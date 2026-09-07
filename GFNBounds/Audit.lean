@@ -7,6 +7,7 @@ import GFNBounds.Doubling.Supersolution
 import GFNBounds.Doubling.Tail
 import GFNBounds.Doubling.Constant
 import GFNBounds.Doubling.Expansion
+import GFNBounds.Doubling.Exponent
 import GFNBounds.Doubling.FixedPoints
 import GFNBounds.Doubling.Main
 import GFNBounds.Doubling.Operator
@@ -217,6 +218,14 @@ namespace GFNBounds.Doubling
 #print axioms Decay.le_foot_rpow
 #print axioms Decay.R0_sub_one_le
 #print axioms Decay.R0_between
+
+-- `prop:doubling_exponent` — app_doubling.tex:693
+#print axioms sum_Ico_rpow_sub_integral_le
+#print axioms integral_rpow_window
+#print axioms tendsto_foot_ratio
+#print axioms tendsto_windowPower
+#print axioms tendsto_windowV
+#print axioms exponent_is_cramer_root
 
 -- the definitional layer (`def:doubling_setting` — app_doubling.tex:13)
 #print axioms pstar_const

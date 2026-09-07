@@ -288,11 +288,21 @@
         709
       ],
       "block_sha256": "53131fac082cd803f7acf42c2088ae524b784c3de05da60cb45fb2402371c798",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "HARD. The argument replaces both sides of `eq:doubling_cut` by their asymptotics and needs the `o(1)` to be uniform over the window `[⌈m/2⌉, m−1]`, plus the sum/integral comparison for `u^{-p-1}` on that window with a relative `O(1/m)`. The comparison is the same missing tool as `lem:doubling_expansion`; the uniformity is bookkeeping on top of it."
+      "lean_files": [
+        "GFNBounds/Doubling/Exponent.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.sum_Ico_rpow_sub_integral_le",
+        "GFNBounds.Doubling.integral_rpow_window",
+        "GFNBounds.Doubling.tendsto_foot_ratio",
+        "GFNBounds.Doubling.tendsto_mpow_foot",
+        "GFNBounds.Doubling.tendsto_windowPower",
+        "GFNBounds.Doubling.tendsto_windowV",
+        "GFNBounds.Doubling.exponent_is_cramer_root"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "Full statement, at every real `p ≠ 0` — including `p < 0`, which the paper's “inside the standing range or not” requires and which the negative Cramér root past `c = 1/ln 2` makes necessary. `λ_j = A j^{-p}(1+o(1))` is carried as `Tendsto (λ_j j^p) (𝓝 A)`, its exact meaning; `c` is any positive real with `ε(j) = c/(j+1)` written out, so no `Setting` (whose `ε_max < 1` would exclude `c ≥ 2`) is involved. The sum/integral comparison is Mathlib's monotone one (`AntitoneOn.integral_le_sum` and siblings) at an arbitrary real exponent, and the paper's “uniformly on the window” is the sandwich `(A−t)V ≤ Σ u_j w_j ≤ (A+t)V` at every `t`. ⚠ weakened: positivity of `(λ_j)` is not used; the paper's proof does not use it either."
     },
     {
       "label": "lem:doubling_cramer_root",

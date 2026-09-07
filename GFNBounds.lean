@@ -11,6 +11,7 @@ import GFNBounds.Doubling.Cramer
 import GFNBounds.Doubling.Constant
 import GFNBounds.Doubling.DecayNotation
 import GFNBounds.Doubling.Expansion
+import GFNBounds.Doubling.Exponent
 import GFNBounds.Doubling.Descent
 import GFNBounds.Doubling.Tail
 import GFNBounds.Doubling.WindowSum

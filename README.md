@@ -34,7 +34,8 @@ names which one stops it:
    `rem:doubling_parity` and by `rem:doubling_second_order`, which the paper does not prove either.
 
 `theo:doubling_decay` is one lemma away from unconditional, and that lemma
-(`lem:doubling_product`) now needs obstruction 1 alone.
+(`lem:doubling_product`) now needs obstruction 1 alone. `prop:doubling_exponent` — the one
+statement that needed neither obstruction — is closed at every real `p ≠ 0`.
 
 ## What this is for
 

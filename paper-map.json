@@ -83,11 +83,19 @@
         164
       ],
       "block_sha256": "b49bce4664d031876fcfbb2978fa38803ad37eb7e5e45fe80ee76b94bbc97293",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/FixedPoints.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.sq_pstar_le",
+        "GFNBounds.Doubling.pstar_sq_gap",
+        "GFNBounds.Doubling.Stat.tsum_jensen_gap",
+        "GFNBounds.Doubling.Stat.jensen_gap_zero",
+        "GFNBounds.Doubling.Stat.fixed_const"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "The `P_star` half, with `L²(λ)` narrowed to **bounded** functions — a sub-case, not a generalization, and marked on the statement. The proof is the paper's: Jensen pointwise, invariance kills the λ-integral of the gap, positivity kills the gap at every state, equality at a doubling state gives `f(2m) = f(m−1)`. The target row is never used; the decrement alone connects the ladder. NOT here: the `P` half, which needs `P_star = P*` and the Hilbert-space fact `ker(Id − Q*) ⊆ ker(Id − Q)`, hence `lem:doubling_operator`(1) and a density action this library does not model."
     },
     {
       "label": "lem:doubling_operator",
@@ -96,11 +104,23 @@
         262
       ],
       "block_sha256": "73143b649e66b243182de497217ea481a67c7070e4653497f95702657daaa818",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Operator.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.partialSum",
+        "GFNBounds.Doubling.one_sub_mul_partialSum",
+        "GFNBounds.Doubling.partialSum_mul_one_sub",
+        "GFNBounds.Doubling.pi_mul_partialSum",
+        "GFNBounds.Doubling.partialSum_mul_pi",
+        "GFNBounds.Doubling.tendsto_pow",
+        "GFNBounds.Doubling.resolvent_identities",
+        "GFNBounds.Doubling.resolvent_inverse",
+        "GFNBounds.Doubling.resolvent_norm_le"
+      ],
+      "status": "partial",
+      "bucket": "C",
+      "scope_notes": "Item (3), proved **more generally than stated**: the argument is pure operator algebra, so it is done for an arbitrary bounded operator on a Banach space with an idempotent `Pi` satisfying `Pi·P = Pi` and `P·Pi = Pi`, with no measure theory. HARD, blocked: item (1) — `P_star` a contraction of every `L^p(λ)` and the `L²`-adjoint of the density action — is the one place the `Lp` layer is unavoidable and the density action is not modelled here (the `p = ∞` case is `pstar_bounded`); item (2) needs `lem:doubling_fixed_points` in its `L²` form and the existence of `λ^K`."
     },
     {
       "label": "rem:doubling_two_constants",
@@ -109,11 +129,15 @@
         273
       ],
       "block_sha256": "7833729214fcf1015662194ec223b18ea1f7ee13c83487c27367749335483856",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Operator.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.resolvent_norm_le"
+      ],
+      "status": "partial",
+      "bucket": "C",
+      "scope_notes": "The ordering of the two constants written `B̂` is `resolvent_norm_le`. Their numerical distinctness is measured in §sec:doubling_measured, not proved, and the trajectory reading `(Sθ)(x) = Σ_n (E(θ(X_n)|X_0=x) − λ(θ))` needs a chain, which this library does not build."
     },
     {
       "label": "theo:doubling_main",
@@ -122,11 +146,20 @@
         321
       ],
       "block_sha256": "6a4100a9cfe7694bdc8860560006d1c32a89a018a7038176b3dcd0ad74d24932",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Main.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.main_unbounded",
+        "GFNBounds.Doubling.main_unbounded_infty",
+        "GFNBounds.Doubling.main_sigmaBar_le",
+        "GFNBounds.Doubling.main_rate",
+        "GFNBounds.Doubling.main_truncation_irreducible",
+        "GFNBounds.Doubling.main_irreducible"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "Item (3) is proved at every p in [1,∞], unconditionally given positive recurrence; its `σ̄ = j̄/(1−c)` clause is proved as the upper bound only, and its `c₇√m` clause is conditional on `eq:doubling_decay`. Item (1)'s irreducibility half and item (5)'s irreducibility half are proved. Items (1) recurrence classification, (2), (4), and (5)'s two constants are open. The file's docstring carries the item-by-item table."
     },
     {
       "label": "prop:doubling_drift",
@@ -204,8 +237,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD. The upper bound `E(σ|j) ≤ j/(1−c)` is `lem:doubling_supersolution` and is proved. The matching lower bound is optional stopping for the martingale `X_{n∧σ} + (1−c)(n∧σ)`, dominated by the integrable excursion maximum: it needs a genuine chain, a filtration and a stopping-time theory, none of which mathlib v4.31.0 has for discrete time in usable form. In the recursion model the missing step is a uniqueness statement for the harmonic function `h − v` of at most linear growth, which is exactly the martingale argument in disguise."
     },
     {
       "label": "prop:doubling_phase",
@@ -222,7 +255,7 @@
       ],
       "status": "open",
       "bucket": "D",
-      "scope_notes": "Needs Foster's criterion and a supermartingale transience criterion; Mathlib v4.31.0 has no discrete-time Markov-chain recurrence theory. Row (d), c = 1/ln 2, is OPEN IN THE PAPER and is not stated."
+      "scope_notes": "DEFERRED. Foster's criterion and the classification of recurrence for a countable chain; mathlib v4.31.0 has no recurrence/transience theory. Tagged in `scaffold/GFNBoundsScaffold/Doubling/Phase.lean`. Nothing downstream is blocked: every consumer takes positive recurrence as a hypothesis, exactly as the paper's items (2)–(4) do."
     },
     {
       "label": "prop:doubling_cut",
@@ -258,8 +291,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD. The argument replaces both sides of `eq:doubling_cut` by their asymptotics and needs the `o(1)` to be uniform over the window `[⌈m/2⌉, m−1]`, plus the sum/integral comparison for `u^{-p-1}` on that window with a relative `O(1/m)`. The comparison is the same missing tool as `lem:doubling_expansion`; the uniformity is bookkeeping on top of it."
     },
     {
       "label": "lem:doubling_cramer_root",
@@ -346,11 +379,22 @@
         953
       ],
       "block_sha256": "7387301b3345f4927b0ec473806a2b03b944781b8c50b5150fff84df435e7b41",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Expansion.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Decay.A0",
+        "GFNBounds.Doubling.Decay.A1",
+        "GFNBounds.Doubling.Decay.Gam",
+        "GFNBounds.Doubling.Decay.A_one_eq",
+        "GFNBounds.Doubling.Decay.Gamma_pos",
+        "GFNBounds.Doubling.Decay.Gamma_lt_one",
+        "GFNBounds.Doubling.Decay.A_zero_pos",
+        "GFNBounds.Doubling.Decay.A_one_neg"
+      ],
+      "status": "partial",
+      "bucket": "C",
+      "scope_notes": "Step 4 only: the closed form of `A₁` and all of `eq:doubling_signs`, each sign coming from one of the four inequalities of `eq:doubling_cramer_ineq`. HARD, blocked: `eq:doubling_Rexp` itself. Its Step 2 is Euler–Maclaurin for `t^{-r}` with a complete-monotonicity remainder bound, and mathlib v4.31.0 has neither. This is the appendix's one analytic wall; everything it feeds is carried downstream as a hypothesis (`½ ≤ R₀ ≤ 2` and `|R₀ − 1| ≤ c₄/m`)."
     },
     {
       "label": "rem:doubling_parity",
@@ -359,11 +403,15 @@
         963
       ],
       "block_sha256": "694ca48026328014f96cdea8304a3eb17f4e12eeb787262f3acafc4fa0de24eb",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Expansion.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Decay.A_gap"
+      ],
+      "status": "partial",
+      "bucket": "C",
+      "scope_notes": "The parity gap `A₀ − A₁ = cτ` is proved (it is the definition of `A₁`). HARD, blocked: the remark's reading of that gap against `eq:doubling_Rexp` — that `Φ₀` is neither a super- nor a sub-solution — needs the expansion, which is open."
     },
     {
       "label": "lem:doubling_descent",
@@ -398,8 +446,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD. Step 1 — `Σ_{j=a}^{b} w_y(j) ≥ 2γ − 4cτ/y` — is a sum/integral comparison for a decreasing power and is reachable; Step 2's three sojourn bounds are statements about the law of an exit time and need the descent chain as a chain, not as the recursion `descW`. Its consumer `lem:doubling_product` is carried as a hypothesis by `theo:doubling_decay`."
     },
     {
       "label": "lem:doubling_product",
@@ -411,8 +459,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD. The block decomposition uses the strong Markov property at the block exit and `E(ζ^ς)` bounds from `lem:doubling_escape`. In the recursion model the quantity is definable (`descW` with a multiplicative weight) but the block argument needs the exit-time law. This is the single hypothesis `theo:doubling_decay` carries (`hlo`, `hhi` in `Descent.lean`), so closing it makes the decay theorem unconditional."
     },
     {
       "label": "theo:doubling_decay",
@@ -468,8 +516,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "D",
+      "scope_notes": "DEFERRED. A computation on a continuous renewal equation — a Leibniz differentiation of `G(x) = ∫ k̄(v)V(x−v)dv` and a dominated-convergence limit — set beside the discrete recursion. The paper is explicit that the identity is exact only for the limit equation and does **not** determine `C`; formalizing it would add no certainty to any claim."
     },
     {
       "label": "theo:doubling_sharp",
@@ -481,8 +529,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD. Rests on `lem:doubling_weight`, `lem:doubling_doeblin` and `lem:doubling_coupling`, i.e. on a Doeblin minorization and a coupling of two descents — total variation between two exit laws, and a geometric contraction in the block index. Needs the descent as a chain. The paper itself notes the exponent `ϑ` it delivers is not effective."
     },
     {
       "label": "lem:doubling_weight",
@@ -494,8 +542,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD; a mean bound on the deviation of a descent's weight, in the same block-decomposition framework as `lem:doubling_product`."
     },
     {
       "label": "lem:doubling_doeblin",
@@ -507,8 +555,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD. A minorization of the exit law of a block by a fixed fraction of one reference law. Mathlib v4.31.0 has no Doeblin condition and no total-variation distance for kernels; both would have to be built."
     },
     {
       "label": "lem:doubling_coupling",
@@ -520,8 +568,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD. A coupling of two descents; needs `lem:doubling_doeblin` and a coupling construction, neither available."
     },
     {
       "label": "rem:doubling_no_logperiodic",
@@ -533,8 +581,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "D",
+      "scope_notes": "DEFERRED. Its content is that the limit of `eq:doubling_sharp` exists, which is `theo:doubling_sharp`; the rest of the remark explains the mechanism (the window spreads the exit law) and is prose."
     },
     {
       "label": "cor:doubling_tail_sharp",
@@ -546,8 +594,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD only through its input: given `λ_j j^{p_*} → C`, the derivation is an ε-argument on `powerTail_ge`/`powerTail_le`, both of which are proved in `Tail.lean`. It is open because `theo:doubling_sharp` is."
     },
     {
       "label": "prop:doubling_constant",
@@ -556,11 +604,21 @@
         1763
       ],
       "block_sha256": "e44c10fd20bb3d5be033de229a2f1e75d133e4587d10ecf927a424aa746a5f3e",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Constant.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Decay.extend",
+        "GFNBounds.Doubling.Decay.extend_cutBal",
+        "GFNBounds.Doubling.Decay.extend_unique",
+        "GFNBounds.Doubling.Decay.extend_pos",
+        "GFNBounds.Doubling.Decay.extend_add",
+        "GFNBounds.Doubling.Decay.extend_smul",
+        "GFNBounds.Doubling.Decay.extend_congr_high"
+      ],
+      "status": "partial",
+      "bucket": "C",
+      "scope_notes": "Step 1 only, in constructive form: `extend` is the unique solution with prescribed boundary data, it solves `eq:doubling_cut`, it is linear in that data, positivity of the sequence is positivity of the data, and its value above the cut `d` does not see `λ_j` for `2j ≤ d` — which is the mechanism behind `ν_j = 0` there. HARD, blocked: Steps 2 and 3 identify `C = lim λ_m m^{p_*}` as a linear functional and fix the signs of its coefficients, and both consume `theo:doubling_sharp`, which is open."
     },
     {
       "label": "rem:doubling_second_order",
@@ -572,8 +630,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "D",
+      "scope_notes": "DEFERRED, and the paper says so: “This is a formal matching computation and is not proved here.” Proving it needs `|u_m − C| = O(1/m)`, whereas `theo:doubling_sharp` gives an exponent `ϑ < 1`. The library mirrors the flag rather than laundering it."
     },
     {
       "label": "lem:doubling_truncation_irreducible",
@@ -708,8 +766,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD. Needs the `L²(λ)` layer: `A := (Id − P_star)|_{ker Π}` bounded with dense range (via `P_star = P*` and `lem:doubling_fixed_points` in its `L²` form) and not surjective (via the open mapping theorem against `eq:doubling_inf`, which **is** proved — `Stat.no_bounded_inverse`). So the missing piece is the `Lp` layer and the adjoint, not the analysis. The witness pair is non-explicit by construction, so the Lean statement would be an `∃`."
     },
     {
       "label": "rem:doubling_geometric",
@@ -739,8 +797,8 @@
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "bucket": "C",
+      "scope_notes": "HARD. Its four steps need: `lem:doubling_truncation_irreducible` Step 4 (Perron–Frobenius, open), `lem:doubling_operator`(2) (open), `theo:doubling_decay` applied to `λ^K` extended past the cap (available, but conditional on `lem:doubling_product`), and `lem:doubling_percut` on the truncation (proved). The `σ̄_K ≤ j̄/(1−c)` input is proved (`sigmaBar_le`)."
     }
   ]
 }

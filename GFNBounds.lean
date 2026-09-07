@@ -8,10 +8,15 @@ import GFNBounds.Doubling.CutBalance
 import GFNBounds.Doubling.Ratios
 import GFNBounds.Doubling.PerCutNorms
 import GFNBounds.Doubling.Cramer
+import GFNBounds.Doubling.Constant
 import GFNBounds.Doubling.DecayNotation
+import GFNBounds.Doubling.Expansion
 import GFNBounds.Doubling.Descent
 import GFNBounds.Doubling.Tail
 import GFNBounds.Doubling.Family
+import GFNBounds.Doubling.FixedPoints
+import GFNBounds.Doubling.Main
+import GFNBounds.Doubling.Operator
 import GFNBounds.Doubling.Irreducible
 import GFNBounds.Doubling.Unbounded
 import GFNBounds.Doubling.Ramp

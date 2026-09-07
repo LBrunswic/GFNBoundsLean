@@ -5,6 +5,11 @@ import GFNBounds.Doubling.Excursion
 import GFNBounds.Doubling.Family
 import GFNBounds.Doubling.Supersolution
 import GFNBounds.Doubling.Tail
+import GFNBounds.Doubling.Constant
+import GFNBounds.Doubling.Expansion
+import GFNBounds.Doubling.FixedPoints
+import GFNBounds.Doubling.Main
+import GFNBounds.Doubling.Operator
 import GFNBounds.Doubling.Drift
 import GFNBounds.Doubling.Irreducible
 import GFNBounds.Doubling.PerCutNorms
@@ -159,6 +164,44 @@ namespace GFNBounds.Doubling
 #print axioms Stat.tailSeq_eq_tailMass
 #print axioms Stat.rayleigh_family
 #print axioms Stat.exists_rayleigh_family
+
+-- `prop:doubling_constant`, Step 1 — app_doubling.tex:1702
+#print axioms Decay.extend_cutBal
+#print axioms Decay.extend_unique
+#print axioms Decay.extend_pos
+#print axioms Decay.extend_add
+#print axioms Decay.extend_smul
+#print axioms Decay.extend_congr_high
+
+-- `lem:doubling_expansion`, Step 4, and `rem:doubling_parity` — app_doubling.tex:848, :955
+#print axioms Decay.A_one_eq
+#print axioms Decay.A_gap
+#print axioms Decay.Gamma_pos
+#print axioms Decay.Gamma_lt_one
+#print axioms Decay.A_zero_pos
+#print axioms Decay.A_one_neg
+
+-- `lem:doubling_fixed_points`, the `P_star` half — app_doubling.tex:130
+#print axioms sq_pstar_le
+#print axioms pstar_sq_gap
+#print axioms Stat.jensen_gap_zero
+#print axioms Stat.fixed_const
+
+-- `lem:doubling_operator`(3) — app_doubling.tex:166
+#print axioms one_sub_mul_partialSum
+#print axioms partialSum_mul_one_sub
+#print axioms tendsto_pow
+#print axioms resolvent_identities
+#print axioms resolvent_inverse
+#print axioms resolvent_norm_le
+
+-- `theo:doubling_main`, assembled — app_doubling.tex:275
+#print axioms main_unbounded
+#print axioms main_unbounded_infty
+#print axioms main_sigmaBar_le
+#print axioms main_rate
+#print axioms main_truncation_irreducible
+#print axioms main_irreducible
 
 -- the definitional layer (`def:doubling_setting` — app_doubling.tex:13)
 #print axioms pstar_const

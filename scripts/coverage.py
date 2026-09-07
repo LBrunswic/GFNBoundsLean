@@ -32,6 +32,14 @@ with open(os.path.join(ROOT, "docs", "COVERAGE.md"), "w", encoding="utf-8") as f
                 counts.get("stale", 0), len(m["statements"])))
     fh.write("`partial` means some items of a multi-part statement are proved and others are not; "
              "the `scope_notes` field of `paper-map.json` says which.\n\n")
+    fh.write("The **bucket** says how far the rest is, and every non-`A` row carries its "
+             "obstruction in `scope_notes`:\n\n"
+             "| bucket | meaning |\n|---|---|\n"
+             "| `A` | nothing left; the statement is certified in full |\n"
+             "| `B` | what remains is routine on the layers already built |\n"
+             "| `C` | **hard** — attempted and blocked on a named obstruction |\n"
+             "| `D` | deferred — needs a layer this library has not built, or is flagged "
+             "unproved in the paper itself |\n\n")
     fh.write("| paper label | tex lines | status | bucket | Lean | open sorries |\n")
     fh.write("|---|---|---|---|---|---|\n")
     fh.write("\n".join(rows) + "\n")

@@ -161,6 +161,7 @@ namespace GFNBounds.Doubling
 #print axioms powerTail_le
 #print axioms Decay.tail_bounds
 #print axioms Decay.tail_ratio_ge
+#print axioms Decay.tail_sharp
 
 -- `cor:doubling_family` — app_doubling.tex:2087
 #print axioms Stat.tailSeq_eq_tailMass

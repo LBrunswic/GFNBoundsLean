@@ -305,6 +305,119 @@ theorem tail_ratio_ge {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam
     _ ≤ c₂ * (D.p - 1) * tailSeq lam m :=
         mul_le_mul_of_nonneg_left hlow (by positivity)
 
+/-! ## `cor:doubling_tail_sharp`, quantitatively -/
+
+/-- **`eq:doubling_tail_sharp`, first line, in explicit form.** If the rescaled profile is within
+`t` of `C` past `m₀`, then `(p_*−1) m^{p_*−1} L(m)` is within `t(1 + (p_*−1)/m) + |C|(p_*−1)/m`
+of `C` at every `m ≥ m₀`.
+
+This is the corollary's content with the limit unwound: the paper's `t → 0` argument is the
+statement read at every `t`, and it converts to `L(m) = C m^{1−p_*}(1+o(1))/(p_*−1)` as soon as
+`theo:doubling_sharp` supplies the limit. It is stated this way because the limit is open and the
+inequality is not. -/
+theorem tail_sharp {lam : ℕ → ℝ} {C t : ℝ} (hsum : Summable lam) {m₀ m : ℕ}
+    (hm : m₀ ≤ m) (hm1 : 1 ≤ m)
+    (hclose : ∀ j : ℕ, m₀ ≤ j → |lam j * (j : ℝ) ^ D.p - C| ≤ t) :
+    |(D.p - 1) * (m : ℝ) ^ (D.p - 1) * tailSeq lam m - C|
+      ≤ t * (1 + (D.p - 1) / (m : ℝ)) + |C| * ((D.p - 1) / (m : ℝ)) := by
+  have hp := D.p_gt_one
+  have hp1 : (0 : ℝ) < D.p - 1 := by linarith
+  have hmpos : (0 : ℝ) < (m : ℝ) := by exact_mod_cast hm1
+  set P : ℝ := powerTail D.p m with hP
+  set W : ℝ := (D.p - 1) * (m : ℝ) ^ (D.p - 1) with hW
+  have hWpos : 0 < W := by rw [hW]; positivity
+  have hmm : (m : ℝ) ^ (D.p - 1) * (m : ℝ) ^ (1 - D.p) = 1 := by
+    rw [← rpow_add hmpos]; simp
+  have hmm2 : (m : ℝ) ^ (D.p - 1) * (m : ℝ) ^ (-D.p) = ((m : ℝ))⁻¹ := by
+    rw [← rpow_add hmpos, show D.p - 1 + -D.p = -1 by ring, rpow_neg_one]
+  -- the pure-power tail, rescaled, is between `1` and `1 + (p−1)/m`
+  have hWP_lo : (1 : ℝ) ≤ W * P := by
+    have h := powerTail_ge (p := D.p) hp hm1
+    rw [← hP] at h
+    have h2 : W * ((m : ℝ) ^ (1 - D.p) / (D.p - 1)) = 1 := by
+      rw [hW]; field_simp; linarith [hmm]
+    calc (1 : ℝ) = W * ((m : ℝ) ^ (1 - D.p) / (D.p - 1)) := h2.symm
+      _ ≤ W * P := mul_le_mul_of_nonneg_left h hWpos.le
+  have hWP_hi : W * P ≤ 1 + (D.p - 1) / (m : ℝ) := by
+    have h := powerTail_le (p := D.p) hp hm1
+    rw [← hP] at h
+    have h2 : W * ((m : ℝ) ^ (-D.p) + (m : ℝ) ^ (1 - D.p) / (D.p - 1))
+        = (D.p - 1) / (m : ℝ) + 1 := by
+      rw [hW]
+      have e1 : (D.p - 1) * (m : ℝ) ^ (D.p - 1) * (m : ℝ) ^ (-D.p)
+          = (D.p - 1) * ((m : ℝ) ^ (D.p - 1) * (m : ℝ) ^ (-D.p)) := by ring
+      have e2 : (D.p - 1) * (m : ℝ) ^ (D.p - 1) * ((m : ℝ) ^ (1 - D.p) / (D.p - 1))
+          = (m : ℝ) ^ (D.p - 1) * (m : ℝ) ^ (1 - D.p) := by field_simp
+      rw [mul_add, e1, e2, hmm, hmm2, ← one_div, ← div_eq_mul_one_div]
+    calc W * P ≤ W * ((m : ℝ) ^ (-D.p) + (m : ℝ) ^ (1 - D.p) / (D.p - 1)) :=
+          mul_le_mul_of_nonneg_left h hWpos.le
+      _ = (D.p - 1) / (m : ℝ) + 1 := h2
+      _ = 1 + (D.p - 1) / (m : ℝ) := by ring
+  have hPnn : 0 ≤ P := by
+    have := hWP_lo; nlinarith [hWpos]
+  -- the sequence is within `t` of the pure power, in tail sum
+  have hpt := hasSum_powerTail (p := D.p) hp m
+  have hlamS : HasSum (fun k : ℕ => lam (k + m)) (tailSeq lam m) :=
+    ((summable_nat_add_iff m).mpr hsum).hasSum
+  have hterm : ∀ k : ℕ, |lam (k + m) - C * ((k + m : ℕ) : ℝ) ^ (-D.p)|
+      ≤ t * ((k + m : ℕ) : ℝ) ^ (-D.p) := by
+    intro k
+    have hj1 : 1 ≤ k + m := by omega
+    have hjpos : (0 : ℝ) < ((k + m : ℕ) : ℝ) := by exact_mod_cast hj1
+    have hJn : (0 : ℝ) < ((k + m : ℕ) : ℝ) ^ (-D.p) := rpow_pos_of_pos hjpos _
+    have hmul : ((k + m : ℕ) : ℝ) ^ D.p * ((k + m : ℕ) : ℝ) ^ (-D.p) = 1 := by
+      rw [← rpow_add hjpos]; simp
+    have hcancel : lam (k + m) * ((k + m : ℕ) : ℝ) ^ D.p * ((k + m : ℕ) : ℝ) ^ (-D.p)
+        = lam (k + m) := by rw [mul_assoc, hmul, mul_one]
+    have hfac : lam (k + m) - C * ((k + m : ℕ) : ℝ) ^ (-D.p)
+        = (lam (k + m) * ((k + m : ℕ) : ℝ) ^ D.p - C) * ((k + m : ℕ) : ℝ) ^ (-D.p) := by
+      calc lam (k + m) - C * ((k + m : ℕ) : ℝ) ^ (-D.p)
+          = lam (k + m) * ((k + m : ℕ) : ℝ) ^ D.p * ((k + m : ℕ) : ℝ) ^ (-D.p)
+            - C * ((k + m : ℕ) : ℝ) ^ (-D.p) := by rw [hcancel]
+        _ = (lam (k + m) * ((k + m : ℕ) : ℝ) ^ D.p - C) * ((k + m : ℕ) : ℝ) ^ (-D.p) := by
+            ring
+    rw [hfac, abs_mul, abs_of_pos hJn]
+    exact mul_le_mul_of_nonneg_right (hclose (k + m) (by omega)) hJn.le
+  have hdiff : HasSum (fun k : ℕ => lam (k + m) - C * ((k + m : ℕ) : ℝ) ^ (-D.p))
+      (tailSeq lam m - C * P) := by
+    have := hlamS.sub (hpt.mul_left C)
+    rw [hP]; exact this
+  have hbound : |tailSeq lam m - C * P| ≤ t * P := by
+    have hsummable : Summable fun k : ℕ => ‖lam (k + m) - C * ((k + m : ℕ) : ℝ) ^ (-D.p)‖ :=
+      hdiff.summable.abs
+    have h1 : ‖tailSeq lam m - C * P‖
+        ≤ ∑' k : ℕ, ‖lam (k + m) - C * ((k + m : ℕ) : ℝ) ^ (-D.p)‖ := by
+      rw [← hdiff.tsum_eq]
+      exact norm_tsum_le_tsum_norm hsummable
+    have h2 : ∑' k : ℕ, ‖lam (k + m) - C * ((k + m : ℕ) : ℝ) ^ (-D.p)‖ ≤ t * P := by
+      have hcmp := Summable.tsum_le_tsum (f := fun k : ℕ =>
+          ‖lam (k + m) - C * ((k + m : ℕ) : ℝ) ^ (-D.p)‖)
+        (g := fun k : ℕ => t * ((k + m : ℕ) : ℝ) ^ (-D.p))
+        (fun k => by simpa [Real.norm_eq_abs] using hterm k) hsummable (hpt.mul_left t).summable
+      rwa [(hpt.mul_left t).tsum_eq, ← hP] at hcmp
+    simpa [Real.norm_eq_abs] using le_trans h1 h2
+  -- assemble
+  have hsplit : W * tailSeq lam m - C
+      = W * (tailSeq lam m - C * P) + C * (W * P - 1) := by ring
+  have hb1 : |W * (tailSeq lam m - C * P)| ≤ W * (t * P) := by
+    rw [abs_mul, abs_of_pos hWpos]
+    exact mul_le_mul_of_nonneg_left hbound hWpos.le
+  have hb2 : W * (t * P) ≤ t * (1 + (D.p - 1) / (m : ℝ)) := by
+    have ht0 : 0 ≤ t := le_trans (abs_nonneg _) (hclose m hm)
+    have : W * (t * P) = t * (W * P) := by ring
+    rw [this]
+    exact mul_le_mul_of_nonneg_left hWP_hi ht0
+  have hb3 : |C * (W * P - 1)| ≤ |C| * ((D.p - 1) / (m : ℝ)) := by
+    rw [abs_mul]
+    refine mul_le_mul_of_nonneg_left ?_ (abs_nonneg C)
+    rw [abs_of_nonneg (by linarith [hWP_lo])]
+    linarith [hWP_hi]
+  calc |(D.p - 1) * (m : ℝ) ^ (D.p - 1) * tailSeq lam m - C|
+      = |W * (tailSeq lam m - C * P) + C * (W * P - 1)| := by rw [hW, ← hsplit]
+    _ ≤ |W * (tailSeq lam m - C * P)| + |C * (W * P - 1)| := abs_add_le _ _
+    _ ≤ t * (1 + (D.p - 1) / (m : ℝ)) + |C| * ((D.p - 1) / (m : ℝ)) := by
+        linarith [hb1, hb2, hb3]
+
 end Decay
 
 end GFNBounds.Doubling

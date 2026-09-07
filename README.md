@@ -6,6 +6,36 @@ Flows* — the doubling-graph counter-example of `app_doubling.tex`.
 Coverage: **[`docs/COVERAGE.md`](docs/COVERAGE.md)** — 41 statements, what is closed and what is
 not. Open `sorry`s: [`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md).
 
+## Where it stands
+
+Every statement that can be proved without building a Markov chain is proved. The headline —
+`theo:doubling_unbounded`, the diffusion operator unbounded on every `L^p`, `p ∈ [1,∞]` — is
+closed and unconditional given positive recurrence, and so is the whole of `lem:doubling_percut`,
+`prop:doubling_cut`, `lem:doubling_irreducible`, `lem:doubling_cramer_root`, `lem:doubling_ramp`,
+`lem:doubling_excursion`, `lem:doubling_supersolution`, `cor:doubling_tail` and
+`cor:doubling_family`.
+
+What is left divides into exactly **three obstructions**, and every open row in the coverage table
+names which one stops it:
+
+1. **A chain.** Optional stopping (`prop:doubling_length`), Foster's criterion
+   (`prop:doubling_phase`), exit-time laws (`lem:doubling_escape`, `lem:doubling_product`),
+   Doeblin and coupling (`theo:doubling_sharp` and its three lemmas). Mathlib v4.31.0 has none of
+   this for discrete time.
+2. **The `L^p` layer with its adjoint.** `lem:doubling_operator`(1)–(2),
+   `lem:doubling_fixed_points`' `P` half, `prop:doubling_unsolvable`. The analysis in the last of
+   these is already done — `eq:doubling_inf` is proved — and what is missing is the functional
+   analysis around it.
+3. ~~Euler–Maclaurin~~ — **routed around.** `lem:doubling_expansion` was the appendix's one
+   analytic wall, but the descent block consumes only `eq:doubling_R0`, and a first-order
+   telescoping comparison suffices for that. `R0Bound.lean` proves
+   `|R₀(m) − 1| ≤ 16cτ/m` at every `m ≥ 1`, with `½ ≤ R₀ ≤ 2` for `m ≥ 32cτ` — the paper's `c₄`
+   and `ℓ₁`, made **effective**. The refined expansion is now needed only by
+   `rem:doubling_parity` and by `rem:doubling_second_order`, which the paper does not prove either.
+
+`theo:doubling_decay` is one lemma away from unconditional, and that lemma
+(`lem:doubling_product`) now needs obstruction 1 alone.
+
 ## What this is for
 
 Appendix H is the paper's most contested mathematics and its most active. It was restructured on

@@ -600,11 +600,15 @@
         1700
       ],
       "block_sha256": "236a28750c6741a711ced497138379ec61aba3073263df3179201b87d11cf7d7",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
+      "lean_files": [
+        "GFNBounds/Doubling/Tail.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Decay.tail_sharp"
+      ],
+      "status": "partial",
       "bucket": "C",
-      "scope_notes": "HARD only through its input: given `λ_j j^{p_*} → C`, the derivation is an ε-argument on `powerTail_ge`/`powerTail_le`, both of which are proved in `Tail.lean`. It is open because `theo:doubling_sharp` is."
+      "scope_notes": "The first line, with the limit unwound into an inequality: if the rescaled profile is within `t` of `C` past `m₀`, then `(p_*−1) m^{p_*−1} L(m)` is within `t(1 + (p_*−1)/m) + |C|(p_*−1)/m` of `C` at every `m ≥ m₀`. That is the paper's `t → 0` argument at every `t`, and it converts to `eq:doubling_tail_sharp` the moment `theo:doubling_sharp` supplies the limit — which is why the statement is quantitative here: the limit is open, the inequality is not. HARD only through that input; the second line (`L(m)/λ_m = m/(p_*−1)(1+o(1))`) is the first divided by `u_m → C` and is not stated."
     },
     {
       "label": "prop:doubling_constant",

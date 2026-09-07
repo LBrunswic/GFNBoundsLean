@@ -1,5 +1,6 @@
 import GFNBounds.Doubling.FixedPoints
 import GFNBounds.Doubling.PerCutNorms
+import GFNBounds.Doubling.Supersolution
 
 /-!
 # The `L^p(λ)` layer: the measure, the a.e. bridge, and the norm identification
@@ -224,19 +225,7 @@ end Stat
 
 /-! ## 4. `P⋆` as a contraction of `L²(μ)` -/
 
-/-- `P⋆` is monotone: it is an average over the one-step law. -/
-theorem pstar_mono {f g : St → ℝ} (h : ∀ x, f x ≤ g x) (x : St) :
-    pstar S cap f x ≤ pstar S cap g x := by
-  rcases x with (_ | j) | _
-  · exact h _
-  · by_cases hD : HasDouble cap (j + 1)
-    · simp only [pstar_lad_succ, hD, if_true]
-      have h1 : 0 ≤ S.eps (j + 1) := (S.eps_pos (Nat.le_add_left 1 j)).le
-      have h2 : 0 ≤ 1 - S.eps (j + 1) := (S.one_sub_eps_pos (Nat.le_add_left 1 j)).le
-      exact add_le_add (mul_le_mul_of_nonneg_left (h _) h1) (mul_le_mul_of_nonneg_left (h _) h2)
-    · simp only [pstar_lad_succ, hD, if_false]; exact h _
-  · exact Finset.sum_le_sum fun k _ => mul_le_mul_of_nonneg_left (h _) (S.row_nonneg k)
-
+-- `pstar_mono` lives in `Supersolution.lean`; this file used to redeclare it.
 /-- `P⋆` is continuous for pointwise convergence: each of its three cases is a finite
 combination of finitely many values. -/
 theorem tendsto_pstar {F : ℕ → St → ℝ} {f : St → ℝ}

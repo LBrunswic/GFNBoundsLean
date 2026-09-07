@@ -442,7 +442,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -653,7 +653,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -827,7 +827,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -1924,7 +1924,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -2079,7 +2079,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -2543,7 +2543,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -3077,7 +3077,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -3325,7 +3325,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -4303,7 +4303,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -4415,7 +4415,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -4429,20 +4429,21 @@
    "scope_disclosed": true,
    "imports": [
     "GFNBounds.Doubling.FixedPoints",
-    "GFNBounds.Doubling.PerCutNorms"
+    "GFNBounds.Doubling.PerCutNorms",
+    "GFNBounds.Doubling.Supersolution"
    ],
    "variables": [
     "variable {S : Setting} {cap : Option ℕ}",
     "variable (L : Stat S cap)",
     "variable (L : Stat S cap)"
    ],
-   "lines": 556,
+   "lines": 545,
    "decls": [
     {
      "name": "_",
      "full": "_",
      "kind": "instance",
-     "line": 102,
+     "line": 103,
      "attrs": "",
      "private": false,
      "statement": "instance : MeasurableSpace St",
@@ -4452,7 +4453,7 @@
      "name": "_",
      "full": "_",
      "kind": "instance",
-     "line": 104,
+     "line": 105,
      "attrs": "",
      "private": false,
      "statement": "instance : DiscreteMeasurableSpace St",
@@ -4462,7 +4463,7 @@
      "name": "mu",
      "full": "GFNBounds.Doubling.Stat.mu",
      "kind": "def",
-     "line": 115,
+     "line": 116,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def mu : Measure St",
@@ -4472,7 +4473,7 @@
      "name": "mu_singleton",
      "full": "GFNBounds.Doubling.Stat.mu_singleton",
      "kind": "theorem",
-     "line": 119,
+     "line": 120,
      "attrs": "@[simp]",
      "private": false,
      "statement": "@[simp] theorem mu_singleton (x : St) : L.mu {x} = ENNReal.ofReal (L.lam x)",
@@ -4482,7 +4483,7 @@
      "name": "instIsProbabilityMeasure",
      "full": "GFNBounds.Doubling.Stat.instIsProbabilityMeasure",
      "kind": "instance",
-     "line": 124,
+     "line": 125,
      "attrs": "",
      "private": false,
      "statement": "instance instIsProbabilityMeasure : IsProbabilityMeasure L.mu",
@@ -4492,7 +4493,7 @@
      "name": "mu_singleton_ne_zero_iff",
      "full": "GFNBounds.Doubling.Stat.mu_singleton_ne_zero_iff",
      "kind": "theorem",
-     "line": 132,
+     "line": 133,
      "attrs": "",
      "private": false,
      "statement": "theorem mu_singleton_ne_zero_iff {x : St} : L.mu {x} ≠ 0 ↔ OnChain cap x",
@@ -4502,7 +4503,7 @@
      "name": "ae_iff_onChain",
      "full": "GFNBounds.Doubling.Stat.ae_iff_onChain",
      "kind": "theorem",
-     "line": 142,
+     "line": 143,
      "attrs": "",
      "private": false,
      "statement": "theorem ae_iff_onChain {p : St → Prop} : (∀ᵐ x ∂L.mu, p x) ↔ ∀ x, OnChain cap x → p x",
@@ -4512,7 +4513,7 @@
      "name": "ae_iff_eq",
      "full": "GFNBounds.Doubling.Stat.ae_iff_eq",
      "kind": "theorem",
-     "line": 151,
+     "line": 152,
      "attrs": "",
      "private": false,
      "statement": "theorem ae_iff_eq {f g : St → ℝ} : f =ᵐ[L.mu] g ↔ ∀ x, OnChain cap x → f x = g x",
@@ -4522,7 +4523,7 @@
      "name": "ae_eq_of_onChain",
      "full": "GFNBounds.Doubling.Stat.ae_eq_of_onChain",
      "kind": "theorem",
-     "line": 155,
+     "line": 156,
      "attrs": "",
      "private": false,
      "statement": "theorem ae_eq_of_onChain {f g : St → ℝ} (h : ∀ x, OnChain cap x → f x = g x) : f =ᵐ[L.mu] g",
@@ -4532,7 +4533,7 @@
      "name": "aestronglyMeasurable",
      "full": "GFNBounds.Doubling.Stat.aestronglyMeasurable",
      "kind": "theorem",
-     "line": 161,
+     "line": 162,
      "attrs": "",
      "private": false,
      "statement": "theorem aestronglyMeasurable (f : St → ℝ) : AEStronglyMeasurable f L.mu",
@@ -4542,7 +4543,7 @@
      "name": "lintegral_eq_tsum",
      "full": "GFNBounds.Doubling.Stat.lintegral_eq_tsum",
      "kind": "theorem",
-     "line": 165,
+     "line": 166,
      "attrs": "",
      "private": false,
      "statement": "theorem lintegral_eq_tsum (g : St → ℝ≥0∞) : ∫⁻ x, g x ∂L.mu = ∑' x, g x * ENNReal.ofReal (L.lam x)",
@@ -4552,7 +4553,7 @@
      "name": "lintegral_rpow_enorm",
      "full": "GFNBounds.Doubling.Stat.lintegral_rpow_enorm",
      "kind": "theorem",
-     "line": 171,
+     "line": 172,
      "attrs": "",
      "private": false,
      "statement": "theorem lintegral_rpow_enorm (f : St → ℝ) {r : ℝ} (hr : 0 ≤ r) : ∫⁻ x, ‖f x‖ₑ ^ r ∂L.mu = ∑' x, ENNReal.ofReal (|f x| ^ r * L.lam x)",
@@ -4562,7 +4563,7 @@
      "name": "lintegral_rpow_enorm_eq_mass",
      "full": "GFNBounds.Doubling.Stat.lintegral_rpow_enorm_eq_mass",
      "kind": "theorem",
-     "line": 179,
+     "line": 180,
      "attrs": "",
      "private": false,
      "statement": "theorem lintegral_rpow_enorm_eq_mass (f : St → ℝ) {r : ℝ} (hr : 0 ≤ r) (hs : Summable fun x => |f x| ^ r * L.lam x) : ∫⁻ x, ‖f x‖ₑ ^ r ∂L.mu = ENNReal.ofReal (L.mass r f)",
@@ -4572,7 +4573,7 @@
      "name": "mass_nonneg",
      "full": "GFNBounds.Doubling.Stat.mass_nonneg",
      "kind": "theorem",
-     "line": 186,
+     "line": 187,
      "attrs": "",
      "private": false,
      "statement": "theorem mass_nonneg (f : St → ℝ) {r : ℝ} : 0 ≤ L.mass r f",
@@ -4582,7 +4583,7 @@
      "name": "memLp_iff",
      "full": "GFNBounds.Doubling.Stat.memLp_iff",
      "kind": "theorem",
-     "line": 190,
+     "line": 191,
      "attrs": "",
      "private": false,
      "statement": "theorem memLp_iff {f : St → ℝ} {p : ℝ≥0∞} (hp0 : p ≠ 0) (hpt : p ≠ ∞) : MemLp f p L.mu ↔ Summable fun x => |f x| ^ p.toReal * L.lam x",
@@ -4592,27 +4593,17 @@
      "name": "toReal_eLpNorm_rpow",
      "full": "GFNBounds.Doubling.Stat.toReal_eLpNorm_rpow",
      "kind": "theorem",
-     "line": 211,
+     "line": 212,
      "attrs": "",
      "private": false,
      "statement": "theorem toReal_eLpNorm_rpow (f : St → ℝ) {p : ℝ≥0∞} (hp0 : p ≠ 0) (hpt : p ≠ ∞) (hs : Summable fun x => |f x| ^ p.toReal * L.lam x) : (eLpNorm f p L.mu).toReal ^ p.toReal = L.mass p.toReal f",
      "doc": "**The norm identification.** `‖f‖_{L^p(μ)}^p = Stat.mass p f`, at every `p ∈ [1,∞)`."
     },
     {
-     "name": "pstar_mono",
-     "full": "GFNBounds.Doubling.pstar_mono",
-     "kind": "theorem",
-     "line": 228,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem pstar_mono {f g : St → ℝ} (h : ∀ x, f x ≤ g x) (x : St) : pstar S cap f x ≤ pstar S cap g x",
-     "doc": "`P⋆` is monotone: it is an average over the one-step law."
-    },
-    {
      "name": "tendsto_pstar",
      "full": "GFNBounds.Doubling.tendsto_pstar",
      "kind": "theorem",
-     "line": 242,
+     "line": 231,
      "attrs": "",
      "private": false,
      "statement": "theorem tendsto_pstar {F : ℕ → St → ℝ} {f : St → ℝ} (h : ∀ y, Tendsto (fun n => F n y) atTop (𝓝 (f y))) (x : St) : Tendsto (fun n => pstar S cap (F n) x) atTop (𝓝 (pstar S cap f x))",
@@ -4622,7 +4613,7 @@
      "name": "RowOnChain",
      "full": "GFNBounds.Doubling.RowOnChain",
      "kind": "def",
-     "line": 259,
+     "line": 248,
      "attrs": "",
      "private": false,
      "statement": "def RowOnChain (S : Setting) (cap : Option ℕ) : Prop",
@@ -4632,7 +4623,7 @@
      "name": "rowOnChain_none",
      "full": "GFNBounds.Doubling.rowOnChain_none",
      "kind": "theorem",
-     "line": 262,
+     "line": 251,
      "attrs": "",
      "private": false,
      "statement": "theorem rowOnChain_none (S : Setting) : RowOnChain S none",
@@ -4642,7 +4633,7 @@
      "name": "rowOnChain_some",
      "full": "GFNBounds.Doubling.rowOnChain_some",
      "kind": "theorem",
-     "line": 264,
+     "line": 253,
      "attrs": "",
      "private": false,
      "statement": "theorem rowOnChain_some {K : ℕ} (h : S.d ≤ K) : RowOnChain S (some K)",
@@ -4652,7 +4643,7 @@
      "name": "onChain_lad_of_succ",
      "full": "GFNBounds.Doubling.onChain_lad_of_succ",
      "kind": "theorem",
-     "line": 268,
+     "line": 257,
      "attrs": "",
      "private": false,
      "statement": "theorem onChain_lad_of_succ {j : ℕ} (h : OnChain cap (.lad (j + 1))) : OnChain cap (.lad j)",
@@ -4662,7 +4653,7 @@
      "name": "onChain_src",
      "full": "GFNBounds.Doubling.onChain_src",
      "kind": "theorem",
-     "line": 274,
+     "line": 263,
      "attrs": "",
      "private": false,
      "statement": "theorem onChain_src (cap : Option ℕ) : OnChain cap (St.lad 0)",
@@ -4672,7 +4663,7 @@
      "name": "pstar_congr_onChain",
      "full": "GFNBounds.Doubling.pstar_congr_onChain",
      "kind": "theorem",
-     "line": 281,
+     "line": 270,
      "attrs": "",
      "private": false,
      "statement": "theorem pstar_congr_onChain (hrow : RowOnChain S cap) {f g : St → ℝ} (h : ∀ x, OnChain cap x → f x = g x) {x : St} (hx : OnChain cap x) : pstar S cap f x = pstar S cap g x",
@@ -4682,7 +4673,7 @@
      "name": "tendsto_min_natCast",
      "full": "GFNBounds.Doubling.tendsto_min_natCast",
      "kind": "theorem",
-     "line": 296,
+     "line": 285,
      "attrs": "",
      "private": true,
      "statement": "private theorem tendsto_min_natCast (a : ℝ) : Tendsto (fun n : ℕ => min a (n : ℝ)) atTop (𝓝 a)",
@@ -4692,7 +4683,7 @@
      "name": "abs_rpow_two",
      "full": "GFNBounds.Doubling.abs_rpow_two",
      "kind": "theorem",
-     "line": 302,
+     "line": 291,
      "attrs": "",
      "private": true,
      "statement": "private theorem abs_rpow_two (t : ℝ) : |t| ^ (2 : ℝ) = t ^ 2",
@@ -4702,7 +4693,7 @@
      "name": "tsum_pstar_le",
      "full": "GFNBounds.Doubling.Stat.tsum_pstar_le",
      "kind": "theorem",
-     "line": 312,
+     "line": 301,
      "attrs": "",
      "private": false,
      "statement": "theorem tsum_pstar_le {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hsum : Summable fun x => L.lam x * g x) : Summable (fun x => L.lam x * pstar S cap g x) ∧ ∑' x, L.lam x * pstar S cap g x ≤ ∑' x, L.lam x * g x",
@@ -4712,7 +4703,7 @@
      "name": "mass_two_pstar_le",
      "full": "GFNBounds.Doubling.Stat.mass_two_pstar_le",
      "kind": "theorem",
-     "line": 346,
+     "line": 335,
      "attrs": "",
      "private": false,
      "statement": "theorem mass_two_pstar_le {f : St → ℝ} (hs : Summable fun x => |f x| ^ (2 : ℝ) * L.lam x) : L.mass 2 (pstar S cap f) ≤ L.mass 2 f",
@@ -4722,7 +4713,7 @@
      "name": "memLp_two_iff",
      "full": "GFNBounds.Doubling.Stat.memLp_two_iff",
      "kind": "theorem",
-     "line": 363,
+     "line": 352,
      "attrs": "",
      "private": false,
      "statement": "theorem memLp_two_iff {f : St → ℝ} : MemLp f 2 L.mu ↔ Summable fun x => |f x| ^ (2 : ℝ) * L.lam x",
@@ -4732,7 +4723,7 @@
      "name": "memLp_two_pstar",
      "full": "GFNBounds.Doubling.Stat.memLp_two_pstar",
      "kind": "theorem",
-     "line": 368,
+     "line": 357,
      "attrs": "",
      "private": false,
      "statement": "theorem memLp_two_pstar {f : St → ℝ} (hf : MemLp f 2 L.mu) : MemLp (pstar S cap f) 2 L.mu",
@@ -4742,7 +4733,7 @@
      "name": "toReal_eLpNorm_two_sq",
      "full": "GFNBounds.Doubling.Stat.toReal_eLpNorm_two_sq",
      "kind": "theorem",
-     "line": 381,
+     "line": 370,
      "attrs": "",
      "private": false,
      "statement": "theorem toReal_eLpNorm_two_sq {f : St → ℝ} (hf : MemLp f 2 L.mu) : (eLpNorm f 2 L.mu).toReal ^ 2 = L.mass 2 f",
@@ -4752,7 +4743,7 @@
      "name": "eLpNorm_two_pstar_le",
      "full": "GFNBounds.Doubling.Stat.eLpNorm_two_pstar_le",
      "kind": "theorem",
-     "line": 393,
+     "line": 382,
      "attrs": "",
      "private": false,
      "statement": "theorem eLpNorm_two_pstar_le {f : St → ℝ} (hf : MemLp f 2 L.mu) : eLpNorm (pstar S cap f) 2 L.mu ≤ eLpNorm f 2 L.mu",
@@ -4762,7 +4753,7 @@
      "name": "pstarLp",
      "full": "GFNBounds.Doubling.Stat.pstarLp",
      "kind": "def",
-     "line": 407,
+     "line": 396,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def pstarLp (F : Lp ℝ 2 L.mu) : Lp ℝ 2 L.mu",
@@ -4772,7 +4763,7 @@
      "name": "coeFn_pstarLp",
      "full": "GFNBounds.Doubling.Stat.coeFn_pstarLp",
      "kind": "theorem",
-     "line": 410,
+     "line": 399,
      "attrs": "",
      "private": false,
      "statement": "theorem coeFn_pstarLp (F : Lp ℝ 2 L.mu) : ⇑(L.pstarLp F) =ᵐ[L.mu] pstar S cap ⇑F",
@@ -4782,7 +4773,7 @@
      "name": "norm_pstarLp_le",
      "full": "GFNBounds.Doubling.Stat.norm_pstarLp_le",
      "kind": "theorem",
-     "line": 413,
+     "line": 402,
      "attrs": "",
      "private": false,
      "statement": "theorem norm_pstarLp_le (F : Lp ℝ 2 L.mu) : ‖L.pstarLp F‖ ≤ ‖F‖",
@@ -4792,7 +4783,7 @@
      "name": "pstarLp_add",
      "full": "GFNBounds.Doubling.Stat.pstarLp_add",
      "kind": "theorem",
-     "line": 417,
+     "line": 406,
      "attrs": "",
      "private": false,
      "statement": "theorem pstarLp_add (hrow : RowOnChain S cap) (F G : Lp ℝ 2 L.mu) : L.pstarLp (F + G) = L.pstarLp F + L.pstarLp G",
@@ -4802,7 +4793,7 @@
      "name": "pstarLp_smul",
      "full": "GFNBounds.Doubling.Stat.pstarLp_smul",
      "kind": "theorem",
-     "line": 427,
+     "line": 416,
      "attrs": "",
      "private": false,
      "statement": "theorem pstarLp_smul (hrow : RowOnChain S cap) (c : ℝ) (F : Lp ℝ 2 L.mu) : L.pstarLp (c • F) = c • L.pstarLp F",
@@ -4812,7 +4803,7 @@
      "name": "pstarL2",
      "full": "GFNBounds.Doubling.Stat.pstarL2",
      "kind": "def",
-     "line": 442,
+     "line": 431,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def pstarL2 (hrow : RowOnChain S cap) : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu",
@@ -4822,7 +4813,7 @@
      "name": "pstarL2_apply",
      "full": "GFNBounds.Doubling.Stat.pstarL2_apply",
      "kind": "theorem",
-     "line": 449,
+     "line": 438,
      "attrs": "@[simp]",
      "private": false,
      "statement": "@[simp] theorem pstarL2_apply (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : L.pstarL2 hrow F = L.pstarLp F",
@@ -4832,7 +4823,7 @@
      "name": "coeFn_pstarL2",
      "full": "GFNBounds.Doubling.Stat.coeFn_pstarL2",
      "kind": "theorem",
-     "line": 452,
+     "line": 441,
      "attrs": "",
      "private": false,
      "statement": "theorem coeFn_pstarL2 (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : ⇑(L.pstarL2 hrow F) =ᵐ[L.mu] pstar S cap ⇑F",
@@ -4842,7 +4833,7 @@
      "name": "norm_pstarL2_le",
      "full": "GFNBounds.Doubling.Stat.norm_pstarL2_le",
      "kind": "theorem",
-     "line": 457,
+     "line": 446,
      "attrs": "",
      "private": false,
      "statement": "theorem norm_pstarL2_le (hrow : RowOnChain S cap) : ‖L.pstarL2 hrow‖ ≤ 1",
@@ -4852,7 +4843,7 @@
      "name": "jensen_gap_zero_memLp",
      "full": "GFNBounds.Doubling.Stat.jensen_gap_zero_memLp",
      "kind": "theorem",
-     "line": 468,
+     "line": 457,
      "attrs": "",
      "private": false,
      "statement": "theorem jensen_gap_zero_memLp {f : St → ℝ} (hf : MemLp f 2 L.mu) (hfix : ∀ x, OnChain cap x → pstar S cap f x = f x) {x : St} (hx : OnChain cap x) : pstar S cap (fun y => (f y) ^ 2) x - (pstar S cap f x) ^ 2 = 0",
@@ -4862,7 +4853,7 @@
      "name": "fixed_const_memLp",
      "full": "GFNBounds.Doubling.Stat.fixed_const_memLp",
      "kind": "theorem",
-     "line": 517,
+     "line": 506,
      "attrs": "",
      "private": false,
      "statement": "theorem fixed_const_memLp {f : St → ℝ} (hf : MemLp f 2 L.mu) (hfix : ∀ x, OnChain cap x → pstar S cap f x = f x) : ∀ x : St, OnChain cap x → f x = f (.lad 0)",
@@ -4870,7 +4861,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -5323,7 +5314,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -5619,7 +5610,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -6189,7 +6180,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -6485,7 +6476,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -7585,7 +7576,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -7726,7 +7717,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -8118,7 +8109,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -8351,7 +8342,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -8424,7 +8415,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -8886,7 +8877,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -9300,7 +9291,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -9881,7 +9872,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -10004,7 +9995,7 @@
     }
    ],
    "library": "scaffold",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   }
  ]

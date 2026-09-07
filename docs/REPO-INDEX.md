@@ -990,7 +990,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 
 **The `L^p(λ)` layer: the measure, the a.e. bridge, and the norm identification**  
 
-*strict library; 556 lines; 43 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 545 lines; 42 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: 🟡 `lem:doubling_operator` (bucket B), ✅ `lem:doubling_fixed_points` (bucket A), ✅ `prop:doubling_unsolvable` (bucket A)
@@ -1001,49 +1001,48 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 102 | instance | `_` | `instance : MeasurableSpace St` |
-| 104 | instance | `_` | `instance : DiscreteMeasurableSpace St` |
-| 115 | def | `mu` | `noncomputable def mu : Measure St` |
-| 119 | theorem @[simp] | `mu_singleton` | `@[simp] theorem mu_singleton (x : St) : L.mu {x} = ENNReal.ofReal (L.lam x)` |
-| 124 | instance | `instIsProbabilityMeasure` | `instance instIsProbabilityMeasure : IsProbabilityMeasure L.mu` |
-| 132 | theorem | `mu_singleton_ne_zero_iff` | `theorem mu_singleton_ne_zero_iff {x : St} : L.mu {x} ≠ 0 ↔ OnChain cap x` |
-| 142 | theorem | `ae_iff_onChain` | `theorem ae_iff_onChain {p : St → Prop} : (∀ᵐ x ∂L.mu, p x) ↔ ∀ x, OnChain cap x → p x` |
-| 151 | theorem | `ae_iff_eq` | `theorem ae_iff_eq {f g : St → ℝ} : f =ᵐ[L.mu] g ↔ ∀ x, OnChain cap x → f x = g x` |
-| 155 | theorem | `ae_eq_of_onChain` | `theorem ae_eq_of_onChain {f g : St → ℝ} (h : ∀ x, OnChain cap x → f x = g x) : f =ᵐ[L.mu] g` |
-| 161 | theorem | `aestronglyMeasurable` | `theorem aestronglyMeasurable (f : St → ℝ) : AEStronglyMeasurable f L.mu` |
-| 165 | theorem | `lintegral_eq_tsum` | `theorem lintegral_eq_tsum (g : St → ℝ≥0∞) : ∫⁻ x, g x ∂L.mu = ∑' x, g x * ENNReal.ofReal (L.lam x)` |
-| 171 | theorem | `lintegral_rpow_enorm` | `theorem lintegral_rpow_enorm (f : St → ℝ) {r : ℝ} (hr : 0 ≤ r) : ∫⁻ x, ‖f x‖ₑ ^ r ∂L.mu = ∑' x, ENNReal.ofReal (\|f x\| ^ r * L.lam x)` |
-| 179 | theorem | `lintegral_rpow_enorm_eq_mass` | `theorem lintegral_rpow_enorm_eq_mass (f : St → ℝ) {r : ℝ} (hr : 0 ≤ r) (hs : Summable fun x => \|f x\| ^ r * L.lam x) : ∫⁻ x, ‖f x‖ₑ ^ r ∂L.mu = ENNReal.ofReal (L.mass r f)` |
-| 186 | theorem | `mass_nonneg` | `theorem mass_nonneg (f : St → ℝ) {r : ℝ} : 0 ≤ L.mass r f` |
-| 190 | theorem | `memLp_iff` | `theorem memLp_iff {f : St → ℝ} {p : ℝ≥0∞} (hp0 : p ≠ 0) (hpt : p ≠ ∞) : MemLp f p L.mu ↔ Summable fun x => \|f x\| ^ p.toReal * L.lam x` |
-| 211 | theorem | `toReal_eLpNorm_rpow` | `theorem toReal_eLpNorm_rpow (f : St → ℝ) {p : ℝ≥0∞} (hp0 : p ≠ 0) (hpt : p ≠ ∞) (hs : Summable fun x => \|f x\| ^ p.toReal * L.lam x) : (eLpNorm f p L.mu).toReal ^ p.toReal = L.mass p.toReal f` |
-| 228 | theorem | `pstar_mono` | `theorem pstar_mono {f g : St → ℝ} (h : ∀ x, f x ≤ g x) (x : St) : pstar S cap f x ≤ pstar S cap g x` |
-| 242 | theorem | `tendsto_pstar` | `theorem tendsto_pstar {F : ℕ → St → ℝ} {f : St → ℝ} (h : ∀ y, Tendsto (fun n => F n y) atTop (𝓝 (f y))) (x : St) : Tendsto (fun n => pstar S cap (F n) x) atTop (𝓝 (pstar S cap f x))` |
-| 259 | def | `RowOnChain` | `def RowOnChain (S : Setting) (cap : Option ℕ) : Prop` |
-| 262 | theorem | `rowOnChain_none` | `theorem rowOnChain_none (S : Setting) : RowOnChain S none` |
-| 264 | theorem | `rowOnChain_some` | `theorem rowOnChain_some {K : ℕ} (h : S.d ≤ K) : RowOnChain S (some K)` |
-| 268 | theorem | `onChain_lad_of_succ` | `theorem onChain_lad_of_succ {j : ℕ} (h : OnChain cap (.lad (j + 1))) : OnChain cap (.lad j)` |
-| 274 | theorem | `onChain_src` | `theorem onChain_src (cap : Option ℕ) : OnChain cap (St.lad 0)` |
-| 281 | theorem | `pstar_congr_onChain` | `theorem pstar_congr_onChain (hrow : RowOnChain S cap) {f g : St → ℝ} (h : ∀ x, OnChain cap x → f x = g x) {x : St} (hx : OnChain cap x) : pstar S cap f x = pstar S cap g x` |
-| 296 | theorem | `tendsto_min_natCast` | `private theorem tendsto_min_natCast (a : ℝ) : Tendsto (fun n : ℕ => min a (n : ℝ)) atTop (𝓝 a)` |
-| 302 | theorem | `abs_rpow_two` | `private theorem abs_rpow_two (t : ℝ) : \|t\| ^ (2 : ℝ) = t ^ 2` |
-| 312 | theorem | `tsum_pstar_le` | `theorem tsum_pstar_le {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hsum : Summable fun x => L.lam x * g x) : Summable (fun x => L.lam x * pstar S cap g x) ∧ ∑' x, L.lam x * pstar S cap g x ≤ ∑' x, L.lam x * g x` |
-| 346 | theorem | `mass_two_pstar_le` | `theorem mass_two_pstar_le {f : St → ℝ} (hs : Summable fun x => \|f x\| ^ (2 : ℝ) * L.lam x) : L.mass 2 (pstar S cap f) ≤ L.mass 2 f` |
-| 363 | theorem | `memLp_two_iff` | `theorem memLp_two_iff {f : St → ℝ} : MemLp f 2 L.mu ↔ Summable fun x => \|f x\| ^ (2 : ℝ) * L.lam x` |
-| 368 | theorem | `memLp_two_pstar` | `theorem memLp_two_pstar {f : St → ℝ} (hf : MemLp f 2 L.mu) : MemLp (pstar S cap f) 2 L.mu` |
-| 381 | theorem | `toReal_eLpNorm_two_sq` | `theorem toReal_eLpNorm_two_sq {f : St → ℝ} (hf : MemLp f 2 L.mu) : (eLpNorm f 2 L.mu).toReal ^ 2 = L.mass 2 f` |
-| 393 | theorem | `eLpNorm_two_pstar_le` | `theorem eLpNorm_two_pstar_le {f : St → ℝ} (hf : MemLp f 2 L.mu) : eLpNorm (pstar S cap f) 2 L.mu ≤ eLpNorm f 2 L.mu` |
-| 407 | def | `pstarLp` | `noncomputable def pstarLp (F : Lp ℝ 2 L.mu) : Lp ℝ 2 L.mu` |
-| 410 | theorem | `coeFn_pstarLp` | `theorem coeFn_pstarLp (F : Lp ℝ 2 L.mu) : ⇑(L.pstarLp F) =ᵐ[L.mu] pstar S cap ⇑F` |
-| 413 | theorem | `norm_pstarLp_le` | `theorem norm_pstarLp_le (F : Lp ℝ 2 L.mu) : ‖L.pstarLp F‖ ≤ ‖F‖` |
-| 417 | theorem | `pstarLp_add` | `theorem pstarLp_add (hrow : RowOnChain S cap) (F G : Lp ℝ 2 L.mu) : L.pstarLp (F + G) = L.pstarLp F + L.pstarLp G` |
-| 427 | theorem | `pstarLp_smul` | `theorem pstarLp_smul (hrow : RowOnChain S cap) (c : ℝ) (F : Lp ℝ 2 L.mu) : L.pstarLp (c • F) = c • L.pstarLp F` |
-| 442 | def | `pstarL2` | `noncomputable def pstarL2 (hrow : RowOnChain S cap) : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu` |
-| 449 | theorem @[simp] | `pstarL2_apply` | `@[simp] theorem pstarL2_apply (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : L.pstarL2 hrow F = L.pstarLp F` |
-| 452 | theorem | `coeFn_pstarL2` | `theorem coeFn_pstarL2 (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : ⇑(L.pstarL2 hrow F) =ᵐ[L.mu] pstar S cap ⇑F` |
-| 457 | theorem | `norm_pstarL2_le` | `theorem norm_pstarL2_le (hrow : RowOnChain S cap) : ‖L.pstarL2 hrow‖ ≤ 1` |
-| 468 | theorem | `jensen_gap_zero_memLp` | `theorem jensen_gap_zero_memLp {f : St → ℝ} (hf : MemLp f 2 L.mu) (hfix : ∀ x, OnChain cap x → pstar S cap f x = f x) {x : St} (hx : OnChain cap x) : pstar S cap (fun y => (f y) ^ 2) x - (pstar S cap f x) ^ 2 = 0` |
-| 517 | theorem | `fixed_const_memLp` | `theorem fixed_const_memLp {f : St → ℝ} (hf : MemLp f 2 L.mu) (hfix : ∀ x, OnChain cap x → pstar S cap f x = f x) : ∀ x : St, OnChain cap x → f x = f (.lad 0)` |
+| 103 | instance | `_` | `instance : MeasurableSpace St` |
+| 105 | instance | `_` | `instance : DiscreteMeasurableSpace St` |
+| 116 | def | `mu` | `noncomputable def mu : Measure St` |
+| 120 | theorem @[simp] | `mu_singleton` | `@[simp] theorem mu_singleton (x : St) : L.mu {x} = ENNReal.ofReal (L.lam x)` |
+| 125 | instance | `instIsProbabilityMeasure` | `instance instIsProbabilityMeasure : IsProbabilityMeasure L.mu` |
+| 133 | theorem | `mu_singleton_ne_zero_iff` | `theorem mu_singleton_ne_zero_iff {x : St} : L.mu {x} ≠ 0 ↔ OnChain cap x` |
+| 143 | theorem | `ae_iff_onChain` | `theorem ae_iff_onChain {p : St → Prop} : (∀ᵐ x ∂L.mu, p x) ↔ ∀ x, OnChain cap x → p x` |
+| 152 | theorem | `ae_iff_eq` | `theorem ae_iff_eq {f g : St → ℝ} : f =ᵐ[L.mu] g ↔ ∀ x, OnChain cap x → f x = g x` |
+| 156 | theorem | `ae_eq_of_onChain` | `theorem ae_eq_of_onChain {f g : St → ℝ} (h : ∀ x, OnChain cap x → f x = g x) : f =ᵐ[L.mu] g` |
+| 162 | theorem | `aestronglyMeasurable` | `theorem aestronglyMeasurable (f : St → ℝ) : AEStronglyMeasurable f L.mu` |
+| 166 | theorem | `lintegral_eq_tsum` | `theorem lintegral_eq_tsum (g : St → ℝ≥0∞) : ∫⁻ x, g x ∂L.mu = ∑' x, g x * ENNReal.ofReal (L.lam x)` |
+| 172 | theorem | `lintegral_rpow_enorm` | `theorem lintegral_rpow_enorm (f : St → ℝ) {r : ℝ} (hr : 0 ≤ r) : ∫⁻ x, ‖f x‖ₑ ^ r ∂L.mu = ∑' x, ENNReal.ofReal (\|f x\| ^ r * L.lam x)` |
+| 180 | theorem | `lintegral_rpow_enorm_eq_mass` | `theorem lintegral_rpow_enorm_eq_mass (f : St → ℝ) {r : ℝ} (hr : 0 ≤ r) (hs : Summable fun x => \|f x\| ^ r * L.lam x) : ∫⁻ x, ‖f x‖ₑ ^ r ∂L.mu = ENNReal.ofReal (L.mass r f)` |
+| 187 | theorem | `mass_nonneg` | `theorem mass_nonneg (f : St → ℝ) {r : ℝ} : 0 ≤ L.mass r f` |
+| 191 | theorem | `memLp_iff` | `theorem memLp_iff {f : St → ℝ} {p : ℝ≥0∞} (hp0 : p ≠ 0) (hpt : p ≠ ∞) : MemLp f p L.mu ↔ Summable fun x => \|f x\| ^ p.toReal * L.lam x` |
+| 212 | theorem | `toReal_eLpNorm_rpow` | `theorem toReal_eLpNorm_rpow (f : St → ℝ) {p : ℝ≥0∞} (hp0 : p ≠ 0) (hpt : p ≠ ∞) (hs : Summable fun x => \|f x\| ^ p.toReal * L.lam x) : (eLpNorm f p L.mu).toReal ^ p.toReal = L.mass p.toReal f` |
+| 231 | theorem | `tendsto_pstar` | `theorem tendsto_pstar {F : ℕ → St → ℝ} {f : St → ℝ} (h : ∀ y, Tendsto (fun n => F n y) atTop (𝓝 (f y))) (x : St) : Tendsto (fun n => pstar S cap (F n) x) atTop (𝓝 (pstar S cap f x))` |
+| 248 | def | `RowOnChain` | `def RowOnChain (S : Setting) (cap : Option ℕ) : Prop` |
+| 251 | theorem | `rowOnChain_none` | `theorem rowOnChain_none (S : Setting) : RowOnChain S none` |
+| 253 | theorem | `rowOnChain_some` | `theorem rowOnChain_some {K : ℕ} (h : S.d ≤ K) : RowOnChain S (some K)` |
+| 257 | theorem | `onChain_lad_of_succ` | `theorem onChain_lad_of_succ {j : ℕ} (h : OnChain cap (.lad (j + 1))) : OnChain cap (.lad j)` |
+| 263 | theorem | `onChain_src` | `theorem onChain_src (cap : Option ℕ) : OnChain cap (St.lad 0)` |
+| 270 | theorem | `pstar_congr_onChain` | `theorem pstar_congr_onChain (hrow : RowOnChain S cap) {f g : St → ℝ} (h : ∀ x, OnChain cap x → f x = g x) {x : St} (hx : OnChain cap x) : pstar S cap f x = pstar S cap g x` |
+| 285 | theorem | `tendsto_min_natCast` | `private theorem tendsto_min_natCast (a : ℝ) : Tendsto (fun n : ℕ => min a (n : ℝ)) atTop (𝓝 a)` |
+| 291 | theorem | `abs_rpow_two` | `private theorem abs_rpow_two (t : ℝ) : \|t\| ^ (2 : ℝ) = t ^ 2` |
+| 301 | theorem | `tsum_pstar_le` | `theorem tsum_pstar_le {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hsum : Summable fun x => L.lam x * g x) : Summable (fun x => L.lam x * pstar S cap g x) ∧ ∑' x, L.lam x * pstar S cap g x ≤ ∑' x, L.lam x * g x` |
+| 335 | theorem | `mass_two_pstar_le` | `theorem mass_two_pstar_le {f : St → ℝ} (hs : Summable fun x => \|f x\| ^ (2 : ℝ) * L.lam x) : L.mass 2 (pstar S cap f) ≤ L.mass 2 f` |
+| 352 | theorem | `memLp_two_iff` | `theorem memLp_two_iff {f : St → ℝ} : MemLp f 2 L.mu ↔ Summable fun x => \|f x\| ^ (2 : ℝ) * L.lam x` |
+| 357 | theorem | `memLp_two_pstar` | `theorem memLp_two_pstar {f : St → ℝ} (hf : MemLp f 2 L.mu) : MemLp (pstar S cap f) 2 L.mu` |
+| 370 | theorem | `toReal_eLpNorm_two_sq` | `theorem toReal_eLpNorm_two_sq {f : St → ℝ} (hf : MemLp f 2 L.mu) : (eLpNorm f 2 L.mu).toReal ^ 2 = L.mass 2 f` |
+| 382 | theorem | `eLpNorm_two_pstar_le` | `theorem eLpNorm_two_pstar_le {f : St → ℝ} (hf : MemLp f 2 L.mu) : eLpNorm (pstar S cap f) 2 L.mu ≤ eLpNorm f 2 L.mu` |
+| 396 | def | `pstarLp` | `noncomputable def pstarLp (F : Lp ℝ 2 L.mu) : Lp ℝ 2 L.mu` |
+| 399 | theorem | `coeFn_pstarLp` | `theorem coeFn_pstarLp (F : Lp ℝ 2 L.mu) : ⇑(L.pstarLp F) =ᵐ[L.mu] pstar S cap ⇑F` |
+| 402 | theorem | `norm_pstarLp_le` | `theorem norm_pstarLp_le (F : Lp ℝ 2 L.mu) : ‖L.pstarLp F‖ ≤ ‖F‖` |
+| 406 | theorem | `pstarLp_add` | `theorem pstarLp_add (hrow : RowOnChain S cap) (F G : Lp ℝ 2 L.mu) : L.pstarLp (F + G) = L.pstarLp F + L.pstarLp G` |
+| 416 | theorem | `pstarLp_smul` | `theorem pstarLp_smul (hrow : RowOnChain S cap) (c : ℝ) (F : Lp ℝ 2 L.mu) : L.pstarLp (c • F) = c • L.pstarLp F` |
+| 431 | def | `pstarL2` | `noncomputable def pstarL2 (hrow : RowOnChain S cap) : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu` |
+| 438 | theorem @[simp] | `pstarL2_apply` | `@[simp] theorem pstarL2_apply (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : L.pstarL2 hrow F = L.pstarLp F` |
+| 441 | theorem | `coeFn_pstarL2` | `theorem coeFn_pstarL2 (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : ⇑(L.pstarL2 hrow F) =ᵐ[L.mu] pstar S cap ⇑F` |
+| 446 | theorem | `norm_pstarL2_le` | `theorem norm_pstarL2_le (hrow : RowOnChain S cap) : ‖L.pstarL2 hrow‖ ≤ 1` |
+| 457 | theorem | `jensen_gap_zero_memLp` | `theorem jensen_gap_zero_memLp {f : St → ℝ} (hf : MemLp f 2 L.mu) (hfix : ∀ x, OnChain cap x → pstar S cap f x = f x) {x : St} (hx : OnChain cap x) : pstar S cap (fun y => (f y) ^ 2) x - (pstar S cap f x) ^ 2 = 0` |
+| 506 | theorem | `fixed_const_memLp` | `theorem fixed_const_memLp {f : St → ℝ} (hf : MemLp f 2 L.mu) (hfix : ∀ x, OnChain cap x → pstar S cap f x = f x) : ∀ x : St, OnChain cap x → f x = f (.lad 0)` |
 
 ### `GFNBounds/Doubling/Lyapunov.lean`
 

@@ -1,4 +1,5 @@
 import GFNBounds.Doubling.Adjoint
+import GFNBounds.Doubling.AdjointL2
 import GFNBounds.Doubling.Balance
 import GFNBounds.Doubling.Constant
 import GFNBounds.Doubling.Coupling
@@ -26,8 +27,11 @@ import GFNBounds.Doubling.Lyapunov
 import GFNBounds.Doubling.Main
 import GFNBounds.Doubling.Operator
 import GFNBounds.Doubling.OperatorFinite
+import GFNBounds.Doubling.OperatorL2
 import GFNBounds.Doubling.PerCutIdentity
 import GFNBounds.Doubling.PerCutNorms
+import GFNBounds.Doubling.PhaseEmpty
+import GFNBounds.Doubling.PhaseExists
 import GFNBounds.Doubling.PointwiseInv
 import GFNBounds.Doubling.Product
 import GFNBounds.Doubling.R0Bound
@@ -36,6 +40,7 @@ import GFNBounds.Doubling.Range
 import GFNBounds.Doubling.Ratios
 import GFNBounds.Doubling.Setting
 import GFNBounds.Doubling.Sharp
+import GFNBounds.Doubling.SharpFull
 import GFNBounds.Doubling.SharpRate
 import GFNBounds.Doubling.Sojourn
 import GFNBounds.Doubling.StatExists
@@ -47,5 +52,6 @@ import GFNBounds.Doubling.Truncation
 import GFNBounds.Doubling.TruncationStat
 import GFNBounds.Doubling.Unbounded
 import GFNBounds.Doubling.Unsolvable
+import GFNBounds.Doubling.Weight
 import GFNBounds.Doubling.WindowSum
 import GFNBounds.Audit

@@ -34,12 +34,20 @@ def scan():
             rel = os.path.relpath(path, ROOT)
             lines = open(path, encoding="utf-8").read().split("\n")
             decl = "(top level)"
+            depth = 0                 # nesting depth of `/- ... -/` comments
             for i, ln in enumerate(lines, 1):
+                # A docstring may discuss `sorry` in prose — a discharged file that says so
+                # must not be read as still carrying one. Track comment depth, not prefixes.
+                before = depth
+                depth += ln.count("/-") - ln.count("-/")
+                in_prose = before > 0 or depth > 0
                 d = DECL.match(ln)
                 if d:
                     decl = d.group(1)
                 if not re.search(r"\bsorry\b", ln):
                     continue
+                if in_prose:
+                    continue          # prose inside a block comment
                 if ln.lstrip().startswith("--") or ln.lstrip().startswith("/-"):
                     continue          # a mention in prose, not a term
                 m = TAG.search(ln)

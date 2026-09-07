@@ -6,6 +6,5 @@ Every entry is a statement of `app_doubling.tex` that this library states but do
 
 | id | paper label | declaration | file:line | why it is open |
 |---|---|---|---|---|
-| `b4bec702` | `lem:doubling_weight` | `exists_weight_bound` | `scaffold/GFNBoundsScaffold/Doubling/Weight.lean:55` | needs an absolute-deviation transform E(|Z_ℓ−1|) as a descW-style recursion; NOT blocked on Mathlib — lem:doubling_escape and lem:doubling_product are both proved chain-free in Escape/Sojourn/Product. |
 
-**Total: 1.**
+**Total: 0.**

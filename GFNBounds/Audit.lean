@@ -15,6 +15,12 @@ import GFNBounds.Doubling.R0Bound
 import GFNBounds.Doubling.WindowSum
 import GFNBounds.Doubling.Drift
 import GFNBounds.Doubling.Irreducible
+import GFNBounds.Doubling.AdjointL2
+import GFNBounds.Doubling.OperatorL2
+import GFNBounds.Doubling.PhaseEmpty
+import GFNBounds.Doubling.PhaseExists
+import GFNBounds.Doubling.SharpFull
+import GFNBounds.Doubling.Weight
 import GFNBounds.Doubling.Adjoint
 import GFNBounds.Doubling.Coupling
 import GFNBounds.Doubling.Doeblin
@@ -329,6 +335,40 @@ namespace GFNBounds.Doubling
 
 -- `prop:doubling_unsolvable` — app_doubling.tex:2126
 #print axioms doubling_unsolvable
+
+-- ── the 2026-09-07 second workflow round ───────────────────────────────────────
+
+-- `lem:doubling_weight`, the last sorry — app_doubling.tex:1343
+#print axioms Decay.c3
+#print axioms Decay.ell3
+#print axioms Decay.weight_bound
+
+-- `theo:doubling_sharp`, now unconditional — app_doubling.tex:1323
+#print axioms Decay.uu_bounded_of_cutBal
+#print axioms Decay.sharp_of_cutBal
+
+-- `lem:doubling_operator`(1), the adjoint clause — app_doubling.tex:166
+#print axioms Stat.densL2
+#print axioms Stat.adjoint_densL2_pow_sub_piL2
+#print axioms Stat.norm_pstarL2_pow_sub_piL2
+#print axioms Stat.betaHat
+
+-- `lem:doubling_operator`(2) and `B̂_K < ∞` — app_doubling.tex:166, :1805
+#print axioms Stat.evalChain_injective
+#print axioms Stat.exists_diffusionOp
+#print axioms Stat.exists_bhat
+
+-- `prop:doubling_phase`, rows (b) and (f) — app_doubling.tex:510
+#print axioms exists_stat_of_threshold
+#print axioms exists_threshold_family
+#print axioms exists_stat_of_family_gt_one
+#print axioms exists_stat_of_family_one
+
+-- `prop:doubling_phase`, rows (a), (c), (e) — app_doubling.tex:510
+#print axioms cut_tail_ge
+#print axioms isEmpty_stat_of_supercritical
+#print axioms isEmpty_stat_of_family_ge_one
+#print axioms isEmpty_stat_of_family_lt_one
 
 -- the definitional layer (`def:doubling_setting` — app_doubling.tex:13)
 #print axioms pstar_const

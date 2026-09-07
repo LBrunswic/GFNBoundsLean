@@ -66,6 +66,14 @@ theorem height_pstar_sub {m : ℕ} (hm : 1 ≤ m) (h : HasDouble cap m) :
     Nat.cast_ofNat]
   ring
 
+/-- `(m+1)·ε_{c,s}(m) = c(m+1)^{1−s}`, the drift coefficient of `eq:doubling_drift` isolated.
+The phase-diagram files rewrite with this directly. -/
+theorem base_mul_epsCS (c s : ℝ) (m : ℕ) :
+    ((m : ℝ) + 1) * epsCS c s m = c * ((m : ℝ) + 1) ^ (1 - s) := by
+  have hb : (0 : ℝ) < (m : ℝ) + 1 := base_pos m
+  rw [epsCS, Real.rpow_sub hb, Real.rpow_one]
+  field_simp
+
 /-- **`eq:doubling_drift`.** On the family, the drift is `c(m+1)^{1−s} − 1`. -/
 theorem drift_family (c s : ℝ) (m : ℕ) :
     epsCS c s m * ((m : ℝ) + 1) - 1 = c * ((m : ℝ) + 1) ^ (1 - s) - 1 := by

@@ -4,7 +4,7 @@ title: The scaffold firewall: where to put a proof, and how to tag a `sorry`
 kind: convention
 tags: [sorry, audit, workflow]
 confidence: established
-sources: [scaffold/GFNBoundsScaffold/Doubling/Weight.lean:51, scripts/sorry_audit.py]
+sources: [scaffold/GFNBoundsScaffold.lean:1, scripts/sorry_audit.py]
 created: 2026-09-07
 ---
 ## When

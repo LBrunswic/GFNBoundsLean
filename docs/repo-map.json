@@ -7,6 +7,7 @@
    "scope_disclosed": false,
    "imports": [
     "GFNBounds.Doubling.Adjoint",
+    "GFNBounds.Doubling.AdjointL2",
     "GFNBounds.Doubling.Balance",
     "GFNBounds.Doubling.Constant",
     "GFNBounds.Doubling.Coupling",
@@ -34,8 +35,11 @@
     "GFNBounds.Doubling.Main",
     "GFNBounds.Doubling.Operator",
     "GFNBounds.Doubling.OperatorFinite",
+    "GFNBounds.Doubling.OperatorL2",
     "GFNBounds.Doubling.PerCutIdentity",
     "GFNBounds.Doubling.PerCutNorms",
+    "GFNBounds.Doubling.PhaseEmpty",
+    "GFNBounds.Doubling.PhaseExists",
     "GFNBounds.Doubling.PointwiseInv",
     "GFNBounds.Doubling.Product",
     "GFNBounds.Doubling.R0Bound",
@@ -44,6 +48,7 @@
     "GFNBounds.Doubling.Ratios",
     "GFNBounds.Doubling.Setting",
     "GFNBounds.Doubling.Sharp",
+    "GFNBounds.Doubling.SharpFull",
     "GFNBounds.Doubling.SharpRate",
     "GFNBounds.Doubling.Sojourn",
     "GFNBounds.Doubling.StatExists",
@@ -55,11 +60,12 @@
     "GFNBounds.Doubling.TruncationStat",
     "GFNBounds.Doubling.Unbounded",
     "GFNBounds.Doubling.Unsolvable",
+    "GFNBounds.Doubling.Weight",
     "GFNBounds.Doubling.WindowSum",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 51,
+   "lines": 57,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -88,6 +94,12 @@
     "GFNBounds.Doubling.WindowSum",
     "GFNBounds.Doubling.Drift",
     "GFNBounds.Doubling.Irreducible",
+    "GFNBounds.Doubling.AdjointL2",
+    "GFNBounds.Doubling.OperatorL2",
+    "GFNBounds.Doubling.PhaseEmpty",
+    "GFNBounds.Doubling.PhaseExists",
+    "GFNBounds.Doubling.SharpFull",
+    "GFNBounds.Doubling.Weight",
     "GFNBounds.Doubling.Adjoint",
     "GFNBounds.Doubling.Coupling",
     "GFNBounds.Doubling.Doeblin",
@@ -116,7 +128,7 @@
     "GFNBounds.Doubling.Unbounded"
    ],
    "variables": [],
-   "lines": 337,
+   "lines": 377,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -443,6 +455,318 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/AdjointL2.lean",
+   "title": "`P⋆ = P*` on `L²(λ)`, and `‖P⋆ⁿ − Π‖ = β̂ₙ`",
+   "labels": [
+    "lem:doubling_operator"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.Adjoint",
+    "GFNBounds.Doubling.Unsolvable"
+   ],
+   "variables": [
+    "variable {S : Setting} {cap : Option ℕ}",
+    "variable (L : Stat S cap)"
+   ],
+   "lines": 303,
+   "decls": [
+    {
+     "name": "inner_eq_tsum",
+     "full": "GFNBounds.Doubling.Stat.inner_eq_tsum",
+     "kind": "theorem",
+     "line": 95,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inner_eq_tsum (F G : Lp ℝ 2 L.mu) : ⟪F, G⟫_ℝ = ∑' x, L.lam x * F x * G x",
+     "doc": "**The Bochner half of the `LpLayer` dictionary.** `⟪F,G⟫_{L²(μ)} = ∑' x, λ(x)F(x)G(x)`."
+    },
+    {
+     "name": "inner_eq_tsum_of_ae",
+     "full": "GFNBounds.Doubling.Stat.inner_eq_tsum_of_ae",
+     "kind": "theorem",
+     "line": 104,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inner_eq_tsum_of_ae {F G : Lp ℝ 2 L.mu} {f g : St → ℝ} (hF : ⇑F =ᵐ[L.mu] f) (hG : ⇑G =ᵐ[L.mu] g) : ⟪F, G⟫_ℝ = ∑' x, L.lam x * f x * g x",
+     "doc": "The same, read against any representatives: off the chain `λ` vanishes, so a.e."
+    },
+    {
+     "name": "dens_add",
+     "full": "GFNBounds.Doubling.Stat.dens_add",
+     "kind": "theorem",
+     "line": 115,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dens_add (u v : St → ℝ) : L.dens (u + v) = L.dens u + L.dens v",
+     "doc": ""
+    },
+    {
+     "name": "dens_smul",
+     "full": "GFNBounds.Doubling.Stat.dens_smul",
+     "kind": "theorem",
+     "line": 121,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dens_smul (c : ℝ) (u : St → ℝ) : L.dens (c • u) = c • L.dens u",
+     "doc": ""
+    },
+    {
+     "name": "dens_congr_onChain",
+     "full": "GFNBounds.Doubling.Stat.dens_congr_onChain",
+     "kind": "theorem",
+     "line": 130,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dens_congr_onChain {u v : St → ℝ} (h : ∀ x, OnChain cap x → u x = v x) (y : St) : L.dens u y = L.dens v y",
+     "doc": "**`P` descends to `λ`-classes**, and unlike `P⋆` it needs no hypothesis to do so: each of its three weights carries the factor `λ` of the state it reads (`Stat.w1`, `Stat.w2`, `Stat.w3`), so a state off the chain is read with weight zero."
+    },
+    {
+     "name": "densLp",
+     "full": "GFNBounds.Doubling.Stat.densLp",
+     "kind": "def",
+     "line": 153,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def densLp (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : Lp ℝ 2 L.mu",
+     "doc": "`P` acting on `L²(μ)`, as a map of the space into itself."
+    },
+    {
+     "name": "coeFn_densLp",
+     "full": "GFNBounds.Doubling.Stat.coeFn_densLp",
+     "kind": "theorem",
+     "line": 156,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coeFn_densLp (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : ⇑(L.densLp hrow F) =ᵐ[L.mu] L.dens ⇑F",
+     "doc": ""
+    },
+    {
+     "name": "norm_densLp_le",
+     "full": "GFNBounds.Doubling.Stat.norm_densLp_le",
+     "kind": "theorem",
+     "line": 159,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_densLp_le (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : ‖L.densLp hrow F‖ ≤ ‖F‖",
+     "doc": ""
+    },
+    {
+     "name": "densLp_add",
+     "full": "GFNBounds.Doubling.Stat.densLp_add",
+     "kind": "theorem",
+     "line": 165,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densLp_add (hrow : RowOnChain S cap) (F G : Lp ℝ 2 L.mu) : L.densLp hrow (F + G) = L.densLp hrow F + L.densLp hrow G",
+     "doc": ""
+    },
+    {
+     "name": "densLp_smul",
+     "full": "GFNBounds.Doubling.Stat.densLp_smul",
+     "kind": "theorem",
+     "line": 175,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densLp_smul (hrow : RowOnChain S cap) (c : ℝ) (F : Lp ℝ 2 L.mu) : L.densLp hrow (c • F) = c • L.densLp hrow F",
+     "doc": ""
+    },
+    {
+     "name": "densL2",
+     "full": "GFNBounds.Doubling.Stat.densL2",
+     "kind": "def",
+     "line": 187,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def densL2 (hrow : RowOnChain S cap) : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu",
+     "doc": "**`P` as a bounded linear operator on `L²(μ)`**, of norm at most `1` — the mirror of `Stat.pstarL2`, and the operator the paper's `β̂ₙ` is measured on."
+    },
+    {
+     "name": "densL2_apply",
+     "full": "GFNBounds.Doubling.Stat.densL2_apply",
+     "kind": "theorem",
+     "line": 194,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem densL2_apply (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : L.densL2 hrow F = L.densLp hrow F",
+     "doc": ""
+    },
+    {
+     "name": "coeFn_densL2",
+     "full": "GFNBounds.Doubling.Stat.coeFn_densL2",
+     "kind": "theorem",
+     "line": 197,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coeFn_densL2 (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : ⇑(L.densL2 hrow F) =ᵐ[L.mu] L.dens ⇑F",
+     "doc": ""
+    },
+    {
+     "name": "norm_densL2_le",
+     "full": "GFNBounds.Doubling.Stat.norm_densL2_le",
+     "kind": "theorem",
+     "line": 201,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_densL2_le (hrow : RowOnChain S cap) : ‖L.densL2 hrow‖ ≤ 1",
+     "doc": "`‖P‖ ≤ 1` on `L²(μ)`."
+    },
+    {
+     "name": "inner_densL2_left",
+     "full": "GFNBounds.Doubling.Stat.inner_densL2_left",
+     "kind": "theorem",
+     "line": 208,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inner_densL2_left (hrow : RowOnChain S cap) (U V : Lp ℝ 2 L.mu) : ⟪L.densL2 hrow U, V⟫_ℝ = ⟪U, L.pstarL2 hrow V⟫_ℝ",
+     "doc": "**`⟪PU, V⟫ = ⟪U, P⋆V⟫` on `L²(μ)`** — `Stat.tsum_dens_mul_sq` read through the inner product."
+    },
+    {
+     "name": "adjoint_pstarL2",
+     "full": "GFNBounds.Doubling.Stat.adjoint_pstarL2",
+     "kind": "theorem",
+     "line": 217,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem adjoint_pstarL2 (hrow : RowOnChain S cap) : ContinuousLinearMap.adjoint (L.pstarL2 hrow) = L.densL2 hrow",
+     "doc": "**The adjoint clause of `lem:doubling_operator`(1).** The density action is the `L²(λ)`-adjoint of the function action."
+    },
+    {
+     "name": "adjoint_densL2",
+     "full": "GFNBounds.Doubling.Stat.adjoint_densL2",
+     "kind": "theorem",
+     "line": 223,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem adjoint_densL2 (hrow : RowOnChain S cap) : ContinuousLinearMap.adjoint (L.densL2 hrow) = L.pstarL2 hrow",
+     "doc": "The same identity read the other way: `P* = P⋆`."
+    },
+    {
+     "name": "piL2",
+     "full": "GFNBounds.Doubling.Stat.piL2",
+     "kind": "def",
+     "line": 230,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def piL2 : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu",
+     "doc": "**`Π`, the `λ`-mean projection** of `L²(μ)`: `ΠF = (∫F dλ)·1`."
+    },
+    {
+     "name": "piL2_apply",
+     "full": "GFNBounds.Doubling.Stat.piL2_apply",
+     "kind": "theorem",
+     "line": 233,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem piL2_apply (F : Lp ℝ 2 L.mu) : L.piL2 F = ⟪L.oneLp, F⟫_ℝ • L.oneLp",
+     "doc": ""
+    },
+    {
+     "name": "inner_oneLp_self",
+     "full": "GFNBounds.Doubling.Stat.inner_oneLp_self",
+     "kind": "theorem",
+     "line": 236,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inner_oneLp_self : ⟪L.oneLp, L.oneLp⟫_ℝ = 1",
+     "doc": "`⟪1,1⟫ = 1`: `λ` is a probability."
+    },
+    {
+     "name": "piL2_mul_piL2",
+     "full": "GFNBounds.Doubling.Stat.piL2_mul_piL2",
+     "kind": "theorem",
+     "line": 240,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem piL2_mul_piL2 : L.piL2 * L.piL2 = L.piL2",
+     "doc": "**`Π` is idempotent.**"
+    },
+    {
+     "name": "adjoint_piL2",
+     "full": "GFNBounds.Doubling.Stat.adjoint_piL2",
+     "kind": "theorem",
+     "line": 246,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem adjoint_piL2 : ContinuousLinearMap.adjoint L.piL2 = L.piL2",
+     "doc": "**`Π` is self-adjoint**, `λ` being a probability."
+    },
+    {
+     "name": "piL2_mul_pstarL2",
+     "full": "GFNBounds.Doubling.Stat.piL2_mul_pstarL2",
+     "kind": "theorem",
+     "line": 252,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem piL2_mul_pstarL2 (hrow : RowOnChain S cap) : L.piL2 * L.pstarL2 hrow = L.piL2",
+     "doc": "`Π P⋆ = Π`: the function action preserves the `λ`-mean."
+    },
+    {
+     "name": "pstarL2_mul_piL2",
+     "full": "GFNBounds.Doubling.Stat.pstarL2_mul_piL2",
+     "kind": "theorem",
+     "line": 258,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pstarL2_mul_piL2 (hrow : RowOnChain S cap) : L.pstarL2 hrow * L.piL2 = L.piL2",
+     "doc": "`P⋆ Π = Π`: the function action fixes the constants."
+    },
+    {
+     "name": "piL2_mul_densL2",
+     "full": "GFNBounds.Doubling.Stat.piL2_mul_densL2",
+     "kind": "theorem",
+     "line": 264,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem piL2_mul_densL2 (hrow : RowOnChain S cap) : L.piL2 * L.densL2 hrow = L.piL2",
+     "doc": "`Π P = Π`, read off the adjoint of `P Π = Π`."
+    },
+    {
+     "name": "densL2_mul_piL2",
+     "full": "GFNBounds.Doubling.Stat.densL2_mul_piL2",
+     "kind": "theorem",
+     "line": 272,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densL2_mul_piL2 (hrow : RowOnChain S cap) : L.densL2 hrow * L.piL2 = L.piL2",
+     "doc": "`P Π = Π`, read off the adjoint of `Π P⋆ = Π`."
+    },
+    {
+     "name": "betaHat",
+     "full": "GFNBounds.Doubling.Stat.betaHat",
+     "kind": "def",
+     "line": 283,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def betaHat (hrow : RowOnChain S cap) (n : ℕ) : ℝ",
+     "doc": "**`β̂ₙ := ‖Pⁿ − Π‖_{L²(λ)}`** — the mixing coefficient of `def:doubling_setting`, defined on the density action as the paper defines it."
+    },
+    {
+     "name": "adjoint_densL2_pow_sub_piL2",
+     "full": "GFNBounds.Doubling.Stat.adjoint_densL2_pow_sub_piL2",
+     "kind": "theorem",
+     "line": 287,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem adjoint_densL2_pow_sub_piL2 (hrow : RowOnChain S cap) (n : ℕ) : ContinuousLinearMap.adjoint ((L.densL2 hrow) ^ n - L.piL2) = (L.pstarL2 hrow) ^ n - L.piL2",
+     "doc": "`P⋆ⁿ − Π` is the adjoint of `Pⁿ − Π`."
+    },
+    {
+     "name": "norm_pstarL2_pow_sub_piL2",
+     "full": "GFNBounds.Doubling.Stat.norm_pstarL2_pow_sub_piL2",
+     "kind": "theorem",
+     "line": 296,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_pstarL2_pow_sub_piL2 (hrow : RowOnChain S cap) (n : ℕ) : ‖(L.pstarL2 hrow) ^ n - L.piL2‖ = L.betaHat hrow n",
+     "doc": "**`‖P⋆ⁿ − Π‖_{L²(λ)} = β̂ₙ` for every `n ≥ 0`** — the trailing clause of `lem:doubling_operator`(1)."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -2095,7 +2419,7 @@
    "variables": [
     "variable {S : Setting} {cap : Option ℕ}"
    ],
-   "lines": 114,
+   "lines": 122,
    "decls": [
     {
      "name": "height",
@@ -2128,10 +2452,20 @@
      "doc": "**`eq:doubling_drift`, for a free `ε`.** The one-step drift of the backward chain at a ladder state carrying its doubling edge is `ε(m)(m+1) − 1`."
     },
     {
+     "name": "base_mul_epsCS",
+     "full": "GFNBounds.Doubling.base_mul_epsCS",
+     "kind": "theorem",
+     "line": 71,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem base_mul_epsCS (c s : ℝ) (m : ℕ) : ((m : ℝ) + 1) * epsCS c s m = c * ((m : ℝ) + 1) ^ (1 - s)",
+     "doc": "`(m+1)·ε_{c,s}(m) = c(m+1)^{1−s}`, the drift coefficient of `eq:doubling_drift` isolated."
+    },
+    {
      "name": "drift_family",
      "full": "GFNBounds.Doubling.drift_family",
      "kind": "theorem",
-     "line": 70,
+     "line": 78,
      "attrs": "",
      "private": false,
      "statement": "theorem drift_family (c s : ℝ) (m : ℕ) : epsCS c s m * ((m : ℝ) + 1) - 1 = c * ((m : ℝ) + 1) ^ (1 - s) - 1",
@@ -2141,7 +2475,7 @@
      "name": "drift_family_at_one",
      "full": "GFNBounds.Doubling.drift_family_at_one",
      "kind": "theorem",
-     "line": 80,
+     "line": 88,
      "attrs": "",
      "private": false,
      "statement": "theorem drift_family_at_one {c : ℝ} (m : ℕ) : epsCS c 1 m * ((m : ℝ) + 1) - 1 = c - 1",
@@ -2151,7 +2485,7 @@
      "name": "four_rpow",
      "full": "GFNBounds.Doubling.four_rpow",
      "kind": "theorem",
-     "line": 87,
+     "line": 95,
      "attrs": "",
      "private": true,
      "statement": "private theorem four_rpow (t : ℝ) : (4 : ℝ) ^ t = (2 : ℝ) ^ (2 * t)",
@@ -2161,7 +2495,7 @@
      "name": "drift_const_iff",
      "full": "GFNBounds.Doubling.drift_const_iff",
      "kind": "theorem",
-     "line": 97,
+     "line": 105,
      "attrs": "",
      "private": false,
      "statement": "theorem drift_const_iff {c s : ℝ} (hc : 0 < c) (hconst : ∀ i j : ℕ, 1 ≤ i → 1 ≤ j → c * ((i : ℝ) + 1) ^ (1 - s) - 1 = c * ((j : ℝ) + 1) ^ (1 - s) - 1) : s = 1",
@@ -2171,7 +2505,7 @@
      "name": "drift_const_of_eq_one",
      "full": "GFNBounds.Doubling.drift_const_of_eq_one",
      "kind": "theorem",
-     "line": 110,
+     "line": 118,
      "attrs": "",
      "private": false,
      "statement": "theorem drift_const_of_eq_one {c : ℝ} (i j : ℕ) : c * ((i : ℝ) + 1) ^ (1 - (1:ℝ)) - 1 = c * ((j : ℝ) + 1) ^ (1 - (1:ℝ)) - 1",
@@ -5614,6 +5948,110 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Doubling/OperatorL2.lean",
+   "title": "The diffusion operator of the truncation, and `B̂_K < +∞`",
+   "labels": [
+    "lem:doubling_operator",
+    "lem:doubling_truncation_irreducible"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.AdjointL2",
+    "GFNBounds.Doubling.OperatorFinite"
+   ],
+   "variables": [
+    "variable {S : Setting} {cap : Option ℕ}",
+    "variable (L : Stat S cap)",
+    "variable {K : ℕ} (L : Stat S (some K))"
+   ],
+   "lines": 198,
+   "decls": [
+    {
+     "name": "finite_onChain",
+     "full": "GFNBounds.Doubling.finite_onChain",
+     "kind": "instance",
+     "line": 84,
+     "attrs": "",
+     "private": false,
+     "statement": "instance finite_onChain (K : ℕ) : Finite {x : St // OnChain (some K) x}",
+     "doc": "**The chain of the truncation at `K` is finite**: it is the `K + 2` states `{s₀, 1, …, K, s_f}` of `lem:doubling_truncation_irreducible`, injected here into `Option (Fin (K+1))`."
+    },
+    {
+     "name": "eq_smul_oneLp_of_pstarL2_fixed",
+     "full": "GFNBounds.Doubling.Stat.eq_smul_oneLp_of_pstarL2_fixed",
+     "kind": "theorem",
+     "line": 100,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_smul_oneLp_of_pstarL2_fixed (hrow : RowOnChain S cap) {F : Lp ℝ 2 L.mu} (hF : L.pstarL2 hrow F = F) : F = (F : St → ℝ) (.lad 0) • L.oneLp",
+     "doc": "A fixed point of `P⋆` in `L²(λ)` is a constant class — `lem:doubling_fixed_points`' `P⋆` half (`Stat.fixed_const_memLp`), transported to `Lp` at an arbitrary cap."
+    },
+    {
+     "name": "piL2_fixed_of_pstarL2_fixed",
+     "full": "GFNBounds.Doubling.Stat.piL2_fixed_of_pstarL2_fixed",
+     "kind": "theorem",
+     "line": 112,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem piL2_fixed_of_pstarL2_fixed (hrow : RowOnChain S cap) {F : Lp ℝ 2 L.mu} (hF : L.pstarL2 hrow F = F) : L.piL2 F = F",
+     "doc": "**`hker`**: `P⋆f = f` forces `Πf = f`."
+    },
+    {
+     "name": "evalChain",
+     "full": "GFNBounds.Doubling.Stat.evalChain",
+     "kind": "def",
+     "line": 128,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def evalChain : Lp ℝ 2 L.mu →ₗ[ℝ] ({x : St // OnChain (some K) x} → ℝ)",
+     "doc": "**Evaluation at the states of the chain**, as a linear map into a finite product."
+    },
+    {
+     "name": "evalChain_injective",
+     "full": "GFNBounds.Doubling.Stat.evalChain_injective",
+     "kind": "theorem",
+     "line": 140,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem evalChain_injective : Function.Injective L.evalChain",
+     "doc": "Evaluation on the chain is injective: `λ` charges every state of the chain and vanishes off it, so a class vanishing there is the zero class."
+    },
+    {
+     "name": "instFiniteDimensionalLp",
+     "full": "GFNBounds.Doubling.Stat.instFiniteDimensionalLp",
+     "kind": "instance",
+     "line": 152,
+     "attrs": "",
+     "private": false,
+     "statement": "instance instFiniteDimensionalLp : FiniteDimensional ℝ (Lp ℝ 2 L.mu)",
+     "doc": "**`L²(λ^K)` is finite-dimensional** — the sentence of Step 4 that `OperatorFinite.exists_resolvent` waits on."
+    },
+    {
+     "name": "exists_diffusionOp",
+     "full": "GFNBounds.Doubling.Stat.exists_diffusionOp",
+     "kind": "theorem",
+     "line": 159,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_diffusionOp (hrow : RowOnChain S (some K)) : ∃ R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 hrow + L.piL2) * R = 1 ∧ R * (1 - L.pstarL2 hrow + L.piL2) = 1 ∧ (1 - L.pstarL2 hrow) * (R - L.piL2) = 1 - L.piL2 ∧ (R - L.piL2) * (1 - L.pstarL2 hrow) = 1 - L.piL2 ∧ L.piL2 * (R - L.piL2) = 0 ∧ (R - L.piL2) * L.piL2 = 0",
+     "doc": "**`lem:doubling_operator`(2), instantiated.** On the truncation `Id − P⋆ + Π` is invertible and the diffusion operator `S := (Id − P⋆ + Π)^{-1} − Π` satisfies `eq:doubling_resolvent`."
+    },
+    {
+     "name": "exists_bhat",
+     "full": "GFNBounds.Doubling.Stat.exists_bhat",
+     "kind": "theorem",
+     "line": 175,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_bhat (hrow : RowOnChain S (some K)) : ∃ Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 hrow) * Sop = 1 - L.piL2 ∧ Sop * (1 - L.pstarL2 hrow) = 1 - L.piL2 ∧ L.piL2 * Sop = 0 ∧ Sop * L.piL2 = 0 ∧ ∀ F : Lp ℝ 2 L.mu, ‖F - L.piL2 F‖ ≤ ‖Sop‖ * ‖F - L.pstarL2 hrow F‖",
+     "doc": "**`lem:doubling_truncation_irreducible` Step 4, and `cor:doubling_truncation` Step 1.** There is a diffusion operator `S` on `L²(λ^K)` satisfying `eq:doubling_resolvent`, and its norm `B̂_K` is a real number — which is `B̂_K < +∞`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Doubling/PerCutIdentity.lean",
    "title": "The exact per-cut identity",
    "labels": [
@@ -6131,6 +6569,224 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/PhaseEmpty.lean",
+   "title": "The loop closure carries no invariant probability when the doubling flux is supercritical",
+   "labels": [
+    "prop:doubling_phase",
+    "theo:doubling_main",
+    "def:doubling_setting"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.CutBalance",
+    "GFNBounds.Doubling.Drift",
+    "GFNBounds.Doubling.Lyapunov"
+   ],
+   "variables": [
+    "variable {S : Setting}"
+   ],
+   "lines": 289,
+   "decls": [
+    {
+     "name": "Icc_one_eq_Ioc_zero",
+     "full": "GFNBounds.Doubling.Icc_one_eq_Ioc_zero",
+     "kind": "theorem",
+     "line": 96,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Icc_one_eq_Ioc_zero (b : ℕ) : Finset.Icc 1 b = Finset.Ioc 0 b",
+     "doc": "`{1,…,b} = (0,b]`."
+    },
+    {
+     "name": "Icc_succ_eq_Ioc",
+     "full": "GFNBounds.Doubling.Icc_succ_eq_Ioc",
+     "kind": "theorem",
+     "line": 100,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Icc_succ_eq_Ioc (a b : ℕ) : Finset.Icc (a + 1) b = Finset.Ioc a b",
+     "doc": "`{a+1,…,b} = (a,b]`."
+    },
+    {
+     "name": "window_swap_shift",
+     "full": "GFNBounds.Doubling.window_swap_shift",
+     "kind": "theorem",
+     "line": 112,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem window_swap_shift (M N : ℕ) : ∀ (m j : ℕ), (m ∈ Finset.Icc (M + 1) N ∧ j ∈ window m) ↔ (m ∈ Finset.Icc (max M j + 1) (min N (2 * j)) ∧ j ∈ Finset.Icc 1 N)",
+     "doc": "The index swap: `m ∈ (M,N]` and `j ∈ W(m)` iff `m ∈ (max(M,j), min(N,2j)]` and `j ∈ {1,…,N}`."
+    },
+    {
+     "name": "window_double_sum_shift",
+     "full": "GFNBounds.Doubling.window_double_sum_shift",
+     "kind": "theorem",
+     "line": 121,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem window_double_sum_shift (M N : ℕ) (F : ℕ → ℝ) : ∑ m ∈ Finset.Icc (M + 1) N, ∑ j ∈ window m, F j = ∑ j ∈ Finset.Icc 1 N, ((min N (2 * j) - max M j : ℕ) : ℝ) * F j",
+     "doc": "**The double-counting step from a shifted foot.** The source index `j` is carried across exactly `min(N,2j) − max(M,j)` of the cuts `M+1, …, N`."
+    },
+    {
+     "name": "cut_tail_ge",
+     "full": "GFNBounds.Doubling.cut_tail_ge",
+     "kind": "theorem",
+     "line": 140,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cut_tail_ge (S : Setting) {lam : ℕ → ℝ} (hlam : ∀ j, 0 ≤ lam j) {M T : ℕ} (hM1 : 1 ≤ M) (hMT : M ≤ T) (hcb : ∀ m, M < m → lam m * (1 - S.eps m) = ∑ j ∈ window m, lam j * S.eps j) (hthr : ∀ m, M < m → 1 ≤ ((m : ℝ) + 1) * S.eps m) : (M : ℝ) * (lam M * S.eps M) ≤ ∑ m ∈ Finset.Icc (T + 1) (2 * T), lam m",
+     "doc": "**The block estimate.** Let `λ ≥ 0` satisfy the cut balance above `M` and let the drift coefficient `(m+1)ε(m)` be at least `1` above `M`."
+    },
+    {
+     "name": "isEmpty_stat_of_supercritical",
+     "full": "GFNBounds.Doubling.isEmpty_stat_of_supercritical",
+     "kind": "theorem",
+     "line": 214,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isEmpty_stat_of_supercritical (S : Setting) {M : ℕ} (hM1 : 1 ≤ M) (hMd : S.d ≤ M) (hthr : ∀ m, M < m → 1 ≤ ((m : ℝ) + 1) * S.eps m) : IsEmpty (Stat S none)",
+     "doc": "**`prop:doubling_phase`(2)–(3), in the form this library consumes.** If the drift coefficient `(m+1)ε(m)` is at least `1` past an index `M ≥ max(d,1)`, the loop-closed chain carries no invariant probability."
+    },
+    {
+     "name": "isEmpty_stat_of_family_ge_one",
+     "full": "GFNBounds.Doubling.isEmpty_stat_of_family_ge_one",
+     "kind": "theorem",
+     "line": 265,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isEmpty_stat_of_family_ge_one {c : ℝ} (hc1 : 1 ≤ c) (S : Setting) (hS : S.eps = epsCS c 1) : IsEmpty (Stat S none)",
+     "doc": "**`prop:doubling_phase`(3), the `1 ≤ c < 2` half.** At `s = 1` the drift coefficient is the constant `c`, so `c ≥ 1` already forbids an invariant probability — with no threshold to find."
+    },
+    {
+     "name": "isEmpty_stat_of_family_lt_one",
+     "full": "GFNBounds.Doubling.isEmpty_stat_of_family_lt_one",
+     "kind": "theorem",
+     "line": 277,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isEmpty_stat_of_family_lt_one {c s : ℝ} (hc : 0 < c) (hs : s < 1) (S : Setting) (hS : S.eps = epsCS c s) : IsEmpty (Stat S none)",
+     "doc": "**`prop:doubling_phase`(2), weakened to non-existence.** At `s < 1` the drift coefficient `c(m+1)^{1−s}` grows without bound, so it passes `1` at an explicit index and the loop closure carries no invariant probability."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/PhaseExists.lean",
+   "title": "The loop closure carries an invariant probability whenever the doubling flux is subcritical",
+   "labels": [
+    "prop:doubling_phase",
+    "theo:doubling_main",
+    "def:doubling_setting"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.StatExists",
+    "GFNBounds.Doubling.Drift",
+    "GFNBounds.Doubling.Lyapunov"
+   ],
+   "variables": [
+    "variable {S : Setting}"
+   ],
+   "lines": 300,
+   "decls": [
+    {
+     "name": "partial_sum_weighted_le",
+     "full": "GFNBounds.Doubling.partial_sum_weighted_le",
+     "kind": "theorem",
+     "line": 105,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem partial_sum_weighted_le {lam g : ℕ → ℝ} (hlam : ∀ j, 0 ≤ lam j) (N : ℕ) (hrec : ∀ m, 1 ≤ m → m ≤ N → lam m * (1 - S.eps m) ≤ ∑ j ∈ window m, lam j * S.eps j + g m) : ∑ m ∈ Finset.Icc 1 N, lam m * (1 - ((m : ℝ) + 1) * S.eps m) ≤ ∑ m ∈ Finset.Icc 1 N, g m",
+     "doc": "**The partial-sum bound, before the family is substituted.** A non-negative sequence obeying the cut balance up to an excess `g` on `{1,…,N}` satisfies `Σ_{m≤N} λ_m(1 − (m+1)ε(m)) ≤ Σ_{m≤N} g_m`."
+    },
+    {
+     "name": "partial_sum_le_of_threshold",
+     "full": "GFNBounds.Doubling.partial_sum_le_of_threshold",
+     "kind": "theorem",
+     "line": 136,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem partial_sum_le_of_threshold {lam g : ℕ → ℝ} (hlam : ∀ j, 0 ≤ lam j) {θ : ℝ} (hθ0 : 0 ≤ θ) (m₀ : ℕ) (hthr : ∀ m, 1 ≤ m → m₀ ≤ m → ((m : ℝ) + 1) * S.eps m ≤ θ) (hrec : ∀ m, 1 ≤ m → lam m * (1 - S.eps m) ≤ ∑ j ∈ window m, lam j * S.eps j + g m) (N : ℕ) : (1 - θ) * ∑ m ∈ Finset.Icc 1 N, lam m ≤ (∑ m ∈ Finset.Icc 1 N, g m) + ∑ m ∈ Finset.Icc 1 m₀, lam m * (((m : ℝ) + 1) * S.eps m)",
+     "doc": "**The threshold form.** If `(m+1)ε(m) ≤ θ` past `m₀`, the partial sums of `λ` are bounded by the excess plus the finitely many terms below `m₀`, divided by `1 − θ`."
+    },
+    {
+     "name": "statSeq_partial_sum_bounded",
+     "full": "GFNBounds.Doubling.statSeq_partial_sum_bounded",
+     "kind": "theorem",
+     "line": 180,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem statSeq_partial_sum_bounded {θ : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (m₀ : ℕ) (hthr : ∀ m, 1 ≤ m → m₀ ≤ m → ((m : ℝ) + 1) * S.eps m ≤ θ) (N : ℕ) : ∑ m ∈ Finset.Icc 1 N, statSeq S m ≤ (S.jbar + ∑ m ∈ Finset.Icc 1 m₀, statSeq S m * (((m : ℝ) + 1) * S.eps m)) / (1 - θ)",
+     "doc": "**The uniform bound on the partial sums of `statSeq`.** At `θ = c`, `m₀ = 0` this is `statSeq_partial_sum_le`'s `j̄/(1−c)`."
+    },
+    {
+     "name": "summable_statSeq_of_threshold",
+     "full": "GFNBounds.Doubling.summable_statSeq_of_threshold",
+     "kind": "theorem",
+     "line": 192,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem summable_statSeq_of_threshold {θ : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (m₀ : ℕ) (hthr : ∀ m, 1 ≤ m → m₀ ≤ m → ((m : ℝ) + 1) * S.eps m ≤ θ) : Summable (statSeq S)",
+     "doc": "**Summability under the threshold.** The one place `θ < 1` is spent."
+    },
+    {
+     "name": "exists_stat_none_of_summable",
+     "full": "GFNBounds.Doubling.exists_stat_none_of_summable",
+     "kind": "theorem",
+     "line": 214,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_stat_none_of_summable (S : Setting) (hsummable : Summable (statSeq S)) : Nonempty (Stat S none)",
+     "doc": "**The construction, given summability.** Everything but summability in `exists_stat_none` is independent of the family: `statSeq` solves the row-corrected cut balance at every `Setting`, `statSeq_point` is its pointwise form, and `inv_of_pointwise` promotes that to the integral invariance `Stat` asks for."
+    },
+    {
+     "name": "exists_stat_of_threshold",
+     "full": "GFNBounds.Doubling.exists_stat_of_threshold",
+     "kind": "theorem",
+     "line": 257,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_stat_of_threshold (S : Setting) {θ : ℝ} (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (m₀ : ℕ) (hthr : ∀ m, 1 ≤ m → m₀ ≤ m → ((m : ℝ) + 1) * S.eps m ≤ θ) : Nonempty (Stat S none)",
+     "doc": "**The threshold criterion.** A backward policy whose drift coefficient `(m+1)ε(m)` is eventually at most some `θ < 1` carries an invariant probability on the loop closure."
+    },
+    {
+     "name": "exists_threshold_family",
+     "full": "GFNBounds.Doubling.exists_threshold_family",
+     "kind": "theorem",
+     "line": 265,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_threshold_family {c s : ℝ} (hc : 0 < c) (hs : 1 < s) : ∃ m₀ : ℕ, ∀ m : ℕ, 1 ≤ m → m₀ ≤ m → ((m : ℝ) + 1) * epsCS c s m ≤ 1 / 2",
+     "doc": "**Step 3's `j₀`, made explicit.** At `s > 1` the drift coefficient falls below `½` past `m₀ ≥ (2c)^{1/(s−1)}` — the paper's \"fix `j₀` with `c(j+1)^{1−s} − 1 ≤ −½` for `j > j₀`\"."
+    },
+    {
+     "name": "exists_stat_of_family_gt_one",
+     "full": "GFNBounds.Doubling.exists_stat_of_family_gt_one",
+     "kind": "theorem",
+     "line": 282,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_stat_of_family_gt_one {c s : ℝ} (hc : 0 < c) (hs : 1 < s) (S : Setting) (hS : S.eps = epsCS c s) : Nonempty (Stat S none)",
+     "doc": "**`prop:doubling_phase`(1), in the form this library consumes.** At `s > 1` the loop-closed chain carries an invariant probability, positive at every state."
+    },
+    {
+     "name": "exists_stat_of_family_one",
+     "full": "GFNBounds.Doubling.exists_stat_of_family_one",
+     "kind": "theorem",
+     "line": 294,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_stat_of_family_one {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (S : Setting) (hS : S.eps = epsCS c 1) : Nonempty (Stat S none)",
+     "doc": "**Row (b) re-derived from the same threshold**, at `θ = c` and `m₀ = 0`: at `s = 1` the drift coefficient is the constant `c`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -7577,6 +8233,48 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/SharpFull.lean",
+   "title": "`theo:doubling_sharp`, unconditional",
+   "labels": [
+    "theo:doubling_sharp",
+    "theo:doubling_decay"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.SharpRate",
+    "GFNBounds.Doubling.Weight"
+   ],
+   "variables": [
+    "variable (D : Decay)"
+   ],
+   "lines": 140,
+   "decls": [
+    {
+     "name": "uu_bounded_of_cutBal",
+     "full": "GFNBounds.Doubling.Decay.uu_bounded_of_cutBal",
+     "kind": "theorem",
+     "line": 67,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem uu_bounded_of_cutBal {d ℓ : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hpos : ∀ j, 1 ≤ j → 0 < lam j) (hℓ : D.m0 d ≤ ℓ) : ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ ≤ c₂ ∧ ∀ j : ℕ, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂",
+     "doc": "**`theo:doubling_decay`(2) in the `u` variable, unconditional.** The same preamble as `Product.decay_two_sided_of_cutBal`, stopped one step earlier: it is the rescaled profile, not the sequence, that `Sharp.lean` takes bounds on."
+    },
+    {
+     "name": "sharp_of_cutBal",
+     "full": "GFNBounds.Doubling.Decay.sharp_of_cutBal",
+     "kind": "theorem",
+     "line": 97,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sharp_of_cutBal {d : ℕ} {lam : ℕ → ℝ} (hcut : D.CutBal d lam ⊤) (hpos : ∀ j, 1 ≤ j → 0 < lam j) : ∃ C c₁ c₂ c₆ : ℝ, 0 < c₁ ∧ c₁ ≤ C ∧ C ≤ c₂ ∧ 0 < c₆ ∧ (∀ j : ℕ, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) ∧ Tendsto (fun m : ℕ => lam m * (m : ℝ) ^ D.p) atTop (𝓝 C) ∧ ∀ m : ℕ, 1 ≤ m → |lam m * (m : ℝ) ^ D.p - C| ≤ c₆ * (m : ℝ) ^ (-D.vartheta)",
+     "doc": "**`theo:doubling_sharp`, with no hypothesis beyond the cut balance and positivity.** `eq:doubling_sharp` is the convergence, `eq:doubling_rate` the bound with `ϑ = Decay.vartheta`, and `c₁ ≤ C ≤ c₂` records the limit inside the decay window that `theo:doubling_decay`(2) produces."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -9876,6 +10574,151 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Doubling/Weight.lean",
+   "title": "`lem:doubling_weight`: the weight of a descent deviates from `1` by `O(1/ℓ)` in mean",
+   "labels": [
+    "lem:doubling_weight",
+    "def:doubling_setting",
+    "def:doubling_decay_notation",
+    "lem:doubling_descent",
+    "lem:doubling_escape"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.Product",
+    "GFNBounds.Doubling.DescentLaw"
+   ],
+   "variables": [
+    "variable (D : Decay)"
+   ],
+   "lines": 300,
+   "decls": [
+    {
+     "name": "exp_sub_one_le_two_mul",
+     "full": "GFNBounds.Doubling.exp_sub_one_le_two_mul",
+     "kind": "theorem",
+     "line": 84,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exp_sub_one_le_two_mul {x : ℝ} (hx0 : 0 ≤ x) (hx1 : x ≤ 1) : Real.exp x - 1 ≤ 2 * x",
+     "doc": "**`e^x − 1 ≤ 2x` on `[0,1]`**, the paper's last inequality in the proof of `lem:doubling_weight`."
+    },
+    {
+     "name": "weight_step",
+     "full": "GFNBounds.Doubling.weight_step",
+     "kind": "theorem",
+     "line": 96,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem weight_step {r beta B SW SP SQ : ℝ} (hB : 0 ≤ B) (hrnn : 0 ≤ r) (hrb : |r - 1| ≤ beta) (h1 : |SW - SP| ≤ B * (SQ - 1)) (h2 : |SP| ≤ B) (h3 : 1 ≤ SQ) : |r * SW - SP| ≤ B * ((1 + beta) * SQ - 1)",
+     "doc": "**The induction step of `lem:doubling_weight`, as arithmetic.** With `r` the total window weight, `β` a bound for `|r − 1|`, `SW`, `SP` the one-step averages of the two transforms and `SQ ≥ 1` the one-step average of the product transform, the step of the recursion propagates the bound `B·(SQ − 1)` to `B·((1+β)·SQ − 1)`."
+    },
+    {
+     "name": "kern_eq_pk",
+     "full": "GFNBounds.Doubling.Decay.kern_eq_pk",
+     "kind": "theorem",
+     "line": 117,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem kern_eq_pk (z j : ℕ) : D.kern z j = D.pk z j",
+     "doc": "The one-step law of `DescentLaw.lean` and the one of `Sojourn.lean` are the same function."
+    },
+    {
+     "name": "one_le_prodW",
+     "full": "GFNBounds.Doubling.Decay.one_le_prodW",
+     "kind": "theorem",
+     "line": 121,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_le_prodW {ℓ : ℕ} (hℓ : 32 * D.c * D.tau ≤ 2 * (ℓ : ℝ)) {b : ℕ → ℝ} (hb : ∀ y : ℕ, 2 * ℓ ≤ y → 0 ≤ b y) (z : ℕ) : 1 ≤ D.prodW ℓ b z",
+     "doc": "The product transform is at least `1` when its factors are: `prodW ℓ b ≥ 1` for `b ≥ 0` above `2ℓ`."
+    },
+    {
+     "name": "abs_descP_le",
+     "full": "GFNBounds.Doubling.Decay.abs_descP_le",
+     "kind": "theorem",
+     "line": 138,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_descP_le {ℓ : ℕ} (hℓ : 32 * D.c * D.tau ≤ 2 * (ℓ : ℝ)) {B : ℝ} {g : ℕ → ℝ} (hg : ∀ j, |g j| ≤ B) (y : ℕ) : |D.descP ℓ g y| ≤ B",
+     "doc": "The normalised transform of a function bounded by `B` is bounded by `B`: it is an average."
+    },
+    {
+     "name": "abs_descW_sub_descP_le",
+     "full": "GFNBounds.Doubling.Decay.abs_descW_sub_descP_le",
+     "kind": "theorem",
+     "line": 162,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_descW_sub_descP_le {ℓ : ℕ} (hℓ : 32 * D.c * D.tau ≤ 2 * (ℓ : ℝ)) {b : ℕ → ℝ} (hbR : ∀ y : ℕ, 2 * ℓ ≤ y → |D.R0 y - 1| ≤ b y) {B : ℝ} {g : ℕ → ℝ} (hg : ∀ j, |g j| ≤ B) : ∀ y : ℕ, |D.descW ℓ g y - D.descP ℓ g y| ≤ B * (D.prodW ℓ b y - 1)",
+     "doc": "**`lem:doubling_weight`, in the form the sharp block consumes.** The unnormalised and the normalised descent transforms of a function bounded by `B` differ by at most `B·(prodW − 1)`, where `prodW` is the product transform at any `b` dominating `|R₀ − 1|` above `2ℓ`."
+    },
+    {
+     "name": "ell3",
+     "full": "GFNBounds.Doubling.Decay.ell3",
+     "kind": "def",
+     "line": 228,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ell3 (D : Decay) : ℕ",
+     "doc": "**`ℓ₃`, made effective.** `ℓ₃ := max(1, ⌈16cτ⌉, ⌈96cτ/γ²⌉)`: the first requirement is `32cτ ≤ 2ℓ`, under which `eq:doubling_R0` and the one-step law are available; the second is `c₄ ≤ γ²ℓ/6`, the hypothesis of `eq:doubling_product` at `H := c₄`, and simultaneously `c₅c₄/ℓ ≤ 1`, which is what `e^x − 1 ≤ 2x` needs."
+    },
+    {
+     "name": "one_le_ell3",
+     "full": "GFNBounds.Doubling.Decay.one_le_ell3",
+     "kind": "theorem",
+     "line": 231,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_le_ell3 : 1 ≤ D.ell3",
+     "doc": ""
+    },
+    {
+     "name": "c3",
+     "full": "GFNBounds.Doubling.Decay.c3",
+     "kind": "def",
+     "line": 234,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def c3 (D : Decay) : ℝ",
+     "doc": "**`c₃`, made effective.** `c₃ := 32c₅c₄/4 = 32c₅cτ = 192cτ/γ²`."
+    },
+    {
+     "name": "c5_pos",
+     "full": "GFNBounds.Doubling.Decay.c5_pos",
+     "kind": "theorem",
+     "line": 236,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c5_pos : 0 < D.c5",
+     "doc": ""
+    },
+    {
+     "name": "c3_nonneg",
+     "full": "GFNBounds.Doubling.Decay.c3_nonneg",
+     "kind": "theorem",
+     "line": 240,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c3_nonneg : 0 ≤ D.c3",
+     "doc": ""
+    },
+    {
+     "name": "weight_bound",
+     "full": "GFNBounds.Doubling.Decay.weight_bound",
+     "kind": "theorem",
+     "line": 250,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem weight_bound {ℓ : ℕ} (hℓ : D.ell3 ≤ ℓ) {B : ℝ} {g : ℕ → ℝ} (hg : ∀ j, |g j| ≤ B) (y : ℕ) : |D.descW ℓ g y - D.descP ℓ g y| ≤ B * D.c3 / (ℓ : ℝ)",
+     "doc": "**`lem:doubling_weight`**, with both constants explicit: at every level `ℓ ≥ ℓ₃`, every function `g` bounded by `B` and every state `y`, `|descW ℓ g y − descP ℓ g y| ≤ B c₃/ℓ`, `c₃ = 32c₅cτ`, `ℓ₃ = max(1, ⌈16cτ⌉, ⌈96cτ/γ²⌉)`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Doubling/WindowSum.lean",
    "title": "Sums of a power over a window, by telescoping",
    "labels": [
@@ -9945,55 +10788,13 @@
   },
   {
    "file": "scaffold/GFNBoundsScaffold.lean",
-   "title": "",
+   "title": "The scaffold is empty",
    "labels": [],
    "scope_disclosed": false,
-   "imports": [
-    "GFNBoundsScaffold.Doubling.Weight"
-   ],
+   "imports": [],
    "variables": [],
-   "lines": 1,
+   "lines": 15,
    "decls": [],
-   "library": "scaffold",
-   "tracked": true,
-   "root_reachable": true
-  },
-  {
-   "file": "scaffold/GFNBoundsScaffold/Doubling/Weight.lean",
-   "title": "The weight of a descent",
-   "labels": [
-    "lem:doubling_weight",
-    "lem:doubling_descent",
-    "lem:doubling_escape"
-   ],
-   "scope_disclosed": false,
-   "imports": [
-    "GFNBounds.Doubling.SharpRate"
-   ],
-   "variables": [],
-   "lines": 95,
-   "decls": [
-    {
-     "name": "exists_weight_bound",
-     "full": "GFNBoundsScaffold.Doubling.exists_weight_bound",
-     "kind": "theorem",
-     "line": 51,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem exists_weight_bound (D : Decay) : ∃ (c₃ : ℝ) (ℓ₃ : ℕ), 0 ≤ c₃ ∧ 1 ≤ ℓ₃ ∧ ∀ (B : ℝ) (g : ℕ → ℝ), (∀ j, |g j| ≤ B) → ∀ ℓ y : ℕ, ℓ₃ ≤ ℓ → 2 * ℓ ≤ y → |D.descW ℓ g y - D.descP ℓ g y| ≤ B * c₃ / ℓ",
-     "doc": "**`eq:doubling_weight`**, in the form the sharp block consumes."
-    },
-    {
-     "name": "sharp_of_decay",
-     "full": "GFNBoundsScaffold.Doubling.sharp_of_decay",
-     "kind": "theorem",
-     "line": 59,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem sharp_of_decay (D : Decay) {d : ℕ} {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hcut : D.CutBal d lam ⊤) (hc₁ : 0 < c₁) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) : ∃ C c₆ : ℝ, 0 < c₆ ∧ c₁ ≤ C ∧ C ≤ c₂ ∧ Filter.Tendsto (fun m : ℕ => lam m * (m : ℝ) ^ D.p) Filter.atTop (nhds C) ∧ ∀ m : ℕ, 1 ≤ m → |lam m * (m : ℝ) ^ D.p - C| ≤ c₆ * (m : ℝ) ^ (-D.vartheta)",
-     "doc": "**`theo:doubling_sharp` in full**, from `theo:doubling_decay`(2) and the weight bound above."
-    }
-   ],
    "library": "scaffold",
    "tracked": true,
    "root_reachable": true

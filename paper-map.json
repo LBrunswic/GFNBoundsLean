@@ -112,19 +112,23 @@
         "GFNBounds/Doubling/LpContraction.lean",
         "GFNBounds/Doubling/LpLayer.lean",
         "GFNBounds/Doubling/Adjoint.lean",
-        "GFNBounds/Doubling/OperatorFinite.lean"
+        "GFNBounds/Doubling/AdjointL2.lean",
+        "GFNBounds/Doubling/OperatorFinite.lean",
+        "GFNBounds/Doubling/OperatorL2.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Stat.eLpNorm_pstar_le_of_memLp",
-        "GFNBounds.Doubling.Stat.pstarL2",
-        "GFNBounds.Doubling.Stat.tsum_dens_mul_sq",
-        "GFNBounds.Doubling.exists_resolvent",
+        "GFNBounds.Doubling.Stat.densL2",
+        "GFNBounds.Doubling.Stat.adjoint_densL2_pow_sub_piL2",
+        "GFNBounds.Doubling.Stat.norm_pstarL2_pow_sub_piL2",
+        "GFNBounds.Doubling.Stat.betaHat",
+        "GFNBounds.Doubling.Stat.exists_diffusionOp",
         "GFNBounds.Doubling.resolvent_identities",
         "GFNBounds.Doubling.resolvent_norm_le"
       ],
-      "status": "partial",
-      "bucket": "B",
-      "scope_notes": "Item (3) was already proved, more generally than stated. Now added: item (1)'s **contraction** at every `p ∈ [1,∞]` (`eLpNorm_pstar_le_of_memLp`), the weighted-sum adjoint identity `Σ λ(Pu)v = Σ λu(P⋆v)`, and item (2)'s resolvent existence in the abstract Banach setting (`OperatorFinite.exists_resolvent`). STILL OPEN, and this was an overclaim caught in verification: the identification of `P⋆` with Mathlib's `ContinuousLinearMap.adjoint`, and hence the trailing clause `‖P⋆ⁿ − Π‖ = β̂ₙ`. ⚠ `Stat.pstarL2` carries `RowOnChain S cap` (= `d ≤ K`), a hypothesis of the construction rather than of the mathematics, discharged free on the loop closure."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "All three items. (1) the contraction at every `p ∈ [1,∞]`, the density action as an honest Radon–Nikodym derivative, the identification of `P⋆` with Mathlib's `ContinuousLinearMap.adjoint` of `densL2`, and the trailing clause `‖P⋆ⁿ − Π‖ = β̂ₙ` — the last was an overclaim caught in the previous round's verification and is now genuinely proved. (2) `exists_diffusionOp` on the truncation, via finite-dimensionality of `L²(λ^K)` (`evalChain_injective`). (3) was already proved, more generally than stated. ⚠ narrowed generality: the paper states this for an arbitrary kernel on a measurable space; Lean proves the doubling-graph instance. ⚠ `RowOnChain S cap` (= `d ≤ K`) is a hypothesis of the construction, free on the loop closure."
     },
     {
       "label": "rem:doubling_two_constants",
@@ -260,20 +264,25 @@
       "block_sha256": "d20ea2008fad2d91330953d131eef09b2fb15d78ae0f88f633beb3c00c9778b9",
       "lean_files": [
         "GFNBounds/Doubling/StatExists.lean",
+        "GFNBounds/Doubling/PhaseExists.lean",
+        "GFNBounds/Doubling/PhaseEmpty.lean",
         "GFNBounds/Doubling/Lyapunov.lean",
         "GFNBounds/Doubling/PointwiseInv.lean",
         "GFNBounds/Doubling/Summable.lean"
       ],
       "decls": [
-        "GFNBounds.Doubling.exists_stat_none",
         "GFNBounds.Doubling.exists_stat_of_family",
-        "GFNBounds.Doubling.statSeq",
-        "GFNBounds.Doubling.inv_of_pointwise",
-        "GFNBounds.Doubling.Wpow_drift_expansion"
+        "GFNBounds.Doubling.exists_stat_of_family_one",
+        "GFNBounds.Doubling.exists_stat_of_family_gt_one",
+        "GFNBounds.Doubling.exists_stat_of_threshold",
+        "GFNBounds.Doubling.isEmpty_stat_of_family_ge_one",
+        "GFNBounds.Doubling.isEmpty_stat_of_family_lt_one",
+        "GFNBounds.Doubling.isEmpty_stat_of_supercritical",
+        "GFNBounds.Doubling.cut_tail_ge"
       ],
       "status": "partial",
       "bucket": "C",
-      "scope_notes": "**Row (b) is closed**, in the form every consumer in this library actually takes: `exists_stat_of_family : 0 < c → c < 1 → S.eps = ε_{c,1} → Nonempty (Stat S none)`. This discharges what was the library's only tagged sorry (`exists_stat_of_lt_one`, id 26ce6853), now deleted. It is NOT a proof of positive recurrence: the invariant probability is **constructed** from the cut balance and proved summable — no return time, no Foster. ⚠ weakened conclusion, disclosed: `Nonempty (Stat S none)` in place of \"positive recurrent\"; uniqueness is not claimed. OPEN: rows (a) `s<1`, (c)/(e) `s=1, c≥1`, and (f) `s>1` — their analytic halves are in `Lyapunov.lean` (`Wpow_drift_expansion`, the `eq:doubling_Wdrift` computation) but the chain conclusions need recurrence theory. Row (d), `c = 1/ln 2`, is open in the paper itself."
+      "scope_notes": "**Every row but (d) is now settled, in the form this library consumes** — the existence or non-existence of an invariant probability, never a statement about recurrence: row (b) `s=1, 0<c<1` and row (f) `s>1` are `Nonempty (Stat S none)` (`exists_stat_of_family`, `exists_stat_of_family_gt_one`, both via the explicit drift threshold `exists_stat_of_threshold`); rows (a) `s<1` and (c)/(e) `s=1, c≥1` are `IsEmpty (Stat S none)` (`isEmpty_stat_of_family_lt_one`, `isEmpty_stat_of_family_ge_one`), proved from the cut balance by a tail-growth argument, no chain. ⚠ weakened, and this is the whole of the gap: the paper distinguishes *null recurrent* from *transient* inside `s=1, c≥1` and calls `s<1` transient; that distinction is a property of the chain and is NOT proved. Row (d), `c = 1/ln 2`, is open in the paper itself."
     },
     {
       "label": "prop:doubling_cut",
@@ -582,16 +591,19 @@
       "block_sha256": "e970b14109bf07b6cdb41777c52ed50b8a672b0fce549b0d7fc093d070e7fa8c",
       "lean_files": [
         "GFNBounds/Doubling/Sharp.lean",
-        "GFNBounds/Doubling/SharpRate.lean"
+        "GFNBounds/Doubling/SharpRate.lean",
+        "GFNBounds/Doubling/SharpFull.lean"
       ],
       "decls": [
+        "GFNBounds.Doubling.Decay.sharp_of_cutBal",
+        "GFNBounds.Doubling.Decay.uu_bounded_of_cutBal",
         "GFNBounds.Doubling.Decay.sharp",
         "GFNBounds.Doubling.Decay.cutBal_unique",
         "GFNBounds.Doubling.Decay.vartheta"
       ],
-      "status": "partial",
-      "bucket": "B",
-      "scope_notes": "`Decay.sharp` gives the whole statement — the limit `λ_m m^{p_*} → C` and the rate `|λ_m m^{p_*} − C| ≤ c₆ m^{−ϑ}` with `ϑ` explicit — conditional on **exactly one** hypothesis, `hweight`, which is `lem:doubling_weight`. Nothing else is assumed. Closing that lemma makes this a theorem and the library sorry-free."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "**Now unconditional.** `Decay.sharp_of_cutBal` gives the limit `λ_m m^{p_*} → C` and the rate `|λ_m m^{p_*} − C| ≤ c₆ m^{−ϑ}` from `D.CutBal d lam ⊤` alone — `lem:doubling_weight` discharged the one hypothesis `Decay.sharp` had carried, and `theo:doubling_decay` supplies the two-sided bound it needs. `ϑ` is the paper's explicit exponent; the paper itself records that it is not *effective* in the sense of being sharp (0.0024 proved against 0.22 measured)."
     },
     {
       "label": "lem:doubling_weight",
@@ -601,15 +613,16 @@
       ],
       "block_sha256": "aa34bc0d4f7a368232ed6eca51d3eee5f0b1caf0c6cb450358ffc1d99d6874f8",
       "lean_files": [
-        "scaffold/GFNBoundsScaffold/Doubling/Weight.lean"
+        "GFNBounds/Doubling/Weight.lean"
       ],
       "decls": [
-        "GFNBoundsScaffold.Doubling.exists_weight_bound",
-        "GFNBoundsScaffold.Doubling.sharp_of_decay"
+        "GFNBounds.Doubling.Decay.weight_bound",
+        "GFNBounds.Doubling.Decay.c3",
+        "GFNBounds.Doubling.Decay.ell3"
       ],
-      "status": "open",
-      "bucket": "B",
-      "scope_notes": "The library's ONLY remaining sorry. **Not blocked on Mathlib** — the original tag blamed missing chain theory, but `lem:doubling_escape` and `lem:doubling_product` both landed chain-free in the same round, and the paper's proof consumes nothing else beyond `eq:doubling_R0`, which is proved. What is left is a modelling step: an absolute-deviation transform `E(|Z_ℓ − 1|)` as a `descW`-style well-founded recursion. The stale reason has been rewritten."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "`eq:doubling_weight` with **effective** constants: `c₃ = 32c₅cτ` and `ℓ₃ = max(1, ⌈16cτ⌉, ⌈96cτ/γ²⌉)`, against the paper's non-effective `c₃`, `ℓ₃`. This was the library's last `sorry`; the scaffold library is now empty. The obstruction its tag once named — missing Mathlib chain theory — was never the real one: the proof runs on `lem:doubling_escape`, `lem:doubling_product` and `eq:doubling_R0`, all chain-free."
     },
     {
       "label": "lem:doubling_doeblin",
@@ -725,18 +738,18 @@
       "block_sha256": "f911ccce02e4422c6d2b18825ba3947b78d6b34108ac2b204a88b83ca22bf057",
       "lean_files": [
         "GFNBounds/Doubling/Irreducible.lean",
-        "GFNBounds/Doubling/TruncationStat.lean"
+        "GFNBounds/Doubling/TruncationStat.lean",
+        "GFNBounds/Doubling/OperatorL2.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.reach_all_some",
-        "GFNBounds.Doubling.reach_one_lad",
         "GFNBounds.Doubling.exists_stat",
         "GFNBounds.Doubling.stat_unique",
-        "GFNBounds.Doubling.PreStat.toStatSome"
+        "GFNBounds.Doubling.Stat.exists_bhat"
       ],
-      "status": "partial",
-      "bucket": "B",
-      "scope_notes": "Steps 1–3 (irreducibility at an even cap, with the parity used where the paper uses it) and the first sentence of Step 4: **existence, uniqueness and positivity of `λ^K`** are now proved (`exists_stat`, `stat_unique`) — finite-dimensional linear algebra, not Perron–Frobenius theory. STILL OPEN: the last clause, `B̂_K < +∞`, which needs `lem:doubling_operator`(2) instantiated at `L²(λ^K)`; the abstract half of that is `OperatorFinite.exists_resolvent`."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "All four steps. Irreducibility at an even cap with the parity used where the paper uses it; existence, uniqueness and positivity of `λ^K` by finite-dimensional linear algebra rather than Perron–Frobenius; and `B̂_K < +∞` (`Stat.exists_bhat`), which closes the last clause. The state count `K+2` is not formalized — `St` stays infinite and the state set is `OnChain (some K)`."
     },
     {
       "label": "lem:doubling_percut",

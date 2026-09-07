@@ -1,10 +1,1 @@
-[
-  {
-    "id": "b4bec702",
-    "label": "lem:doubling_weight",
-    "decl": "exists_weight_bound",
-    "file": "scaffold/GFNBoundsScaffold/Doubling/Weight.lean",
-    "line": 55,
-    "reason": "needs an absolute-deviation transform E(|Z_ℓ−1|) as a descW-style recursion; NOT blocked on Mathlib — lem:doubling_escape and lem:doubling_product are both proved chain-free in Escape/Sojourn/Product."
-  }
-]
+[]

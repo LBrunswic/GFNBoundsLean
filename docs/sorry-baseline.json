@@ -1,0 +1,17 @@
+[
+  {
+    "id": "97b09fa7",
+    "label": "prop:doubling_cut",
+    "decl": "lam_double_ge"
+  },
+  {
+    "id": "d7eca5e1",
+    "label": "prop:doubling_cut",
+    "decl": "lam_le_prev"
+  },
+  {
+    "id": "26ce6853",
+    "label": "prop:doubling_phase",
+    "decl": "exists_stat_of_lt_one"
+  }
+]

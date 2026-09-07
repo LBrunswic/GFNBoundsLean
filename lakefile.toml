@@ -1,0 +1,26 @@
+name = "GFNBounds"
+defaultTargets = ["GFNBounds"]
+
+# Mathlib pinned to the v4.31.0 tag; lake-manifest.json freezes it to fabf563a7c95,
+# the same commit as ~/LeanAI/library, so a lemma can migrate between the two
+# without a version fight and `lake exe cache get` hits ~/.cache/mathlib.
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "v4.31.0"
+
+# The STRICT library.  `sorry` is a compile error here (warningAsError turns Lean's
+# own "declaration uses 'sorry'" warning into one), and every closed declaration is
+# axiom-audited in GFNBounds/Audit.lean.  This is the default target.
+[[lean_lib]]
+name = "GFNBounds"
+globs = ["GFNBounds.*"]
+leanOptions = { warningAsError = true }
+
+# The SCAFFOLD library.  `sorry` is permitted, tagged and audited.  It is NOT a
+# default target and is never imported by GFNBounds: graduation is a file move,
+# which is what makes "the sorry list only shrinks" compiler-enforced.
+[[lean_lib]]
+name = "GFNBoundsScaffold"
+srcDir = "scaffold"
+globs = ["GFNBoundsScaffold.*"]

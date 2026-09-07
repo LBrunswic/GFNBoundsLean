@@ -1,0 +1,587 @@
+{
+  "paper": {
+    "path": "/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex",
+    "git_commit": "f13d7d5",
+    "appendix": "H"
+  },
+  "statements": [
+    {
+      "label": "def:doubling_setting",
+      "tex_span": [
+        13,
+        84
+      ],
+      "block_sha256": "55db84c060752dde453a278bee2617fd0c7352f22197e11fb955a5c667d345cf",
+      "lean_files": [
+        "GFNBounds/Doubling/Setting.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.St",
+        "GFNBounds.Doubling.Setting",
+        "GFNBounds.Doubling.pstar",
+        "GFNBounds.Doubling.Stat",
+        "GFNBounds.Doubling.OnChain",
+        "GFNBounds.Doubling.window"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "Definitional layer. `s0 = lad 0` per the paper's own convention. `P_star` is the function action in closed form, total, with a `cap` parameter carrying loop closure and truncation at once. `Stat` carries positivity on-chain and vanishing off it; the density action `P` is not modelled here."
+    },
+    {
+      "label": "lem:doubling_range",
+      "tex_span": [
+        86,
+        99
+      ],
+      "block_sha256": "ee758039a5ef2117cc013268c7a6b4f17fd67bcc887c85584fc8354fb3930f72",
+      "lean_files": [
+        "GFNBounds/Doubling/Range.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.epsCS",
+        "GFNBounds.Doubling.epsCS_antitone",
+        "GFNBounds.Doubling.epsCS_one",
+        "GFNBounds.Doubling.epsCS_le_one_val",
+        "GFNBounds.Doubling.epsCS_one_lt_one",
+        "GFNBounds.Doubling.one_sub_epsCS_one_pos",
+        "GFNBounds.Doubling.Setting.ofFamily"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "Full statement. The family enters only as an instance of `Setting`, never baked in."
+    },
+    {
+      "label": "lem:doubling_irreducible",
+      "tex_span": [
+        101,
+        128
+      ],
+      "block_sha256": "2614cd214973c2139cc5e97fa82a114a0e6094adfc4770ca053da6d32066b5c4",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_fixed_points",
+      "tex_span": [
+        130,
+        164
+      ],
+      "block_sha256": "b49bce4664d031876fcfbb2978fa38803ad37eb7e5e45fe80ee76b94bbc97293",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_operator",
+      "tex_span": [
+        166,
+        262
+      ],
+      "block_sha256": "73143b649e66b243182de497217ea481a67c7070e4653497f95702657daaa818",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "rem:doubling_two_constants",
+      "tex_span": [
+        264,
+        273
+      ],
+      "block_sha256": "7833729214fcf1015662194ec223b18ea1f7ee13c83487c27367749335483856",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "theo:doubling_main",
+      "tex_span": [
+        275,
+        321
+      ],
+      "block_sha256": "6a4100a9cfe7694bdc8860560006d1c32a89a018a7038176b3dcd0ad74d24932",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "prop:doubling_drift",
+      "tex_span": [
+        379,
+        396
+      ],
+      "block_sha256": "c23b159fd6f1fc850d8d27d7d32cf2d990479b7e3c4e809ef8a81e77b2b2c3db",
+      "lean_files": [
+        "GFNBounds/Doubling/Drift.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.height",
+        "GFNBounds.Doubling.height_pstar_sub",
+        "GFNBounds.Doubling.drift_family",
+        "GFNBounds.Doubling.drift_family_at_one",
+        "GFNBounds.Doubling.drift_const_iff",
+        "GFNBounds.Doubling.drift_const_of_eq_one"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "Both halves of the `iff`. `height_pstar_sub` is stated for a free eps as `eps(m)(m+1)-1`, weaker hypotheses than the paper's; `drift_family` specialises it to `c(m+1)^(1-s)-1`."
+    },
+    {
+      "label": "lem:doubling_excursion",
+      "tex_span": [
+        398,
+        424
+      ],
+      "block_sha256": "9570e638aa93814c3489e62c3ae0c19591351f27f9b125d53f5e63ba44db480f",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_supersolution",
+      "tex_span": [
+        426,
+        474
+      ],
+      "block_sha256": "15693da44017d599e0cd614faa1692066aa2ce06cafb20091ea77a1d84f3242d",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "prop:doubling_length",
+      "tex_span": [
+        476,
+        501
+      ],
+      "block_sha256": "4e5598d107ea6001572f719058e7988d2c8b57ae1c2c10acb38ed78df5eb094c",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "prop:doubling_phase",
+      "tex_span": [
+        510,
+        624
+      ],
+      "block_sha256": "d20ea2008fad2d91330953d131eef09b2fb15d78ae0f88f633beb3c00c9778b9",
+      "lean_files": [
+        "scaffold/GFNBoundsScaffold/Doubling/Phase.lean"
+      ],
+      "decls": [
+        "GFNBoundsScaffold.Doubling.exists_stat_of_lt_one"
+      ],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Needs Foster's criterion and a supermartingale transience criterion; Mathlib v4.31.0 has no discrete-time Markov-chain recurrence theory. Row (d), c = 1/ln 2, is OPEN IN THE PAPER and is not stated."
+    },
+    {
+      "label": "prop:doubling_cut",
+      "tex_span": [
+        641,
+        691
+      ],
+      "block_sha256": "d42d15faf5bbff44af72c33c5c5c06092d1bddd7ee8465c0b1eb067fa0b9f83b",
+      "lean_files": [
+        "GFNBounds/Doubling/CutBalance.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.cut_balance",
+        "GFNBounds.Doubling.CutBalanceSeq",
+        "GFNBounds.Doubling.cutBalanceSeq_of_stat",
+        "GFNBounds.Doubling.tsum_lam_mul_cutFn"
+      ],
+      "status": "partial",
+      "bucket": "A",
+      "scope_notes": "eq:doubling_cut closed for loop closure and truncation together, via the cap parameter; the paper's `d < m <= K/2` is `hdm` plus `hD : HasDouble cap m`. Evenness of K is not used. eq:doubling_ratios is OPEN (scaffold/Ratios.lean): it needs pointwise balance, not the integral form. Derived here FROM lem:doubling_percut Step 2, inverting the paper's order."
+    },
+    {
+      "label": "prop:doubling_exponent",
+      "tex_span": [
+        693,
+        709
+      ],
+      "block_sha256": "53131fac082cd803f7acf42c2088ae524b784c3de05da60cb45fb2402371c798",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_cramer_root",
+      "tex_span": [
+        711,
+        767
+      ],
+      "block_sha256": "ecaf1400fe574a01aa0be24783596a6d4804022a92b8c57a10a5a15830ae7722",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "def:doubling_decay_notation",
+      "tex_span": [
+        789,
+        812
+      ],
+      "block_sha256": "11697b348e8ba6d7c26cf26447813a19bb52c608ce171b1a81f59eb00d42d706",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_averaging",
+      "tex_span": [
+        814,
+        846
+      ],
+      "block_sha256": "54fa6cfaedef950de7a8ab2dfd545e762f1df91052642d40331b5d5118edd6c0",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_expansion",
+      "tex_span": [
+        848,
+        953
+      ],
+      "block_sha256": "7387301b3345f4927b0ec473806a2b03b944781b8c50b5150fff84df435e7b41",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "rem:doubling_parity",
+      "tex_span": [
+        955,
+        963
+      ],
+      "block_sha256": "694ca48026328014f96cdea8304a3eb17f4e12eeb787262f3acafc4fa0de24eb",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_descent",
+      "tex_span": [
+        965,
+        1024
+      ],
+      "block_sha256": "b13b9257c03792666b0a66c5b4072c66a63da9ebba4361254b80417108f24cc5",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_escape",
+      "tex_span": [
+        1026,
+        1108
+      ],
+      "block_sha256": "d942f1c9c0ff9d186cc8dcc67c050d4dbbc979464c42b09bb189a2eee4b870e2",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_product",
+      "tex_span": [
+        1110,
+        1153
+      ],
+      "block_sha256": "8c21fc14f1a4b7dd660acf9e21ba4af90d9ffdc393e7ab98968e0bcc36697da1",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "theo:doubling_decay",
+      "tex_span": [
+        1155,
+        1228
+      ],
+      "block_sha256": "b2f8f408d14f0bf8f740933cd30d762e9c9f1be377dbfba8453ec988f6409b39",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "cor:doubling_tail",
+      "tex_span": [
+        1230,
+        1268
+      ],
+      "block_sha256": "3f22eac7acad3f7c8c24e7fbe04263e777531a2b0c522ec51e2d4de34114176c",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "rem:doubling_renewal",
+      "tex_span": [
+        1270,
+        1302
+      ],
+      "block_sha256": "005d968b985374eeb8f516de1cdda079a6744b751ae3b3f8ed9f4491ea698152",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "theo:doubling_sharp",
+      "tex_span": [
+        1323,
+        1341
+      ],
+      "block_sha256": "e970b14109bf07b6cdb41777c52ed50b8a672b0fce549b0d7fc093d070e7fa8c",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_weight",
+      "tex_span": [
+        1343,
+        1383
+      ],
+      "block_sha256": "aa34bc0d4f7a368232ed6eca51d3eee5f0b1caf0c6cb450358ffc1d99d6874f8",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_doeblin",
+      "tex_span": [
+        1385,
+        1473
+      ],
+      "block_sha256": "e37ea2a509ebeb7edc42216cede3b812313a7bf5cddd4d5cdc0536f240e8b2a5",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_coupling",
+      "tex_span": [
+        1475,
+        1533
+      ],
+      "block_sha256": "9ca82978f2c96c1a789f1fb6437a796e7d5e9a87c2890aa629b7239a305036cc",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "rem:doubling_no_logperiodic",
+      "tex_span": [
+        1659,
+        1670
+      ],
+      "block_sha256": "86f13ca4ccce536b6bd5f5b1a90837fdd00a91dbe6653bb1219452e204be983a",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "cor:doubling_tail_sharp",
+      "tex_span": [
+        1672,
+        1700
+      ],
+      "block_sha256": "236a28750c6741a711ced497138379ec61aba3073263df3179201b87d11cf7d7",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "prop:doubling_constant",
+      "tex_span": [
+        1702,
+        1763
+      ],
+      "block_sha256": "e44c10fd20bb3d5be033de229a2f1e75d133e4587d10ecf927a424aa746a5f3e",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "rem:doubling_second_order",
+      "tex_span": [
+        1769,
+        1785
+      ],
+      "block_sha256": "27bc7100a1cc4e23b36f72f4724f62af4ad59905b123cd9d80c47466c991a4f2",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_truncation_irreducible",
+      "tex_span": [
+        1805,
+        1846
+      ],
+      "block_sha256": "f911ccce02e4422c6d2b18825ba3947b78d6b34108ac2b204a88b83ca22bf057",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_percut",
+      "tex_span": [
+        1848,
+        1943
+      ],
+      "block_sha256": "208f08108c076df9f3caa4a1b81abf35830d4fd440e7ddd67c534c79b6061e8a",
+      "lean_files": [
+        "GFNBounds/Doubling/PerCutIdentity.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.tailInd",
+        "GFNBounds.Doubling.cutFn",
+        "GFNBounds.Doubling.percut_id"
+      ],
+      "status": "partial",
+      "bucket": "A",
+      "scope_notes": "Step 2 (eq:doubling_step1) closed, for both cases (1) and (2) at once. Asserted ON CHAIN: it genuinely fails at lad(K+1) off the truncated chain, where lambda vanishes. Steps 3-4 (the norm bounds eq:doubling_step2/step3/stepp) are NOT yet done."
+    },
+    {
+      "label": "theo:doubling_unbounded",
+      "tex_span": [
+        1945,
+        2019
+      ],
+      "block_sha256": "71138ced76f59f0dbc8d165fa581f9cc49205fcaf66e57dc03bf60508cde4e7a",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "lem:doubling_ramp",
+      "tex_span": [
+        2021,
+        2085
+      ],
+      "block_sha256": "35c51432f174c0299adcd1d44fb241bc28b3866efc8ee0f15e7a54e9c5e64f35",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "cor:doubling_family",
+      "tex_span": [
+        2087,
+        2124
+      ],
+      "block_sha256": "909585b04232eb8e85ca370c7e0fbc7d99b15b687946ff7b7d7c8df76bae0512",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "prop:doubling_unsolvable",
+      "tex_span": [
+        2126,
+        2181
+      ],
+      "block_sha256": "a195679a74255fa14e2c571e4c8a2d931dafc5a63a9e7878e45d9e56aba029da",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "rem:doubling_geometric",
+      "tex_span": [
+        2183,
+        2189
+      ],
+      "block_sha256": "3eeaf9fef370efff9eadab9bb1d2e0221e93760f614e9761538983f362073913",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    },
+    {
+      "label": "cor:doubling_truncation",
+      "tex_span": [
+        2199,
+        2336
+      ],
+      "block_sha256": "87367845bf1d850602b5758516f6650d2b4047ce3f00b6e0c443c42aaf67841b",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "",
+      "scope_notes": ""
+    }
+  ]
+}

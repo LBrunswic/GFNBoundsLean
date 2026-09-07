@@ -157,11 +157,17 @@
         424
       ],
       "block_sha256": "9570e638aa93814c3489e62c3ae0c19591351f27f9b125d53f5e63ba44db480f",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Excursion.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.LadderStep",
+        "GFNBounds.Doubling.LadderStep.le_succ_add_one",
+        "GFNBounds.Doubling.excursion_le"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "Pathwise, which is the strongest reading of the paper's “almost surely”: quantification over every sequence with admissible steps, on either chain via `cap`. The path is a sequence of ladder indices with `s₀ = 0`, so “the chain visits only ladder states before σ” is built into the formulation rather than proved. `σ` need not be the *first* hitting time — the bound holds at every index where the path is at `0`, which is stronger. The `{σ = +∞}` branch is vacuous in the paper and absent here."
     },
     {
       "label": "lem:doubling_supersolution",
@@ -170,11 +176,23 @@
         474
       ],
       "block_sha256": "15693da44017d599e0cd614faa1692066aa2ce06cafb20091ea77a1d84f3242d",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Supersolution.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.pstar_mono",
+        "GFNBounds.Doubling.linSuper",
+        "GFNBounds.Doubling.linSuper_eq",
+        "GFNBounds.Doubling.linSuper_ge",
+        "GFNBounds.Doubling.hitExp",
+        "GFNBounds.Doubling.hitExp_le_linSuper",
+        "GFNBounds.Doubling.hitExp_mono",
+        "GFNBounds.Doubling.hitExp_iSup_le",
+        "GFNBounds.Doubling.sigmaBar_le"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "All three steps, on both chains. `E(σ ∧ n)` is *defined* by the paper's own one-step recursion (`hitExp`) rather than derived from a chain — the same modelling decision as `pstar` — so what is not formalized is that this recursion computes the expectation of a stopping time. `σ < ∞` a.s. is a statement about the law of `σ` and has no counterpart; its content here is the finiteness of `⨆ₙ hitExp n`. ⚠ weakened hypothesis: `K ≥ d` is not needed, the supersolution inequality holding at every cap."
     },
     {
       "label": "prop:doubling_length",
@@ -277,11 +295,28 @@
         812
       ],
       "block_sha256": "11697b348e8ba6d7c26cf26447813a19bb52c608ce171b1a81f59eb00d42d706",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/DecayNotation.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Decay",
+        "GFNBounds.Doubling.Decay.p_gt_one",
+        "GFNBounds.Doubling.Decay.tau",
+        "GFNBounds.Doubling.Decay.eps",
+        "GFNBounds.Doubling.Decay.qm",
+        "GFNBounds.Doubling.Decay.wm",
+        "GFNBounds.Doubling.Decay.R0",
+        "GFNBounds.Doubling.Decay.uu",
+        "GFNBounds.Doubling.Decay.Phi",
+        "GFNBounds.Doubling.Decay.Ralpha",
+        "GFNBounds.Doubling.Decay.delta",
+        "GFNBounds.Doubling.Decay.block",
+        "GFNBounds.Doubling.Decay.CutBal",
+        "GFNBounds.Doubling.Decay.cutBal_of_setting"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "The whole notation block. `s = 1` is not a parameter but the shape of `Decay.eps`; `Decay.cutBal_of_setting` is the bridge from a `Setting` whose `eps` has that shape. `Decay.CutBal` is `CutBalanceSeq` with the target row dropped, since the decay block never uses it."
     },
     {
       "label": "lem:doubling_averaging",
@@ -290,11 +325,19 @@
         846
       ],
       "block_sha256": "54fa6cfaedef950de7a8ab2dfd545e762f1df91052642d40331b5d5118edd6c0",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/DecayNotation.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Decay.qm_pos",
+        "GFNBounds.Doubling.Decay.avg_of_cutBal",
+        "GFNBounds.Doubling.Decay.uavg_of_avg",
+        "GFNBounds.Doubling.Decay.sum_wm",
+        "GFNBounds.Doubling.Decay.uavg_of_cutBal"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "Both items, and `q_m > 0` on `W(m)`. ⚠ weakened hypothesis: the identities are linear and need no positivity of `(λ_j)`; `m > d` enters only through `1 ≤ m`."
     },
     {
       "label": "lem:doubling_expansion",
@@ -329,11 +372,21 @@
         1024
       ],
       "block_sha256": "b13b9257c03792666b0a66c5b4072c66a63da9ebba4361254b80417108f24cc5",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Descent.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Decay.descW",
+        "GFNBounds.Doubling.Decay.descW_of_lt",
+        "GFNBounds.Doubling.Decay.descW_of_ge",
+        "GFNBounds.Doubling.Decay.descOne",
+        "GFNBounds.Doubling.Decay.le_of_mem_window_of_ge",
+        "GFNBounds.Doubling.Decay.descW_uu",
+        "GFNBounds.Doubling.Decay.descW_between"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "Items (1), (2) and (3) are proved, as facts about a recursion rather than about a chain: the descent chain is not built, and `E(Z_ℓ g(Y_{N_ℓ}))` is the unnormalized transform `descW`, the `R₀(y)` of the transition law cancelling the `R₀(y)` of the weight. Item (1) is the recursion's well-foundedness (`j < m` on `W(m)`), item (2) is the range of its base case (`descW_between`), item (3) is `descW_uu`. NOT here: the two bounds `½ ≤ R₀ ≤ 2` and `|R₀ − 1| ≤ c₄/m` of `eq:doubling_R0`, which come from `lem:doubling_expansion` (Euler–Maclaurin, absent from mathlib v4.31.0). They are carried downstream as hypotheses."
     },
     {
       "label": "lem:doubling_escape",
@@ -368,11 +421,17 @@
         1228
       ],
       "block_sha256": "b2f8f408d14f0bf8f740933cd30d762e9c9f1be377dbfba8453ec988f6409b39",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Descent.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Decay.decay_block",
+        "GFNBounds.Doubling.Decay.uu_bounded",
+        "GFNBounds.Doubling.Decay.decay_two_sided"
+      ],
+      "status": "partial",
+      "bucket": "C",
+      "scope_notes": "Both items, **conditional on one hypothesis**: the two-sided bound `Z₁ ≤ E(Z_ℓ) ≤ Z₂` on the expected weight of a descent, which is `eq:doubling_product` at `b := R₀ − 1`, `H := c₄`. That bound is `lem:doubling_product`, which rests on `lem:doubling_escape` and `lem:doubling_expansion` and is open (bucket C, hard). Everything else — the descent identity, the sandwich by the base block, and the passage from `eq:doubling_block` to the two-sided `c₁ j^{-p_*} ≤ λ_j ≤ c₂ j^{-p_*}` — is proved. The constants `c₄, ℓ₁, γ, c₅, ℓ₂, m₀` are therefore not named: the level `ℓ` and the two bounds are parameters."
     },
     {
       "label": "cor:doubling_tail",
@@ -381,11 +440,23 @@
         1268
       ],
       "block_sha256": "3f22eac7acad3f7c8c24e7fbe04263e777531a2b0c522ec51e2d4de34114176c",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Tail.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.rpow_ge_tangent",
+        "GFNBounds.Doubling.incr_le",
+        "GFNBounds.Doubling.le_incr",
+        "GFNBounds.Doubling.powerTail",
+        "GFNBounds.Doubling.powerTail_ge",
+        "GFNBounds.Doubling.powerTail_le",
+        "GFNBounds.Doubling.tailSeq",
+        "GFNBounds.Doubling.Decay.tail_bounds",
+        "GFNBounds.Doubling.Decay.tail_ratio_ge"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "`eq:doubling_powertail` (as its two inequalities, the `ξ_m` not being named) and both pairs of `eq:doubling_tailratio`. The paper compares the sum with `∫_m^∞ t^{-p}`; mathlib v4.31.0 has the finite sum/integral comparison but not the improper one, so the comparison here telescopes against `j ↦ j^{1-p}`, both increments coming from one tangent-line inequality `u^q ≥ 1 + q(u−1)` for `q ≤ 0`. No integral appears. `L(m) → 0` is proved elsewhere (`Stat.tailMass_tendsto_zero`), from summability."
     },
     {
       "label": "rem:doubling_renewal",
@@ -615,11 +686,17 @@
         2124
       ],
       "block_sha256": "909585b04232eb8e85ca370c7e0fbc7d99b15b687946ff7b7d7c8df76bae0512",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Family.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Stat.tailSeq_eq_tailMass",
+        "GFNBounds.Doubling.Stat.rayleigh_family",
+        "GFNBounds.Doubling.Stat.exists_rayleigh_family"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "`eq:doubling_explicit` in squared, denominator-free form: `c₁ m ‖(Id−P⋆)f_m‖² ≤ 4c₂(p−1)‖f_m‖²`, so `c₇ = √(c₁/(4c₂(p−1)))` and no square root is taken. Conditional on `eq:doubling_decay` with a pair `(c₁,c₂)`, exactly as the paper's is conditional on `theo:doubling_decay`; positive recurrence is the hypothesis `Stat S none`, not a conclusion."
     },
     {
       "label": "prop:doubling_unsolvable",
@@ -641,11 +718,16 @@
         2189
       ],
       "block_sha256": "3eeaf9fef370efff9eadab9bb1d2e0221e93760f614e9761538983f362073913",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Unbounded.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.geometric_sum",
+        "GFNBounds.Doubling.not_growthCond_geometric"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "The identity and its consequence: for `ε(j) = a ρ^j` with `ρ ∈ (0,1)` the left side of (★) is `D log(1/a) + (2^D − 1) log(1/ρ)`, and (★) fails. The remark's closing sentence — that no boundedness is claimed for any policy on this graph — is prose."
     },
     {
       "label": "cor:doubling_truncation",

@@ -408,4 +408,51 @@ theorem growthCond_of_family {c s : ℝ} (hc : 0 < c) (hs : 0 ≤ s)
     field_simp
   exact squeeze_zero hnn hub hlim
 
+/-! ## `rem:doubling_geometric`: (★) is not vacuous -/
+
+/-- **`rem:doubling_geometric`, the identity.** For a geometrically decaying doubling probability
+`ε(j) = a ρ^j` the left side of (★) is `D log(1/a) + (2^D − 1) log(1/ρ)`. -/
+theorem geometric_sum {a rho : ℝ} (ha : 0 < a) (hrho : 0 < rho) (S : Setting)
+    (heps : ∀ j, S.eps j = a * rho ^ j) (D : ℕ) :
+    ∑ i ∈ Finset.range D, Real.log (1 / S.eps (2 ^ i))
+      = (D : ℝ) * Real.log (1 / a) + ((2 : ℝ) ^ D - 1) * Real.log (1 / rho) := by
+  have hterm : ∀ i ∈ Finset.range D, Real.log (1 / S.eps (2 ^ i))
+      = Real.log (1 / a) + (2 : ℝ) ^ i * Real.log (1 / rho) := by
+    intro i _
+    have hp : (0 : ℝ) < rho ^ (2 ^ i) := pow_pos hrho _
+    rw [heps, one_div, mul_inv, ← one_div, ← one_div]
+    rw [Real.log_mul (by positivity) (by positivity)]
+    rw [show (1 : ℝ) / rho ^ 2 ^ i = (1 / rho) ^ 2 ^ i by rw [div_pow, one_pow],
+      Real.log_pow]
+    push_cast
+    ring
+  rw [Finset.sum_congr rfl hterm, Finset.sum_add_distrib, Finset.sum_const, Finset.card_range,
+    nsmul_eq_mul, ← Finset.sum_mul, geom_sum_eq (by norm_num : (2:ℝ) ≠ 1)]
+  norm_num
+
+/-- **`rem:doubling_geometric`.** (★) fails for `ε(j) = a ρ^j` with `ρ ∈ (0,1)`: the left side is
+of order `2^D`, not `o(2^D)`. -/
+theorem not_growthCond_geometric {a rho : ℝ} (ha : 0 < a) (hrho : 0 < rho) (hrho1 : rho < 1)
+    (S : Setting) (heps : ∀ j, S.eps j = a * rho ^ j) : ¬ GrowthCond S := by
+  intro hstar
+  have hlogpos : 0 < Real.log (1 / rho) := by
+    rw [one_div]
+    exact Real.log_pos (by rw [lt_inv_comm₀ (by norm_num) hrho]; simpa using hrho1)
+  have hlim : Tendsto (fun D : ℕ =>
+      (∑ i ∈ Finset.range D, Real.log (1 / S.eps (2 ^ i))) / 2 ^ D) atTop
+      (𝓝 (Real.log (1 / rho))) := by
+    have h1 := tendsto_pow_const_div_const_pow_of_one_lt 1 (by norm_num : (1:ℝ) < 2)
+    have h2 : Tendsto (fun D : ℕ => (1 : ℝ) / 2 ^ D) atTop (𝓝 0) := by
+      simpa using tendsto_pow_const_div_const_pow_of_one_lt 0 (by norm_num : (1:ℝ) < 2)
+    have hsum := (h1.const_mul (Real.log (1 / a))).add
+      (((tendsto_const_nhds (x := (1:ℝ)) (f := atTop (α := ℕ))).sub h2).const_mul
+        (Real.log (1 / rho)))
+    simp only [mul_zero, zero_add, sub_zero, mul_one] at hsum
+    refine hsum.congr fun D => ?_
+    have hd : ((2 : ℝ) ^ D) ≠ 0 := by positivity
+    rw [geometric_sum ha hrho S heps D]
+    field_simp
+  have := tendsto_nhds_unique hstar hlim
+  exact absurd this.symm hlogpos.ne'
+
 end GFNBounds.Doubling

@@ -1,11 +1,17 @@
 import GFNBounds.Doubling.Setting
 import GFNBounds.Doubling.Range
 import GFNBounds.Doubling.Drift
+import GFNBounds.Doubling.Excursion
+import GFNBounds.Doubling.Supersolution
 import GFNBounds.Doubling.PerCutIdentity
 import GFNBounds.Doubling.CutBalance
 import GFNBounds.Doubling.Ratios
 import GFNBounds.Doubling.PerCutNorms
 import GFNBounds.Doubling.Cramer
+import GFNBounds.Doubling.DecayNotation
+import GFNBounds.Doubling.Descent
+import GFNBounds.Doubling.Tail
+import GFNBounds.Doubling.Family
 import GFNBounds.Doubling.Irreducible
 import GFNBounds.Doubling.Unbounded
 import GFNBounds.Doubling.Ramp

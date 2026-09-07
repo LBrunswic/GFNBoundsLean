@@ -1,5 +1,10 @@
 import GFNBounds.Doubling.CutBalance
 import GFNBounds.Doubling.Cramer
+import GFNBounds.Doubling.Descent
+import GFNBounds.Doubling.Excursion
+import GFNBounds.Doubling.Family
+import GFNBounds.Doubling.Supersolution
+import GFNBounds.Doubling.Tail
 import GFNBounds.Doubling.Drift
 import GFNBounds.Doubling.Irreducible
 import GFNBounds.Doubling.PerCutNorms
@@ -98,6 +103,62 @@ namespace GFNBounds.Doubling
 #print axioms Stat.exists_centredRamp_ge
 #print axioms Stat.no_bounded_inverse_infty
 #print axioms gamma_family
+
+-- `rem:doubling_geometric` — app_doubling.tex:2183
+#print axioms geometric_sum
+#print axioms not_growthCond_geometric
+
+-- `lem:doubling_excursion` — app_doubling.tex:398
+#print axioms LadderStep.le_succ_add_one
+#print axioms excursion_le
+
+-- `lem:doubling_supersolution` — app_doubling.tex:426
+#print axioms pstar_mono
+#print axioms linSuper_eq
+#print axioms linSuper_ge
+#print axioms hitExp_le_linSuper
+#print axioms hitExp_mono
+#print axioms hitExp_iSup_le
+#print axioms sigmaBar_le
+
+-- `def:doubling_decay_notation` — app_doubling.tex:789
+#print axioms Decay.p_gt_one
+#print axioms Decay.tau_gt_two
+#print axioms Decay.cramer
+#print axioms Decay.one_sub_eps_pos
+#print axioms Decay.wm_pos
+#print axioms Decay.cutBal_of_setting
+
+-- `lem:doubling_averaging` — app_doubling.tex:814
+#print axioms Decay.avg_of_cutBal
+#print axioms Decay.uavg_of_avg
+#print axioms Decay.uavg_of_cutBal
+
+-- `lem:doubling_descent` — app_doubling.tex:965
+#print axioms Decay.descW
+#print axioms Decay.descW_of_ge
+#print axioms Decay.le_of_mem_window_of_ge
+#print axioms Decay.descW_uu
+#print axioms Decay.descW_between
+
+-- `theo:doubling_decay` — app_doubling.tex:1155
+#print axioms Decay.decay_block
+#print axioms Decay.uu_bounded
+#print axioms Decay.decay_two_sided
+
+-- `cor:doubling_tail` — app_doubling.tex:1230
+#print axioms rpow_ge_tangent
+#print axioms incr_le
+#print axioms le_incr
+#print axioms powerTail_ge
+#print axioms powerTail_le
+#print axioms Decay.tail_bounds
+#print axioms Decay.tail_ratio_ge
+
+-- `cor:doubling_family` — app_doubling.tex:2087
+#print axioms Stat.tailSeq_eq_tailMass
+#print axioms Stat.rayleigh_family
+#print axioms Stat.exists_rayleigh_family
 
 -- the definitional layer (`def:doubling_setting` — app_doubling.tex:13)
 #print axioms pstar_const

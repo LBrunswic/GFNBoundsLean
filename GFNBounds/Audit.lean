@@ -1,5 +1,6 @@
 import GFNBounds.Doubling.CutBalance
 import GFNBounds.Doubling.Drift
+import GFNBounds.Doubling.PerCutNorms
 
 /-!
 # Axiom audit
@@ -33,6 +34,18 @@ namespace GFNBounds.Doubling
 
 -- `lem:doubling_percut`, Step 2 (`eq:doubling_step1`) — app_doubling.tex:1848
 #print axioms percut_id
+
+-- `lem:doubling_percut`, Steps 1, 3, 4 — app_doubling.tex:1848
+#print axioms mass_cutFn
+#print axioms mass_cutFn_le_mid
+#print axioms mass_cutFn_le_two
+#print axioms Stat.tsum_centredTail
+#print axioms Stat.mass_centredTail
+#print axioms Stat.mass_two_centredTail
+#print axioms centredTail_defect
+#print axioms Stat.mass_defect_le
+#print axioms Stat.tailMass_mul_coTail_pos
+#print axioms Stat.rayleigh_two_le'
 
 -- `prop:doubling_cut` (`eq:doubling_cut`) — app_doubling.tex:641
 #print axioms cut_balance

@@ -106,8 +106,10 @@ def main():
                 fail.append("%s: listed Lean file %s does not exist" % (lab, f))
         for d in st["decls"]:
             short = d.split(".")[-1]
+            # `(?![\w'])` rather than `\b`: Lean names may end in a prime, after which
+            # `\b` would demand a word character.
             pat = (r"\b(theorem|lemma|def|structure|inductive|abbrev|instance)\s+"
-                   r"(?:[A-Za-z_][\w.']*\.)?%s\b" % re.escape(short))
+                   r"(?:[A-Za-z_][\w.']*\.)?%s(?![\w'])" % re.escape(short))
             if not any(re.search(pat, src[f]) for f in st["lean_files"] if f in src):
                 fail.append("%s: declaration %s not found in its listed files" % (lab, d))
 

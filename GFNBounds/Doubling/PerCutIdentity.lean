@@ -119,6 +119,12 @@ theorem sum_eps_dirac (S : Setting) (m j : ℕ) :
   simp only [dirac_lad, mul_ite, mul_one, mul_zero]
   exact Finset.sum_ite_eq (window m) j S.eps
 
+/-- The window sum collapses to a single term, for an arbitrary coefficient function. -/
+theorem sum_dirac_gen (c : ℕ → ℝ) (m j : ℕ) :
+    ∑ y ∈ window m, c y * dirac y (.lad j) = if j ∈ window m then c j else 0 := by
+  simp only [dirac_lad, mul_ite, mul_one, mul_zero]
+  exact Finset.sum_ite_eq (window m) j c
+
 theorem cutFn_lad (S : Setting) (m j : ℕ) :
     cutFn S m (.lad j) =
       (1 - S.eps m) * (if j = m then 1 else 0) - (if j ∈ window m then S.eps j else 0) := by

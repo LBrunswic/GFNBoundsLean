@@ -494,16 +494,29 @@
       ],
       "block_sha256": "208f08108c076df9f3caa4a1b81abf35830d4fd440e7ddd67c534c79b6061e8a",
       "lean_files": [
-        "GFNBounds/Doubling/PerCutIdentity.lean"
+        "GFNBounds/Doubling/PerCutIdentity.lean",
+        "GFNBounds/Doubling/PerCutNorms.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.tailInd",
         "GFNBounds.Doubling.cutFn",
-        "GFNBounds.Doubling.percut_id"
+        "GFNBounds.Doubling.percut_id",
+        "GFNBounds.Doubling.mass_cutFn",
+        "GFNBounds.Doubling.mass_cutFn_le_mid",
+        "GFNBounds.Doubling.mass_cutFn_le_two",
+        "GFNBounds.Doubling.Stat.tailMass",
+        "GFNBounds.Doubling.Stat.centredTail",
+        "GFNBounds.Doubling.Stat.tsum_centredTail",
+        "GFNBounds.Doubling.Stat.mass_centredTail",
+        "GFNBounds.Doubling.Stat.mass_two_centredTail",
+        "GFNBounds.Doubling.centredTail_defect",
+        "GFNBounds.Doubling.Stat.mass_defect_le",
+        "GFNBounds.Doubling.Stat.tailMass_mul_coTail_pos",
+        "GFNBounds.Doubling.Stat.rayleigh_two_le'"
       ],
-      "status": "partial",
+      "status": "closed",
       "bucket": "A",
-      "scope_notes": "Step 2 (eq:doubling_step1) closed, for both cases (1) and (2) at once. Asserted ON CHAIN: it genuinely fails at lad(K+1) off the truncated chain, where lambda vanishes. Steps 3-4 (the norm bounds eq:doubling_step2/step3/stepp) are NOT yet done."
+      "scope_notes": "All four steps, for the loop closure and the truncation at once via the cap parameter; the paper's `d < m <= K/2` is hdm plus hD : HasDouble cap m, and evenness of K is unused. eq:doubling_step3 is stated SQUARED (Stat.mass is the p-th power of the norm), equivalent to the paper's square-root form. Stat.mass_centredTail is proved with NO hypothesis on p (the paper assumes p in [1,inf)): f_m takes two values, so the identity is exact at every exponent. The identity of Step 2 is asserted OnChain and genuinely fails at lad(K+1), where lambda vanishes."
     },
     {
       "label": "theo:doubling_unbounded",

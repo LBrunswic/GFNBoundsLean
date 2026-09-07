@@ -5,4 +5,8 @@ import GFNBounds.Doubling.PerCutIdentity
 import GFNBounds.Doubling.CutBalance
 import GFNBounds.Doubling.Ratios
 import GFNBounds.Doubling.PerCutNorms
+import GFNBounds.Doubling.Cramer
+import GFNBounds.Doubling.Irreducible
+import GFNBounds.Doubling.Unbounded
+import GFNBounds.Doubling.Ramp
 import GFNBounds.Audit

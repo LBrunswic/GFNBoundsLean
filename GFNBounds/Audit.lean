@@ -1,7 +1,11 @@
 import GFNBounds.Doubling.CutBalance
+import GFNBounds.Doubling.Cramer
 import GFNBounds.Doubling.Drift
+import GFNBounds.Doubling.Irreducible
 import GFNBounds.Doubling.PerCutNorms
+import GFNBounds.Doubling.Ramp
 import GFNBounds.Doubling.Ratios
+import GFNBounds.Doubling.Unbounded
 
 /-!
 # Axiom audit
@@ -54,6 +58,46 @@ namespace GFNBounds.Doubling
 #print axioms Stat.hasSum_flux
 #print axioms Stat.lam_double_ge
 #print axioms Stat.lam_le_prev
+
+-- `lem:doubling_cramer_root` — app_doubling.tex:711
+#print axioms psi_strictConvexOn
+#print axioms cramer_root_unique
+#print axioms cramer_root_exists
+#print axioms psi_pos_of_log_eq
+#print axioms cramer_root_gt_one
+#print axioms cramer_lt_one_of_root_gt_one
+#print axioms cramer_root_pos_iff
+#print axioms cramer_form
+#print axioms cramer_kernel_integral
+#print axioms cramer_ineq
+
+-- `lem:doubling_irreducible` — app_doubling.tex:101
+#print axioms edge_pstar_pos
+#print axioms reach_all_none
+#print axioms PreStat.pos_of_irreducible
+#print axioms PreStat.toStatNone
+
+-- `lem:doubling_truncation_irreducible` (Steps 1–3) — app_doubling.tex:1805
+#print axioms reach_one_lad
+#print axioms reach_all_some
+#print axioms PreStat.toStatSome
+
+-- `theo:doubling_unbounded` — app_doubling.tex:1945
+#print axioms Stat.tailMass_succ
+#print axioms Stat.tailMass_tendsto_zero
+#print axioms Stat.lam_pow_two_ge
+#print axioms Stat.exists_tailRatio_gt
+#print axioms Stat.mass_ratio_bound
+#print axioms Stat.exists_small_mass_ratio
+#print axioms Stat.no_bounded_inverse
+#print axioms growthCond_of_family
+
+-- `lem:doubling_ramp` — app_doubling.tex:2021
+#print axioms ramp_defect_bounded
+#print axioms Stat.tsum_centredRamp
+#print axioms Stat.exists_centredRamp_ge
+#print axioms Stat.no_bounded_inverse_infty
+#print axioms gamma_family
 
 -- the definitional layer (`def:doubling_setting` — app_doubling.tex:13)
 #print axioms pstar_const

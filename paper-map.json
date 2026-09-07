@@ -57,11 +57,24 @@
         128
       ],
       "block_sha256": "2614cd214973c2139cc5e97fa82a114a0e6094adfc4770ca053da6d32066b5c4",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Irreducible.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Edge",
+        "GFNBounds.Doubling.Reach",
+        "GFNBounds.Doubling.edge_pstar_pos",
+        "GFNBounds.Doubling.reach_one",
+        "GFNBounds.Doubling.reach_lad_none",
+        "GFNBounds.Doubling.reach_all_none",
+        "GFNBounds.Doubling.PreStat",
+        "GFNBounds.Doubling.PreStat.lam_pos_of_reach",
+        "GFNBounds.Doubling.PreStat.pos_of_irreducible",
+        "GFNBounds.Doubling.PreStat.toStatNone"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "Both sentences. Irreducibility is `Reach`, the reflexive-transitive closure of `Edge`, and `edge_pstar_pos` is the bridge to `P_star`: an edge is exactly a positive one-step law. The second sentence — an invariant probability is positive at every state — is *derived* here (`PreStat.toStat`), removing the one place where the Lean `Setting` layer had been stronger than the paper: `Stat.pos` is a field, but `PreStat` shows it is not an extra hypothesis."
     },
     {
       "label": "lem:doubling_fixed_points",
@@ -237,11 +250,25 @@
         767
       ],
       "block_sha256": "ecaf1400fe574a01aa0be24783596a6d4804022a92b8c57a10a5a15830ae7722",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Cramer.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.psi",
+        "GFNBounds.Doubling.psi_strictConvexOn",
+        "GFNBounds.Doubling.cramer_root_unique",
+        "GFNBounds.Doubling.cramer_root_exists",
+        "GFNBounds.Doubling.psi_pos_of_log_eq",
+        "GFNBounds.Doubling.cramer_root_gt_one",
+        "GFNBounds.Doubling.cramer_lt_one_of_root_gt_one",
+        "GFNBounds.Doubling.cramer_root_pos_iff",
+        "GFNBounds.Doubling.cramer_form",
+        "GFNBounds.Doubling.cramer_kernel_integral",
+        "GFNBounds.Doubling.cramer_ineq"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "All three items, plus existence, uniqueness and the `c = 1/ln 2` case. Two proofs use weaker tools than the paper's and are marked in the file: `two_rpow_gt_add_one` gets `2^t > t+1` for `t > 1` from `exp x ≥ x+1` and `2 ln 2 > 1` rather than from convexity, and the `c = 1/ln 2` case comes from `x + 1 < exp x` rather than from `0` being the strict minimum. Strict convexity is still proved and is what carries uniqueness. Downstream files take a root as a hypothesis, so nothing depends on how `p_*` is selected."
     },
     {
       "label": "def:doubling_decay_notation",
@@ -484,11 +511,18 @@
         1846
       ],
       "block_sha256": "f911ccce02e4422c6d2b18825ba3947b78d6b34108ac2b204a88b83ca22bf057",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Irreducible.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.reach_pow_two",
+        "GFNBounds.Doubling.reach_one_lad",
+        "GFNBounds.Doubling.reach_all_some",
+        "GFNBounds.Doubling.PreStat.toStatSome"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "Steps 1–3 only: the truncation at an even cap `K ≥ d` is irreducible, with the parity used exactly where the paper uses it, and an invariant probability on it is positive. Step 4 — existence and uniqueness of `λ^K` (Perron–Frobenius) and `B̂_K < +∞` (`lem:doubling_operator`(2)) — is open. The count `K+2` is not formalized; `St` stays infinite and the state set is `OnChain (some K)`."
     },
     {
       "label": "lem:doubling_percut",
@@ -529,11 +563,23 @@
         2019
       ],
       "block_sha256": "71138ced76f59f0dbc8d165fa581f9cc49205fcaf66e57dc03bf60508cde4e7a",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Unbounded.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.GrowthCond",
+        "GFNBounds.Doubling.growthCond_of_family",
+        "GFNBounds.Doubling.Stat.tailMass_succ",
+        "GFNBounds.Doubling.Stat.tailMass_tendsto_zero",
+        "GFNBounds.Doubling.Stat.lam_pow_two_ge",
+        "GFNBounds.Doubling.Stat.exists_tailRatio_gt",
+        "GFNBounds.Doubling.Stat.mass_ratio_bound",
+        "GFNBounds.Doubling.Stat.exists_small_mass_ratio",
+        "GFNBounds.Doubling.Stat.no_bounded_inverse"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "Items (1) and (2) at every finite `p`, in the ℝ mass layer: `Stat.mass p f` is `‖f‖_{L^p(λ)}^p`, so `eq:doubling_inf` reads as the same statement raised to the power `p`, and `Π f = 0` reads as `∑' λ·f = 0`. \"No bounded `S`\" is `Stat.no_bounded_inverse`: no real `B` bounds `mass p f ≤ B · mass p ((Id−P⋆)f)` over the bounded mean-zero `f`, which is the inequality Step 3 of the paper actually uses. NOT here: the `p = 2` clauses about `Σ β̂_n = +∞` and the divergence of `Σ (P⋆ⁿ − Π)`, which need `lem:doubling_operator`. ⚠ weakened hypothesis in `exists_tailRatio_gt`: the start of the supremum need not exceed `d`."
     },
     {
       "label": "lem:doubling_ramp",
@@ -542,11 +588,25 @@
         2085
       ],
       "block_sha256": "35c51432f174c0299adcd1d44fb241bc28b3866efc8ee0f15e7a54e9c5e64f35",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "",
-      "scope_notes": ""
+      "lean_files": [
+        "GFNBounds/Doubling/Ramp.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.rampFn",
+        "GFNBounds.Doubling.ramp_defect_below",
+        "GFNBounds.Doubling.ramp_defect_straddle",
+        "GFNBounds.Doubling.ramp_defect_above",
+        "GFNBounds.Doubling.ramp_defect_sink",
+        "GFNBounds.Doubling.ramp_defect_bounded",
+        "GFNBounds.Doubling.Stat.centredRamp",
+        "GFNBounds.Doubling.Stat.tsum_centredRamp",
+        "GFNBounds.Doubling.Stat.exists_centredRamp_ge",
+        "GFNBounds.Doubling.Stat.no_bounded_inverse_infty",
+        "GFNBounds.Doubling.gamma_family"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "All five cases of the defect, both lines of `eq:doubling_ramp`, `Π r̃_N = 0`, and the conclusion. `L^∞(λ)` is not built: since `λ` is positive at every state the `L^∞(λ)` norm is the supremum over states, so the two inequalities are stated in the forms that supremum consumes — a pointwise upper bound on the defect and an attained lower bound on the function — and `no_bounded_inverse_infty` is phrased against those. The family clause is the bound `γ = c 2^{1−s}` for `s ≥ 1`; that it is *unbounded* for `s < 1` is not formalized."
     },
     {
       "label": "cor:doubling_family",

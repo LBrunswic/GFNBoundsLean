@@ -13,6 +13,8 @@ import GFNBounds.Doubling.DecayNotation
 import GFNBounds.Doubling.Expansion
 import GFNBounds.Doubling.Descent
 import GFNBounds.Doubling.Tail
+import GFNBounds.Doubling.WindowSum
+import GFNBounds.Doubling.R0Bound
 import GFNBounds.Doubling.Family
 import GFNBounds.Doubling.FixedPoints
 import GFNBounds.Doubling.Main

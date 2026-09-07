@@ -10,6 +10,8 @@ import GFNBounds.Doubling.Expansion
 import GFNBounds.Doubling.FixedPoints
 import GFNBounds.Doubling.Main
 import GFNBounds.Doubling.Operator
+import GFNBounds.Doubling.R0Bound
+import GFNBounds.Doubling.WindowSum
 import GFNBounds.Doubling.Drift
 import GFNBounds.Doubling.Irreducible
 import GFNBounds.Doubling.PerCutNorms
@@ -202,6 +204,18 @@ namespace GFNBounds.Doubling
 #print axioms main_rate
 #print axioms main_truncation_irreducible
 #print axioms main_irreducible
+
+-- `eq:doubling_R0`, effectivized — app_doubling.tex:965 (in `lem:doubling_descent`)
+#print axioms incr_le'
+#print axioms le_incr'
+#print axioms telescope_Ico
+#print axioms sum_window_ge
+#print axioms sum_window_le
+#print axioms Decay.R0_eq
+#print axioms Decay.foot_rpow_le
+#print axioms Decay.le_foot_rpow
+#print axioms Decay.R0_sub_one_le
+#print axioms Decay.R0_between
 
 -- the definitional layer (`def:doubling_setting` — app_doubling.tex:13)
 #print axioms pstar_const

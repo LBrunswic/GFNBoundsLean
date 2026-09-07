@@ -394,7 +394,7 @@
       ],
       "status": "partial",
       "bucket": "C",
-      "scope_notes": "Step 4 only: the closed form of `A₁` and all of `eq:doubling_signs`, each sign coming from one of the four inequalities of `eq:doubling_cramer_ineq`. HARD, blocked: `eq:doubling_Rexp` itself. Its Step 2 is Euler–Maclaurin for `t^{-r}` with a complete-monotonicity remainder bound, and mathlib v4.31.0 has neither. This is the appendix's one analytic wall; everything it feeds is carried downstream as a hypothesis (`½ ≤ R₀ ≤ 2` and `|R₀ − 1| ≤ c₄/m`)."
+      "scope_notes": "Step 4 only: the closed form of `A₁` and all of `eq:doubling_signs`, each sign coming from one of the four inequalities of `eq:doubling_cramer_ineq`. HARD, blocked: `eq:doubling_Rexp` itself, whose Step 2 is Euler–Maclaurin for `t^{-r}` with a complete-monotonicity remainder bound — mathlib v4.31.0 has neither. **But the wall has been routed around where it mattered**: what the descent block consumes is only `eq:doubling_R0`, and `R0Bound.lean` proves that by a first-order telescoping comparison, with the explicit constant `c₄ = 16cτ`. The refined expansion is now needed only by `rem:doubling_parity` and `rem:doubling_second_order`, and the latter is unproved in the paper too."
     },
     {
       "label": "rem:doubling_parity",
@@ -421,7 +421,9 @@
       ],
       "block_sha256": "b13b9257c03792666b0a66c5b4072c66a63da9ebba4361254b80417108f24cc5",
       "lean_files": [
-        "GFNBounds/Doubling/Descent.lean"
+        "GFNBounds/Doubling/Descent.lean",
+        "GFNBounds/Doubling/R0Bound.lean",
+        "GFNBounds/Doubling/WindowSum.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Decay.descW",
@@ -430,11 +432,18 @@
         "GFNBounds.Doubling.Decay.descOne",
         "GFNBounds.Doubling.Decay.le_of_mem_window_of_ge",
         "GFNBounds.Doubling.Decay.descW_uu",
-        "GFNBounds.Doubling.Decay.descW_between"
+        "GFNBounds.Doubling.Decay.descW_between",
+        "GFNBounds.Doubling.sum_window_ge",
+        "GFNBounds.Doubling.sum_window_le",
+        "GFNBounds.Doubling.Decay.R0_eq",
+        "GFNBounds.Doubling.Decay.foot_rpow_le",
+        "GFNBounds.Doubling.Decay.le_foot_rpow",
+        "GFNBounds.Doubling.Decay.R0_sub_one_le",
+        "GFNBounds.Doubling.Decay.R0_between"
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "Items (1), (2) and (3) are proved, as facts about a recursion rather than about a chain: the descent chain is not built, and `E(Z_ℓ g(Y_{N_ℓ}))` is the unnormalized transform `descW`, the `R₀(y)` of the transition law cancelling the `R₀(y)` of the weight. Item (1) is the recursion's well-foundedness (`j < m` on `W(m)`), item (2) is the range of its base case (`descW_between`), item (3) is `descW_uu`. NOT here: the two bounds `½ ≤ R₀ ≤ 2` and `|R₀ − 1| ≤ c₄/m` of `eq:doubling_R0`, which come from `lem:doubling_expansion` (Euler–Maclaurin, absent from mathlib v4.31.0). They are carried downstream as hypotheses."
+      "scope_notes": "Items (1), (2), (3) and **`eq:doubling_R0`** are proved. The chain is not built: `E(Z_ℓ g(Y_{N_ℓ}))` is the unnormalized transform `descW`, the `R₀(y)` of the transition law cancelling the `R₀(y)` of the weight; item (1) is the recursion's well-foundedness, item (2) the range of its base case, item (3) the fixed-point identity `eq:doubling_pathid`. `eq:doubling_R0` is proved with an **explicit** constant, `c₄ = 16cτ` valid at every `m ≥ 1`, and `½ ≤ R₀ ≤ 2` for `m ≥ 32cτ` — against the paper's non-effective `c₄` and `ℓ₁`; it does not go through `lem:doubling_expansion`, a first-order telescoping comparison sufficing. Left as `partial` for one reason only: the two clauses that are *about the chain* rather than about the recursion — `N_ℓ ≤ m` and the “almost surely” of item (2) — have no counterpart here, because no chain is built. Nothing of the lemma is assumed."
     },
     {
       "label": "lem:doubling_escape",
@@ -460,7 +469,7 @@
       "decls": [],
       "status": "open",
       "bucket": "C",
-      "scope_notes": "HARD. The block decomposition uses the strong Markov property at the block exit and `E(ζ^ς)` bounds from `lem:doubling_escape`. In the recursion model the quantity is definable (`descW` with a multiplicative weight) but the block argument needs the exit-time law. This is the single hypothesis `theo:doubling_decay` carries (`hlo`, `hhi` in `Descent.lean`), so closing it makes the decay theorem unconditional."
+      "scope_notes": "HARD. The block decomposition uses the strong Markov property at the block exit and `E(ζ^ς)` bounds from `lem:doubling_escape`. Its *other* input, `eq:doubling_R0` with an explicit `c₄`, is now proved (`R0Bound.lean`), so the exit-time law is the whole of what is left. This is the single hypothesis `theo:doubling_decay` carries, so closing it makes the decay theorem unconditional."
     },
     {
       "label": "theo:doubling_decay",
@@ -479,7 +488,7 @@
       ],
       "status": "partial",
       "bucket": "C",
-      "scope_notes": "Both items, **conditional on one hypothesis**: the two-sided bound `Z₁ ≤ E(Z_ℓ) ≤ Z₂` on the expected weight of a descent, which is `eq:doubling_product` at `b := R₀ − 1`, `H := c₄`. That bound is `lem:doubling_product`, which rests on `lem:doubling_escape` and `lem:doubling_expansion` and is open (bucket C, hard). Everything else — the descent identity, the sandwich by the base block, and the passage from `eq:doubling_block` to the two-sided `c₁ j^{-p_*} ≤ λ_j ≤ c₂ j^{-p_*}` — is proved. The constants `c₄, ℓ₁, γ, c₅, ℓ₂, m₀` are therefore not named: the level `ℓ` and the two bounds are parameters."
+      "scope_notes": "Both items, **conditional on one hypothesis**: the two-sided bound `Z₁ ≤ E(Z_ℓ) ≤ Z₂` on the expected weight of a descent, which is `eq:doubling_product`. That is now the *only* missing input: `eq:doubling_R0`, which `lem:doubling_product` consumes, is proved in `R0Bound.lean` with an explicit constant. What remains is `lem:doubling_escape`'s sojourn bounds and the block decomposition of `lem:doubling_product`, both of which are statements about the law of an exit time and need the descent as a chain. Everything else — the descent identity, the sandwich by the base block, and the passage from `eq:doubling_block` to `c₁ j^{-p_*} ≤ λ_j ≤ c₂ j^{-p_*}` — is proved, with the level `ℓ` and the two bounds as parameters."
     },
     {
       "label": "cor:doubling_tail",

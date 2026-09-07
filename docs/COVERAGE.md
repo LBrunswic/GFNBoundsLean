@@ -38,7 +38,7 @@ The **bucket** says how far the rest is, and every non-`A` row carries its obstr
 | `lem:doubling_averaging` | 814–846 | ✅ closed | A | `DecayNotation.lean` | — |
 | `lem:doubling_expansion` | 848–953 | 🟡 partial | C | `Expansion.lean` | — |
 | `rem:doubling_parity` | 955–963 | 🟡 partial | C | `Expansion.lean` | — |
-| `lem:doubling_descent` | 965–1024 | 🟡 partial | B | `Descent.lean` | — |
+| `lem:doubling_descent` | 965–1024 | 🟡 partial | B | `Descent.lean`<br>`R0Bound.lean`<br>`WindowSum.lean` | — |
 | `lem:doubling_escape` | 1026–1108 | ⬜ open | C | — | — |
 | `lem:doubling_product` | 1110–1153 | ⬜ open | C | — | — |
 | `theo:doubling_decay` | 1155–1228 | 🟡 partial | C | `Descent.lean` | — |

@@ -21,6 +21,8 @@ import GFNBounds.Doubling.FixedPoints
 import GFNBounds.Doubling.Main
 import GFNBounds.Doubling.Operator
 import GFNBounds.Doubling.Irreducible
+import GFNBounds.Doubling.Kac
+import GFNBounds.Doubling.Truncation
 import GFNBounds.Doubling.Unbounded
 import GFNBounds.Doubling.Ramp
 import GFNBounds.Audit

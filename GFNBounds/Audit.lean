@@ -15,6 +15,8 @@ import GFNBounds.Doubling.R0Bound
 import GFNBounds.Doubling.WindowSum
 import GFNBounds.Doubling.Drift
 import GFNBounds.Doubling.Irreducible
+import GFNBounds.Doubling.Kac
+import GFNBounds.Doubling.Truncation
 import GFNBounds.Doubling.PerCutNorms
 import GFNBounds.Doubling.Ramp
 import GFNBounds.Doubling.Ratios
@@ -226,6 +228,30 @@ namespace GFNBounds.Doubling
 #print axioms tendsto_windowPower
 #print axioms tendsto_windowV
 #print axioms exponent_is_cramer_root
+
+-- `cor:doubling_truncation`, Step 6 (Kac's formula) — app_doubling.tex:2199
+#print axioms hitExp_le_nat
+#print axioms Stat.hasSum_flux_pt
+#print axioms pstar_ptFn_sink
+#print axioms Stat.lam_sink_eq_src
+#print axioms Stat.lam_src_le_lam_one
+#print axioms hitExp_defect
+#print axioms Stat.hitInt_succ_sub
+#print axioms Stat.kac_identity
+#print axioms Stat.lam_one_ge
+
+-- `cor:doubling_truncation` — app_doubling.tex:2199
+#print axioms Stat.percut_K
+#print axioms Stat.finset_sum_le_tailMass
+#print axioms Stat.tail_lower
+#print axioms Stat.hitInt_le
+#print axioms Stat.sqrtK
+#print axioms Stat.lam_ge_prev
+#print axioms Stat.lam_chain_up
+#print axioms Stat.lam_chain_down
+#print axioms Stat.block_ratio
+#print axioms Stat.cutBalanceSeq_trunc
+#print axioms Stat.decayK
 
 -- the definitional layer (`def:doubling_setting` — app_doubling.tex:13)
 #print axioms pstar_const

@@ -817,11 +817,28 @@
         2336
       ],
       "block_sha256": "87367845bf1d850602b5758516f6650d2b4047ce3f00b6e0c443c42aaf67841b",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "HARD. Its four steps need: `lem:doubling_truncation_irreducible` Step 4 (Perron–Frobenius, open), `lem:doubling_operator`(2) (open), `theo:doubling_decay` applied to `λ^K` extended past the cap (available, but conditional on `lem:doubling_product`), and `lem:doubling_percut` on the truncation (proved). The `σ̄_K ≤ j̄/(1−c)` input is proved (`sigmaBar_le`)."
+      "lean_files": [
+        "GFNBounds/Doubling/Truncation.lean",
+        "GFNBounds/Doubling/Kac.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Stat.percut_K",
+        "GFNBounds.Doubling.Stat.finset_sum_le_tailMass",
+        "GFNBounds.Doubling.Stat.tail_lower",
+        "GFNBounds.Doubling.Stat.hitInt_le",
+        "GFNBounds.Doubling.Stat.sqrtK",
+        "GFNBounds.Doubling.Stat.lam_ge_prev",
+        "GFNBounds.Doubling.Stat.lam_chain_up",
+        "GFNBounds.Doubling.Stat.lam_chain_down",
+        "GFNBounds.Doubling.Stat.block_ratio",
+        "GFNBounds.Doubling.Stat.cutBalanceSeq_trunc",
+        "GFNBounds.Doubling.Stat.decayK",
+        "GFNBounds.Doubling.Stat.kac_identity",
+        "GFNBounds.Doubling.Stat.lam_one_ge"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "All three items, and all seven steps, with one disclosed recasting. **`B̂_K` is not constructed** — that is Step 1, which needs `lem:doubling_truncation_irreducible` Step 4 (Perron–Frobenius) and `lem:doubling_operator`(2), both open — so items (1) and (3) are stated about *any* `B` bounding the `L²(λ^K)` Rayleigh quotient, which is what `eq:doubling_resolvent` supplies for `B = B̂_K²`. They are therefore lower bounds on every such constant, which is the useful direction. Squared and cleared of roots throughout. Step 6 is the interesting one: the paper cites Kac's formula, mathlib has none, and `Kac.lean` **derives it** — `λ(s₀)(2 + σ̄) = 1` — from invariance in the integral form tested against the truncated hitting expectations `hitExp`, with no chain. That is the identity the lab register records as measured (`1/λ(s₀) − σ̄ ∈ [1.999999994526, 2.000000000004]`), and it is `prop:morozov_rate`(1) read at `s₀`. Step 4 (`decayK`) is conditional on `eq:doubling_product` exactly as `theo:doubling_decay` is; its `c₉` is explicit and free of `K` (`(Z₂/Z₁)·2^{p_*}·Q²` with `Q = ρ^ℓ + (η^ℓ)^{-1}`, `ρ = (1−ε_max)^{-1}`, `η = c/(2ℓ+1)`), which is the whole point of item (2). ⚠ weakened: evenness of `K` enters only through `m ≤ K/2 ↔ 2m ≤ K` and is never assumed."
     }
   ]
 }

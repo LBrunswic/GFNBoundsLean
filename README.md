@@ -21,7 +21,10 @@ names which one stops it:
 1. **A chain.** Optional stopping (`prop:doubling_length`), Foster's criterion
    (`prop:doubling_phase`), exit-time laws (`lem:doubling_escape`, `lem:doubling_product`),
    Doeblin and coupling (`theo:doubling_sharp` and its three lemmas). Mathlib v4.31.0 has none of
-   this for discrete time.
+   this for discrete time. One chain fact the appendix cites did **not** need it: Kac's formula.
+   `Kac.lean` derives `λ(s₀)(2 + σ̄) = 1` on this graph from invariance alone, tested against the
+   truncated hitting expectations — the identity the lab record measures as
+   `1/λ(s₀) − σ̄ ∈ [1.999999994526, 2.000000000004]`.
 2. **The `L^p` layer with its adjoint.** `lem:doubling_operator`(1)–(2),
    `lem:doubling_fixed_points`' `P` half, `prop:doubling_unsolvable`. The analysis in the last of
    these is already done — `eq:doubling_inf` is proved — and what is missing is the functional

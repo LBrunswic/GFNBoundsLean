@@ -1,21 +1,5 @@
 [
   {
-    "id": "97b09fa7",
-    "label": "prop:doubling_cut",
-    "decl": "lam_double_ge",
-    "file": "scaffold/GFNBoundsScaffold/Doubling/Ratios.lean",
-    "line": 35,
-    "reason": "needs pointwise balance at `lad (2j)`; the `kern` layer and the `Stat.inv`-tested-against-`dirac` bridge are not built."
-  },
-  {
-    "id": "d7eca5e1",
-    "label": "prop:doubling_cut",
-    "decl": "lam_le_prev",
-    "file": "scaffold/GFNBoundsScaffold/Doubling/Ratios.lean",
-    "line": 40,
-    "reason": "same missing bridge as `lam_double_ge`."
-  },
-  {
     "id": "26ce6853",
     "label": "prop:doubling_phase",
     "decl": "exists_stat_of_lt_one",

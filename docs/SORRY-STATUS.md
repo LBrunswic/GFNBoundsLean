@@ -6,8 +6,6 @@ Every entry is a statement of `app_doubling.tex` that this library states but do
 
 | id | paper label | declaration | file:line | why it is open |
 |---|---|---|---|---|
-| `97b09fa7` | `prop:doubling_cut` | `lam_double_ge` | `scaffold/GFNBoundsScaffold/Doubling/Ratios.lean:35` | needs pointwise balance at `lad (2j)`; the `kern` layer and the `Stat.inv`-tested-against-`dirac` bridge are not built. |
-| `d7eca5e1` | `prop:doubling_cut` | `lam_le_prev` | `scaffold/GFNBoundsScaffold/Doubling/Ratios.lean:40` | same missing bridge as `lam_double_ge`. |
 | `26ce6853` | `prop:doubling_phase` | `exists_stat_of_lt_one` | `scaffold/GFNBoundsScaffold/Doubling/Phase.lean:43` | Foster's criterion for positive recurrence; Mathlib v4.31.0 has no discrete-time Markov-chain recurrence theory. |
 
-**Total: 3.**
+**Total: 1.**

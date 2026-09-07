@@ -1,6 +1,7 @@
 import GFNBounds.Doubling.CutBalance
 import GFNBounds.Doubling.Drift
 import GFNBounds.Doubling.PerCutNorms
+import GFNBounds.Doubling.Ratios
 
 /-!
 # Axiom audit
@@ -50,6 +51,9 @@ namespace GFNBounds.Doubling
 -- `prop:doubling_cut` (`eq:doubling_cut`) — app_doubling.tex:641
 #print axioms cut_balance
 #print axioms cutBalanceSeq_of_stat
+#print axioms Stat.hasSum_flux
+#print axioms Stat.lam_double_ge
+#print axioms Stat.lam_le_prev
 
 -- the definitional layer (`def:doubling_setting` — app_doubling.tex:13)
 #print axioms pstar_const

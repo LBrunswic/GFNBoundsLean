@@ -201,17 +201,21 @@
       ],
       "block_sha256": "d42d15faf5bbff44af72c33c5c5c06092d1bddd7ee8465c0b1eb067fa0b9f83b",
       "lean_files": [
-        "GFNBounds/Doubling/CutBalance.lean"
+        "GFNBounds/Doubling/CutBalance.lean",
+        "GFNBounds/Doubling/Ratios.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.cut_balance",
         "GFNBounds.Doubling.CutBalanceSeq",
         "GFNBounds.Doubling.cutBalanceSeq_of_stat",
-        "GFNBounds.Doubling.tsum_lam_mul_cutFn"
+        "GFNBounds.Doubling.tsum_lam_mul_cutFn",
+        "GFNBounds.Doubling.Stat.lam_double_ge",
+        "GFNBounds.Doubling.Stat.lam_le_prev",
+        "GFNBounds.Doubling.Stat.hasSum_flux"
       ],
-      "status": "partial",
+      "status": "closed",
       "bucket": "A",
-      "scope_notes": "eq:doubling_cut closed for loop closure and truncation together, via the cap parameter; the paper's `d < m <= K/2` is `hdm` plus `hD : HasDouble cap m`. Evenness of K is not used. eq:doubling_ratios is OPEN (scaffold/Ratios.lean): it needs pointwise balance, not the integral form. Derived here FROM lem:doubling_percut Step 2, inverting the paper's order."
+      "scope_notes": "eq:doubling_cut and eq:doubling_ratios both closed, for the loop closure and the truncation together via the cap parameter; the paper's `d < m <= K/2` is hdm plus hD : HasDouble cap m, and evenness of K is unused. eq:doubling_cut is derived FROM lem:doubling_percut Step 2, inverting the paper's order, since the pointwise identity needs no summation and no invariance. eq:doubling_ratios is obtained by testing Stat.inv against a point mass, so no transition-matrix layer is built."
     },
     {
       "label": "prop:doubling_exponent",

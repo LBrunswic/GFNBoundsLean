@@ -267,6 +267,45 @@ theorem pstar_smul (c : ℝ) : pstar S cap (c • f) = c • pstar S cap f := by
   · simp only [pstar_sink, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
     exact Finset.sum_congr rfl fun _ _ => by ring
 
+/-- `P⋆` preserves non-negativity: it is an average over the one-step law. -/
+theorem pstar_nonneg (hf : ∀ x, 0 ≤ f x) (x : St) : 0 ≤ pstar S cap f x := by
+  rcases x with (_ | j) | _
+  · exact hf _
+  · by_cases h : HasDouble cap (j + 1)
+    · simp only [pstar_lad_succ, h, if_true]
+      have h1 : 0 ≤ S.eps (j + 1) := (S.eps_pos (Nat.le_add_left 1 j)).le
+      have h2 : 0 ≤ 1 - S.eps (j + 1) := (S.one_sub_eps_pos (Nat.le_add_left 1 j)).le
+      exact add_nonneg (mul_nonneg h1 (hf _)) (mul_nonneg h2 (hf _))
+    · simp only [pstar_lad_succ, h, if_false]; exact hf _
+  · exact Finset.sum_nonneg fun k _ => mul_nonneg (S.row_nonneg k) (hf _)
+
+/-- `P⋆` is a contraction of the sup norm: it is an average, so it cannot enlarge the range.
+This is the `p = ∞` case of `lem:doubling_operator`(1), which is all the `tsum` manipulations
+below need. -/
+theorem pstar_bounded {C : ℝ} (hC : ∀ x, |f x| ≤ C) (x : St) : |pstar S cap f x| ≤ C := by
+  rcases x with (_ | j) | _
+  · exact hC _
+  · by_cases h : HasDouble cap (j + 1)
+    · simp only [pstar_lad_succ, h, if_true]
+      have h1 : 0 ≤ S.eps (j + 1) := (S.eps_pos (Nat.le_add_left 1 j)).le
+      have h2 : 0 ≤ 1 - S.eps (j + 1) := (S.one_sub_eps_pos (Nat.le_add_left 1 j)).le
+      calc |S.eps (j+1) * f (.lad (2*(j+1))) + (1 - S.eps (j+1)) * f (.lad j)|
+          ≤ |S.eps (j+1) * f (.lad (2*(j+1)))| + |(1 - S.eps (j+1)) * f (.lad j)| :=
+            abs_add_le _ _
+        _ ≤ S.eps (j+1) * C + (1 - S.eps (j+1)) * C := by
+            rw [abs_mul, abs_mul, abs_of_nonneg h1, abs_of_nonneg h2]
+            gcongr <;> [exact hC _; exact hC _]
+        _ = C := by ring
+    · simp only [pstar_lad_succ, h, if_false]; exact hC _
+  · simp only [pstar_sink]
+    calc |∑ k ∈ Finset.Icc 1 S.d, S.row k * f (.lad k)|
+        ≤ ∑ k ∈ Finset.Icc 1 S.d, |S.row k * f (.lad k)| := Finset.abs_sum_le_sum_abs _ _
+      _ ≤ ∑ k ∈ Finset.Icc 1 S.d, S.row k * C := by
+          refine Finset.sum_le_sum fun k _ => ?_
+          rw [abs_mul, abs_of_nonneg (S.row_nonneg k)]
+          exact mul_le_mul_of_nonneg_left (hC _) (S.row_nonneg k)
+      _ = C := by rw [← Finset.sum_mul, S.row_sum, one_mul]
+
 /-- `P⋆` fixes the constants: the rows are probabilities. This is the statement that the constants
 are `0`-flows, and it is what makes `Π` commute with `P⋆`. -/
 @[simp] theorem pstar_const (c : ℝ) : pstar S cap (fun _ => c) = fun _ => c := by
@@ -322,28 +361,7 @@ theorem tsum_sub_pstar {f : St → ℝ} (hf : ∃ C, ∀ x, |f x| ≤ C) :
     ∑' x, L.lam x * (f x - pstar S cap f x) = 0 := by
   have hb : ∃ C, ∀ x, |pstar S cap f x| ≤ C := by
     obtain ⟨C, hC⟩ := hf
-    refine ⟨C, fun x => ?_⟩
-    rcases x with (_ | j) | _
-    · exact hC _
-    · by_cases h : HasDouble cap (j + 1)
-      · simp only [pstar_lad_succ, h, if_true]
-        have h1 : 0 ≤ S.eps (j + 1) := (S.eps_pos (Nat.le_add_left 1 j)).le
-        have h2 : 0 ≤ 1 - S.eps (j + 1) := (S.one_sub_eps_pos (Nat.le_add_left 1 j)).le
-        calc |S.eps (j+1) * f (.lad (2*(j+1))) + (1 - S.eps (j+1)) * f (.lad j)|
-            ≤ |S.eps (j+1) * f (.lad (2*(j+1)))| + |(1 - S.eps (j+1)) * f (.lad j)| := abs_add_le _ _
-          _ ≤ S.eps (j+1) * C + (1 - S.eps (j+1)) * C := by
-              rw [abs_mul, abs_mul, abs_of_nonneg h1, abs_of_nonneg h2]
-              gcongr <;> [exact hC _; exact hC _]
-          _ = C := by ring
-      · simp only [pstar_lad_succ, h, if_false]; exact hC _
-    · simp only [pstar_sink]
-      calc |∑ k ∈ Finset.Icc 1 S.d, S.row k * f (.lad k)|
-          ≤ ∑ k ∈ Finset.Icc 1 S.d, |S.row k * f (.lad k)| := Finset.abs_sum_le_sum_abs _ _
-        _ ≤ ∑ k ∈ Finset.Icc 1 S.d, S.row k * C := by
-            refine Finset.sum_le_sum fun k _ => ?_
-            rw [abs_mul, abs_of_nonneg (S.row_nonneg k)]
-            exact mul_le_mul_of_nonneg_left (hC _) (S.row_nonneg k)
-        _ = C := by rw [← Finset.sum_mul, S.row_sum, one_mul]
+    exact ⟨C, fun x => pstar_bounded hC x⟩
   have := L.inv f hf
   have hs1 := L.summable_mul hf
   have hs2 := L.summable_mul hb

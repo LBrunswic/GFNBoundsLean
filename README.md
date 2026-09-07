@@ -167,6 +167,31 @@ and `8.99991` at `c = 0.5` against `j̄/(1−c)` with `j̄ = 4.5`; fitted `p_*` 
 1.719 / 1.269 against the predicted 4.1314 / 2.6599 / 1.7189 / 1.2691; cut balance exact to
 `0.0e0`. Any Lean statement whose numerical instance disagrees is wrong.
 
+## Working on this with sub-sessions
+
+[`CLAUDE.md`](CLAUDE.md) is the standing brief every session loads. Four specialist sub-sessions
+are defined in `.claude/agents/` and are dispatched by the master session:
+
+| agent | for | writes? |
+|---|---|---|
+| `lean-formalizer` | a paper label with no Lean yet: signatures, docstring, hypothesis checklist, map wiring, tagged `sorry`s | scaffold + map |
+| `lean-prover` | a stated declaration that needs closing | scaffold, one file |
+| `mathlib-scout` | "does this lemma exist at the v4.31.0 pin, and what is it called" | no — read-only |
+| `lean-auditor` | finished work, before graduation or commit | no — reports findings |
+
+None of them may graduate a file into `GFNBounds/`, commit, or run `sorry_audit.py --accept`;
+those stay with the master. They draw on two generated references and one accumulating one:
+
+- [`docs/REPO-MAP.md`](docs/REPO-MAP.md) — orientation: loose ends, layer order, the
+  general-purpose shelf, one line per file. Small enough to read whole.
+- [`docs/REPO-INDEX.md`](docs/REPO-INDEX.md) — every declaration with its statement, plus the name
+  index. Grepped, not read.
+- [`kb/`](kb/README.md) — the knowledge base: patterns, pitfalls, obstructions and house rules
+  learned while proving here. Each session reads it before starting and adds to it when it learns
+  something that would have saved it time. `python3 scripts/kb.py search <terms>`.
+
+`make map` and `make kb` regenerate the first two and validate the third; `make check` runs both.
+
 ## Relation to the draft
 
 Nothing here edits `app_doubling.tex`. If formalization forces a change to a statement in the

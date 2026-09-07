@@ -1,7 +1,7 @@
 [
   {
-    "id": "26ce6853",
-    "label": "prop:doubling_phase",
-    "decl": "exists_stat_of_lt_one"
+    "id": "b4bec702",
+    "label": "lem:doubling_weight",
+    "decl": "exists_weight_bound"
   }
 ]

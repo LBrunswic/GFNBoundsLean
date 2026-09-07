@@ -5,7 +5,7 @@
 # sorry-free: it is built with `warningAsError := true`, which turns Lean's own
 # "declaration uses 'sorry'" warning into an error.
 
-.PHONY: check build scaffold audit clean
+.PHONY: check build scaffold audit map kb clean
 
 check: build scaffold audit
 
@@ -20,6 +20,18 @@ audit:
 	python3 scripts/axiom_audit.py build.log
 	python3 scripts/trace_check.py
 	python3 scripts/coverage.py
+	python3 scripts/repo_map.py
+	python3 scripts/kb.py lint
+	python3 scripts/kb.py index
+
+# The map of the library that a sub-session reads before it touches anything.
+map:
+	python3 scripts/repo_map.py
+
+# The knowledge base: validate every entry, then regenerate the index.
+kb:
+	python3 scripts/kb.py lint
+	python3 scripts/kb.py index
 
 clean:
 	rm -f build.log

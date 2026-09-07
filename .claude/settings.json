@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(lake build:*)",
+      "Bash(lake exe cache get)",
+      "Bash(make check)",
+      "Bash(make map)",
+      "Bash(make kb)",
+      "Bash(python3 scripts/repo_map.py)",
+      "Bash(python3 scripts/kb.py:*)",
+      "Bash(python3 scripts/coverage.py)",
+      "Bash(python3 scripts/trace_check.py)",
+      "Bash(python3 scripts/sorry_audit.py)",
+      "Bash(python3 scripts/axiom_audit.py:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git ls-files:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)"
+    ],
+    "deny": [
+      "Bash(python3 scripts/sorry_audit.py --accept)",
+      "Bash(rm -rf .lake:*)"
+    ]
+  }
+}

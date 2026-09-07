@@ -1,1 +1,1 @@
-import GFNBoundsScaffold.Doubling.Phase
+import GFNBoundsScaffold.Doubling.Weight

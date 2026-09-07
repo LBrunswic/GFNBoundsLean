@@ -15,6 +15,26 @@ import GFNBounds.Doubling.R0Bound
 import GFNBounds.Doubling.WindowSum
 import GFNBounds.Doubling.Drift
 import GFNBounds.Doubling.Irreducible
+import GFNBounds.Doubling.Adjoint
+import GFNBounds.Doubling.Coupling
+import GFNBounds.Doubling.Doeblin
+import GFNBounds.Doubling.Escape
+import GFNBounds.Doubling.FixedPointsP
+import GFNBounds.Doubling.Length
+import GFNBounds.Doubling.LpContraction
+import GFNBounds.Doubling.LpLayer
+import GFNBounds.Doubling.Lyapunov
+import GFNBounds.Doubling.OperatorFinite
+import GFNBounds.Doubling.PointwiseInv
+import GFNBounds.Doubling.Product
+import GFNBounds.Doubling.Sharp
+import GFNBounds.Doubling.SharpRate
+import GFNBounds.Doubling.Sojourn
+import GFNBounds.Doubling.StatExists
+import GFNBounds.Doubling.Summable
+import GFNBounds.Doubling.TotalVariation
+import GFNBounds.Doubling.TruncationStat
+import GFNBounds.Doubling.Unsolvable
 import GFNBounds.Doubling.Kac
 import GFNBounds.Doubling.Truncation
 import GFNBounds.Doubling.PerCutNorms
@@ -252,6 +272,63 @@ namespace GFNBounds.Doubling
 #print axioms Stat.block_ratio
 #print axioms Stat.cutBalanceSeq_trunc
 #print axioms Stat.decayK
+
+-- ── the 2026-09-07 workflow round ──────────────────────────────────────────────
+
+-- the `L^p` layer (no paper label of its own; the layer `lem:doubling_operator`,
+-- `lem:doubling_fixed_points` and `prop:doubling_unsolvable` all need)
+#print axioms Stat.mu
+#print axioms Stat.ae_iff_eq
+#print axioms Stat.pstarL2
+#print axioms Stat.fixed_const_memLp
+
+-- `lem:doubling_operator`(1), the contraction clause — app_doubling.tex:166
+#print axioms Stat.eLpNorm_pstar_le_of_memLp
+#print axioms Stat.dens
+#print axioms Stat.tsum_dens_mul_sq
+
+-- `lem:doubling_fixed_points`, both halves — app_doubling.tex:130
+#print axioms Stat.ker_eq_const
+
+-- `prop:doubling_length` — app_doubling.tex:476
+#print axioms hitExp_iSup_eq
+#print axioms sbar_iSup_eq
+
+-- `prop:doubling_phase`(3), row (b) — app_doubling.tex:510
+#print axioms exists_stat_none
+#print axioms exists_stat_of_family
+#print axioms inv_of_pointwise
+#print axioms Wpow_drift_expansion
+
+-- `lem:doubling_escape` — app_doubling.tex:1026
+#print axioms Decay.escape_of_level
+#print axioms Decay.sojourn_block
+
+-- `lem:doubling_product` — app_doubling.tex:1110
+#print axioms Decay.prodW_two_sided_paper
+#print axioms Decay.prodW_R0_eq_descOne
+
+-- `theo:doubling_decay`, now unconditional — app_doubling.tex:1155
+#print axioms Decay.decay_block_of_cutBal
+#print axioms Decay.decay_two_sided_of_cutBal
+
+-- `lem:doubling_doeblin` — app_doubling.tex:1385
+#print axioms Decay.doeblin
+
+-- `lem:doubling_coupling` — app_doubling.tex:1475
+#print axioms Decay.coupling
+#print axioms Decay.coupling_above
+
+-- `theo:doubling_sharp` (conditional on `lem:doubling_weight`) — app_doubling.tex:1323
+#print axioms Decay.cutBal_unique
+#print axioms Decay.sharp
+
+-- `lem:doubling_truncation_irreducible`, Step 4 — app_doubling.tex:1805
+#print axioms exists_stat
+#print axioms stat_unique
+
+-- `prop:doubling_unsolvable` — app_doubling.tex:2126
+#print axioms doubling_unsolvable
 
 -- the definitional layer (`def:doubling_setting` — app_doubling.tex:13)
 #print axioms pstar_const

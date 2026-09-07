@@ -1,10 +1,10 @@
 [
   {
-    "id": "26ce6853",
-    "label": "prop:doubling_phase",
-    "decl": "exists_stat_of_lt_one",
-    "file": "scaffold/GFNBoundsScaffold/Doubling/Phase.lean",
-    "line": 43,
-    "reason": "Foster's criterion for positive recurrence; Mathlib v4.31.0 has no discrete-time Markov-chain recurrence theory."
+    "id": "b4bec702",
+    "label": "lem:doubling_weight",
+    "decl": "exists_weight_bound",
+    "file": "scaffold/GFNBoundsScaffold/Doubling/Weight.lean",
+    "line": 55,
+    "reason": "needs an absolute-deviation transform E(|Z_ℓ−1|) as a descW-style recursion; NOT blocked on Mathlib — lem:doubling_escape and lem:doubling_product are both proved chain-free in Escape/Sojourn/Product."
   }
 ]

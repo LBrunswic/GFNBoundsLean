@@ -48,6 +48,35 @@ DECAY_VAR_RE = re.compile(r"(?<![\w.])D\.")
 OPENERS, CLOSERS = "([{⟨", ")]}⟩"
 
 
+def comment_depth(line, depth):
+    """Block-comment nesting after this line, given the depth before it.
+
+    Lean block comments nest, and `/--` and `/-!` are block comments, so this cannot be done
+    by stripping `--` first: that would eat the `-` of `/--` and leave a stray `/`. Walks the
+    line instead. String literals are not tracked -- a `/-` inside a string would fool it, and
+    there is none in this library."""
+    j = 0
+    while j < len(line):
+        if depth > 0:
+            if line.startswith("-/", j):
+                depth -= 1
+                j += 2
+                continue
+            if line.startswith("/-", j):
+                depth += 1
+                j += 2
+                continue
+        else:
+            if line.startswith("/-", j):
+                depth += 1
+                j += 2
+                continue
+            if line.startswith("--", j):
+                break          # a line comment: nothing after it can open a block
+        j += 1
+    return depth
+
+
 def depth_delta(s):
     """Bracket balance of a line, ignoring `--` comments and string literals (good enough here)."""
     s = re.sub(r"--.*$", "", s)
@@ -60,6 +89,11 @@ def statement_of(lines, i, kind):
     buf, depth = [], 0
     for k in range(i, min(i + 30, len(lines))):
         raw = lines[k]
+        # A signature never spans another declaration. This guard alone makes a mis-detected
+        # declaration harmless instead of destructive: it stops at the real one rather than
+        # consuming it.
+        if k > i and DECL_RE.match(raw):
+            return " ".join(" ".join(buf).split()), k
         line = re.sub(r"--.*$", "", raw).rstrip()
         cut = None
         d = depth
@@ -84,7 +118,11 @@ def statement_of(lines, i, kind):
         depth += depth_delta(raw)
         # an `inductive` body starts with `|` on the next line. Only `inductive`: a `|` at the
         # head of a continuation line is far more often the opening bar of an `|x|`.
-        if (kind == "inductive" and k + 1 < len(lines) and depth <= 0
+        # `inductive`, and equation-style `def`/`abbrev`, put the body's first `|` on the next
+        # line with no `:=` anywhere. Restricted to those kinds and to depth 0, because a `|`
+        # heading a continuation line is otherwise far more often the opening bar of `|x|`.
+        if (kind in ("inductive", "def", "abbrev") and k + 1 < len(lines) and depth <= 0
+                and ":" in " ".join(buf)
                 and re.match(r"^\s*\|", lines[k + 1])):
             return " ".join(" ".join(buf).split()), k + 1
     return " ".join(" ".join(buf).split()), i + 1
@@ -131,9 +169,20 @@ def scan(path, rel):
     title, labels, scoped = module_header(text)
     imports = [ln.split()[1] for ln in lines if ln.startswith("import ")]
     variables = [" ".join(ln.split()) for ln in lines if ln.startswith("variable")]
+    # Which lines *begin* inside a block comment. Without this, a prose line that happens to
+    # start with a declaration keyword -- `theorem about the derivative. -/` -- is read as a
+    # declaration named `about`, and `statement_of` then swallows the real one after it.
+    in_comment, _d = [], 0
+    for ln in lines:
+        in_comment.append(_d > 0)
+        _d = comment_depth(ln, _d)
+
     ns, decls, i = [], [], 0
     while i < len(lines):
         ln = lines[i]
+        if in_comment[i]:
+            i += 1
+            continue
         if ln.startswith("namespace "):
             ns.append(ln.split()[1])
         elif ln.startswith("end ") or ln.rstrip() == "end":

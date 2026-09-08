@@ -10,7 +10,7 @@ SHELL := /bin/bash
 # sorry-free: it is built with `warningAsError := true`, which turns Lean's own
 # "declaration uses 'sorry'" warning into an error.
 
-.PHONY: check build scaffold audit map kb appendix clean
+.PHONY: check build scaffold audit map kb appendix dashboard deploy clean
 
 check: build scaffold audit
 
@@ -53,5 +53,17 @@ kb:
 	python3 scripts/kb.py lint
 	python3 scripts/kb.py index
 
+# The static site node1 serves: the blueprint, the generated docs, and the headline numbers.
+# Reads artefacts only — `make check` and `make appendix` are what produce them, so a dashboard
+# built on a stale tree is stale rather than wrong.
+dashboard:
+	python3 scripts/dashboard.py
+
+# Ship it. Refuses a tree whose gate is not green; `FORCE=1 make deploy` overrides.
+# PUBLIC AND UNAUTHENTICATED by the author's instruction — see nginx/gfnbounds-blueprint.conf.
+deploy: dashboard
+	scripts/deploy.sh
+
 clean:
 	rm -f build.log
+	rm -rf dashboard

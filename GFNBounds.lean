@@ -73,8 +73,12 @@ import GFNBounds.Graph.Morozov
 import GFNBounds.Graph.FrozenUnstable
 import GFNBounds.Core.StrongUniversality
 import GFNBounds.Balance.Lift
+import GFNBounds.Core.Adjoint
 import GFNBounds.Core.ILBound
 import GFNBounds.Balance.Freezing
 import GFNBounds.Balance.Lojasiewicz
 import GFNBounds.Graph.CycleExample
+import GFNBounds.Balance.FirstVariation
+import GFNBounds.Balance.GradientFormulas
+import GFNBounds.Balance.Flow
 import GFNBounds.Audit

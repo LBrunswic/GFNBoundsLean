@@ -100,6 +100,16 @@ input is `λ`-invariance. See SCOPE.
   paper's ambient Hilbert space carries no content here and no norm is used. The `𝓜²(λ)` norm
   appears in items *(2)*–*(3)* only.
 
+**Update, 2026-09-08 — this disclosure is now discharged elsewhere.**
+`GFNBounds/Balance/FirstVariation.lean` proves `theo:first_variation_full` on a finite state
+space: `hasDerivAt_loss_ipL2` shows that for every direction `d`, the directional derivative of
+`𝓛_{g,ν}` at `μ` is `⟪lossGradDensity … ∣ d⟫_{L²(λ)}`, and `lossGradDensity_unique` shows no
+other function represents those derivatives. So `D` **is** the gradient, and the readings below
+are no longer conditional — with two residues, both still real: the state space is finite (the
+general measured-space statement remains bucket `D`), and criticality is *directional* rather
+than Fréchet. The wording of this bullet is kept as written because it records what **this
+file** proves on its own.
+
 ## Hypothesis checklist
 
 | paper hypothesis | here |

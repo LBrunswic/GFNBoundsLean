@@ -10,7 +10,7 @@ SHELL := /bin/bash
 # sorry-free: it is built with `warningAsError := true`, which turns Lean's own
 # "declaration uses 'sorry'" warning into an error.
 
-.PHONY: check build scaffold audit map kb appendix dashboard deploy clean
+.PHONY: check build scaffold audit map kb facts appendix browser dashboard deploy clean
 
 check: build scaffold audit
 
@@ -40,8 +40,13 @@ map:
 # against the compiled environment by `--lint`. Deliberately NOT part of `check`: it needs a
 # TeX Live and `pip install leanblueprint`. Requires a current build, since the first step
 # reads the environment. See blueprint/README.md.
-appendix:
+# The compiled environment, dumped to docs/lean-facts.json. Must run from the repo root:
+# scripts/lean_facts.lean writes a relative path. Shared by `appendix` and `browser`, which
+# is why it is factored out -- it was being paid twice.
+facts:
 	lake env lean scripts/lean_facts.lean
+
+appendix: facts
 	python3 scripts/appendix.py --paper --graph
 	python3 scripts/appendix.py --lint
 	dot -Tsvg docs/lean-graph.dot -o docs/lean-graph.svg
@@ -52,6 +57,13 @@ appendix:
 kb:
 	python3 scripts/kb.py lint
 	python3 scripts/kb.py index
+
+# The formal statement browser: every declaration as the kernel elaborated it, with both
+# directions of its dependency edges. Like `appendix`, deliberately NOT part of `check` --
+# it needs its own pass over the whole environment. The generator refuses to run against a
+# lean-facts.json older than any source file, so `browser/` cannot be quietly stale.
+browser: facts
+	python3 scripts/lean_browser.py --verify
 
 # The static site node1 serves: the blueprint, the generated docs, and the headline numbers.
 # Reads artefacts only — `make check` and `make appendix` are what produce them, so a dashboard

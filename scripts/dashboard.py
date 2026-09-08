@@ -18,7 +18,8 @@ Layout of the output:
       readme.html         README.md, rendered
       lean-graph.svg      the verified dependency graph, from proof terms
       print.pdf           the blueprint, as a paper
-      blueprint/          leanblueprint's own web output, verbatim
+      blueprint/          leanblueprint's own web output, plus the citation linker
+      lean/               the statement browser, from scripts/lean_browser.py
       status.json         the machine twin of the headline numbers
 
 Markdown is rendered by pandoc into a fragment and wrapped in the local template, so the
@@ -363,10 +364,14 @@ APPENDIX_TITLE = {
 }
 
 LINKS = [
+    ("lean/", "The statement browser",
+     "<b>Every declaration of the library, as the compiler elaborated it.</b> Its type, its "
+     "docstring, the axioms it rests on, what its statement and its proof invoke \u2014 and "
+     "what invokes them. Searchable; the blueprint\u2019s Lean links land here."),
     ("blueprint/index.html", "The blueprint",
      "leanblueprint\u2019s own site: every result stated in English and sketched, with a "
-     "\u2713 where the Lean proof is complete and the declaration named beside it. The "
-     "declaration names are not yet links \u2014 there is no doc-gen4 site to point them at."),
+     "\u2713 where the Lean proof is complete. Every declaration it names now links into "
+     "the statement browser."),
     # No card for blueprint/dep_graph_document.html: `web.tex` omits `\\dep_graph` on purpose
     # (the fifteen `main_*` results are siblings, and content.tex carries no `\\uses`), so
     # plasTeX emits that page with zero nodes and zero edges. The graph below is the real one.
@@ -382,10 +387,10 @@ LINKS = [
     ("repo-map.html", "Repo map",
      "One line per file, the layer order, and the loose ends \u2014 what to read before "
      "touching anything."),
-    ("repo-index.html", "Declaration index",
-     "<b>The statement inspector.</b> Every declaration with its full pretty-printed Lean type "
-     "\u2014 binders, hypotheses and conclusion as the compiler sees them. Large; use the "
-     "browser\u2019s find."),
+    ("repo-index.html", "Source-text index",
+     "Every declaration as it is <i>written</i>, file by file, from parsing the sources. "
+     "Complements the browser, which shows the <i>elaborated</i> type; where the two disagree, "
+     "the browser is right. Large; use the browser\u2019s find."),
     ("readme.html", "README",
      "What the project is, where it stands, and the three obstructions it is blocked on."),
     ("print.pdf", "The blueprint, as a paper",
@@ -497,6 +502,21 @@ def landing(d):
 """, extra=THEME_JS + TIP_JS)
 
 
+LEANREF_TAG = '<script defer src="../lean/leanref.js"></script>'
+
+
+def inject_leanref(path):
+    """Add the citation-linking script to one copied blueprint page. Mutating the copy is
+    correct: `dashboard/` is git-ignored and rebuilt from scratch on every run."""
+    with open(path, encoding="utf-8") as fh:
+        html = fh.read()
+    if LEANREF_TAG in html or "</body>" not in html:
+        return False
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(html.replace("</body>", LEANREF_TAG + "\n</body>", 1))
+    return True
+
+
 # ---------------------------------------------------------------- markdown pages
 
 def render_md(src, dest, title):
@@ -550,6 +570,20 @@ def main():
         shutil.copytree(web, os.path.join(OUT, "blueprint"))
     else:
         missing.append("blueprint/web (run `make appendix`)")
+
+    lean = os.path.join(ROOT, "browser")
+    if os.path.isdir(lean) and os.path.exists(os.path.join(lean, "index.html")):
+        shutil.copytree(lean, os.path.join(OUT, "lean"))
+        # The blueprint prints its `[[Name]]` citations as plain monospace. Linking them in
+        # LaTeX would mean regenerating content.tex, which puts appendix.py's lint gates in
+        # the blast radius of a cosmetic change; linking them at read time cannot.
+        bp = os.path.join(OUT, "blueprint")
+        if os.path.isdir(bp):
+            for name in sorted(os.listdir(bp)):
+                if name.endswith(".html"):
+                    inject_leanref(os.path.join(bp, name))
+    else:
+        missing.append("browser/ (run `make browser`)")
 
     for src, dest in [("blueprint/print/print.pdf", "print.pdf"),
                       ("docs/lean-graph.svg", "lean-graph.svg")]:

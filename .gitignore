@@ -6,3 +6,5 @@
 /blueprint/src/web.paux
 __pycache__/
 /dashboard/
+/browser/
+/docs/lean-externals.json

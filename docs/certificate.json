@@ -1,15 +1,12 @@
 {
   "schema": 1,
-  "source_date": "2026-09-08T13:16:17+01:00",
-  "commit": "c328a9e4229cfe03d617af2d9989bd2f0d1a1e75",
-  "commit_short": "c328a9e",
-  "head": "1f4b2ce85c1598f256767cebc8180267adcdc1dc",
+  "source_date": "2026-09-08T13:16:39+01:00",
+  "commit": "e2e9cee071ef1b8f385e8331e803d4bb8f1fcfd1",
+  "commit_short": "e2e9cee",
+  "head": "e2e9cee071ef1b8f385e8331e803d4bb8f1fcfd1",
   "branch": "main",
-  "dirty": true,
-  "dirty_files": [
-    "ocs/certificate.json",
-    "scripts/certificate.py"
-  ],
+  "dirty": false,
+  "dirty_files": [],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",

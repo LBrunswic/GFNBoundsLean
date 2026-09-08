@@ -13,9 +13,9 @@ Ingredient of **`prop:doubling_phase`** Step 5 — `app_doubling.tex:510–624` 
 > every `j ≥ 1`.
 
 At `s = 1` and `0 < c < 1` the Cramér root has `p_* > 1` (`lem:doubling_cramer_root`(1)), so
-`theo:doubling_decay`(2) makes `(λ_j)` summable. That route is not available here:
-`theo:doubling_decay` is proved in this library only conditionally on `eq:doubling_product`
-(see `Descent.lean`). **Summability does not need it.** Summing the cut balance over
+`theo:doubling_decay`(2) makes `(λ_j)` summable. That route is now available
+(`Decay.decay_two_sided_of_cutBal`, `Product.lean`), but **summability does not need it.**
+Summing the cut balance over
 `m ∈ {1,…,N}` and exchanging the double sum gives, with no asymptotics and no chain,
 
   `(1 − c) Σ_{m=1}^{N} λ_m ≤ Σ_{m=1}^{N} g_m`

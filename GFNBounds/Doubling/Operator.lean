@@ -18,11 +18,12 @@ Banach space with an idempotent `Pi` satisfying those two intertwining relations
 strictly more general than the paper's statement and needs no measure theory at all.
 
 **Items (1) and (2) are not here.** Item (1) — `P⋆` a contraction of every `L^p(λ)` and the
-`L²`-adjoint of the density action — is the one place the `Lp` layer is unavoidable, and the
-density action `P` is not modelled in this library; the `p = ∞` case of the contraction is
+`L²`-adjoint of the density action — lives on the `Lp` layer: `LpContraction.lean` and
+`AdjointL2.lean`, with `P` modelled in `Adjoint.lean`; the `p = ∞` case of the contraction is
 `pstar_bounded` in `Setting.lean`, which is all the `tsum` estimates need. Item (2) is the
-finite-dimensional case, which needs `lem:doubling_fixed_points` in its `L²` form and the
-existence of `λ^K`; both are open.
+finite-dimensional case, `OperatorFinite.lean` instantiated in `OperatorL2.lean`
+(`Stat.exists_diffusionOp`). The abstract layer here is instantiated at `L²(λ)` in
+`UnboundedL2.lean`.
 
 `rem:doubling_two_constants` is the observation that `resolvent_norm_le` orders two numerically
 distinct constants; it carries no further mathematics and is not formalized separately.

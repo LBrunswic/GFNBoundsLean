@@ -1,0 +1,15 @@
+At $s=1$ the substitution $\varepsilon(j)=c/(j+1)$ collapses the one-step average of the
+state to $\varepsilon(j)\,2j+(1-\varepsilon(j))(j-1)=c+j-1$; since $h$ is linear this turns
+$1+\mathbb E(h(X_1)\mid X_0=j)$ into $1+(c+j-1)/(1-c)=j/(1-c)=h(j)$, the identity
+\eqref{eq:doubling_super}. On the truncation the states $j$ with $2j\leq K$ have the
+transitions of the loop closure, so the identity persists, while at $2j>K$ the decrement
+carries probability~$1$ and the left-hand side drops to $1+(j-1)/(1-c)\leq h(j)$, the
+inequality being $1\leq1/(1-c)$.
+
+A non-negative supersolution dominates the expected hitting time: the truncated expectations
+$u_n(x):=\mathbb E(\sigma\wedge n\mid X_0=x)$ satisfy $u_0=0$, $u_n(s_0)=0$ and
+$u_{n+1}(j)=1+\mathbb E(u_n(X_1)\mid X_0=j)$, so $u_n\leq h$ for every $n$ by induction on
+the two displays above. Monotone convergence gives
+$\mathbb E(\sigma\mid X_0=j)\leq h(j)=j/(1-c)<+\infty$, hence $\sigma<+\infty$ almost surely,
+and averaging over the target row --- a probability supported in $\{1,\dots,d\}$ of mean
+$\bar\jmath$, on which $h$ is linear --- gives the bound on $\bar\sigma$ in both chains.

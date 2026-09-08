@@ -737,6 +737,62 @@ theorem decay_two_sided_of_cutBal {d ℓ : ℕ} {lam : ℕ → ℝ} (h : D.CutBa
   · rw [← Real.exp_zero]
     exact Real.exp_le_exp.mpr hT0
 
+/-- **`eq:doubling_decay` in the `u` variable, with the constants written out.** If the rescaled
+profile lies in `[a, b]` on the initial block `1 ≤ j < 2ℓ`, `ℓ ≥ m₀`, then on the whole ladder it
+lies in `[a e^{−c₅c₄/ℓ}, b e^{c₅c₄/ℓ}]`, `c₄ = 16cτ`. This is the dependence clause of
+`theo:doubling_decay`(2) made precise: the constants are functions of `c`, `d` (through `m₀`) and
+`λ_1, …, λ_{2ℓ−1}` (through `a`, `b`) alone. -/
+theorem uu_bounded_explicit {d ℓ : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hℓ : D.m0 d ≤ ℓ)
+    {a b : ℝ} (ha : 0 ≤ a)
+    (hab : ∀ j, 1 ≤ j → j < 2 * ℓ → a ≤ D.uu lam j ∧ D.uu lam j ≤ b) :
+    ∀ j : ℕ, 1 ≤ j →
+      a * Real.exp (-(D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) ≤ D.uu lam j ∧
+        D.uu lam j ≤ b * Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ)) := by
+  intro j hj
+  have hd : d < ℓ := lt_of_lt_of_le (D.lt_m0 d) hℓ
+  have hℓ1 : 1 ≤ ℓ := by omega
+  have hℓpos : (0 : ℝ) < (ℓ : ℝ) := by exact_mod_cast hℓ1
+  have hgp := D.gam_pos
+  have hc5pos : (0 : ℝ) < D.c5 := by rw [c5]; positivity
+  have hct := D.ctau_pos
+  have hH0 : (0 : ℝ) ≤ 16 * D.c * D.tau := by nlinarith
+  have hT0 : 0 ≤ D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ) :=
+    div_nonneg (mul_nonneg hc5pos.le hH0) hℓpos.le
+  have hZ1 : Real.exp (-(D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) ≤ 1 := by
+    rw [← Real.exp_zero]; exact Real.exp_le_exp.mpr (by linarith)
+  have hZ2 : 1 ≤ Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ)) := by
+    rw [← Real.exp_zero]; exact Real.exp_le_exp.mpr hT0
+  have hb : 0 ≤ b :=
+    le_trans ha ((hab 1 le_rfl (by omega)).1.trans (hab 1 le_rfl (by omega)).2)
+  by_cases hjs : j < 2 * ℓ
+  · obtain ⟨h1, h2⟩ := hab j hj hjs
+    exact ⟨le_trans (mul_le_of_le_one_right ha hZ1) h1,
+      le_trans h2 (le_mul_of_one_le_right hb hZ2)⟩
+  · exact D.decay_block_of_cutBal h hℓ ha (fun j h1 h2 => hab j (le_trans hℓ1 h1) h2)
+      (by omega : ℓ ≤ j) le_top
+
+/-- **`eq:doubling_decay` with the constants written out** — `theo:doubling_decay`(2) and its
+dependence clause. With `a ≤ λ_j j^{p_*} ≤ b` on `1 ≤ j < 2ℓ`, `ℓ ≥ m₀`, `0 ≤ a`:
+`a e^{−c₅c₄/ℓ} j^{−p_*} ≤ λ_j ≤ b e^{c₅c₄/ℓ} j^{−p_*}` for every `j ≥ 1`, `c₄ = 16cτ`. The
+existential form is `decay_two_sided_of_cutBal`; this is its witness. -/
+theorem decay_two_sided_explicit {d ℓ : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤)
+    (hℓ : D.m0 d ≤ ℓ) {a b : ℝ} (ha : 0 ≤ a)
+    (hab : ∀ j, 1 ≤ j → j < 2 * ℓ → a ≤ D.uu lam j ∧ D.uu lam j ≤ b) :
+    ∀ j : ℕ, 1 ≤ j →
+      a * Real.exp (-(D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) * (j : ℝ) ^ (-D.p) ≤ lam j ∧
+        lam j ≤ b * Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ)) * (j : ℝ) ^ (-D.p) := by
+  intro j hj
+  obtain ⟨h1, h2⟩ := D.uu_bounded_explicit h hℓ ha hab j hj
+  have hj' : (0 : ℝ) < (j : ℝ) := by exact_mod_cast hj
+  have hjp : (0 : ℝ) < (j : ℝ) ^ D.p := Real.rpow_pos_of_pos hj' D.p
+  have hneg : (j : ℝ) ^ (-D.p) = ((j : ℝ) ^ D.p)⁻¹ := by
+    rw [Real.rpow_neg hj'.le]
+  rw [uu] at h1 h2
+  rw [hneg]
+  constructor
+  · rw [mul_inv_le_iff₀ hjp]; linarith
+  · rw [le_mul_inv_iff₀ hjp]; linarith
+
 end Decay
 
 end GFNBounds.Doubling

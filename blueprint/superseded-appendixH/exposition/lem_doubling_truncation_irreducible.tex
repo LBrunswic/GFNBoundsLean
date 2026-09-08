@@ -1,0 +1,16 @@
+The set $\{s_0,1,\dots,K,s_f\}$ is closed --- a ladder state $j\leq K$ decrements within it and
+doubles only when $2j\leq K$, $s_0$ maps to $s_f$, and $s_f$ into $\{1,\dots,d\}\subseteq
+\{1,\dots,K\}$ --- and every retained transition is positive. Every state leads to $1$ exactly
+as on the loop closure: $j$ decrements to $s_0$, the wrap reaches $s_f$, the target row reaches
+some $j_0\leq d$, and $j_0-1$ decrements reach $1$.
+
+For the converse let $2^{r}$ be the largest power of two below $K$. The doubling edges
+$2^{i}\rightarrow2^{i+1}$ are all present for $i<r$, so $1$ leads to $2^{r}$ and thence, by
+decrements, to every ladder state $n\leq2^{r}$. Above $2^{r}$: an even $n$ has $n/2\leq
+K/2<2^{r}$ and the doubling edge $n/2\rightarrow n$ is present; an odd $n$ is not $K$, which is
+even, so $n+1$ is even and in range, and the decrement $n+1\rightarrow n$ finishes. The
+truncation is therefore a finite irreducible chain on $K+2$ states, so it carries a unique
+invariant probability, positive everywhere, and
+Lemma~\ref{lem:doubling_operator}\emph{(2)} applied to it produces $S$ and
+\eqref{eq:doubling_resolvent}; that $S$ acts on a finite-dimensional space, so
+$\widehat B_K<+\infty$.

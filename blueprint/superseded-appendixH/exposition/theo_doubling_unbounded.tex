@@ -1,0 +1,25 @@
+\emph{(1)} At $\varepsilon=\varepsilon_{c,s}$ the left-hand side of \eqref{eq:doubling_star}
+is $\sum_{i<D}\bigl(s\log(2^{i}+1)-\log c\bigr)=O(D^2)$, which is $o(2^{D})$.
+
+\emph{(2), Step 1: the ratio $L/\lambda$ is unbounded.} Suppose
+$Q:=\sup_{m>d}L(m)/\lambda_m<+\infty$. Since $\lambda_m=L(m)-L(m+1)$, the bound
+$L(m)\leq Q\lambda_m$ makes $L$ decay geometrically, $L(m)\leq L(d+1)e^{-(m-d-1)/Q}$. In the
+other direction, iterating the doubling inequality of \eqref{eq:doubling_ratios} along the
+powers of two gives $L(2^{D})\geq\lambda_{2^{D}}\geq\lambda_1\prod_{i<D}\varepsilon(2^{i})$.
+Taking logarithms at $m=2^{D}$ puts a quantity of order $2^{D}$ below one that
+\eqref{eq:doubling_star} makes $o(2^{D})$ --- a contradiction for $D$ large.
+
+\emph{Step 2: the infimum, along the centred tail indicators.} Dropping finitely many cuts
+leaves the supremum infinite, so given $p$ and $t>0$ one may choose a cut $m$ with
+$\lambda_m/L(m)$ as small as desired and $1-L(m)\geq\tfrac12$. At such a cut
+Lemma~\ref{lem:doubling_percut} gives $\Pi f_m=0$,
+$\|(\mathrm{Id}-P_\star)f_m\|_{L^p(\lambda)}\leq(2\lambda_m)^{1/p}$ and
+$\|f_m\|_{L^p(\lambda)}\geq\tfrac12L(m)^{1/p}>0$, so the Rayleigh quotient is at most
+$2\bigl(2\lambda_m/L(m)\bigr)^{1/p}\leq t$. That is \eqref{eq:doubling_inf}.
+
+\emph{Step 3: the consequences.} A bounded $S$ with $S(\mathrm{Id}-P_\star)=\mathrm{Id}-\Pi$
+would give $\|f\|_{L^p(\lambda)}\leq\|S\|\,\|(\mathrm{Id}-P_\star)f\|_{L^p(\lambda)}$ at every
+mean-zero $f$, which \eqref{eq:doubling_inf} forbids. At $p=2$ norm convergence of the series
+would produce such an $S$ by Lemma~\ref{lem:doubling_operator}\emph{(3)}, and
+$\sum_n\widehat\beta_n<+\infty$ would make the series absolutely convergent, the norms being
+the $\widehat\beta_n$ by Lemma~\ref{lem:doubling_operator}\emph{(1)}: both are excluded.

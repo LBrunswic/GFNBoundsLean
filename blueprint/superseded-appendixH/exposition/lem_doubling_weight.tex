@@ -1,0 +1,12 @@
+Every state $Y_n$ with $n<N_\ell$ is $\geq2\ell$, so \eqref{eq:doubling_R0} gives
+$1-c_4/Y_n\leq R_0(Y_n)\leq1+c_4/Y_n$ with $c_4/Y_n\leq\tfrac14$, and the elementary
+inequalities $1-x\geq e^{-2x}$ on $[0,\tfrac12]$ and $1+x\leq e^{x}$ sandwich the weight:
+$|Z_\ell-1|\leq\exp\bigl(2\sum_{n<N_\ell}c_4/Y_n\bigr)-1$.
+
+That bound is $\prod_{n<N_\ell}\bigl(1+\widetilde b(Y_n)\bigr)-1$ for
+$\widetilde b(y):=e^{2c_4/y}-1$, which satisfies $0\leq\widetilde b(y)\leq4c_4/y$ at every
+integer $y\geq\ell$ because $2c_4/\ell\leq1$ and $e^{x}-1\leq2x$ on $[0,1]$. So
+Lemma~\ref{lem:doubling_product} applies at $H:=4c_4$, the hypothesis
+$H\leq\gamma^2\ell/6$ holding because $\ell\geq24c_4/\gamma^2$, and bounds the expectation of
+that product by $e^{4c_5c_4/\ell}$. One more use of $e^{x}-1\leq2x$, legitimate because
+$\ell\geq4c_4c_5$, turns this into \eqref{eq:doubling_weight}.

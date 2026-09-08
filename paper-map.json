@@ -13,6 +13,7 @@
       ],
       "block_sha256": "55db84c060752dde453a278bee2617fd0c7352f22197e11fb955a5c667d345cf",
       "lean_files": [
+        "GFNBounds/Doubling/PointwiseInv.lean",
         "GFNBounds/Doubling/Setting.lean"
       ],
       "decls": [
@@ -25,7 +26,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Definitional layer. `s0 = lad 0` per the paper's own convention. `P_star` is the function action in closed form, total, with a `cap` parameter carrying loop closure and truncation at once. `Stat` carries positivity on-chain and vanishing off it; the density action `P` is not modelled here."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_range",
@@ -48,7 +50,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Full statement. The family enters only as an instance of `Setting`, never baked in."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_irreducible",
@@ -74,7 +77,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Both sentences. Irreducibility is `Reach`, the reflexive-transitive closure of `Edge`, and `edge_pstar_pos` is the bridge to `P_star`: an edge is exactly a positive one-step law. The second sentence — an invariant probability is positive at every state — is *derived* here (`PreStat.toStat`), removing the one place where the Lean `Setting` layer had been stronger than the paper: `Stat.pos` is a field, but `PreStat` shows it is not an extra hypothesis."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_fixed_points",
@@ -84,10 +88,10 @@
       ],
       "block_sha256": "b49bce4664d031876fcfbb2978fa38803ad37eb7e5e45fe80ee76b94bbc97293",
       "lean_files": [
+        "GFNBounds/Doubling/FixedPoints.lean",
         "GFNBounds/Doubling/FixedPointsP.lean",
         "GFNBounds/Doubling/LpLayer.lean",
-        "GFNBounds/Doubling/Adjoint.lean",
-        "GFNBounds/Doubling/FixedPoints.lean"
+        "GFNBounds/Doubling/Adjoint.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Stat.ker_eq_const",
@@ -98,7 +102,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Both halves of `eq:doubling_fixed`, at the paper's own hypothesis `f ∈ L²(λ)` — superseding the earlier bounded-`f` narrowing, which stays in `FixedPoints.lean` as the elementary route. The density action `P` is now modelled (`Stat.dens`) and its reversed-law weights are *derived* from `Stat.inv`, not assumed. ⚠ narrowed generality: the paper states this for an arbitrary irreducible kernel on a countable space; Lean proves the doubling-graph instance."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_operator",
@@ -126,9 +131,10 @@
         "GFNBounds.Doubling.resolvent_identities",
         "GFNBounds.Doubling.resolvent_norm_le"
       ],
-      "status": "closed",
-      "bucket": "A",
-      "scope_notes": "All three items. (1) the contraction at every `p ∈ [1,∞]`, the density action as an honest Radon–Nikodym derivative, the identification of `P⋆` with Mathlib's `ContinuousLinearMap.adjoint` of `densL2`, and the trailing clause `‖P⋆ⁿ − Π‖ = β̂ₙ` — the last was an overclaim caught in the previous round's verification and is now genuinely proved. (2) `exists_diffusionOp` on the truncation, via finite-dimensionality of `L²(λ^K)` (`evalChain_injective`). (3) was already proved, more generally than stated. ⚠ narrowed generality: the paper states this for an arbitrary kernel on a measurable space; Lean proves the doubling-graph instance. ⚠ `RowOnChain S cap` (= `d ≤ K`) is a hypothesis of the construction, free on the loop closure."
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "rem:doubling_two_constants",
@@ -145,7 +151,8 @@
       ],
       "status": "partial",
       "bucket": "C",
-      "scope_notes": "The ordering of the two constants written `B̂` is `resolvent_norm_le`. Their numerical distinctness is measured in §sec:doubling_measured, not proved, and the trajectory reading `(Sθ)(x) = Σ_n (E(θ(X_n)|X_0=x) − λ(θ))` needs a chain, which this library does not build."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "theo:doubling_main",
@@ -155,7 +162,10 @@
       ],
       "block_sha256": "6a4100a9cfe7694bdc8860560006d1c32a89a018a7038176b3dcd0ad74d24932",
       "lean_files": [
-        "GFNBounds/Doubling/Main.lean"
+        "GFNBounds/Doubling/Main.lean",
+        "GFNBounds/Doubling/UnboundedL2.lean",
+        "GFNBounds/Doubling/RayleighBridge.lean",
+        "GFNBounds/Doubling/ConstantFunctional.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.main_unbounded",
@@ -163,11 +173,22 @@
         "GFNBounds.Doubling.main_sigmaBar_le",
         "GFNBounds.Doubling.main_rate",
         "GFNBounds.Doubling.main_truncation_irreducible",
-        "GFNBounds.Doubling.main_irreducible"
+        "GFNBounds.Doubling.main_irreducible",
+        "GFNBounds.Doubling.Decay.ofC",
+        "GFNBounds.Doubling.main_phase",
+        "GFNBounds.Doubling.main_invariant_measure",
+        "GFNBounds.Doubling.main_constant_determined",
+        "GFNBounds.Doubling.main_unbounded_two",
+        "GFNBounds.Doubling.main_sigmaBar_eq",
+        "GFNBounds.Doubling.main_unsolvable",
+        "GFNBounds.Doubling.main_truncation_bhat",
+        "GFNBounds.Doubling.main_truncation_sqrtK",
+        "GFNBounds.Doubling.main_constant_functional"
       ],
       "status": "partial",
-      "bucket": "B",
-      "scope_notes": "Item (3) is proved at every p in [1,∞], unconditionally given positive recurrence; its `σ̄ = j̄/(1−c)` clause is proved as the upper bound only, and its `c₇√m` clause is conditional on `eq:doubling_decay`. Item (1)'s irreducibility half and item (5)'s irreducibility half are proved. Items (1) recurrence classification, (2), (4), and (5)'s two constants are open. The file's docstring carries the item-by-item table."
+      "bucket": "C",
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "prop:doubling_drift",
@@ -189,7 +210,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Both halves of the `iff`. `height_pstar_sub` is stated for a free eps as `eps(m)(m+1)-1`, weaker hypotheses than the paper's; `drift_family` specialises it to `c(m+1)^(1-s)-1`."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_excursion",
@@ -208,7 +230,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Pathwise, which is the strongest reading of the paper's “almost surely”: quantification over every sequence with admissible steps, on either chain via `cap`. The path is a sequence of ladder indices with `s₀ = 0`, so “the chain visits only ladder states before σ” is built into the formulation rather than proved. `σ` need not be the *first* hitting time — the bound holds at every index where the path is at `0`, which is stronger. The `{σ = +∞}` branch is vacuous in the paper and absent here."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_supersolution",
@@ -233,7 +256,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "All three steps, on both chains. `E(σ ∧ n)` is *defined* by the paper's own one-step recursion (`hitExp`) rather than derived from a chain — the same modelling decision as `pstar` — so what is not formalized is that this recursion computes the expectation of a stopping time. `σ < ∞` a.s. is a statement about the law of `σ` and has no counterpart; its content here is the finiteness of `⨆ₙ hitExp n`. ⚠ weakened hypothesis: `K ≥ d` is not needed, the supersolution inequality holding at every cap."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "prop:doubling_length",
@@ -253,7 +277,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Both clauses, the paper's hypotheses, no chain. `E(σ|X₀=j)` is `⨆ₙ hitExp none n (lad j)`, the modelling convention of `lem:doubling_supersolution`. ⚠ route changed, not weakened: the paper dominates `X_{n∧σ}` by the integrable excursion maximum for optional stopping; here the domination is by an explicit `wLog` weight, so **`lem:doubling_excursion` is not consumed at all** — a real structural finding about the appendix. ⚠ weakened: `j = 0` is allowed (both sides `0`); the paper says `j ≥ 1`."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "prop:doubling_phase",
@@ -263,12 +288,12 @@
       ],
       "block_sha256": "d20ea2008fad2d91330953d131eef09b2fb15d78ae0f88f633beb3c00c9778b9",
       "lean_files": [
+        "GFNBounds/Doubling/Summable.lean",
         "GFNBounds/Doubling/StatExists.lean",
         "GFNBounds/Doubling/PhaseExists.lean",
         "GFNBounds/Doubling/PhaseEmpty.lean",
         "GFNBounds/Doubling/Lyapunov.lean",
-        "GFNBounds/Doubling/PointwiseInv.lean",
-        "GFNBounds/Doubling/Summable.lean"
+        "GFNBounds/Doubling/PointwiseInv.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.exists_stat_of_family",
@@ -282,7 +307,8 @@
       ],
       "status": "partial",
       "bucket": "C",
-      "scope_notes": "**Every row but (d) is now settled, in the form this library consumes** — the existence or non-existence of an invariant probability, never a statement about recurrence: row (b) `s=1, 0<c<1` and row (f) `s>1` are `Nonempty (Stat S none)` (`exists_stat_of_family`, `exists_stat_of_family_gt_one`, both via the explicit drift threshold `exists_stat_of_threshold`); rows (a) `s<1` and (c)/(e) `s=1, c≥1` are `IsEmpty (Stat S none)` (`isEmpty_stat_of_family_lt_one`, `isEmpty_stat_of_family_ge_one`), proved from the cut balance by a tail-growth argument, no chain. ⚠ weakened, and this is the whole of the gap: the paper distinguishes *null recurrent* from *transient* inside `s=1, c≥1` and calls `s<1` transient; that distinction is a property of the chain and is NOT proved. Row (d), `c = 1/ln 2`, is open in the paper itself."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "prop:doubling_cut",
@@ -306,7 +332,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "eq:doubling_cut and eq:doubling_ratios both closed, for the loop closure and the truncation together via the cap parameter; the paper's `d < m <= K/2` is hdm plus hD : HasDouble cap m, and evenness of K is unused. eq:doubling_cut is derived FROM lem:doubling_percut Step 2, inverting the paper's order, since the pointwise identity needs no summation and no invariance. eq:doubling_ratios is obtained by testing Stat.inv against a point mass, so no transition-matrix layer is built."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "prop:doubling_exponent",
@@ -329,7 +356,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Full statement, at every real `p ≠ 0` — including `p < 0`, which the paper's “inside the standing range or not” requires and which the negative Cramér root past `c = 1/ln 2` makes necessary. `λ_j = A j^{-p}(1+o(1))` is carried as `Tendsto (λ_j j^p) (𝓝 A)`, its exact meaning; `c` is any positive real with `ε(j) = c/(j+1)` written out, so no `Setting` (whose `ε_max < 1` would exclude `c ≥ 2`) is involved. The sum/integral comparison is Mathlib's monotone one (`AntitoneOn.integral_le_sum` and siblings) at an arbitrary real exponent, and the paper's “uniformly on the window” is the sandwich `(A−t)V ≤ Σ u_j w_j ≤ (A+t)V` at every `t`. ⚠ weakened: positivity of `(λ_j)` is not used; the paper's proof does not use it either."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_cramer_root",
@@ -356,7 +384,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "All three items, plus existence, uniqueness and the `c = 1/ln 2` case. Two proofs use weaker tools than the paper's and are marked in the file: `two_rpow_gt_add_one` gets `2^t > t+1` for `t > 1` from `exp x ≥ x+1` and `2 ln 2 > 1` rather than from convexity, and the `c = 1/ln 2` case comes from `x + 1 < exp x` rather than from `0` being the strict minimum. Strict convexity is still proved and is what carries uniqueness. Downstream files take a root as a hypothesis, so nothing depends on how `p_*` is selected."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "def:doubling_decay_notation",
@@ -386,7 +415,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "The whole notation block. `s = 1` is not a parameter but the shape of `Decay.eps`; `Decay.cutBal_of_setting` is the bridge from a `Setting` whose `eps` has that shape. `Decay.CutBal` is `CutBalanceSeq` with the target row dropped, since the decay block never uses it."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_averaging",
@@ -407,7 +437,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Both items, and `q_m > 0` on `W(m)`. ⚠ weakened hypothesis: the identities are linear and need no positivity of `(λ_j)`; `m > d` enters only through `1 ≤ m`."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_expansion",
@@ -431,7 +462,8 @@
       ],
       "status": "partial",
       "bucket": "C",
-      "scope_notes": "Step 4 only: the closed form of `A₁` and all of `eq:doubling_signs`, each sign coming from one of the four inequalities of `eq:doubling_cramer_ineq`. HARD, blocked: `eq:doubling_Rexp` itself, whose Step 2 is Euler–Maclaurin for `t^{-r}` with a complete-monotonicity remainder bound — mathlib v4.31.0 has neither. **But the wall has been routed around where it mattered**: what the descent block consumes is only `eq:doubling_R0`, and `R0Bound.lean` proves that by a first-order telescoping comparison, with the explicit constant `c₄ = 16cτ`. The refined expansion is now needed only by `rem:doubling_parity` and `rem:doubling_second_order`, and the latter is unproved in the paper too."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "rem:doubling_parity",
@@ -448,7 +480,8 @@
       ],
       "status": "partial",
       "bucket": "C",
-      "scope_notes": "The parity gap `A₀ − A₁ = cτ` is proved (it is the definition of `A₁`). HARD, blocked: the remark's reading of that gap against `eq:doubling_Rexp` — that `Φ₀` is neither a super- nor a sub-solution — needs the expansion, which is open."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_descent",
@@ -480,7 +513,8 @@
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "Items (1), (2), (3) and **`eq:doubling_R0`** are proved. The chain is not built: `E(Z_ℓ g(Y_{N_ℓ}))` is the unnormalized transform `descW`, the `R₀(y)` of the transition law cancelling the `R₀(y)` of the weight; item (1) is the recursion's well-foundedness, item (2) the range of its base case, item (3) the fixed-point identity `eq:doubling_pathid`. `eq:doubling_R0` is proved with an **explicit** constant, `c₄ = 16cτ` valid at every `m ≥ 1`, and `½ ≤ R₀ ≤ 2` for `m ≥ 32cτ` — against the paper's non-effective `c₄` and `ℓ₁`; it does not go through `lem:doubling_expansion`, a first-order telescoping comparison sufficing. Left as `partial` for one reason only: the two clauses that are *about the chain* rather than about the recursion — `N_ℓ ≤ m` and the “almost surely” of item (2) — have no counterpart here, because no chain is built. Nothing of the lemma is assumed."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_escape",
@@ -499,11 +533,13 @@
         "GFNBounds.Doubling.Decay.sojourn_block",
         "GFNBounds.Doubling.Decay.gam",
         "GFNBounds.Doubling.Decay.surv",
-        "GFNBounds.Doubling.Decay.kern"
+        "GFNBounds.Doubling.Decay.kern",
+        "GFNBounds.Doubling.Decay.pk"
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "`eq:doubling_escape` and all three lines of `eq:doubling_sojourn`, on the paper's own blocks `I_i(ℓ)`, with `γ = √τ/(2(√τ+1))` and `c₅ = 6/γ²` verbatim. No chain: the exit time is the recursion `surv`, a genuine `P(Y_0..Y_r ∈ I)`. ⚠ **strengthened**: the paper's non-effective `ℓ₂` is replaced by the explicit `ell2 d = max(d+1, ⌈16cτ⌉)`, and the conjunct `ℓ₂ ≥ 2ℓ₁` is dropped — the paper's form follows by taking `max(ell2, 2ℓ₁)`."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_product",
@@ -521,7 +557,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "`eq:doubling_product` with the paper's exact hypotheses and conclusion `exp(−c₅H/ℓ) ≤ E(∏(1+b(Y_n))) ≤ exp(c₅H/ℓ)`. The coherence check that matters is `prodW_R0_eq_descOne`: the new normalised recursion is identified with the pre-existing `Descent.descOne`, which `Decay.decay_block` had been carrying as the hypotheses `hlo`/`hhi`. So this genuinely discharges them."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "theo:doubling_decay",
@@ -532,17 +569,21 @@
       "block_sha256": "b2f8f408d14f0bf8f740933cd30d762e9c9f1be377dbfba8453ec988f6409b39",
       "lean_files": [
         "GFNBounds/Doubling/Descent.lean",
+        "GFNBounds/Doubling/Summable.lean",
         "GFNBounds/Doubling/Product.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Decay.decay_block_of_cutBal",
         "GFNBounds.Doubling.Decay.decay_two_sided_of_cutBal",
         "GFNBounds.Doubling.Decay.decay_block",
-        "GFNBounds.Doubling.Decay.uu_bounded"
+        "GFNBounds.Doubling.Decay.uu_bounded",
+        "GFNBounds.Doubling.Decay.uu_bounded_explicit",
+        "GFNBounds.Doubling.Decay.decay_two_sided_explicit"
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "**Now unconditional.** Both items, from `D.CutBal d lam ⊤`, positivity and an explicit level `D.m0 d ≤ ℓ` — `lem:doubling_product` discharged the descent-weight hypothesis the statement used to carry, and `eq:doubling_R0`'s constant was already effective (`R0Bound.lean`). ⚠ narrowed: item (2)'s clause that `c₁, c₂` depend on `c`, `d`, `λ₁..λ_{2m₀}` alone is not formalized; the Lean statement is a bare existential in `c₁ ≤ c₂`."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "cor:doubling_tail",
@@ -563,11 +604,15 @@
         "GFNBounds.Doubling.powerTail_le",
         "GFNBounds.Doubling.tailSeq",
         "GFNBounds.Doubling.Decay.tail_bounds",
-        "GFNBounds.Doubling.Decay.tail_ratio_ge"
+        "GFNBounds.Doubling.Decay.tail_ratio_ge",
+        "GFNBounds.Doubling.Decay.tail_ratio_le",
+        "GFNBounds.Doubling.Decay.tendsto_tailSeq_zero",
+        "GFNBounds.Doubling.Decay.tendsto_tail_ratio_atTop"
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "`eq:doubling_powertail` (as its two inequalities, the `ξ_m` not being named) and both pairs of `eq:doubling_tailratio`. The paper compares the sum with `∫_m^∞ t^{-p}`; mathlib v4.31.0 has the finite sum/integral comparison but not the improper one, so the comparison here telescopes against `j ↦ j^{1-p}`, both increments coming from one tangent-line inequality `u^q ≥ 1 + q(u−1)` for `q ≤ 0`. No integral appears. `L(m) → 0` is proved elsewhere (`Stat.tailMass_tendsto_zero`), from summability."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "rem:doubling_renewal",
@@ -580,7 +625,8 @@
       "decls": [],
       "status": "open",
       "bucket": "D",
-      "scope_notes": "DEFERRED. A computation on a continuous renewal equation — a Leibniz differentiation of `G(x) = ∫ k̄(v)V(x−v)dv` and a dominated-convergence limit — set beside the discrete recursion. The paper is explicit that the identity is exact only for the limit equation and does **not** determine `C`; formalizing it would add no certainty to any claim."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "theo:doubling_sharp",
@@ -591,19 +637,25 @@
       "block_sha256": "e970b14109bf07b6cdb41777c52ed50b8a672b0fce549b0d7fc093d070e7fa8c",
       "lean_files": [
         "GFNBounds/Doubling/Sharp.lean",
+        "GFNBounds/Doubling/SharpFull.lean",
         "GFNBounds/Doubling/SharpRate.lean",
-        "GFNBounds/Doubling/SharpFull.lean"
+        "GFNBounds/Doubling/TotalVariation.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Decay.sharp_of_cutBal",
         "GFNBounds.Doubling.Decay.uu_bounded_of_cutBal",
         "GFNBounds.Doubling.Decay.sharp",
         "GFNBounds.Doubling.Decay.cutBal_unique",
-        "GFNBounds.Doubling.Decay.vartheta"
+        "GFNBounds.Doubling.Decay.vartheta",
+        "GFNBounds.Doubling.Decay.sharp_rate_explicit",
+        "GFNBounds.Doubling.Decay.levelL",
+        "GFNBounds.Doubling.Decay.c6",
+        "GFNBounds.Doubling.Decay.sharp_explicit"
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "**Now unconditional.** `Decay.sharp_of_cutBal` gives the limit `λ_m m^{p_*} → C` and the rate `|λ_m m^{p_*} − C| ≤ c₆ m^{−ϑ}` from `D.CutBal d lam ⊤` alone — `lem:doubling_weight` discharged the one hypothesis `Decay.sharp` had carried, and `theo:doubling_decay` supplies the two-sided bound it needs. `ϑ` is the paper's explicit exponent; the paper itself records that it is not *effective* in the sense of being sharp (0.0024 proved against 0.22 measured)."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_weight",
@@ -620,9 +672,10 @@
         "GFNBounds.Doubling.Decay.c3",
         "GFNBounds.Doubling.Decay.ell3"
       ],
-      "status": "closed",
-      "bucket": "A",
-      "scope_notes": "`eq:doubling_weight` with **effective** constants: `c₃ = 32c₅cτ` and `ℓ₃ = max(1, ⌈16cτ⌉, ⌈96cτ/γ²⌉)`, against the paper's non-effective `c₃`, `ℓ₃`. This was the library's last `sorry`; the scaffold library is now empty. The obstruction its tag once named — missing Mathlib chain theory — was never the real one: the proof runs on `lem:doubling_escape`, `lem:doubling_product` and `eq:doubling_R0`, all chain-free."
+      "status": "partial",
+      "bucket": "C",
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_doeblin",
@@ -632,18 +685,19 @@
       ],
       "block_sha256": "e37ea2a509ebeb7edc42216cede3b812313a7bf5cddd4d5cdc0536f240e8b2a5",
       "lean_files": [
+        "GFNBounds/Doubling/DescentLaw.lean",
         "GFNBounds/Doubling/Doeblin.lean",
-        "GFNBounds/Doubling/TotalVariation.lean"
+        "GFNBounds/Doubling/HarmonicWindow.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Decay.doeblin",
         "GFNBounds.Doubling.Decay.omeg",
-        "GFNBounds.Doubling.Decay.varpi",
-        "GFNBounds.Doubling.tvOn"
+        "GFNBounds.Doubling.Decay.varpi"
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "`eq:doubling_doeblin` and both lines of `eq:doubling_windowsums`, with `ω = (c²/16)ln(5/4)ln(8/5)` verbatim and `ϖ` the reference law on `[⌈5a/4⌉, 2a)` proportional to `1/(j+1)`. Total variation is a finite `Finset` sum with the `½` convention, not a measure-theoretic TV — the descent leaves a block at one of finitely many states, so nothing is lost."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_coupling",
@@ -653,15 +707,19 @@
       ],
       "block_sha256": "9ca82978f2c96c1a789f1fb6437a796e7d5e9a87c2890aa629b7239a305036cc",
       "lean_files": [
-        "GFNBounds/Doubling/Coupling.lean"
+        "GFNBounds/Doubling/Coupling.lean",
+        "GFNBounds/Doubling/DescentLaw.lean",
+        "GFNBounds/Doubling/TotalVariation.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Decay.coupling",
-        "GFNBounds.Doubling.Decay.coupling_above"
+        "GFNBounds.Doubling.Decay.coupling_above",
+        "GFNBounds.Doubling.tvOn"
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "`eq:doubling_coupling` verbatim: the geometric contraction of the TV distance between two exit laws, in the block index, from `lem:doubling_doeblin`."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "rem:doubling_no_logperiodic",
@@ -674,7 +732,8 @@
       "decls": [],
       "status": "open",
       "bucket": "D",
-      "scope_notes": "DEFERRED. Its content is that the limit of `eq:doubling_sharp` exists, which is `theo:doubling_sharp`; the rest of the remark explains the mechanism (the window spreads the exit law) and is prose."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "cor:doubling_tail_sharp",
@@ -687,11 +746,14 @@
         "GFNBounds/Doubling/Tail.lean"
       ],
       "decls": [
-        "GFNBounds.Doubling.Decay.tail_sharp"
+        "GFNBounds.Doubling.Decay.tail_sharp",
+        "GFNBounds.Doubling.Decay.tendsto_tail_sharp",
+        "GFNBounds.Doubling.Decay.tendsto_tail_ratio_sharp"
       ],
-      "status": "partial",
-      "bucket": "C",
-      "scope_notes": "The first line, with the limit unwound into an inequality: if the rescaled profile is within `t` of `C` past `m₀`, then `(p_*−1) m^{p_*−1} L(m)` is within `t(1 + (p_*−1)/m) + |C|(p_*−1)/m` of `C` at every `m ≥ m₀`. That is the paper's `t → 0` argument at every `t`, and it converts to `eq:doubling_tail_sharp` the moment `theo:doubling_sharp` supplies the limit — which is why the statement is quantitative here: the limit is open, the inequality is not. HARD only through that input; the second line (`L(m)/λ_m = m/(p_*−1)(1+o(1))`) is the first divided by `u_m → C` and is not stated."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "prop:doubling_constant",
@@ -701,7 +763,9 @@
       ],
       "block_sha256": "e44c10fd20bb3d5be033de229a2f1e75d133e4587d10ecf927a424aa746a5f3e",
       "lean_files": [
-        "GFNBounds/Doubling/Constant.lean"
+        "GFNBounds/Doubling/Constant.lean",
+        "GFNBounds/Doubling/ConstantFunctional.lean",
+        "GFNBounds/Doubling/Main.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Decay.extend",
@@ -710,11 +774,27 @@
         "GFNBounds.Doubling.Decay.extend_pos",
         "GFNBounds.Doubling.Decay.extend_add",
         "GFNBounds.Doubling.Decay.extend_smul",
-        "GFNBounds.Doubling.Decay.extend_congr_high"
+        "GFNBounds.Doubling.Decay.extend_congr_high",
+        "GFNBounds.Doubling.Decay.ind",
+        "GFNBounds.Doubling.Decay.climit",
+        "GFNBounds.Doubling.Decay.nu",
+        "GFNBounds.Doubling.Decay.extend_nonneg",
+        "GFNBounds.Doubling.Decay.extend_eq_sum_ind",
+        "GFNBounds.Doubling.Decay.tendsto_climit_of_pos",
+        "GFNBounds.Doubling.Decay.tendsto_extend",
+        "GFNBounds.Doubling.Decay.climit_eq_sum",
+        "GFNBounds.Doubling.Decay.tendsto_of_cutBal",
+        "GFNBounds.Doubling.Decay.constant_eq",
+        "GFNBounds.Doubling.Decay.nu_nonneg",
+        "GFNBounds.Doubling.Decay.sum_nu_pos",
+        "GFNBounds.Doubling.Decay.nu_eq_zero",
+        "GFNBounds.Doubling.Decay.constant_functional",
+        "GFNBounds.Doubling.main_constant_functional"
       ],
-      "status": "partial",
-      "bucket": "C",
-      "scope_notes": "Step 1 only, in constructive form: `extend` is the unique solution with prescribed boundary data, it solves `eq:doubling_cut`, it is linear in that data, positivity of the sequence is positivity of the data, and its value above the cut `d` does not see `λ_j` for `2j ≤ d` — which is the mechanism behind `ν_j = 0` there. HARD, blocked: Steps 2 and 3 identify `C = lim λ_m m^{p_*}` as a linear functional and fix the signs of its coefficients, and both consume `theo:doubling_sharp`, which is open."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "rem:doubling_second_order",
@@ -727,7 +807,8 @@
       "decls": [],
       "status": "open",
       "bucket": "D",
-      "scope_notes": "DEFERRED, and the paper says so: “This is a formal matching computation and is not proved here.” Proving it needs `|u_m − C| = O(1/m)`, whereas `theo:doubling_sharp` gives an exponent `ϑ < 1`. The library mirrors the flag rather than laundering it."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_truncation_irreducible",
@@ -749,7 +830,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "All four steps. Irreducibility at an even cap with the parity used where the paper uses it; existence, uniqueness and positivity of `λ^K` by finite-dimensional linear algebra rather than Perron–Frobenius; and `B̂_K < +∞` (`Stat.exists_bhat`), which closes the last clause. The state count `K+2` is not formalized — `St` stays infinite and the state set is `OnChain (some K)`."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_percut",
@@ -781,7 +863,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "All four steps, for the loop closure and the truncation at once via the cap parameter; the paper's `d < m <= K/2` is hdm plus hD : HasDouble cap m, and evenness of K is unused. eq:doubling_step3 is stated SQUARED (Stat.mass is the p-th power of the norm), equivalent to the paper's square-root form. Stat.mass_centredTail is proved with NO hypothesis on p (the paper assumes p in [1,inf)): f_m takes two values, so the identity is exact at every exponent. The identity of Step 2 is asserted OnChain and genuinely fails at lad(K+1), where lambda vanishes."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "theo:doubling_unbounded",
@@ -791,7 +874,9 @@
       ],
       "block_sha256": "71138ced76f59f0dbc8d165fa581f9cc49205fcaf66e57dc03bf60508cde4e7a",
       "lean_files": [
-        "GFNBounds/Doubling/Unbounded.lean"
+        "GFNBounds/Doubling/Unbounded.lean",
+        "GFNBounds/Doubling/UnboundedL2.lean",
+        "GFNBounds/Doubling/RayleighBridge.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.GrowthCond",
@@ -802,11 +887,16 @@
         "GFNBounds.Doubling.Stat.exists_tailRatio_gt",
         "GFNBounds.Doubling.Stat.mass_ratio_bound",
         "GFNBounds.Doubling.Stat.exists_small_mass_ratio",
-        "GFNBounds.Doubling.Stat.no_bounded_inverse"
+        "GFNBounds.Doubling.Stat.no_bounded_inverse",
+        "GFNBounds.Doubling.Stat.mass_le_of_leftInverse",
+        "GFNBounds.Doubling.Stat.no_diffusionOp",
+        "GFNBounds.Doubling.Stat.not_tendsto_partialSum",
+        "GFNBounds.Doubling.Stat.not_summable_betaHat"
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Items (1) and (2) at every finite `p`, in the ℝ mass layer: `Stat.mass p f` is `‖f‖_{L^p(λ)}^p`, so `eq:doubling_inf` reads as the same statement raised to the power `p`, and `Π f = 0` reads as `∑' λ·f = 0`. \"No bounded `S`\" is `Stat.no_bounded_inverse`: no real `B` bounds `mass p f ≤ B · mass p ((Id−P⋆)f)` over the bounded mean-zero `f`, which is the inequality Step 3 of the paper actually uses. NOT here: the `p = 2` clauses about `Σ β̂_n = +∞` and the divergence of `Σ (P⋆ⁿ − Π)`, which need `lem:doubling_operator`. ⚠ weakened hypothesis in `exists_tailRatio_gt`: the start of the supremum need not exceed `d`."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_ramp",
@@ -820,6 +910,7 @@
       ],
       "decls": [
         "GFNBounds.Doubling.rampFn",
+        "GFNBounds.Doubling.ramp_defect_src",
         "GFNBounds.Doubling.ramp_defect_below",
         "GFNBounds.Doubling.ramp_defect_straddle",
         "GFNBounds.Doubling.ramp_defect_above",
@@ -833,7 +924,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "All five cases of the defect, both lines of `eq:doubling_ramp`, `Π r̃_N = 0`, and the conclusion. `L^∞(λ)` is not built: since `λ` is positive at every state the `L^∞(λ)` norm is the supremum over states, so the two inequalities are stated in the forms that supremum consumes — a pointwise upper bound on the defect and an attained lower bound on the function — and `no_bounded_inverse_infty` is phrased against those. The family clause is the bound `γ = c 2^{1−s}` for `s ≥ 1`; that it is *unbounded* for `s < 1` is not formalized."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "cor:doubling_family",
@@ -843,16 +935,19 @@
       ],
       "block_sha256": "909585b04232eb8e85ca370c7e0fbc7d99b15b687946ff7b7d7c8df76bae0512",
       "lean_files": [
-        "GFNBounds/Doubling/Family.lean"
+        "GFNBounds/Doubling/Family.lean",
+        "GFNBounds/Doubling/Main.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Stat.tailSeq_eq_tailMass",
         "GFNBounds.Doubling.Stat.rayleigh_family",
-        "GFNBounds.Doubling.Stat.exists_rayleigh_family"
+        "GFNBounds.Doubling.Stat.exists_rayleigh_family",
+        "GFNBounds.Doubling.main_rate"
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "`eq:doubling_explicit` in squared, denominator-free form: `c₁ m ‖(Id−P⋆)f_m‖² ≤ 4c₂(p−1)‖f_m‖²`, so `c₇ = √(c₁/(4c₂(p−1)))` and no square root is taken. Conditional on `eq:doubling_decay` with a pair `(c₁,c₂)`, exactly as the paper's is conditional on `theo:doubling_decay`; positive recurrence is the hypothesis `Stat S none`, not a conclusion."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "prop:doubling_unsolvable",
@@ -871,7 +966,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "Both items, from `Setting` + `Stat S none` + `GrowthCond S`. Item (1) is the dense proper subspace; item (2)'s pair are genuinely non-negative, in `L²(μ)`, of total mass `1`, with the flow-matching equation stated `μ`-a.e. and the witness non-explicit, as the paper's is. The route **avoids the adjoint**, so nothing here is conditional on the unproved part of `lem:doubling_operator`(1). The paper's own caveat is carried in SCOPE: this refutes *exact* `L²` flow matching, not the weak universality of `theo:universality_L2`, which stays open because the range is dense."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "rem:doubling_geometric",
@@ -889,7 +985,8 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "The identity and its consequence: for `ε(j) = a ρ^j` with `ρ ∈ (0,1)` the left side of (★) is `D log(1/a) + (2^D − 1) log(1/ρ)`, and (★) fails. The remark's closing sentence — that no boundedness is claimed for any policy on this graph — is prose."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
     },
     {
       "label": "cor:doubling_truncation",
@@ -900,7 +997,9 @@
       "block_sha256": "87367845bf1d850602b5758516f6650d2b4047ce3f00b6e0c443c42aaf67841b",
       "lean_files": [
         "GFNBounds/Doubling/Truncation.lean",
-        "GFNBounds/Doubling/Kac.lean"
+        "GFNBounds/Doubling/Kac.lean",
+        "GFNBounds/Doubling/Main.lean",
+        "GFNBounds/Doubling/RayleighBridge.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Stat.percut_K",
@@ -915,11 +1014,786 @@
         "GFNBounds.Doubling.Stat.cutBalanceSeq_trunc",
         "GFNBounds.Doubling.Stat.decayK",
         "GFNBounds.Doubling.Stat.kac_identity",
-        "GFNBounds.Doubling.Stat.lam_one_ge"
+        "GFNBounds.Doubling.Stat.lam_one_ge",
+        "GFNBounds.Doubling.main_truncation_bhat",
+        "GFNBounds.Doubling.main_truncation_sqrtK"
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "All three items, and all seven steps, with one disclosed recasting. **`B̂_K` is not constructed** — that is Step 1, which needs `lem:doubling_truncation_irreducible` Step 4 (Perron–Frobenius) and `lem:doubling_operator`(2), both open — so items (1) and (3) are stated about *any* `B` bounding the `L²(λ^K)` Rayleigh quotient, which is what `eq:doubling_resolvent` supplies for `B = B̂_K²`. They are therefore lower bounds on every such constant, which is the useful direction. Squared and cleared of roots throughout. Step 6 is the interesting one: the paper cites Kac's formula, mathlib has none, and `Kac.lean` **derives it** — `λ(s₀)(2 + σ̄) = 1` — from invariance in the integral form tested against the truncated hitting expectations `hitExp`, with no chain. That is the identity the lab register records as measured (`1/λ(s₀) − σ̄ ∈ [1.999999994526, 2.000000000004]`), and it is `prop:morozov_rate`(1) read at `s₀`. Step 4 (`decayK`) is conditional on `eq:doubling_product` exactly as `theo:doubling_decay` is; its `c₉` is explicit and free of `K` (`(Z₂/Z₁)·2^{p_*}·Q²` with `Q = ρ^ℓ + (η^ℓ)^{-1}`, `ρ = (1−ε_max)^{-1}`, `η = c/(2ℓ+1)`), which is the whole point of item (2). ⚠ weakened: evenness of `K` enters only through `m ≤ K/2 ↔ 2m ≤ K` and is never assumed."
+      "scope_notes": "",
+      "source": "app_doubling.tex"
+    },
+    {
+      "label": "theo:sampling_theorem",
+      "source": "proofs.tex",
+      "tex_span": [
+        28,
+        39
+      ],
+      "block_sha256": "5071f6a112cbbafd7421c9f47c8ddd1104ebe67fd307631d033fbf9b00417508",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Quoted from Bengio et al. 2021; the paper does not prove it. Formalizing it means formalizing the sampling theorem for generative flows from scratch -- a project of its own, and outside what this paper claims."
+    },
+    {
+      "label": "theo:negative_control",
+      "source": "proofs.tex",
+      "tex_span": [
+        52,
+        61
+      ],
+      "block_sha256": "82287bcdc212af7c078a9e7de8b5ab465450559695e1d83ab7cfdb4e750ed13c",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Quoted from brunswicEGF. Same as theo:sampling_theorem: the paper cites, it does not prove."
+    },
+    {
+      "label": "theo:universality_L2_full",
+      "source": "proofs.tex",
+      "tex_span": [
+        65,
+        115
+      ],
+      "block_sha256": "0ed66bc7c52c82674677c2e68ce93f6c815ef9f4f6e77f715c2eeacccf5fdc43",
+      "lean_files": [
+        "GFNBounds/Core/Flow.lean",
+        "GFNBounds/Core/Mixing.lean",
+        "GFNBounds/Core/Universality.lean",
+        "GFNBounds/Core/UniversalityLp.lean",
+        "scaffold/GFNBoundsScaffold/Core/Kernel.lean"
+      ],
+      "decls": [
+        "GFNBounds.Core.defect",
+        "GFNBounds.Core.resInit",
+        "GFNBounds.Core.resTerm",
+        "GFNBounds.Core.WeaklyUniversalAt",
+        "GFNBounds.Core.StronglyUniversalAt",
+        "GFNBounds.Core.WeaklyUniversal",
+        "GFNBounds.Core.liftedOutflow",
+        "GFNBounds.Core.truncation",
+        "GFNBounds.Core.defect_eq_truncation",
+        "GFNBounds.Core.residuals_le",
+        "GFNBounds.Core.stronglyUniversalAt_of_le",
+        "GFNBounds.Core.weaklyUniversalAt_of_tendsto",
+        "GFNBounds.Core.constOne",
+        "GFNBounds.Core.tendsto_truncation_norm",
+        "GFNBounds.Core.weaklyUniversalAt_Lp",
+        "GFNBounds.Core.weaklyUniversal_Lp",
+        "GFNBounds.Core.integralCLM",
+        "GFNBounds.Core.meanProj",
+        "GFNBounds.Core.meanProj_comp_left",
+        "GFNBounds.Core.comp_meanProj",
+        "GFNBounds.Core.meanProj_sub_eq_zero",
+        "GFNBounds.Core.mixing_of_massPreserving",
+        "GFNBounds.Core.weaklyUniversal_of_massPreserving",
+        "GFNBounds.Core.weaklyUniversalAt_of_equalMass",
+        "GFNBounds.Core.eq_meanProj_of_invariant"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept. Independently audited against the .tex: no overreach. CLOSED: Step 1 (Core/Mixing, on a Banach space); equ:defect_equivalence both halves; equ:defect_is_truncation; equ:universality_quantitative with the constant 2(1+||P||) on the nose; Step 3's ||psi_eta|| -> 0 for p != inf with no side hypothesis; and weak L^p-universality with def:universality's quantifier over pairs closed. Core/Flow.lean then replaced the assumed hypotheses by DERIVED ones: Pi is no longer a hypothesised operator but the paper's own mean projection `Pi f = (int f dnu / nu(S)) . 1` (proofs.tex:22), built as a CLM; `Pi P = Pi` is derived from P preserving integrals, `P Pi = Pi` from P fixing the constants, and `Pi theta = 0` from equal masses. So `weaklyUniversal_of_massPreserving` needs only (i) P 1 = 1, (ii) P preserves nu-integrals, (iii) summable mixing, (iv) p != inf. REMAINING, and it is one construction: the kernel-to-operator passage, `P_star f = d((f nu) pi_star)/d nu` from a Markov kernel, of which (i) and (ii) are the consequences. That is CLAUDE.md's obstruction 2 and is not built. Also still open: p = inf strong universality and its cross-p transfer. Ergodicity did not vanish into thin air -- `eq_meanProj_of_invariant` proves that under summable mixing against the mean projection every P-invariant L^p element is a.e. constant, so the ergodic content sits in the summability hypothesis and the bundle cannot be satisfied by a P with a non-constant invariant density."
+    },
+    {
+      "label": "theo:universality_L2_body",
+      "source": "proofs.tex",
+      "tex_span": [
+        119,
+        144
+      ],
+      "block_sha256": "af17ae1015eb5415187464e028d9f6c1379dc200dd217c5184c11acfac356303",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Needs manifolds, a volume form, EGF pushforwards by diffeomorphisms and the manifold L^p change-of-variables bound of Stern 2010 Thm 1 -- an external theorem the library would have to assume. Deferred behind theo:universality_L2_full."
+    },
+    {
+      "label": "theo:RL_CV_bound_full",
+      "source": "proofs.tex",
+      "tex_span": [
+        148,
+        184
+      ],
+      "block_sha256": "213642fff5f19db7ddcce1e7478dfbc761c65d2bbfcc3a6378fd11c9a2b44492",
+      "lean_files": [
+        "GFNBounds/Core/StableBound.lean"
+      ],
+      "decls": [
+        "GFNBounds.Core.tvD",
+        "GFNBounds.Core.tvD_triangle",
+        "GFNBounds.Core.tvD_normalization",
+        "GFNBounds.Core.tvD_normalization_le",
+        "GFNBounds.Core.posPart_mass",
+        "GFNBounds.Core.mass_defect_le",
+        "GFNBounds.Core.tv_le_two_fmL1",
+        "GFNBounds.Core.holderConst",
+        "GFNBounds.Core.stableConst",
+        "GFNBounds.Core.stableLoss",
+        "GFNBounds.Core.fmL1_le_holderConst_mul_loss",
+        "GFNBounds.Core.mass_floor",
+        "GFNBounds.Core.stable_bound"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept. ITEM (1) CLOSED in both its displays: equ:stable_bound (`stable_bound`, TV <= C * L) and equ:mass_floor (`mass_floor`, |z - t| <= C_0 * L), with the constant C_0 = nu_B(S)^(1-1/q) * M^(1/q) DERIVED independently and matching equ:stable_constants on the nose. equ:normalization_lemma is isolated as a reusable pair (`tvD_normalization`, `tvD_normalization_le`). Everything is on densities against nu_B; no measure and no kernel is formed. TWO EXTERNAL INPUTS, both carried as named hypotheses on real numbers and disclosed in three places each, never axiomatized (the axiom sweep stays clean): `hNC` is theo:negative_control, which the paper quotes from brunswicEGF and does not prove, and `htri` is the TV triangle inequality for the abstract sampler s_tau -- `tvD_triangle` discharges htri for any sampler whose law has a nu_B-density, nothing discharges hNC. Also hypothesized: `hz : z = int e dnu`, i.e. Step 0's E(S) = F_init(S), which rests on pi_star being a Markov kernel -- no layer builds that. ITEMS (2) AND (3) NOT ATTEMPTED: they need def:universality and the initial-family scaling argument. q = +inf not covered."
+    },
+    {
+      "label": "theo:IL_CV_bound",
+      "source": "proofs.tex",
+      "tex_span": [
+        271,
+        372
+      ],
+      "block_sha256": "43eeab852812f3f1227acbf36c15e842327d30712fb7117b8191ddccfdcf12e0",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "C",
+      "scope_notes": "Needs KL divergence and self-entropy against a background measure, and Pinsker. Mathlib v4.31 has klDiv but the shape the paper uses (unnormalized, weak-FM, q-dual) needs a layer built on top."
+    },
+    {
+      "label": "lem:adjoint",
+      "source": "proofs.tex",
+      "tex_span": [
+        402,
+        445
+      ],
+      "block_sha256": "ef3aaa2745b8bf972ca20b49f9bc4c3f3b96541bd8e13b917ffb4f58078a62b4",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "C",
+      "scope_notes": "Disintegration of T (x) lambda on a standard Borel space -- Mathlib has ProbabilityTheory.Kernel disintegration -- then the lambda-reversal as an involution and the two density actions as L^2(lambda) adjoints. The layer exists; the work is real. Gates the whole first-variation block."
+    },
+    {
+      "label": "theo:first_variation_full",
+      "source": "proofs.tex",
+      "tex_span": [
+        447,
+        483
+      ],
+      "block_sha256": "0b6097925ce53dd70e62b54b73fe3fa555584de76feb510a3bf3f888181d4b03",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Frechet derivative of mu |-> int g(d(mu T)/d mu) dnu over measures, with a preconditioner nu_G. Needs a calculus-of-variations layer on M^+(S) that Mathlib does not have."
+    },
+    {
+      "label": "cor:gradient_formulas",
+      "source": "proofs.tex",
+      "tex_span": [
+        485,
+        502
+      ],
+      "block_sha256": "ee9fbdd0200fba0f43d1dbb4eabdde5adf60877b18c9b43513b1ab500f641129",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Corollary of theo:first_variation_full; inherits its obstruction."
+    },
+    {
+      "label": "def:edge_lift",
+      "source": "proofs.tex",
+      "tex_span": [
+        504,
+        510
+      ],
+      "block_sha256": "b6eb5fb5f001deaefd98b930c89212ba3676548afb09dbc95479791aac820314",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "C",
+      "scope_notes": "A kernel construction on S^2 with its stationary edge measure. Straightforward once the kernel layer of lem:adjoint is up."
+    },
+    {
+      "label": "lem:lift_wellposed",
+      "source": "proofs.tex",
+      "tex_span": [
+        512,
+        522
+      ],
+      "block_sha256": "52aacdd8a1978718fa1553e35394c366dba68f36d1e0802e003f8024f7c8b5c6",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "C",
+      "scope_notes": "Invariance of lambda_2 under K_2, contraction, and the dual as the forward edge lift. Needs def:edge_lift."
+    },
+    {
+      "label": "prop:db_lift",
+      "source": "proofs.tex",
+      "tex_span": [
+        524,
+        535
+      ],
+      "block_sha256": "d443dabb698e0ad4935a71f501bf64093d3b4cd89ccedd4f381232860c979d75",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "C",
+      "scope_notes": "DB as a lifted balance loss; needs def:edge_lift and the disintegration of an edge flow."
+    },
+    {
+      "label": "cor:db_gradient",
+      "source": "proofs.tex",
+      "tex_span": [
+        537,
+        548
+      ],
+      "block_sha256": "dfa16aefe103ef8438a4be6333b4b55104739d5553a258e5085137b038594c6b",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Corollary of theo:first_variation_full on (S^2, lambda_2, K_2); inherits its obstruction."
+    },
+    {
+      "label": "lem:lift_mixing",
+      "source": "proofs.tex",
+      "tex_span": [
+        550,
+        561
+      ],
+      "block_sha256": "6e79027990a3ca16533df0285748cadea2f3df01e5b475a40c016298d5163319",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "C",
+      "scope_notes": "beta-hat_n <= beta_(n-1): an operator-norm inequality, easy once the lift layer is up. Bucket C for the layer, not for the argument."
+    },
+    {
+      "label": "theo:gd_diffusion_full",
+      "source": "proofs.tex",
+      "tex_span": [
+        563,
+        579
+      ],
+      "block_sha256": "92c94f97016bbf90f719efb18a8dced3b928d24098b95f0b57065c79afe19ee9",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Linearization of a gradient flow with an L^2 error term, and its identification with the square of the backward heat flow. Needs the first-variation layer AND an ODE/semigroup layer."
+    },
+    {
+      "label": "lem:sigma_mixing",
+      "source": "proofs.tex",
+      "tex_span": [
+        581,
+        590
+      ],
+      "block_sha256": "1f4ebb13fc0c86263eaafc46112284a4e90ba5657c9e9ffff3d9263e9597812e",
+      "lean_files": [
+        "GFNBounds/Core/Mixing.lean"
+      ],
+      "decls": [
+        "GFNBounds.Core.Mixing",
+        "GFNBounds.Core.Mixing.S",
+        "GFNBounds.Core.Mixing.B",
+        "GFNBounds.Core.Mixing.norm_S_le",
+        "GFNBounds.Core.Mixing.poisson_right",
+        "GFNBounds.Core.Mixing.poisson_left",
+        "GFNBounds.Core.Mixing.coercivity",
+        "GFNBounds.Core.Mixing.coercivity_div",
+        "GFNBounds.Core.Mixing.proj_idem"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED 2026-09-08, sorry-free, warning-free, axiom-swept to [propext, Classical.choice, Quot.sound]. All three clauses: S converges with ||S|| <= B (`norm_S_le`), the Poisson equation both sides (`poisson_right`, `poisson_left`), and the coercivity ||h - Pi h|| <= B ||(1-P) h|| (`coercivity`; `coercivity_div` is the paper's quotient form). Proved on a Banach space, so it serves every p at once, not only the p = 2 the lemma is stated at -- note the lemma is Step 1 read at p = 2 WITH pi* replaced by the backward policy, so the invariant measure is lambda and not nu_B; the abstraction covers both. Builds on GFNBounds/Doubling/Operator.lean's resolvent algebra rather than re-proving it; that Core -> Doubling dependency is an architectural debt recorded in the file. ASSUMED, not derived: Pi P = P Pi = Pi, which the paper gets from ergodicity and invariance -- that is Core/Flow.lean, which does not exist."
+    },
+    {
+      "label": "theo:db_stable_frozen_full",
+      "source": "proofs.tex",
+      "tex_span": [
+        592,
+        610
+      ],
+      "block_sha256": "53f1dabc3d18544fcc63e7f2583dfe30a1f0d66d1ba933d7972a891859db1c7e",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Decay rate of the linearized flow; needs theo:gd_diffusion_full."
+    },
+    {
+      "label": "theo:local_convergence_full",
+      "source": "proofs.tex",
+      "tex_span": [
+        612,
+        657
+      ],
+      "block_sha256": "3c6f5cd06f8a4784003d7077e5edd201514379a4bcb9977a9b5c9bb1d1e20856",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Nonlinear local convergence with explicit constants; needs the whole calculus layer."
+    },
+    {
+      "label": "prop:frozen_unstable_full",
+      "source": "proofs.tex",
+      "tex_span": [
+        659,
+        683
+      ],
+      "block_sha256": "d9c473ffd177ca69e4ac8e9ed13aff141e21fc1faaebdb4ffe66bb10aee6cf29",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "C",
+      "scope_notes": "A finite explicit counterexample -- the balanced edgeflow minus epsilon times a unit circulation -- so no calculus is needed, only the loss functional on a finite graph. Tractable after the finite-graph layer of Milestone 2."
+    },
+    {
+      "label": "prop:tb_gradient",
+      "source": "proofs.tex",
+      "tex_span": [
+        685,
+        725
+      ],
+      "block_sha256": "9f8d865ec9aa13f6c07a5f51a474c8395ce904d011f87dab145c244d5c8ea753",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Needs theo:first_variation_full on the window lift."
+    },
+    {
+      "label": "prop:tb_hessian",
+      "source": "proofs.tex",
+      "tex_span": [
+        727,
+        751
+      ],
+      "block_sha256": "2d51b0fb8d56f81c1c253130ec94b3b3f69d549a443756bd7967a16c222eb882",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A Hessian on L^2(lambda_2) with a Cesaro/Fejer spectral density; needs the calculus layer and a spectral layer."
+    },
+    {
+      "label": "rem:tb_vs_db",
+      "source": "proofs.tex",
+      "tex_span": [
+        753,
+        755
+      ],
+      "block_sha256": "434a46fa7568d3344c8c9a86f5a8292a0e61a686eba6c9805bdf042a425471e3",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A remark."
+    },
+    {
+      "label": "prop:nonlinear_freezing",
+      "source": "proofs.tex",
+      "tex_span": [
+        759,
+        781
+      ],
+      "block_sha256": "739e73d16ee31c17da7631f26472bc5b661314b64cb68b268af671d4fecc0ff4",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "C",
+      "scope_notes": "Constructs a C-infinity generator vanishing on two bands (Mathlib has ContDiffBump) and then argues criticality. Item 1 is a sign computation; items beyond need the first variation."
+    },
+    {
+      "label": "rem:freezing",
+      "source": "proofs.tex",
+      "tex_span": [
+        783,
+        785
+      ],
+      "block_sha256": "64a0f9950cb9c6b08c05dc00735787ea8232a6917a312a4c264e176f11da4a32",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A remark."
+    },
+    {
+      "label": "prop:no_distant_equilibrium",
+      "source": "proofs.tex",
+      "tex_span": [
+        787,
+        814
+      ],
+      "block_sha256": "6ad31ba30230308d8334d9814efe439e973f546096fab58c45882f734f339a64",
+      "lean_files": [
+        "GFNBounds/Balance/MassIdentity.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.gradDensity",
+        "GFNBounds.Balance.Invariant",
+        "GFNBounds.Balance.StrictlyUnimodal",
+        "GFNBounds.Balance.ratio",
+        "GFNBounds.Balance.Balanced",
+        "GFNBounds.Balance.gradMass",
+        "GFNBounds.Balance.integral_gradDensity",
+        "GFNBounds.Balance.ratio_pos",
+        "GFNBounds.Balance.no_distant_equilibrium_one",
+        "GFNBounds.Balance.global_dichotomy_full_one",
+        "GFNBounds.Balance.balanced_of_critical",
+        "GFNBounds.Balance.strictlyUnimodal_logSqDeriv"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED: item (1), the mass identity, in all three of its conjuncts -- the mass equals int g'(r)(1-r)(dnu/dmu) dlambda, it is <= 0, and it is 0 iff mu is balanced -- plus `balanced_of_critical`. Proved once and shared between the two labels. Finite state space, disclosed: every downstream use is on a finite graph and the general case would need obstruction 2 merely to say what Q phi is. THE BOUNDARY, and it is the point of the file: `D := Q phi - r phi` is a Lean DEFINITION, never derived. Identifying it with the gradient of L_{g,nu} is theo:first_variation_full's job, which is bucket D and not formalized -- so what is certified is the mass of THAT EXPRESSION, and the words 'every critical point is balanced' are conditional on that identification. 'Critical' is read as D = 0, not as 'the first variation vanishes in every admissible direction'. Three further weakenings in the safe direction: ergodicity is NOT assumed (only lambda-invariance, so uniqueness of the balanced flow is not certified), lambda need not be a probability, and K need not be row-stochastic. One thing came out stronger than the paper: r > 0 is DERIVED from invariance plus positivity rather than hypothesized as 'essentially bounded away from 0 and infinity'. NOT DONE: items (2)-(3) of the proposition and the convergence half of the dichotomy, which need a gradient-flow / LaSalle layer."
+    },
+    {
+      "label": "rem:cycle_no_stalemate",
+      "source": "proofs.tex",
+      "tex_span": [
+        816,
+        818
+      ],
+      "block_sha256": "5aec37ff81079d4112888b38434d8f13e68aaea9560ca9384b2971773922d0b3",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "C",
+      "scope_notes": "A worked five-vertex example. Certifiable as a finite computation once the finite-graph loss layer exists, though the paper files it as a remark."
+    },
+    {
+      "label": "theo:global_dichotomy_full",
+      "source": "proofs.tex",
+      "tex_span": [
+        820,
+        830
+      ],
+      "block_sha256": "54bd6b8feeabf5a71799e043f08e64179e0d468a40b148296afe6249ff0197cc",
+      "lean_files": [
+        "GFNBounds/Balance/MassIdentity.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.gradDensity",
+        "GFNBounds.Balance.Invariant",
+        "GFNBounds.Balance.StrictlyUnimodal",
+        "GFNBounds.Balance.ratio",
+        "GFNBounds.Balance.Balanced",
+        "GFNBounds.Balance.gradMass",
+        "GFNBounds.Balance.integral_gradDensity",
+        "GFNBounds.Balance.ratio_pos",
+        "GFNBounds.Balance.no_distant_equilibrium_one",
+        "GFNBounds.Balance.global_dichotomy_full_one",
+        "GFNBounds.Balance.balanced_of_critical",
+        "GFNBounds.Balance.strictlyUnimodal_logSqDeriv"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED: item (1)'s first horn, in all three of its conjuncts -- the mass equals int g'(r)(1-r)(dnu/dmu) dlambda, it is <= 0, and it is 0 iff mu is balanced -- plus `balanced_of_critical`. Proved once and shared between the two labels. Finite state space, disclosed: every downstream use is on a finite graph and the general case would need obstruction 2 merely to say what Q phi is. THE BOUNDARY, and it is the point of the file: `D := Q phi - r phi` is a Lean DEFINITION, never derived. Identifying it with the gradient of L_{g,nu} is theo:first_variation_full's job, which is bucket D and not formalized -- so what is certified is the mass of THAT EXPRESSION, and the words 'every critical point is balanced' are conditional on that identification. 'Critical' is read as D = 0, not as 'the first variation vanishes in every admissible direction'. Three further weakenings in the safe direction: ergodicity is NOT assumed (only lambda-invariance, so uniqueness of the balanced flow is not certified), lambda need not be a probability, and K need not be row-stochastic. One thing came out stronger than the paper: r > 0 is DERIVED from invariance plus positivity rather than hypothesized as 'essentially bounded away from 0 and infinity'. NOT DONE: items (2)-(3) of the proposition and the convergence half of the dichotomy, which need a gradient-flow / LaSalle layer."
+    },
+    {
+      "label": "prop:morozov_rate",
+      "source": "proofs.tex",
+      "tex_span": [
+        834,
+        873
+      ],
+      "block_sha256": "60716b3fcfaee28b3bfc676de87d31a3bdbe5ba0e1e7811fbd8dd2a6c664d2bc",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "B",
+      "scope_notes": "MILESTONE 2. lambda(x) = N(x)/(2 + sigma-bar) on a finite loop closure: Kac's formula. GFNBounds/Doubling/Kac.lean already proves the doubling instance of exactly this WITHOUT a Markov-chain layer, from invariance alone -- the general finite-graph version is the same argument."
+    },
+    {
+      "label": "cor:global_lojasiewicz",
+      "source": "proofs.tex",
+      "tex_span": [
+        875,
+        898
+      ],
+      "block_sha256": "3d0a17aaeb98016d8332691a264abb0503e5e1f9d6ee14eb79a192cf195c21f1",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "C",
+      "scope_notes": "The Lojasiewicz inequality -Ldot >= kappa^2 L^2 is an integral inequality (Cauchy-Schwarz on the mass identity); reading it along the flow needs the flow. The inequality alone is bucket B, the corollary as stated is C."
+    },
+    {
+      "label": "theo:training_speed_full",
+      "source": "proofs.tex",
+      "tex_span": [
+        900,
+        934
+      ],
+      "block_sha256": "4b979bef5ab7baa256b082c874e34ef896f55f6eaa1299d0e67f0fe8e90584f9",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "Two-phase convergence with a crossover time; needs everything in the calculus layer."
+    },
+    {
+      "label": "rem:visit_ratio",
+      "source": "proofs.tex",
+      "tex_span": [
+        936,
+        942
+      ],
+      "block_sha256": "ba7202303372d121bdac04323a2ddb2f894b40807854bb2deb12cd45b976a3ba",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A remark that interprets; nothing to certify."
+    },
+    {
+      "label": "def:path_connected",
+      "source": "proofs.tex",
+      "tex_span": [
+        951,
+        953
+      ],
+      "block_sha256": "4fac8be58e53dcd323cad3ed0d231a1d23308e5f8ec2047f7c863f37e21a8282",
+      "lean_files": [
+        "GFNBounds/Graph/Setting.lean"
+      ],
+      "decls": [
+        "GFNBounds.Graph.MarkedGraph",
+        "GFNBounds.Graph.MarkedGraph.PathConnected",
+        "GFNBounds.Graph.MarkedGraph.Reach"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED 2026-09-08. `MarkedGraph` carries the source, the sink, src != snk, no edge into the source and none out of the sink; `PathConnected G := forall s, Reach src s and Reach s snk`, which is the paper's 'a path from s_0 to s_f via s' split at s. Reach is Relation.ReflTransGen, i.e. a WALK not a simple path -- disclosed, and the proofs only ever reverse walks."
+    },
+    {
+      "label": "def:loop_closure",
+      "source": "proofs.tex",
+      "tex_span": [
+        955,
+        957
+      ],
+      "block_sha256": "c8f415ab75a0aee9850d3b7a42fd0085c4e3dd384c34c166924c880e65ce6a47",
+      "lean_files": [
+        "GFNBounds/Graph/Setting.lean"
+      ],
+      "decls": [
+        "GFNBounds.Graph.MarkedGraph.hatEdge",
+        "GFNBounds.Graph.BackwardPolicy",
+        "GFNBounds.Graph.BackwardPolicy.phat",
+        "GFNBounds.Graph.BackwardPolicy.phat_row_sum",
+        "GFNBounds.Graph.BackwardPolicy.phat_unique_extension"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED 2026-09-08, and the uniqueness half is proved, not assumed: `phat_unique_extension` shows any row-stochastic Q supported on hat-edges and agreeing with pb off s_0 IS phat. `phat_row_sum` holds at EVERY state including s_0, so the loop closure really is a Markov kernel on all of V. A disclosed strengthening: `src_row_unique` turned out not to mention the policy at all -- uniqueness of the source row is a fact about the graph."
+    },
+    {
+      "label": "theo:universality_graphs",
+      "source": "proofs.tex",
+      "tex_span": [
+        966,
+        1012
+      ],
+      "block_sha256": "5692714877ffa727dccef35c6c2c05597f2d0e95494fbbaa9a210cc165faa864",
+      "lean_files": [
+        "GFNBounds/Graph/Setting.lean",
+        "GFNBounds/Graph/Universality.lean"
+      ],
+      "decls": [
+        "GFNBounds.Graph.BackwardPolicy.universality_graphs_one",
+        "GFNBounds.Graph.BackwardPolicy.universality_graphs_two",
+        "GFNBounds.Graph.BackwardPolicy.universality_graphs_three",
+        "GFNBounds.Graph.BackwardPolicy.eq_smul_invProb",
+        "GFNBounds.Graph.BackwardPolicy.reversal",
+        "GFNBounds.Graph.BackwardPolicy.FrozenBalance",
+        "GFNBounds.Graph.BackwardPolicy.edgeFlow",
+        "GFNBounds.Graph.BackwardPolicy.outflowStar",
+        "GFNBounds.Graph.BackwardPolicy.outflowStar_mul_fwdStar",
+        "GFNBounds.Graph.BackwardPolicy.termFlow_eq_target",
+        "GFNBounds.Graph.BackwardPolicy.flow_matching",
+        "GFNBounds.Graph.BackwardPolicy.fmDefect_eq_zero",
+        "GFNBounds.Graph.BackwardPolicy.residuals_eq_zero"
+      ],
+      "status": "closed",
+      "bucket": "B",
+      "scope_notes": "CLOSED 2026-09-08 in ALL THREE ITEMS, sorry-free, axiom-swept, graduated. (1) irreducibility, existence, uniqueness and positivity of lambda, and lambda(s_0) = lambda(s_f) -- Mathlib v4.31 has no finite-chain Perron-Frobenius, so the paper's Levin-Peres citation was PROVED. (2) the frozen-backward family is exactly the ray f_out = c.lambda with pf the lambda-reversal, both directions. (3) cutting the wrap edge gives exact flow matching: `fmDefect_eq_zero` at every internal state, `termFlow_eq_target` (F_term = Z.pb(s_f -> .)), `sum_initFlow` (mass Z), and `residuals_eq_zero`. Two disclosed choices. (a) The forward half of (2) assumes of pi_-> only that its rows sum to 1, never non-negativity -- the paper's Theta asks for a kernel, and dropping an unused hypothesis strengthens the statement; the converse proves both halves for the reversal, so no member is lost. (b) The paper lets f_out* vanish and calls the policy 'immaterial' there; rather than adding a side condition, `outflowStar_mul_fwdStar` proves the identity the flow-matching computation actually consumes -- f_out*(u) . pi_->*(u->v) = e(u->v) -- UNCONDITIONALLY, since f_out*(u) = 0 forces e(u->v) = 0. Not a corner case: on s_0 -> a -> s_f the unique internal state has f_out* = 0 exactly. NOT DONE, and named: the sampler clause of item (3) and the closing paragraph rest on theo:sampling_theorem, which the paper quotes from bengio2021flow; there is no trajectory space in the file and no hypothesis carrying it, because without a model of the sampler such a conditional would merely restate its own hypothesis. Nor is the bridge to Core's `StronglyUniversalAt` built -- see the obstruction note."
+    },
+    {
+      "label": "rem:loop_closure_necessary",
+      "source": "proofs.tex",
+      "tex_span": [
+        1014,
+        1016
+      ],
+      "block_sha256": "16cdbd0543edce0bcb4888e7e2b79547a3aa605af05f183a99749f5b7b3e02e0",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A remark."
+    },
+    {
+      "label": "rem:graphs_vs_L2",
+      "source": "proofs.tex",
+      "tex_span": [
+        1018,
+        1020
+      ],
+      "block_sha256": "6215ee3ecfe8d3dcd233cdf48af10d39fa203c9d3cd5b060e6c9057b28158028",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A remark."
+    },
+    {
+      "label": "rem:partial_support",
+      "source": "proofs.tex",
+      "tex_span": [
+        1022,
+        1024
+      ],
+      "block_sha256": "b1612e72f363a4d615d21cc306ba3423794669efef2c8cd482f5ae04148b0122",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A remark."
+    },
+    {
+      "label": "prop:silva_explicit",
+      "source": "silva_comparison.tex",
+      "tex_span": [
+        29,
+        50
+      ],
+      "block_sha256": "e1d2c86922b8aad8b79f57c69c18504a9b1fc9c7cd544f08a30023ead3ea5b46",
+      "lean_files": [
+        "GFNBounds/Silva/Explicit.lean",
+        "GFNBounds/Silva/Basic.lean"
+      ],
+      "decls": [
+        "GFNBounds.Silva.tv",
+        "GFNBounds.Silva.chiSq",
+        "GFNBounds.Silva.unif",
+        "GFNBounds.Silva.logRatio",
+        "GFNBounds.Silva.residual",
+        "GFNBounds.Silva.MprimeLe",
+        "GFNBounds.Silva.chiSq_nonneg",
+        "GFNBounds.Silva.sum_sq_div_eq_one_add_chiSq",
+        "GFNBounds.Silva.logLipschitz",
+        "GFNBounds.Silva.tv_le_sqrt_residual",
+        "GFNBounds.Silva.tv_le_sqrt_residual_max"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED 2026-09-08, sorry-free, axiom-swept, cross-checked numerically on 20,000 random instances (min slack +2.8e-7), and GRADUATED into the strict library. Two forms: `tv_le_sqrt_residual` with M and ||pi||_inf as upper bounds, and `tv_le_sqrt_residual_max` with the paper's own maxima as Finset.sup', so the paper's statement is an instance and not a weakening. The paper's CORRECTION to Silva et al. is live: the constant is max(M, ||pi||_inf), and the log-Lipschitz lemma's hypothesis b <= C is exactly what fails for C = M alone. Trajectories are an abstract Fintype -- no DAG, no horizon, no acyclicity, none of which the proof consumes; the graph's contribution appears as the row-sum hypothesis and the domination identity, which rem:silva_hypotheses(3) already says is a hypothesis. Step 3 goes through Real.log_le_sub_one_of_pos rather than the paper's mean value theorem -- same constant, and the substitution is disclosed rather than passed off as the paper's argument. Shared Appendix-B vocabulary lives in Silva/Basic.lean."
+    },
+    {
+      "label": "rem:silva_hypotheses",
+      "source": "silva_comparison.tex",
+      "tex_span": [
+        52,
+        62
+      ],
+      "block_sha256": "6115308d51a85a07853c11c276fc92d3ea38eece89fc17d8a9a7d636e2440f4d",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A remark."
+    },
+    {
+      "label": "rem:silva_model_constant",
+      "source": "silva_comparison.tex",
+      "tex_span": [
+        64,
+        70
+      ],
+      "block_sha256": "1a330811c5faf002e237947a2399933517ad135b5f9d4b00eb8e415748cef5f1",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A remark."
+    },
+    {
+      "label": "prop:silva_no_uniform",
+      "source": "silva_comparison.tex",
+      "tex_span": [
+        74,
+        96
+      ],
+      "block_sha256": "6ba8c97022fd75d28a545fd060cc84af96027c784e16df37f9e5fd3c20ad68b9",
+      "lean_files": [
+        "GFNBounds/Silva/NoUniform.lean",
+        "GFNBounds/Silva/Basic.lean"
+      ],
+      "decls": [
+        "GFNBounds.Silva.wMin",
+        "GFNBounds.Silva.wSupport",
+        "GFNBounds.Silva.abs_exp_sub_one_le",
+        "GFNBounds.Silva.tv_le_exp_sqrt_energy",
+        "GFNBounds.Silva.tv_le_exp_sqrt_energy_wmin",
+        "GFNBounds.Silva.Star",
+        "GFNBounds.Silva.starPi",
+        "GFNBounds.Silva.starPF",
+        "GFNBounds.Silva.starPET",
+        "GFNBounds.Silva.star_energy",
+        "GFNBounds.Silva.star_tv",
+        "GFNBounds.Silva.star_Mprime",
+        "GFNBounds.Silva.star_chiSq",
+        "GFNBounds.Silva.exists_star_witness",
+        "GFNBounds.Silva.no_state_space_free_bound",
+        "GFNBounds.Silva.no_three_argument_bound"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED 2026-09-08, sorry-free, axiom-swept, GRADUATED. BOTH items plus the final clause. Item (i), the per-graph model-free bound TV <= (exp(sqrt(E/w_min)) - 1)/2, in a version with an abstract w and one with the paper's own w_min as a Finset.inf'. Item (ii), the star-DAG witness, fully explicit: `exists_star_witness` returns K together with positivity, normalization, chi^2 = 0, M' <= 1, 0 < E <= eps and TV = 1/8 exactly. `(log(3/2))^2 + (log 2)^2 = 0.6449 <= 1` is discharged without decimal arithmetic on log(3/2), so the paper's E <= 1/(K+2) is confirmed. The final 'no such F' clause is formalized twice: `no_state_space_free_bound` for F : R -> R, quantifying instances over Type 0 so the witness Bool + Fin K lives there, and `no_three_argument_bound` in the paper's literal three-argument shape -- the latter had to choose a reading, see the paper findings. Consistency cross-check: item (i) applied to the star family gives 1/w_min = K+2 and a K-independent bound 0.6161 >= 1/8, so the two items agree and the degeneracy is exactly in the constant."
+    },
+    {
+      "label": "rem:path_space",
+      "source": "silva_comparison.tex",
+      "tex_span": [
+        102,
+        108
+      ],
+      "block_sha256": "12be53177f868e529e401de480b9f703b850ef9e3562a54eeed33ed6f1122c53",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A remark."
+    },
+    {
+      "label": "rem:silva_vs_ours",
+      "source": "silva_comparison.tex",
+      "tex_span": [
+        110,
+        112
+      ],
+      "block_sha256": "e66f5444edb260718c77f19257a1becda04595b17e6d99ba528c2591eb5e5543",
+      "lean_files": [],
+      "decls": [],
+      "status": "open",
+      "bucket": "D",
+      "scope_notes": "A remark."
     }
-  ]
+  ],
+  "sources": {
+    "proofs.tex": {
+      "path": "/home/maxbrain/Dropbox/GFN Bounds/proofs.tex",
+      "appendix": "A"
+    },
+    "silva_comparison.tex": {
+      "path": "/home/maxbrain/Dropbox/GFN Bounds/silva_comparison.tex",
+      "appendix": "B"
+    },
+    "app_doubling.tex": {
+      "path": "/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex",
+      "appendix": "H"
+    }
+  }
 }

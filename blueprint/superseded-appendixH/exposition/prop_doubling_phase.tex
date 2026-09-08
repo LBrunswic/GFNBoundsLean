@@ -1,0 +1,41 @@
+Irreducibility on the whole standing range is Lemma~\ref{lem:doubling_range} followed by
+Lemma~\ref{lem:doubling_irreducible}. Everything else rests on one expansion. For $t>0$ put
+$W_t(j):=(j+1)^{-t}$ at a ladder state and $W_t(s_0)=W_t(s_f):=1$. Expanding $(2j+1)^{-t}$ and
+$j^{-t}$ about $(j+1)^{-t}$ and collecting the two leading terms gives, at every ladder state
+$j\geq1$,
+\begin{equation}\label{eq:doubling_Wdrift}
+\begin{aligned}
+    \mathbb E\left(W_t(X_1)\mid X_0=j\right)-W_t(j)
+    &\;=\;(j+1)^{-t-1}\Bigl[\,t-c\left(1-2^{-t}\right)(j+1)^{1-s}\Bigr]+\Upsilon_t(j),\\
+    |\Upsilon_t(j)|&\;\leq\;\Xi_t\Bigl((j+1)^{-t-2}+\varepsilon(j)(j+1)^{-t-1}\Bigr),
+\end{aligned}
+\end{equation}
+with $\Xi_t<+\infty$ depending on $t$ alone: the bracket carries the drift and the remainder is
+smaller by a factor $(j+1)^{-1}$ at least. Each row is then a Foster or a supermartingale
+criterion applied to a suitable test function.
+
+For $s>1$ the drift of the state itself is $c(j+1)^{1-s}-1\rightarrow-1$
+(Proposition~\ref{prop:doubling_drift}), so $V_1(j):=j$ is a Foster function off a finite set
+and $X$ is positive recurrent. For $s<1$ the bracket at $t=1$ tends to $-\infty$, which makes
+$W_1$ a bounded non-negative supermartingale off a finite set taking somewhere off that set a
+value below its infimum on it; the standard transience criterion applies.
+
+At $s=1$ the bracket is the constant $-\phi(t)$ with $\phi(t):=c\left(1-2^{-t}\right)-t$, and
+everything turns on the sign of $\phi'(0)=c\ln2-1$. For $c<1$ the return time to $s_0$ is one
+step to $s_f$, one step into $\{1,\dots,d\}$ and then $\sigma$, of total expectation
+$2+\bar\sigma<+\infty$ by Proposition~\ref{prop:doubling_length}: $X$ is positive recurrent.
+For $c<1/\ln2$ the function $\log(j+1)$ has drift $(c\ln2-1)/(j+1)+O(j^{-2})\leq0$ off a finite
+set, and Foster's recurrence criterion applies. For $c>1/\ln2$ some $t>0$ has $\phi(t)>0$, the
+bracket is a negative constant, and the criterion of the case $s<1$ gives transience.
+
+The remaining clause, $\mathbb E(\sigma\mid X_0=j)=+\infty$ at $1\leq c<2$, is an
+optional-stopping estimate. The drift being $c-1\geq0$, $(X_{n\wedge\sigma})_n$ is a
+submartingale; at the exit time $\varsigma_r$ of $[1,r)$ the stopped chain is bounded by
+$2r-2$ and $\mathbb E(X_{\varsigma_r}\mid X_0=1)\geq1$, so the chain exits above with
+probability at least $1/(2r)$, and the excursion maximum exceeds $r$ at least that often.
+Summing over $r$ makes that maximum non-integrable, and
+$\max_{0\leq n\leq\sigma}X_n\leq\sigma$ (Lemma~\ref{lem:doubling_excursion}) transfers this to
+$\sigma$; the same holds from any $j\geq2$, which reaches $1$ before $0$ with positive
+probability. An expected return time that is infinite at one state excludes positive
+recurrence for an irreducible chain, and together with the recurrence just proved gives null
+recurrence for $1\leq c<1/\ln2$.

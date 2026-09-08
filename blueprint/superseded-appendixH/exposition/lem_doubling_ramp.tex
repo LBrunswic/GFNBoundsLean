@@ -1,0 +1,22 @@
+\emph{The image of the clipped ramp is bounded uniformly in $N$.} Five cases exhaust the
+transitions. At a ladder state $j$ with $2j\leq N$ neither image is clipped, so the value of
+$(\mathrm{Id}-P_\star)r_N$ is $1-\varepsilon(j)(j+1)\in[1-\gamma,1]$. At $j$ with $2j>N\geq j$
+the doubled image is clipped to $N$ and the value is $1-\varepsilon(j)(N-j+1)$, again in
+$[1-\gamma,1]$ because $N-j+1\leq j+1$. Above $N$ every image carries the value $N$, so the
+value is $0$; at $s_0$ both $r_N(s_0)$ and $r_N(s_f)$ vanish; and at $s_f$ the target row has
+mean $\bar\jmath$ and $r_N=V$ on $\{1,\dots,d\}$, so the value is $-\bar\jmath$. Hence
+$\|(\mathrm{Id}-P_\star)r_N\|_{L^\infty(\lambda)}\leq\max(1,\gamma,\bar\jmath)$.
+
+\emph{Centring leaves the image unchanged and half of the clip.} $P_\star\mathbf 1=\mathbf 1$
+gives $(\mathrm{Id}-P_\star)\tilde r_N=(\mathrm{Id}-P_\star)r_N$, and $\Pi\tilde r_N=0$.
+Irreducibility makes $\lambda$ positive at every state, so an $L^\infty(\lambda)$-norm is a
+supremum over states; $r_N$ attains both $0$ and $N$, so $\tilde r_N$ attains
+$-\lambda(r_N)$ and $N-\lambda(r_N)$ and has norm at least $N/2$. That is
+\eqref{eq:doubling_ramp}.
+
+\emph{No bounded inverse.} The normalised $h_N:=\tilde r_N/\|\tilde r_N\|_{L^\infty(\lambda)}$
+is mean-zero of unit norm with
+$\|(\mathrm{Id}-P_\star)h_N\|_{L^\infty(\lambda)}\leq2\max(1,\gamma,\bar\jmath)/N\rightarrow0$,
+so a bounded $S$ with $S(\mathrm{Id}-P_\star)=\mathrm{Id}-\Pi$ would force $1\leq\|S\|\cdot o(1)$.
+Finally $(j+1)\varepsilon_{c,s}(j)=c(j+1)^{1-s}$ is non-increasing for $s\geq1$ with supremum
+$c\,2^{1-s}$, and unbounded for $s<1$.

@@ -6,6 +6,7 @@ import GFNBounds.Doubling.Family
 import GFNBounds.Doubling.Supersolution
 import GFNBounds.Doubling.Tail
 import GFNBounds.Doubling.Constant
+import GFNBounds.Doubling.ConstantFunctional
 import GFNBounds.Doubling.Expansion
 import GFNBounds.Doubling.Exponent
 import GFNBounds.Doubling.FixedPoints
@@ -47,6 +48,8 @@ import GFNBounds.Doubling.PerCutNorms
 import GFNBounds.Doubling.Ramp
 import GFNBounds.Doubling.Ratios
 import GFNBounds.Doubling.Unbounded
+import GFNBounds.Doubling.RayleighBridge
+import GFNBounds.Doubling.UnboundedL2
 
 /-!
 # Axiom audit
@@ -373,5 +376,61 @@ namespace GFNBounds.Doubling
 -- the definitional layer (`def:doubling_setting` — app_doubling.tex:13)
 #print axioms pstar_const
 #print axioms Stat.tsum_sub_pstar
+
+-- ── the 2026-09-07 evening round: the umbrella assembled ───────────────────────
+
+-- the `L²(λ)` Rayleigh bridge (no paper label of its own)
+#print axioms Stat.memLp_two_of_bounded
+#print axioms Stat.rayleigh_of_leftInverse
+#print axioms Stat.mass_le_of_rayleighL2
+#print axioms Stat.mass_le_of_leftInverse
+
+-- `theo:doubling_unbounded`(2), the `p = 2` clauses — app_doubling.tex:1945
+#print axioms Stat.no_diffusionOp
+#print axioms Stat.not_tendsto_partialSum
+#print axioms Stat.not_summable_betaHat
+
+-- `cor:doubling_tail_sharp`, first line as a limit — app_doubling.tex:1672
+#print axioms Decay.tendsto_tail_sharp
+#print axioms Decay.tendsto_tail_ratio_sharp
+
+-- `cor:doubling_tail`, the ratio's upper half and the two limits — app_doubling.tex:1230
+#print axioms Decay.tail_ratio_le
+#print axioms Decay.tendsto_tailSeq_zero
+#print axioms Decay.tendsto_tail_ratio_atTop
+
+-- `theo:doubling_decay`(2) with the constants written out — app_doubling.tex:1155
+#print axioms Decay.uu_bounded_explicit
+#print axioms Decay.decay_two_sided_explicit
+
+-- `theo:doubling_sharp` with `c₆` written out — app_doubling.tex:1323
+#print axioms Decay.sharp_rate_explicit
+#print axioms Decay.levelL
+#print axioms Decay.c6
+#print axioms Decay.sharp_explicit
+
+-- `theo:doubling_main`, assembled item by item — app_doubling.tex:275
+#print axioms Decay.ofC
+#print axioms main_phase
+#print axioms main_invariant_measure
+#print axioms main_constant_determined
+#print axioms main_unbounded_two
+#print axioms main_sigmaBar_eq
+#print axioms main_unsolvable
+#print axioms main_truncation_bhat
+#print axioms main_truncation_sqrtK
+
+-- `prop:doubling_constant`, Steps 2 and 3 — app_doubling.tex:1702
+#print axioms Decay.nu
+#print axioms Decay.extend_nonneg
+#print axioms Decay.tendsto_extend
+#print axioms Decay.climit_eq_sum
+#print axioms Decay.tendsto_of_cutBal
+#print axioms Decay.constant_eq
+#print axioms Decay.nu_nonneg
+#print axioms Decay.sum_nu_pos
+#print axioms Decay.nu_eq_zero
+#print axioms Decay.constant_functional
+#print axioms main_constant_functional
 
 end GFNBounds.Doubling

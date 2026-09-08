@@ -1,0 +1,9 @@
+Every state leads to the state $1$: from a ladder state $j$ the $j$ consecutive decrements
+reach $s_0$, the wrap reaches $s_f$, the target row reaches a $j_0\in\{1,\dots,d\}$ at which
+it is positive, and $j_0-1$ further decrements reach $1$. Conversely the state $1$ leads to
+every state, by induction along the ladder: from $n$ the doubling edge $n\rightarrow 2n$
+followed by $n-1$ decrements reaches $n+1$, since $2n\geq n+1$. Concatenating a path into
+$1$ with a path out of it gives irreducibility. Positivity of an invariant $\lambda$ is then
+immediate: $\lambda$ is positive at some state $x$, being a probability, irreducibility
+supplies an $n$ with $\mathbb P(X_n=y\mid X_0=x)>0$, and $\lambda T^n=\lambda$ transports
+that positivity to $y$.

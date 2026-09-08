@@ -1,0 +1,545 @@
+\section{The doubling graph: an unbounded diffusion operator at finite backward length}\label{app:doubling}
+
+\subsection{What is formalised}\label{sec:doubling_formal}
+
+This appendix is an account of a Lean~4 development, checked against Mathlib
+\texttt{v4.31.0}. Every statement below is a theorem of that development; every proof sketch
+names the results that the corresponding proof term actually invokes, and nothing else. The
+development contains no unproved goal, and each result stated here has been verified to depend
+on no axiom beyond Lean's own \texttt{propext}, \texttt{Classical.choice} and
+\texttt{Quot.sound}.
+
+\medskip\noindent
+\emph{The object.} The graph is \extref{the counter-example graph of the main text}: a source
+$s_0$, a ladder $1,2,3,\dots$, a sink $s_f$, and the forward edges $s_0\rightarrow1$,
+$j\rightarrow j+1$, $2j\rightarrow j$, $j\rightarrow s_f$. The predecessors of a ladder state
+$j$ are $j-1$ and $2j$, so the backward chain either \emph{decrements} or \emph{doubles}, and
+the loop closure adds the wrap $s_f\rightarrow s_0$. The backward policy is
+$\BackwardPolicy(j\rightarrow2j)=\varepsilon(j)$ and
+$\BackwardPolicy(j\rightarrow j-1)=1-\varepsilon(j)$, and the family studied throughout is
+\begin{equation}\label{eq:doubling_family}
+    \varepsilon_{c,s}(j)\;:=\;\frac{c}{(j+1)^{s}},\qquad s\geq0,\quad 0<c<2^{s} .
+\end{equation}
+The target row $\widehat\BackwardPolicy(s_f\rightarrow\cdot)$ is a probability supported in
+$\{1,\dots,d\}$ of mean $\bar\jmath$. A \emph{truncation at $K$} deletes every doubling edge
+$j\rightarrow2j$ with $2j>K$, leaving a chain on $K+2$ states.
+
+\medskip\noindent
+\emph{What is not modelled.} The development builds no stochastic process. It works with the
+invariant measure through the balance identity across a cut, with the expected hitting time
+through the supersolution that dominates it, and with the descent through a recursion on the
+state rather than a chain of random variables. Everything below is therefore a statement about
+those objects, and \S\ref{sec:doubling_differences} says where that costs something.
+
+
+\subsection{The results}\label{sec:doubling_results}
+
+
+\subsubsection{The chain, and when it settles}
+
+
+\begin{theorem}
+  \label{thm:main_irreducible}
+  \lean{GFNBounds.Doubling.main_irreducible}\leanok
+On the loop closure every state reaches every other, and every invariant measure of it is
+strictly positive at every state.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+The graph half is a pair of explicit paths \leanref{reach\_all\_none}. Every state
+reaches the ladder state $1$: from a ladder state the decrements walk down to the source, the
+wrap carries it to the sink, and the target row re-enters the ladder. Conversely $1$ reaches
+every state, by climbing: from $n$ the doubling edge to $2n$ followed by $n-1$ decrements lands
+on $n+1$, and $2n\geq n+1$. Concatenating the two gives reachability between any pair.
+
+The measure half is general and needs only that \leanref{PreStat.pos\_of\_irreducible}:
+an invariant measure is positive somewhere, and invariance transports that positivity along any
+path, so irreducibility spreads it over the whole state space.
+\end{proof}
+
+\noindent Irreducibility and positivity are the standing hypotheses under which the rest of this appendix
+speaks of \emph{the} invariant probability and of the operators built from it. The main text's
+universality and convergence theorems are stated for chains carrying such a measure; what
+follows establishes, for each member of the family, whether one exists.
+
+
+\begin{theorem}
+  \label{thm:main_phase}
+  \lean{GFNBounds.Doubling.main_phase}\leanok
+Let $\varepsilon_{c,s}(j)=c(j+1)^{-s}$ with $c>0$, in the standing range. The loop-closed
+backward chain admits an invariant probability exactly in two of the four regimes: it admits
+none for $s<1$; exactly one for $s=1$ with $c<1$; none for $s=1$ with $c\geq1$; and one for
+$s>1$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+Three cases, each a drift computation against a Lyapunov function, and no more.
+
+For $s<1$ the drift coefficient $c(m+1)^{1-s}$ grows without bound, which forces the tail of
+any candidate invariant sequence to grow too fast to be summable
+\leanref{isEmpty\_stat\_of\_family\_lt\_one}. For $s=1$ the coefficient is the constant
+$c$, and $c\geq1$ is exactly the threshold past which the same tail argument applies
+\leanref{isEmpty\_stat\_of\_family\_ge\_one}. For $s>1$ the drift is eventually
+negative and a Foster argument on the ladder height produces an invariant probability
+\leanref{exists\_stat\_of\_family\_gt\_one}; the remaining regime $s=1$, $c<1$ is the
+same argument at the explicit threshold.
+
+Each conclusion is drawn from the cut balance directly, without constructing the chain as a
+stochastic process.
+\end{proof}
+
+\noindent This is the phase diagram that decides which members of the family the main text's theorems can
+even be stated about. In the two regimes with no invariant probability there is no $\lambda$,
+hence no $\Pi$, no mixing coefficients and no diffusion constant: the hypotheses of those
+theorems fail there for want of the objects they quantify over, which is a different kind of
+failure from the one this appendix is about.
+
+
+\subsubsection{The invariant measure}
+
+
+\begin{theorem}
+  \label{thm:main_invariant_measure}
+  \lean{GFNBounds.Doubling.main_invariant_measure}\leanok
+At $s=1$ and $0<c<1$, let $\lambda$ be an invariant probability of the loop closure. Then the
+Cram\'er equation $\psi_c(p)=0$ has a root $p>1$, and there is a constant $C>0$ with
+\[ \lambda_m\,m^{p}\longrightarrow C, \qquad (p-1)\,m^{p-1}L(m)\longrightarrow C, \]
+where $L(m)=\sum_{j\geq m}\lambda_j$; and the first convergence carries a polynomial rate:
+there are $\vartheta\in(0,1)$ and $c_6>0$ with $|\lambda_m m^{p}-C|\leq c_6\,m^{-\vartheta}$ at
+every $m\geq1$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+The Cram\'er root and the parameters it fixes are packaged by \leanref{Decay.ofC}.
+Given them, the invariant probability yields a positive sequence satisfying the cut balance
+above $d$, and the whole asymptotic follows from that alone
+\leanref{Decay.sharp\_of\_cutBal}: a contraction estimate on dyadic blocks shows the
+rescaled profile $\lambda_m m^{p}$ is Cauchy, its limit lies between the two constants of the
+two-sided decay bound and is therefore positive, and balancing the block index against the
+level gives the exponent $\vartheta$. The statement about the tail is the same limit summed
+\leanref{Decay.tendsto\_tail\_sharp}: comparing $\sum_{j\geq m}j^{-p}$ with its
+integral turns a limit for the profile into one for the tail.
+\end{proof}
+
+\noindent The invariant measure of this graph decays like a power, not geometrically, and the exponent is
+the Cram\'er root of the doubling probability. That is the mechanism behind everything that
+follows: a power tail is heavy enough that the centred tail indicators below have vanishing
+Rayleigh quotient, which is what breaks the mixing hypothesis of the main text.
+
+
+\begin{theorem}
+  \label{thm:main_constant_determined}
+  \lean{GFNBounds.Doubling.main_constant_determined}\leanok
+At $s=1$ and $0<c<1$, two invariant probabilities of the loop closure that agree on the first
+$d$ ladder states agree at every ladder state.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+At $s=1$ the cut balance expresses $\lambda_m$, for every $m>d$, as a positive combination of
+the $\lambda_j$ with $\lceil m/2\rceil\leq j\leq m-1$ — indices all smaller than $m$. Induction
+on $m$ therefore determines the whole sequence from $\lambda_1,\dots,\lambda_d$, which is the
+uniqueness statement \leanref{Decay.cutBal\_unique}; the Cramér root that the
+surrounding parameters need is supplied by \leanref{Decay.ofC}.
+\end{proof}
+
+\noindent The boundary data of the target row therefore fix the whole invariant measure, and with it the
+constant of the asymptotic below. This is what makes that constant a property of the policy and
+the target row rather than a free parameter.
+
+
+\begin{theorem}
+  \label{thm:main_constant_functional}
+  \lean{GFNBounds.Doubling.main_constant_functional}\leanok
+At $s=1$ and $0<c<1$ there is a root $p>1$ of the Cramér equation $\psi_c(p)=0$ and there are
+coefficients $\nu_1,\dots,\nu_d\geq0$ with $\sum_{j\leq d}\nu_j>0$ and $\nu_j=0$ whenever
+$2j\leq d$, such that for \emph{every} invariant probability $\lambda$ of the loop closure,
+\[ \lambda_m\,m^{p}\;\longrightarrow\;\sum_{j=1}^{d}\nu_j\,\lambda_j . \]
+\end{theorem}
+
+\begin{proof}
+  \leanok
+The sequences satisfying the cut balance above $d$ form a real vector space, and restriction to
+the first $d$ coordinates is an isomorphism onto $\mathbb R^{d}$ — that is the content of the
+determinacy above. Each map $\lambda\mapsto\lambda_m m^{p}$ is linear in those coordinates, so
+their limit is additive and positively homogeneous on the cone of positive sequences and
+extends to a linear functional on the whole space; its coefficients are the $\nu_j$
+\leanref{Decay.constant\_functional}. Positivity of $\sum_j\nu_j$ comes from the
+two-sided decay bound, and $\nu_j=0$ for $2j\leq d$ because no window above $d$ ever reads
+those indices. The root and the parameters it determines are again
+\leanref{Decay.ofC}.
+\end{proof}
+
+\noindent The constant of the tail asymptotic is thus a fixed non-negative linear functional of the
+boundary data, the same functional for every invariant probability. The vanishing of $\nu_j$
+for $2j\leq d$ says that the low half of the target row contributes nothing: only the states
+the doubling edge can reach from above carry weight.
+
+
+\subsubsection{The backward length}
+
+
+\begin{theorem}
+  \label{thm:main_sigmaBar_eq}
+  \lean{GFNBounds.Doubling.main_sigmaBar_eq}\leanok
+At $s=1$ and $0<c<1$ the expected backward-trajectory length of the loop closure is exactly
+\[ \bar\sigma \;=\; \frac{\bar\jmath}{1-c}, \]
+the supremum of the truncated expectations $\bar\sigma^{(n)}$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+The linear function $h(x)=x/(1-c)$ is an exact solution of the one-step equation at $s=1$: the
+substitution $\varepsilon(j)=c/(j+1)$ collapses the average of the state after one step to
+$c+j-1$, and $1+h(c+j-1)=h(j)$. A non-negative solution of that equation dominates the
+truncated hitting-time expectations by induction, and the constant drift $c-1$ makes the
+inequality an equality in the limit \leanref{sbar\_iSup\_eq}. Averaging over the
+target row, whose mean is $\bar\jmath$ and on which $h$ is linear, gives the stated value.
+\end{proof}
+
+\noindent This is the quantity Morozov et al.\ (2025) require to be finite, and on this graph it is
+finite throughout the positive recurrent regime at $s=1$. It is the first half of the
+separation this appendix is for: the condition of the main text that is repaired here.
+
+
+\begin{theorem}
+  \label{thm:main_sigmaBar_le}
+  \lean{GFNBounds.Doubling.main_sigmaBar_le}\leanok
+At $s=1$ and $0<c<1$, on the loop closure and on every truncation alike, the truncated expected
+backward-trajectory lengths satisfy $\bar\sigma^{(n)}\leq\bar\jmath/(1-c)$ for every $n$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+The same linear supersolution as above serves here, and the one place the truncation differs is
+harmless: at a state whose doubling edge has been cut the decrement carries all the mass, and
+the one-step equation becomes an inequality in the right direction, because $1\leq1/(1-c)$. The
+induction and the target-row average then run unchanged \leanref{sigmaBar\_le}.
+\end{proof}
+
+\noindent The bound is uniform in the truncation, so the finiteness that repairs the condition of the
+main text is not an artefact of the infinite chain: it survives every finite approximation of
+it, which is what the measurements of a truncated system can be compared against.
+
+
+\subsubsection{The diffusion operator}
+
+
+\begin{theorem}
+  \label{thm:main_unbounded}
+  \lean{GFNBounds.Doubling.main_unbounded}\leanok
+Let $\varepsilon_{c,s}$ be a member of the family with $c>0$, $s\geq0$, let $\lambda$ be an
+invariant probability of the loop closure, and let $1\leq p<\infty$. Then:
+\begin{itemize}
+  \item for every $t>0$ there is a cut $m>d$ whose centred tail indicator $f_m$ satisfies
+        $\|(\mathrm{Id}-P_\star)f_m\|^p_{L^p(\lambda)}\leq t\,\|f_m\|^p_{L^p(\lambda)}$; and
+  \item no constant $B$ satisfies $\|f\|_{L^p(\lambda)}\leq B\,\|(\mathrm{Id}-P_\star)f\|_{L^p(\lambda)}$
+        for every bounded mean-zero $f$.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+  \leanok
+The family satisfies the growth condition $\sum_{i<D}\log(1/\varepsilon(2^i))=o(2^{D})$
+\leanref{GrowthCond}, because for $\varepsilon_{c,s}$ that sum is $O(D^2)$
+\leanref{growthCond\_of\_family}.
+
+Given the growth condition, the ratio $L(m)/\lambda_m$ is unbounded: were it bounded by $Q$,
+the tail would decay geometrically at rate $e^{-1/Q}$, while iterating the doubling inequality
+along the powers of two forces $L(2^{D})\geq\lambda_1\prod_{i<D}\varepsilon(2^{i})$, and the
+growth condition makes the second bound incompatible with the first. Choosing cuts along that
+unbounded ratio makes the centred tail indicator's defect small against its own mass
+\leanref{Stat.exists\_small\_mass\_ratio}, which is the first clause; the second is
+that same infimum read as the non-existence of a bound
+\leanref{Stat.no\_bounded\_inverse}.
+\end{proof}
+
+\noindent The second clause is the failure of a bounded diffusion operator at every finite exponent. The
+main text's convergence bounds are stated with a constant of exactly this shape; on this graph
+no such constant exists, at any $p$, at any positive recurrent member of the family. The first
+clause is the sharper fact behind it: the infimum of the Rayleigh quotient is not merely
+unattained but zero.
+
+
+\begin{theorem}
+  \label{thm:main_unbounded_infty}
+  \lean{GFNBounds.Doubling.main_unbounded_infty}\leanok
+Let $\varepsilon_{c,s}$ be a member of the family with $c>0$ and let $\lambda$ be an invariant
+probability of the loop closure. There is no constant $B$ such that every bounded mean-zero
+$f$, attaining size $M$ somewhere and having flow-matching defect bounded uniformly by $D$,
+satisfies $M\leq B\,D$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+The witnesses are clipped ramps: $r_N$ is the ladder height cut off at $N$. Its
+flow-matching defect is bounded independently of $N$ — at a state below the clip the defect is
+$1-\varepsilon(j)(j+1)$, at a state above it the defect vanishes, and at the sink it is
+$-\bar\jmath$ — while centring leaves the defect unchanged and leaves the function attaining at
+least $N/2$. So $M/D$ grows without bound
+\leanref{Stat.no\_bounded\_inverse\_infty}.
+
+That the defect is bounded uses $\gamma=\sup_j(j+1)\varepsilon(j)<\infty$, which for this
+family holds exactly when $s\geq1$, with $\gamma=c\,2^{1-s}$
+\leanref{gamma\_family}. Below $s=1$ there is no invariant probability to quantify
+over \leanref{isEmpty\_stat\_of\_family\_lt\_one}, and the statement holds for that
+reason instead.
+\end{proof}
+
+\noindent The failure therefore reaches the uniform norm as well, where the main text's stable bounds are
+most often read. No hypothesis on $s$ is needed: above $s=1$ the clipped ramps do the work, and
+below it there is no invariant probability at all, so the claim is vacuous exactly where the
+objects it quantifies over do not exist.
+
+
+\begin{theorem}
+  \label{thm:main_unbounded_two}
+  \lean{GFNBounds.Doubling.main_unbounded_two}\leanok
+Let $\varepsilon_{c,s}$ be a member of the family with $c>0$, $s\geq0$, and let $\lambda$ be an
+invariant probability of the loop closure. On $L^2(\lambda)$: no bounded operator $S$ satisfies
+$S(\mathrm{Id}-P_\star)=\mathrm{Id}-\Pi$; the series $\sum_{n\geq0}(P_\star^n-\Pi)$ does not
+converge in operator norm; and $\sum_{n\geq0}\widehat\beta_n=+\infty$, where
+$\widehat\beta_n=\|P^n-\Pi\|_{L^2(\lambda)}$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+All three are the same fact at $p=2$. The family satisfies the growth condition
+\leanref{GrowthCond}, discharged as before
+\leanref{growthCond\_of\_family}; the vanishing infimum of the Rayleigh quotient
+then excludes a bounded left inverse \leanref{Stat.no\_diffusionOp}. The other two
+follow from that one: a norm-convergent series would furnish such an inverse, since its sum
+$U$ satisfies $(\mathrm{Id}-P_\star)U=U(\mathrm{Id}-P_\star)=\mathrm{Id}-\Pi$ by telescoping
+\leanref{Stat.not\_tendsto\_partialSum}; and a summable
+$\sum_n\widehat\beta_n$ would make that series absolutely convergent, the norms being the
+$\widehat\beta_n$ \leanref{Stat.not\_summable\_betaHat}.
+\end{proof}
+
+\noindent This is the sentence that separates the two conditions. The summable-mixing hypothesis of the
+main text's $L^2$ universality theorem, and of its frozen detailed-balance theorem in the
+flow-matching instance --- where the constant is exactly the state-space mixing sum
+$\sum_n\widehat\beta_n$ --- is repaired by no positive recurrent member of this family, while
+the backward length above is finite throughout. The divergence is a statement about the
+flow-matching instance; the detailed-balance instance, whose coefficients are the edge-lifted
+ones, is not covered.
+
+
+\begin{theorem}
+  \label{thm:main_rate}
+  \lean{GFNBounds.Doubling.main_rate}\leanok
+At $s=1$ and $0<c<1$, with $p>1$ the Cram\'er root and $\lambda$ an invariant probability of
+the loop closure, there are constants $0<c_1\leq c_2$ and a cut $m_2>d$ such that the centred
+tail indicators satisfy
+\[ c_1\,m\;\bigl\|(\mathrm{Id}-P_\star)f_m\bigr\|^2_{L^2(\lambda)}
+   \;\leq\; 4c_2(p-1)\,\|f_m\|^2_{L^2(\lambda)} \qquad (m\geq m_2). \]
+\end{theorem}
+
+\begin{proof}
+  \leanok
+The two-sided decay bound $c_1 j^{-p}\leq\lambda_j\leq c_2 j^{-p}$ holds unconditionally at
+this level \leanref{Decay.decay\_two\_sided\_of\_cutBal}, run at the level $m_0$ at
+which the descent-weight window is controlled \leanref{Decay.m0}, with the root
+supplied by \leanref{Decay.ofC}. Summing that bound over $j\geq m$ gives
+$L(m)/\lambda_m\geq c_1m/(c_2(p-1))$, so the per-cut inequality --- the defect of $f_m$ is
+carried by the cut and the window alone, and the cut balance collapses the window --- reads as
+the display once the mass below the cut is bounded away from zero. The cut $m_2$ past which
+that last condition holds exists because $L(m)\to0$
+\leanref{Stat.exists\_rayleigh\_family}.
+\end{proof}
+
+\noindent Unboundedness above says only that the Rayleigh quotient has infimum zero; this says how fast,
+along an explicit family of trial functions. Squared and rearranged it is
+$\|f_m\|\geq c_7\sqrt m\,\|(\mathrm{Id}-P_\star)f_m\|$. It is not a lower bound on the
+diffusion constant of the infinite chain, which is $+\infty$ there; it is a rate along the
+$f_m$, and it is the truncation below that converts a rate into a bound on a finite constant.
+
+
+\subsubsection{Flow matching}
+
+
+\begin{theorem}
+  \label{thm:main_unsolvable}
+  \lean{GFNBounds.Doubling.main_unsolvable}\leanok
+Let $\varepsilon_{c,s}$ be a member of the family with $c>0$, $s\geq0$, and let $\lambda$ be an
+invariant probability of the loop closure. Then $(\mathrm{Id}-P_\star)L^2(\lambda)$ is a dense
+proper subspace of $\ker\Pi$, and there are probability densities
+$\finit,\fterm\in L^2(\lambda)$ for which no $f\in L^2(\lambda)$ satisfies the flow-matching
+equation $(\mathrm{Id}-P_\star)f=\finit-\fterm$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+Write $A$ for the restriction of $\mathrm{Id}-P_\star$ to $\ker\Pi$. It is injective, its
+kernel being the mean-zero fixed points of $P_\star$, which irreducibility reduces to the
+constants and hence to zero; its adjoint inside $\ker\Pi$ is the restriction of
+$\mathrm{Id}-P$, injective for the same reason, so the range of $A$ is dense. It is not
+surjective: a surjective bounded injection of a Hilbert space is boundedly invertible by the
+open mapping theorem, and that contradicts the vanishing infimum established above. Picking
+$\psi\in\ker\Pi$ outside the range and splitting it into positive and negative parts produces
+the two densities \leanref{doubling\_unsolvable}. The growth condition the argument
+needs is discharged for the family as before
+\leanref{growthCond\_of\_family}.
+\end{proof}
+
+\noindent What this refutes is \emph{exact} $L^2$ flow matching on the infinite chain: a pair of $L^2$
+densities the loop closure cannot balance at all. It does not refute the weak universality of
+the main text, whose conclusion is a defect infimum of zero --- density of the range is exactly
+what the first clause asserts, and whether the weak form fails here is not decided.
+
+
+\subsubsection{The truncation}
+
+
+\begin{theorem}
+  \label{thm:main_truncation_irreducible}
+  \lean{GFNBounds.Doubling.main_truncation_irreducible}\leanok
+At an even cap $K\geq d$ the truncation is irreducible on its $K+2$ states, and every invariant
+measure of it is strictly positive at each of them.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+Only the climbing half differs from the infinite chain, because the doubling edges above $K/2$
+have been cut. Let $2^{r}$ be the largest power of two at most $K$: the edges
+$2^{i}\rightarrow2^{i+1}$ all survive for $i<r$, so the ladder state $1$ reaches $2^{r}$ and,
+by decrements, every state below it. Above $2^{r}$ an even $n$ is reached by doubling from
+$n/2\leq K/2<2^{r}$, and an odd $n$ is not the cap --- which is even --- so $n+1$ is even and
+in range and one decrement finishes \leanref{reach\_all\_some}. Positivity is the
+same general fact as on the loop closure
+\leanref{PreStat.pos\_of\_irreducible}.
+\end{proof}
+
+\noindent The truncation is what a numerical experiment can actually run, and this is what makes it a
+legitimate finite approximation: the same qualitative structure as the infinite chain, on a
+finite state space where the diffusion constant is finite and can be measured.
+
+
+\begin{theorem}
+  \label{thm:main_truncation_bhat}
+  \lean{GFNBounds.Doubling.main_truncation_bhat}\leanok
+At an even cap $K\geq d$ the truncation carries exactly one invariant probability $\lambda^K$,
+and on $L^2(\lambda^K)$ there is a bounded operator $S$ with
+\[ S(\mathrm{Id}-P_\star)=(\mathrm{Id}-P_\star)S=\mathrm{Id}-\Pi,\qquad \Pi S=S\Pi=0 . \]
+In particular the diffusion constant $\widehat B_K=\|S\|$ is finite at every even cap.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+Existence and uniqueness of the invariant probability are those of a finite irreducible chain
+\leanref{exists\_stat}, \leanref{stat\_unique}. On a finite state space
+$\mathrm{Id}-P_\star+\Pi$ is then injective --- a vector it kills has zero mean and is fixed by
+$P_\star$, hence is a constant of zero mean --- and injective is invertible in finite
+dimension; writing $R$ for the inverse and $S=R-\Pi$, the relations $\Pi P_\star=P_\star\Pi=\Pi$
+and $\Pi^2=\Pi$ give the four identities \leanref{Stat.exists\_bhat}. Boundedness
+is automatic, the space being finite-dimensional.
+\end{proof}
+
+\noindent So the object that fails to exist on the infinite chain does exist on every truncation of it.
+Nothing diverges at a finite cap; what the next result shows is that the constant grows without
+bound as the cap does, which is how an infinite constant is visible to a finite computation.
+
+
+\begin{theorem}
+  \label{thm:main_truncation_sqrtK}
+  \lean{GFNBounds.Doubling.main_truncation_sqrtK}\leanok
+At $s=1$ and $0<c<1$ there are $c_8>0$ and a cap $K_0$ such that, for every $K\geq K_0$ and
+every bounded operator $S$ on $L^2(\lambda^K)$ with $S(\mathrm{Id}-P_\star)=\mathrm{Id}-\Pi$,
+\[ c_8\,K \;\leq\; \|S\|^2 . \]
+That is, $\widehat B_K\geq\sqrt{c_8}\,\sqrt K$ at every large even cap.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+The argument is the per-cut inequality applied at a cut of order $K$. The decay bound transfers
+to the truncation with constants that do not depend on the cap
+\leanref{Stat.decayK}: extending $\lambda^K$ above the cap gives a positive
+sequence satisfying the cut balance below $K/2$, so the block estimate applies at the level
+$m_0$ \leanref{Decay.m0}, and the ratio of the two constants is controlled by
+chaining the cut-balance inequalities across one block. The descent weight at that level is
+two-sided \leanref{Decay.descOne\_two\_sided} with the escape constant
+\leanref{Decay.c5}, and the Cram\'er root is again
+\leanref{Decay.ofC}.
+
+Taking the cut at $\lfloor K/4\rfloor$ then makes $L_K(m)/\lambda^K_m$ of order $K$, while the
+mass below the cut is bounded away from zero uniformly in $K$ --- on a finite irreducible chain
+the mass at the source is the reciprocal of the expected return time, which is
+$2+\bar\sigma_K\leq2+\bar\jmath/(1-c)$. Feeding both into the per-cut inequality gives the
+displayed bound \leanref{Stat.sqrtK}.
+\end{proof}
+
+\noindent This is the quantitative form of the separation, and the one a measurement can be compared
+against: the diffusion constant of the truncation is finite but grows at least like $\sqrt K$,
+so it diverges as the truncation is lifted, while the backward length stays at
+$\bar\jmath/(1-c)$ throughout. The bound holds for \emph{every} left inverse, so it is a
+property of the chain and not of a particular construction.
+
+
+\subsection{What is not established here}\label{sec:doubling_differences}
+
+Three claims that would naturally accompany the results above are absent, and in each case for
+the same reason: they are properties of the backward chain as a stochastic process, and no such
+process is constructed.
+
+\begin{itemize}
+  \item \emph{Transience and null recurrence.} The phase diagram distinguishes only between the
+        existence and the non-existence of an invariant probability. Where none exists --- at
+        $s<1$, and at $s=1$ with $c\geq1$ --- nothing is said about which of transience or null
+        recurrence obtains. In particular the case $s=1$, $c=1/\ln2$ sits inside the
+        non-existence regime and is not resolved further.
+  \item \emph{An infinite expected hitting time.} At $s=1$ with $1\leq c<2$ the absence of an
+        invariant probability is established; the accompanying statement that
+        $\mathbb E(\sigma\mid X_0=j)=+\infty$ at every ladder state is not.
+  \item \emph{The trajectory reading of the diffusion operator.} The operator excluded at $p=2$
+        is characterised by the resolvent identities, not as the sum
+        $\sum_{n\geq0}\bigl(\mathbb E(\theta(X_n)\mid X_0=x)-\lambda(\theta)\bigr)$ along
+        backward trajectories. That the two agree needs the chain.
+\end{itemize}
+
+\noindent
+Nothing above depends on these. They are named so that a reader who expects the vocabulary of
+recurrence classification knows where it has been replaced by the weaker statement that is
+actually proved.
+
+
+\subsection{The development}\label{sec:doubling_development}
+
+Each result above is a declaration of a Lean~4 development checked against Mathlib
+\texttt{v4.31.0}. Table~\ref{tab:doubling_decls} gives the correspondence. Every one of them
+has been verified to rest on no axiom beyond Lean's own \texttt{propext},
+\texttt{Classical.choice} and \texttt{Quot.sound}, and the development contains no unproved
+goal.
+
+\begin{table}[htb]
+\centering
+\small
+\begin{tabular}{@{}l l r r@{}}
+\hline
+result & declaration & named results & declarations \\
+\hline
+\ref{thm:main_irreducible} & \texttt{\small main\_irreducible} & 3 & 67 \\
+\ref{thm:main_phase} & \texttt{\small main\_phase} & 25 & 162 \\
+\ref{thm:main_invariant_measure} & \texttt{\small main\_invariant\_measure} & 98 & 366 \\
+\ref{thm:main_constant_determined} & \texttt{\small main\_constant\_determined} & 5 & 98 \\
+\ref{thm:main_constant_functional} & \texttt{\small main\_constant\_functional} & 104 & 377 \\
+\ref{thm:main_sigmaBar_eq} & \texttt{\small main\_sigmaBar\_eq} & 10 & 83 \\
+\ref{thm:main_sigmaBar_le} & \texttt{\small main\_sigmaBar\_le} & 4 & 39 \\
+\ref{thm:main_unbounded} & \texttt{\small main\_unbounded} & 16 & 128 \\
+\ref{thm:main_unbounded_infty} & \texttt{\small main\_unbounded\_infty} & 11 & 116 \\
+\ref{thm:main_unbounded_two} & \texttt{\small main\_unbounded\_two} & 60 & 267 \\
+\ref{thm:main_rate} & \texttt{\small main\_rate} & 71 & 302 \\
+\ref{thm:main_unsolvable} & \texttt{\small main\_unsolvable} & 44 & 203 \\
+\ref{thm:main_truncation_irreducible} & \texttt{\small main\_truncation\_irreducible} & 4 & 69 \\
+\ref{thm:main_truncation_bhat} & \texttt{\small main\_truncation\_bhat} & 37 & 183 \\
+\ref{thm:main_truncation_sqrtK} & \texttt{\small main\_truncation\_sqrtK} & 96 & 393 \\
+\hline
+\end{tabular}
+\caption{The results of this appendix as declarations of the Lean development, in the
+namespace \texttt{GFNBounds.Doubling}. The last two columns count what each proof rests on,
+unfolded to the bottom of the development: the declarations it reaches, and how many of those
+are results the development names rather than steps internal to one.}
+\label{tab:doubling_decls}
+\end{table}
+

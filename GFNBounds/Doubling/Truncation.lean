@@ -18,19 +18,19 @@ import GFNBounds.Doubling.Family
 
 ## SCOPE (disclosed)
 
-* **`B̂_K` is not constructed.** Its existence is Step 1, which needs
-  `lem:doubling_truncation_irreducible` Step 4 (Perron–Frobenius) and `lem:doubling_operator`(2),
-  both open. Items (1) and (3) are therefore stated about *any* `B` bounding the `L²(λ^K)`
-  Rayleigh quotient — which is what `eq:doubling_resolvent` supplies for `B = B̂_K²` — so they are
-  lower bounds on every such constant. That is the useful direction: a `√K` lower bound on a
-  constant that might not exist would say nothing.
+* **`B̂_K` is not used here.** Items (1) and (3) are stated about *any* `B` bounding the
+  `L²(λ^K)` Rayleigh quotient in the mass layer, so they are lower bounds on every such
+  constant. `B̂_K` itself is constructed in `OperatorL2.lean` (`Stat.exists_bhat`, Step 1), and
+  `RayleighBridge.lean` turns `‖S‖` into such a `B = ‖S‖²`; `main_truncation_sqrtK` in
+  `Main.lean` composes the two with item (3) into the paper's `B̂_K ≥ c₈√K`.
 * Squared and cleared of roots, as in `cor:doubling_family`: `B` stands for `B̂_K²` and `c₈sq`
   for `c₈²`.
 * Step 6 is `Kac.lean` and is **unconditional** — the paper cites Kac's formula, which mathlib
   does not have, and it is derived there from invariance alone.
-* Item (2) is `decayK_of_decay_block`, conditional on `eq:doubling_product` exactly as
-  `theo:doubling_decay` is. Item (3) takes `eq:doubling_decayK` as a hypothesis, so the
-  conditionality sits in one place.
+* Item (2) is `decayK`, stated with the descent-weight window `Z₁ ≤ E(Z_ℓ) ≤ Z₂` as
+  hypotheses; `Decay.descOne_two_sided` (`Product.lean`) discharges them at every level
+  `ℓ ≥ m₀`, which is how `main_truncation_sqrtK` uses it. Item (3) takes `eq:doubling_decayK` as
+  a hypothesis, so the composition sits in one place.
 * ⚠ weakened: evenness of `K` enters only through `m ≤ K/2 ↔ 2m ≤ K`, and is not assumed.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
@@ -371,8 +371,8 @@ theorem cutBalanceSeq_trunc (L : Stat S (some K)) :
 `C⁺/C⁻ ≤ (Z₂/Z₁) 2^{p_*} Q²` **free of `K`** — which is the `c₉` of the paper, since `Q` depends
 on `c` and `ℓ` alone and `Z₁, Z₂` on `c` and `d` alone.
 
-Conditional on `Z₁ ≤ E(Z_ℓ) ≤ Z₂` exactly as `theo:doubling_decay` is: that is
-`eq:doubling_product`, the appendix's one remaining chain-dependent input. -/
+Stated with `Z₁ ≤ E(Z_ℓ) ≤ Z₂` — `eq:doubling_product` at the level `ℓ` — as hypotheses, which
+`Decay.descOne_two_sided` (`Product.lean`) discharges for every `ℓ ≥ m₀`. -/
 theorem decayK (D : Decay) (L : Stat S (some K)) (heps : ∀ j, S.eps j = D.eps j)
     {ℓ : ℕ} (hℓd : S.d < ℓ) (hℓ1 : 1 ≤ ℓ) (h4ℓK : 4 * ℓ ≤ K)
     {Z₁ Z₂ : ℝ} (hZ1 : 0 < Z₁) (hZ2 : 0 < Z₂)

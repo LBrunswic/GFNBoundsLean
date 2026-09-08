@@ -1,0 +1,24 @@
+Write $a:=2^{i-1}\ell$, so that $I_i(\ell)=[2a,4a)$ and $I_{i-1}(\ell)=[a,2a)$, and put
+$J:=\{\lceil5a/4\rceil,\dots,2a-1\}\subseteq I_{i-1}(\ell)$ and
+$J':=\{2a,\dots,\lceil5a/2\rceil-1\}\subseteq I_i(\ell)$. Comparing $\sum1/(j+1)$ with
+$\int dt/t$ over each range bounds those two sums below by $\ln\tfrac85-2/a$ and
+$\ln\tfrac54-2/a$, hence by $\tfrac12\ln\tfrac85$ and $\tfrac12\ln\tfrac54$ once
+$\ell\geq\ell_4$.
+
+Three observations do the rest. First, the exit from $I_i(\ell)$ lands in $I_{i-1}(\ell)$ and
+$\varsigma\leq N_\ell\leq y$: the halving bound of
+Lemma~\ref{lem:doubling_descent}\emph{(1)} keeps $Y_\varsigma\geq a$, while
+$Y_\varsigma\leq Y_0<4a$ and $Y_\varsigma\notin[2a,4a)$ force $Y_\varsigma<2a$. Second, one
+step from a state $z\geq2\ell$ gives each $j\in W(z)$ mass at least $c/\bigl(2(j+1)\bigr)$,
+since $(z/j)^{p}\geq1$, $q_z(j)\geq c/(j+1)$ and $R_0(z)\leq2$ by \eqref{eq:doubling_R0}.
+
+Third, the two halves of $I_i(\ell)$ are treated in turn. A state $y<\lceil5a/2\rceil$ has
+$J\subseteq W(y)$, and a first step into $J$ is already the exit, so the one-step bound and
+the first window sum give
+$\mathbb P(Y_\varsigma=j\mid Y_0=y)\geq\tfrac c4\ln\tfrac85\,\varpi_i(j)$. A state
+$y\geq\lceil5a/2\rceil$ has $J'\subseteq W(y)$ and reaches $J'$ in one step with probability
+at least $\tfrac c4\ln\tfrac54$, by the second window sum; every state of $J'$ is again in $I_i(\ell)$ and below
+$\lceil5a/2\rceil$, so the Markov property at time~$1$ composes the two bounds into
+$\omega\,\varpi_i(j)$. The two cases cover $I_i(\ell)$ and $\tfrac c4\ln\tfrac85\geq\omega$,
+which is \eqref{eq:doubling_doeblin}; $\omega\in(0,1)$ because $c<1$ and
+$\ln\tfrac54\ln\tfrac85<1$.

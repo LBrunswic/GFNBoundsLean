@@ -1,0 +1,6 @@
+By \eqref{eq:doubling_policy} the chain moves from $j$ to $2j$ with probability
+$\varepsilon(j)$ and to $j-1$ with probability $1-\varepsilon(j)$, so the one-step drift is
+$\varepsilon(j)(2j-j)+(1-\varepsilon(j))(-1)=\varepsilon(j)(j+1)-1$; substituting
+$\varepsilon(j)=c\,(j+1)^{-s}$ gives \eqref{eq:doubling_drift}. At $s=1$ that value is $c-1$
+at every $j$, and for $s\neq1$ the map $j\mapsto c\,(j+1)^{1-s}$ is strictly monotone with
+$c>0$, so it already separates $j=1$ from $j=2$.

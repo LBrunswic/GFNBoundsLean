@@ -135,6 +135,72 @@ theorem sharp_of_cutBal {d : ℕ} {lam : ℕ → ℝ} (hcut : D.CutBal d lam ⊤
     D.sharp hcut hLd hL20 hLτ hc₁ D.c3_nonneg hbd hweight
   exact ⟨C, c₁, c₂, c₆, hc₁, hC1, hC2, hc₆, hbd, hlim, hrate⟩
 
+/-- **The level of the sharp block**, `L = max(ℓ₃, 20, d+1, m₀(d), ⌈32cτ⌉)`: past it every
+hypothesis of `Sharp.sharp_limit` and `Decay.weight_bound` holds. -/
+noncomputable def levelL (D : Decay) (d : ℕ) : ℕ :=
+  max (max D.ell3 20) (max (max (d + 1) (D.m0 d)) ⌈32 * D.c * D.tau⌉₊)
+
+/-- **`c₆` of `eq:doubling_rate`, written out**: `c₂(4^α + 2c₃) + c₂ m₃^ϑ` with
+`m₃ = max(1, ⌈L^{1/ϑ}⌉)`, `L = levelL d` and `c₂` the upper decay constant. -/
+noncomputable def c6 (D : Decay) (d : ℕ) (c₂ : ℝ) : ℝ :=
+  c₂ * (4 ^ D.alph + 2 * D.c3)
+    + c₂ * ((max 1 ⌈((D.levelL d : ℕ) : ℝ) ^ (1 / D.vartheta)⌉₊ : ℕ) : ℝ) ^ D.vartheta
+
+/-- **`theo:doubling_sharp` with every constant written out.** If the rescaled profile lies in
+`[a, b]` on the initial block `1 ≤ j < 2ℓ`, `ℓ ≥ m₀`, `a > 0`, then the limit `C` lies in
+`[a e^{−c₅c₄/ℓ}, b e^{c₅c₄/ℓ}]`, `c₄ = 16cτ`, and `|λ_m m^{p_*} − C| ≤ c₆ m^{−ϑ}` at every
+`m ≥ 1` with `c₆ = c6 d (b e^{c₅c₄/ℓ})` — a formula in `c`, `d` and the initial block, which is
+the paper's dependence clause "`c₆` depends on `c`, `d`, `λ_1..λ_{2m₀}` alone" made precise. -/
+theorem sharp_explicit {d ℓ : ℕ} {lam : ℕ → ℝ} (hcut : D.CutBal d lam ⊤) (hℓ : D.m0 d ≤ ℓ)
+    {a b : ℝ} (ha : 0 < a)
+    (hab : ∀ j, 1 ≤ j → j < 2 * ℓ → a ≤ D.uu lam j ∧ D.uu lam j ≤ b) :
+    ∃ C : ℝ,
+      a * Real.exp (-(D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) ≤ C ∧
+      C ≤ b * Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ)) ∧
+      Tendsto (fun m : ℕ => lam m * (m : ℝ) ^ D.p) atTop (𝓝 C) ∧
+      ∀ m : ℕ, 1 ≤ m →
+        |lam m * (m : ℝ) ^ D.p - C|
+          ≤ D.c6 d (b * Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) * (m : ℝ) ^ (-D.vartheta) := by
+  classical
+  simp only [Decay.c6]
+  set L : ℕ := D.levelL d with hLdef
+  have hLℓ₃ : D.ell3 ≤ L := by
+    rw [hLdef, Decay.levelL]; exact le_trans (le_max_left _ 20) (le_max_left _ _)
+  have hL20 : 20 ≤ L := by
+    rw [hLdef, Decay.levelL]; exact le_trans (le_max_right D.ell3 20) (le_max_left _ _)
+  have hLd1 : d + 1 ≤ L := by
+    rw [hLdef, Decay.levelL]
+    exact le_trans (le_trans (le_max_left (d + 1) (D.m0 d)) (le_max_left _ _)) (le_max_right _ _)
+  have hLτ : 32 * D.c * D.tau ≤ (L : ℝ) := by
+    have h1 : ⌈32 * D.c * D.tau⌉₊ ≤ L := by
+      rw [hLdef, Decay.levelL]
+      exact le_trans (le_max_right (max (d + 1) (D.m0 d)) _) (le_max_right _ _)
+    have h2 : (⌈32 * D.c * D.tau⌉₊ : ℝ) ≤ (L : ℝ) := by exact_mod_cast h1
+    exact le_trans (Nat.le_ceil _) h2
+  have hLd : d < 2 * L := by omega
+  set Z₁ : ℝ := Real.exp (-(D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) with hZ₁def
+  set Z₂ : ℝ := Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ)) with hZ₂def
+  have hbd : ∀ j, 1 ≤ j → a * Z₁ ≤ D.uu lam j ∧ D.uu lam j ≤ b * Z₂ :=
+    fun j hj => D.uu_bounded_explicit hcut hℓ ha.le hab j hj
+  have hc₁ : 0 < a * Z₁ := mul_pos ha (Real.exp_pos _)
+  have hc₂pos : 0 < b * Z₂ := lt_of_lt_of_le hc₁ (le_trans (hbd 1 le_rfl).1 (hbd 1 le_rfl).2)
+  have hg : ∀ j : ℕ, |D.uu lam j| ≤ b * Z₂ := by
+    intro j
+    rcases Nat.eq_zero_or_pos j with rfl | hj
+    · have hz : D.uu lam 0 = 0 := by
+        rw [Decay.uu, Nat.cast_zero, Real.zero_rpow D.p_ne, mul_zero]
+      rw [hz, abs_zero]
+      exact hc₂pos.le
+    · obtain ⟨h1, h2⟩ := hbd j hj
+      rw [abs_le]
+      exact ⟨by linarith, h2⟩
+  have hweight : ∀ ℓ' y : ℕ, L ≤ ℓ' → 2 * ℓ' ≤ y →
+      |D.descW ℓ' (D.uu lam) y - D.descP ℓ' (D.uu lam) y| ≤ b * Z₂ * D.c3 / ℓ' :=
+    fun ℓ' y hℓ' _ => D.weight_bound (le_trans hLℓ₃ hℓ') hg y
+  obtain ⟨C, hC, hC1, hC2, hCbound⟩ :=
+    D.sharp_limit hcut hLd hL20 hLτ hc₁ D.c3_nonneg hbd hweight
+  exact ⟨C, hC1, hC2, hC, D.sharp_rate_explicit hL20 hc₁ D.c3_nonneg hbd hC1 hC2 hCbound⟩
+
 end Decay
 
 end GFNBounds.Doubling

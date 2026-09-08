@@ -26,23 +26,25 @@ Everything except the **rate** `eq:doubling_rate`. Precisely:
 * `cutBal_unique` — the fifth bullet: the cut balance determines the whole sequence, hence `C`,
   from `c`, `d` and `λ_1,…,λ_d`.
 
-The **one** unproved input is `lem:doubling_weight` (`app_doubling.tex:1343–1383`), whose proof
-consumes `lem:doubling_escape` and `lem:doubling_product` — the two exit-time laws that do need a
-chain. It enters as the named hypothesis
+The one input taken as a hypothesis here is `lem:doubling_weight` (`app_doubling.tex:1343–1383`),
+proved in `Weight.lean` (`Decay.weight_bound`, from `lem:doubling_escape` and
+`lem:doubling_product`) and discharged in `SharpFull.lean`. It enters as the named hypothesis
 
   `hweight : ∀ ℓ y, L ≤ ℓ → 2ℓ ≤ y → |descW ℓ u y − descP ℓ u y| ≤ c₂c₃/ℓ`,
 
 which is `E(|Z_ℓ − 1| ∣ Y_0 = y) ≤ c₃/ℓ` combined with `0 < u ≤ c₂`, since
 `descW ℓ u y − descP ℓ u y = E((Z_ℓ − 1) u_{Y_{N_ℓ}} ∣ Y_0 = y)`. This is the same discipline as
-`Decay.decay_block` in `Descent.lean`: the unproved input is a hypothesis, not an assumption.
+`Decay.decay_block` in `Descent.lean`: the input is a hypothesis here and is discharged one file
+up.
 
 ## SCOPE (disclosed)
 
-* **`eq:doubling_rate` is not proved.** The convergence is proved with the explicit error
-  `c₂(1−ω)^i + 2c₂c₃/ℓ`, valid at every level `ℓ ≥ L` and every `i` with `2^iℓ ≤ m`, which is the
-  inequality the paper then optimises over `ℓ = ⌈m^ϑ⌉`, `i = ⌊log₂(m/ℓ)⌋` to get `c₆ m^{−ϑ}` with
-  `ϑ = α/(1+α)`, `α = log₂(1/(1−ω))`. That optimisation is arithmetic on `Real.rpow`, `Nat.ceil`
-  and `Nat.log`, and is **not** carried out; `ϑ` and `c₆` therefore do not appear.
+* **`eq:doubling_rate` is not proved in this file.** The convergence is proved with the explicit
+  error `c₂(1−ω)^i + 2c₂c₃/ℓ`, valid at every level `ℓ ≥ L` and every `i` with `2^iℓ ≤ m`; the
+  optimisation over `ℓ = ⌈m^ϑ⌉`, `i = ⌊log₂(m/ℓ)⌋` that turns it into `c₆ m^{−ϑ}` with
+  `ϑ = α/(1+α)`, `α = log₂(1/(1−ω))`, is `SharpRate.lean` (`Decay.sharp_rate_explicit`), and the
+  assembled theorem is `SharpFull.lean` (`Decay.sharp_of_cutBal`, `Decay.sharp_explicit`). `ϑ`
+  and `c₆` therefore do not appear here.
 * The paper's `ℓ₄` and `ℓ₃` are replaced by one integer `L` subject to three effective conditions
   (`20 ≤ L`, `32cτ ≤ L`, `d < 2L`); see `Doeblin.lean`.
 * `theo:doubling_decay`(2) — the two-sided bound `c₁ ≤ u_m ≤ c₂` — is a hypothesis, as it is in

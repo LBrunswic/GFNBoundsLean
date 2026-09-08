@@ -8,7 +8,9 @@ through an import. Reads the build log produced by `make check`.
 import re, sys
 
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
-LINE = re.compile(r"'([^']+)' depends on axioms: \[([^\]]*)\]")
+# `\S+?` rather than `[^']+`: Lean names may end in a prime (`incr_le'`), which `[^']+` cannot
+# cross — until 2026-09-07 three primed declarations were silently skipped by this audit.
+LINE = re.compile(r"'(\S+?)' depends on axioms: \[([^\]]*)\]")
 
 
 def main(path):

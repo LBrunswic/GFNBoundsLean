@@ -1,0 +1,29 @@
+% The web version of the blueprint: the same content plus the dependency graph.
+% Compiled by `leanblueprint web`, which runs plasTeX with plastex.cfg.
+\documentclass{article}
+
+\usepackage{amssymb, amsthm, amsmath, mathtools}
+\usepackage{graphicx}
+% The one figure of the last subsection, copied beside these sources so the
+% draft builds without reaching into the paper's tree.
+\graphicspath{{figures/}}
+\usepackage{hyperref}
+% No `dep_graph`: the fifteen results are siblings assembled in one module and none invokes
+% another, so a graph over them alone would be fifteen isolated nodes. The real dependency
+% graph is emitted from the compiled environment to docs/lean-graph.svg.
+\usepackage{blueprint}
+
+\input{macros/common}
+\input{macros/web}
+
+\home{}
+\github{}
+\dochome{}
+
+\title{The Doubling Graph: an Unbounded Diffusion Operator at Finite Backward Length}
+\author{}
+
+\begin{document}
+\maketitle
+\input{content}
+\end{document}

@@ -1,0 +1,30 @@
+Both actions descend to $\lambda$-classes, because $\lambda T=\lambda$ makes $T(x,\cdot)$
+charge a $\lambda$-null set for $\lambda$-almost no $x$.
+
+\emph{(1)} Jensen's inequality for the probability $T(x,\cdot)$ and the convex $t\mapsto|t|^p$
+gives $|P_\star v|^p\leq P_\star(|v|^p)$ almost everywhere, and $\lambda T=\lambda$ integrates
+the right-hand side to $\|v\|_{L^p(\lambda)}^p$; at $p=+\infty$ the same argument applies to
+the null set $\{|v|>\|v\|_{L^\infty(\lambda)}\}$. Boundedness on $L^2(\lambda)$ makes
+$(x,y)\mapsto u(x)v(y)$ integrable against $T(x,dy)\lambda(dx)$, so Fubini identifies
+$\int v\,d\bigl((u\lambda)T\bigr)$ with $\langle u,P_\star v\rangle_\lambda$; the Riesz
+representation theorem then exhibits the density action as a bounded operator $P$ on
+$L^2(\lambda)$ and reads that identity as $P_\star=P^*$. Since $\Pi$ is self-adjoint,
+$P_\star^n-\Pi$ and $P^n-\Pi$ have the same norm.
+
+\emph{(2)} On a finite state space an irreducible kernel carries a unique invariant
+probability, positive at every state, so $P_\star$ fixes only the constants by
+Lemma~\ref{lem:doubling_fixed_points}. In finite dimension $\mathrm{Id}-P_\star+\Pi$ is
+therefore invertible, being injective: $(\mathrm{Id}-P_\star+\Pi)f=0$ forces $\Pi f=0$ and
+then $P_\star f=f$, so $f$ is a constant of zero mean. Writing $R$ for the inverse and
+$S:=R-\Pi$, the relations $\Pi P_\star=P_\star\Pi=\Pi$ and $\Pi^2=\Pi$ give $\Pi R=R\Pi=\Pi$,
+hence $\Pi S=S\Pi=0$, and multiplying $R(\mathrm{Id}-P_\star+\Pi)=\mathrm{Id}$ out gives
+\eqref{eq:doubling_resolvent}.
+
+\emph{(3)} Suppose the series converges in operator norm and call its sum $U$. Each term is
+annihilated by $\Pi$ on both sides, so $\Pi U=U\Pi=0$, and
+$(\mathrm{Id}-P_\star)(P_\star^n-\Pi)=P_\star^n-P_\star^{n+1}$ telescopes, so
+$(\mathrm{Id}-P_\star)U=U(\mathrm{Id}-P_\star)=\mathrm{Id}-\Pi$. Hence $\Pi+U$ inverts
+$\mathrm{Id}-P_\star+\Pi$ and $S=U$, which is \eqref{eq:doubling_resolvent}, and
+$\widehat B=\|U\|\leq\sum_n\widehat\beta_n$ by \emph{(1)}. On a finite irreducible chain
+$S$ exists by \emph{(2)} and that bound holds either way: vacuously when the sum diverges,
+and by the above when it converges.

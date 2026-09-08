@@ -1,34 +1,51 @@
 # GFNBoundsLean
 
-A Lean 4 / Mathlib formalization of **Appendix H** of *Universality and Convergence of Generative
-Flows* — the doubling-graph counter-example of `app_doubling.tex`.
+A Lean 4 / Mathlib formalization of the **proofs** of *Universality and Convergence of Generative
+Flows* — **Appendices A, B and H**:
 
-Coverage: **[`docs/COVERAGE.md`](docs/COVERAGE.md)** — 41 statements, what is closed and what is
-not. Open `sorry`s: [`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md).
+| appendix | source | what it is | statements |
+|---|---|---|---|
+| **A** | `proofs.tex` | the paper's proofs: universality, the stable bounds, the first variation, the frozen-policy dynamics, universality on finite graphs | 37 |
+| **B** | `silva_comparison.tex` | the explicit-constant restatement of Silva et al.'s bound, and why its state-space dependence is unavoidable | 6 |
+| **H** | `app_doubling.tex` | the doubling-graph counter-example: an unbounded diffusion operator at finite backward length | 41 |
+
+The library began as Appendix H alone and was widened to A and B on 2026-09-08, at the author's
+instruction. Appendices C–G are **not** in scope.
+
+Coverage: **[`docs/COVERAGE.md`](docs/COVERAGE.md)**. Open `sorry`s:
+[`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md). The whole-paper ledger — all 129 statements with
+their natural-language status, their Lean status and the dependency DAG — lives on the paper side
+at `FORMALIZATION-LEDGER.md`.
 
 ## Where it stands
 
-Every statement that can be proved without building a Markov chain is proved. The headline —
-`theo:doubling_unbounded`, the diffusion operator unbounded on every `L^p`, `p ∈ [1,∞]` — is
-closed and unconditional given positive recurrence, and so is the whole of `lem:doubling_percut`,
-`prop:doubling_cut`, `lem:doubling_irreducible`, `lem:doubling_cramer_root`, `lem:doubling_ramp`,
-`lem:doubling_excursion`, `lem:doubling_supersolution`, `cor:doubling_tail` and
-`cor:doubling_family`.
+The strict library is **`sorry`-free** and every one of its 1,800-odd declarations depends only
+on `propext`, `Classical.choice` and `Quot.sound` (`scripts/AxiomSweep.lean`). The umbrella
+theorem `theo:doubling_main` is assembled item by item in `Main.lean` from closed inputs; the
+coverage table (`docs/COVERAGE.md`) says per statement what is closed, what is partial and why.
+`theo:doubling_decay` and `theo:doubling_sharp` are unconditional from the cut balance and
+positivity, with `m₀`, `ℓ₂`, `ℓ₃`, `c₃`, `c₄ = 16cτ`, `c₅`, `ω`, `ϑ` and `c₆` explicit
+(`Decay.sharp_explicit`); `prop:doubling_unsolvable` is closed on Mathlib's `Lp`, and the `p = 2`
+clauses of `theo:doubling_unbounded` on the same space (`UnboundedL2.lean`).
 
-What is left divides into exactly **three obstructions**, and every open row in the coverage table
-names which one stops it:
+What is left divides into the **three obstructions** below, and every non-closed row in the
+coverage table names which one stops it:
 
-1. **A chain.** Optional stopping (`prop:doubling_length`), Foster's criterion
-   (`prop:doubling_phase`), exit-time laws (`lem:doubling_escape`, `lem:doubling_product`),
-   Doeblin and coupling (`theo:doubling_sharp` and its three lemmas). Mathlib v4.31.0 has none of
-   this for discrete time. One chain fact the appendix cites did **not** need it: Kac's formula.
-   `Kac.lean` derives `λ(s₀)(2 + σ̄) = 1` on this graph from invariance alone, tested against the
-   truncated hitting expectations — the identity the lab record measures as
+1. **A chain.** Mathlib v4.31.0 has no discrete-time Markov chain theory. Everything the appendix
+   proves *about the chain as a process* — the labels *transient* and *null recurrent* in
+   `prop:doubling_phase`, `E(σ | X₀ = j) = +∞` on the non-positive-recurrent rows, `E|Z_ℓ − 1|` in
+   `lem:doubling_weight` (stated here in the transform form the sharp theorem consumes) — is
+   either restated as what it is used for (existence or non-existence of an invariant
+   probability; a bound on transforms) or not stated. What did **not** need a chain turned out to
+   be most of the appendix: the decay and sharp blocks run on recursions, and Kac's formula
+   (`Kac.lean`) is derived from invariance alone — the identity the lab record measures as
    `1/λ(s₀) − σ̄ ∈ [1.999999994526, 2.000000000004]`.
-2. **The `L^p` layer with its adjoint.** `lem:doubling_operator`(1)–(2),
-   `lem:doubling_fixed_points`' `P` half, `prop:doubling_unsolvable`. The analysis in the last of
-   these is already done — `eq:doubling_inf` is proved — and what is missing is the functional
-   analysis around it.
+2. **The `L^p` layer with its adjoint** — **built.** `P` is modelled (`Stat.dens`, `Stat.densL2`),
+   `P⋆ = P*` is Mathlib's adjoint (`Stat.adjoint_pstarL2`), the diffusion operator exists on every
+   truncation (`Stat.exists_bhat`), and the mass layer and `Lp` are bridged both ways where the
+   umbrella needs it (`RayleighBridge.lean`). What remains here is bookkeeping: the "in
+   particular" clause of `lem:doubling_operator`(3) and a standalone unconditional item (2) of
+   `cor:doubling_truncation`.
 3. ~~Euler–Maclaurin~~ — **routed around.** `lem:doubling_expansion` was the appendix's one
    analytic wall, but the descent block consumes only `eq:doubling_R0`, and a first-order
    telescoping comparison suffices for that. `R0Bound.lean` proves
@@ -154,7 +171,7 @@ The appendix flags these itself; this library mirrors the flags rather than laun
   so only *exact* `L²` flow matching is refuted.
 - `rem:doubling_second_order` is explicitly "a formal matching computation and is not proved here".
 - `prop:doubling_unsolvable`'s witness pair is non-explicit by construction (open mapping), so the
-  Lean statement will be an `∃`.
+  Lean statement is an `∃`.
 - `rem:doubling_renewal`'s kernel-mean identity is exact for the limit equation only and does not
   determine `C`.
 
@@ -196,3 +213,20 @@ those stay with the master. They draw on two generated references and one accumu
 
 Nothing here edits `app_doubling.tex`. If formalization forces a change to a statement in the
 draft, that change goes through `/writer`, like every other edit to the paper.
+
+In the other direction, `blueprint/` holds a **draft replacement for Appendix H generated from
+this development** — not from the appendix, whose prose proofs are not machine-checked:
+
+```
+make appendix       # -> blueprint/print/print.pdf, blueprint/appendix_H.tex, docs/lean-graph.svg
+```
+
+`scripts/lean_facts.lean` walks the compiled environment and records, for every declaration,
+the project constants its proof term invokes. The fifteen results of `Doubling/Main.lean` are
+then stated in English, sketched, and related to the main text in `blueprint/exposition/`, and
+`scripts/appendix.py --lint` checks the writing against the environment: a sketch may not cite
+a lemma the proof does not invoke, may not drop a named result it does, and goes stale the
+moment its theorem changes shape. See [`blueprint/README.md`](blueprint/README.md).
+
+This is a **draft for discussion** — replacing the appendix is a decision about the paper, so
+it goes through `/writer` too.

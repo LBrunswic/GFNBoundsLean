@@ -34,9 +34,11 @@ the argument consumes, through `Nat.pow_log_le_self` and `Nat.lt_pow_succ_log_se
 ## SCOPE (disclosed)
 
 * The input is `Sharp.sharp_limit`'s conclusion, taken here as the hypothesis `hCbound`; so this
-  file inherits `Sharp.lean`'s one unproved input, `lem:doubling_weight`, and nothing more.
-* `c₆` is delivered existentially, as the paper's is a `max`; it is `c₂(4^α + 2c₃) + c₂ m₃^ϑ`,
-  which is explicit in `c`, `c₂`, `c₃` and `L`, i.e. in the paper's `c, d, λ_1,…,λ_{2m₀}`.
+  file inherits `Sharp.lean`'s one hypothesis, `lem:doubling_weight` in transform form, which
+  `Weight.lean` proves and `SharpFull.lean` discharges.
+* `c₆` is **explicit**: `sharp_rate_explicit` states it as `c₂(4^α + 2c₃) + c₂ m₃^ϑ` with
+  `m₃ = max(1, ⌈L^{1/ϑ}⌉)`, a formula in `c`, `c₂`, `c₃` and `L`, i.e. in the paper's
+  `c, d, λ_1,…,λ_{2m₀}`; `sharp_rate` is the existential reading of it.
 * `ϑ` is explicit and, exactly as the paper says, **not effective**: at `c = 1/2` the proved `ω`
   is `≈ 0.0016` and `ϑ ≈ 0.0024`, against a measured `0.22`. This library reproduces the paper's
   constant, it does not improve it.
@@ -196,15 +198,18 @@ theorem rate_of_large (hL : 20 ≤ L) (hc₂ : 0 < c₂) (hc₃ : 0 ≤ c₃)
   have hbound := hCbound ℓ i m hLℓ hpow_le
   nlinarith [hbound, hgeom, hwt, hc₂]
 
-/-- **`eq:doubling_rate`.** With `ϑ = α/(1+α)` and `α = log₂(1/(1−ω))`, there is an explicit
-`c₆ > 0` with `|λ_m m^{p_*} − C| ≤ c₆ m^{−ϑ}` at every `m ≥ 1`. -/
-theorem sharp_rate (hL : 20 ≤ L) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃)
+/-- **`eq:doubling_rate`, with the constant written out.** With `ϑ = α/(1+α)`,
+`α = log₂(1/(1−ω))` and `m₃ = max(1, ⌈L^{1/ϑ}⌉)`,
+`|λ_m m^{p_*} − C| ≤ (c₂(4^α + 2c₃) + c₂ m₃^ϑ) m^{−ϑ}` at every `m ≥ 1`. -/
+theorem sharp_rate_explicit (hL : 20 ≤ L) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃)
     (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂)
     (hC1 : c₁ ≤ C) (hC2 : C ≤ c₂)
     (hCbound : ∀ ℓ i m : ℕ, L ≤ ℓ → 2 ^ i * ℓ ≤ m →
       |D.uu lam m - C| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)) :
-    ∃ c₆ : ℝ, 0 < c₆ ∧
-      ∀ m : ℕ, 1 ≤ m → |D.uu lam m - C| ≤ c₆ * (m : ℝ) ^ (-D.vartheta) := by
+    ∀ m : ℕ, 1 ≤ m → |D.uu lam m - C|
+      ≤ (c₂ * (4 ^ D.alph + 2 * c₃)
+          + c₂ * ((max 1 ⌈(L : ℝ) ^ (1 / D.vartheta)⌉₊ : ℕ) : ℝ) ^ D.vartheta)
+        * (m : ℝ) ^ (-D.vartheta) := by
   have hϑ0 : 0 < D.vartheta := D.vartheta_pos
   have hα : 0 < D.alph := D.alph_pos
   have hc₂ : 0 < c₂ := lt_of_lt_of_le hc₁ (le_trans (hbd 1 le_rfl).1 (hbd 1 le_rfl).2)
@@ -213,56 +218,71 @@ theorem sharp_rate (hL : 20 ≤ L) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃)
   have hMR : (1 : ℝ) ≤ (M : ℝ) := by exact_mod_cast hM1
   have hMpos : (0 : ℝ) < (M : ℝ) := by linarith
   have hMϑpos : (0 : ℝ) < (M : ℝ) ^ D.vartheta := Real.rpow_pos_of_pos hMpos _
-  refine ⟨c₂ * (4 ^ D.alph + 2 * c₃) + c₂ * (M : ℝ) ^ D.vartheta, ?_, ?_⟩
-  · have h4 : (0 : ℝ) < (4 : ℝ) ^ D.alph := Real.rpow_pos_of_pos (by norm_num) _
-    nlinarith [hc₂, hc₃, hMϑpos, h4]
-  · intro m hm1
-    have hmR : (1 : ℝ) ≤ (m : ℝ) := by exact_mod_cast hm1
-    have hmpos : (0 : ℝ) < (m : ℝ) := by linarith
-    have hmneg : (0 : ℝ) < (m : ℝ) ^ (-D.vartheta) := Real.rpow_pos_of_pos hmpos _
-    have h4 : (0 : ℝ) < (4 : ℝ) ^ D.alph := Real.rpow_pos_of_pos (by norm_num) _
-    by_cases hMm : M ≤ m
-    · -- the large range
-      have hmL : (L : ℝ) ≤ (m : ℝ) ^ D.vartheta := by
-        have hceil : ⌈(L : ℝ) ^ (1 / D.vartheta)⌉₊ ≤ m := le_trans (le_max_right _ _) hMm
-        have hx : (L : ℝ) ^ (1 / D.vartheta) ≤ (m : ℝ) := Nat.ceil_le.mp hceil
-        have hLnn : (0 : ℝ) ≤ (L : ℝ) := by positivity
-        have hpow : ((L : ℝ) ^ (1 / D.vartheta)) ^ D.vartheta = (L : ℝ) := by
-          rw [← Real.rpow_mul hLnn, one_div, inv_mul_cancel₀ hϑ0.ne', Real.rpow_one]
-        calc (L : ℝ) = ((L : ℝ) ^ (1 / D.vartheta)) ^ D.vartheta := hpow.symm
-          _ ≤ (m : ℝ) ^ D.vartheta := Real.rpow_le_rpow (Real.rpow_nonneg hLnn _) hx hϑ0.le
-      have hmain := D.rate_of_large hL hc₂ hc₃ hCbound hm1 hmL
-      have hle : c₂ * (4 ^ D.alph + 2 * c₃)
-          ≤ c₂ * (4 ^ D.alph + 2 * c₃) + c₂ * (M : ℝ) ^ D.vartheta := by
-        linarith [mul_nonneg hc₂.le hMϑpos.le]
-      exact le_trans hmain (mul_le_mul_of_nonneg_right hle hmneg.le)
-    · -- the finite range `1 ≤ m < M`
-      have hmM : (m : ℝ) ≤ (M : ℝ) := by
-        have : m ≤ M := by omega
-        exact_mod_cast this
-      have hsmall : |D.uu lam m - C| ≤ c₂ := by
-        obtain ⟨h1, h2⟩ := hbd m hm1
-        rw [abs_le]
-        constructor <;> linarith
-      have hmϑ : (m : ℝ) ^ D.vartheta ≤ (M : ℝ) ^ D.vartheta :=
-        Real.rpow_le_rpow (by positivity) hmM hϑ0.le
-      have hmϑpos : (0 : ℝ) < (m : ℝ) ^ D.vartheta := Real.rpow_pos_of_pos hmpos _
-      have hkey : 1 ≤ (M : ℝ) ^ D.vartheta * (m : ℝ) ^ (-D.vartheta) := by
-        rw [Real.rpow_neg hmpos.le]
-        have hcancel : (m : ℝ) ^ D.vartheta * ((m : ℝ) ^ D.vartheta)⁻¹ = 1 :=
-          mul_inv_cancel₀ hmϑpos.ne'
-        have hmul : (m : ℝ) ^ D.vartheta * ((m : ℝ) ^ D.vartheta)⁻¹
-            ≤ (M : ℝ) ^ D.vartheta * ((m : ℝ) ^ D.vartheta)⁻¹ :=
-          mul_le_mul_of_nonneg_right hmϑ (by positivity)
-        linarith [hmul, hcancel]
-      have h1 : c₂ ≤ c₂ * (M : ℝ) ^ D.vartheta * (m : ℝ) ^ (-D.vartheta) := by
-        nlinarith [mul_le_mul_of_nonneg_left hkey hc₂.le]
-      have hnn : 0 ≤ c₂ * (4 ^ D.alph + 2 * c₃) := by nlinarith [h4, hc₃, hc₂]
-      have h2 : c₂ * (M : ℝ) ^ D.vartheta * (m : ℝ) ^ (-D.vartheta)
-          ≤ (c₂ * (4 ^ D.alph + 2 * c₃) + c₂ * (M : ℝ) ^ D.vartheta)
-            * (m : ℝ) ^ (-D.vartheta) := by
-        nlinarith [hnn, hmneg]
-      linarith [hsmall, h1, h2]
+  intro m hm1
+  have hmR : (1 : ℝ) ≤ (m : ℝ) := by exact_mod_cast hm1
+  have hmpos : (0 : ℝ) < (m : ℝ) := by linarith
+  have hmneg : (0 : ℝ) < (m : ℝ) ^ (-D.vartheta) := Real.rpow_pos_of_pos hmpos _
+  have h4 : (0 : ℝ) < (4 : ℝ) ^ D.alph := Real.rpow_pos_of_pos (by norm_num) _
+  by_cases hMm : M ≤ m
+  · -- the large range
+    have hmL : (L : ℝ) ≤ (m : ℝ) ^ D.vartheta := by
+      have hceil : ⌈(L : ℝ) ^ (1 / D.vartheta)⌉₊ ≤ m := le_trans (le_max_right _ _) hMm
+      have hx : (L : ℝ) ^ (1 / D.vartheta) ≤ (m : ℝ) := Nat.ceil_le.mp hceil
+      have hLnn : (0 : ℝ) ≤ (L : ℝ) := by positivity
+      have hpow : ((L : ℝ) ^ (1 / D.vartheta)) ^ D.vartheta = (L : ℝ) := by
+        rw [← Real.rpow_mul hLnn, one_div, inv_mul_cancel₀ hϑ0.ne', Real.rpow_one]
+      calc (L : ℝ) = ((L : ℝ) ^ (1 / D.vartheta)) ^ D.vartheta := hpow.symm
+        _ ≤ (m : ℝ) ^ D.vartheta := Real.rpow_le_rpow (Real.rpow_nonneg hLnn _) hx hϑ0.le
+    have hmain := D.rate_of_large hL hc₂ hc₃ hCbound hm1 hmL
+    have hle : c₂ * (4 ^ D.alph + 2 * c₃)
+        ≤ c₂ * (4 ^ D.alph + 2 * c₃) + c₂ * (M : ℝ) ^ D.vartheta := by
+      linarith [mul_nonneg hc₂.le hMϑpos.le]
+    exact le_trans hmain (mul_le_mul_of_nonneg_right hle hmneg.le)
+  · -- the finite range `1 ≤ m < M`
+    have hmM : (m : ℝ) ≤ (M : ℝ) := by
+      have : m ≤ M := by omega
+      exact_mod_cast this
+    have hsmall : |D.uu lam m - C| ≤ c₂ := by
+      obtain ⟨h1, h2⟩ := hbd m hm1
+      rw [abs_le]
+      constructor <;> linarith
+    have hmϑ : (m : ℝ) ^ D.vartheta ≤ (M : ℝ) ^ D.vartheta :=
+      Real.rpow_le_rpow (by positivity) hmM hϑ0.le
+    have hmϑpos : (0 : ℝ) < (m : ℝ) ^ D.vartheta := Real.rpow_pos_of_pos hmpos _
+    have hkey : 1 ≤ (M : ℝ) ^ D.vartheta * (m : ℝ) ^ (-D.vartheta) := by
+      rw [Real.rpow_neg hmpos.le]
+      have hcancel : (m : ℝ) ^ D.vartheta * ((m : ℝ) ^ D.vartheta)⁻¹ = 1 :=
+        mul_inv_cancel₀ hmϑpos.ne'
+      have hmul : (m : ℝ) ^ D.vartheta * ((m : ℝ) ^ D.vartheta)⁻¹
+          ≤ (M : ℝ) ^ D.vartheta * ((m : ℝ) ^ D.vartheta)⁻¹ :=
+        mul_le_mul_of_nonneg_right hmϑ (by positivity)
+      linarith [hmul, hcancel]
+    have h1 : c₂ ≤ c₂ * (M : ℝ) ^ D.vartheta * (m : ℝ) ^ (-D.vartheta) := by
+      nlinarith [mul_le_mul_of_nonneg_left hkey hc₂.le]
+    have hnn : 0 ≤ c₂ * (4 ^ D.alph + 2 * c₃) := by nlinarith [h4, hc₃, hc₂]
+    have h2 : c₂ * (M : ℝ) ^ D.vartheta * (m : ℝ) ^ (-D.vartheta)
+        ≤ (c₂ * (4 ^ D.alph + 2 * c₃) + c₂ * (M : ℝ) ^ D.vartheta)
+          * (m : ℝ) ^ (-D.vartheta) := by
+      nlinarith [hnn, hmneg]
+    linarith [hsmall, h1, h2]
+
+/-- **`eq:doubling_rate`.** There is `c₆ > 0` with `|λ_m m^{p_*} − C| ≤ c₆ m^{−ϑ}` at every
+`m ≥ 1`: the existential reading of `sharp_rate_explicit`. -/
+theorem sharp_rate (hL : 20 ≤ L) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃)
+    (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂)
+    (hC1 : c₁ ≤ C) (hC2 : C ≤ c₂)
+    (hCbound : ∀ ℓ i m : ℕ, L ≤ ℓ → 2 ^ i * ℓ ≤ m →
+      |D.uu lam m - C| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)) :
+    ∃ c₆ : ℝ, 0 < c₆ ∧
+      ∀ m : ℕ, 1 ≤ m → |D.uu lam m - C| ≤ c₆ * (m : ℝ) ^ (-D.vartheta) := by
+  have hc₂ : 0 < c₂ := lt_of_lt_of_le hc₁ (le_trans (hbd 1 le_rfl).1 (hbd 1 le_rfl).2)
+  have hMpos : (0 : ℝ) < ((max 1 ⌈(L : ℝ) ^ (1 / D.vartheta)⌉₊ : ℕ) : ℝ) :=
+    Nat.cast_pos.mpr (lt_of_lt_of_le one_pos (le_max_left _ _))
+  have hMϑpos : (0 : ℝ) < ((max 1 ⌈(L : ℝ) ^ (1 / D.vartheta)⌉₊ : ℕ) : ℝ) ^ D.vartheta :=
+    Real.rpow_pos_of_pos hMpos _
+  have h4 : (0 : ℝ) < (4 : ℝ) ^ D.alph := Real.rpow_pos_of_pos (by norm_num) _
+  exact ⟨_, by nlinarith [hc₂, hc₃, hMϑpos, h4],
+    D.sharp_rate_explicit hL hc₁ hc₃ hbd hC1 hC2 hCbound⟩
 
 /-- **`theo:doubling_sharp`, assembled.** The rescaled profile `λ_m m^{p_*}` converges to a limit
 `C ∈ [c₁,c₂]` — this is `eq:doubling_sharp` — and the convergence carries the polynomial rate
@@ -271,7 +291,8 @@ theorem sharp_rate (hL : 20 ≤ L) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃)
 `Decay.cutBal_unique` supplies the remaining clause of the theorem: `C` is determined by `c`, `d`
 and `λ_1,…,λ_d`.
 
-The sole unproved input is `hweight`, which is `lem:doubling_weight`; see `Sharp.lean`. -/
+The input `hweight` is `lem:doubling_weight` in transform form (`Weight.lean`,
+`Decay.weight_bound`); `SharpFull.lean` discharges it. -/
 theorem sharp (hcut : D.CutBal d lam ⊤) (hLd : d < 2 * L) (hL : 20 ≤ L)
     (hLτ : 32 * D.c * D.tau ≤ (L : ℝ)) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃)
     (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂)

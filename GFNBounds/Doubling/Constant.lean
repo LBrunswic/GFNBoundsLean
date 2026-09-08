@@ -21,8 +21,10 @@ is the unique solution with prescribed boundary data, and
 * `extend_congr_high` — the value at `m > d` does not see `λ_j` for `2j ≤ d`, which is the
   mechanism behind `ν_j = 0` there.
 
-**Steps 2 and 3 are not here.** They identify `C = lim λ_m m^{p_*}` as a linear functional and fix
-the signs of its coefficients, and both consume `theo:doubling_sharp`, which is open. What
+**Steps 2 and 3 are `ConstantFunctional.lean`.** They identify `C = lim λ_m m^{p_*}` as a linear
+functional and fix the signs of its coefficients (`Decay.constant_functional`, with the
+coefficients `Decay.nu` defined as differences of limits), consuming `theo:doubling_sharp`
+(`Decay.sharp_of_cutBal`, `SharpFull.lean`). What
 `extend_congr_high` gives is the *independence* half of Step 3, ready for the moment `C` exists:
 if `C` is a function of the sequence, it is a function of `λ_j` for `d/2 < j ≤ d` alone.
 

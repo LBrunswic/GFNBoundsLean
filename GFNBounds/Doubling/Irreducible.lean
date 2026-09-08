@@ -31,14 +31,15 @@ the second sentence of `lem:doubling_irreducible` and removes the one place wher
   `St` remains infinite; the count `K+2` is not formalized, and the claim proved is that `Reach`
   is total on `OnChain`, which is what every consumer uses.
 * `lem:doubling_truncation_irreducible`'s Step 4 — existence and uniqueness of `λ^K`, and
-  `B̂_K < +∞` — is **not** here; it is Perron–Frobenius plus `lem:doubling_operator`(2), and is
-  tracked as open.
+  `B̂_K < +∞` — is not here: the first two are `TruncationStat.lean` (`exists_stat`,
+  `stat_unique`, by finite-dimensional linear algebra rather than Perron–Frobenius) and the last
+  is `OperatorL2.lean` (`Stat.exists_bhat`).
 
 ## Hypothesis checklist
 
 | paper hypothesis | here |
 |---|---|
-| `ε(j) ∈ (0,1)` for `j ≥ 1` | ✓ carried by `Setting` (`eps_pos`, `eps_le`, `epsMax_lt_one`) |
+| `ε(j) ∈ (0,1)` for `j ≥ 1` | ⚠ strengthened: `Setting` carries `sup ε ≤ ε_max < 1` (`eps_pos`, `eps_le`, `epsMax_lt_one`) where the paper needs only pointwise `ε(j) < 1`; the proof uses per-edge positivity alone |
 | the target row is a probability on `{1,…,d}` | ✓ carried (`row_sum`, `row_supp`, `row_nonneg`) |
 | `K ≥ d` | ✓ carried (`hdK`) |
 | `K` even | ✓ carried (`hK`) |

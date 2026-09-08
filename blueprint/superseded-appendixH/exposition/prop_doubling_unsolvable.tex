@@ -1,0 +1,25 @@
+Let $A$ be the restriction of $\mathrm{Id}-P_\star$ to $\ker\Pi$; it maps that Hilbert space
+into itself, since $\Pi P_\star=\Pi$, and its range is
+$(\mathrm{Id}-P_\star)L^2(\lambda)$ because $(\mathrm{Id}-P_\star)\Pi=0$. The hypotheses make
+the loop closure irreducible, so by Lemma~\ref{lem:doubling_fixed_points} the only fixed points
+of $P_\star$ and of $P$ in $L^2(\lambda)$ are the constants.
+
+\emph{$A$ is injective with dense range.} $\ker A$ consists of the mean-zero fixed points of
+$P_\star$, hence is $\{0\}$. For $f,g\in\ker\Pi$ one has
+$\langle Af,g\rangle_\lambda=\langle f,(\mathrm{Id}-P)g\rangle_\lambda$ by $P_\star=P^*$, and
+$(\mathrm{Id}-P)g$ again lies in $\ker\Pi$, so the adjoint of $A$ inside $\ker\Pi$ is the
+restriction of $\mathrm{Id}-P$; its kernel is $\{0\}$ for the same reason, and the closure of
+the range of $A$ is $(\ker A^*)^{\perp}=\ker\Pi$.
+
+\emph{$A$ is not surjective.} Theorem~\ref{theo:doubling_unbounded}\emph{(2)} at $p=2$ makes
+the infimum of $\|Af\|_{L^2(\lambda)}$ over unit $f\in\ker\Pi$ equal to $0$. Were $A$
+surjective it would be a bounded bijection of $\ker\Pi$, hence boundedly invertible by the open
+mapping theorem, and $\|f\|\leq\|A^{-1}\|\,\|Af\|$ would contradict that infimum. With the
+density just proved this is \emph{(1)}.
+
+\emph{The pair of densities.} Fix $\psi\in\ker\Pi$ outside the range of $A$ and put
+$Z:=1+\lambda(\psi^{+})=1+\lambda(\psi^{-})$. Then $\finit:=(\mathbf 1+\psi^{-})/Z$ and
+$\fterm:=(\mathbf 1+\psi^{+})/Z$ are probability densities in $L^2(\lambda)$ with
+$\finit-\fterm=-\psi/Z$. If $(\mathrm{Id}-P_\star)f=\finit-\fterm$ had a solution, then
+$A(f-\Pi f)=-\psi/Z$ with $f-\Pi f\in\ker\Pi$ would put $\psi$ in the range of $A$; no such $f$
+exists, which is \emph{(2)}.

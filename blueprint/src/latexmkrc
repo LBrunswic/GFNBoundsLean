@@ -1,0 +1,5 @@
+# latexmk settings for the pdf version.  lualatex, not xelatex: the Lean code
+# blocks need luaotfload's font fallback (see macros/print.tex).
+$pdf_mode = 1;
+$pdflatex = 'lualatex -synctex=1 %O %S';
+@default_files = ('print.tex');

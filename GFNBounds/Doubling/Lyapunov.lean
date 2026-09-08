@@ -43,8 +43,9 @@ The one-step conditional expectation `E(f(X₁) | X₀ = j)` is `pstar S cap f (
   drift of the test function at `m` has the required sign", which is precisely the hypothesis
   Foster's criterion and the transience criterion consume. Steps 1, 5 and 7 are elsewhere:
   Step 1 is `lem:doubling_irreducible` (`Irreducible.lean`), Step 5 is
-  `lem:doubling_supersolution` (`Supersolution.lean`), and Step 7 needs optional stopping
-  (`prop:doubling_length`, open).
+  `lem:doubling_supersolution` (`Supersolution.lean`), and Step 7 is `prop:doubling_length`
+  (`Length.lean`, `hitExp_iSup_eq`, proved by an explicit weight domination rather than optional
+  stopping).
 * **Step 2 is proved in an effective form, and it is stronger than the paper's.** The paper's
   `Ξ_t` is non-effective ("a constant depending on `t` alone"). Here `Ξ_t = max(3t/2 + C_t/4, C_t)`
   with `C_t = 2t + 4t²`, valid at every ladder `m` with `4t ≤ m+1`; that side condition is the

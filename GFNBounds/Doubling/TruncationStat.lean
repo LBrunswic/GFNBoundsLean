@@ -44,9 +44,9 @@ library builds no chain. It does not need one: at a finite cap the statement is 
 
 ## SCOPE (disclosed)
 
-* **`B̂_K < +∞` is not proved here.** It is the second sentence of Step 4 and needs
-  `lem:doubling_operator`(2) — the `L^p` layer with its adjoint, the library's obstruction 2. Only
-  the first sentence, the invariant probability, is closed.
+* **`B̂_K < +∞` is not proved here.** It is the second sentence of Step 4 and is
+  `Stat.exists_bhat` in `OperatorL2.lean`, through `lem:doubling_operator`(2). This file closes
+  the first sentence, the invariant probability.
 * ⚠ **Existence needs less than the paper's hypotheses**: `exists_preStat` uses only `d ≤ K`, not
   the parity of `K`. Parity enters through `reach_all_some`, hence only in the *positivity* and
   *uniqueness* halves (`exists_stat`, `stat_unique`). This is a strengthening, disclosed rather
@@ -65,7 +65,7 @@ library builds no chain. It does not need one: at a finite cap the statement is 
 
 | paper hypothesis | here |
 |---|---|
-| `ε(j) ∈ (0,1)` for every `j ≥ 1` | ✓ carried (in `Setting`) |
+| `ε(j) ∈ (0,1)` for every `j ≥ 1` | ⚠ strengthened: `Setting` carries `sup ε ≤ ε_max < 1`; only pointwise positivity is used |
 | the target row is a probability on `{1,…,d}` | ✓ carried (in `Setting`) |
 | `K ≥ d` | ✓ carried (`hdK`), and it is what closes the state set |
 | `K` even | ✓ carried (`hK`) for positivity and uniqueness; ⚠ **not needed** for existence |
@@ -78,7 +78,7 @@ library builds no chain. It does not need one: at a finite cap the statement is 
 | `λ^K` exists | `exists_preStat`, `exists_stat`, `truncStat` |
 | `λ^K` is unique | `stat_unique` |
 | `λ^K` is positive at every state | `Stat.pos` of `exists_stat`, via `PreStat.toStatSome` |
-| `B̂_K < +∞` | ✗ not proved; needs `lem:doubling_operator`(2) |
+| `B̂_K < +∞` | ✓ `Stat.exists_bhat` (`OperatorL2.lean`) |
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

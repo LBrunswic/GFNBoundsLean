@@ -16,23 +16,24 @@ import GFNBounds.Doubling.Unbounded
 `c₁ m λ_m ≤ c₂(p−1) L(m)` (`Decay.tail_ratio_ge`, from `eq:doubling_decay`) meets
 `‖(Id−P⋆)f_m‖² ≤ 2λ_m` and `‖f_m‖² = L(1−L)` (`lem:doubling_percut`), and `1 − L(m) ≥ ½` past
 `m₂` (`Stat.tailMass_tendsto_zero`). The two-sided decay `eq:doubling_decay` itself is a
-hypothesis here — `theo:doubling_decay` supplies it from `Descent.lean` once
-`lem:doubling_product` is proved, and until then this corollary is conditional on the pair
-`(c₁,c₂)` exactly as the paper's is conditional on `theo:doubling_decay`.
+hypothesis here, so `exists_rayleigh_family` is conditional on the pair `(c₁,c₂)`;
+`theo:doubling_decay` supplies it unconditionally (`Decay.decay_two_sided_of_cutBal`,
+`Product.lean`), and `main_rate` in `Main.lean` is the corollary with that hypothesis
+discharged — the paper's unconditional statement.
 
 ## SCOPE (disclosed)
 
 * Stated in the **squared, denominator-free** form `c₁ m ‖(Id−P⋆)f_m‖² ≤ 4c₂(p−1) ‖f_m‖²`, which
   is `eq:doubling_explicit` squared and cleared: `c₇ = √(c₁/(4c₂(p−1)))`. The square root is not
   taken, so no positivity side condition on the denominator is needed at the point of use.
-* Positive recurrence is the hypothesis `Stat S none`, not a conclusion: it is
-  `prop:doubling_phase`, which is open.
+* Positive recurrence is the hypothesis `Stat S none`, not a conclusion: `prop:doubling_phase`
+  row (b) supplies it (`exists_stat_of_family`, `StatExists.lean`).
 
 ## Hypothesis checklist against `cor:doubling_family`
 
 | paper hypothesis | here |
 |---|---|
-| `s = 1`, `0 < c < 1` | ✓ carried (`Decay`, and `heps` tying it to the `Setting`) |
+| `s = 1`, `0 < c < 1` | ⚠ weakened: `D : Decay` supplies only `p`; no `heps` ties `S.eps` to the family, so the statement holds for every `Setting` and every `λ` with the two-sided decay |
 | positive recurrence, `λ` | ✓ carried as `Stat S none` |
 | `eq:doubling_decay` with `0 < c₁ ≤ c₂` | ✓ carried as hypotheses (`theo:doubling_decay` is its source) |
 | `m ≥ m₂ > d` | ✓ carried |

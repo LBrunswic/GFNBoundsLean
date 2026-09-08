@@ -18,9 +18,9 @@ Lean statement:
   to `f²` without an integrability side condition, and every consumer in this library tests
   against bounded functions. A bounded function on a probability space is in `L²`, so this is a
   sub-case of the paper's, not a generalization.
-* Only the `P⋆` half is proved. The `P` half runs through `P⋆ = P*` and the Hilbert-space fact
-  `ker(Id − Q*) ⊆ ker(Id − Q)` for a contraction `Q`, both of which need the `Lp` layer and
-  `lem:doubling_operator`(1); the density action `P` is not modelled at all.
+* Only the `P⋆` half is proved *in this file*. Both halves at the paper's hypothesis
+  `f ∈ L²(λ)` are `Stat.ker_eq_const` in `FixedPointsP.lean`, with the density action `P`
+  modelled as `Stat.dens` (`Adjoint.lean`); this file stays as the elementary route.
 
 The proof is the paper's: Jensen for the one-step law and the strictly convex `t ↦ t²` gives
 `(P⋆f)² ≤ P⋆(f²)` pointwise, invariance makes the `λ`-integral of the gap vanish, positivity of

@@ -1,0 +1,23 @@
+\emph{The space and its coordinates.} At $m>d$ one has $\varepsilon(m)\leq c/2<1$, so
+\eqref{eq:doubling_cut} divides into $\lambda_m=\sum_{j\in W(m)}q_m(j)\lambda_j$ with $q_m>0$
+and every index of $W(m)$ smaller than $m$. That identity is linear, so the sequences
+satisfying it at every $m>d$ form a real vector space, and by induction it determines the whole
+sequence from $\lambda_1,\dots,\lambda_d$: restriction to the first $d$ coordinates is a
+linear isomorphism onto $\mathbb R^{d}$. The same induction, $q_m$ being positive, identifies
+the positive sequences with the open positive orthant.
+
+\emph{Linearity of $C$.} Each $\lambda\mapsto\lambda_m\,m^{p_*}$ is a linear functional of
+$(\lambda_1,\dots,\lambda_d)$, and on the positive cone
+Theorem~\ref{theo:doubling_sharp} makes their limit $C$ exist; additivity and positive
+homogeneity therefore pass to $C$ on that cone. The cone being open and non-empty, every
+element of the space is a difference of two of its elements, so $C$ extends unambiguously to a
+linear functional on the whole space, and \eqref{eq:doubling_constant} is that functional
+written in the coordinates $\lambda_1,\dots,\lambda_d$.
+
+\emph{The signs.} At $\lambda_1=\dots=\lambda_d=1$ the identity reads $\sum_j\nu_j=C$, which is
+positive because Theorem~\ref{theo:doubling_decay} confines $C$ to $[c_1,c_2]$ with $c_1>0$.
+Fixing $j$ and letting $\lambda_j=t$ with the other coordinates $1$ makes $C$ an affine
+function of $t$, positive at every $t>0$ by the same two theorems; an affine function of
+negative slope is eventually negative, so $\nu_j\geq0$. Finally if $2j\leq d$ then every index
+of every window $W(m)$ with $m>d$ exceeds $d/2\geq j$, so the induction never reads
+$\lambda_j$: neither $\lambda_m$ for $m>d$ nor $C$ depends on it, and $\nu_j=0$.

@@ -1,9 +1,28 @@
 # GFNBoundsLean — standing rules
 
-A Lean 4 / Mathlib formalization of **Appendix H** of *Universality and Convergence of Generative
-Flows*: the doubling-graph counter-example of `app_doubling.tex`. Read `README.md` for what the
-project is and where it stands. This file is what binds every session, master and sub-session
-alike.
+A Lean 4 / Mathlib formalization of the **proofs** of *Universality and Convergence of Generative
+Flows* — **Appendices A, B and H**. Read `README.md` for what the project is and where it stands.
+This file is what binds every session, master and sub-session alike.
+
+| appendix | source `.tex` | Lean namespace |
+|---|---|---|
+| **A** — the paper's proofs | `proofs.tex` | `GFNBounds.Core`, `GFNBounds.Graph` |
+| **B** — the Silva comparison | `silva_comparison.tex` | `GFNBounds.Silva` |
+| **H** — the doubling graph | `app_doubling.tex` | `GFNBounds.Doubling` |
+
+**Appendices C–G are not in scope.** The library began as Appendix H alone and was widened to A
+and B on 2026-09-08 at the author's instruction; where a file, a script or a docstring still says
+"Appendix H" as if it were the whole charter, that is a leftover and may be corrected.
+
+**A gap in traceability, named rather than papered over.** `scripts/paper.py`'s `SOURCES` lists
+the three appendix files, so `trace_check`'s invariant (c) polices exactly the labels defined in
+them. A handful of labels the library certifies live in the **body** instead — `def:universality`
+(`universality.tex:10`) is the one that matters, since `theo:universality_L2_full` is the theorem
+*about* it. Those are **not** in `paper-map.json` and (c) does not fire on them. They are tracked
+on the paper side, by `FORMALIZATION-LEDGER.md`, which covers all 129 statements of the document
+and cross-checks against this map (`formalization_ledger.py check`). Adding `universality.tex`
+here would widen the charter past what the author asked for, so the split is deliberate: the map
+is the appendices, the ledger is the paper.
 
 ## Orientation, in reading order
 
@@ -16,8 +35,15 @@ alike.
 | [`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md) | Every open `sorry`, keyed and justified. Generated. |
 | `paper-map.json` | The traceability spine: label → tex span → LaTeX digest → Lean files and declarations → status, bucket, scope notes. |
 
-The paper is at `/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex`. **Nothing here edits it.**
-If formalizing forces a change to the draft, that change goes through `/writer`.
+The paper is at `/home/maxbrain/Dropbox/GFN Bounds/`; the three files in scope are
+`proofs.tex`, `silva_comparison.tex` and `app_doubling.tex`. **Nothing here edits them.** If
+formalizing forces a change to the draft, that change goes through `/writer`.
+
+The whole-paper ledger — all 129 statements with natural-language status, Lean status and the
+dependency DAG — is on the paper side at `FORMALIZATION-LEDGER.md` (generator
+`formalization_ledger.py`, machine twin `formalization-ledger.json`). It reads `paper-map.json`
+and never writes it. Use it to pick the next target: `python3 formalization_ledger.py ready`
+lists what is unformalized and has every dependency closed.
 
 ## The five rules
 

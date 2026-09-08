@@ -305,6 +305,100 @@ theorem tail_ratio_ge {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam
     _ ≤ c₂ * (D.p - 1) * tailSeq lam m :=
         mul_le_mul_of_nonneg_left hlow (by positivity)
 
+/-- **`eq:doubling_tailratio`, second pair, upper half.** `c₁(p−1) L(m) ≤ c₂ p m λ_m`, the
+denominator-free form of `L(m)/λ_m ≤ c₂ p m/(c₁(p−1))`: the tail bound `tail_bounds` divided by
+`λ_m ≥ c₁ m^{−p}`, with `(p−1) + m ≤ p m` for `m ≥ 1`. -/
+theorem tail_ratio_le {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam)
+    (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j)
+    (habove : ∀ j : ℕ, 1 ≤ j → lam j ≤ c₂ * (j : ℝ) ^ (-D.p))
+    {m : ℕ} (hm : 1 ≤ m) :
+    c₁ * (D.p - 1) * tailSeq lam m ≤ c₂ * D.p * (m : ℝ) * lam m := by
+  have hp := D.p_gt_one
+  have hp0 : 0 < D.p := D.p_pos
+  have hp1 : (0 : ℝ) < D.p - 1 := by linarith
+  have hp1ne : D.p - 1 ≠ 0 := hp1.ne'
+  have hm1R : (1 : ℝ) ≤ (m : ℝ) := by exact_mod_cast hm
+  have hmpos : (0 : ℝ) < (m : ℝ) := by linarith
+  have hmp : (0 : ℝ) < (m : ℝ) ^ (-D.p) := rpow_pos_of_pos hmpos _
+  have hc2 : 0 ≤ c₂ := by
+    have h1 := hbelow 1 le_rfl
+    have h2 := habove 1 le_rfl
+    have hone : ((1 : ℕ) : ℝ) ^ (-D.p) = 1 := by norm_num
+    rw [hone, mul_one] at h1 h2
+    linarith
+  have hup := (D.tail_bounds hsum hc1 hbelow habove hm).2
+  have hlow := hbelow m hm
+  have h1 : (m : ℝ) ^ (1 - D.p) = (m : ℝ) * (m : ℝ) ^ (-D.p) := by
+    rw [show (1 - D.p) = 1 + (-D.p) by ring, rpow_add hmpos, rpow_one]
+  calc c₁ * (D.p - 1) * tailSeq lam m
+      ≤ c₁ * (D.p - 1) * (c₂ * ((m : ℝ) ^ (-D.p) + (m : ℝ) ^ (1 - D.p) / (D.p - 1))) :=
+        mul_le_mul_of_nonneg_left hup (mul_pos hc1 hp1).le
+    _ = c₁ * c₂ * (m : ℝ) ^ (-D.p) * ((D.p - 1) + (m : ℝ)) := by
+        rw [h1]; field_simp
+    _ ≤ c₁ * c₂ * (m : ℝ) ^ (-D.p) * (D.p * (m : ℝ)) := by
+        refine mul_le_mul_of_nonneg_left ?_ (mul_nonneg (mul_nonneg hc1.le hc2) hmp.le)
+        nlinarith [mul_nonneg hp1.le (sub_nonneg.mpr hm1R)]
+    _ = c₂ * D.p * (m : ℝ) * (c₁ * (m : ℝ) ^ (-D.p)) := by ring
+    _ ≤ c₂ * D.p * (m : ℝ) * lam m :=
+        mul_le_mul_of_nonneg_left hlow (mul_nonneg (mul_nonneg hc2 hp0.le) hmpos.le)
+
+/-- **`cor:doubling_tail`, "in particular `L(m) → 0`"**, for the sequence: squeezed between `0`
+and `c₂(m^{−p} + m^{1−p}/(p−1)) → 0`. -/
+theorem tendsto_tailSeq_zero {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam)
+    (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j)
+    (habove : ∀ j : ℕ, 1 ≤ j → lam j ≤ c₂ * (j : ℝ) ^ (-D.p)) :
+    Tendsto (tailSeq lam) atTop (𝓝 0) := by
+  have hp := D.p_gt_one
+  have hp0 : 0 < D.p := D.p_pos
+  have hp1 : (0 : ℝ) < D.p - 1 := by linarith
+  have h1 : Tendsto (fun m : ℕ => (m : ℝ) ^ (-D.p)) atTop (𝓝 0) := by
+    have := (tendsto_rpow_neg_atTop hp0).comp tendsto_natCast_atTop_atTop
+    refine this.congr fun m => ?_
+    simp only [Function.comp_apply]
+  have h2 : Tendsto (fun m : ℕ => (m : ℝ) ^ (1 - D.p)) atTop (𝓝 0) := by
+    have := (tendsto_rpow_neg_atTop hp1).comp tendsto_natCast_atTop_atTop
+    refine this.congr fun m => ?_
+    simp only [Function.comp_apply]
+    congr 1; ring
+  have hup : Tendsto (fun m : ℕ => c₂ * ((m : ℝ) ^ (-D.p) + (m : ℝ) ^ (1 - D.p) / (D.p - 1)))
+      atTop (𝓝 0) := by
+    have := (h1.add (h2.div_const (D.p - 1))).const_mul c₂
+    simpa using this
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hup ?_ ?_
+  · filter_upwards [eventually_ge_atTop 1] with m hm
+    have hmpos : (0 : ℝ) < (m : ℝ) := by exact_mod_cast hm
+    exact le_trans (mul_nonneg hc1.le (div_nonneg (rpow_nonneg hmpos.le _) hp1.le))
+      (D.tail_bounds hsum hc1 hbelow habove hm).1
+  · filter_upwards [eventually_ge_atTop 1] with m hm
+    exact (D.tail_bounds hsum hc1 hbelow habove hm).2
+
+/-- **`cor:doubling_tail`, "in particular `L(m)/λ_m → +∞`"**, for the sequence: the ratio
+dominates `c₁ m/(c₂(p−1))` (`tail_ratio_ge`). -/
+theorem tendsto_tail_ratio_atTop {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam)
+    (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j)
+    (habove : ∀ j : ℕ, 1 ≤ j → lam j ≤ c₂ * (j : ℝ) ^ (-D.p)) :
+    Tendsto (fun m : ℕ => tailSeq lam m / lam m) atTop atTop := by
+  have hp := D.p_gt_one
+  have hp1 : (0 : ℝ) < D.p - 1 := by linarith
+  have hc2 : 0 < c₂ := by
+    have h1 := hbelow 1 le_rfl
+    have h2 := habove 1 le_rfl
+    have hone : ((1 : ℕ) : ℝ) ^ (-D.p) = 1 := by norm_num
+    rw [hone, mul_one] at h1 h2
+    linarith
+  have hlam : ∀ m : ℕ, 1 ≤ m → 0 < lam m := fun m hm =>
+    lt_of_lt_of_le (mul_pos hc1 (rpow_pos_of_pos (by exact_mod_cast hm) _)) (hbelow m hm)
+  have hlin : Tendsto (fun m : ℕ => c₁ / (c₂ * (D.p - 1)) * (m : ℝ)) atTop atTop :=
+    tendsto_natCast_atTop_atTop.const_mul_atTop (div_pos hc1 (mul_pos hc2 hp1))
+  refine tendsto_atTop_mono' atTop ?_ hlin
+  filter_upwards [eventually_ge_atTop 1] with m hm
+  have h := D.tail_ratio_ge hsum hc1 hbelow habove hm
+  rw [le_div_iff₀ (hlam m hm)]
+  have hrw : c₁ / (c₂ * (D.p - 1)) * (m : ℝ) * lam m
+      = c₁ * (m : ℝ) * lam m / (c₂ * (D.p - 1)) := by ring
+  rw [hrw, div_le_iff₀ (mul_pos hc2 hp1), mul_comm (tailSeq lam m)]
+  exact h
+
 /-! ## `cor:doubling_tail_sharp`, quantitatively -/
 
 /-- **`eq:doubling_tail_sharp`, first line, in explicit form.** If the rescaled profile is within
@@ -312,9 +406,8 @@ theorem tail_ratio_ge {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam
 of `C` at every `m ≥ m₀`.
 
 This is the corollary's content with the limit unwound: the paper's `t → 0` argument is the
-statement read at every `t`, and it converts to `L(m) = C m^{1−p_*}(1+o(1))/(p_*−1)` as soon as
-`theo:doubling_sharp` supplies the limit. It is stated this way because the limit is open and the
-inequality is not. -/
+statement read at every `t`. `tendsto_tail_sharp` below performs that conversion, and
+`theo:doubling_sharp` (`Decay.sharp_of_cutBal`, `SharpFull.lean`) supplies the limit it needs. -/
 theorem tail_sharp {lam : ℕ → ℝ} {C t : ℝ} (hsum : Summable lam) {m₀ m : ℕ}
     (hm : m₀ ≤ m) (hm1 : 1 ≤ m)
     (hclose : ∀ j : ℕ, m₀ ≤ j → |lam j * (j : ℝ) ^ D.p - C| ≤ t) :
@@ -417,6 +510,70 @@ theorem tail_sharp {lam : ℕ → ℝ} {C t : ℝ} (hsum : Summable lam) {m₀ m
     _ ≤ |W * (tailSeq lam m - C * P)| + |C * (W * P - 1)| := abs_add_le _ _
     _ ≤ t * (1 + (D.p - 1) / (m : ℝ)) + |C| * ((D.p - 1) / (m : ℝ)) := by
         linarith [hb1, hb2, hb3]
+
+/-- **`eq:doubling_tail_sharp`, first line, as a limit.** If the rescaled profile `λ_j j^{p_*}`
+converges to `C`, then `(p_*−1) m^{p_*−1} L(m) → C`, i.e. `L(m) = C m^{1−p_*}(1+o(1))/(p_*−1)`.
+This is `tail_sharp` read at every `t > 0`; `theo:doubling_sharp` supplies the hypothesis. -/
+theorem tendsto_tail_sharp {lam : ℕ → ℝ} {C : ℝ} (hsum : Summable lam)
+    (hlim : Tendsto (fun j : ℕ => lam j * (j : ℝ) ^ D.p) atTop (𝓝 C)) :
+    Tendsto (fun m : ℕ => (D.p - 1) * (m : ℝ) ^ (D.p - 1) * tailSeq lam m) atTop (𝓝 C) := by
+  have hp1 : (0 : ℝ) < D.p - 1 := by linarith [D.p_gt_one]
+  rw [Metric.tendsto_atTop]
+  intro ε hε
+  have hε4 : (0 : ℝ) < ε / 4 := by positivity
+  obtain ⟨m₀, hm₀⟩ := (Metric.tendsto_atTop.mp hlim) (ε / 4) hε4
+  obtain ⟨M, hM⟩ := exists_nat_gt (max (D.p - 1) (4 * (|C| * (D.p - 1)) / ε))
+  refine ⟨max (max m₀ M) 1, fun m hm => ?_⟩
+  have hm₀m : m₀ ≤ m := le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) hm
+  have hMm : M ≤ m := le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) hm
+  have hm1 : 1 ≤ m := le_trans (le_max_right _ _) hm
+  have hmpos : (0 : ℝ) < (m : ℝ) := by exact_mod_cast hm1
+  have hMr : (M : ℝ) ≤ (m : ℝ) := by exact_mod_cast hMm
+  have hclose : ∀ j : ℕ, m₀ ≤ j → |lam j * (j : ℝ) ^ D.p - C| ≤ ε / 4 := by
+    intro j hj
+    have := hm₀ j hj
+    rw [Real.dist_eq] at this
+    exact this.le
+  have hbound := D.tail_sharp hsum hm₀m hm1 hclose
+  have hA : (D.p - 1) / (m : ℝ) ≤ 1 := by
+    rw [div_le_one hmpos]
+    have h1 : D.p - 1 < (M : ℝ) := lt_of_le_of_lt (le_max_left _ _) hM
+    linarith
+  have hB : |C| * ((D.p - 1) / (m : ℝ)) ≤ ε / 4 := by
+    have h1 : 4 * (|C| * (D.p - 1)) / ε < (M : ℝ) := lt_of_le_of_lt (le_max_right _ _) hM
+    have h2 : 4 * (|C| * (D.p - 1)) / ε < (m : ℝ) := lt_of_lt_of_le h1 hMr
+    rw [div_lt_iff₀ hε] at h2
+    have h3 : ε / 4 * (m : ℝ) = (m : ℝ) * ε / 4 := by ring
+    rw [← mul_div_assoc, div_le_iff₀ hmpos, h3]
+    linarith
+  rw [Real.dist_eq]
+  calc |(D.p - 1) * (m : ℝ) ^ (D.p - 1) * tailSeq lam m - C|
+      ≤ ε / 4 * (1 + (D.p - 1) / (m : ℝ)) + |C| * ((D.p - 1) / (m : ℝ)) := hbound
+    _ ≤ ε / 4 * (1 + 1) + ε / 4 :=
+        add_le_add (mul_le_mul_of_nonneg_left (by linarith) hε4.le) hB
+    _ < ε := by linarith
+
+/-- **`eq:doubling_tail_sharp`, second line.** If `λ_j j^{p_*} → C > 0` then
+`(p_*−1) L(m)/(m λ_m) → 1`, i.e. `L(m)/λ_m = m(1+o(1))/(p_*−1)`: the first line divided by the
+profile. -/
+theorem tendsto_tail_ratio_sharp {lam : ℕ → ℝ} {C : ℝ} (hsum : Summable lam) (hC : 0 < C)
+    (hpos : ∀ m : ℕ, 1 ≤ m → 0 < lam m)
+    (hlim : Tendsto (fun j : ℕ => lam j * (j : ℝ) ^ D.p) atTop (𝓝 C)) :
+    Tendsto (fun m : ℕ => (D.p - 1) * tailSeq lam m / ((m : ℝ) * lam m)) atTop (𝓝 1) := by
+  have h1 := D.tendsto_tail_sharp hsum hlim
+  have h2 := h1.div hlim hC.ne'
+  rw [div_self hC.ne'] at h2
+  refine h2.congr' ?_
+  filter_upwards [eventually_ge_atTop 1] with m hm
+  have hmpos : (0 : ℝ) < (m : ℝ) := by exact_mod_cast hm
+  have hsplit : (m : ℝ) ^ D.p = (m : ℝ) ^ (D.p - 1) * (m : ℝ) := by
+    rw [← rpow_add_one hmpos.ne', sub_add_cancel]
+  have hne1 : (m : ℝ) ^ (D.p - 1) ≠ 0 := (rpow_pos_of_pos hmpos _).ne'
+  have hne2 : lam m ≠ 0 := (hpos m hm).ne'
+  have hne3 : (m : ℝ) ≠ 0 := hmpos.ne'
+  simp only [Pi.div_apply]
+  rw [hsplit]
+  field_simp
 
 end Decay
 

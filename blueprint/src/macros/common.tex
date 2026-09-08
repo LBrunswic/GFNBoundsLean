@@ -1,0 +1,44 @@
+% ---------------------------------------------------------------------------
+% blueprint/src/macros/common.tex --- macros used by BOTH the pdf and the web
+% version. The content of the appendix is generated into content.tex by
+% scripts/blueprint.py; this file is hand-written.
+% ---------------------------------------------------------------------------
+
+% --- theorem environments -------------------------------------------------
+% One shared counter, never reset, so the numbering matches between pdf and web.
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---------------------------------------------------------------------------
+% The paper's notation, vendored from the notation file it is defined in.
+% Only the macros this appendix uses are copied.
+% ---------------------------------------------------------------------------
+\def\BackwardPolicy{\pi_{\leftarrow}}
+\def\ForwardPolicy{\pi_{\rightarrow}}
+\def\Statespace{\mathcal S}
+\def\Finit{F_{\mathrm{init}}}
+\def\Fterm{F_{\mathrm{term}}}
+\def\finit{f_{\mathrm{init}}}
+\def\fterm{f_{\mathrm{term}}}
+\def\foutstareta{f^{*,\eta}_{\rightarrow}}
+\def\nuB{\nu_{\mathrm{B}}}
+\def\target{\kappa}
+\def\TV{\mathrm{TV}}
+\def\KL{\mathrm{KL}}
+\def\LossWKLFM{\mathcal L_{\mathrm{KL-wFM}}}
+
+% --- references that leave this appendix -----------------------------------
+% This appendix cites twenty-two labels defined elsewhere in the paper. The
+% standalone build names them; spliced back in, they become ordinary
+% cross-references again.
+\newcommand{\extref}[1]{\emph{#1}}
+
+% A named declaration of the development. The sketches cite these; the index in the closing
+% subsection resolves them.
+\newcommand{\leanref}[1]{\texttt{\small #1}}

@@ -1,0 +1,19 @@
+Every state visited before the exit is $\geq2\ell$, so $|b(Y_n)|\leq H/(2\ell)\leq\gamma^2/12$
+and every factor of the product lies in $[\tfrac12,\tfrac32]$. Write
+$\Psi(z):=\mathbb E\bigl(\prod_{n<N_\ell}(1+b(Y_n))\mid Y_0=z\bigr)$ and let $\varphi_i$ and
+$\underline\varphi_i$ be its supremum and infimum over the dyadic block $I_i(\ell)$, so that
+$\varphi_0=\underline\varphi_0=1$, the product being empty there.
+
+Fix $i\geq1$ and let $\varsigma$ be the exit time of $I_i(\ell)$. By
+Lemma~\ref{lem:doubling_descent}\emph{(1)} the exit lands in $I_{i-1}(\ell)$ and
+$\varsigma\leq N_\ell$, so the factors being positive the strong Markov property at $\varsigma$
+gives $\Psi(z)=\mathbb E\bigl(\prod_{n<\varsigma}(1+b(Y_n))\,\Psi(Y_\varsigma)\mid Y_0=z\bigr)$.
+On $I_i(\ell)$ one has $|b|\leq H2^{-i}/\ell$, so with $\zeta_i:=1+H2^{-i}/\ell$ the
+exponential-moment bound of \eqref{eq:doubling_sojourn} gives
+$\varphi_i\leq\varphi_{i-1}\bigl(1+c_5H2^{-i}/\ell\bigr)$, and summing the geometric series
+over $i$ leaves $\varphi_i\leq e^{c_5H/\ell}$. In the other direction
+$(1-x)^{\varsigma}\geq1-\varsigma x$ and the mean bound of \eqref{eq:doubling_sojourn} give
+$\underline\varphi_i\geq\underline\varphi_{i-1}\bigl(1-2H2^{-i}/(\gamma^2\ell)\bigr)$, and
+$1-x\geq e^{-2x}$ on $[0,\tfrac12]$ turns the product into $e^{-c_5H/\ell}$. The starting
+state $m\geq2\ell$ lies in some $I_i(\ell)$, so $\Psi(m)$ lies between the two, which is
+\eqref{eq:doubling_product}.

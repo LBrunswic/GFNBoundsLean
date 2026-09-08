@@ -53,11 +53,11 @@ from `MeasureTheory.L2.inner_def`, `MeasureTheory.L2.integrable_inner` and
   not proved.
 * **This settles the adjoint clause of item (1) and no more.** Item (1)'s contraction clause is
   `Stat.eLpNorm_pstar_le_of_memLp` (`LpContraction.lean`), item (2) is `OperatorFinite.lean`
-  *modulo* a finite-dimensionality instance on `Lp ℝ 2 μ` that is **still not built**, and item (3)
-  is `Operator.lean`. In particular `B̂_K < +∞` of `lem:doubling_truncation_irreducible` Step 4 is
-  **not** closed here: the intertwining hypotheses `Pi * P = Pi`, `P * Pi = Pi`, `Pi * Pi = Pi` and
-  the kernel hypothesis `hker` that `OperatorFinite.exists_resolvent` consumes are all supplied
-  below, and `FiniteDimensional ℝ (Lp ℝ 2 μ)` at `cap = some K` is the one remaining gap.
+  instantiated in `OperatorL2.lean` (`Stat.exists_diffusionOp`, with `FiniteDimensional ℝ
+  (Lp ℝ 2 μ)` at `cap = some K` proved there), and item (3) is `Operator.lean`. `B̂_K < +∞` of
+  `lem:doubling_truncation_irreducible` Step 4 is `Stat.exists_bhat` (`OperatorL2.lean`); the
+  intertwining hypotheses `Pi * P = Pi`, `P * Pi = Pi`, `Pi * Pi = Pi` it consumes are supplied
+  below.
 * **`β̂ₙ` is defined from `P`, as in the paper**, and the theorem is that `P⋆` gives the same
   number. Defining it from `P⋆` and proving the mirror would be the same content read backwards.
 

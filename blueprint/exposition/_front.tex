@@ -1,0 +1,30 @@
+\subsection{What is formalised}\label{sec:doubling_formal}
+
+This appendix is an account of a Lean~4 development, checked against Mathlib
+\texttt{v4.31.0}. Every statement below is a theorem of that development; every proof sketch
+names the results that the corresponding proof term actually invokes, and nothing else. The
+development contains no unproved goal, and each result stated here has been verified to depend
+on no axiom beyond Lean's own \texttt{propext}, \texttt{Classical.choice} and
+\texttt{Quot.sound}.
+
+\medskip\noindent
+\emph{The object.} The graph is \extref{the counter-example graph of the main text}: a source
+$s_0$, a ladder $1,2,3,\dots$, a sink $s_f$, and the forward edges $s_0\rightarrow1$,
+$j\rightarrow j+1$, $2j\rightarrow j$, $j\rightarrow s_f$. The predecessors of a ladder state
+$j$ are $j-1$ and $2j$, so the backward chain either \emph{decrements} or \emph{doubles}, and
+the loop closure adds the wrap $s_f\rightarrow s_0$. The backward policy is
+$\BackwardPolicy(j\rightarrow2j)=\varepsilon(j)$ and
+$\BackwardPolicy(j\rightarrow j-1)=1-\varepsilon(j)$, and the family studied throughout is
+\begin{equation}\label{eq:doubling_family}
+    \varepsilon_{c,s}(j)\;:=\;\frac{c}{(j+1)^{s}},\qquad s\geq0,\quad 0<c<2^{s} .
+\end{equation}
+The target row $\widehat\BackwardPolicy(s_f\rightarrow\cdot)$ is a probability supported in
+$\{1,\dots,d\}$ of mean $\bar\jmath$. A \emph{truncation at $K$} deletes every doubling edge
+$j\rightarrow2j$ with $2j>K$, leaving a chain on $K+2$ states.
+
+\medskip\noindent
+\emph{What is not modelled.} The development builds no stochastic process. It works with the
+invariant measure through the balance identity across a cut, with the expected hitting time
+through the supersolution that dominates it, and with the descent through a recursion on the
+state rather than a chain of random variables. Everything below is therefore a statement about
+those objects, and \S\ref{sec:doubling_differences} says where that costs something.

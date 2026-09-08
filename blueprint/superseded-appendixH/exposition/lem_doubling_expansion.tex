@@ -1,0 +1,32 @@
+\emph{Partial fractions.} For $j\geq1$, $\Phi_\alpha(j)/(j+1)=j^{-p-1}+(\alpha-1)j^{-p-2}+
+e_\alpha(j)$ with $|e_\alpha(j)|\leq|1-\alpha|\,j^{-p-3}$.
+
+\emph{The window sum.} Summing that over $W(m)$ and applying, at the endpoints
+$a:=\lceil m/2\rceil$ and $b:=m$, the Euler--Maclaurin formula truncated before its first
+Bernoulli term,
+\begin{equation}\label{eq:doubling_em}
+    \sum_{j=a}^{b-1}j^{-r}\;=\;\frac{a^{1-r}-b^{1-r}}{r-1}+\frac{a^{-r}-b^{-r}}{2}+E,
+    \qquad |E|\;\leq\;\frac{r}{12}\bigl(a^{-r-1}+b^{-r-1}\bigr),
+\end{equation}
+once at $r=p+1$ and once at $r=p+2$, evaluates the sum; the remainder is controlled because
+$t\mapsto t^{-r}$ is completely monotone on $(0,+\infty)$, so the error after any number of
+terms is bounded by the first omitted one. The ceiling enters only through the parity $\delta(m)$, in
+$a^{-p}=\tau m^{-p}\bigl(1-p\delta/m+O(m^{-2})\bigr)$ and
+$a^{-p-1}=2\tau m^{-p-1}\bigl(1+O(m^{-1})\bigr)$, and the sum becomes
+$\frac{\tau-1}{p}m^{-p}+\Theta_\alpha(\delta)\,m^{-p-1}+O(m^{-p-2})$ with
+$\Theta_\alpha(\delta)=\frac{2\tau-1}{2}-\tau\delta+(\alpha-1)\frac{2\tau-1}{p+1}$.
+
+\emph{The ratio.} Multiplying by $c/(1-\varepsilon(m))=c\bigl(1+c/m+O(m^{-2})\bigr)$ and
+dividing by $\Phi_\alpha(m)$ turns that into an expansion of $R_\alpha(m)$ in powers of
+$1/m$. Its leading coefficient is
+$c(\tau-1)/p$, which is $1$ by \eqref{eq:doubling_cramer_form}; the same relation reduces the
+coefficient of $1/m$ to $c\,\Theta_\alpha(\delta)+c-\alpha$, whose part in $\alpha$ is
+$\Gamma\alpha$ after substituting $c=p/(\tau-1)$, and whose part free of $\alpha$ is $A_0$ at
+$\delta=0$ and $A_0-c\tau$ at $\delta=1$. That is \eqref{eq:doubling_Rexp}.
+
+\emph{The closed form and the signs.} Writing $c\tau=p\tau/(\tau-1)$ over the common
+denominator $2(p+1)(\tau-1)$ and using
+$p\bigl(p+3+2\tau(p-1)\bigr)-2p\tau(p+1)=p(p+3-4\tau)$ gives the stated form of $A_1$. The
+four inequalities of Lemma~\ref{lem:doubling_cramer_root}\emph{(3)} then give the four signs
+of \eqref{eq:doubling_signs} one apiece: $\tau(p-1)+1>0$ makes $\Gamma>0$, $2\tau-p-2>0$ makes
+$\Gamma<1$, $p+3+2\tau(p-1)>0$ makes $A_0>0$, and $p+3-4\tau<0$ makes $A_1<0$.

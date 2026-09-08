@@ -1,0 +1,16 @@
+For $z\geq\ell$ write $\pi_z$ for the law of $Y_{N_\ell}$ started at $z$, and for
+$y\in I_i(\ell)$ write $\mu_y$ for the law of the exit state $Y_\varsigma$. The proof is an
+induction on $i$, the claim being $\TV(\pi_y\|\pi_{y'})\leq(1-\omega)^{i}$ for
+$y,y'\in I_i(\ell)$. At $i=0$ the descent has already ended, so $\pi_y$ and $\pi_{y'}$ are
+Dirac masses and their distance is at most $1$.
+
+At $i\geq1$, Lemma~\ref{lem:doubling_doeblin} makes $\mu_y$ a probability carried by
+$I_{i-1}(\ell)$ with $\mu_y\geq\omega\varpi_i$, so
+$\mu_y=\omega\varpi_i+(1-\omega)\widetilde\mu_y$ for a probability $\widetilde\mu_y$ on that
+block --- the minorization is exactly what makes the remainder non-negative. The strong Markov
+property at $\varsigma$, a stopping time bounded by $N_\ell$, gives
+$\pi_y=\sum_{z\in I_{i-1}(\ell)}\mu_y(z)\pi_z$. Subtracting two such identities cancels the
+common part $\omega\sum_z\varpi_i(z)\pi_z$ and leaves
+$\pi_y-\pi_{y'}=(1-\omega)\sum_{z,z'}\widetilde\mu_y(z)\widetilde\mu_{y'}(z')(\pi_z-\pi_{z'})$,
+a convex combination; the triangle inequality for the total-variation norm and the inductive
+hypothesis bound it by $(1-\omega)^{i}$. That is \eqref{eq:doubling_coupling}.

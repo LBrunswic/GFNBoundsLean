@@ -23,10 +23,11 @@ and **`rem:doubling_parity`** — `app_doubling.tex:955–963`.
 
 What is **not** proved is `eq:doubling_Rexp` itself. Its Step 2 is Euler–Maclaurin for `t^{−r}`
 with the complete-monotonicity remainder bound, and mathlib v4.31.0 has neither. This is the one
-analytic wall of the appendix, and everything the expansion feeds — `eq:doubling_R0`, hence
-`lem:doubling_escape`, `lem:doubling_product` and the unconditional form of
-`theo:doubling_decay` — is carried downstream as a hypothesis rather than assumed here. The two
-inequalities actually consumed are `½ ≤ R₀(m) ≤ 2` and `|R₀(m) − 1| ≤ c₄/m`.
+analytic wall of the appendix — and it has been routed around: the only consequence the descent
+block consumes is `eq:doubling_R0`, the two inequalities `½ ≤ R₀(m) ≤ 2` and
+`|R₀(m) − 1| ≤ c₄/m`, and `R0Bound.lean` proves both by a first-order telescoping comparison
+with the explicit `c₄ = 16cτ`. So `lem:doubling_escape`, `lem:doubling_product` and
+`theo:doubling_decay` are unconditional without `eq:doubling_Rexp`.
 
 `rem:doubling_parity`'s second sentence — that `Φ₀` is neither a super- nor a sub-solution — reads
 off `eq:doubling_Rexp` and is not available.

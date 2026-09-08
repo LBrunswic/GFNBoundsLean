@@ -1,23 +1,54 @@
 """Shared LaTeX extraction for the GFN Bounds Lean library.
 
-Locates a theorem-like environment by its `\\label{...}` in `app_doubling.tex`, returns the
-statement block together with the proof that follows it, and digests it. Per-*statement* digests
-rather than a whole-file digest is the point: an edit to `lem:doubling_doeblin` must not mark
-`lem:doubling_percut` stale.
+Locates a theorem-like environment by its `\\label{...}` in one of the paper's source files,
+returns the statement block together with the proof that follows it, and digests it.
+Per-*statement* digests rather than a whole-file digest is the point: an edit to
+`lem:doubling_doeblin` must not mark `lem:doubling_percut` stale.
+
+**Multi-source since 2026-09-08.** The library's charter widened from Appendix H alone to
+Appendices A, B and H, so a statement carries the file it comes from. `SOURCES` maps a source
+filename to its appendix letter; `paper-map.json` rows carry a `source` field, defaulting to
+`app_doubling.tex` for the Appendix-H rows written before the widening.
 """
 import hashlib, os, re
 
-DEFAULT_TEX = os.path.expanduser("~/Dropbox/GFN Bounds/app_doubling.tex")
+PAPER_DIR = os.path.expanduser("~/Dropbox/GFN Bounds")
+
+#: source filename -> appendix letter. The library covers these and only these.
+SOURCES = {
+    "proofs.tex": "A",
+    "silva_comparison.tex": "B",
+    "app_doubling.tex": "H",
+}
+
+DEFAULT_SOURCE = "app_doubling.tex"
+DEFAULT_TEX = os.path.join(PAPER_DIR, DEFAULT_SOURCE)
 ENVS = ("definition", "lemma", "proposition", "theorem", "corollary", "remark")
 
 
-def tex_path() -> str:
-    return os.environ.get("GFNBOUNDS_TEX", DEFAULT_TEX)
+def paper_dir() -> str:
+    return os.environ.get("GFNBOUNDS_PAPER_DIR", PAPER_DIR)
 
 
-def read_tex(path=None):
-    with open(path or tex_path(), encoding="utf-8") as fh:
-        return fh.read().split("\n")
+def tex_path(source: str = DEFAULT_SOURCE) -> str:
+    """Absolute path of one source file. `GFNBOUNDS_TEX` still overrides, for the
+    Appendix-H-only callers that predate the widening."""
+    override = os.environ.get("GFNBOUNDS_TEX")
+    if override and source == DEFAULT_SOURCE:
+        return override
+    return os.path.join(paper_dir(), source)
+
+
+_CACHE = {}
+
+
+def read_tex(source: str = DEFAULT_SOURCE, path=None):
+    """Lines of one source file, cached — `trace_check` reads each of them once per statement."""
+    key = path or tex_path(source)
+    if key not in _CACHE:
+        with open(key, encoding="utf-8") as fh:
+            _CACHE[key] = fh.read().split("\n")
+    return _CACHE[key]
 
 
 def _match_end(lines, start, env):

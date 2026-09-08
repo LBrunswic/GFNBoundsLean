@@ -12,8 +12,8 @@ import GFNBounds.Doubling.DecayNotation
 ## What this file changes
 
 The paper reads these two bounds off `eq:doubling_Rexp`, whose proof is Euler–Maclaurin for
-`t^{−r}` with a complete-monotonicity remainder — the one tool mathlib v4.31.0 does not have, and
-the reason `theo:doubling_decay` carries them as hypotheses in `Descent.lean`. But the *refined*
+`t^{−r}` with a complete-monotonicity remainder — the one tool mathlib v4.31.0 does not have. But
+the *refined*
 expansion, with its named coefficients `A₀, A₁, Γ`, is needed only by `rem:doubling_parity` and
 `rem:doubling_second_order`. What the descent block consumes is only `eq:doubling_R0`, and that
 needs no more than a **first-order** comparison, which `WindowSum.lean` supplies by telescoping.

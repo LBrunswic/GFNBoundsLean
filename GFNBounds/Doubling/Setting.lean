@@ -37,8 +37,9 @@ and `lem:doubling_percut` — each of them "on the loop closure and the truncati
 
 This file is definitions only; it asserts no mathematics. Two things it deliberately does **not**
 model. First, the *density* action `P` of `def:doubling_setting` is not defined here — only the
-function action `P⋆`; they are mutually adjoint on `L²(λ)` by `lem:adjoint`(3), and that identity
-belongs to `LpLayer`. Second, `Stat` carries positivity of `λ` as a **field** rather than deriving
+function action `P⋆`; `P` is `Stat.dens` in `Adjoint.lean`, and the adjoint identity `P⋆ = P*`
+on `L²(λ)` of `lem:adjoint`(3) is `Stat.adjoint_pstarL2` in `AdjointL2.lean`. Second, `Stat`
+carries positivity of `λ` as a **field** rather than deriving
 it: `lem:doubling_irreducible` and `lem:doubling_truncation_irreducible` supply it, but every
 downstream statement of the appendix quantifies over "an invariant probability", so positivity
 belongs in the hypothesis and not in a global theorem.
@@ -326,8 +327,7 @@ Positivity is **on chain**, and `λ` vanishes off it; see `OnChain`. On the loop
 Invariance is carried in the **integral** form `∫ P⋆f dλ = ∫ f dλ` against bounded `f`, which is
 the form every downstream use consumes (`prop:doubling_cut` tests it against `1_A`) and which
 needs no summability side condition at the point of use. The pointwise form `λT = λ` is
-equivalent on a countable space; that bridge is `Stat.of_pointwise`, and nothing below is blocked
-while it is open.
+equivalent on a countable space; that bridge is `inv_of_pointwise` in `PointwiseInv.lean`.
 
 Positivity is a field rather than a theorem because every statement of the appendix downstream of
 `lem:doubling_irreducible` quantifies over "an invariant probability" — the existence question is

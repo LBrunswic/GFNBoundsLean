@@ -36,8 +36,11 @@ paper imposes on `ℓ₂` — that `y ≥ 2ℓ₂` force `⌈y/2⌉ ≤ ⌊y/√
 
   `y ≥ 32 c τ`,
 
-because `cτ = p_* + c > 1` and `γ > ¼`. So `ℓ₂ := max(d+1, ⌈16cτ⌉)` works, and it is already
-`≥ ℓ₁`; the paper's `ℓ₂ ≥ 2ℓ₁` is not needed. That is `Decay.ell2` and `Decay.escape_of_level`.
+because `cτ = p_* + c > 1` and `γ > ¼`. So `ℓ₂ := max(d+1, ⌈16cτ⌉)` works, and the paper's
+conjunct `ℓ₂ ≥ 2ℓ₁` is not needed at all: at `ℓ ≥ ℓ₂` every `y ≥ 2ℓ` has `y ≥ 32cτ`, which is
+where `R0_between` gives `½ ≤ R₀(y) ≤ 2`, and nothing else of `ℓ₁` is consumed. (With
+`ℓ₁ = max(d+1, 32cτ)` as in `R0Bound.lean`, `ℓ₂` is in general *smaller* than `ℓ₁`.) That is
+`Decay.ell2` and `Decay.escape_of_level`.
 
 **No integral.** The paper's Step 1 compares `Σ (j+1)^{−p−1}` with `∫ t^{−p−1} dt`. Here
 `sum_shift_ge` does the same comparison by telescoping against `t ↦ (t+1)^{−p}`, in the manner of

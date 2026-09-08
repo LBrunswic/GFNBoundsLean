@@ -34,11 +34,11 @@ it.
 
 | paper hypothesis | here |
 |---|---|
-| `ε(j) ∈ (0,1)` for every `j ≥ 1` | ✓ carried (in `Setting`) |
-| `λ` any invariant probability | ✓ carried (`Stat`) |
+| `ε(j) ∈ (0,1)` for every `j ≥ 1` | ⚠ strengthened: `Setting` carries `sup ε ≤ ε_max < 1`; only per-edge positivity is used |
+| `λ` any invariant probability | ✓ carried (`Stat`; positivity a field, derivable via `PreStat.toStatNone`) |
 | `m > d` | ✓ carried (`hdm`) |
 | truncation: `K` even, `d < m ≤ K/2` | ✓ `hdm` and `hD`; ⚠ weakened, evenness unused |
-| `eq:doubling_ratios` (`λ_{2j} ≥ λ_j ε(j)`, `λ_m ≤ λ_{m−1}/(1−ε(m))`) | ✗ not yet — see `GFNBoundsScaffold.Doubling.Ratios` |
+| `eq:doubling_ratios` (`λ_{2j} ≥ λ_j ε(j)`, `λ_m ≤ λ_{m−1}/(1−ε(m))`) | ✓ `Stat.lam_double_ge`, `Stat.lam_le_prev` (`Ratios.lean`) |
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

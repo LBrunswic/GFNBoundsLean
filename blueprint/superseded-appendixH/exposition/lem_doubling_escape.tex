@@ -1,0 +1,24 @@
+\emph{One step halves with probability $\gamma$.} On the window,
+$w_y(j)\geq c\,y^{p}(j+1)^{-p-1}$, so summing over
+$\lceil y/2\rceil\leq j\leq\lfloor y/\sqrt2\rfloor$ and comparing with
+$\int t^{-p-1}\,dt$ bounds that mass below by $\frac{c}{p}\bigl(\tau-\sqrt\tau\bigr)-4c\tau/y$,
+using $(1+x)^{-p}\geq1-px$ at the lower endpoint and $b+2\geq y/\sqrt2$ at the upper. By
+\eqref{eq:doubling_cramer_form} the leading constant is $2\gamma$; choosing $\ell_2$ so that
+the correction is at most $\gamma/2$ and $R_0(y)\leq\tfrac32$, dividing by $R_0(y)$ leaves at
+least $\gamma$, which is \eqref{eq:doubling_escape}.
+
+\emph{The three sojourn bounds.} Two consecutive halvings leave a dyadic block: if
+$Y_{n+1}\leq Y_n/\sqrt2$ and $Y_{n+2}\leq Y_{n+1}/\sqrt2$ then $Y_{n+2}\leq Y_n/2<2^{i}\ell$,
+and the chain being non-increasing it cannot return. So $\{Y_{n+2}\in I_i(\ell)\}$ is contained
+in the failure of one of those two halvings, each of conditional probability at most
+$1-\gamma$ by the previous paragraph, every state of $I_i(\ell)$ being $\geq2\ell$; hence
+$\mathbb P(Y_{n+2}\in I_i(\ell)\mid Y_0,\dots,Y_n)\leq1-\gamma^2$. The times a non-increasing
+chain spends in a block form an interval, so $\{\varsigma>2r\}=\{Y_{2r}\in I_i(\ell)\}$, and
+iterating gives the geometric tail of \eqref{eq:doubling_sojourn}; summing that tail gives the
+mean. For the exponential moment, $\zeta^{\varsigma}\leq\bar\zeta^{\,\lceil\varsigma/2\rceil}$
+with $\bar\zeta:=\zeta^2$, and expanding
+$\bar\zeta^{\,r}=1+(\bar\zeta-1)\sum_{k<r}\bar\zeta^{\,k}$ against the same tail bounds the
+excess by $(\bar\zeta-1)/\bigl(1-\bar\zeta(1-\gamma^2)\bigr)$; the hypotheses
+$\zeta-1\leq\gamma^2/6$ and $\gamma<\tfrac12$ give $\bar\zeta\leq1+\gamma^2/2$, hence
+$\bar\zeta(1-\gamma^2)\leq1-\gamma^2/2$ and $\bar\zeta-1\leq3(\zeta-1)$, so the ratio is at
+most $6(\zeta-1)/\gamma^2$.

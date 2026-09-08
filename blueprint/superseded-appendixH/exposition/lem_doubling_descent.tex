@@ -1,0 +1,20 @@
+\eqref{eq:doubling_Rexp} at $\alpha=0$, with the coefficients \eqref{eq:doubling_AB}, reads
+$R_0(m)=1+A_{\delta(m)}/m+O(m^{-2})$ with an implied constant depending on $c$ alone; that is
+the second half of \eqref{eq:doubling_R0}, and enlarging $\ell_1$ past $2c_4$ gives the first.
+Every state $y\geq2\ell$ that the chain leaves satisfies $y\geq2\ell_1>d$ and
+$\varepsilon(y)=c/(y+1)\leq c/2<1$, so the weights $w_y(j)=q_y(j)(y/j)^{p}$ are positive on
+$W(y)$ and sum to $R_0(y)\geq\tfrac12$: the transition law of the statement is a probability
+on $W(y)$.
+
+\emph{(1)} Every $j\in W(y)$ satisfies $\lceil y/2\rceil\leq j\leq y-1$, so $Y_n\leq m-n$ for
+$n\leq N_\ell$, and $Y_{N_\ell-1}\geq2\ell$ forces $N_\ell\leq m-2\ell+1\leq m$.
+
+\emph{(2)} $N_\ell\geq1$ because $Y_0=m\geq2\ell$, while $Y_{N_\ell}<2\ell$ by definition and
+$Y_{N_\ell}\geq\lceil Y_{N_\ell-1}/2\rceil\geq\ell$ by \emph{(1)}.
+
+\emph{(3)} By \emph{(1)} every path is finite, so \eqref{eq:doubling_pathid} is a finite sum,
+and $\mathbb E(Z_\ell\,u_{Y_{N_\ell}}\mid Y_0=y)=u_y$ follows by induction on $y$: below
+$2\ell$ the product is empty and the claim is trivial, and at $2\ell\leq y\leq m$ the cut
+balance holds at $y$, so Lemma~\ref{lem:doubling_averaging} supplies \eqref{eq:doubling_uavg}
+there and the factor $R_0(y)$ carried by the weight cancels the $R_0(y)$ normalising the
+transition law. Positivity of $Z_\ell$ is the first half of \eqref{eq:doubling_R0}.

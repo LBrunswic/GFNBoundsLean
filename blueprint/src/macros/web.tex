@@ -1,0 +1,12 @@
+% ---------------------------------------------------------------------------
+% blueprint/src/macros/web.tex --- web-only macros.
+%
+% The blueprint package already provides \lean, \leanok, \uses, \proves,
+% \notready and the dependency graph, so there is nothing to neutralise. The one
+% thing that does need handling is the figure of the last subsection: plasTeX
+% renders a float it cannot express in HTML by compiling it with pdflatex in a
+% temporary directory, where leanblueprint's own blueprint.sty cannot be found,
+% and the whole run then dies before the dependency graph is written. The pdf and
+% the paper-ready fragment both carry the figure; here it is named instead.
+% ---------------------------------------------------------------------------
+\newcommand{\onlyprint}[1]{\textit{[figure \texttt{#1} --- see the pdf]}}

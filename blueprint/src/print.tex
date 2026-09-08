@@ -1,0 +1,30 @@
+% The printable version: a draft replacement for Appendix H.
+% Compiled by `leanblueprint pdf`, which runs latexmk with the settings in
+% latexmkrc (lualatex, because of the Unicode --- see macros/print.tex).
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{geometry}
+\geometry{margin=2.6cm}
+
+\usepackage{expl3}
+\usepackage{amssymb, amsthm, mathtools}
+\usepackage{graphicx}
+\usepackage[unicode,colorlinks=true,linkcolor=blue,urlcolor=magenta,citecolor=blue]{hyperref}
+\usepackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+\usepackage{fontspec}
+
+% The one figure of the last subsection, copied beside these sources so the
+% draft builds without reaching into the paper's tree.
+\graphicspath{{figures/}}
+
+\input{macros/common}
+\input{macros/print}
+
+\title{The Doubling Graph: an Unbounded Diffusion Operator at Finite Backward Length}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\input{content}
+\end{document}

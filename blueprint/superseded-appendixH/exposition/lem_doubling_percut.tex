@@ -1,0 +1,24 @@
+\emph{The identity.} $P_\star$ being the function action of the backward kernel, the value of
+$(\mathrm{Id}-P_\star)\mathbf 1_A$ at a state is $\mathbf 1_A$ there minus the probability of
+landing in $A$. Six cases exhaust the transitions \eqref{eq:doubling_policy}: above the cut
+both images stay in $A$ and the value is $0$; at $x=m$ the doubling edge is present --- in the
+truncated case because $2m\leq K$ --- and the value is $1-\varepsilon(m)$; on the window
+$\lceil m/2\rceil\leq x\leq m-1$ only the doubling edge enters $A$ and it is present, so the
+value is $-\varepsilon(x)$; below the window, and at $s_0$ and $s_f$, nothing enters $A$
+because $d<m$. That is \eqref{eq:doubling_step1}.
+
+\emph{Its norm.} The indicators in \eqref{eq:doubling_step1} have disjoint supports, so the
+$L^p(\lambda)$-norm splits into $\lambda_m(1-\varepsilon(m))^p$ plus a window sum. Bounding
+$\varepsilon(x)^{p}\leq\varepsilon_{\max}^{\,p-1}\varepsilon(x)$ there and collapsing the
+result with the cut balance \eqref{eq:doubling_cut}, which
+Proposition~\ref{prop:doubling_cut} supplies at $m$ in both cases, gives
+$\|(\mathrm{Id}-P_\star)\mathbf 1_A\|^p_{L^p(\lambda)}\leq\lambda_m(1-\varepsilon(m))
+\bigl((1-\varepsilon(m))^{p-1}+\varepsilon_{\max}^{\,p-1}\bigr)$; this is
+\eqref{eq:doubling_step2} at $p=2$ and the first pair of \eqref{eq:doubling_stepp} in general.
+
+\emph{The ratio at the cut.} Since $P_\star\mathbf 1=\mathbf 1$, centring changes nothing:
+$(\mathrm{Id}-P_\star)f_m=(\mathrm{Id}-P_\star)\mathbf 1_A$. The centred indicator has
+$\Pi f_m=0$ and takes two values only, so
+$\|f_m\|^p_{L^p(\lambda)}=L(1-L)^{p}+(1-L)L^{p}$, which at $p=2$ is $L(1-L)$, positive because
+irreducibility makes $\lambda$ positive at every state and $m>d\geq1$ separates the state $1$
+from $A$. Dividing and taking square roots gives \eqref{eq:doubling_step3}.

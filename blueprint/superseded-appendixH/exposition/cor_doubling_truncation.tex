@@ -1,0 +1,30 @@
+\emph{The truncation and its per-cut bound.} At an even $K\geq d$,
+Lemma~\ref{lem:doubling_truncation_irreducible} makes the truncation a finite irreducible chain
+with a positive invariant probability $\lambda^K$ and supplies $S$ with
+\eqref{eq:doubling_resolvent} and $\widehat B_K<+\infty$; the truncation clause of
+Proposition~\ref{prop:doubling_cut} carries the cut balance to $\lambda^K$ below $K/2$. At a
+cut $d<m\leq K/2$ the second case of Lemma~\ref{lem:doubling_percut} applies, and
+\eqref{eq:doubling_resolvent} gives $\|f_m\|\leq\widehat B_K\|(\mathrm{Id}-P_\star)f_m\|$;
+combining this with \eqref{eq:doubling_step3} is \eqref{eq:doubling_percut_K}, which is
+\emph{(1)}.
+
+\emph{Decay uniform in $K$.} Extend $\lambda^K$ by $1$ above $K$; the extended sequence is
+positive and satisfies the cut balance at every $d<y\leq K/2$, an identity reading only indices
+$\leq K$. So Theorem~\ref{theo:doubling_decay}\emph{(1)} applies at the level $m_0$ and the
+range $K/2$, and bounds the rescaled profile on $[2m_0,K/2]$ by the extrema over the single
+block $J_0:=[m_0,2m_0)$ within $e^{\pm c_5c_4/m_0}$; those extrema define $C^K_\pm$ and give
+\eqref{eq:doubling_decayK}. Their ratio is bounded independently of $K$: chaining the
+decrement inequality of \eqref{eq:doubling_ratios} across $J_0$ bounds
+$\lambda^K_{j'}/\lambda^K_j$ above, and dropping all but one term of the cut balance bounds it
+below by $\prod\varepsilon(i)$, both over a block whose length depends on $c$ and $d$ alone.
+That is \emph{(2)}, with $K_0=8m_0+2$.
+
+\emph{A cut of order $K$.} Take $m:=\lfloor K/4\rfloor$. Summing \eqref{eq:doubling_decayK}
+over $\{m,\dots,2m\}$ gives $L_K(m)\geq C^K_-2^{-p_*}m^{1-p_*}$ while
+$\lambda^K_m\leq C^K_+m^{-p_*}$, so $L_K(m)/\lambda^K_m\geq2^{-p_*}c_9^{-1}m$. The mass below
+the cut is bounded away from $0$ uniformly in $K$: on a finite irreducible chain
+$\lambda^K(s_0)$ is the reciprocal of the expected return time to $s_0$, which is
+$2+\bar\sigma_K$, and $\bar\sigma_K\leq\bar\jmath/(1-c)$ by
+Lemma~\ref{lem:doubling_supersolution}, while stationarity at $s_0$ gives
+$\lambda^K_1\geq\lambda^K(s_0)$. Feeding the two into \eqref{eq:doubling_percut_K} at that cut,
+and $m\geq K/8$, gives \eqref{eq:doubling_sqrtK} and \emph{(3)}.

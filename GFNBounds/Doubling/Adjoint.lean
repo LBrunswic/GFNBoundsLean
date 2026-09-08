@@ -46,8 +46,9 @@ every argument that Jensen's inequality gives for `P⋆` it gives for `P` verbat
   the space is a weighted sequence space.
 * **The identity is on the plain-real layer**, `∑' x, λ(x)·(Pu)(x)·v(x) = ∑' x, λ(x)·u(x)·(P⋆v)(x)`.
   Its transcription into `⟪·,·⟫` on `MeasureTheory.Lp ℝ 2 μ` needs the Bochner-integral half of the
-  `LpLayer` dictionary, which is not built; so `ContinuousLinearMap.adjoint (pstarL2) = densL2`
-  is **not** claimed here, and neither is `‖P⋆^n − Π‖ = β̂_n`, which is its corollary.
+  `LpLayer` dictionary; so `ContinuousLinearMap.adjoint (pstarL2) = densL2` is **not** claimed
+  here, and neither is `‖P⋆^n − Π‖ = β̂_n`, which is its corollary — both are proved in
+  `AdjointL2.lean` (`Stat.adjoint_pstarL2`, `Stat.norm_pstarL2_pow_sub_piL2`).
 * **`RowOnChain` is carried**, as everywhere in this layer: off the chain the transported measure
   must vanish for `Pu := (uλ)T/λ` to be the honest quotient, and at the sink that is exactly
   `d ≤ K` (`LpLayer`, SCOPE).

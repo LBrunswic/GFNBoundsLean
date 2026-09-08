@@ -54,23 +54,21 @@ square-integrable `f` needs, `f²` being unbounded.
 
 The file is definitions plus the dictionary. It settles **no** statement of the appendix in
 full; the one statement it advances is `lem:doubling_fixed_points`, whose `P⋆` half it upgrades
-from bounded `f` to `f ∈ L²(λ)` and whose `P` half remains open.
+from bounded `f` to `f ∈ L²(λ)`; the `P` half is `FixedPointsP.lean`.
 
-* **`P⋆` on `L²` is here; its adjoint `P` is not.** `pstarL2` is built as a contraction of
-  `L²(μ)`, which is the `p = 2` case of `lem:doubling_operator`(1)'s first clause. The second
-  clause — `P⋆ = P*` — is *not* proved: the density action `P` is not modelled in this library at
-  all (`Setting.lean`, SCOPE). So `lem:doubling_operator`(1) stays open, and this file does not
-  claim it.
-* **The contraction is proved at `p = 2` only.** The pointwise Jensen step available here is
-  `sq_pstar_le` (`FixedPoints.lean`), which is the square. For general `p ∈ [1,∞)` the same
-  argument needs convexity of `t ↦ |t|^p` against a finite convex combination, which is not
-  developed here. `Stat.eLpNorm_two_pstar_le` is therefore stated at `2`.
+* **`P⋆` on `L²` is here; its adjoint `P` is in `Adjoint.lean` / `AdjointL2.lean`.** `pstarL2`
+  is built as a contraction of `L²(μ)`, which is the `p = 2` case of `lem:doubling_operator`(1)'s
+  first clause. The second clause — `P⋆ = P*` — is `Stat.adjoint_pstarL2` (`AdjointL2.lean`),
+  with `P` modelled as `Stat.dens` / `Stat.densL2`; this file does not claim it.
+* **The contraction is proved at `p = 2` only in this file.** The pointwise Jensen step available
+  here is `sq_pstar_le` (`FixedPoints.lean`), which is the square; the general `p ∈ [1,∞]` case
+  is `Stat.eLpNorm_pstar_le_of_memLp` (`LpContraction.lean`). `Stat.eLpNorm_two_pstar_le` is
+  therefore stated at `2`.
 * **`fixed_const_memLp` states the fixed-point equation on the chain, i.e. `λ`-a.e.**, which is
   weaker than the paper's pointwise `P⋆f = f` and is what `prop:doubling_unsolvable` (working in
   `L²(λ)`, a space of classes) actually has. The conclusion is likewise `f = f(s₀)` on the chain,
   i.e. `f = f(s₀)` in `L²(λ)`, which is `ker(Id − P⋆) ∩ L²(λ) = ℝ·1`. The `P` half of
-  `eq:doubling_fixed` is **not** proved, for the same reason as everywhere else: `P` is not
-  modelled.
+  `eq:doubling_fixed` is `Stat.ker_eq_const` (`FixedPointsP.lean`).
 * **The `L²` operator carries one hypothesis the paper does not name: `RowOnChain`.** On the
   truncation at `K`, `pstar` at the sink reads the target row at `1, …, d`, and if `K < d` those
   states are off-chain — where `λ` vanishes and a.e. equality says nothing — so `pstar` would not
@@ -85,8 +83,8 @@ from bounded `f` to `f ∈ L²(λ)` and whose `P` half remains open.
 | invariant probability `λ` positive at every state | ✓ carried (`Stat`; positivity on chain) |
 | the state space is countable | ✓ carried (`St` is `Countable`, `Setting.lean`; discrete σ-algebra) |
 | `p ∈ [1,∞)` for the norm identification | ✓ carried (`hp0`, `hpt`) |
-| `p ∈ [1,∞]` for the contraction | ⚠ **narrowed to `p = 2`** — see SCOPE |
-| `P⋆ = P*` on `L²(λ)` | ⚠ **not claimed** — `P` is not modelled |
+| `p ∈ [1,∞]` for the contraction | `p = 2` here; every `p ∈ [1,∞]` in `LpContraction.lean` |
+| `P⋆ = P*` on `L²(λ)` | not claimed here; `Stat.adjoint_pstarL2` in `AdjointL2.lean` |
 | `f ∈ L²(λ)` with `P⋆f = f` (`lem:doubling_fixed_points`) | ✓ carried, at `L²` and a.e. |
 | irreducibility (`lem:doubling_fixed_points`) | ✓ implied: the ladder is connected by the decrement alone |
 
@@ -426,8 +424,8 @@ theorem pstarLp_smul (hrow : RowOnChain S cap) (c : ℝ) (F : Lp ℝ 2 L.mu) :
 /-- **`P⋆` as a bounded linear operator on `L²(μ)`**, of norm at most `1`.
 
 This is the `p = 2` case of `lem:doubling_operator`(1)'s first clause, and the operator that
-`lem:doubling_operator`(3) — proved abstractly in `Operator.lean` — is meant to be instantiated
-at. The adjoint clause `P⋆ = P*` is *not* proved: the density action `P` is not modelled here. -/
+`lem:doubling_operator`(3) — proved abstractly in `Operator.lean` — is instantiated at
+(`UnboundedL2.lean`). The adjoint clause `P⋆ = P*` is `Stat.adjoint_pstarL2` (`AdjointL2.lean`). -/
 noncomputable def pstarL2 (hrow : RowOnChain S cap) : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu :=
   LinearMap.mkContinuous
     { toFun := L.pstarLp

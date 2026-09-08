@@ -30,8 +30,9 @@ the infimum along the centred tail indicators, which consumes `lem:doubling_perc
   `Stat.no_bounded_inverse`: no real `B` bounds `mass p f ≤ B · mass p ((Id−P⋆)f)` over the
   bounded mean-zero `f`. That is the inequality the paper's Step 3 actually uses, and it is what
   makes the conclusion independent of the `Lp` layer.
-* The `p = 2` clauses about `Σ β̂_n` need `lem:doubling_operator`, which is not formalized; they
-  are **not** here.
+* The `p = 2` clauses — no bounded `S` on `L²(λ)`, the series `Σ(P⋆ⁿ − Π)` has no operator-norm
+  limit, `Σ β̂_n = +∞` — are `UnboundedL2.lean` (`Stat.no_diffusionOp`,
+  `Stat.not_tendsto_partialSum`, `Stat.not_summable_betaHat`), through `RayleighBridge.lean`.
 * The chain here is the loop closure (`cap = none`), as in the paper.
 
 ## Hypothesis checklist against `theo:doubling_unbounded`

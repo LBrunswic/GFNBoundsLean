@@ -14,6 +14,117 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 
 | declaration | file | statement |
 |---|---|---|
+| `Invariant` | `MassIdentity.lean` | `def Invariant (K : V → V → ℝ) (lam : V → ℝ) : Prop` |
+| `funAct` | `MassIdentity.lean` | `def funAct (K : V → V → ℝ) (φ : V → ℝ) : V → ℝ` |
+| `integral_funAct` | `MassIdentity.lean` | `theorem integral_funAct {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K lam) (φ : V → ℝ) : ∑ x, lam x * funAct K φ x = ∑ x, lam x * φ x` |
+| `gradDensity` | `MassIdentity.lean` | `def gradDensity (K : V → V → ℝ) (r φ : V → ℝ) : V → ℝ` |
+| `integral_gradDensity` | `MassIdentity.lean` | `theorem integral_gradDensity {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K lam) (r φ : V → ℝ) : ∑ x, lam x * gradDensity K r φ x = ∑ x, lam x * (φ x * (1 - r x))` |
+| `integral_gradDensity_potential` | `MassIdentity.lean` | `theorem integral_gradDensity_potential {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K lam) (gd : ℝ → ℝ) (r w : V → ℝ) : ∑ x, lam x * gradDensity K r (fun y => gd (r y) * w y) x = ∑ x, lam x * (gd (r x) * (1 - r x) * w x)` |
+| `StrictlyUnimodal` | `MassIdentity.lean` | `def StrictlyUnimodal (gd : ℝ → ℝ) : Prop` |
+| `term_neg` | `MassIdentity.lean` | `theorem term_neg {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ} (hl : 0 < l) (hr : 0 < rx) (hw : 0 < wx) (hne : rx ≠ 1) : l * (gd rx * (1 - rx) * wx) < 0` |
+| `term_nonpos` | `MassIdentity.lean` | `theorem term_nonpos {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ} (hl : 0 ≤ l) (hr : 0 < rx) (hw : 0 < wx) : l * (gd rx * (1 - rx) * wx) ≤ 0` |
+| `term_eq_zero_iff` | `MassIdentity.lean` | `theorem term_eq_zero_iff {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ} (hl : 0 < l) (hr : 0 < rx) (hw : 0 < wx) : l * (gd rx * (1 - rx) * wx) = 0 ↔ rx = 1` |
+| `pushMass` | `MassIdentity.lean` | `def pushMass (K : V → V → ℝ) (lam u : V → ℝ) : V → ℝ` |
+| `Balanced` | `MassIdentity.lean` | `def Balanced (K : V → V → ℝ) (lam u : V → ℝ) : Prop` |
+| `ratio` | `MassIdentity.lean` | `noncomputable def ratio (K : V → V → ℝ) (lam u : V → ℝ) : V → ℝ` |
+| `ratio_pos` | `MassIdentity.lean` | `theorem ratio_pos {K : V → V → ℝ} {lam u : V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (y : V) : 0 < ratio K lam u y` |
+| `ratio_eq_one_iff_balanced` | `MassIdentity.lean` | `theorem ratio_eq_one_iff_balanced {K : V → V → ℝ} {lam u : V → ℝ} (hpos : ∀ y, 0 < lam y * u y) : (∀ y, ratio K lam u y = 1) ↔ Balanced K lam u` |
+| `lossGradDensity` | `MassIdentity.lean` | `noncomputable def lossGradDensity (K : V → V → ℝ) (lam u w : V → ℝ) (gd : ℝ → ℝ) : V → ℝ` |
+| `gradMass` | `MassIdentity.lean` | `noncomputable def gradMass (K : V → V → ℝ) (lam u w : V → ℝ) (gd : ℝ → ℝ) : ℝ` |
+| `no_distant_equilibrium_one` | `MassIdentity.lean` | `theorem no_distant_equilibrium_one {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) : gradMass K lam u w gd = ∑ x, lam x * (gd (ratio K lam u x) * (1 - ratio K lam u x) * w x) ∧ gradMass K lam u w gd ≤ 0 ∧ (gradMass K lam u w gd = 0 ↔ Balanced K lam u)` |
+| `balanced_of_critical` | `MassIdentity.lean` | `theorem balanced_of_critical {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) (hD : ∀ x, lossGradDensity K lam u w gd x = 0) : Balanced K lam u` |
+| `global_dichotomy_full_one` | `MassIdentity.lean` | `theorem global_dichotomy_full_one {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) : gradMass K lam u w gd = ∑ x, lam x * (gd (ratio K lam u x) * (1 - ratio K lam u x) * w x) ∧ gradMass K lam u w gd ≤ 0 ∧ (gradMass K lam u w gd = 0 ↔ Balanced K lam u)` |
+| `strictlyUnimodal_sqDeriv` | `MassIdentity.lean` | `theorem strictlyUnimodal_sqDeriv : StrictlyUnimodal fun x : ℝ => 2 * (x - 1)` |
+| `strictlyUnimodal_logSqDeriv` | `MassIdentity.lean` | `theorem strictlyUnimodal_logSqDeriv : StrictlyUnimodal fun x : ℝ => 2 * Real.log x / x` |
+| `invariant_of_isInvProb` | `MassIdentity.lean` | `theorem invariant_of_isInvProb {lam : V → ℝ} (h : B.IsInvProb lam) : Invariant B.phat lam` |
+| `no_distant_equilibrium_one_graph` | `MassIdentity.lean` | `theorem no_distant_equilibrium_one_graph {lam u w : V → ℝ} {gd : ℝ → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (h : B.IsInvProb lam) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) : gradMass B.phat lam u w gd = ∑ x, lam x * (gd (ratio B.phat lam u x) * (1 - ratio B.phat lam u x) * w x) ∧ gradMass B.phat lam u w gd ≤ 0 ∧ (gradMass B.phat lam u w gd = 0 ↔ Balanced B.phat lam u)` |
+| `balanced_of_critical_graph` | `MassIdentity.lean` | `theorem balanced_of_critical_graph {lam u w : V → ℝ} {gd : ℝ → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (h : B.IsInvProb lam) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) (hD : ∀ x, lossGradDensity B.phat lam u w gd x = 0) : Balanced B.phat lam u` |
+| `integrable_of_Lp` | `Flow.lean` | `theorem integrable_of_Lp (f : Lp ℝ p ν) : Integrable (⇑f) ν` |
+| `integralLM` | `Flow.lean` | `noncomputable def integralLM (ν : Measure α) (p : ℝ≥0∞) [IsFiniteMeasure ν] [Fact (1 ≤ p)] : Lp ℝ p ν →ₗ[ℝ] ℝ` |
+| `norm_integral_le_holder` | `Flow.lean` | `theorem norm_integral_le_holder (f : Lp ℝ p ν) : ‖∫ x, f x ∂ν‖ ≤ (ν Set.univ).toReal ^ (1 - 1 / p.toReal) * ‖f‖` |
+| `integralCLM` | `Flow.lean` | `noncomputable def integralCLM (ν : Measure α) (p : ℝ≥0∞) [IsFiniteMeasure ν] [Fact (1 ≤ p)] : Lp ℝ p ν →L[ℝ] ℝ` |
+| `integralCLM_apply` | `Flow.lean` | `theorem integralCLM_apply (f : Lp ℝ p ν) : integralCLM ν p f = ∫ x, f x ∂ν` |
+| `norm_integralCLM_le` | `Flow.lean` | `theorem norm_integralCLM_le : ‖integralCLM ν p‖ ≤ (ν Set.univ).toReal ^ (1 - 1 / p.toReal)` |
+| `integral_constOne` | `Flow.lean` | `theorem integral_constOne : ∫ x, (constOne ν p) x ∂ν = (ν Set.univ).toReal` |
+| `meanProj` | `Flow.lean` | `noncomputable def meanProj (ν : Measure α) (p : ℝ≥0∞) [IsFiniteMeasure ν] [Fact (1 ≤ p)] : Lp ℝ p ν →L[ℝ] Lp ℝ p ν` |
+| `meanProj_apply` | `Flow.lean` | `theorem meanProj_apply (f : Lp ℝ p ν) : meanProj ν p f = ((∫ x, f x ∂ν) / (ν Set.univ).toReal) • constOne ν p` |
+| `meanProj_constOne` | `Flow.lean` | `theorem meanProj_constOne (hν : ν Set.univ ≠ 0) : meanProj ν p (constOne ν p) = constOne ν p` |
+| `meanProj_idem` | `Flow.lean` | `theorem meanProj_idem (hν : ν Set.univ ≠ 0) : meanProj ν p * meanProj ν p = meanProj ν p` |
+| `meanProj_comp_left` | `Flow.lean` | `theorem meanProj_comp_left (hint : ∀ f : Lp ℝ p ν, ∫ x, (P f) x ∂ν = ∫ x, f x ∂ν) : meanProj ν p * P = meanProj ν p` |
+| `comp_meanProj` | `Flow.lean` | `theorem comp_meanProj (hone : P (constOne ν p) = constOne ν p) : P * meanProj ν p = meanProj ν p` |
+| `meanProj_sub_eq_zero` | `Flow.lean` | `theorem meanProj_sub_eq_zero {f_init f_term : Lp ℝ p ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : meanProj ν p (f_term - f_init) = 0` |
+| `mixing_of_massPreserving` | `Flow.lean` | `theorem mixing_of_massPreserving (hone : P (constOne ν p) = constOne ν p) (hint : ∀ f : Lp ℝ p ν, ∫ x, (P f) x ∂ν = ∫ x, f x ∂ν) (hsum : Summable fun n : ℕ => ‖P ^ n - meanProj ν p‖) : Mixing P (meanProj ν p)` |
+| `weaklyUniversal_of_massPreserving` | `Flow.lean` | `theorem weaklyUniversal_of_massPreserving (hone : P (constOne ν p) = constOne ν p) (hint : ∀ f : Lp ℝ p ν, ∫ x, (P f) x ∂ν = ∫ x, f x ∂ν) (hsum : Summable fun n : ℕ => ‖P ^ n - meanProj ν p‖) (hp : p ≠ ⊤) : WeaklyUniversal P (meanProj ν p)` |
+| `weaklyUniversalAt_of_equalMass` | `Flow.lean` | `theorem weaklyUniversalAt_of_equalMass (hone : P (constOne ν p) = constOne ν p) (hint : ∀ f : Lp ℝ p ν, ∫ x, (P f) x ∂ν = ∫ x, f x ∂ν) (hsum : Summable fun n : ℕ => ‖P ^ n - meanProj ν p‖) (hp : p ≠ ⊤) {f_init f_term : Lp ℝ p ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : WeaklyUniversalAt P (f_term - f_init)` |
+| `eq_meanProj_of_invariant` | `Flow.lean` | `theorem eq_meanProj_of_invariant (h : Mixing P (meanProj ν p)) {g : Lp ℝ p ν} (hg : P g = g) : g = ((∫ x, g x ∂ν) / (ν Set.univ).toReal) • constOne ν p` |
+| `beta` | `Mixing.lean` | `noncomputable def beta (P Pi : E →L[ℝ] E) (n : ℕ) : ℝ` |
+| `B` | `Mixing.lean` | `noncomputable def B (P Pi : E →L[ℝ] E) : ℝ` |
+| `summable_beta` | `Mixing.lean` | `theorem summable_beta (h : Mixing P Pi) : Summable (beta P Pi)` |
+| `beta_nonneg` | `Mixing.lean` | `theorem beta_nonneg (P Pi : E →L[ℝ] E) (n : ℕ) : 0 ≤ beta P Pi n` |
+| `B_nonneg` | `Mixing.lean` | `theorem B_nonneg (P Pi : E →L[ℝ] E) : 0 ≤ B P Pi` |
+| `summable_terms` | `Mixing.lean` | `theorem summable_terms [CompleteSpace E] (h : Mixing P Pi) : Summable fun n : ℕ => P ^ n - Pi` |
+| `S` | `Mixing.lean` | `noncomputable def S (P Pi : E →L[ℝ] E) : E →L[ℝ] E` |
+| `tendsto_partialSum` | `Mixing.lean` | `theorem tendsto_partialSum [CompleteSpace E] (h : Mixing P Pi) : Tendsto (partialSum P Pi) atTop (𝓝 (S P Pi))` |
+| `tendsto_pow` | `Mixing.lean` | `theorem tendsto_pow [CompleteSpace E] (h : Mixing P Pi) : Tendsto (fun n : ℕ => P ^ n) atTop (𝓝 Pi)` |
+| `proj_idem` | `Mixing.lean` | `theorem proj_idem [CompleteSpace E] (h : Mixing P Pi) : Pi * Pi = Pi` |
+| `norm_S_le` | `Mixing.lean` | `theorem norm_S_le [CompleteSpace E] (h : Mixing P Pi) : ‖S P Pi‖ ≤ B P Pi` |
+| `norm_S_apply_le` | `Mixing.lean` | `theorem norm_S_apply_le [CompleteSpace E] (h : Mixing P Pi) (θ : E) : ‖S P Pi θ‖ ≤ B P Pi * ‖θ‖` |
+| `poisson_right` | `Mixing.lean` | `theorem poisson_right [CompleteSpace E] (h : Mixing P Pi) : S P Pi * (1 - P) = 1 - Pi` |
+| `poisson_left` | `Mixing.lean` | `theorem poisson_left [CompleteSpace E] (h : Mixing P Pi) : (1 - P) * S P Pi = 1 - Pi` |
+| `poisson_right_apply` | `Mixing.lean` | `theorem poisson_right_apply [CompleteSpace E] (h : Mixing P Pi) (θ : E) : S P Pi ((1 - P) θ) = θ - Pi θ` |
+| `poisson_left_apply` | `Mixing.lean` | `theorem poisson_left_apply [CompleteSpace E] (h : Mixing P Pi) (θ : E) : (1 - P) (S P Pi θ) = θ - Pi θ` |
+| `poisson_solved` | `Mixing.lean` | `theorem poisson_solved [CompleteSpace E] (h : Mixing P Pi) {θ : E} (hθ : Pi θ = 0) : (1 - P) (S P Pi θ) = θ` |
+| `coercivity` | `Mixing.lean` | `theorem coercivity [CompleteSpace E] (h : Mixing P Pi) (x : E) : ‖x - Pi x‖ ≤ B P Pi * ‖(1 - P) x‖` |
+| `coercivity_div` | `Mixing.lean` | `theorem coercivity_div [CompleteSpace E] (h : Mixing P Pi) (hB : 0 < B P Pi) (x : E) : ‖x - Pi x‖ / B P Pi ≤ ‖(1 - P) x‖` |
+| `tvD` | `StableBound.lean` | `noncomputable def tvD (ν : Measure α) (f g : α → ℝ) : ℝ` |
+| `tvD_nonneg` | `StableBound.lean` | `theorem tvD_nonneg (ν : Measure α) (f g : α → ℝ) : 0 ≤ tvD ν f g` |
+| `tvD_comm` | `StableBound.lean` | `theorem tvD_comm (ν : Measure α) (f g : α → ℝ) : tvD ν f g = tvD ν g f` |
+| `tvD_triangle` | `StableBound.lean` | `theorem tvD_triangle {ν : Measure α} {f₁ f₂ f₃ : α → ℝ} (h₁ : Integrable (fun x => f₁ x - f₂ x) ν) (h₂ : Integrable (fun x => f₂ x - f₃ x) ν) : tvD ν f₁ f₃ ≤ tvD ν f₁ f₂ + tvD ν f₂ f₃` |
+| `tvD_normalization` | `StableBound.lean` | `theorem tvD_normalization {ν : Measure α} {f g : α → ℝ} {a b : ℝ} (hf : Integrable f ν) (hg : Integrable g ν) (hg0 : 0 ≤ᵐ[ν] g) (hb : b = ∫ x, g x ∂ν) (ha0 : 0 < a) (hb0 : 0 < b) : tvD ν (fun x => f x / a) (fun x => g x / b) ≤ ((∫ x, \|f x - g x\| ∂ν) + \|a - b\|) / (2 * a)` |
+| `tvD_normalization_le` | `StableBound.lean` | `theorem tvD_normalization_le {ν : Measure α} {f g : α → ℝ} {a b : ℝ} (hf : Integrable f ν) (hg : Integrable g ν) (hg0 : 0 ≤ᵐ[ν] g) (ha : a = ∫ x, f x ∂ν) (hb : b = ∫ x, g x ∂ν) (ha0 : 0 < a) (hb0 : 0 < b) : tvD ν (fun x => f x / a) (fun x => g x / b) ≤ (∫ x, \|f x - g x\| ∂ν) / a` |
+| `negPart_le_abs_sub` | `StableBound.lean` | `theorem negPart_le_abs_sub {x y : ℝ} (hy : 0 ≤ y) : max (-x) 0 ≤ \|x - y\|` |
+| `abs_sub_posPart_le` | `StableBound.lean` | `theorem abs_sub_posPart_le {x y : ℝ} (hy : 0 ≤ y) : \|y - max x 0\| ≤ \|x - y\|` |
+| `posPart_mass` | `StableBound.lean` | `theorem posPart_mass (he : Integrable e ν) : ∫ x, max (e x) 0 ∂ν = (∫ x, e x ∂ν) + ∫ x, max (-e x) 0 ∂ν` |
+| `negMass_le` | `StableBound.lean` | `theorem negMass_le (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) : ∫ x, max (-e x) 0 ∂ν ≤ ∫ x, \|e x - k x\| ∂ν` |
+| `hatDist_le` | `StableBound.lean` | `theorem hatDist_le (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) : ∫ x, \|k x - max (e x) 0\| ∂ν ≤ ∫ x, \|e x - k x\| ∂ν` |
+| `mass_defect_le` | `StableBound.lean` | `theorem mass_defect_le (he : Integrable e ν) (hk : Integrable k ν) : \|(∫ x, e x ∂ν) - ∫ x, k x ∂ν\| ≤ ∫ x, \|e x - k x\| ∂ν` |
+| `normalization_bound` | `StableBound.lean` | `theorem normalization_bound (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) {t zhat : ℝ} (ht : t = ∫ x, k x ∂ν) (hzh : zhat = ∫ x, max (e x) 0 ∂ν) (ht0 : 0 < t) (hzh0 : 0 < zhat) : tvD ν (fun x => k x / t) (fun x => max (e x) 0 / zhat) ≤ (∫ x, \|e x - k x\| ∂ν) / t` |
+| `tv_le_two_fmL1` | `StableBound.lean` | `theorem tv_le_two_fmL1 (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) {z t zhat tv tvNC : ℝ} (hz : z = ∫ x, e x ∂ν) (ht : t = ∫ x, k x ∂ν) (hzh : zhat = ∫ x, max (e x) 0 ∂ν) (hz0 : 0 < z) (ht0 : 0 < t) (hNC : tvNC ≤ (∫ x, max (-e x) 0 ∂ν) / zhat) (htri : tv ≤ tvNC + tvD ν (fun x => max (e x) 0 / zhat) (fun x => k x / t)) : tv ≤ 2 * (∫ x, \|e x - k x\| ∂ν) / t` |
+| `integral_le_measure_rpow_mul` | `StableBound.lean` | `theorem integral_le_measure_rpow_mul {q : ℝ} (hq : 1 ≤ q) (ν : Measure α) [IsFiniteMeasure ν] {h : α → ℝ} (hh0 : 0 ≤ᵐ[ν] h) (hmem : MemLp h (ENNReal.ofReal q) ν) : ∫ x, h x ∂ν ≤ ν.real Set.univ ^ (1 - 1 / q) * (∫ x, h x ^ q ∂ν) ^ (1 / q)` |
+| `integral_le_of_le_smul` | `StableBound.lean` | `theorem integral_le_of_le_smul {νT : Measure α} {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {f : α → ℝ} (hf0 : 0 ≤ᵐ[νT] f) (hint : Integrable f νT) : ∫ x, f x ∂ν ≤ (M : ℝ) * ∫ x, f x ∂νT` |
+| `holderConst` | `StableBound.lean` | `noncomputable def holderConst (ν : Measure α) (M : ℝ≥0) (q : ℝ) : ℝ` |
+| `stableConst` | `StableBound.lean` | `noncomputable def stableConst (ν : Measure α) (M : ℝ≥0) (q t : ℝ) : ℝ` |
+| `stableLoss` | `StableBound.lean` | `noncomputable def stableLoss (νT : Measure α) (q : ℝ) (e k : α → ℝ) : ℝ` |
+| `fmL1_le_holderConst_mul_loss` | `StableBound.lean` | `theorem fmL1_le_holderConst_mul_loss {νT : Measure α} {M : ℝ≥0} {q : ℝ} (hq : 1 ≤ q) [IsFiniteMeasure ν] (hdom : ν ≤ (M : ℝ≥0∞) • νT) (hmem : MemLp (fun x => e x - k x) (ENNReal.ofReal q) νT) : ∫ x, \|e x - k x\| ∂ν ≤ holderConst ν M q * stableLoss νT q e k` |
+| `mass_floor` | `StableBound.lean` | `theorem mass_floor {νT : Measure α} {M : ℝ≥0} {q z t : ℝ} (hq : 1 ≤ q) [IsFiniteMeasure ν] (hdom : ν ≤ (M : ℝ≥0∞) • νT) (hmem : MemLp (fun x => e x - k x) (ENNReal.ofReal q) νT) (he : Integrable e ν) (hk : Integrable k ν) (hz : z = ∫ x, e x ∂ν) (ht : t = ∫ x, k x ∂ν) : \|z - t\| ≤ holderConst ν M q * stableLoss νT q e k` |
+| `stable_bound` | `StableBound.lean` | `theorem stable_bound {νT : Measure α} {M : ℝ≥0} {q z t zhat tv tvNC : ℝ} (hq : 1 ≤ q) [IsFiniteMeasure ν] (hdom : ν ≤ (M : ℝ≥0∞) • νT) (hmem : MemLp (fun x => e x - k x) (ENNReal.ofReal q) νT) (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) (hz : z = ∫ x, e x ∂ν) (ht : t = ∫ x, k x ∂ν) (hzh : zhat = ∫ x, max (e x) 0 ∂ν) (hz0 : 0 < z) (ht0 : 0 < t) (hNC : tvNC ≤ (∫ x, max (-e x) 0 ∂ν) / zhat) (htri : tv ≤ tvNC + tvD ν (fun x => max (e x) 0 / zhat) (fun x => k x / t)) : tv ≤ stableConst ν M q t * stableLoss νT q e k` |
+| `applies.` | `Universality.lean` | `axiom applies. -/ theorem norm_posPart_le (a : F) : ‖a⁺‖ ≤ ‖a‖` |
+| `norm_negPart_le` | `Universality.lean` | `theorem norm_negPart_le (a : F) : ‖a⁻‖ ≤ ‖a‖` |
+| `norm_le_norm_posPart_add_norm_negPart` | `Universality.lean` | `theorem norm_le_norm_posPart_add_norm_negPart (a : F) : ‖a‖ ≤ ‖a⁺‖ + ‖a⁻‖` |
+| `defect` | `Universality.lean` | `noncomputable def defect (P : E →L[ℝ] E) (θ fout : E) : E` |
+| `resInit` | `Universality.lean` | `noncomputable def resInit (P : E →L[ℝ] E) (θ fout : E) : E` |
+| `resTerm` | `Universality.lean` | `noncomputable def resTerm (P : E →L[ℝ] E) (θ fout : E) : E` |
+| `norm_defect_le_residuals` | `Universality.lean` | `theorem norm_defect_le_residuals (P : E →L[ℝ] E) (θ fout : E) : ‖defect P θ fout‖ ≤ ‖resInit P θ fout‖ + ‖resTerm P θ fout‖` |
+| `residuals_le_two_norm_defect` | `Universality.lean` | `theorem residuals_le_two_norm_defect (P : E →L[ℝ] E) (θ fout : E) : ‖resInit P θ fout‖ + ‖resTerm P θ fout‖ ≤ 2 * ‖defect P θ fout‖` |
+| `WeaklyUniversalAt` | `Universality.lean` | `def WeaklyUniversalAt (P : E →L[ℝ] E) (θ : E) : Prop` |
+| `StronglyUniversalAt` | `Universality.lean` | `def StronglyUniversalAt (P : E →L[ℝ] E) (θ : E) : Prop` |
+| `WeaklyUniversal` | `Universality.lean` | `def WeaklyUniversal (P Pi : E →L[ℝ] E) : Prop` |
+| `StronglyUniversalAt.weaklyUniversalAt` | `Universality.lean` | `theorem StronglyUniversalAt.weaklyUniversalAt {P : E →L[ℝ] E} {θ : E} (h : StronglyUniversalAt P θ) : WeaklyUniversalAt P θ` |
+| `liftedOutflow` | `Universality.lean` | `noncomputable def liftedOutflow (P Pi : E →L[ℝ] E) (one θ : E) (η : ℝ) : E` |
+| `truncation` | `Universality.lean` | `noncomputable def truncation (P Pi : E →L[ℝ] E) (one θ : E) (η : ℝ) : E` |
+| `liftedOutflow_nonneg` | `Universality.lean` | `theorem liftedOutflow_nonneg (P Pi : E →L[ℝ] E) (one θ : E) (η : ℝ) : 0 ≤ liftedOutflow P Pi one θ η` |
+| `truncation_nonneg` | `Universality.lean` | `theorem truncation_nonneg (P Pi : E →L[ℝ] E) (one θ : E) (η : ℝ) : 0 ≤ truncation P Pi one θ η` |
+| `liftedOutflow_eq` | `Universality.lean` | `theorem liftedOutflow_eq (P Pi : E →L[ℝ] E) (one θ : E) (η : ℝ) : liftedOutflow P Pi one θ η = (η • one - Mixing.S P Pi θ) + truncation P Pi one θ η` |
+| `defect_eq_truncation` | `Universality.lean` | `theorem defect_eq_truncation (h : Mixing P Pi) (hone : P one = one) (hθ : Pi θ = 0) (η : ℝ) : defect P θ (liftedOutflow P Pi one θ η) = P (truncation P Pi one θ η) - truncation P Pi one θ η` |
+| `residuals_le` | `Universality.lean` | `theorem residuals_le (h : Mixing P Pi) (hone : P one = one) (hθ : Pi θ = 0) (η : ℝ) : ‖resInit P θ (liftedOutflow P Pi one θ η)‖ + ‖resTerm P θ (liftedOutflow P Pi one θ η)‖ ≤ 2 * (1 + ‖P‖) * ‖truncation P Pi one θ η‖` |
+| `stronglyUniversalAt_of_le` | `Universality.lean` | `theorem stronglyUniversalAt_of_le (h : Mixing P Pi) (hone : P one = one) (hθ : Pi θ = 0) {η : ℝ} (hle : Mixing.S P Pi θ ≤ η • one) : StronglyUniversalAt P θ` |
+| `weaklyUniversalAt_of_tendsto` | `Universality.lean` | `theorem weaklyUniversalAt_of_tendsto (h : Mixing P Pi) (hone : P one = one) (hθ : Pi θ = 0) (hlim : Filter.Tendsto (fun η : ℝ => ‖truncation P Pi one θ η‖) Filter.atTop (𝓝 0)) : WeaklyUniversalAt P θ` |
+| `constOne` | `UniversalityLp.lean` | `noncomputable def constOne (ν : Measure α) (p : ℝ≥0∞) [IsFiniteMeasure ν] : Lp ℝ p ν` |
+| `coeFn_constOne` | `UniversalityLp.lean` | `theorem coeFn_constOne : ⇑(constOne ν p) =ᵐ[ν] fun _ => (1 : ℝ)` |
+| `coeFn_truncation` | `UniversalityLp.lean` | `theorem coeFn_truncation (P Pi : Lp ℝ p ν →L[ℝ] Lp ℝ p ν) (θ : Lp ℝ p ν) (η : ℝ) : ⇑(truncation P Pi (constOne ν p) θ η) =ᵐ[ν] fun x => max (Mixing.S P Pi θ x - η) 0` |
+| `tendsto_truncation_norm` | `UniversalityLp.lean` | `theorem tendsto_truncation_norm (hp : p ≠ ⊤) (P Pi : Lp ℝ p ν →L[ℝ] Lp ℝ p ν) (θ : Lp ℝ p ν) : Tendsto (fun η : ℝ => ‖truncation P Pi (constOne ν p) θ η‖) atTop (𝓝 0)` |
+| `weaklyUniversalAt_Lp` | `UniversalityLp.lean` | `theorem weaklyUniversalAt_Lp {P Pi : Lp ℝ p ν →L[ℝ] Lp ℝ p ν} {θ : Lp ℝ p ν} (h : Mixing P Pi) (hone : P (constOne ν p) = constOne ν p) (hθ : Pi θ = 0) (hp : p ≠ ⊤) : WeaklyUniversalAt P θ` |
+| `weaklyUniversal_Lp` | `UniversalityLp.lean` | `theorem weaklyUniversal_Lp {P Pi : Lp ℝ p ν →L[ℝ] Lp ℝ p ν} (h : Mixing P Pi) (hone : P (constOne ν p) = constOne ν p) (hp : p ≠ ⊤) : WeaklyUniversal P Pi` |
 | `abs_rpow_add3_le` | `Adjoint.lean` | `theorem abs_rpow_add3_le {w₁ w₂ w₃ u₁ u₂ u₃ p : ℝ} (h1 : 0 ≤ w₁) (h2 : 0 ≤ w₂) (h3 : 0 ≤ w₃) (hw : w₁ + w₂ + w₃ = 1) (hp : 1 ≤ p) : \|w₁ * u₁ + w₂ * u₂ + w₃ * u₃\| ^ p ≤ w₁ * \|u₁\| ^ p + w₂ * \|u₂\| ^ p + w₃ * \|u₃\| ^ p` |
 | `abs_rpow_two'` | `Adjoint.lean` | `theorem abs_rpow_two' (t : ℝ) : \|t\| ^ (2 : ℝ) = t ^ 2` |
 | `dblW_nonneg` | `Balance.lean` | `theorem dblW_nonneg {j : ℕ} (hj : 1 ≤ j) : 0 ≤ dblW S cap j` |
@@ -158,7 +269,7 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `phi_pos` | `Lyapunov.lean` | `theorem phi_pos {c t : ℝ} (hc0 : 0 ≤ c) (ht : 0 < t) (hlt : t * Real.log 2 < c * Real.log 2 - 1) : 0 < phi c t` |
 | `Wpow_antitone` | `Lyapunov.lean` | `theorem Wpow_antitone {t : ℝ} (ht : 0 ≤ t) {i j : ℕ} (h : i ≤ j) : Wpow t (.lad j) ≤ Wpow t (.lad i)` |
 | `Wpow_strictAnti` | `Lyapunov.lean` | `theorem Wpow_strictAnti {t : ℝ} (ht : 0 < t) {i j : ℕ} (h : i < j) : Wpow t (.lad j) < Wpow t (.lad i)` |
-| `main_sigmaBar_le` | `Main.lean` | `theorem main_sigmaBar_le {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) {cap : Option ℕ} (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = c / ((j : ℝ) + 1)) (n : ℕ) : ∑ k ∈ Finset.Icc 1 S.d, S.row k * hitExp S cap n (.lad k) ≤ S.jbar / (1 - c)` |
+| `c_mul_log_two_lt_one` | `Main.lean` | `theorem c_mul_log_two_lt_one {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) : c * Real.log 2 < 1` |
 | `pi_mul_pow` | `Operator.lean` | `theorem pi_mul_pow (hPiP : Pi * P = Pi) : ∀ n : ℕ, Pi * P ^ n = Pi` |
 | `pow_mul_pi` | `Operator.lean` | `theorem pow_mul_pi (hPPi : P * Pi = Pi) : ∀ n : ℕ, P ^ n * Pi = Pi` |
 | `partialSum` | `Operator.lean` | `noncomputable def partialSum (P Pi : E →L[ℝ] E) (N : ℕ) : E →L[ℝ] E` |
@@ -245,19 +356,393 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `telescope_Ico` | `WindowSum.lean` | `theorem telescope_Ico (f : ℕ → ℝ) {a b : ℕ} (hab : a ≤ b) : ∑ j ∈ Finset.Ico a b, (f j - f (j + 1)) = f a - f b` |
 | `sum_window_ge` | `WindowSum.lean` | `theorem sum_window_ge {r : ℝ} (hr : 0 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / r ≤ ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r - 1)` |
 | `sum_window_le` | `WindowSum.lean` | `theorem sum_window_le {r : ℝ} (hr : 0 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r - 1) ≤ (a : ℝ) ^ (-r - 1) + ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / r` |
+| `Reach` | `Setting.lean` | `abbrev Reach : V → V → Prop` |
+| `PathConnected` | `Setting.lean` | `def PathConnected : Prop` |
+| `hatEdge` | `Setting.lean` | `def hatEdge (x y : V) : Prop` |
+| `hatEdge_wrap` | `Setting.lean` | `theorem hatEdge_wrap : G.hatEdge G.snk G.src` |
+| `eq_snk_of_hatEdge_into_src` | `Setting.lean` | `theorem eq_snk_of_hatEdge_into_src {x : V} (h : G.hatEdge x G.src) : x = G.snk` |
+| `PathConnected.from_src` | `Setting.lean` | `theorem PathConnected.from_src (h : G.PathConnected) (s : V) : G.Reach G.src s` |
+| `PathConnected.to_snk` | `Setting.lean` | `theorem PathConnected.to_snk (h : G.PathConnected) (s : V) : G.Reach s G.snk` |
+| `PathConnected.reach_src_snk` | `Setting.lean` | `theorem PathConnected.reach_src_snk (h : G.PathConnected) (s : V) : G.Reach G.src G.snk` |
+| `exists_hatEdge_into` | `Setting.lean` | `theorem exists_hatEdge_into (h : G.PathConnected) (x : V) : ∃ y, G.hatEdge y x` |
+| `phat` | `Setting.lean` | `noncomputable def phat : V → V → ℝ` |
+| `phat_src_snk` | `Setting.lean` | `@[simp] theorem phat_src_snk : B.phat G.src G.snk = 1` |
+| `phat_src_of_ne` | `Setting.lean` | `theorem phat_src_of_ne {s' : V} (h : s' ≠ G.snk) : B.phat G.src s' = 0` |
+| `phat_of_ne_src` | `Setting.lean` | `theorem phat_of_ne_src {s s' : V} (h : s ≠ G.src) : B.phat s s' = B.pb s s'` |
+| `phat_nonneg` | `Setting.lean` | `theorem phat_nonneg (s s' : V) : 0 ≤ B.phat s s'` |
+| `phat_row_sum` | `Setting.lean` | `theorem phat_row_sum (s : V) : ∑ s', B.phat s s' = 1` |
+| `phat_supp` | `Setting.lean` | `theorem phat_supp {s s' : V} (h : B.phat s s' ≠ 0) : G.hatEdge s' s` |
+| `src_row_unique` | `Setting.lean` | `theorem src_row_unique (q : V → ℝ) (htot : ∑ s', q s' = 1) (hsupp : ∀ s', q s' ≠ 0 → G.hatEdge s' G.src) : q = fun s' => if s' = G.snk then 1 else 0` |
+| `phat_unique_extension` | `Setting.lean` | `theorem phat_unique_extension (Q : V → V → ℝ) (hrow : ∀ s, ∑ s', Q s s' = 1) (hsupp : ∀ s s', Q s s' ≠ 0 → G.hatEdge s' s) (hoff : ∀ ⦃s⦄, s ≠ G.src → Q s = B.pb s) : Q = B.phat` |
+| `PositiveOnEdges` | `Setting.lean` | `def PositiveOnEdges : Prop` |
+| `phat_pos_of_edge` | `Setting.lean` | `theorem phat_pos_of_edge (hpos : B.PositiveOnEdges) {x y : V} (h : G.Edge x y) : 0 < B.phat y x` |
+| `BStep` | `Setting.lean` | `def BStep (x y : V) : Prop` |
+| `BReach` | `Setting.lean` | `abbrev BReach : V → V → Prop` |
+| `bstep_wrap` | `Setting.lean` | `theorem bstep_wrap : B.BStep G.src G.snk` |
+| `bstep_of_edge` | `Setting.lean` | `theorem bstep_of_edge (hpos : B.PositiveOnEdges) {x y : V} (h : G.Edge x y) : B.BStep y x` |
+| `breach_of_reach` | `Setting.lean` | `theorem breach_of_reach (hpos : B.PositiveOnEdges) {a b : V} (h : G.Reach a b) : B.BReach b a` |
+| `breach_all` | `Setting.lean` | `theorem breach_all (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (x y : V) : B.BReach x y` |
+| `densMap` | `Setting.lean` | `noncomputable def densMap : (V → ℝ) →ₗ[ℝ] (V → ℝ)` |
+| `densMap_apply` | `Setting.lean` | `theorem densMap_apply (l : V → ℝ) (y : V) : B.densMap l y = ∑ x, l x * B.phat x y` |
+| `sum_densMap` | `Setting.lean` | `theorem sum_densMap (l : V → ℝ) : ∑ y, B.densMap l y = ∑ x, l x` |
+| `exists_fixed` | `Setting.lean` | `theorem exists_fixed : ∃ l : V → ℝ, l ≠ 0 ∧ B.densMap l = l` |
+| `exists_invProb` | `Setting.lean` | `theorem exists_invProb : ∃ lam : V → ℝ, B.IsInvProb lam` |
+| `IsInvProb.pos_of_bstep` | `Setting.lean` | `theorem IsInvProb.pos_of_bstep {lam : V → ℝ} (h : B.IsInvProb lam) {x y : V} (hs : B.BStep x y) (hx : 0 < lam x) : 0 < lam y` |
+| `IsInvProb.pos_of_breach` | `Setting.lean` | `theorem IsInvProb.pos_of_breach {lam : V → ℝ} (h : B.IsInvProb lam) {x y : V} (hr : B.BReach x y) (hx : 0 < lam x) : 0 < lam y` |
+| `IsInvProb.exists_pos` | `Setting.lean` | `theorem IsInvProb.exists_pos {lam : V → ℝ} (h : B.IsInvProb lam) : ∃ x, 0 < lam x` |
+| `IsInvProb.pos` | `Setting.lean` | `theorem IsInvProb.pos (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (y : V) : 0 < lam y` |
+| `eq_zero_of_breach` | `Setting.lean` | `theorem eq_zero_of_breach {nu : V → ℝ} (hnn : ∀ x, 0 ≤ nu x) (hinv : ∀ y, ∑ x, nu x * B.phat x y = nu y) {x0 : V} (h0 : nu x0 = 0) {x : V} (hr : B.BReach x x0) : nu x = 0` |
+| `invProb_unique` | `Setting.lean` | `theorem invProb_unique (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam lam' : V → ℝ} (h : B.IsInvProb lam) (h' : B.IsInvProb lam') : lam = lam'` |
+| `IsInvProb.lam_snk_eq_src` | `Setting.lean` | `theorem IsInvProb.lam_snk_eq_src {lam : V → ℝ} (h : B.IsInvProb lam) : lam G.snk = lam G.src` |
+| `universality_graphs_one` | `Setting.lean` | `theorem universality_graphs_one (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) : (∀ x y : V, B.BReach x y) ∧ (∃ lam : V → ℝ, B.IsInvProb lam) ∧ (∀ lam lam' : V → ℝ, B.IsInvProb lam → B.IsInvProb lam' → lam = lam') ∧ (∀ lam : V → ℝ, B.IsInvProb lam → (∀ x, 0 < lam x) ∧ lam G.snk = lam G.src)` |
+| `internal` | `Universality.lean` | `def internal : Finset V` |
+| `mem_internal` | `Universality.lean` | `theorem mem_internal {v : V} : v ∈ G.internal ↔ v ≠ G.src ∧ v ≠ G.snk` |
+| `internal_eq_erase_src` | `Universality.lean` | `theorem internal_eq_erase_src : G.internal = (Finset.univ.erase G.snk).erase G.src` |
+| `isInvProb_normalized` | `Universality.lean` | `theorem isInvProb_normalized {f : V → ℝ} (hnn : ∀ x, 0 ≤ f x) (hpos : 0 < ∑ z, f z) (hinv : ∀ y, ∑ x, f x * B.phat x y = f y) : B.IsInvProb (fun x => f x / ∑ z, f z)` |
+| `eq_smul_invProb` | `Universality.lean` | `theorem eq_smul_invProb (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam f : V → ℝ} (h : B.IsInvProb lam) (hnn : ∀ x, 0 ≤ f x) (hne : f ≠ 0) (hinv : ∀ y, ∑ x, f x * B.phat x y = f y) : 0 < ∑ z, f z ∧ ∀ x, f x = (∑ z, f z) * lam x` |
+| `FrozenBalance` | `Universality.lean` | `def FrozenBalance (pf : V → V → ℝ) (fout : V → ℝ) : Prop` |
+| `reversal` | `Universality.lean` | `noncomputable def reversal (lam : V → ℝ) (u v : V) : ℝ` |
+| `reversal_nonneg` | `Universality.lean` | `theorem reversal_nonneg {lam : V → ℝ} (hlam : ∀ x, 0 ≤ lam x) (u v : V) : 0 ≤ B.reversal lam u v` |
+| `sum_reversal` | `Universality.lean` | `theorem sum_reversal {lam : V → ℝ} (h : B.IsInvProb lam) {u : V} (hu : lam u ≠ 0) : ∑ v, B.reversal lam u v = 1` |
+| `frozenBalance_reversal` | `Universality.lean` | `theorem frozenBalance_reversal {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (c : ℝ) : B.FrozenBalance (B.reversal lam) (fun x => c * lam x)` |
+| `frozenBalance_eq` | `Universality.lean` | `theorem frozenBalance_eq (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) {pf : V → V → ℝ} {fout : V → ℝ} (hrow : ∀ u, ∑ v, pf u v = 1) (hnn : ∀ x, 0 ≤ fout x) (hne : fout ≠ 0) (hfb : B.FrozenBalance pf fout) : 0 < ∑ z, fout z ∧ (∀ x, fout x = (∑ z, fout z) * lam x) ∧ pf = B.reversal lam` |
+| `universality_graphs_two` | `Universality.lean` | `theorem universality_graphs_two (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) : (∀ (pf : V → V → ℝ) (fout : V → ℝ), (∀ u, ∑ v, pf u v = 1) → (∀ x, 0 ≤ fout x) → fout ≠ 0 → B.FrozenBalance pf fout → ∃ c : ℝ, 0 < c ∧ (∀ x, fout x = c * lam x) ∧ pf = B.reversal lam) ∧ (∀ c : ℝ, 0 < c → B.FrozenBalance (B.reversal lam) (fun x => c * lam x)) ∧ (∀ u v, 0 ≤ B.reversal lam u v) ∧ (∀ u, ∑ v, B.reversal lam u v = 1)` |
+| `edgeFlow` | `Universality.lean` | `noncomputable def edgeFlow (lam : V → ℝ) (c : ℝ) (u v : V) : ℝ` |
+| `initFlow` | `Universality.lean` | `noncomputable def initFlow (lam : V → ℝ) (c : ℝ) (v : V) : ℝ` |
+| `termFlow` | `Universality.lean` | `noncomputable def termFlow (lam : V → ℝ) (c : ℝ) (x : V) : ℝ` |
+| `outflowStar` | `Universality.lean` | `noncomputable def outflowStar (lam : V → ℝ) (c : ℝ) (u : V) : ℝ` |
+| `fwdStar` | `Universality.lean` | `noncomputable def fwdStar (lam : V → ℝ) (c : ℝ) (u v : V) : ℝ` |
+| `fmDefect` | `Universality.lean` | `noncomputable def fmDefect (lam : V → ℝ) (c : ℝ) (v : V) : ℝ` |
+| `phat_snk_of_ne_src` | `Universality.lean` | `theorem phat_snk_of_ne_src {v : V} (hv : v ≠ G.src) : B.phat v G.snk = 0` |
+| `edgeFlow_nonneg` | `Universality.lean` | `theorem edgeFlow_nonneg {lam : V → ℝ} (hlam : ∀ x, 0 ≤ lam x) {c : ℝ} (hc : 0 ≤ c) (u v : V) : 0 ≤ B.edgeFlow lam c u v` |
+| `sum_edgeFlow_out` | `Universality.lean` | `theorem sum_edgeFlow_out {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) (u : V) : ∑ v, B.edgeFlow lam c u v = c * lam u` |
+| `sum_edgeFlow_in` | `Universality.lean` | `theorem sum_edgeFlow_in (lam : V → ℝ) (c : ℝ) (v : V) : ∑ u, B.edgeFlow lam c u v = c * lam v` |
+| `edgeFlow_wrap` | `Universality.lean` | `theorem edgeFlow_wrap (lam : V → ℝ) (c : ℝ) : B.edgeFlow lam c G.snk G.src = c * lam G.src` |
+| `edgeFlow_snk_out` | `Universality.lean` | `theorem edgeFlow_snk_out (lam : V → ℝ) (c : ℝ) {v : V} (hv : v ≠ G.src) : B.edgeFlow lam c G.snk v = 0` |
+| `edgeFlow_to_src` | `Universality.lean` | `theorem edgeFlow_to_src (lam : V → ℝ) (c : ℝ) {u : V} (hu : u ≠ G.snk) : B.edgeFlow lam c u G.src = 0` |
+| `outflowStar_eq_sum` | `Universality.lean` | `theorem outflowStar_eq_sum {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) (u : V) : B.outflowStar lam c u = ∑ v ∈ Finset.univ.erase G.snk, B.edgeFlow lam c u v` |
+| `outflowStar_nonneg` | `Universality.lean` | `theorem outflowStar_nonneg {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) (u : V) : 0 ≤ B.outflowStar lam c u` |
+| `edgeFlow_eq_zero_of_outflowStar` | `Universality.lean` | `theorem edgeFlow_eq_zero_of_outflowStar {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) {u : V} (hu : B.outflowStar lam c u = 0) {v : V} (hv : v ≠ G.snk) : B.edgeFlow lam c u v = 0` |
+| `outflowStar_mul_fwdStar` | `Universality.lean` | `theorem outflowStar_mul_fwdStar {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) (u : V) {v : V} (hv : v ≠ G.snk) : B.outflowStar lam c u * B.fwdStar lam c u v = B.edgeFlow lam c u v` |
+| `sum_fwdStar` | `Universality.lean` | `theorem sum_fwdStar {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) {u : V} (hu : B.outflowStar lam c u ≠ 0) : ∑ v ∈ Finset.univ.erase G.snk, B.fwdStar lam c u v = 1` |
+| `sum_fwdStar_internal` | `Universality.lean` | `theorem sum_fwdStar_internal {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) {u : V} (husnk : u ≠ G.snk) (hu : B.outflowStar lam c u ≠ 0) : ∑ v ∈ G.internal, B.fwdStar lam c u v = 1` |
+| `sum_initFlow` | `Universality.lean` | `theorem sum_initFlow {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) : ∑ v, B.initFlow lam c v = c * lam G.src` |
+| `termFlow_eq_target` | `Universality.lean` | `theorem termFlow_eq_target {lam : V → ℝ} (h : B.IsInvProb lam) {c Z : ℝ} (hcZ : c * lam G.src = Z) (x : V) : B.termFlow lam c x = Z * B.pb G.snk x` |
+| `termFlow_pos_of_edge` | `Universality.lean` | `theorem termFlow_pos_of_edge (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) {c : ℝ} (hc : 0 < c) {x : V} (hx : G.Edge x G.snk) : 0 < B.termFlow lam c x` |
+| `fmDefect_eq_zero` | `Universality.lean` | `theorem fmDefect_eq_zero {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) {v : V} (hv : v ∈ G.internal) : B.fmDefect lam c v = 0` |
+| `flow_matching` | `Universality.lean` | `theorem flow_matching {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) {v : V} (hv : v ∈ G.internal) : B.initFlow lam c v + (∑ u ∈ G.internal, B.outflowStar lam c u * B.fwdStar lam c u v) = B.termFlow lam c v + B.outflowStar lam c v` |
+| `residuals_eq_zero` | `Universality.lean` | `theorem residuals_eq_zero {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) {v : V} (hv : v ∈ G.internal) : (B.fmDefect lam c v)⁻ = 0 ∧ (B.fmDefect lam c v)⁺ = 0` |
+| `universality_graphs_three` | `Universality.lean` | `theorem universality_graphs_three (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) {Z c : ℝ} (hZ : 0 < Z) (hc : c = Z / lam G.src) : 0 < c ∧ c * lam G.src = Z ∧ B.edgeFlow lam c G.snk G.src = Z ∧ (∑ v, B.initFlow lam c v) = Z ∧ (∀ x, B.termFlow lam c x = Z * B.pb G.snk x) ∧ (∀ x, G.Edge x G.snk → 0 < B.termFlow lam c x) ∧ (∀ u, 0 ≤ B.outflowStar lam c u) ∧ (∀ v ∈ G.internal, B.fmDefect lam c v = 0)` |
+| `tv` | `Basic.lean` | `noncomputable def tv {X : Type*} [Fintype X] (p q : X → ℝ) : ℝ` |
+| `chiSq` | `Basic.lean` | `noncomputable def chiSq {X : Type*} [Fintype X] (q p : X → ℝ) : ℝ` |
+| `unif` | `Basic.lean` | `noncomputable def unif (X : Type*) [Fintype X] : X → ℝ` |
+| `logRatio` | `Basic.lean` | `noncomputable def logRatio {X T : Type*} (π : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) (x : X) (t : T) : ℝ` |
+| `residual` | `Basic.lean` | `noncomputable def residual {X T : Type*} [Fintype X] [Fintype T] (pET π : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) : ℝ` |
+| `residual_eq` | `Basic.lean` | `theorem residual_eq {X T : Type*} [Fintype X] [Fintype T] (pET π : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) : residual pET π pB pF = ∑ x, pET x * ∑ t, pB x t * Real.log (pF t / (π x * pB x t)) ^ 2` |
+| `MprimeLe` | `Basic.lean` | `def MprimeLe {X T : Type*} [Fintype X] [Fintype T] (pB : X → T → ℝ) (pF : T → ℝ) (π : X → ℝ) (c : ℝ) : Prop` |
+| `chiSq_nonneg` | `Basic.lean` | `theorem chiSq_nonneg {X : Type*} [Fintype X] {q p : X → ℝ} (hp : ∀ x, 0 ≤ p x) : 0 ≤ chiSq q p` |
+| `chiSq_self` | `Basic.lean` | `theorem chiSq_self {X : Type*} [Fintype X] (p : X → ℝ) : chiSq p p = 0` |
+| `sum_unif` | `Basic.lean` | `theorem sum_unif {X : Type*} [Fintype X] (h : (Fintype.card X : ℝ) ≠ 0) : ∑ x, unif X x = 1` |
+| `sum_sq_div_eq_one_add_chiSq` | `Basic.lean` | `theorem sum_sq_div_eq_one_add_chiSq {X : Type*} [Fintype X] {q p : X → ℝ} (hp : ∀ x, 0 < p x) (hq1 : ∑ x, q x = 1) (hp1 : ∑ x, p x = 1) : ∑ x, q x ^ 2 / p x = 1 + chiSq q p` |
+| `wSupport` | `Basic.lean` | `noncomputable def wSupport {X T : Type*} [Fintype X] [Fintype T] (pB : X → T → ℝ) : Finset (X × T)` |
+| `wMin` | `Basic.lean` | `noncomputable def wMin {X T : Type*} [Fintype X] [Fintype T] (pET : X → ℝ) (pB : X → T → ℝ) (h : (wSupport pB).Nonempty) : ℝ` |
+| `wMin_le` | `Basic.lean` | `theorem wMin_le {X T : Type*} [Fintype X] [Fintype T] {pET : X → ℝ} {pB : X → T → ℝ} (h : (wSupport pB).Nonempty) {x : X} {t : T} (ht : 0 < pB x t) : wMin pET pB h ≤ pET x * pB x t` |
+| `wMin_pos` | `Basic.lean` | `theorem wMin_pos {X T : Type*} [Fintype X] [Fintype T] {pET : X → ℝ} {pB : X → T → ℝ} (h : (wSupport pB).Nonempty) (hET : ∀ x, 0 < pET x) : 0 < wMin pET pB h` |
+| `sq_sub_weighted_le` | `Explicit.lean` | `theorem sq_sub_weighted_le {T : Type*} [Fintype T] {w f : T → ℝ} {c : ℝ} (hw : ∀ τ, 0 ≤ w τ) (hw1 : ∑ τ, w τ = 1) : (c - ∑ τ, w τ * f τ) ^ 2 ≤ ∑ τ, w τ * (c - f τ) ^ 2` |
+| `logLipschitz` | `Explicit.lean` | `theorem logLipschitz {a b C : ℝ} (ha : 0 < a) (hb : 0 < b) (haC : a ≤ C) (hbC : b ≤ C) : \|a - b\| ≤ C * \|Real.log a - Real.log b\|` |
+| `sq_sub_le_sq_mul_log_sq` | `Explicit.lean` | `theorem sq_sub_le_sq_mul_log_sq {a b C : ℝ} (ha : 0 < a) (hb : 0 < b) (haC : a ≤ C) (hbC : b ≤ C) : (a - b) ^ 2 ≤ C ^ 2 * Real.log (a / b) ^ 2` |
+| `tv_le_sqrt_residual` | `Explicit.lean` | `theorem tv_le_sqrt_residual {X T : Type*} [Fintype X] [Fintype T] {pET π pT : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} {M Pinf : ℝ} (hET_pos : ∀ x, 0 < pET x) (hET_sum : ∑ x, pET x = 1) (hπ_pos : ∀ x, 0 < π x) (hB_nonneg : ∀ x τ, 0 ≤ pB x τ) (hB_sum : ∀ x, ∑ τ, pB x τ = 1) (hF_pos : ∀ x τ, 0 < pB x τ → 0 < pF τ) (hdom : ∀ x, pT x = ∑ τ, pB x τ * (pF τ / pB x τ)) (hM : ∀ x τ, 0 < pB x τ → pF τ / pB x τ ≤ M) (hPinf : ∀ x, π x ≤ Pinf) : tv pT π ≤ (Fintype.card X : ℝ) / 2 * max M Pinf * Real.sqrt ((1 + chiSq (unif X) pET) * residual pET π pB pF)` |
+| `tv_le_sqrt_residual_max` | `Explicit.lean` | `theorem tv_le_sqrt_residual_max {X T : Type*} [Fintype X] [Fintype T] {pET π pT : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} (hX : (Finset.univ : Finset X).Nonempty) (hsupp : ((Finset.univ : Finset (X × T)).filter fun p => 0 < pB p.1 p.2).Nonempty) (hET_pos : ∀ x, 0 < pET x) (hET_sum : ∑ x, pET x = 1) (hπ_pos : ∀ x, 0 < π x) (hB_nonneg : ∀ x τ, 0 ≤ pB x τ) (hB_sum : ∀ x, ∑ τ, pB x τ = 1) (hF_pos : ∀ x τ, 0 < pB x τ → 0 < pF τ) (hdom : ∀ x, pT x = ∑ τ, pB x τ * (pF τ / pB x τ)) : tv pT π ≤ (Fintype.card X : ℝ) / 2 * max (((Finset.univ : Finset (X × T)).filter fun p => 0 < pB p.1 p.2).sup' hsupp fun p => pF p.2 / pB p.1 p.2) ((Finset.univ : Finset X).sup' hX π) * Real.sqrt ((1 + chiSq (unif X) pET) * residual pET π pB pF)` |
+| `abs_exp_sub_one_le` | `NoUniform.lean` | `theorem abs_exp_sub_one_le {u s : ℝ} (h : \|u\| ≤ s) : \|Real.exp u - 1\| ≤ Real.exp s - 1` |
+| `tv_le_exp_sqrt_energy` | `NoUniform.lean` | `theorem tv_le_exp_sqrt_energy {pET : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} {π pT : X → ℝ} {w : ℝ} (hπ : ∀ x, 0 < π x) (hπ1 : ∑ x, π x = 1) (hET : ∀ x, 0 ≤ pET x) (hB : ∀ x t, 0 ≤ pB x t) (hB1 : ∀ x, ∑ t, pB x t = 1) (hF : ∀ x t, 0 < pB x t → 0 < pF t) (hdom : ∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) (hw : 0 < w) (hwle : ∀ x t, 0 < pB x t → w ≤ pET x * pB x t) : tv pT π ≤ 2⁻¹ * (Real.exp (Real.sqrt (residual pET π pB pF / w)) - 1)` |
+| `tv_le_exp_sqrt_energy_wmin` | `NoUniform.lean` | `theorem tv_le_exp_sqrt_energy_wmin {pET : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} {π pT : X → ℝ} (h : (wSupport pB).Nonempty) (hπ : ∀ x, 0 < π x) (hπ1 : ∑ x, π x = 1) (hET : ∀ x, 0 < pET x) (hB : ∀ x t, 0 ≤ pB x t) (hB1 : ∀ x, ∑ t, pB x t = 1) (hF : ∀ x t, 0 < pB x t → 0 < pF t) (hdom : ∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) : tv pT π ≤ 2⁻¹ * (Real.exp (Real.sqrt (residual pET π pB pF / wMin pET pB h)) - 1)` |
+| `deltaPB` | `NoUniform.lean` | `def deltaPB (X : Type*) [DecidableEq X] : X → X → ℝ` |
+| `deltaPB_nonneg` | `NoUniform.lean` | `theorem deltaPB_nonneg (x t : X) : 0 ≤ deltaPB X x t` |
+| `deltaPB_pos_iff` | `NoUniform.lean` | `theorem deltaPB_pos_iff {x t : X} : 0 < deltaPB X x t ↔ t = x` |
+| `deltaPB_sum` | `NoUniform.lean` | `theorem deltaPB_sum (x : X) : ∑ t, deltaPB X x t = 1` |
+| `hdom_deltaPB` | `NoUniform.lean` | `theorem hdom_deltaPB (pF : X → ℝ) (x : X) : pF x = ∑ t, deltaPB X x t * (pF t / deltaPB X x t)` |
+| `energy_deltaPB` | `NoUniform.lean` | `theorem energy_deltaPB (pET pF π : X → ℝ) : residual pET π (deltaPB X) pF = ∑ x, pET x * Real.log (pF x / π x) ^ 2` |
+| `Star` | `NoUniform.lean` | `abbrev Star (K : ℕ)` |
+| `starPi` | `NoUniform.lean` | `noncomputable def starPi (K : ℕ) : Star K → ℝ \| .inl _ => 1 / 4 \| .inr _ => 1 / (2 * K) / `p_F(s_o→bᵢ) = 1/(2K)`. -/ noncomputable def starPF (K : ℕ) : Star K → ℝ \| .inl false => 3 / 8 \| .inl true => 1 / 8 \| .inr _ => 1 / (2 * K) / noncomputable def starPET (K : ℕ) : Star K → ℝ` |
+| `card_star` | `NoUniform.lean` | `theorem card_star (K : ℕ) : (Fintype.card (Star K) : ℝ) = (K : ℝ) + 2` |
+| `starPET_pos` | `NoUniform.lean` | `theorem starPET_pos (K : ℕ) (x : Star K) : 0 < starPET K x` |
+| `starPET_sum` | `NoUniform.lean` | `theorem starPET_sum (K : ℕ) : ∑ x, starPET K x = 1` |
+| `star_chiSq` | `NoUniform.lean` | `theorem star_chiSq (K : ℕ) : chiSq (unif (Star K)) (starPET K) = 0` |
+| `star_tv` | `NoUniform.lean` | `theorem star_tv (K : ℕ) : tv (starPF K) (starPi K) = 1 / 8` |
+| `starK_pos` | `NoUniform.lean` | `theorem starK_pos : (0 : ℝ) < K` |
+| `starK_one` | `NoUniform.lean` | `theorem starK_one : (1 : ℝ) ≤ K` |
+| `starPi_pos` | `NoUniform.lean` | `theorem starPi_pos (x : Star K) : 0 < starPi K x` |
+| `starPF_pos` | `NoUniform.lean` | `theorem starPF_pos (x : Star K) : 0 < starPF K x` |
+| `starPi_sum` | `NoUniform.lean` | `theorem starPi_sum : ∑ x, starPi K x = 1` |
+| `starPF_sum` | `NoUniform.lean` | `theorem starPF_sum : ∑ x, starPF K x = 1` |
+| `star_Mprime` | `NoUniform.lean` | `theorem star_Mprime : MprimeLe (deltaPB (Star K)) (starPF K) (starPi K) 1` |
+| `star_energy` | `NoUniform.lean` | `theorem star_energy : residual (starPET K) (starPi K) (deltaPB (Star K)) (starPF K) = ((Real.log (3 / 2)) ^ 2 + (Real.log 2) ^ 2) / ((K : ℝ) + 2)` |
+| `log_sq_sum_le_one` | `NoUniform.lean` | `theorem log_sq_sum_le_one : (Real.log (3 / 2)) ^ 2 + (Real.log 2) ^ 2 ≤ 1` |
+| `exists_star_witness` | `NoUniform.lean` | `theorem exists_star_witness {ε : ℝ} (hε : 0 < ε) : ∃ K : ℕ, 0 < K ∧ (∀ x, 0 < starPi K x) ∧ (∀ x, 0 < starPF K x) ∧ (∑ x, starPi K x = 1) ∧ (∑ x, starPF K x = 1) ∧ (∀ x, 0 < starPET K x) ∧ (∑ x, starPET K x = 1) ∧ chiSq (unif (Star K)) (starPET K) = 0 ∧ MprimeLe (deltaPB (Star K)) (starPF K) (starPi K) 1 ∧ 0 < residual (starPET K) (starPi K) (deltaPB (Star K)) (starPF K) ∧ residual (starPET K) (starPi K) (deltaPB (Star K)) (starPF K) ≤ ε ∧ tv (starPF K) (starPi K) = 1 / 8` |
+| `no_state_space_free_bound` | `NoUniform.lean` | `theorem no_state_space_free_bound : ¬ ∃ F : ℝ → ℝ, Tendsto F (𝓝[>] (0 : ℝ)) (𝓝 0) ∧ ∀ (X T : Type) [Fintype X] [Fintype T] (pET : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) (π pT : X → ℝ), (∀ x, 0 < π x) → (∑ x, π x = 1) → (∀ x, 0 < pET x) → (∑ x, pET x = 1) → (∀ x t, 0 ≤ pB x t) → (∀ x, ∑ t, pB x t = 1) → (∀ x t, 0 < pB x t → 0 < pF t) → (∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) → chiSq (unif X) pET = 0 → MprimeLe pB pF π 1 → tv pT π ≤ F (residual pET π pB pF)` |
+| `no_three_argument_bound` | `NoUniform.lean` | `theorem no_three_argument_bound : ¬ ∃ F : ℝ → ℝ → ℝ → ℝ, Tendsto (fun e => F e 0 1) (𝓝[>] (0 : ℝ)) (𝓝 0) ∧ ∀ (X T : Type) [Fintype X] [Fintype T] (pET : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) (π pT : X → ℝ) (c : ℝ), (∀ x, 0 < π x) → (∑ x, π x = 1) → (∀ x, 0 < pET x) → (∑ x, pET x = 1) → (∀ x t, 0 ≤ pB x t) → (∀ x, ∑ t, pB x t = 1) → (∀ x t, 0 < pB x t → 0 < pF t) → (∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) → MprimeLe pB pF π c → tv pT π ≤ F (residual pET π pB pF) (chiSq (unif X) pET) c` |
+| `bind_absolutelyContinuous_bind` | `Kernel.lean` | `theorem bind_absolutelyContinuous_bind (κ : Kernel α α) {μ ν : Measure α} (h : μ ≪ ν) : μ.bind ⇑κ ≪ ν.bind ⇑κ` |
+| `bind_add_measure` | `Kernel.lean` | `theorem bind_add_measure (κ : Kernel α α) (μ₁ μ₂ : Measure α) : (μ₁ + μ₂).bind ⇑κ = μ₁.bind ⇑κ + μ₂.bind ⇑κ` |
+| `bind_withDensity_absolutelyContinuous` | `Kernel.lean` | `theorem bind_withDensity_absolutelyContinuous (κ : Kernel α α) {ν : Measure α} (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : (ν.withDensity f).bind ⇑κ ≪ ν` |
+| `bind_withDensity_univ` | `Kernel.lean` | `theorem bind_withDensity_univ (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) (f : α → ℝ≥0∞) : ((ν.withDensity f).bind ⇑κ) Set.univ = ∫⁻ x, f x ∂ν` |
+| `isFiniteMeasure_bind_withDensity` | `Kernel.lean` | `theorem isFiniteMeasure_bind_withDensity (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) {f : α → ℝ≥0∞} (hf : ∫⁻ x, f x ∂ν ≠ ⊤) : IsFiniteMeasure ((ν.withDensity f).bind ⇑κ)` |
+| `bindDensity` | `Kernel.lean` | `noncomputable def bindDensity (κ : Kernel α α) (ν : Measure α) (f : α → ℝ≥0∞) : α → ℝ≥0∞` |
+| `bindDensity_congr` | `Kernel.lean` | `theorem bindDensity_congr (κ : Kernel α α) (ν : Measure α) {f g : α → ℝ≥0∞} (h : f =ᵐ[ν] g) : bindDensity κ ν f = bindDensity κ ν g` |
+| `measurable_bindDensity` | `Kernel.lean` | `theorem measurable_bindDensity (κ : Kernel α α) (ν : Measure α) (f : α → ℝ≥0∞) : Measurable (bindDensity κ ν f)` |
+| `withDensity_bindDensity` | `Kernel.lean` | `theorem withDensity_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : ν.withDensity (bindDensity κ ν f) = (ν.withDensity f).bind ⇑κ` |
+| `lintegral_bindDensity` | `Kernel.lean` | `theorem lintegral_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : ∫⁻ x, bindDensity κ ν f x ∂ν = ∫⁻ x, f x ∂ν` |
+| `bindDensity_one` | `Kernel.lean` | `theorem bindDensity_one (κ : Kernel α α) {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) : bindDensity κ ν 1 =ᵐ[ν] 1` |
+| `bindDensity_zero` | `Kernel.lean` | `theorem bindDensity_zero (κ : Kernel α α) (ν : Measure α) : bindDensity κ ν 0 =ᵐ[ν] 0` |
+| `bindDensity_add` | `Kernel.lean` | `theorem bindDensity_add (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {f g : α → ℝ≥0∞} (hf : AEMeasurable f ν) (hfi : ∫⁻ x, f x ∂ν ≠ ⊤) (hgi : ∫⁻ x, g x ∂ν ≠ ⊤) : bindDensity κ ν (f + g) =ᵐ[ν] bindDensity κ ν f + bindDensity κ ν g` |
+| `bindDensity_smul` | `Kernel.lean` | `theorem bindDensity_smul (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {c : ℝ≥0∞} (hc : c ≠ ⊤) {f : α → ℝ≥0∞} (hf : AEMeasurable f ν) (hfi : ∫⁻ x, f x ∂ν ≠ ⊤) : bindDensity κ ν (c • f) =ᵐ[ν] c • bindDensity κ ν f` |
+| `densityAction` | `Kernel.lean` | `noncomputable def densityAction (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : α → ℝ` |
+| `densityAction_congr` | `Kernel.lean` | `theorem densityAction_congr (κ : Kernel α α) (ν : Measure α) {f g : α → ℝ} (h : f =ᵐ[ν] g) : densityAction κ ν f = densityAction κ ν g` |
+| `measurable_densityAction` | `Kernel.lean` | `theorem measurable_densityAction (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : Measurable (densityAction κ ν f)` |
+| `lintegral_ofReal_ne_top` | `Kernel.lean` | `theorem lintegral_ofReal_ne_top {ν : Measure α} {f : α → ℝ} (hf : Integrable f ν) : ∫⁻ x, ENNReal.ofReal (f x) ∂ν ≠ ⊤` |
+| `bindDensity_ofReal_lt_top` | `Kernel.lean` | `theorem bindDensity_ofReal_lt_top (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∀ᵐ x ∂ν, bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x < ⊤` |
+| `integrable_toReal_bindDensity` | `Kernel.lean` | `theorem integrable_toReal_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : Integrable (fun x => (bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x).toReal) ν` |
+| `integral_toReal_bindDensity` | `Kernel.lean` | `theorem integral_toReal_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∫ x, (bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x).toReal ∂ν = (∫⁻ x, ENNReal.ofReal (f x) ∂ν).toReal` |
+| `integral_densityAction` | `Kernel.lean` | `theorem integral_densityAction (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∫ x, densityAction κ ν f x ∂ν = ∫ x, f x ∂ν` |
+| `densityAction_one` | `Kernel.lean` | `theorem densityAction_one (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) : densityAction κ ν 1 =ᵐ[ν] 1` |
+| `max_add_aux` | `Kernel.lean` | `theorem max_add_aux (u v : ℝ) : max (u + v) 0 + max (-u) 0 + max (-v) 0 = max (-(u + v)) 0 + max u 0 + max v 0` |
+| `ofReal_add_aux` | `Kernel.lean` | `theorem ofReal_add_aux (u v : ℝ) : ENNReal.ofReal (u + v) + ENNReal.ofReal (-u) + ENNReal.ofReal (-v) = ENNReal.ofReal (-(u + v)) + ENNReal.ofReal u + ENNReal.ofReal v` |
+| `lintegral_add_ne_top` | `Kernel.lean` | `theorem lintegral_add_ne_top {ν : Measure α} {u v : α → ℝ≥0∞} (hu : AEMeasurable u ν) (hun : ∫⁻ x, u x ∂ν ≠ ⊤) (hvn : ∫⁻ x, v x ∂ν ≠ ⊤) : ∫⁻ x, (u + v) x ∂ν ≠ ⊤` |
+| `bindDensity_add₃` | `Kernel.lean` | `theorem bindDensity_add₃ (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {u v w : α → ℝ≥0∞} (hu : AEMeasurable u ν) (hv : AEMeasurable v ν) (hun : ∫⁻ x, u x ∂ν ≠ ⊤) (hvn : ∫⁻ x, v x ∂ν ≠ ⊤) (hwn : ∫⁻ x, w x ∂ν ≠ ⊤) : bindDensity κ ν (u + v + w) =ᵐ[ν] bindDensity κ ν u + bindDensity κ ν v + bindDensity κ ν w` |
+| `aemeasurable_ofReal` | `Kernel.lean` | `theorem aemeasurable_ofReal {ν : Measure α} {f : α → ℝ} (hf : Integrable f ν) : AEMeasurable (fun y => ENNReal.ofReal (f y)) ν` |
+| `densityAction_add` | `Kernel.lean` | `theorem densityAction_add (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f g : α → ℝ} (hf : Integrable f ν) (hg : Integrable g ν) : densityAction κ ν (fun x => f x + g x) =ᵐ[ν] fun x => densityAction κ ν f x + densityAction κ ν g x` |
+| `densityAction_neg` | `Kernel.lean` | `theorem densityAction_neg (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : densityAction κ ν (fun x => -f x) = fun x => -densityAction κ ν f x` |
+| `densityAction_smul_nonneg` | `Kernel.lean` | `theorem densityAction_smul_nonneg (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {r : ℝ} (hr : 0 ≤ r) {f : α → ℝ} (hf : Integrable f ν) : densityAction κ ν (fun x => r * f x) =ᵐ[ν] fun x => r * densityAction κ ν f x` |
+| `densityAction_smul` | `Kernel.lean` | `theorem densityAction_smul (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (r : ℝ) {f : α → ℝ} (hf : Integrable f ν) : densityAction κ ν (fun x => r * f x) =ᵐ[ν] fun x => r * densityAction κ ν f x` |
+| `densityActionLM` | `Kernel.lean` | `noncomputable def densityActionLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : Lp ℝ p ν →ₗ[ℝ] Lp ℝ p ν` |
+| `densityActionCLM` | `Kernel.lean` | `noncomputable def densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : Lp ℝ p ν →L[ℝ] Lp ℝ p ν` |
+| `norm_densityActionCLM_le` | `Kernel.lean` | `theorem norm_densityActionCLM_le (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : ‖densityActionCLM κ ν p hinv hb‖ ≤ C` |
+| `coeFn_densityActionCLM` | `Kernel.lean` | `theorem coeFn_densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (F : Lp ℝ p ν) : ⇑(densityActionCLM κ ν p hinv hb F) =ᵐ[ν] densityAction κ ν ⇑F` |
+| `densityActionCLM_constOne` | `Kernel.lean` | `theorem densityActionCLM_constOne (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : densityActionCLM κ ν p hinv hb (constOne ν p) = constOne ν p` |
+| `integral_densityActionCLM` | `Kernel.lean` | `theorem integral_densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (F : Lp ℝ p ν) : ∫ x, (densityActionCLM κ ν p hinv hb F) x ∂ν = ∫ x, F x ∂ν` |
+| `weaklyUniversal_of_kernel` | `Kernel.lean` | `theorem weaklyUniversal_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν p hinv hb) ^ n - meanProj ν p‖) (hp : p ≠ ⊤) : WeaklyUniversal (densityActionCLM κ ν p hinv hb) (meanProj ν p)` |
+| `weaklyUniversalAt_of_kernel` | `Kernel.lean` | `theorem weaklyUniversalAt_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν p hinv hb) ^ n - meanProj ν p‖) (hp : p ≠ ⊤) {f_init f_term : Lp ℝ p ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : WeaklyUniversalAt (densityActionCLM κ ν p hinv hb) (f_term - f_init)` |
 
 
 ## Every declaration, by file
 
 
+### `GFNBounds/Balance/MassIdentity.lean`
+
+**The mass identity: a strictly unimodal generator admits no distant equilibrium**  
+
+*strict library; 428 lines; 25 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `prop:no_distant_equilibrium` (bucket B), 🟡 `theo:global_dichotomy_full` (bucket B)
+
+
+In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 136 | def | `Invariant` | `def Invariant (K : V → V → ℝ) (lam : V → ℝ) : Prop` |
+| 141 | def | `funAct` | `def funAct (K : V → V → ℝ) (φ : V → ℝ) : V → ℝ` |
+| 147 | theorem | `integral_funAct` | `theorem integral_funAct {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K lam) (φ : V → ℝ) : ∑ x, lam x * funAct K φ x = ∑ x, lam x * φ x` |
+| 165 | def | `gradDensity` | `def gradDensity (K : V → V → ℝ) (r φ : V → ℝ) : V → ℝ` |
+| 168 | theorem | `integral_gradDensity` | `theorem integral_gradDensity {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K lam) (r φ : V → ℝ) : ∑ x, lam x * gradDensity K r φ x = ∑ x, lam x * (φ x * (1 - r x))` |
+| 179 | theorem | `integral_gradDensity_potential` | `theorem integral_gradDensity_potential {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K lam) (gd : ℝ → ℝ) (r w : V → ℝ) : ∑ x, lam x * gradDensity K r (fun y => gd (r y) * w y) x = ∑ x, lam x * (gd (r x) * (1 - r x) * w x)` |
+| 192 | def | `StrictlyUnimodal` | `def StrictlyUnimodal (gd : ℝ → ℝ) : Prop` |
+| 196 | theorem | `term_neg` | `theorem term_neg {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ} (hl : 0 < l) (hr : 0 < rx) (hw : 0 < wx) (hne : rx ≠ 1) : l * (gd rx * (1 - rx) * wx) < 0` |
+| 205 | theorem | `term_nonpos` | `theorem term_nonpos {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ} (hl : 0 ≤ l) (hr : 0 < rx) (hw : 0 < wx) : l * (gd rx * (1 - rx) * wx) ≤ 0` |
+| 216 | theorem | `term_eq_zero_iff` | `theorem term_eq_zero_iff {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ} (hl : 0 < l) (hr : 0 < rx) (hw : 0 < wx) : l * (gd rx * (1 - rx) * wx) = 0 ↔ rx = 1` |
+| 229 | def | `pushMass` | `def pushMass (K : V → V → ℝ) (lam u : V → ℝ) : V → ℝ` |
+| 232 | def | `Balanced` | `def Balanced (K : V → V → ℝ) (lam u : V → ℝ) : Prop` |
+| 235 | def | `ratio` | `noncomputable def ratio (K : V → V → ℝ) (lam u : V → ℝ) : V → ℝ` |
+| 244 | theorem | `ratio_pos` | `theorem ratio_pos {K : V → V → ℝ} {lam u : V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (y : V) : 0 < ratio K lam u y` |
+| 266 | theorem | `ratio_eq_one_iff_balanced` | `theorem ratio_eq_one_iff_balanced {K : V → V → ℝ} {lam u : V → ℝ} (hpos : ∀ y, 0 < lam y * u y) : (∀ y, ratio K lam u y = 1) ↔ Balanced K lam u` |
+| 283 | def | `lossGradDensity` | `noncomputable def lossGradDensity (K : V → V → ℝ) (lam u w : V → ℝ) (gd : ℝ → ℝ) : V → ℝ` |
+| 287 | def | `gradMass` | `noncomputable def gradMass (K : V → V → ℝ) (lam u w : V → ℝ) (gd : ℝ → ℝ) : ℝ` |
+| 300 | theorem | `no_distant_equilibrium_one` | `theorem no_distant_equilibrium_one {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) : gradMass K lam u w gd = ∑ x, lam x * (gd (ratio K lam u x) * (1 - ratio K lam u x) * w x) ∧ gradMass K lam u w gd ≤ 0 ∧ (gradMass K lam u w gd = 0 ↔ Balanced K lam u)` |
+| 335 | theorem | `balanced_of_critical` | `theorem balanced_of_critical {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) (hD : ∀ x, lossGradDensity K lam u w gd x = 0) : Balanced K lam u` |
+| 358 | theorem | `global_dichotomy_full_one` | `theorem global_dichotomy_full_one {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) : gradMass K lam u w gd = ∑ x, lam x * (gd (ratio K lam u x) * (1 - ratio K lam u x) * w x) ∧ gradMass K lam u w gd ≤ 0 ∧ (gradMass K lam u w gd = 0 ↔ Balanced K lam u)` |
+| 370 | theorem | `strictlyUnimodal_sqDeriv` | `theorem strictlyUnimodal_sqDeriv : StrictlyUnimodal fun x : ℝ => 2 * (x - 1)` |
+| 378 | theorem | `strictlyUnimodal_logSqDeriv` | `theorem strictlyUnimodal_logSqDeriv : StrictlyUnimodal fun x : ℝ => 2 * Real.log x / x` |
+| 400 | theorem | `invariant_of_isInvProb` | `theorem invariant_of_isInvProb {lam : V → ℝ} (h : B.IsInvProb lam) : Invariant B.phat lam` |
+| 408 | theorem | `no_distant_equilibrium_one_graph` | `theorem no_distant_equilibrium_one_graph {lam u w : V → ℝ} {gd : ℝ → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (h : B.IsInvProb lam) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) : gradMass B.phat lam u w gd = ∑ x, lam x * (gd (ratio B.phat lam u x) * (1 - ratio B.phat lam u x) * w x) ∧ gradMass B.phat lam u w gd ≤ 0 ∧ (gradMass B.phat lam u w gd = 0 ↔ Balanced B.phat lam u)` |
+| 419 | theorem | `balanced_of_critical_graph` | `theorem balanced_of_critical_graph {lam u w : V → ℝ} {gd : ℝ → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (h : B.IsInvProb lam) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) (hD : ∀ x, lossGradDensity B.phat lam u w gd x = 0) : Balanced B.phat lam u` |
+
+### `GFNBounds/Core/Flow.lean`
+
+**The mean projection, and the two identities `Core.Mixing` assumes**  
+
+*strict library; 340 lines; 18 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `theo:universality_L2_full` (bucket B)
+
+
+In scope: `variable {α : Type*} [MeasurableSpace α] {ν : Measure α} [IsFiniteMeasure ν]`, `variable {P : Lp ℝ p ν →L[ℝ] Lp ℝ p ν}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 132 | theorem | `integrable_of_Lp` | `theorem integrable_of_Lp (f : Lp ℝ p ν) : Integrable (⇑f) ν` |
+| 136 | def | `integralLM` | `noncomputable def integralLM (ν : Measure α) (p : ℝ≥0∞) [IsFiniteMeasure ν] [Fact (1 ≤ p)] : Lp ℝ p ν →ₗ[ℝ] ℝ` |
+| 154 | theorem | `norm_integral_le_holder` | `theorem norm_integral_le_holder (f : Lp ℝ p ν) : ‖∫ x, f x ∂ν‖ ≤ (ν Set.univ).toReal ^ (1 - 1 / p.toReal) * ‖f‖` |
+| 185 | def | `integralCLM` | `noncomputable def integralCLM (ν : Measure α) (p : ℝ≥0∞) [IsFiniteMeasure ν] [Fact (1 ≤ p)] : Lp ℝ p ν →L[ℝ] ℝ` |
+| 191 | theorem | `integralCLM_apply` | `theorem integralCLM_apply (f : Lp ℝ p ν) : integralCLM ν p f = ∫ x, f x ∂ν` |
+| 195 | theorem | `norm_integralCLM_le` | `theorem norm_integralCLM_le : ‖integralCLM ν p‖ ≤ (ν Set.univ).toReal ^ (1 - 1 / p.toReal)` |
+| 201 | theorem | `integral_constOne` | `theorem integral_constOne : ∫ x, (constOne ν p) x ∂ν = (ν Set.univ).toReal` |
+| 213 | def | `meanProj` | `noncomputable def meanProj (ν : Measure α) (p : ℝ≥0∞) [IsFiniteMeasure ν] [Fact (1 ≤ p)] : Lp ℝ p ν →L[ℝ] Lp ℝ p ν` |
+| 217 | theorem | `meanProj_apply` | `theorem meanProj_apply (f : Lp ℝ p ν) : meanProj ν p f = ((∫ x, f x ∂ν) / (ν Set.univ).toReal) • constOne ν p` |
+| 222 | theorem | `meanProj_constOne` | `theorem meanProj_constOne (hν : ν Set.univ ≠ 0) : meanProj ν p (constOne ν p) = constOne ν p` |
+| 229 | theorem | `meanProj_idem` | `theorem meanProj_idem (hν : ν Set.univ ≠ 0) : meanProj ν p * meanProj ν p = meanProj ν p` |
+| 243 | theorem | `meanProj_comp_left` | `theorem meanProj_comp_left (hint : ∀ f : Lp ℝ p ν, ∫ x, (P f) x ∂ν = ∫ x, f x ∂ν) : meanProj ν p * P = meanProj ν p` |
+| 253 | theorem | `comp_meanProj` | `theorem comp_meanProj (hone : P (constOne ν p) = constOne ν p) : P * meanProj ν p = meanProj ν p` |
+| 263 | theorem | `meanProj_sub_eq_zero` | `theorem meanProj_sub_eq_zero {f_init f_term : Lp ℝ p ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : meanProj ν p (f_term - f_init) = 0` |
+| 278 | theorem | `mixing_of_massPreserving` | `theorem mixing_of_massPreserving (hone : P (constOne ν p) = constOne ν p) (hint : ∀ f : Lp ℝ p ν, ∫ x, (P f) x ∂ν = ∫ x, f x ∂ν) (hsum : Summable fun n : ℕ => ‖P ^ n - meanProj ν p‖) : Mixing P (meanProj ν p)` |
+| 296 | theorem | `weaklyUniversal_of_massPreserving` | `theorem weaklyUniversal_of_massPreserving (hone : P (constOne ν p) = constOne ν p) (hint : ∀ f : Lp ℝ p ν, ∫ x, (P f) x ∂ν = ∫ x, f x ∂ν) (hsum : Summable fun n : ℕ => ‖P ^ n - meanProj ν p‖) (hp : p ≠ ⊤) : WeaklyUniversal P (meanProj ν p)` |
+| 304 | theorem | `weaklyUniversalAt_of_equalMass` | `theorem weaklyUniversalAt_of_equalMass (hone : P (constOne ν p) = constOne ν p) (hint : ∀ f : Lp ℝ p ν, ∫ x, (P f) x ∂ν = ∫ x, f x ∂ν) (hsum : Summable fun n : ℕ => ‖P ^ n - meanProj ν p‖) (hp : p ≠ ⊤) {f_init f_term : Lp ℝ p ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : WeaklyUniversalAt P (f_term - f_init)` |
+| 319 | theorem | `eq_meanProj_of_invariant` | `theorem eq_meanProj_of_invariant (h : Mixing P (meanProj ν p)) {g : Lp ℝ p ν} (hg : P g = g) : g = ((∫ x, g x ∂ν) / (ν Set.univ).toReal) • constOne ν p` |
+
+### `GFNBounds/Core/Mixing.lean`
+
+**The mixing sum, and the Poisson equation it solves**  
+
+*strict library; 227 lines; 21 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `theo:universality_L2_full` (bucket B), ✅ `lem:sigma_mixing` (bucket A)
+
+
+In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi : E →L[ℝ] E}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 60 | structure | `of` | `structure of `L^p`. That is also why `Pi` is a hypothesis rather than a construction. On `L^p(ν_B)` with `ν_B` finite and `π*` ergodic, `Pi f = (∫ f dν_B / ν_B(𝒮)) • 1` is the mean projection onto the invariant densities (`proofs.tex:22`), and `Pi P = P Pi = Pi` holds because the density action preserves integrals and `ν_B π* = ν_B` fixes the constants (`proofs.tex:589`). **That derivation is not in this library.** It is `Core.Flow`, which **does not exist**: the kernel-to-operator passage that `CLAUDE.md` names as *obstruction 2*, "the `L^p` layer with its adjoint — the analysis is done; the functional analysis around it is not". Until it exists, `Mixing` is a hypothesis, and nothing is claimed about when it holds. ## SCOPE (disclosed) `Mixing` assumes the two intertwining identities and summability, and **not** idempotence of `Pi`, `‖Pi‖ ≤ 1`, or that `Pi` projects onto `ker (1 - P)`. Two of those are not concessions but consequences, and saying only "not assumed" would understate the bundle: `proj_idem` derives `Pi * Pi = Pi` from summability alone, and if `(1 - P) x = 0` then `P ^ n x = x` for every `n`, so `P ^ n → Pi` gives `Pi x = x` — `Pi` *is* forced to be the projection onto `ker (1 - P)`. The hypothesis is therefore tighter than its statement suggests, in the safe direction. ## Hypothesis checklist \| paper hypothesis \| here \| \| \| `L^2(λ)` (`lem:sigma_mixing`) / `L^p(ν_B)` (Step 1) \| ⚠ weakened to any Banach space over `ℝ` \| \| `P` the density action of an ergodic policy \| ⚠ weakened to any bounded operator \| \| `Π` the mean projection onto the invariant densities \| ⚠ weakened to `Pi * P = Pi`, `P * Pi = Pi` \| \| `Π P = P Π = Π` *derived* from ergodicity and invariance \| ⚠ **assumed**; the derivation is `Core.Flow`, which does not exist \| \| `B̂ = Σ β̂_n < ∞` \| ✓ carried (`Mixing.summable`) \| \| `β̂_0 = 1` \| not needed; the conclusions use only `B ≥ 0`, and `B̂ ≥ 1` holds in the paper's normalization \|` |
+| 104 | structure | `Mixing` | `structure Mixing {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] (P Pi : E →L[ℝ] E) : Prop` |
+| 120 | def | `beta` | `noncomputable def beta (P Pi : E →L[ℝ] E) (n : ℕ) : ℝ` |
+| 124 | def | `B` | `noncomputable def B (P Pi : E →L[ℝ] E) : ℝ` |
+| 126 | theorem | `summable_beta` | `theorem summable_beta (h : Mixing P Pi) : Summable (beta P Pi)` |
+| 128 | theorem | `beta_nonneg` | `theorem beta_nonneg (P Pi : E →L[ℝ] E) (n : ℕ) : 0 ≤ beta P Pi n` |
+| 130 | theorem | `B_nonneg` | `theorem B_nonneg (P Pi : E →L[ℝ] E) : 0 ≤ B P Pi` |
+| 134 | theorem | `summable_terms` | `theorem summable_terms [CompleteSpace E] (h : Mixing P Pi) : Summable fun n : ℕ => P ^ n - Pi` |
+| 139 | def | `S` | `noncomputable def S (P Pi : E →L[ℝ] E) : E →L[ℝ] E` |
+| 143 | theorem | `tendsto_partialSum` | `theorem tendsto_partialSum [CompleteSpace E] (h : Mixing P Pi) : Tendsto (partialSum P Pi) atTop (𝓝 (S P Pi))` |
+| 149 | theorem | `tendsto_pow` | `theorem tendsto_pow [CompleteSpace E] (h : Mixing P Pi) : Tendsto (fun n : ℕ => P ^ n) atTop (𝓝 Pi)` |
+| 155 | theorem | `proj_idem` | `theorem proj_idem [CompleteSpace E] (h : Mixing P Pi) : Pi * Pi = Pi` |
+| 170 | theorem | `norm_S_le` | `theorem norm_S_le [CompleteSpace E] (h : Mixing P Pi) : ‖S P Pi‖ ≤ B P Pi` |
+| 175 | theorem | `norm_S_apply_le` | `theorem norm_S_apply_le [CompleteSpace E] (h : Mixing P Pi) (θ : E) : ‖S P Pi θ‖ ≤ B P Pi * ‖θ‖` |
+| 181 | theorem | `poisson_right` | `theorem poisson_right [CompleteSpace E] (h : Mixing P Pi) : S P Pi * (1 - P) = 1 - Pi` |
+| 185 | theorem | `poisson_left` | `theorem poisson_left [CompleteSpace E] (h : Mixing P Pi) : (1 - P) * S P Pi = 1 - Pi` |
+| 189 | theorem | `poisson_right_apply` | `theorem poisson_right_apply [CompleteSpace E] (h : Mixing P Pi) (θ : E) : S P Pi ((1 - P) θ) = θ - Pi θ` |
+| 195 | theorem | `poisson_left_apply` | `theorem poisson_left_apply [CompleteSpace E] (h : Mixing P Pi) (θ : E) : (1 - P) (S P Pi θ) = θ - Pi θ` |
+| 203 | theorem | `poisson_solved` | `theorem poisson_solved [CompleteSpace E] (h : Mixing P Pi) {θ : E} (hθ : Pi θ = 0) : (1 - P) (S P Pi θ) = θ` |
+| 213 | theorem | `coercivity` | `theorem coercivity [CompleteSpace E] (h : Mixing P Pi) (x : E) : ‖x - Pi x‖ ≤ B P Pi * ‖(1 - P) x‖` |
+| 221 | theorem | `coercivity_div` | `theorem coercivity_div [CompleteSpace E] (h : Mixing P Pi) (hB : 0 < B P Pi) (x : E) : ‖x - Pi x‖ / B P Pi ≤ ‖(1 - P) x‖` |
+
+### `GFNBounds/Core/StableBound.lean`
+
+**A stable `L^q` flow-matching loss controls the sampling error and the initial-mass defect**  
+
+*strict library; 474 lines; 22 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `theo:RL_CV_bound_full` (bucket B)
+
+
+In scope: `variable {α : Type*} [MeasurableSpace α]`, `variable {ν : Measure α} {e k : α → ℝ}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 116 | def | `tvD` | `noncomputable def tvD (ν : Measure α) (f g : α → ℝ) : ℝ` |
+| 118 | theorem | `tvD_nonneg` | `theorem tvD_nonneg (ν : Measure α) (f g : α → ℝ) : 0 ≤ tvD ν f g` |
+| 121 | theorem | `tvD_comm` | `theorem tvD_comm (ν : Measure α) (f g : α → ℝ) : tvD ν f g = tvD ν g f` |
+| 129 | theorem | `tvD_triangle` | `theorem tvD_triangle {ν : Measure α} {f₁ f₂ f₃ : α → ℝ} (h₁ : Integrable (fun x => f₁ x - f₂ x) ν) (h₂ : Integrable (fun x => f₂ x - f₃ x) ν) : tvD ν f₁ f₃ ≤ tvD ν f₁ f₂ + tvD ν f₂ f₃` |
+| 151 | theorem | `tvD_normalization` | `theorem tvD_normalization {ν : Measure α} {f g : α → ℝ} {a b : ℝ} (hf : Integrable f ν) (hg : Integrable g ν) (hg0 : 0 ≤ᵐ[ν] g) (hb : b = ∫ x, g x ∂ν) (ha0 : 0 < a) (hb0 : 0 < b) : tvD ν (fun x => f x / a) (fun x => g x / b) ≤ ((∫ x, \|f x - g x\| ∂ν) + \|a - b\|) / (2 * a)` |
+| 192 | theorem | `tvD_normalization_le` | `theorem tvD_normalization_le {ν : Measure α} {f g : α → ℝ} {a b : ℝ} (hf : Integrable f ν) (hg : Integrable g ν) (hg0 : 0 ≤ᵐ[ν] g) (ha : a = ∫ x, f x ∂ν) (hb : b = ∫ x, g x ∂ν) (ha0 : 0 < a) (hb0 : 0 < b) : tvD ν (fun x => f x / a) (fun x => g x / b) ≤ (∫ x, \|f x - g x\| ∂ν) / a` |
+| 214 | theorem | `negPart_le_abs_sub` | `theorem negPart_le_abs_sub {x y : ℝ} (hy : 0 ≤ y) : max (-x) 0 ≤ \|x - y\|` |
+| 224 | theorem | `abs_sub_posPart_le` | `theorem abs_sub_posPart_le {x y : ℝ} (hy : 0 ≤ y) : \|y - max x 0\| ≤ \|x - y\|` |
+| 236 | theorem | `posPart_mass` | `theorem posPart_mass (he : Integrable e ν) : ∫ x, max (e x) 0 ∂ν = (∫ x, e x ∂ν) + ∫ x, max (-e x) 0 ∂ν` |
+| 247 | theorem | `negMass_le` | `theorem negMass_le (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) : ∫ x, max (-e x) 0 ∂ν ≤ ∫ x, \|e x - k x\| ∂ν` |
+| 255 | theorem | `hatDist_le` | `theorem hatDist_le (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) : ∫ x, \|k x - max (e x) 0\| ∂ν ≤ ∫ x, \|e x - k x\| ∂ν` |
+| 262 | theorem | `mass_defect_le` | `theorem mass_defect_le (he : Integrable e ν) (hk : Integrable k ν) : \|(∫ x, e x ∂ν) - ∫ x, k x ∂ν\| ≤ ∫ x, \|e x - k x\| ∂ν` |
+| 271 | theorem | `normalization_bound` | `theorem normalization_bound (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) {t zhat : ℝ} (ht : t = ∫ x, k x ∂ν) (hzh : zhat = ∫ x, max (e x) 0 ∂ν) (ht0 : 0 < t) (hzh0 : 0 < zhat) : tvD ν (fun x => k x / t) (fun x => max (e x) 0 / zhat) ≤ (∫ x, \|e x - k x\| ∂ν) / t` |
+| 290 | theorem | `tv_le_two_fmL1` | `theorem tv_le_two_fmL1 (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) {z t zhat tv tvNC : ℝ} (hz : z = ∫ x, e x ∂ν) (ht : t = ∫ x, k x ∂ν) (hzh : zhat = ∫ x, max (e x) 0 ∂ν) (hz0 : 0 < z) (ht0 : 0 < t) (hNC : tvNC ≤ (∫ x, max (-e x) 0 ∂ν) / zhat) (htri : tv ≤ tvNC + tvD ν (fun x => max (e x) 0 / zhat) (fun x => k x / t)) : tv ≤ 2 * (∫ x, \|e x - k x\| ∂ν) / t` |
+| 333 | theorem | `integral_le_measure_rpow_mul` | `theorem integral_le_measure_rpow_mul {q : ℝ} (hq : 1 ≤ q) (ν : Measure α) [IsFiniteMeasure ν] {h : α → ℝ} (hh0 : 0 ≤ᵐ[ν] h) (hmem : MemLp h (ENNReal.ofReal q) ν) : ∫ x, h x ∂ν ≤ ν.real Set.univ ^ (1 - 1 / q) * (∫ x, h x ^ q ∂ν) ^ (1 / q)` |
+| 363 | theorem | `integral_le_of_le_smul` | `theorem integral_le_of_le_smul {νT : Measure α} {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {f : α → ℝ} (hf0 : 0 ≤ᵐ[νT] f) (hint : Integrable f νT) : ∫ x, f x ∂ν ≤ (M : ℝ) * ∫ x, f x ∂νT` |
+| 373 | def | `holderConst` | `noncomputable def holderConst (ν : Measure α) (M : ℝ≥0) (q : ℝ) : ℝ` |
+| 377 | def | `stableConst` | `noncomputable def stableConst (ν : Measure α) (M : ℝ≥0) (q t : ℝ) : ℝ` |
+| 382 | def | `stableLoss` | `noncomputable def stableLoss (νT : Measure α) (q : ℝ) (e k : α → ℝ) : ℝ` |
+| 388 | theorem | `fmL1_le_holderConst_mul_loss` | `theorem fmL1_le_holderConst_mul_loss {νT : Measure α} {M : ℝ≥0} {q : ℝ} (hq : 1 ≤ q) [IsFiniteMeasure ν] (hdom : ν ≤ (M : ℝ≥0∞) • νT) (hmem : MemLp (fun x => e x - k x) (ENNReal.ofReal q) νT) : ∫ x, \|e x - k x\| ∂ν ≤ holderConst ν M q * stableLoss νT q e k` |
+| 434 | theorem | `mass_floor` | `theorem mass_floor {νT : Measure α} {M : ℝ≥0} {q z t : ℝ} (hq : 1 ≤ q) [IsFiniteMeasure ν] (hdom : ν ≤ (M : ℝ≥0∞) • νT) (hmem : MemLp (fun x => e x - k x) (ENNReal.ofReal q) νT) (he : Integrable e ν) (hk : Integrable k ν) (hz : z = ∫ x, e x ∂ν) (ht : t = ∫ x, k x ∂ν) : \|z - t\| ≤ holderConst ν M q * stableLoss νT q e k` |
+| 451 | theorem | `stable_bound` | `theorem stable_bound {νT : Measure α} {M : ℝ≥0} {q z t zhat tv tvNC : ℝ} (hq : 1 ≤ q) [IsFiniteMeasure ν] (hdom : ν ≤ (M : ℝ≥0∞) • νT) (hmem : MemLp (fun x => e x - k x) (ENNReal.ofReal q) νT) (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) (hz : z = ∫ x, e x ∂ν) (ht : t = ∫ x, k x ∂ν) (hzh : zhat = ∫ x, max (e x) 0 ∂ν) (hz0 : 0 < z) (ht0 : 0 < t) (hNC : tvNC ≤ (∫ x, max (-e x) 0 ∂ν) / zhat) (htri : tv ≤ tvNC + tvD ν (fun x => max (e x) 0 / zhat) (fun x => k x / t)) : tv ≤ stableConst ν M q t * stableLoss νT q e k` |
+
+### `GFNBounds/Core/Universality.lean`
+
+**Universality: the lifted outflow, its defect, and the quantitative bound**  
+
+*strict library; 303 lines; 21 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `theo:universality_L2_full` (bucket B)
+
+
+In scope: `variable {E : Type*} [NormedAddCommGroup E] [Lattice E] [HasSolidNorm E]`, `variable {F : Type*} [NormedAddCommGroup F] [Lattice F] [HasSolidNorm F] [IsOrderedAddMonoid F]`, `variable {P Pi : E →L[ℝ] E} {one θ : E}`, `variable [CompleteSpace E]`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 110 | axiom | `applies.` | `axiom applies. -/ theorem norm_posPart_le (a : F) : ‖a⁺‖ ≤ ‖a‖` |
+| 118 | theorem | `norm_negPart_le` | `theorem norm_negPart_le (a : F) : ‖a⁻‖ ≤ ‖a‖` |
+| 126 | theorem | `norm_le_norm_posPart_add_norm_negPart` | `theorem norm_le_norm_posPart_add_norm_negPart (a : F) : ‖a‖ ≤ ‖a⁺‖ + ‖a⁻‖` |
+| 135 | def | `defect` | `noncomputable def defect (P : E →L[ℝ] E) (θ fout : E) : E` |
+| 138 | def | `resInit` | `noncomputable def resInit (P : E →L[ℝ] E) (θ fout : E) : E` |
+| 141 | def | `resTerm` | `noncomputable def resTerm (P : E →L[ℝ] E) (θ fout : E) : E` |
+| 145 | theorem | `norm_defect_le_residuals` | `theorem norm_defect_le_residuals (P : E →L[ℝ] E) (θ fout : E) : ‖defect P θ fout‖ ≤ ‖resInit P θ fout‖ + ‖resTerm P θ fout‖` |
+| 152 | theorem | `residuals_le_two_norm_defect` | `theorem residuals_le_two_norm_defect (P : E →L[ℝ] E) (θ fout : E) : ‖resInit P θ fout‖ + ‖resTerm P θ fout‖ ≤ 2 * ‖defect P θ fout‖` |
+| 163 | def | `WeaklyUniversalAt` | `def WeaklyUniversalAt (P : E →L[ℝ] E) (θ : E) : Prop` |
+| 169 | def | `StronglyUniversalAt` | `def StronglyUniversalAt (P : E →L[ℝ] E) (θ : E) : Prop` |
+| 179 | def | `WeaklyUniversal` | `def WeaklyUniversal (P Pi : E →L[ℝ] E) : Prop` |
+| 182 | theorem | `StronglyUniversalAt.weaklyUniversalAt` | `theorem StronglyUniversalAt.weaklyUniversalAt {P : E →L[ℝ] E} {θ : E} (h : StronglyUniversalAt P θ) : WeaklyUniversalAt P θ` |
+| 197 | def | `liftedOutflow` | `noncomputable def liftedOutflow (P Pi : E →L[ℝ] E) (one θ : E) (η : ℝ) : E` |
+| 202 | def | `truncation` | `noncomputable def truncation (P Pi : E →L[ℝ] E) (one θ : E) (η : ℝ) : E` |
+| 206 | theorem | `liftedOutflow_nonneg` | `theorem liftedOutflow_nonneg (P Pi : E →L[ℝ] E) (one θ : E) (η : ℝ) : 0 ≤ liftedOutflow P Pi one θ η` |
+| 210 | theorem | `truncation_nonneg` | `theorem truncation_nonneg (P Pi : E →L[ℝ] E) (one θ : E) (η : ℝ) : 0 ≤ truncation P Pi one θ η` |
+| 215 | theorem | `liftedOutflow_eq` | `theorem liftedOutflow_eq (P Pi : E →L[ℝ] E) (one θ : E) (η : ℝ) : liftedOutflow P Pi one θ η = (η • one - Mixing.S P Pi θ) + truncation P Pi one θ η` |
+| 230 | theorem | `defect_eq_truncation` | `theorem defect_eq_truncation (h : Mixing P Pi) (hone : P one = one) (hθ : Pi θ = 0) (η : ℝ) : defect P θ (liftedOutflow P Pi one θ η) = P (truncation P Pi one θ η) - truncation P Pi one θ η` |
+| 246 | theorem | `residuals_le` | `theorem residuals_le (h : Mixing P Pi) (hone : P one = one) (hθ : Pi θ = 0) (η : ℝ) : ‖resInit P θ (liftedOutflow P Pi one θ η)‖ + ‖resTerm P θ (liftedOutflow P Pi one θ η)‖ ≤ 2 * (1 + ‖P‖) * ‖truncation P Pi one θ η‖` |
+| 272 | theorem | `stronglyUniversalAt_of_le` | `theorem stronglyUniversalAt_of_le (h : Mixing P Pi) (hone : P one = one) (hθ : Pi θ = 0) {η : ℝ} (hle : Mixing.S P Pi θ ≤ η • one) : StronglyUniversalAt P θ` |
+| 284 | theorem | `weaklyUniversalAt_of_tendsto` | `theorem weaklyUniversalAt_of_tendsto (h : Mixing P Pi) (hone : P one = one) (hθ : Pi θ = 0) (hlim : Filter.Tendsto (fun η : ℝ => ‖truncation P Pi one θ η‖) Filter.atTop (𝓝 0)) : WeaklyUniversalAt P θ` |
+
+### `GFNBounds/Core/UniversalityLp.lean`
+
+**The truncation vanishes on `L^p(ν)` for `p < ∞`, and weak universality follows**  
+
+*strict library; 201 lines; 6 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `theo:universality_L2_full` (bucket B)
+
+
+In scope: `variable {α : Type*} [MeasurableSpace α] {ν : Measure α} [IsFiniteMeasure ν]`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 90 | def | `constOne` | `noncomputable def constOne (ν : Measure α) (p : ℝ≥0∞) [IsFiniteMeasure ν] : Lp ℝ p ν` |
+| 94 | theorem | `coeFn_constOne` | `theorem coeFn_constOne : ⇑(constOne ν p) =ᵐ[ν] fun _ => (1 : ℝ)` |
+| 99 | theorem | `coeFn_truncation` | `theorem coeFn_truncation (P Pi : Lp ℝ p ν →L[ℝ] Lp ℝ p ν) (θ : Lp ℝ p ν) (η : ℝ) : ⇑(truncation P Pi (constOne ν p) θ η) =ᵐ[ν] fun x => max (Mixing.S P Pi θ x - η) 0` |
+| 124 | theorem | `tendsto_truncation_norm` | `theorem tendsto_truncation_norm (hp : p ≠ ⊤) (P Pi : Lp ℝ p ν →L[ℝ] Lp ℝ p ν) (θ : Lp ℝ p ν) : Tendsto (fun η : ℝ => ‖truncation P Pi (constOne ν p) θ η‖) atTop (𝓝 0)` |
+| 184 | theorem | `weaklyUniversalAt_Lp` | `theorem weaklyUniversalAt_Lp {P Pi : Lp ℝ p ν →L[ℝ] Lp ℝ p ν} {θ : Lp ℝ p ν} (h : Mixing P Pi) (hone : P (constOne ν p) = constOne ν p) (hθ : Pi θ = 0) (hp : p ≠ ⊤) : WeaklyUniversalAt P θ` |
+| 196 | theorem | `weaklyUniversal_Lp` | `theorem weaklyUniversal_Lp {P Pi : Lp ℝ p ν →L[ℝ] Lp ℝ p ν} (h : Mixing P Pi) (hone : P (constOne ν p) = constOne ν p) (hp : p ≠ ⊤) : WeaklyUniversal P Pi` |
+
 ### `GFNBounds/Doubling/Adjoint.lean`
 
 **The density action `P`, and `P⋆ = P*`**  
 
-*strict library; 477 lines; 30 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 478 lines; 30 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_operator` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket B)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`, `variable (L : Stat S cap)`
@@ -265,36 +750,36 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 79 | theorem | `abs_rpow_add3_le` | `theorem abs_rpow_add3_le {w₁ w₂ w₃ u₁ u₂ u₃ p : ℝ} (h1 : 0 ≤ w₁) (h2 : 0 ≤ w₂) (h3 : 0 ≤ w₃) (hw : w₁ + w₂ + w₃ = 1) (hp : 1 ≤ p) : \|w₁ * u₁ + w₂ * u₂ + w₃ * u₃\| ^ p ≤ w₁ * \|u₁\| ^ p + w₂ * \|u₂\| ^ p + w₃ * \|u₃\| ^ p` |
-| 109 | theorem | `mact_vanish_offChain` | `theorem mact_vanish_offChain (hrow : RowOnChain S cap) {nu : St → ℝ} (hnu : ∀ x, ¬ OnChain cap x → nu x = 0) {y : St} (hy : ¬ OnChain cap y) : mact S cap nu y = 0` |
-| 139 | def | `dens` | `noncomputable def dens (u : St → ℝ) (y : St) : ℝ` |
-| 143 | def | `w1` | `noncomputable def w1 (k : ℕ) : ℝ` |
-| 146 | def | `w2` | `noncomputable def w2 (k : ℕ) : ℝ` |
-| 150 | def | `w3` | `noncomputable def w3 (k : ℕ) : ℝ` |
-| 152 | theorem | `w1_nonneg` | `theorem w1_nonneg (k : ℕ) : 0 ≤ L.w1 k` |
-| 155 | theorem | `w2_nonneg` | `theorem w2_nonneg (k : ℕ) : 0 ≤ L.w2 k` |
-| 162 | theorem | `w3_nonneg` | `theorem w3_nonneg (k : ℕ) : 0 ≤ L.w3 k` |
-| 167 | theorem | `w_sum` | `theorem w_sum {k : ℕ} (hk : OnChain cap (.lad k)) : L.w1 k + L.w2 k + L.w3 k = 1` |
-| 173 | theorem | `dens_sink` | `theorem dens_sink (u : St → ℝ) : L.dens u .sink = u (.lad 0)` |
-| 179 | theorem | `dens_lad` | `theorem dens_lad (u : St → ℝ) (k : ℕ) : L.dens u (.lad k) = L.w1 k * u (.lad (k + 1)) + L.w2 k * u (.lad (k / 2)) + L.w3 k * u .sink` |
-| 189 | theorem | `lam_mul_dens` | `theorem lam_mul_dens (hrow : RowOnChain S cap) (u : St → ℝ) (y : St) : L.lam y * L.dens u y = mact S cap (fun x => L.lam x * u x) y` |
-| 197 | theorem | `dens_const` | `theorem dens_const (hrow : RowOnChain S cap) {y : St} (hy : OnChain cap y) : L.dens (fun _ => (1 : ℝ)) y = 1` |
-| 205 | theorem | `summable_abs_lad_mul` | `theorem summable_abs_lad_mul {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hs : Summable fun x => L.lam x * g x) : Summable fun k : ℕ => \|L.lam (.lad k) * g (.lad k)\|` |
-| 214 | theorem | `tsum_lam_dens` | `theorem tsum_lam_dens (hrow : RowOnChain S cap) {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hs : Summable fun x => L.lam x * g x) : ∑' y, L.lam y * L.dens g y = ∑' x, L.lam x * g x` |
-| 220 | theorem | `summable_lam_dens` | `theorem summable_lam_dens (hrow : RowOnChain S cap) {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hs : Summable fun x => L.lam x * g x) : Summable fun y => L.lam y * L.dens g y` |
-| 234 | theorem | `abs_rpow_dens_le` | `theorem abs_rpow_dens_le {p : ℝ} (hp : 1 ≤ p) (u : St → ℝ) {y : St} (hy : OnChain cap y) : \|L.dens u y\| ^ p ≤ L.dens (fun z => \|u z\| ^ p) y` |
-| 244 | theorem | `mass_dens_le` | `theorem mass_dens_le (hrow : RowOnChain S cap) {p : ℝ} (hp : 1 ≤ p) {u : St → ℝ} (hs : Summable fun x => \|u x\| ^ p * L.lam x) : L.mass p (L.dens u) ≤ L.mass p u` |
-| 272 | theorem | `tsum_dens_mul` | `theorem tsum_dens_mul (hrow : RowOnChain S cap) {u : St → ℝ} (hu : Summable fun k : ℕ => \|L.lam (.lad k) * u (.lad k)\|) {v : St → ℝ} (hv : ∃ C, ∀ x, \|v x\| ≤ C) : ∑' y, L.lam y * L.dens u y * v y = ∑' x, L.lam x * u x * pstar S cap v x` |
-| 293 | theorem | `abs_rpow_two'` | `theorem abs_rpow_two' (t : ℝ) : \|t\| ^ (2 : ℝ) = t ^ 2` |
-| 297 | theorem | `abs_pstar_le` | `theorem abs_pstar_le (f : St → ℝ) (x : St) : \|pstar S cap f x\| ≤ pstar S cap (fun y => \|f y\|) x` |
-| 308 | theorem | `summable_mass_pstar` | `theorem summable_mass_pstar {p : ℝ} (hp : 1 ≤ p) {f : St → ℝ} (hs : Summable fun x => \|f x\| ^ p * L.lam x) : Summable fun x => \|pstar S cap f x\| ^ p * L.lam x` |
-| 321 | theorem | `summable_mass_dens` | `theorem summable_mass_dens (hrow : RowOnChain S cap) {p : ℝ} (hp : 1 ≤ p) {u : St → ℝ} (hs : Summable fun x => \|u x\| ^ p * L.lam x) : Summable fun x => \|L.dens u x\| ^ p * L.lam x` |
-| 339 | theorem | `summable_lam_mul_mul` | `theorem summable_lam_mul_mul {a b : St → ℝ} (ha : Summable fun x => \|a x\| ^ (2 : ℝ) * L.lam x) (hb : Summable fun x => \|b x\| ^ (2 : ℝ) * L.lam x) : Summable fun x => L.lam x * \|a x\| * \|b x\|` |
-| 356 | theorem | `summable_abs_lad_of_sq` | `theorem summable_abs_lad_of_sq {u : St → ℝ} (hu : Summable fun x => \|u x\| ^ (2 : ℝ) * L.lam x) : Summable fun k : ℕ => \|L.lam (.lad k) * u (.lad k)\|` |
-| 369 | theorem | `tsum_dens_mul_sq` | `theorem tsum_dens_mul_sq (hrow : RowOnChain S cap) {u v : St → ℝ} (hu : Summable fun x => \|u x\| ^ (2 : ℝ) * L.lam x) (hv : Summable fun x => \|v x\| ^ (2 : ℝ) * L.lam x) : ∑' y, L.lam y * L.dens u y * v y = ∑' x, L.lam x * u x * pstar S cap v x` |
-| 432 | theorem | `tsum_lam_pstar_sq` | `theorem tsum_lam_pstar_sq (hrow : RowOnChain S cap) {v : St → ℝ} (hv : Summable fun x => \|v x\| ^ (2 : ℝ) * L.lam x) : ∑' x, L.lam x * pstar S cap v x = ∑' x, L.lam x * v x` |
-| 447 | theorem | `memLp_dens` | `theorem memLp_dens (hrow : RowOnChain S cap) {p : ℝ≥0∞} (hp1 : 1 ≤ p) (hpt : p ≠ ∞) {u : St → ℝ} (hu : MemLp u p L.mu) : MemLp (L.dens u) p L.mu` |
-| 457 | theorem | `eLpNorm_dens_le` | `theorem eLpNorm_dens_le (hrow : RowOnChain S cap) {p : ℝ≥0∞} (hp1 : 1 ≤ p) (hpt : p ≠ ∞) {u : St → ℝ} (hu : MemLp u p L.mu) : eLpNorm (L.dens u) p L.mu ≤ eLpNorm u p L.mu` |
+| 80 | theorem | `abs_rpow_add3_le` | `theorem abs_rpow_add3_le {w₁ w₂ w₃ u₁ u₂ u₃ p : ℝ} (h1 : 0 ≤ w₁) (h2 : 0 ≤ w₂) (h3 : 0 ≤ w₃) (hw : w₁ + w₂ + w₃ = 1) (hp : 1 ≤ p) : \|w₁ * u₁ + w₂ * u₂ + w₃ * u₃\| ^ p ≤ w₁ * \|u₁\| ^ p + w₂ * \|u₂\| ^ p + w₃ * \|u₃\| ^ p` |
+| 110 | theorem | `mact_vanish_offChain` | `theorem mact_vanish_offChain (hrow : RowOnChain S cap) {nu : St → ℝ} (hnu : ∀ x, ¬ OnChain cap x → nu x = 0) {y : St} (hy : ¬ OnChain cap y) : mact S cap nu y = 0` |
+| 140 | def | `dens` | `noncomputable def dens (u : St → ℝ) (y : St) : ℝ` |
+| 144 | def | `w1` | `noncomputable def w1 (k : ℕ) : ℝ` |
+| 147 | def | `w2` | `noncomputable def w2 (k : ℕ) : ℝ` |
+| 151 | def | `w3` | `noncomputable def w3 (k : ℕ) : ℝ` |
+| 153 | theorem | `w1_nonneg` | `theorem w1_nonneg (k : ℕ) : 0 ≤ L.w1 k` |
+| 156 | theorem | `w2_nonneg` | `theorem w2_nonneg (k : ℕ) : 0 ≤ L.w2 k` |
+| 163 | theorem | `w3_nonneg` | `theorem w3_nonneg (k : ℕ) : 0 ≤ L.w3 k` |
+| 168 | theorem | `w_sum` | `theorem w_sum {k : ℕ} (hk : OnChain cap (.lad k)) : L.w1 k + L.w2 k + L.w3 k = 1` |
+| 174 | theorem | `dens_sink` | `theorem dens_sink (u : St → ℝ) : L.dens u .sink = u (.lad 0)` |
+| 180 | theorem | `dens_lad` | `theorem dens_lad (u : St → ℝ) (k : ℕ) : L.dens u (.lad k) = L.w1 k * u (.lad (k + 1)) + L.w2 k * u (.lad (k / 2)) + L.w3 k * u .sink` |
+| 190 | theorem | `lam_mul_dens` | `theorem lam_mul_dens (hrow : RowOnChain S cap) (u : St → ℝ) (y : St) : L.lam y * L.dens u y = mact S cap (fun x => L.lam x * u x) y` |
+| 198 | theorem | `dens_const` | `theorem dens_const (hrow : RowOnChain S cap) {y : St} (hy : OnChain cap y) : L.dens (fun _ => (1 : ℝ)) y = 1` |
+| 206 | theorem | `summable_abs_lad_mul` | `theorem summable_abs_lad_mul {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hs : Summable fun x => L.lam x * g x) : Summable fun k : ℕ => \|L.lam (.lad k) * g (.lad k)\|` |
+| 215 | theorem | `tsum_lam_dens` | `theorem tsum_lam_dens (hrow : RowOnChain S cap) {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hs : Summable fun x => L.lam x * g x) : ∑' y, L.lam y * L.dens g y = ∑' x, L.lam x * g x` |
+| 221 | theorem | `summable_lam_dens` | `theorem summable_lam_dens (hrow : RowOnChain S cap) {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hs : Summable fun x => L.lam x * g x) : Summable fun y => L.lam y * L.dens g y` |
+| 235 | theorem | `abs_rpow_dens_le` | `theorem abs_rpow_dens_le {p : ℝ} (hp : 1 ≤ p) (u : St → ℝ) {y : St} (hy : OnChain cap y) : \|L.dens u y\| ^ p ≤ L.dens (fun z => \|u z\| ^ p) y` |
+| 245 | theorem | `mass_dens_le` | `theorem mass_dens_le (hrow : RowOnChain S cap) {p : ℝ} (hp : 1 ≤ p) {u : St → ℝ} (hs : Summable fun x => \|u x\| ^ p * L.lam x) : L.mass p (L.dens u) ≤ L.mass p u` |
+| 273 | theorem | `tsum_dens_mul` | `theorem tsum_dens_mul (hrow : RowOnChain S cap) {u : St → ℝ} (hu : Summable fun k : ℕ => \|L.lam (.lad k) * u (.lad k)\|) {v : St → ℝ} (hv : ∃ C, ∀ x, \|v x\| ≤ C) : ∑' y, L.lam y * L.dens u y * v y = ∑' x, L.lam x * u x * pstar S cap v x` |
+| 294 | theorem | `abs_rpow_two'` | `theorem abs_rpow_two' (t : ℝ) : \|t\| ^ (2 : ℝ) = t ^ 2` |
+| 298 | theorem | `abs_pstar_le` | `theorem abs_pstar_le (f : St → ℝ) (x : St) : \|pstar S cap f x\| ≤ pstar S cap (fun y => \|f y\|) x` |
+| 309 | theorem | `summable_mass_pstar` | `theorem summable_mass_pstar {p : ℝ} (hp : 1 ≤ p) {f : St → ℝ} (hs : Summable fun x => \|f x\| ^ p * L.lam x) : Summable fun x => \|pstar S cap f x\| ^ p * L.lam x` |
+| 322 | theorem | `summable_mass_dens` | `theorem summable_mass_dens (hrow : RowOnChain S cap) {p : ℝ} (hp : 1 ≤ p) {u : St → ℝ} (hs : Summable fun x => \|u x\| ^ p * L.lam x) : Summable fun x => \|L.dens u x\| ^ p * L.lam x` |
+| 340 | theorem | `summable_lam_mul_mul` | `theorem summable_lam_mul_mul {a b : St → ℝ} (ha : Summable fun x => \|a x\| ^ (2 : ℝ) * L.lam x) (hb : Summable fun x => \|b x\| ^ (2 : ℝ) * L.lam x) : Summable fun x => L.lam x * \|a x\| * \|b x\|` |
+| 357 | theorem | `summable_abs_lad_of_sq` | `theorem summable_abs_lad_of_sq {u : St → ℝ} (hu : Summable fun x => \|u x\| ^ (2 : ℝ) * L.lam x) : Summable fun k : ℕ => \|L.lam (.lad k) * u (.lad k)\|` |
+| 370 | theorem | `tsum_dens_mul_sq` | `theorem tsum_dens_mul_sq (hrow : RowOnChain S cap) {u v : St → ℝ} (hu : Summable fun x => \|u x\| ^ (2 : ℝ) * L.lam x) (hv : Summable fun x => \|v x\| ^ (2 : ℝ) * L.lam x) : ∑' y, L.lam y * L.dens u y * v y = ∑' x, L.lam x * u x * pstar S cap v x` |
+| 433 | theorem | `tsum_lam_pstar_sq` | `theorem tsum_lam_pstar_sq (hrow : RowOnChain S cap) {v : St → ℝ} (hv : Summable fun x => \|v x\| ^ (2 : ℝ) * L.lam x) : ∑' x, L.lam x * pstar S cap v x = ∑' x, L.lam x * v x` |
+| 448 | theorem | `memLp_dens` | `theorem memLp_dens (hrow : RowOnChain S cap) {p : ℝ≥0∞} (hp1 : 1 ≤ p) (hpt : p ≠ ∞) {u : St → ℝ} (hu : MemLp u p L.mu) : MemLp (L.dens u) p L.mu` |
+| 458 | theorem | `eLpNorm_dens_le` | `theorem eLpNorm_dens_le (hrow : RowOnChain S cap) {p : ℝ≥0∞} (hp1 : 1 ≤ p) (hpt : p ≠ ∞) {u : St → ℝ} (hu : MemLp u p L.mu) : eLpNorm (L.dens u) p L.mu ≤ eLpNorm u p L.mu` |
 
 ### `GFNBounds/Doubling/AdjointL2.lean`
 
@@ -303,7 +788,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 *strict library; 303 lines; 29 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_operator` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket B)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`
@@ -348,7 +833,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 *strict library; 317 lines; 19 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_operator` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket B)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`
@@ -380,10 +865,10 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 
 **The solutions of the cut balance form a `d`-dimensional space**  
 
-*strict library; 147 lines; 9 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 149 lines; 9 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:doubling_constant` (bucket C)
+Certifies: ✅ `prop:doubling_constant` (bucket A)
 
 
 In scope: `variable (D : Decay) {d : ℕ}`
@@ -391,15 +876,49 @@ In scope: `variable (D : Decay) {d : ℕ}`
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 48 | def | `extend` | `noncomputable def extend (D : Decay) (d : ℕ) (b : ℕ → ℝ) (m : ℕ) : ℝ` |
-| 56 | theorem | `extend_of_le` | `theorem extend_of_le (b : ℕ → ℝ) {m : ℕ} (h : m ≤ d) : D.extend d b m = b m` |
-| 59 | theorem | `extend_of_gt` | `theorem extend_of_gt (b : ℕ → ℝ) {m : ℕ} (h : d < m) : D.extend d b m = ∑ j ∈ window m, D.qm m j * D.extend d b j` |
-| 65 | theorem | `extend_cutBal` | `theorem extend_cutBal (b : ℕ → ℝ) (hd : 1 ≤ d) : D.CutBal d (D.extend d b) ⊤` |
-| 77 | theorem | `extend_unique` | `theorem extend_unique {lam b : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hd : 1 ≤ d) (hb : ∀ j ≤ d, lam j = b j) : ∀ m, lam m = D.extend d b m` |
-| 90 | theorem | `extend_pos` | `theorem extend_pos (b : ℕ → ℝ) (hd : 1 ≤ d) (hb : ∀ j, 1 ≤ j → j ≤ d → 0 < b j) : ∀ m, 1 ≤ m → 0 < D.extend d b m` |
-| 105 | theorem | `extend_add` | `theorem extend_add (b₁ b₂ : ℕ → ℝ) (m : ℕ) : D.extend d (fun j => b₁ j + b₂ j) m = D.extend d b₁ m + D.extend d b₂ m` |
-| 117 | theorem | `extend_smul` | `theorem extend_smul (t : ℝ) (b : ℕ → ℝ) (m : ℕ) : D.extend d (fun j => t * b j) m = t * D.extend d b m` |
-| 131 | theorem | `extend_congr_high` | `theorem extend_congr_high (b₁ b₂ : ℕ → ℝ) (hb : ∀ j, d < 2 * j → j ≤ d → b₁ j = b₂ j) : ∀ m : ℕ, d < m → D.extend d b₁ m = D.extend d b₂ m` |
+| 50 | def | `extend` | `noncomputable def extend (D : Decay) (d : ℕ) (b : ℕ → ℝ) (m : ℕ) : ℝ` |
+| 58 | theorem | `extend_of_le` | `theorem extend_of_le (b : ℕ → ℝ) {m : ℕ} (h : m ≤ d) : D.extend d b m = b m` |
+| 61 | theorem | `extend_of_gt` | `theorem extend_of_gt (b : ℕ → ℝ) {m : ℕ} (h : d < m) : D.extend d b m = ∑ j ∈ window m, D.qm m j * D.extend d b j` |
+| 67 | theorem | `extend_cutBal` | `theorem extend_cutBal (b : ℕ → ℝ) (hd : 1 ≤ d) : D.CutBal d (D.extend d b) ⊤` |
+| 79 | theorem | `extend_unique` | `theorem extend_unique {lam b : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hd : 1 ≤ d) (hb : ∀ j ≤ d, lam j = b j) : ∀ m, lam m = D.extend d b m` |
+| 92 | theorem | `extend_pos` | `theorem extend_pos (b : ℕ → ℝ) (hd : 1 ≤ d) (hb : ∀ j, 1 ≤ j → j ≤ d → 0 < b j) : ∀ m, 1 ≤ m → 0 < D.extend d b m` |
+| 107 | theorem | `extend_add` | `theorem extend_add (b₁ b₂ : ℕ → ℝ) (m : ℕ) : D.extend d (fun j => b₁ j + b₂ j) m = D.extend d b₁ m + D.extend d b₂ m` |
+| 119 | theorem | `extend_smul` | `theorem extend_smul (t : ℝ) (b : ℕ → ℝ) (m : ℕ) : D.extend d (fun j => t * b j) m = t * D.extend d b m` |
+| 133 | theorem | `extend_congr_high` | `theorem extend_congr_high (b₁ b₂ : ℕ → ℝ) (hb : ∀ j, d < 2 * j → j ≤ d → b₁ j = b₂ j) : ∀ m : ℕ, d < m → D.extend d b₁ m = D.extend d b₂ m` |
+
+### `GFNBounds/Doubling/ConstantFunctional.lean`
+
+**The constant of the sharp asymptotic is a non-negative linear functional of the boundary data**  
+
+*strict library; 253 lines; 18 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `prop:doubling_constant` (bucket A), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), ✅ `theo:doubling_sharp` (bucket A)
+
+
+In scope: `variable (D : Decay) {d : ℕ}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 68 | def | `ind` | `def ind (j : ℕ) : ℕ → ℝ` |
+| 70 | theorem | `ind_nonneg` | `theorem ind_nonneg (j i : ℕ) : 0 ≤ ind j i` |
+| 77 | def | `climit` | `noncomputable def climit (D : Decay) (d : ℕ) (b : ℕ → ℝ) : ℝ` |
+| 82 | def | `nu` | `noncomputable def nu (D : Decay) (d : ℕ) (j : ℕ) : ℝ` |
+| 89 | theorem | `extend_zero` | `theorem extend_zero (m : ℕ) : D.extend d (fun _ => (0 : ℝ)) m = 0` |
+| 94 | theorem | `extend_sum` | `theorem extend_sum {ι : Type*} (s : Finset ι) (f : ι → ℕ → ℝ) (m : ℕ) : D.extend d (fun i => ∑ j ∈ s, f j i) m = ∑ j ∈ s, D.extend d (f j) m` |
+| 105 | theorem | `extend_nonneg` | `theorem extend_nonneg (b : ℕ → ℝ) (hb : ∀ j, 1 ≤ j → j ≤ d → 0 ≤ b j) : ∀ m, 1 ≤ m → 0 ≤ D.extend d b m` |
+| 121 | theorem | `extend_eq_sum_ind` | `theorem extend_eq_sum_ind (hd : 1 ≤ d) (b : ℕ → ℝ) : ∀ m, 1 ≤ m → D.extend d b m = ∑ j ∈ Finset.Icc 1 d, b j * D.extend d (ind j) m` |
+| 136 | theorem | `tendsto_climit_of_pos` | `theorem tendsto_climit_of_pos (hd : 1 ≤ d) (b : ℕ → ℝ) (hb : ∀ j, 1 ≤ j → j ≤ d → 0 < b j) : Tendsto (fun m : ℕ => D.extend d b m * (m : ℝ) ^ D.p) atTop (𝓝 (D.climit d b)) ∧ 0 < D.climit d b` |
+| 146 | theorem | `tendsto_ind` | `theorem tendsto_ind (hd : 1 ≤ d) (j : ℕ) : Tendsto (fun m : ℕ => D.extend d (ind j) m * (m : ℝ) ^ D.p) atTop (𝓝 (D.nu d j))` |
+| 161 | theorem | `tendsto_extend` | `theorem tendsto_extend (hd : 1 ≤ d) (b : ℕ → ℝ) : Tendsto (fun m : ℕ => D.extend d b m * (m : ℝ) ^ D.p) atTop (𝓝 (∑ j ∈ Finset.Icc 1 d, D.nu d j * b j))` |
+| 178 | theorem | `climit_eq_sum` | `theorem climit_eq_sum (hd : 1 ≤ d) (b : ℕ → ℝ) : D.climit d b = ∑ j ∈ Finset.Icc 1 d, D.nu d j * b j` |
+| 185 | theorem | `tendsto_of_cutBal` | `theorem tendsto_of_cutBal (hd : 1 ≤ d) {lam : ℕ → ℝ} (hcut : D.CutBal d lam ⊤) : Tendsto (fun m : ℕ => lam m * (m : ℝ) ^ D.p) atTop (𝓝 (∑ j ∈ Finset.Icc 1 d, D.nu d j * lam j))` |
+| 194 | theorem | `constant_eq` | `theorem constant_eq (hd : 1 ≤ d) {lam : ℕ → ℝ} (hcut : D.CutBal d lam ⊤) {C : ℝ} (hC : Tendsto (fun m : ℕ => lam m * (m : ℝ) ^ D.p) atTop (𝓝 C)) : C = ∑ j ∈ Finset.Icc 1 d, D.nu d j * lam j` |
+| 203 | theorem | `nu_nonneg` | `theorem nu_nonneg (hd : 1 ≤ d) (j : ℕ) : 0 ≤ D.nu d j` |
+| 211 | theorem | `sum_nu_pos` | `theorem sum_nu_pos (hd : 1 ≤ d) : 0 < ∑ j ∈ Finset.Icc 1 d, D.nu d j` |
+| 221 | theorem | `nu_eq_zero` | `theorem nu_eq_zero (hd : 1 ≤ d) {j : ℕ} (h2j : 2 * j ≤ d) : D.nu d j = 0` |
+| 242 | theorem | `constant_functional` | `theorem constant_functional (hd : 1 ≤ d) : ∃ ν : ℕ → ℝ, (∀ j, 0 ≤ ν j) ∧ 0 < ∑ j ∈ Finset.Icc 1 d, ν j ∧ (∀ j, 1 ≤ j → 2 * j ≤ d → ν j = 0) ∧ ∀ lam : ℕ → ℝ, D.CutBal d lam ⊤ → (∀ j, 1 ≤ j → 0 < lam j) → Tendsto (fun m : ℕ => lam m * (m : ℝ) ^ D.p) atTop (𝓝 (∑ j ∈ Finset.Icc 1 d, ν j * lam j))` |
 
 ### `GFNBounds/Doubling/Coupling.lean`
 
@@ -542,7 +1061,7 @@ In scope: `variable (D : Decay)`
 
 **The descent chain, as a recursion**  
 
-*strict library; 241 lines; 12 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 244 lines; 12 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: 🟡 `lem:doubling_descent` (bucket B), ✅ `theo:doubling_decay` (bucket A)
@@ -553,18 +1072,18 @@ In scope: `variable (D : Decay)`
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 70 | def | `descW` | `noncomputable def descW (D : Decay) (ℓ : ℕ) (g : ℕ → ℝ) (m : ℕ) : ℝ` |
-| 78 | theorem | `descW_of_lt` | `theorem descW_of_lt {ℓ : ℕ} (g : ℕ → ℝ) {m : ℕ} (h : m < 2 * ℓ) : D.descW ℓ g m = g m` |
-| 81 | theorem | `descW_of_ge` | `theorem descW_of_ge {ℓ : ℕ} (g : ℕ → ℝ) {m : ℕ} (h : ¬ m < 2 * ℓ) : D.descW ℓ g m = ∑ j ∈ window m, D.wm m j * D.descW ℓ g j` |
-| 87 | def | `descOne` | `noncomputable def descOne (ℓ m : ℕ) : ℝ` |
-| 89 | theorem | `descOne_of_lt` | `theorem descOne_of_lt {ℓ m : ℕ} (h : m < 2 * ℓ) : D.descOne ℓ m = 1` |
-| 92 | theorem | `descOne_of_ge` | `theorem descOne_of_ge {ℓ m : ℕ} (h : ¬ m < 2 * ℓ) : D.descOne ℓ m = ∑ j ∈ window m, D.wm m j * D.descOne ℓ j` |
-| 98 | theorem | `le_of_mem_window_of_ge` | `theorem le_of_mem_window_of_ge {ℓ m j : ℕ} (hm : 2 * ℓ ≤ m) (hj : j ∈ window m) : ℓ ≤ j` |
-| 104 | theorem | `descW_uu` | `theorem descW_uu {ℓ d : ℕ} {lam : ℕ → ℝ} {M₁ : ℕ∞} (h : D.CutBal d lam M₁) (hℓ : d < 2 * ℓ) : ∀ m : ℕ, (m : ℕ∞) ≤ M₁ → D.uu lam m = D.descW ℓ (D.uu lam) m` |
-| 128 | theorem | `descW_between` | `theorem descW_between {ℓ : ℕ} (hℓ1 : 1 ≤ ℓ) {g : ℕ → ℝ} {a b : ℝ} (hab : ∀ j, ℓ ≤ j → j < 2 * ℓ → a ≤ g j ∧ g j ≤ b) : ∀ m : ℕ, ℓ ≤ m → a * D.descOne ℓ m ≤ D.descW ℓ g m ∧ D.descW ℓ g m ≤ b * D.descOne ℓ m` |
-| 164 | theorem | `decay_block` | `theorem decay_block {ℓ d : ℕ} {lam : ℕ → ℝ} {M₁ : ℕ∞} (h : D.CutBal d lam M₁) (hℓ : d < 2 * ℓ) (hℓ1 : 1 ≤ ℓ) {Z₁ Z₂ : ℝ} (hlo : ∀ y : ℕ, ℓ ≤ y → Z₁ ≤ D.descOne ℓ y) (hhi : ∀ y : ℕ, ℓ ≤ y → D.descOne ℓ y ≤ Z₂) {a b : ℝ} (ha : 0 ≤ a) (hab : ∀ j, ℓ ≤ j → j < 2 * ℓ → a ≤ D.uu lam j ∧ D.uu lam j ≤ b) {m : ℕ} (hm : ℓ ≤ m) (hM : (m : ℕ∞) ≤ M₁) : a * Z₁ ≤ D.uu lam m ∧ D.uu lam m ≤ b * Z₂` |
-| 181 | theorem | `uu_bounded` | `theorem uu_bounded {ℓ d : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hpos : ∀ j, 1 ≤ j → 0 < lam j) (hℓ : d < 2 * ℓ) (hℓ1 : 1 ≤ ℓ) {Z₁ Z₂ : ℝ} (hZ1 : 0 < Z₁) (hZ1' : Z₁ ≤ 1) (hZ2 : 1 ≤ Z₂) (hlo : ∀ y : ℕ, ℓ ≤ y → Z₁ ≤ D.descOne ℓ y) (hhi : ∀ y : ℕ, ℓ ≤ y → D.descOne ℓ y ≤ Z₂) : ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ ≤ c₂ ∧ ∀ j : ℕ, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂` |
-| 219 | theorem | `decay_two_sided` | `theorem decay_two_sided {ℓ d : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hpos : ∀ j, 1 ≤ j → 0 < lam j) (hℓ : d < 2 * ℓ) (hℓ1 : 1 ≤ ℓ) {Z₁ Z₂ : ℝ} (hZ1 : 0 < Z₁) (hZ1' : Z₁ ≤ 1) (hZ2 : 1 ≤ Z₂) (hlo : ∀ y : ℕ, ℓ ≤ y → Z₁ ≤ D.descOne ℓ y) (hhi : ∀ y : ℕ, ℓ ≤ y → D.descOne ℓ y ≤ Z₂) : ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ ≤ c₂ ∧ ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j ∧ lam j ≤ c₂ * (j : ℝ) ^ (-D.p)` |
+| 73 | def | `descW` | `noncomputable def descW (D : Decay) (ℓ : ℕ) (g : ℕ → ℝ) (m : ℕ) : ℝ` |
+| 81 | theorem | `descW_of_lt` | `theorem descW_of_lt {ℓ : ℕ} (g : ℕ → ℝ) {m : ℕ} (h : m < 2 * ℓ) : D.descW ℓ g m = g m` |
+| 84 | theorem | `descW_of_ge` | `theorem descW_of_ge {ℓ : ℕ} (g : ℕ → ℝ) {m : ℕ} (h : ¬ m < 2 * ℓ) : D.descW ℓ g m = ∑ j ∈ window m, D.wm m j * D.descW ℓ g j` |
+| 90 | def | `descOne` | `noncomputable def descOne (ℓ m : ℕ) : ℝ` |
+| 92 | theorem | `descOne_of_lt` | `theorem descOne_of_lt {ℓ m : ℕ} (h : m < 2 * ℓ) : D.descOne ℓ m = 1` |
+| 95 | theorem | `descOne_of_ge` | `theorem descOne_of_ge {ℓ m : ℕ} (h : ¬ m < 2 * ℓ) : D.descOne ℓ m = ∑ j ∈ window m, D.wm m j * D.descOne ℓ j` |
+| 101 | theorem | `le_of_mem_window_of_ge` | `theorem le_of_mem_window_of_ge {ℓ m j : ℕ} (hm : 2 * ℓ ≤ m) (hj : j ∈ window m) : ℓ ≤ j` |
+| 107 | theorem | `descW_uu` | `theorem descW_uu {ℓ d : ℕ} {lam : ℕ → ℝ} {M₁ : ℕ∞} (h : D.CutBal d lam M₁) (hℓ : d < 2 * ℓ) : ∀ m : ℕ, (m : ℕ∞) ≤ M₁ → D.uu lam m = D.descW ℓ (D.uu lam) m` |
+| 131 | theorem | `descW_between` | `theorem descW_between {ℓ : ℕ} (hℓ1 : 1 ≤ ℓ) {g : ℕ → ℝ} {a b : ℝ} (hab : ∀ j, ℓ ≤ j → j < 2 * ℓ → a ≤ g j ∧ g j ≤ b) : ∀ m : ℕ, ℓ ≤ m → a * D.descOne ℓ m ≤ D.descW ℓ g m ∧ D.descW ℓ g m ≤ b * D.descOne ℓ m` |
+| 167 | theorem | `decay_block` | `theorem decay_block {ℓ d : ℕ} {lam : ℕ → ℝ} {M₁ : ℕ∞} (h : D.CutBal d lam M₁) (hℓ : d < 2 * ℓ) (hℓ1 : 1 ≤ ℓ) {Z₁ Z₂ : ℝ} (hlo : ∀ y : ℕ, ℓ ≤ y → Z₁ ≤ D.descOne ℓ y) (hhi : ∀ y : ℕ, ℓ ≤ y → D.descOne ℓ y ≤ Z₂) {a b : ℝ} (ha : 0 ≤ a) (hab : ∀ j, ℓ ≤ j → j < 2 * ℓ → a ≤ D.uu lam j ∧ D.uu lam j ≤ b) {m : ℕ} (hm : ℓ ≤ m) (hM : (m : ℕ∞) ≤ M₁) : a * Z₁ ≤ D.uu lam m ∧ D.uu lam m ≤ b * Z₂` |
+| 184 | theorem | `uu_bounded` | `theorem uu_bounded {ℓ d : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hpos : ∀ j, 1 ≤ j → 0 < lam j) (hℓ : d < 2 * ℓ) (hℓ1 : 1 ≤ ℓ) {Z₁ Z₂ : ℝ} (hZ1 : 0 < Z₁) (hZ1' : Z₁ ≤ 1) (hZ2 : 1 ≤ Z₂) (hlo : ∀ y : ℕ, ℓ ≤ y → Z₁ ≤ D.descOne ℓ y) (hhi : ∀ y : ℕ, ℓ ≤ y → D.descOne ℓ y ≤ Z₂) : ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ ≤ c₂ ∧ ∀ j : ℕ, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂` |
+| 222 | theorem | `decay_two_sided` | `theorem decay_two_sided {ℓ d : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hpos : ∀ j, 1 ≤ j → 0 < lam j) (hℓ : d < 2 * ℓ) (hℓ1 : 1 ≤ ℓ) {Z₁ Z₂ : ℝ} (hZ1 : 0 < Z₁) (hZ1' : Z₁ ≤ 1) (hZ2 : 1 ≤ Z₂) (hlo : ∀ y : ℕ, ℓ ≤ y → Z₁ ≤ D.descOne ℓ y) (hhi : ∀ y : ℕ, ℓ ≤ y → D.descOne ℓ y ≤ Z₂) : ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ ≤ c₂ ∧ ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j ∧ lam j ≤ c₂ * (j : ℝ) ^ (-D.p)` |
 
 ### `GFNBounds/Doubling/DescentLaw.lean`
 
@@ -607,7 +1126,7 @@ In scope: `variable (D : Decay)`
 *strict library; 285 lines; 13 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_doeblin` (bucket A), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), ✅ `lem:doubling_weight` (bucket A)
+Certifies: ✅ `lem:doubling_doeblin` (bucket A), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), 🟡 `lem:doubling_weight` (bucket C)
 
 
 In scope: `variable (D : Decay)`, `variable {a : ℕ}`
@@ -658,7 +1177,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`
 
 **`lem:doubling_escape`, Step 1: the descent halves at a uniform rate**  
 
-*strict library; 444 lines; 34 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 447 lines; 34 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `lem:doubling_escape` (bucket A), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), 🟡 `lem:doubling_descent` (bucket B)
@@ -669,40 +1188,40 @@ In scope: `variable (D : Decay)`, `variable {y : ℕ}`
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 70 | theorem | `sum_shift_ge` | `theorem sum_shift_ge {r : ℝ} (hr : 0 < r) {a b : ℕ} (hab : a ≤ b) : (((a : ℝ) + 1) ^ (-r) - ((b : ℝ) + 1) ^ (-r)) / r ≤ ∑ j ∈ Finset.Ico a b, ((j : ℝ) + 1) ^ (-r - 1)` |
-| 86 | theorem | `sqrt_two_lt` | `theorem sqrt_two_lt : Real.sqrt 2 < 1.415` |
-| 90 | theorem | `one_lt_sqrt_two` | `theorem one_lt_sqrt_two : (1 : ℝ) < Real.sqrt 2` |
-| 93 | theorem | `sqrt_two_pos` | `theorem sqrt_two_pos : (0 : ℝ) < Real.sqrt 2` |
-| 102 | def | `sqTau` | `noncomputable def sqTau : ℝ` |
-| 104 | theorem | `sqTau_sq` | `theorem sqTau_sq : D.sqTau ^ 2 = D.tau` |
-| 106 | theorem | `one_lt_sqTau` | `theorem one_lt_sqTau : 1 < D.sqTau` |
-| 112 | theorem | `sqTau_pos` | `theorem sqTau_pos : 0 < D.sqTau` |
-| 115 | theorem | `sqrt_two_rpow` | `theorem sqrt_two_rpow : (Real.sqrt 2) ^ D.p = D.sqTau` |
-| 121 | def | `gam` | `noncomputable def gam : ℝ` |
-| 123 | theorem | `gam_pos` | `theorem gam_pos : 0 < D.gam` |
-| 128 | theorem | `gam_lt_half` | `theorem gam_lt_half : D.gam < 1 / 2` |
-| 134 | theorem | `quarter_lt_gam` | `theorem quarter_lt_gam : 1 / 4 < D.gam` |
-| 140 | theorem | `cramer_mul` | `theorem cramer_mul : D.c * (D.tau - 1) = D.p` |
-| 148 | theorem | `one_lt_ctau` | `theorem one_lt_ctau : 1 < D.c * D.tau` |
-| 154 | theorem | `ctau_pos` | `theorem ctau_pos : 0 < D.c * D.tau` |
-| 157 | theorem | `two_gam_eq` | `theorem two_gam_eq : D.c * ((D.tau - D.sqTau) / D.p) = 2 * D.gam` |
-| 171 | theorem | `half_rpow'` | `theorem half_rpow' {x : ℝ} (hx : 0 < x) : (x / 2) ^ (-D.p) = D.tau * x ^ (-D.p)` |
-| 178 | theorem | `foot_shift_ge` | `theorem foot_shift_ge {y : ℕ} (hy : 1 ≤ y) : D.tau * (y : ℝ) ^ (-D.p) * (1 - 4 * D.p / (y : ℝ)) ≤ ((((y + 1) / 2 : ℕ) : ℝ) + 1) ^ (-D.p)` |
-| 210 | theorem | `head_shift_le` | `theorem head_shift_le {y : ℕ} (hy : 1 ≤ y) {z : ℝ} (hz : (y : ℝ) / Real.sqrt 2 ≤ z) : z ^ (-D.p) ≤ D.sqTau * (y : ℝ) ^ (-D.p)` |
-| 224 | theorem | `wm_ge_shift` | `theorem wm_ge_shift {y j : ℕ} (hy : 1 ≤ y) (hj : 1 ≤ j) : D.c * (y : ℝ) ^ D.p * (((j : ℝ) + 1) ^ (-D.p - 1)) ≤ D.wm y j` |
-| 259 | def | `halveIco` | `noncomputable def halveIco (y : ℕ) : Finset ℕ` |
-| 267 | theorem | `thirty_two_lt` | `theorem thirty_two_lt (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : (32 : ℝ) < (y : ℝ)` |
-| 271 | theorem | `one_le_of_thr` | `theorem one_le_of_thr (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : 1 ≤ y` |
-| 277 | theorem | `floor_lt_self` | `theorem floor_lt_self (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : ⌊(y : ℝ) / Real.sqrt 2⌋₊ < y` |
-| 287 | theorem | `foot_le_floor` | `theorem foot_le_floor (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : (y + 1) / 2 ≤ ⌊(y : ℝ) / Real.sqrt 2⌋₊` |
-| 306 | theorem | `escape_sum` | `theorem escape_sum (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : 2 * D.gam - 4 * D.c * D.tau / (y : ℝ) ≤ ∑ j ∈ halveIco y, D.wm y j` |
-| 360 | theorem | `escape` | `theorem escape (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : D.gam ≤ (∑ j ∈ halveIco y, D.wm y j) / D.R0 y` |
-| 385 | theorem | `halveIco_eq_filter` | `theorem halveIco_eq_filter (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : halveIco y = (window y).filter (fun j : ℕ => (j : ℝ) * Real.sqrt 2 ≤ (y : ℝ))` |
-| 408 | theorem | `escape_filter` | `theorem escape_filter (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : D.gam ≤ (∑ j ∈ (window y).filter (fun j : ℕ => (j : ℝ) * Real.sqrt 2 ≤ (y : ℝ)), D.wm y j) / D.R0 y` |
-| 421 | def | `ell2` | `noncomputable def ell2 (D : Decay) (d : ℕ) : ℕ` |
-| 423 | theorem | `lt_ell2` | `theorem lt_ell2 (d : ℕ) : d < D.ell2 d` |
-| 425 | theorem | `thr_of_level` | `theorem thr_of_level {d ℓ y : ℕ} (hℓ : D.ell2 d ≤ ℓ) (hy : 2 * ℓ ≤ y) : 32 * D.c * D.tau ≤ (y : ℝ)` |
-| 436 | theorem | `escape_of_level` | `theorem escape_of_level {d ℓ y : ℕ} (hℓ : D.ell2 d ≤ ℓ) (hy : 2 * ℓ ≤ y) : D.gam ≤ (∑ j ∈ (window y).filter (fun j : ℕ => (j : ℝ) * Real.sqrt 2 ≤ (y : ℝ)), D.wm y j) / D.R0 y` |
+| 73 | theorem | `sum_shift_ge` | `theorem sum_shift_ge {r : ℝ} (hr : 0 < r) {a b : ℕ} (hab : a ≤ b) : (((a : ℝ) + 1) ^ (-r) - ((b : ℝ) + 1) ^ (-r)) / r ≤ ∑ j ∈ Finset.Ico a b, ((j : ℝ) + 1) ^ (-r - 1)` |
+| 89 | theorem | `sqrt_two_lt` | `theorem sqrt_two_lt : Real.sqrt 2 < 1.415` |
+| 93 | theorem | `one_lt_sqrt_two` | `theorem one_lt_sqrt_two : (1 : ℝ) < Real.sqrt 2` |
+| 96 | theorem | `sqrt_two_pos` | `theorem sqrt_two_pos : (0 : ℝ) < Real.sqrt 2` |
+| 105 | def | `sqTau` | `noncomputable def sqTau : ℝ` |
+| 107 | theorem | `sqTau_sq` | `theorem sqTau_sq : D.sqTau ^ 2 = D.tau` |
+| 109 | theorem | `one_lt_sqTau` | `theorem one_lt_sqTau : 1 < D.sqTau` |
+| 115 | theorem | `sqTau_pos` | `theorem sqTau_pos : 0 < D.sqTau` |
+| 118 | theorem | `sqrt_two_rpow` | `theorem sqrt_two_rpow : (Real.sqrt 2) ^ D.p = D.sqTau` |
+| 124 | def | `gam` | `noncomputable def gam : ℝ` |
+| 126 | theorem | `gam_pos` | `theorem gam_pos : 0 < D.gam` |
+| 131 | theorem | `gam_lt_half` | `theorem gam_lt_half : D.gam < 1 / 2` |
+| 137 | theorem | `quarter_lt_gam` | `theorem quarter_lt_gam : 1 / 4 < D.gam` |
+| 143 | theorem | `cramer_mul` | `theorem cramer_mul : D.c * (D.tau - 1) = D.p` |
+| 151 | theorem | `one_lt_ctau` | `theorem one_lt_ctau : 1 < D.c * D.tau` |
+| 157 | theorem | `ctau_pos` | `theorem ctau_pos : 0 < D.c * D.tau` |
+| 160 | theorem | `two_gam_eq` | `theorem two_gam_eq : D.c * ((D.tau - D.sqTau) / D.p) = 2 * D.gam` |
+| 174 | theorem | `half_rpow'` | `theorem half_rpow' {x : ℝ} (hx : 0 < x) : (x / 2) ^ (-D.p) = D.tau * x ^ (-D.p)` |
+| 181 | theorem | `foot_shift_ge` | `theorem foot_shift_ge {y : ℕ} (hy : 1 ≤ y) : D.tau * (y : ℝ) ^ (-D.p) * (1 - 4 * D.p / (y : ℝ)) ≤ ((((y + 1) / 2 : ℕ) : ℝ) + 1) ^ (-D.p)` |
+| 213 | theorem | `head_shift_le` | `theorem head_shift_le {y : ℕ} (hy : 1 ≤ y) {z : ℝ} (hz : (y : ℝ) / Real.sqrt 2 ≤ z) : z ^ (-D.p) ≤ D.sqTau * (y : ℝ) ^ (-D.p)` |
+| 227 | theorem | `wm_ge_shift` | `theorem wm_ge_shift {y j : ℕ} (hy : 1 ≤ y) (hj : 1 ≤ j) : D.c * (y : ℝ) ^ D.p * (((j : ℝ) + 1) ^ (-D.p - 1)) ≤ D.wm y j` |
+| 262 | def | `halveIco` | `noncomputable def halveIco (y : ℕ) : Finset ℕ` |
+| 270 | theorem | `thirty_two_lt` | `theorem thirty_two_lt (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : (32 : ℝ) < (y : ℝ)` |
+| 274 | theorem | `one_le_of_thr` | `theorem one_le_of_thr (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : 1 ≤ y` |
+| 280 | theorem | `floor_lt_self` | `theorem floor_lt_self (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : ⌊(y : ℝ) / Real.sqrt 2⌋₊ < y` |
+| 290 | theorem | `foot_le_floor` | `theorem foot_le_floor (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : (y + 1) / 2 ≤ ⌊(y : ℝ) / Real.sqrt 2⌋₊` |
+| 309 | theorem | `escape_sum` | `theorem escape_sum (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : 2 * D.gam - 4 * D.c * D.tau / (y : ℝ) ≤ ∑ j ∈ halveIco y, D.wm y j` |
+| 363 | theorem | `escape` | `theorem escape (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : D.gam ≤ (∑ j ∈ halveIco y, D.wm y j) / D.R0 y` |
+| 388 | theorem | `halveIco_eq_filter` | `theorem halveIco_eq_filter (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : halveIco y = (window y).filter (fun j : ℕ => (j : ℝ) * Real.sqrt 2 ≤ (y : ℝ))` |
+| 411 | theorem | `escape_filter` | `theorem escape_filter (hy : 32 * D.c * D.tau ≤ (y : ℝ)) : D.gam ≤ (∑ j ∈ (window y).filter (fun j : ℕ => (j : ℝ) * Real.sqrt 2 ≤ (y : ℝ)), D.wm y j) / D.R0 y` |
+| 424 | def | `ell2` | `noncomputable def ell2 (D : Decay) (d : ℕ) : ℕ` |
+| 426 | theorem | `lt_ell2` | `theorem lt_ell2 (d : ℕ) : d < D.ell2 d` |
+| 428 | theorem | `thr_of_level` | `theorem thr_of_level {d ℓ y : ℕ} (hℓ : D.ell2 d ≤ ℓ) (hy : 2 * ℓ ≤ y) : 32 * D.c * D.tau ≤ (y : ℝ)` |
+| 439 | theorem | `escape_of_level` | `theorem escape_of_level {d ℓ y : ℕ} (hℓ : D.ell2 d ≤ ℓ) (hy : 2 * ℓ ≤ y) : D.gam ≤ (∑ j ∈ (window y).filter (fun j : ℕ => (j : ℝ) * Real.sqrt 2 ≤ (y : ℝ)), D.wm y j) / D.R0 y` |
 
 ### `GFNBounds/Doubling/Excursion.lean`
 
@@ -724,7 +1243,7 @@ Certifies: ✅ `lem:doubling_excursion` (bucket A)
 
 **The coefficients of the expansion of `R_α`**  
 
-*strict library; 126 lines; 12 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 127 lines; 12 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: 🟡 `lem:doubling_expansion` (bucket C), 🟡 `rem:doubling_parity` (bucket C)
@@ -735,18 +1254,18 @@ In scope: `variable (D : Decay)`
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 46 | def | `A0` | `noncomputable def A0 : ℝ` |
-| 50 | def | `A1` | `noncomputable def A1 : ℝ` |
-| 53 | def | `Gam` | `noncomputable def Gam : ℝ` |
-| 55 | theorem | `tau_sub_one_pos` | `theorem tau_sub_one_pos : 0 < D.tau - 1` |
-| 58 | theorem | `p_add_one_pos` | `theorem p_add_one_pos : 0 < D.p + 1` |
-| 62 | theorem | `c_mul_tau` | `theorem c_mul_tau : D.c * D.tau = D.p * D.tau / (D.tau - 1)` |
-| 70 | theorem | `A_one_eq` | `theorem A_one_eq : D.A1 = D.p * (D.p + 3 - 4 * D.tau) / (2 * (D.p + 1) * (D.tau - 1))` |
-| 78 | theorem | `A_gap` | `theorem A_gap : D.A0 - D.A1 = D.c * D.tau` |
-| 81 | theorem | `Gamma_pos` | `theorem Gamma_pos : 0 < D.Gam` |
-| 91 | theorem | `Gamma_lt_one` | `theorem Gamma_lt_one : D.Gam < 1` |
-| 102 | theorem | `A_zero_pos` | `theorem A_zero_pos : 0 < D.A0` |
-| 113 | theorem | `A_one_neg` | `theorem A_one_neg : D.A1 < 0` |
+| 47 | def | `A0` | `noncomputable def A0 : ℝ` |
+| 51 | def | `A1` | `noncomputable def A1 : ℝ` |
+| 54 | def | `Gam` | `noncomputable def Gam : ℝ` |
+| 56 | theorem | `tau_sub_one_pos` | `theorem tau_sub_one_pos : 0 < D.tau - 1` |
+| 59 | theorem | `p_add_one_pos` | `theorem p_add_one_pos : 0 < D.p + 1` |
+| 63 | theorem | `c_mul_tau` | `theorem c_mul_tau : D.c * D.tau = D.p * D.tau / (D.tau - 1)` |
+| 71 | theorem | `A_one_eq` | `theorem A_one_eq : D.A1 = D.p * (D.p + 3 - 4 * D.tau) / (2 * (D.p + 1) * (D.tau - 1))` |
+| 79 | theorem | `A_gap` | `theorem A_gap : D.A0 - D.A1 = D.c * D.tau` |
+| 82 | theorem | `Gamma_pos` | `theorem Gamma_pos : 0 < D.Gam` |
+| 92 | theorem | `Gamma_lt_one` | `theorem Gamma_lt_one : D.Gam < 1` |
+| 103 | theorem | `A_zero_pos` | `theorem A_zero_pos : 0 < D.A0` |
+| 114 | theorem | `A_one_neg` | `theorem A_one_neg : D.A1 < 0` |
 
 ### `GFNBounds/Doubling/Exponent.lean`
 
@@ -777,7 +1296,7 @@ In scope: `variable {p : ℝ}`
 
 **An explicit divergent family: the `√m` rate**  
 
-*strict library; 120 lines; 3 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 121 lines; 3 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `cor:doubling_family` (bucket A), ✅ `def:doubling_setting` (bucket A)
@@ -788,9 +1307,9 @@ In scope: `variable {S : Setting}`, `variable (L : Stat S none)`
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 54 | theorem | `tailSeq_eq_tailMass` | `theorem tailSeq_eq_tailMass (m : ℕ) : tailSeq (fun j => L.lam (.lad j)) m = L.tailMass m` |
-| 61 | theorem | `rayleigh_family` | `theorem rayleigh_family (D : Decay) {c₁ c₂ : ℝ} (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ L.lam (.lad j)) (habove : ∀ j : ℕ, 1 ≤ j → L.lam (.lad j) ≤ c₂ * (j : ℝ) ^ (-D.p)) {m : ℕ} (hdm : S.d < m) (hhalf : (1 : ℝ) / 2 ≤ 1 - L.tailMass m) : c₁ * (m : ℝ) * L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ 4 * c₂ * (D.p - 1) * L.mass 2 (L.centredTail m)` |
-| 100 | theorem | `exists_rayleigh_family` | `theorem exists_rayleigh_family (D : Decay) {c₁ c₂ : ℝ} (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ L.lam (.lad j)) (habove : ∀ j : ℕ, 1 ≤ j → L.lam (.lad j) ≤ c₂ * (j : ℝ) ^ (-D.p)) : ∃ m₂ : ℕ, S.d < m₂ ∧ ∀ m : ℕ, m₂ ≤ m → c₁ * (m : ℝ) * L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ 4 * c₂ * (D.p - 1) * L.mass 2 (L.centredTail m)` |
+| 55 | theorem | `tailSeq_eq_tailMass` | `theorem tailSeq_eq_tailMass (m : ℕ) : tailSeq (fun j => L.lam (.lad j)) m = L.tailMass m` |
+| 62 | theorem | `rayleigh_family` | `theorem rayleigh_family (D : Decay) {c₁ c₂ : ℝ} (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ L.lam (.lad j)) (habove : ∀ j : ℕ, 1 ≤ j → L.lam (.lad j) ≤ c₂ * (j : ℝ) ^ (-D.p)) {m : ℕ} (hdm : S.d < m) (hhalf : (1 : ℝ) / 2 ≤ 1 - L.tailMass m) : c₁ * (m : ℝ) * L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ 4 * c₂ * (D.p - 1) * L.mass 2 (L.centredTail m)` |
+| 101 | theorem | `exists_rayleigh_family` | `theorem exists_rayleigh_family (D : Decay) {c₁ c₂ : ℝ} (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ L.lam (.lad j)) (habove : ∀ j : ℕ, 1 ≤ j → L.lam (.lad j) ≤ c₂ * (j : ℝ) ^ (-D.p)) : ∃ m₂ : ℕ, S.d < m₂ ∧ ∀ m : ℕ, m₂ ≤ m → c₁ * (m : ℝ) * L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ 4 * c₂ * (D.p - 1) * L.mass 2 (L.centredTail m)` |
 
 ### `GFNBounds/Doubling/FixedPoints.lean`
 
@@ -878,7 +1397,7 @@ Certifies: ✅ `lem:doubling_doeblin` (bucket A)
 
 **Irreducibility, and why an invariant probability is positive**  
 
-*strict library; 355 lines; 28 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 356 lines; 28 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `lem:doubling_irreducible` (bucket A), ✅ `lem:doubling_truncation_irreducible` (bucket A)
@@ -889,34 +1408,34 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable {K : ℕ}`, `va
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 57 | inductive | `Edge` | `inductive Edge (S : Setting) (cap : Option ℕ) : St → St → Prop` |
-| 64 | abbrev | `Reach` | `abbrev Reach (S : Setting) (cap : Option ℕ) : St → St → Prop` |
-| 68 | def | `ptFn` | `def ptFn (y : St) : St → ℝ` |
-| 70 | theorem | `ptFn_nonneg` | `theorem ptFn_nonneg (y x : St) : 0 ≤ ptFn y x` |
-| 72 | theorem | `ptFn_bounded` | `theorem ptFn_bounded (y : St) : ∃ C, ∀ x, \|ptFn y x\| ≤ C` |
-| 75 | theorem @[simp] | `ptFn_self` | `@[simp] theorem ptFn_self (y : St) : ptFn y y = 1` |
-| 77 | theorem | `ptFn_of_ne` | `theorem ptFn_of_ne {y x : St} (h : x ≠ y) : ptFn y x = 0` |
-| 80 | theorem | `edge_pstar_pos` | `theorem edge_pstar_pos {x y : St} (h : Edge S cap x y) : 0 < pstar S cap (ptFn y) x` |
-| 112 | theorem | `exists_row_pos` | `theorem exists_row_pos (S : Setting) : ∃ k, k ∈ Finset.Icc 1 S.d ∧ 0 < S.row k` |
-| 124 | theorem | `reach_dec` | `theorem reach_dec (S : Setting) (cap : Option ℕ) (j n : ℕ) : Reach S cap (.lad (j + n)) (.lad j)` |
-| 132 | theorem | `reach_dec_le` | `theorem reach_dec_le (S : Setting) (cap : Option ℕ) {i j : ℕ} (h : j ≤ i) : Reach S cap (.lad i) (.lad j)` |
-| 139 | theorem | `reach_one` | `theorem reach_one (S : Setting) (cap : Option ℕ) (x : St) : Reach S cap x (.lad 1)` |
-| 154 | theorem | `reach_lad_none` | `theorem reach_lad_none (S : Setting) : ∀ n : ℕ, 1 ≤ n → Reach S none (.lad 1) (.lad n)` |
-| 169 | theorem | `reach_all_none` | `theorem reach_all_none (S : Setting) (x y : St) : Reach S none x y` |
-| 185 | theorem | `reach_pow_two` | `theorem reach_pow_two (S : Setting) : ∀ r : ℕ, 2 ^ r ≤ K → Reach S (some K) (.lad 1) (.lad (2 ^ r))` |
-| 208 | theorem | `reach_one_lad` | `theorem reach_one_lad (S : Setting) (hK : Even K) (hK1 : 1 ≤ K) {n : ℕ} (hn : 1 ≤ n) (hnK : n ≤ K) : Reach S (some K) (.lad 1) (.lad n)` |
-| 247 | theorem | `reach_all_some` | `theorem reach_all_some (S : Setting) (hK : Even K) (hdK : S.d ≤ K) {x y : St} (hy : OnChain (some K) y) : Reach S (some K) x y` |
-| 263 | structure | `PreStat` | `structure PreStat (S : Setting) (cap : Option ℕ)` |
-| 276 | theorem | `summable_mul` | `theorem summable_mul {f : St → ℝ} (hf : ∃ C, ∀ x, \|f x\| ≤ C) : Summable (fun x => P.lam x * f x)` |
-| 284 | theorem | `hasSum_mul_ptFn` | `theorem hasSum_mul_ptFn (y : St) : HasSum (fun x => P.lam x * ptFn y x) (P.lam y)` |
-| 293 | theorem | `hasSum_flux` | `theorem hasSum_flux (y : St) : HasSum (fun x => P.lam x * pstar S cap (ptFn y) x) (P.lam y)` |
-| 302 | theorem | `lam_pos_step` | `theorem lam_pos_step {x y : St} (h : Edge S cap x y) (hx : 0 < P.lam x) : 0 < P.lam y` |
-| 308 | theorem | `lam_pos_of_reach` | `theorem lam_pos_of_reach {x y : St} (h : Reach S cap x y) (hx : 0 < P.lam x) : 0 < P.lam y` |
-| 314 | theorem | `exists_pos` | `theorem exists_pos : ∃ x, OnChain cap x ∧ 0 < P.lam x` |
-| 329 | theorem | `pos_of_irreducible` | `theorem pos_of_irreducible (hirr : ∀ x y : St, OnChain cap y → Reach S cap x y) ⦃y : St⦄ (hy : OnChain cap y) : 0 < P.lam y` |
-| 335 | def | `toStat` | `def toStat (hirr : ∀ x y : St, OnChain cap y → Reach S cap x y) : Stat S cap` |
-| 347 | def | `PreStat.toStatNone` | `def PreStat.toStatNone (P : PreStat S none) : Stat S none` |
-| 351 | def | `PreStat.toStatSome` | `def PreStat.toStatSome {K : ℕ} (P : PreStat S (some K)) (hK : Even K) (hdK : S.d ≤ K) : Stat S (some K)` |
+| 58 | inductive | `Edge` | `inductive Edge (S : Setting) (cap : Option ℕ) : St → St → Prop` |
+| 65 | abbrev | `Reach` | `abbrev Reach (S : Setting) (cap : Option ℕ) : St → St → Prop` |
+| 69 | def | `ptFn` | `def ptFn (y : St) : St → ℝ` |
+| 71 | theorem | `ptFn_nonneg` | `theorem ptFn_nonneg (y x : St) : 0 ≤ ptFn y x` |
+| 73 | theorem | `ptFn_bounded` | `theorem ptFn_bounded (y : St) : ∃ C, ∀ x, \|ptFn y x\| ≤ C` |
+| 76 | theorem @[simp] | `ptFn_self` | `@[simp] theorem ptFn_self (y : St) : ptFn y y = 1` |
+| 78 | theorem | `ptFn_of_ne` | `theorem ptFn_of_ne {y x : St} (h : x ≠ y) : ptFn y x = 0` |
+| 81 | theorem | `edge_pstar_pos` | `theorem edge_pstar_pos {x y : St} (h : Edge S cap x y) : 0 < pstar S cap (ptFn y) x` |
+| 113 | theorem | `exists_row_pos` | `theorem exists_row_pos (S : Setting) : ∃ k, k ∈ Finset.Icc 1 S.d ∧ 0 < S.row k` |
+| 125 | theorem | `reach_dec` | `theorem reach_dec (S : Setting) (cap : Option ℕ) (j n : ℕ) : Reach S cap (.lad (j + n)) (.lad j)` |
+| 133 | theorem | `reach_dec_le` | `theorem reach_dec_le (S : Setting) (cap : Option ℕ) {i j : ℕ} (h : j ≤ i) : Reach S cap (.lad i) (.lad j)` |
+| 140 | theorem | `reach_one` | `theorem reach_one (S : Setting) (cap : Option ℕ) (x : St) : Reach S cap x (.lad 1)` |
+| 155 | theorem | `reach_lad_none` | `theorem reach_lad_none (S : Setting) : ∀ n : ℕ, 1 ≤ n → Reach S none (.lad 1) (.lad n)` |
+| 170 | theorem | `reach_all_none` | `theorem reach_all_none (S : Setting) (x y : St) : Reach S none x y` |
+| 186 | theorem | `reach_pow_two` | `theorem reach_pow_two (S : Setting) : ∀ r : ℕ, 2 ^ r ≤ K → Reach S (some K) (.lad 1) (.lad (2 ^ r))` |
+| 209 | theorem | `reach_one_lad` | `theorem reach_one_lad (S : Setting) (hK : Even K) (hK1 : 1 ≤ K) {n : ℕ} (hn : 1 ≤ n) (hnK : n ≤ K) : Reach S (some K) (.lad 1) (.lad n)` |
+| 248 | theorem | `reach_all_some` | `theorem reach_all_some (S : Setting) (hK : Even K) (hdK : S.d ≤ K) {x y : St} (hy : OnChain (some K) y) : Reach S (some K) x y` |
+| 264 | structure | `PreStat` | `structure PreStat (S : Setting) (cap : Option ℕ)` |
+| 277 | theorem | `summable_mul` | `theorem summable_mul {f : St → ℝ} (hf : ∃ C, ∀ x, \|f x\| ≤ C) : Summable (fun x => P.lam x * f x)` |
+| 285 | theorem | `hasSum_mul_ptFn` | `theorem hasSum_mul_ptFn (y : St) : HasSum (fun x => P.lam x * ptFn y x) (P.lam y)` |
+| 294 | theorem | `hasSum_flux` | `theorem hasSum_flux (y : St) : HasSum (fun x => P.lam x * pstar S cap (ptFn y) x) (P.lam y)` |
+| 303 | theorem | `lam_pos_step` | `theorem lam_pos_step {x y : St} (h : Edge S cap x y) (hx : 0 < P.lam x) : 0 < P.lam y` |
+| 309 | theorem | `lam_pos_of_reach` | `theorem lam_pos_of_reach {x y : St} (h : Reach S cap x y) (hx : 0 < P.lam x) : 0 < P.lam y` |
+| 315 | theorem | `exists_pos` | `theorem exists_pos : ∃ x, OnChain cap x ∧ 0 < P.lam x` |
+| 330 | theorem | `pos_of_irreducible` | `theorem pos_of_irreducible (hirr : ∀ x y : St, OnChain cap y → Reach S cap x y) ⦃y : St⦄ (hy : OnChain cap y) : 0 < P.lam y` |
+| 336 | def | `toStat` | `def toStat (hirr : ∀ x y : St, OnChain cap y → Reach S cap x y) : Stat S cap` |
+| 348 | def | `PreStat.toStatNone` | `def PreStat.toStatNone (P : PreStat S none) : Stat S none` |
+| 352 | def | `PreStat.toStatSome` | `def PreStat.toStatSome {K : ℕ} (P : PreStat S (some K)) (hK : Even K) (hdK : S.d ≤ K) : Stat S (some K)` |
 
 ### `GFNBounds/Doubling/Kac.lean`
 
@@ -1020,7 +1539,7 @@ In scope: `variable {S : Setting}`
 *strict library; 272 lines; 9 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_operator` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket B)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`, `variable (L : Stat S cap)`
@@ -1042,10 +1561,10 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 
 **The `L^p(λ)` layer: the measure, the a.e. bridge, and the norm identification**  
 
-*strict library; 545 lines; 42 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 543 lines; 42 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_operator` (bucket A), ✅ `lem:doubling_fixed_points` (bucket A), ✅ `prop:doubling_unsolvable` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket B), ✅ `lem:doubling_fixed_points` (bucket A), ✅ `prop:doubling_unsolvable` (bucket A)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`, `variable (L : Stat S cap)`
@@ -1053,57 +1572,57 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 103 | instance | `_` | `instance : MeasurableSpace St` |
-| 105 | instance | `_` | `instance : DiscreteMeasurableSpace St` |
-| 116 | def | `mu` | `noncomputable def mu : Measure St` |
-| 120 | theorem @[simp] | `mu_singleton` | `@[simp] theorem mu_singleton (x : St) : L.mu {x} = ENNReal.ofReal (L.lam x)` |
-| 125 | instance | `instIsProbabilityMeasure` | `instance instIsProbabilityMeasure : IsProbabilityMeasure L.mu` |
-| 133 | theorem | `mu_singleton_ne_zero_iff` | `theorem mu_singleton_ne_zero_iff {x : St} : L.mu {x} ≠ 0 ↔ OnChain cap x` |
-| 143 | theorem | `ae_iff_onChain` | `theorem ae_iff_onChain {p : St → Prop} : (∀ᵐ x ∂L.mu, p x) ↔ ∀ x, OnChain cap x → p x` |
-| 152 | theorem | `ae_iff_eq` | `theorem ae_iff_eq {f g : St → ℝ} : f =ᵐ[L.mu] g ↔ ∀ x, OnChain cap x → f x = g x` |
-| 156 | theorem | `ae_eq_of_onChain` | `theorem ae_eq_of_onChain {f g : St → ℝ} (h : ∀ x, OnChain cap x → f x = g x) : f =ᵐ[L.mu] g` |
-| 162 | theorem | `aestronglyMeasurable` | `theorem aestronglyMeasurable (f : St → ℝ) : AEStronglyMeasurable f L.mu` |
-| 166 | theorem | `lintegral_eq_tsum` | `theorem lintegral_eq_tsum (g : St → ℝ≥0∞) : ∫⁻ x, g x ∂L.mu = ∑' x, g x * ENNReal.ofReal (L.lam x)` |
-| 172 | theorem | `lintegral_rpow_enorm` | `theorem lintegral_rpow_enorm (f : St → ℝ) {r : ℝ} (hr : 0 ≤ r) : ∫⁻ x, ‖f x‖ₑ ^ r ∂L.mu = ∑' x, ENNReal.ofReal (\|f x\| ^ r * L.lam x)` |
-| 180 | theorem | `lintegral_rpow_enorm_eq_mass` | `theorem lintegral_rpow_enorm_eq_mass (f : St → ℝ) {r : ℝ} (hr : 0 ≤ r) (hs : Summable fun x => \|f x\| ^ r * L.lam x) : ∫⁻ x, ‖f x‖ₑ ^ r ∂L.mu = ENNReal.ofReal (L.mass r f)` |
-| 187 | theorem | `mass_nonneg` | `theorem mass_nonneg (f : St → ℝ) {r : ℝ} : 0 ≤ L.mass r f` |
-| 191 | theorem | `memLp_iff` | `theorem memLp_iff {f : St → ℝ} {p : ℝ≥0∞} (hp0 : p ≠ 0) (hpt : p ≠ ∞) : MemLp f p L.mu ↔ Summable fun x => \|f x\| ^ p.toReal * L.lam x` |
-| 212 | theorem | `toReal_eLpNorm_rpow` | `theorem toReal_eLpNorm_rpow (f : St → ℝ) {p : ℝ≥0∞} (hp0 : p ≠ 0) (hpt : p ≠ ∞) (hs : Summable fun x => \|f x\| ^ p.toReal * L.lam x) : (eLpNorm f p L.mu).toReal ^ p.toReal = L.mass p.toReal f` |
-| 231 | theorem | `tendsto_pstar` | `theorem tendsto_pstar {F : ℕ → St → ℝ} {f : St → ℝ} (h : ∀ y, Tendsto (fun n => F n y) atTop (𝓝 (f y))) (x : St) : Tendsto (fun n => pstar S cap (F n) x) atTop (𝓝 (pstar S cap f x))` |
-| 248 | def | `RowOnChain` | `def RowOnChain (S : Setting) (cap : Option ℕ) : Prop` |
-| 251 | theorem | `rowOnChain_none` | `theorem rowOnChain_none (S : Setting) : RowOnChain S none` |
-| 253 | theorem | `rowOnChain_some` | `theorem rowOnChain_some {K : ℕ} (h : S.d ≤ K) : RowOnChain S (some K)` |
-| 257 | theorem | `onChain_lad_of_succ` | `theorem onChain_lad_of_succ {j : ℕ} (h : OnChain cap (.lad (j + 1))) : OnChain cap (.lad j)` |
-| 263 | theorem | `onChain_src` | `theorem onChain_src (cap : Option ℕ) : OnChain cap (St.lad 0)` |
-| 270 | theorem | `pstar_congr_onChain` | `theorem pstar_congr_onChain (hrow : RowOnChain S cap) {f g : St → ℝ} (h : ∀ x, OnChain cap x → f x = g x) {x : St} (hx : OnChain cap x) : pstar S cap f x = pstar S cap g x` |
-| 285 | theorem | `tendsto_min_natCast` | `private theorem tendsto_min_natCast (a : ℝ) : Tendsto (fun n : ℕ => min a (n : ℝ)) atTop (𝓝 a)` |
-| 291 | theorem | `abs_rpow_two` | `private theorem abs_rpow_two (t : ℝ) : \|t\| ^ (2 : ℝ) = t ^ 2` |
-| 301 | theorem | `tsum_pstar_le` | `theorem tsum_pstar_le {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hsum : Summable fun x => L.lam x * g x) : Summable (fun x => L.lam x * pstar S cap g x) ∧ ∑' x, L.lam x * pstar S cap g x ≤ ∑' x, L.lam x * g x` |
-| 335 | theorem | `mass_two_pstar_le` | `theorem mass_two_pstar_le {f : St → ℝ} (hs : Summable fun x => \|f x\| ^ (2 : ℝ) * L.lam x) : L.mass 2 (pstar S cap f) ≤ L.mass 2 f` |
-| 352 | theorem | `memLp_two_iff` | `theorem memLp_two_iff {f : St → ℝ} : MemLp f 2 L.mu ↔ Summable fun x => \|f x\| ^ (2 : ℝ) * L.lam x` |
-| 357 | theorem | `memLp_two_pstar` | `theorem memLp_two_pstar {f : St → ℝ} (hf : MemLp f 2 L.mu) : MemLp (pstar S cap f) 2 L.mu` |
-| 370 | theorem | `toReal_eLpNorm_two_sq` | `theorem toReal_eLpNorm_two_sq {f : St → ℝ} (hf : MemLp f 2 L.mu) : (eLpNorm f 2 L.mu).toReal ^ 2 = L.mass 2 f` |
-| 382 | theorem | `eLpNorm_two_pstar_le` | `theorem eLpNorm_two_pstar_le {f : St → ℝ} (hf : MemLp f 2 L.mu) : eLpNorm (pstar S cap f) 2 L.mu ≤ eLpNorm f 2 L.mu` |
-| 396 | def | `pstarLp` | `noncomputable def pstarLp (F : Lp ℝ 2 L.mu) : Lp ℝ 2 L.mu` |
-| 399 | theorem | `coeFn_pstarLp` | `theorem coeFn_pstarLp (F : Lp ℝ 2 L.mu) : ⇑(L.pstarLp F) =ᵐ[L.mu] pstar S cap ⇑F` |
-| 402 | theorem | `norm_pstarLp_le` | `theorem norm_pstarLp_le (F : Lp ℝ 2 L.mu) : ‖L.pstarLp F‖ ≤ ‖F‖` |
-| 406 | theorem | `pstarLp_add` | `theorem pstarLp_add (hrow : RowOnChain S cap) (F G : Lp ℝ 2 L.mu) : L.pstarLp (F + G) = L.pstarLp F + L.pstarLp G` |
-| 416 | theorem | `pstarLp_smul` | `theorem pstarLp_smul (hrow : RowOnChain S cap) (c : ℝ) (F : Lp ℝ 2 L.mu) : L.pstarLp (c • F) = c • L.pstarLp F` |
-| 431 | def | `pstarL2` | `noncomputable def pstarL2 (hrow : RowOnChain S cap) : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu` |
-| 438 | theorem @[simp] | `pstarL2_apply` | `@[simp] theorem pstarL2_apply (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : L.pstarL2 hrow F = L.pstarLp F` |
-| 441 | theorem | `coeFn_pstarL2` | `theorem coeFn_pstarL2 (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : ⇑(L.pstarL2 hrow F) =ᵐ[L.mu] pstar S cap ⇑F` |
-| 446 | theorem | `norm_pstarL2_le` | `theorem norm_pstarL2_le (hrow : RowOnChain S cap) : ‖L.pstarL2 hrow‖ ≤ 1` |
-| 457 | theorem | `jensen_gap_zero_memLp` | `theorem jensen_gap_zero_memLp {f : St → ℝ} (hf : MemLp f 2 L.mu) (hfix : ∀ x, OnChain cap x → pstar S cap f x = f x) {x : St} (hx : OnChain cap x) : pstar S cap (fun y => (f y) ^ 2) x - (pstar S cap f x) ^ 2 = 0` |
-| 506 | theorem | `fixed_const_memLp` | `theorem fixed_const_memLp {f : St → ℝ} (hf : MemLp f 2 L.mu) (hfix : ∀ x, OnChain cap x → pstar S cap f x = f x) : ∀ x : St, OnChain cap x → f x = f (.lad 0)` |
+| 101 | instance | `_` | `instance : MeasurableSpace St` |
+| 103 | instance | `_` | `instance : DiscreteMeasurableSpace St` |
+| 114 | def | `mu` | `noncomputable def mu : Measure St` |
+| 118 | theorem @[simp] | `mu_singleton` | `@[simp] theorem mu_singleton (x : St) : L.mu {x} = ENNReal.ofReal (L.lam x)` |
+| 123 | instance | `instIsProbabilityMeasure` | `instance instIsProbabilityMeasure : IsProbabilityMeasure L.mu` |
+| 131 | theorem | `mu_singleton_ne_zero_iff` | `theorem mu_singleton_ne_zero_iff {x : St} : L.mu {x} ≠ 0 ↔ OnChain cap x` |
+| 141 | theorem | `ae_iff_onChain` | `theorem ae_iff_onChain {p : St → Prop} : (∀ᵐ x ∂L.mu, p x) ↔ ∀ x, OnChain cap x → p x` |
+| 150 | theorem | `ae_iff_eq` | `theorem ae_iff_eq {f g : St → ℝ} : f =ᵐ[L.mu] g ↔ ∀ x, OnChain cap x → f x = g x` |
+| 154 | theorem | `ae_eq_of_onChain` | `theorem ae_eq_of_onChain {f g : St → ℝ} (h : ∀ x, OnChain cap x → f x = g x) : f =ᵐ[L.mu] g` |
+| 160 | theorem | `aestronglyMeasurable` | `theorem aestronglyMeasurable (f : St → ℝ) : AEStronglyMeasurable f L.mu` |
+| 164 | theorem | `lintegral_eq_tsum` | `theorem lintegral_eq_tsum (g : St → ℝ≥0∞) : ∫⁻ x, g x ∂L.mu = ∑' x, g x * ENNReal.ofReal (L.lam x)` |
+| 170 | theorem | `lintegral_rpow_enorm` | `theorem lintegral_rpow_enorm (f : St → ℝ) {r : ℝ} (hr : 0 ≤ r) : ∫⁻ x, ‖f x‖ₑ ^ r ∂L.mu = ∑' x, ENNReal.ofReal (\|f x\| ^ r * L.lam x)` |
+| 178 | theorem | `lintegral_rpow_enorm_eq_mass` | `theorem lintegral_rpow_enorm_eq_mass (f : St → ℝ) {r : ℝ} (hr : 0 ≤ r) (hs : Summable fun x => \|f x\| ^ r * L.lam x) : ∫⁻ x, ‖f x‖ₑ ^ r ∂L.mu = ENNReal.ofReal (L.mass r f)` |
+| 185 | theorem | `mass_nonneg` | `theorem mass_nonneg (f : St → ℝ) {r : ℝ} : 0 ≤ L.mass r f` |
+| 189 | theorem | `memLp_iff` | `theorem memLp_iff {f : St → ℝ} {p : ℝ≥0∞} (hp0 : p ≠ 0) (hpt : p ≠ ∞) : MemLp f p L.mu ↔ Summable fun x => \|f x\| ^ p.toReal * L.lam x` |
+| 210 | theorem | `toReal_eLpNorm_rpow` | `theorem toReal_eLpNorm_rpow (f : St → ℝ) {p : ℝ≥0∞} (hp0 : p ≠ 0) (hpt : p ≠ ∞) (hs : Summable fun x => \|f x\| ^ p.toReal * L.lam x) : (eLpNorm f p L.mu).toReal ^ p.toReal = L.mass p.toReal f` |
+| 229 | theorem | `tendsto_pstar` | `theorem tendsto_pstar {F : ℕ → St → ℝ} {f : St → ℝ} (h : ∀ y, Tendsto (fun n => F n y) atTop (𝓝 (f y))) (x : St) : Tendsto (fun n => pstar S cap (F n) x) atTop (𝓝 (pstar S cap f x))` |
+| 246 | def | `RowOnChain` | `def RowOnChain (S : Setting) (cap : Option ℕ) : Prop` |
+| 249 | theorem | `rowOnChain_none` | `theorem rowOnChain_none (S : Setting) : RowOnChain S none` |
+| 251 | theorem | `rowOnChain_some` | `theorem rowOnChain_some {K : ℕ} (h : S.d ≤ K) : RowOnChain S (some K)` |
+| 255 | theorem | `onChain_lad_of_succ` | `theorem onChain_lad_of_succ {j : ℕ} (h : OnChain cap (.lad (j + 1))) : OnChain cap (.lad j)` |
+| 261 | theorem | `onChain_src` | `theorem onChain_src (cap : Option ℕ) : OnChain cap (St.lad 0)` |
+| 268 | theorem | `pstar_congr_onChain` | `theorem pstar_congr_onChain (hrow : RowOnChain S cap) {f g : St → ℝ} (h : ∀ x, OnChain cap x → f x = g x) {x : St} (hx : OnChain cap x) : pstar S cap f x = pstar S cap g x` |
+| 283 | theorem | `tendsto_min_natCast` | `private theorem tendsto_min_natCast (a : ℝ) : Tendsto (fun n : ℕ => min a (n : ℝ)) atTop (𝓝 a)` |
+| 289 | theorem | `abs_rpow_two` | `private theorem abs_rpow_two (t : ℝ) : \|t\| ^ (2 : ℝ) = t ^ 2` |
+| 299 | theorem | `tsum_pstar_le` | `theorem tsum_pstar_le {g : St → ℝ} (hg : ∀ x, 0 ≤ g x) (hsum : Summable fun x => L.lam x * g x) : Summable (fun x => L.lam x * pstar S cap g x) ∧ ∑' x, L.lam x * pstar S cap g x ≤ ∑' x, L.lam x * g x` |
+| 333 | theorem | `mass_two_pstar_le` | `theorem mass_two_pstar_le {f : St → ℝ} (hs : Summable fun x => \|f x\| ^ (2 : ℝ) * L.lam x) : L.mass 2 (pstar S cap f) ≤ L.mass 2 f` |
+| 350 | theorem | `memLp_two_iff` | `theorem memLp_two_iff {f : St → ℝ} : MemLp f 2 L.mu ↔ Summable fun x => \|f x\| ^ (2 : ℝ) * L.lam x` |
+| 355 | theorem | `memLp_two_pstar` | `theorem memLp_two_pstar {f : St → ℝ} (hf : MemLp f 2 L.mu) : MemLp (pstar S cap f) 2 L.mu` |
+| 368 | theorem | `toReal_eLpNorm_two_sq` | `theorem toReal_eLpNorm_two_sq {f : St → ℝ} (hf : MemLp f 2 L.mu) : (eLpNorm f 2 L.mu).toReal ^ 2 = L.mass 2 f` |
+| 380 | theorem | `eLpNorm_two_pstar_le` | `theorem eLpNorm_two_pstar_le {f : St → ℝ} (hf : MemLp f 2 L.mu) : eLpNorm (pstar S cap f) 2 L.mu ≤ eLpNorm f 2 L.mu` |
+| 394 | def | `pstarLp` | `noncomputable def pstarLp (F : Lp ℝ 2 L.mu) : Lp ℝ 2 L.mu` |
+| 397 | theorem | `coeFn_pstarLp` | `theorem coeFn_pstarLp (F : Lp ℝ 2 L.mu) : ⇑(L.pstarLp F) =ᵐ[L.mu] pstar S cap ⇑F` |
+| 400 | theorem | `norm_pstarLp_le` | `theorem norm_pstarLp_le (F : Lp ℝ 2 L.mu) : ‖L.pstarLp F‖ ≤ ‖F‖` |
+| 404 | theorem | `pstarLp_add` | `theorem pstarLp_add (hrow : RowOnChain S cap) (F G : Lp ℝ 2 L.mu) : L.pstarLp (F + G) = L.pstarLp F + L.pstarLp G` |
+| 414 | theorem | `pstarLp_smul` | `theorem pstarLp_smul (hrow : RowOnChain S cap) (c : ℝ) (F : Lp ℝ 2 L.mu) : L.pstarLp (c • F) = c • L.pstarLp F` |
+| 429 | def | `pstarL2` | `noncomputable def pstarL2 (hrow : RowOnChain S cap) : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu` |
+| 436 | theorem @[simp] | `pstarL2_apply` | `@[simp] theorem pstarL2_apply (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : L.pstarL2 hrow F = L.pstarLp F` |
+| 439 | theorem | `coeFn_pstarL2` | `theorem coeFn_pstarL2 (hrow : RowOnChain S cap) (F : Lp ℝ 2 L.mu) : ⇑(L.pstarL2 hrow F) =ᵐ[L.mu] pstar S cap ⇑F` |
+| 444 | theorem | `norm_pstarL2_le` | `theorem norm_pstarL2_le (hrow : RowOnChain S cap) : ‖L.pstarL2 hrow‖ ≤ 1` |
+| 455 | theorem | `jensen_gap_zero_memLp` | `theorem jensen_gap_zero_memLp {f : St → ℝ} (hf : MemLp f 2 L.mu) (hfix : ∀ x, OnChain cap x → pstar S cap f x = f x) {x : St} (hx : OnChain cap x) : pstar S cap (fun y => (f y) ^ 2) x - (pstar S cap f x) ^ 2 = 0` |
+| 504 | theorem | `fixed_const_memLp` | `theorem fixed_const_memLp {f : St → ℝ} (hf : MemLp f 2 L.mu) (hfix : ∀ x, OnChain cap x → pstar S cap f x = f x) : ∀ x : St, OnChain cap x → f x = f (.lad 0)` |
 
 ### `GFNBounds/Doubling/Lyapunov.lean`
 
 **The Lyapunov drifts of the phase diagram**  
 
-*strict library; 671 lines; 43 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 672 lines; 43 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:doubling_phase` (bucket C), 🟡 `theo:doubling_main` (bucket B), ✅ `def:doubling_setting` (bucket A)
+Certifies: 🟡 `prop:doubling_phase` (bucket C), 🟡 `theo:doubling_main` (bucket C), ✅ `def:doubling_setting` (bucket A)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`
@@ -1111,58 +1630,58 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 88 | def | `Wpow` | `noncomputable def Wpow (t : ℝ) : St → ℝ \| .lad j => ((j : ℝ) + 1) ^ (-t) \| .sink => 1 @[simp] theorem Wpow_lad (t : ℝ) (j : ℕ) : Wpow t (.lad j) = ((j : ℝ) + 1) ^ (-t)` |
-| 93 | theorem @[simp] | `Wpow_sink` | `@[simp] theorem Wpow_sink (t : ℝ) : Wpow t .sink = 1` |
-| 95 | theorem | `Wpow_src` | `theorem Wpow_src (t : ℝ) : Wpow t .src = 1` |
-| 100 | def | `logHeight` | `noncomputable def logHeight : St → ℝ \| .lad j => Real.log ((j : ℝ) + 1) \| .sink => 0 @[simp] theorem logHeight_lad (j : ℕ) : logHeight (.lad j) = Real.log ((j : ℝ) + 1)` |
-| 105 | theorem @[simp] | `logHeight_sink` | `@[simp] theorem logHeight_sink : logHeight .sink = 0` |
-| 107 | theorem | `logHeight_src` | `theorem logHeight_src : logHeight .src = 0` |
-| 112 | theorem | `cast_pred` | `theorem cast_pred {m : ℕ} (hm : 1 ≤ m) : ((m - 1 : ℕ) : ℝ) = (m : ℝ) - 1` |
-| 123 | theorem | `Wpow_pstar_sub` | `theorem Wpow_pstar_sub (t : ℝ) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) : pstar S cap (Wpow t) (.lad m) - Wpow t (.lad m) = S.eps m * ((2 * (m : ℝ) + 1) ^ (-t) - ((m : ℝ) + 1) ^ (-t)) + (1 - S.eps m) * ((m : ℝ) ^ (-t) - ((m : ℝ) + 1) ^ (-t))` |
-| 134 | theorem | `logHeight_pstar_sub` | `theorem logHeight_pstar_sub {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) : pstar S cap logHeight (.lad m) - logHeight (.lad m) = S.eps m * (Real.log (2 * (m : ℝ) + 1) - Real.log ((m : ℝ) + 1)) + (1 - S.eps m) * (Real.log (m : ℝ) - Real.log ((m : ℝ) + 1))` |
-| 150 | theorem | `one_add_mul_le_one_sub_rpow_neg` | `theorem one_add_mul_le_one_sub_rpow_neg {t x : ℝ} (ht : 0 ≤ t) (hx1 : x < 1) : 1 + t * x ≤ (1 - x) ^ (-t)` |
-| 162 | def | `remC` | `noncomputable def remC (t : ℝ) : ℝ` |
-| 164 | theorem | `remC_nonneg` | `theorem remC_nonneg {t : ℝ} (ht : 0 ≤ t) : 0 ≤ remC t` |
-| 171 | theorem | `one_sub_rpow_neg_le` | `theorem one_sub_rpow_neg_le {t x : ℝ} (ht : 0 ≤ t) (hx0 : 0 ≤ x) (hx1 : x ≤ 1/2) (htx : t * x ≤ 1/4) : (1 - x) ^ (-t) ≤ 1 + t * x + remC t * x ^ 2` |
-| 199 | theorem | `shift_double` | `theorem shift_double (t : ℝ) {u : ℝ} (hu1 : 1 ≤ u) : (2 * u - 1) ^ (-t) = (2:ℝ) ^ (-t) * u ^ (-t) * (1 - 1/(2*u)) ^ (-t)` |
-| 210 | theorem | `shift_dec` | `theorem shift_dec (t : ℝ) {u : ℝ} (hu1 : 1 ≤ u) : (u - 1) ^ (-t) = u ^ (-t) * (1 - 1/u) ^ (-t)` |
-| 221 | theorem | `drift_remainder_bound` | `theorem drift_remainder_bound {e a b tt xone xtwo C h : ℝ} (he0 : 0 ≤ e) (he1 : e ≤ 1) (hh0 : 0 ≤ h) (hh1 : h ≤ 1) (ha0 : 0 ≤ a) (hahi : a ≤ tt * xone + C * xone ^ 2) (hb0 : 0 ≤ b) (hbhi : b ≤ C * xtwo ^ 2) (ht0 : 0 ≤ tt) (hx2 : 0 ≤ xtwo) (hC : 0 ≤ C) (hx1 : 0 ≤ xone) : \|e * h * a + (1 - e) * b - e * tt * xtwo\| ≤ e * (tt * xone + C * xone ^ 2) + C * xtwo ^ 2 + e * tt * xtwo` |
-| 246 | theorem | `Wdrift_core` | `theorem Wdrift_core {t e u : ℝ} (ht : 0 ≤ t) (hu2 : 2 ≤ u) (hmt : 4 * t ≤ u) (he0 : 0 ≤ e) (he1 : e ≤ 1) : \|e * ((2 * u - 1) ^ (-t) - u ^ (-t)) + (1 - e) * ((u - 1) ^ (-t) - u ^ (-t)) - u ^ (-t) * (t / u - e * (1 - (2:ℝ) ^ (-t)))\| ≤ (3 * t / 2 + remC t / 4) * e * (u ^ (-t) / u) + remC t * (u ^ (-t) / u ^ 2)` |
-| 305 | theorem | `rpow_div_self` | `theorem rpow_div_self {u : ℝ} (hu : 0 < u) (t : ℝ) : u ^ (-t) / u = u ^ (-t - 1)` |
-| 308 | theorem | `rpow_div_sq` | `theorem rpow_div_sq {u : ℝ} (hu : 0 < u) (t : ℝ) : u ^ (-t) / u ^ 2 = u ^ (-t - 2)` |
-| 315 | theorem | `Wpow_drift_expansion` | `theorem Wpow_drift_expansion {t : ℝ} (ht : 0 ≤ t) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (hmt : 4 * t ≤ (m : ℝ) + 1) : \|pstar S cap (Wpow t) (.lad m) - Wpow t (.lad m) - ((m:ℝ) + 1) ^ (-t) * (t / ((m:ℝ) + 1) - S.eps m * (1 - (2:ℝ) ^ (-t)))\| ≤ (3 * t / 2 + remC t / 4) * S.eps m * (((m:ℝ) + 1) ^ (-t) / ((m:ℝ) + 1)) + remC t * (((m:ℝ) + 1) ^ (-t) / ((m:ℝ) + 1) ^ 2)` |
-| 333 | def | `Xi` | `noncomputable def Xi (t : ℝ) : ℝ` |
-| 335 | theorem | `Xi_nonneg` | `theorem Xi_nonneg {t : ℝ} (ht : 0 ≤ t) : 0 ≤ Xi t` |
-| 340 | theorem | `Wdrift_family` | `theorem Wdrift_family {c s t : ℝ} (ht : 0 ≤ t) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c s j) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (hmt : 4 * t ≤ (m:ℝ) + 1) : \|pstar S cap (Wpow t) (.lad m) - Wpow t (.lad m) - ((m:ℝ) + 1) ^ (-t - 1) * (t - c * (1 - (2:ℝ) ^ (-t)) * ((m:ℝ) + 1) ^ (1 - s))\| ≤ Xi t * (((m:ℝ) + 1) ^ (-t - 2) + S.eps m * ((m:ℝ) + 1) ^ (-t - 1))` |
-| 385 | theorem | `height_drift_le_neg_half` | `theorem height_drift_le_neg_half {c s : ℝ} (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c s j) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (hthr : c * ((m:ℝ) + 1) ^ (1 - s) ≤ 1/2) : pstar S cap height (.lad m) - height (.lad m) ≤ -(1/2)` |
-| 393 | theorem | `exists_threshold_rpow` | `theorem exists_threshold_rpow {c e : ℝ} (hc : 0 < c) (he : 0 < e) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → c ≤ ((m:ℝ) + 1) ^ e` |
-| 405 | theorem | `exists_height_drift_neg` | `theorem exists_height_drift_neg {c s : ℝ} (hc : 0 < c) (hs : 1 < s) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c s j) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → 1 ≤ m → HasDouble cap m → pstar S cap height (.lad m) - height (.lad m) ≤ -(1/2)` |
-| 425 | theorem | `Wpow_one_lad` | `theorem Wpow_one_lad (j : ℕ) : Wpow 1 (.lad j) = ((j:ℝ) + 1)⁻¹` |
-| 429 | theorem | `Wpow_one_drift` | `theorem Wpow_one_drift {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) : pstar S cap (Wpow 1) (.lad m) - Wpow 1 (.lad m) = (2 * (m:ℝ) + 1 - S.eps m * ((m:ℝ) + 1) ^ 2) / ((m:ℝ) * ((m:ℝ) + 1) * (2 * (m:ℝ) + 1))` |
-| 446 | theorem | `Wpow_one_drift_nonpos` | `theorem Wpow_one_drift_nonpos {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (hthr : 2 * (m:ℝ) + 1 ≤ S.eps m * ((m:ℝ) + 1) ^ 2) : pstar S cap (Wpow 1) (.lad m) - Wpow 1 (.lad m) ≤ 0` |
-| 455 | theorem | `eps_family_sq` | `theorem eps_family_sq {c s : ℝ} {m : ℕ} (hm : 1 ≤ m) (hthr : 2 ≤ c * ((m:ℝ) + 1) ^ (1 - s)) : 2 * (m:ℝ) + 1 ≤ epsCS c s m * ((m:ℝ) + 1) ^ 2` |
-| 467 | theorem | `exists_Wpow_one_drift_nonpos` | `theorem exists_Wpow_one_drift_nonpos {c s : ℝ} (hc : 0 < c) (hs : s < 1) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c s j) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → 1 ≤ m → HasDouble cap m → pstar S cap (Wpow 1) (.lad m) - Wpow 1 (.lad m) ≤ 0` |
-| 484 | theorem | `logHeight_drift_nonpos` | `theorem logHeight_drift_nonpos {c : ℝ} (hc0 : 0 ≤ c) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (heps : S.eps m = c / ((m:ℝ) + 1)) (hthr : c ≤ (1 - c * Real.log 2) * ((m:ℝ) + 1)) : pstar S cap logHeight (.lad m) - logHeight (.lad m) ≤ 0` |
-| 523 | theorem | `exists_logHeight_drift_nonpos` | `theorem exists_logHeight_drift_nonpos {c : ℝ} (hc0 : 0 ≤ c) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c 1 j) (hclog : c * Real.log 2 < 1) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → 1 ≤ m → HasDouble cap m → pstar S cap logHeight (.lad m) - logHeight (.lad m) ≤ 0` |
-| 539 | def | `phi` | `noncomputable def phi (c t : ℝ) : ℝ` |
-| 543 | theorem | `phi_eq_neg_psi` | `theorem phi_eq_neg_psi (c t : ℝ) : phi c t = -psi c (-t)` |
-| 548 | theorem | `phi_pos` | `theorem phi_pos {c t : ℝ} (hc0 : 0 ≤ c) (ht : 0 < t) (hlt : t * Real.log 2 < c * Real.log 2 - 1) : 0 < phi c t` |
-| 576 | theorem | `Wpow_drift_neg_at_one` | `theorem Wpow_drift_neg_at_one {c t : ℝ} (ht : 0 < t) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c 1 j) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (hmt : 4 * t ≤ (m:ℝ) + 1) (hthr : Xi t * (1 + c) < phi c t * ((m:ℝ) + 1)) : pstar S cap (Wpow t) (.lad m) - Wpow t (.lad m) < 0` |
-| 610 | theorem | `exists_Wpow_drift_neg` | `theorem exists_Wpow_drift_neg {c t : ℝ} (hc0 : 0 ≤ c) (ht : 0 < t) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c 1 j) (hlt : t * Real.log 2 < c * Real.log 2 - 1) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → 1 ≤ m → HasDouble cap m → pstar S cap (Wpow t) (.lad m) - Wpow t (.lad m) < 0` |
-| 636 | theorem | `Wpow_pos` | `theorem Wpow_pos (t : ℝ) (x : St) : 0 < Wpow t x` |
-| 641 | theorem | `Wpow_le_one` | `theorem Wpow_le_one {t : ℝ} (ht : 0 ≤ t) (x : St) : Wpow t x ≤ 1` |
-| 648 | theorem | `Wpow_antitone` | `theorem Wpow_antitone {t : ℝ} (ht : 0 ≤ t) {i j : ℕ} (h : i ≤ j) : Wpow t (.lad j) ≤ Wpow t (.lad i)` |
-| 654 | theorem | `Wpow_strictAnti` | `theorem Wpow_strictAnti {t : ℝ} (ht : 0 < t) {i j : ℕ} (h : i < j) : Wpow t (.lad j) < Wpow t (.lad i)` |
-| 661 | theorem | `Wpow_below_inf` | `theorem Wpow_below_inf {t : ℝ} (ht : 0 < t) (j₀ : ℕ) (x : St) (hx : x = .sink ∨ ∃ j, j ≤ j₀ ∧ x = .lad j) : Wpow t (.lad (j₀ + 1)) < Wpow t x` |
+| 89 | def | `Wpow` | `noncomputable def Wpow (t : ℝ) : St → ℝ \| .lad j => ((j : ℝ) + 1) ^ (-t) \| .sink => 1 @[simp] theorem Wpow_lad (t : ℝ) (j : ℕ) : Wpow t (.lad j) = ((j : ℝ) + 1) ^ (-t)` |
+| 94 | theorem @[simp] | `Wpow_sink` | `@[simp] theorem Wpow_sink (t : ℝ) : Wpow t .sink = 1` |
+| 96 | theorem | `Wpow_src` | `theorem Wpow_src (t : ℝ) : Wpow t .src = 1` |
+| 101 | def | `logHeight` | `noncomputable def logHeight : St → ℝ \| .lad j => Real.log ((j : ℝ) + 1) \| .sink => 0 @[simp] theorem logHeight_lad (j : ℕ) : logHeight (.lad j) = Real.log ((j : ℝ) + 1)` |
+| 106 | theorem @[simp] | `logHeight_sink` | `@[simp] theorem logHeight_sink : logHeight .sink = 0` |
+| 108 | theorem | `logHeight_src` | `theorem logHeight_src : logHeight .src = 0` |
+| 113 | theorem | `cast_pred` | `theorem cast_pred {m : ℕ} (hm : 1 ≤ m) : ((m - 1 : ℕ) : ℝ) = (m : ℝ) - 1` |
+| 124 | theorem | `Wpow_pstar_sub` | `theorem Wpow_pstar_sub (t : ℝ) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) : pstar S cap (Wpow t) (.lad m) - Wpow t (.lad m) = S.eps m * ((2 * (m : ℝ) + 1) ^ (-t) - ((m : ℝ) + 1) ^ (-t)) + (1 - S.eps m) * ((m : ℝ) ^ (-t) - ((m : ℝ) + 1) ^ (-t))` |
+| 135 | theorem | `logHeight_pstar_sub` | `theorem logHeight_pstar_sub {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) : pstar S cap logHeight (.lad m) - logHeight (.lad m) = S.eps m * (Real.log (2 * (m : ℝ) + 1) - Real.log ((m : ℝ) + 1)) + (1 - S.eps m) * (Real.log (m : ℝ) - Real.log ((m : ℝ) + 1))` |
+| 151 | theorem | `one_add_mul_le_one_sub_rpow_neg` | `theorem one_add_mul_le_one_sub_rpow_neg {t x : ℝ} (ht : 0 ≤ t) (hx1 : x < 1) : 1 + t * x ≤ (1 - x) ^ (-t)` |
+| 163 | def | `remC` | `noncomputable def remC (t : ℝ) : ℝ` |
+| 165 | theorem | `remC_nonneg` | `theorem remC_nonneg {t : ℝ} (ht : 0 ≤ t) : 0 ≤ remC t` |
+| 172 | theorem | `one_sub_rpow_neg_le` | `theorem one_sub_rpow_neg_le {t x : ℝ} (ht : 0 ≤ t) (hx0 : 0 ≤ x) (hx1 : x ≤ 1/2) (htx : t * x ≤ 1/4) : (1 - x) ^ (-t) ≤ 1 + t * x + remC t * x ^ 2` |
+| 200 | theorem | `shift_double` | `theorem shift_double (t : ℝ) {u : ℝ} (hu1 : 1 ≤ u) : (2 * u - 1) ^ (-t) = (2:ℝ) ^ (-t) * u ^ (-t) * (1 - 1/(2*u)) ^ (-t)` |
+| 211 | theorem | `shift_dec` | `theorem shift_dec (t : ℝ) {u : ℝ} (hu1 : 1 ≤ u) : (u - 1) ^ (-t) = u ^ (-t) * (1 - 1/u) ^ (-t)` |
+| 222 | theorem | `drift_remainder_bound` | `theorem drift_remainder_bound {e a b tt xone xtwo C h : ℝ} (he0 : 0 ≤ e) (he1 : e ≤ 1) (hh0 : 0 ≤ h) (hh1 : h ≤ 1) (ha0 : 0 ≤ a) (hahi : a ≤ tt * xone + C * xone ^ 2) (hb0 : 0 ≤ b) (hbhi : b ≤ C * xtwo ^ 2) (ht0 : 0 ≤ tt) (hx2 : 0 ≤ xtwo) (hC : 0 ≤ C) (hx1 : 0 ≤ xone) : \|e * h * a + (1 - e) * b - e * tt * xtwo\| ≤ e * (tt * xone + C * xone ^ 2) + C * xtwo ^ 2 + e * tt * xtwo` |
+| 247 | theorem | `Wdrift_core` | `theorem Wdrift_core {t e u : ℝ} (ht : 0 ≤ t) (hu2 : 2 ≤ u) (hmt : 4 * t ≤ u) (he0 : 0 ≤ e) (he1 : e ≤ 1) : \|e * ((2 * u - 1) ^ (-t) - u ^ (-t)) + (1 - e) * ((u - 1) ^ (-t) - u ^ (-t)) - u ^ (-t) * (t / u - e * (1 - (2:ℝ) ^ (-t)))\| ≤ (3 * t / 2 + remC t / 4) * e * (u ^ (-t) / u) + remC t * (u ^ (-t) / u ^ 2)` |
+| 306 | theorem | `rpow_div_self` | `theorem rpow_div_self {u : ℝ} (hu : 0 < u) (t : ℝ) : u ^ (-t) / u = u ^ (-t - 1)` |
+| 309 | theorem | `rpow_div_sq` | `theorem rpow_div_sq {u : ℝ} (hu : 0 < u) (t : ℝ) : u ^ (-t) / u ^ 2 = u ^ (-t - 2)` |
+| 316 | theorem | `Wpow_drift_expansion` | `theorem Wpow_drift_expansion {t : ℝ} (ht : 0 ≤ t) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (hmt : 4 * t ≤ (m : ℝ) + 1) : \|pstar S cap (Wpow t) (.lad m) - Wpow t (.lad m) - ((m:ℝ) + 1) ^ (-t) * (t / ((m:ℝ) + 1) - S.eps m * (1 - (2:ℝ) ^ (-t)))\| ≤ (3 * t / 2 + remC t / 4) * S.eps m * (((m:ℝ) + 1) ^ (-t) / ((m:ℝ) + 1)) + remC t * (((m:ℝ) + 1) ^ (-t) / ((m:ℝ) + 1) ^ 2)` |
+| 334 | def | `Xi` | `noncomputable def Xi (t : ℝ) : ℝ` |
+| 336 | theorem | `Xi_nonneg` | `theorem Xi_nonneg {t : ℝ} (ht : 0 ≤ t) : 0 ≤ Xi t` |
+| 341 | theorem | `Wdrift_family` | `theorem Wdrift_family {c s t : ℝ} (ht : 0 ≤ t) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c s j) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (hmt : 4 * t ≤ (m:ℝ) + 1) : \|pstar S cap (Wpow t) (.lad m) - Wpow t (.lad m) - ((m:ℝ) + 1) ^ (-t - 1) * (t - c * (1 - (2:ℝ) ^ (-t)) * ((m:ℝ) + 1) ^ (1 - s))\| ≤ Xi t * (((m:ℝ) + 1) ^ (-t - 2) + S.eps m * ((m:ℝ) + 1) ^ (-t - 1))` |
+| 386 | theorem | `height_drift_le_neg_half` | `theorem height_drift_le_neg_half {c s : ℝ} (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c s j) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (hthr : c * ((m:ℝ) + 1) ^ (1 - s) ≤ 1/2) : pstar S cap height (.lad m) - height (.lad m) ≤ -(1/2)` |
+| 394 | theorem | `exists_threshold_rpow` | `theorem exists_threshold_rpow {c e : ℝ} (hc : 0 < c) (he : 0 < e) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → c ≤ ((m:ℝ) + 1) ^ e` |
+| 406 | theorem | `exists_height_drift_neg` | `theorem exists_height_drift_neg {c s : ℝ} (hc : 0 < c) (hs : 1 < s) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c s j) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → 1 ≤ m → HasDouble cap m → pstar S cap height (.lad m) - height (.lad m) ≤ -(1/2)` |
+| 426 | theorem | `Wpow_one_lad` | `theorem Wpow_one_lad (j : ℕ) : Wpow 1 (.lad j) = ((j:ℝ) + 1)⁻¹` |
+| 430 | theorem | `Wpow_one_drift` | `theorem Wpow_one_drift {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) : pstar S cap (Wpow 1) (.lad m) - Wpow 1 (.lad m) = (2 * (m:ℝ) + 1 - S.eps m * ((m:ℝ) + 1) ^ 2) / ((m:ℝ) * ((m:ℝ) + 1) * (2 * (m:ℝ) + 1))` |
+| 447 | theorem | `Wpow_one_drift_nonpos` | `theorem Wpow_one_drift_nonpos {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (hthr : 2 * (m:ℝ) + 1 ≤ S.eps m * ((m:ℝ) + 1) ^ 2) : pstar S cap (Wpow 1) (.lad m) - Wpow 1 (.lad m) ≤ 0` |
+| 456 | theorem | `eps_family_sq` | `theorem eps_family_sq {c s : ℝ} {m : ℕ} (hm : 1 ≤ m) (hthr : 2 ≤ c * ((m:ℝ) + 1) ^ (1 - s)) : 2 * (m:ℝ) + 1 ≤ epsCS c s m * ((m:ℝ) + 1) ^ 2` |
+| 468 | theorem | `exists_Wpow_one_drift_nonpos` | `theorem exists_Wpow_one_drift_nonpos {c s : ℝ} (hc : 0 < c) (hs : s < 1) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c s j) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → 1 ≤ m → HasDouble cap m → pstar S cap (Wpow 1) (.lad m) - Wpow 1 (.lad m) ≤ 0` |
+| 485 | theorem | `logHeight_drift_nonpos` | `theorem logHeight_drift_nonpos {c : ℝ} (hc0 : 0 ≤ c) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (heps : S.eps m = c / ((m:ℝ) + 1)) (hthr : c ≤ (1 - c * Real.log 2) * ((m:ℝ) + 1)) : pstar S cap logHeight (.lad m) - logHeight (.lad m) ≤ 0` |
+| 524 | theorem | `exists_logHeight_drift_nonpos` | `theorem exists_logHeight_drift_nonpos {c : ℝ} (hc0 : 0 ≤ c) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c 1 j) (hclog : c * Real.log 2 < 1) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → 1 ≤ m → HasDouble cap m → pstar S cap logHeight (.lad m) - logHeight (.lad m) ≤ 0` |
+| 540 | def | `phi` | `noncomputable def phi (c t : ℝ) : ℝ` |
+| 544 | theorem | `phi_eq_neg_psi` | `theorem phi_eq_neg_psi (c t : ℝ) : phi c t = -psi c (-t)` |
+| 549 | theorem | `phi_pos` | `theorem phi_pos {c t : ℝ} (hc0 : 0 ≤ c) (ht : 0 < t) (hlt : t * Real.log 2 < c * Real.log 2 - 1) : 0 < phi c t` |
+| 577 | theorem | `Wpow_drift_neg_at_one` | `theorem Wpow_drift_neg_at_one {c t : ℝ} (ht : 0 < t) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c 1 j) {m : ℕ} (hm : 1 ≤ m) (hD : HasDouble cap m) (hmt : 4 * t ≤ (m:ℝ) + 1) (hthr : Xi t * (1 + c) < phi c t * ((m:ℝ) + 1)) : pstar S cap (Wpow t) (.lad m) - Wpow t (.lad m) < 0` |
+| 611 | theorem | `exists_Wpow_drift_neg` | `theorem exists_Wpow_drift_neg {c t : ℝ} (hc0 : 0 ≤ c) (ht : 0 < t) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = epsCS c 1 j) (hlt : t * Real.log 2 < c * Real.log 2 - 1) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → 1 ≤ m → HasDouble cap m → pstar S cap (Wpow t) (.lad m) - Wpow t (.lad m) < 0` |
+| 637 | theorem | `Wpow_pos` | `theorem Wpow_pos (t : ℝ) (x : St) : 0 < Wpow t x` |
+| 642 | theorem | `Wpow_le_one` | `theorem Wpow_le_one {t : ℝ} (ht : 0 ≤ t) (x : St) : Wpow t x ≤ 1` |
+| 649 | theorem | `Wpow_antitone` | `theorem Wpow_antitone {t : ℝ} (ht : 0 ≤ t) {i j : ℕ} (h : i ≤ j) : Wpow t (.lad j) ≤ Wpow t (.lad i)` |
+| 655 | theorem | `Wpow_strictAnti` | `theorem Wpow_strictAnti {t : ℝ} (ht : 0 < t) {i j : ℕ} (h : i < j) : Wpow t (.lad j) < Wpow t (.lad i)` |
+| 662 | theorem | `Wpow_below_inf` | `theorem Wpow_below_inf {t : ℝ} (ht : 0 < t) (j₀ : ℕ) (x : St) (hx : x = .sink ∨ ∃ j, j ≤ j₀ ∧ x = .lad j) : Wpow t (.lad (j₀ + 1)) < Wpow t x` |
 
 ### `GFNBounds/Doubling/Main.lean`
 
 **The doubling graph in one statement**  
 
-*strict library; 109 lines; 6 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 390 lines; 20 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:doubling_main` (bucket B)
+Certifies: 🟡 `theo:doubling_main` (bucket C)
 
 
 In scope: `variable {S : Setting}`
@@ -1170,21 +1689,35 @@ In scope: `variable {S : Setting}`
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 52 | theorem | `main_unbounded` | `theorem main_unbounded {c s : ℝ} (hc : 0 < c) (hs : 0 ≤ s) (heps : ∀ j, S.eps j = epsCS c s j) (L : Stat S none) {p : ℝ} (hp : 1 ≤ p) : (∀ t : ℝ, 0 < t → ∃ m, S.d < m ∧ L.mass p (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ t * L.mass p (L.centredTail m)) ∧ ¬ ∃ B : ℝ, ∀ f : St → ℝ, (∃ C, ∀ x, \|f x\| ≤ C) → (∑' x, L.lam x * f x = 0) → L.mass p f ≤ B * L.mass p (fun x => f x - pstar S none f x)` |
-| 65 | theorem | `main_unbounded_infty` | `theorem main_unbounded_infty {c s : ℝ} (hc : 0 < c) (hs : 1 ≤ s) (heps : ∀ j, S.eps j = epsCS c s j) (L : Stat S none) : ¬ ∃ B : ℝ, ∀ (f : St → ℝ) (M Dd : ℝ), (∑' x, L.lam x * f x = 0) → (∃ x, M ≤ \|f x\|) → (∀ x, \|f x - pstar S none f x\| ≤ Dd) → M ≤ B * Dd` |
-| 77 | theorem | `main_sigmaBar_le` | `theorem main_sigmaBar_le {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) {cap : Option ℕ} (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = c / ((j : ℝ) + 1)) (n : ℕ) : ∑ k ∈ Finset.Icc 1 S.d, S.row k * hitExp S cap n (.lad k) ≤ S.jbar / (1 - c)` |
-| 84 | theorem | `main_rate` | `theorem main_rate (L : Stat S none) (D : Decay) {c₁ c₂ : ℝ} (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ L.lam (.lad j)) (habove : ∀ j : ℕ, 1 ≤ j → L.lam (.lad j) ≤ c₂ * (j : ℝ) ^ (-D.p)) : ∃ m₂ : ℕ, S.d < m₂ ∧ ∀ m : ℕ, m₂ ≤ m → c₁ * (m : ℝ) * L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ 4 * c₂ * (D.p - 1) * L.mass 2 (L.centredTail m)` |
-| 95 | theorem | `main_truncation_irreducible` | `theorem main_truncation_irreducible {K : ℕ} (hK : Even K) (hdK : S.d ≤ K) (P : PreStat S (some K)) : (∀ x y : St, OnChain (some K) y → Reach S (some K) x y) ∧ (∀ ⦃y : St⦄, OnChain (some K) y → 0 < P.lam y)` |
-| 105 | theorem | `main_irreducible` | `theorem main_irreducible (P : PreStat S none) : (∀ x y : St, Reach S none x y) ∧ (∀ y : St, 0 < P.lam y)` |
+| 77 | theorem | `c_mul_log_two_lt_one` | `theorem c_mul_log_two_lt_one {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) : c * Real.log 2 < 1` |
+| 84 | def | `Decay.ofC` | `noncomputable def Decay.ofC {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) : Decay` |
+| 92 | theorem @[simp] | `Decay.ofC_c` | `@[simp] theorem Decay.ofC_c {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) : (Decay.ofC hc0 hc1).c = c` |
+| 95 | theorem | `epsCS_one_apply` | `theorem epsCS_one_apply (c : ℝ) (j : ℕ) : epsCS c 1 j = c / ((j : ℝ) + 1)` |
+| 99 | theorem | `eps_eq_decay_eps` | `theorem eps_eq_decay_eps {c : ℝ} (heps : ∀ j, S.eps j = epsCS c 1 j) (D : Decay) (hDc : D.c = c) (j : ℕ) : S.eps j = D.eps j` |
+| 107 | theorem | `main_irreducible` | `theorem main_irreducible (P : PreStat S none) : (∀ x y : St, Reach S none x y) ∧ (∀ y : St, 0 < P.lam y)` |
+| 116 | theorem | `main_phase` | `theorem main_phase {c s : ℝ} (hc : 0 < c) (heps : ∀ j, S.eps j = epsCS c s j) : (s < 1 → IsEmpty (Stat S none)) ∧ (s = 1 → c < 1 → Nonempty (Stat S none)) ∧ (s = 1 → 1 ≤ c → IsEmpty (Stat S none)) ∧ (1 < s → Nonempty (Stat S none))` |
+| 133 | theorem | `main_invariant_measure` | `theorem main_invariant_measure {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) (L : Stat S none) : ∃ p : ℝ, psi c p = 0 ∧ 1 < p ∧ ∃ C : ℝ, 0 < C ∧ Tendsto (fun m : ℕ => L.lam (.lad m) * (m : ℝ) ^ p) atTop (𝓝 C) ∧ Tendsto (fun m : ℕ => (p - 1) * (m : ℝ) ^ (p - 1) * L.tailMass m) atTop (𝓝 C) ∧ ∃ ϑ c₆ : ℝ, 0 < ϑ ∧ ϑ < 1 ∧ 0 < c₆ ∧ ∀ m : ℕ, 1 ≤ m → \|L.lam (.lad m) * (m : ℝ) ^ p - C\| ≤ c₆ * (m : ℝ) ^ (-ϑ)` |
+| 155 | theorem | `main_constant_determined` | `theorem main_constant_determined {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) (L L' : Stat S none) (hagree : ∀ j : ℕ, 1 ≤ j → j ≤ S.d → L.lam (.lad j) = L'.lam (.lad j)) : ∀ m : ℕ, 1 ≤ m → L.lam (.lad m) = L'.lam (.lad m)` |
+| 168 | theorem | `main_constant_functional` | `theorem main_constant_functional {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) : ∃ p : ℝ, psi c p = 0 ∧ 1 < p ∧ ∃ ν : ℕ → ℝ, (∀ j, 0 ≤ ν j) ∧ 0 < ∑ j ∈ Finset.Icc 1 S.d, ν j ∧ (∀ j, 1 ≤ j → 2 * j ≤ S.d → ν j = 0) ∧ ∀ L : Stat S none, Tendsto (fun m : ℕ => L.lam (.lad m) * (m : ℝ) ^ p) atTop (𝓝 (∑ j ∈ Finset.Icc 1 S.d, ν j * L.lam (.lad j)))` |
+| 192 | theorem | `main_unbounded` | `theorem main_unbounded {c s : ℝ} (hc : 0 < c) (hs : 0 ≤ s) (heps : ∀ j, S.eps j = epsCS c s j) (L : Stat S none) {p : ℝ} (hp : 1 ≤ p) : (∀ t : ℝ, 0 < t → ∃ m, S.d < m ∧ L.mass p (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ t * L.mass p (L.centredTail m)) ∧ ¬ ∃ B : ℝ, ∀ f : St → ℝ, (∃ C, ∀ x, \|f x\| ≤ C) → (∑' x, L.lam x * f x = 0) → L.mass p f ≤ B * L.mass p (fun x => f x - pstar S none f x)` |
+| 209 | theorem | `main_unbounded_infty` | `theorem main_unbounded_infty {c s : ℝ} (hc : 0 < c) (heps : ∀ j, S.eps j = epsCS c s j) (L : Stat S none) : ¬ ∃ B : ℝ, ∀ (f : St → ℝ) (M Dd : ℝ), (∃ C, ∀ x, \|f x\| ≤ C) → (∑' x, L.lam x * f x = 0) → (∃ x, M ≤ \|f x\|) → (∀ x, \|f x - pstar S none f x\| ≤ Dd) → M ≤ B * Dd` |
+| 223 | theorem | `main_unbounded_two` | `theorem main_unbounded_two {c s : ℝ} (hc : 0 < c) (hs : 0 ≤ s) (heps : ∀ j, S.eps j = epsCS c s j) (L : Stat S none) : (¬ ∃ Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, Sop * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2) ∧ (¬ ∃ U : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, Tendsto (partialSum (L.pstarL2 (rowOnChain_none S)) L.piL2) atTop (𝓝 U)) ∧ ¬ Summable (L.betaHat (rowOnChain_none S))` |
+| 236 | theorem | `main_sigmaBar_eq` | `theorem main_sigmaBar_eq {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) : ⨆ n, sbar S none n = S.jbar / (1 - c)` |
+| 244 | theorem | `main_sigmaBar_le` | `theorem main_sigmaBar_le {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) {cap : Option ℕ} (heps : ∀ j, S.eps j = epsCS c 1 j) (n : ℕ) : sbar S cap n ≤ S.jbar / (1 - c)` |
+| 254 | theorem | `main_rate` | `theorem main_rate {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) (L : Stat S none) : ∃ p : ℝ, psi c p = 0 ∧ 1 < p ∧ ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ ≤ c₂ ∧ ∃ m₂ : ℕ, S.d < m₂ ∧ ∀ m : ℕ, m₂ ≤ m → c₁ * (m : ℝ) * L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ 4 * c₂ * (p - 1) * L.mass 2 (L.centredTail m)` |
+| 275 | theorem | `main_unsolvable` | `theorem main_unsolvable {c s : ℝ} (hc : 0 < c) (hs : 0 ≤ s) (heps : ∀ j, S.eps j = epsCS c s j) (L : Stat S none) : (L.defectRange ≤ L.kerPi ∧ L.defectRange.topologicalClosure = L.kerPi ∧ L.defectRange ≠ L.kerPi) ∧ ∃ fi fe : St → ℝ, (∀ x, 0 ≤ fi x) ∧ (∀ x, 0 ≤ fe x) ∧ MemLp fi 2 L.mu ∧ MemLp fe 2 L.mu ∧ ∑' x, L.lam x * fi x = 1 ∧ ∑' x, L.lam x * fe x = 1 ∧ ¬ ∃ f : St → ℝ, MemLp f 2 L.mu ∧ ∀ᵐ x ∂L.mu, f x - pstar S none f x = fi x - fe x` |
+| 291 | theorem | `main_truncation_irreducible` | `theorem main_truncation_irreducible {K : ℕ} (hK : Even K) (hdK : S.d ≤ K) (P : PreStat S (some K)) : (∀ x y : St, OnChain (some K) y → Reach S (some K) x y) ∧ (∀ ⦃y : St⦄, OnChain (some K) y → 0 < P.lam y)` |
+| 302 | theorem | `main_truncation_bhat` | `theorem main_truncation_bhat {K : ℕ} (hK : Even K) (hdK : S.d ≤ K) : Nonempty (Stat S (some K)) ∧ (∀ L L' : Stat S (some K), L.lam = L'.lam) ∧ ∀ L : Stat S (some K), ∃ Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 (rowOnChain_some hdK)) * Sop = 1 - L.piL2 ∧ Sop * (1 - L.pstarL2 (rowOnChain_some hdK)) = 1 - L.piL2 ∧ L.piL2 * Sop = 0 ∧ Sop * L.piL2 = 0` |
+| 318 | theorem | `main_truncation_sqrtK` | `theorem main_truncation_sqrtK {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) : ∃ c₈ : ℝ, 0 < c₈ ∧ ∃ K₀ : ℕ, ∀ K : ℕ, K₀ ≤ K → ∀ (L : Stat S (some K)) (hrow : RowOnChain S (some K)) (Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu), Sop * (1 - L.pstarL2 hrow) = 1 - L.piL2 → c₈ * (K : ℝ) ≤ ‖Sop‖ ^ 2` |
 
 ### `GFNBounds/Doubling/Operator.lean`
 
 **The diffusion operator: the resolvent identities**  
 
-*strict library; 181 lines; 11 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 182 lines; 11 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_operator` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket B)
 
 
 In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]`, `variable {P Pi U : E →L[ℝ] E}`
@@ -1192,17 +1725,17 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]`, `va
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 53 | theorem | `pi_mul_pow` | `theorem pi_mul_pow (hPiP : Pi * P = Pi) : ∀ n : ℕ, Pi * P ^ n = Pi` |
-| 60 | theorem | `pow_mul_pi` | `theorem pow_mul_pi (hPPi : P * Pi = Pi) : ∀ n : ℕ, P ^ n * Pi = Pi` |
-| 67 | def | `partialSum` | `noncomputable def partialSum (P Pi : E →L[ℝ] E) (N : ℕ) : E →L[ℝ] E` |
-| 70 | theorem | `one_sub_mul_partialSum` | `theorem one_sub_mul_partialSum (hPPi : P * Pi = Pi) (N : ℕ) : (1 - P) * partialSum P Pi N = 1 - P ^ N` |
-| 84 | theorem | `partialSum_mul_one_sub` | `theorem partialSum_mul_one_sub (hPiP : Pi * P = Pi) (N : ℕ) : partialSum P Pi N * (1 - P) = 1 - P ^ N` |
-| 98 | theorem | `pi_mul_partialSum` | `theorem pi_mul_partialSum (hPi2 : Pi * Pi = Pi) (hPiP : Pi * P = Pi) (N : ℕ) : Pi * partialSum P Pi N = 0` |
-| 105 | theorem | `partialSum_mul_pi` | `theorem partialSum_mul_pi (hPi2 : Pi * Pi = Pi) (hPPi : P * Pi = Pi) (N : ℕ) : partialSum P Pi N * Pi = 0` |
-| 112 | theorem | `tendsto_pow` | `theorem tendsto_pow (hconv : Tendsto (partialSum P Pi) atTop (𝓝 U)) : Tendsto (fun N : ℕ => P ^ N) atTop (𝓝 Pi)` |
-| 126 | theorem | `resolvent_identities` | `theorem resolvent_identities (hPi2 : Pi * Pi = Pi) (hPiP : Pi * P = Pi) (hPPi : P * Pi = Pi) (hconv : Tendsto (partialSum P Pi) atTop (𝓝 U)) : (1 - P) * U = 1 - Pi ∧ U * (1 - P) = 1 - Pi ∧ Pi * U = 0 ∧ U * Pi = 0` |
-| 155 | theorem | `resolvent_inverse` | `theorem resolvent_inverse (hPi2 : Pi * Pi = Pi) (hPiP : Pi * P = Pi) (hPPi : P * Pi = Pi) (hconv : Tendsto (partialSum P Pi) atTop (𝓝 U)) : (1 - P + Pi) * (Pi + U) = 1 ∧ (Pi + U) * (1 - P + Pi) = 1` |
-| 172 | theorem | `resolvent_norm_le` | `theorem resolvent_norm_le {B : ℝ} (hconv : Tendsto (partialSum P Pi) atTop (𝓝 U)) (hB : ∀ N : ℕ, ∑ n ∈ Finset.range N, ‖P ^ n - Pi‖ ≤ B) : ‖U‖ ≤ B` |
+| 54 | theorem | `pi_mul_pow` | `theorem pi_mul_pow (hPiP : Pi * P = Pi) : ∀ n : ℕ, Pi * P ^ n = Pi` |
+| 61 | theorem | `pow_mul_pi` | `theorem pow_mul_pi (hPPi : P * Pi = Pi) : ∀ n : ℕ, P ^ n * Pi = Pi` |
+| 68 | def | `partialSum` | `noncomputable def partialSum (P Pi : E →L[ℝ] E) (N : ℕ) : E →L[ℝ] E` |
+| 71 | theorem | `one_sub_mul_partialSum` | `theorem one_sub_mul_partialSum (hPPi : P * Pi = Pi) (N : ℕ) : (1 - P) * partialSum P Pi N = 1 - P ^ N` |
+| 85 | theorem | `partialSum_mul_one_sub` | `theorem partialSum_mul_one_sub (hPiP : Pi * P = Pi) (N : ℕ) : partialSum P Pi N * (1 - P) = 1 - P ^ N` |
+| 99 | theorem | `pi_mul_partialSum` | `theorem pi_mul_partialSum (hPi2 : Pi * Pi = Pi) (hPiP : Pi * P = Pi) (N : ℕ) : Pi * partialSum P Pi N = 0` |
+| 106 | theorem | `partialSum_mul_pi` | `theorem partialSum_mul_pi (hPi2 : Pi * Pi = Pi) (hPPi : P * Pi = Pi) (N : ℕ) : partialSum P Pi N * Pi = 0` |
+| 113 | theorem | `tendsto_pow` | `theorem tendsto_pow (hconv : Tendsto (partialSum P Pi) atTop (𝓝 U)) : Tendsto (fun N : ℕ => P ^ N) atTop (𝓝 Pi)` |
+| 127 | theorem | `resolvent_identities` | `theorem resolvent_identities (hPi2 : Pi * Pi = Pi) (hPiP : Pi * P = Pi) (hPPi : P * Pi = Pi) (hconv : Tendsto (partialSum P Pi) atTop (𝓝 U)) : (1 - P) * U = 1 - Pi ∧ U * (1 - P) = 1 - Pi ∧ Pi * U = 0 ∧ U * Pi = 0` |
+| 156 | theorem | `resolvent_inverse` | `theorem resolvent_inverse (hPi2 : Pi * Pi = Pi) (hPiP : Pi * P = Pi) (hPPi : P * Pi = Pi) (hconv : Tendsto (partialSum P Pi) atTop (𝓝 U)) : (1 - P + Pi) * (Pi + U) = 1 ∧ (Pi + U) * (1 - P + Pi) = 1` |
+| 173 | theorem | `resolvent_norm_le` | `theorem resolvent_norm_le {B : ℝ} (hconv : Tendsto (partialSum P Pi) atTop (𝓝 U)) (hB : ∀ N : ℕ, ∑ n ∈ Finset.range N, ‖P ^ n - Pi‖ ≤ B) : ‖U‖ ≤ B` |
 
 ### `GFNBounds/Doubling/OperatorFinite.lean`
 
@@ -1211,7 +1744,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]`, `va
 *strict library; 173 lines; 6 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_operator` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket B)
 
 
 In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi : E →L[ℝ] E}`, `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]`, `variable {P Pi : E →L[ℝ] E}`
@@ -1233,7 +1766,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi
 *strict library; 198 lines; 8 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_operator` (bucket A), ✅ `lem:doubling_truncation_irreducible` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket B), ✅ `lem:doubling_truncation_irreducible` (bucket A)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`, `variable {K : ℕ} (L : Stat S (some K))`
@@ -1337,7 +1870,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`
 *strict library; 289 lines; 8 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:doubling_phase` (bucket C), 🟡 `theo:doubling_main` (bucket B), ✅ `def:doubling_setting` (bucket A)
+Certifies: 🟡 `prop:doubling_phase` (bucket C), 🟡 `theo:doubling_main` (bucket C), ✅ `def:doubling_setting` (bucket A)
 
 
 In scope: `variable {S : Setting}`
@@ -1361,7 +1894,7 @@ In scope: `variable {S : Setting}`
 *strict library; 300 lines; 9 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:doubling_phase` (bucket C), 🟡 `theo:doubling_main` (bucket B), ✅ `def:doubling_setting` (bucket A)
+Certifies: 🟡 `prop:doubling_phase` (bucket C), 🟡 `theo:doubling_main` (bucket C), ✅ `def:doubling_setting` (bucket A)
 
 
 In scope: `variable {S : Setting}`
@@ -1402,7 +1935,7 @@ In scope: `variable {S : Setting}`
 
 **`lem:doubling_product`: the weight of a descent is `1 + O(1/ℓ)` in expectation**  
 
-*strict library; 742 lines; 27 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 798 lines; 29 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `lem:doubling_product` (bucket A), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), ✅ `lem:doubling_escape` (bucket A), 🟡 `lem:doubling_descent` (bucket B)
@@ -1440,6 +1973,8 @@ In scope: `variable (D : Decay)`, `variable {ℓ : ℕ} {b : ℕ → ℝ} {H : �
 | 659 | theorem | `descOne_two_sided` | `theorem descOne_two_sided {d ℓ : ℕ} (hℓ : D.m0 d ≤ ℓ) (y : ℕ) : Real.exp (-(D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) ≤ D.descOne ℓ y ∧ D.descOne ℓ y ≤ Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))` |
 | 695 | theorem | `decay_block_of_cutBal` | `theorem decay_block_of_cutBal {d ℓ : ℕ} {lam : ℕ → ℝ} {M₁ : ℕ∞} (h : D.CutBal d lam M₁) (hℓ : D.m0 d ≤ ℓ) {a b : ℝ} (ha : 0 ≤ a) (hab : ∀ j, ℓ ≤ j → j < 2 * ℓ → a ≤ D.uu lam j ∧ D.uu lam j ≤ b) {m : ℕ} (hm : ℓ ≤ m) (hM : (m : ℕ∞) ≤ M₁) : a * Real.exp (-(D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) ≤ D.uu lam m ∧ D.uu lam m ≤ b * Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))` |
 | 714 | theorem | `decay_two_sided_of_cutBal` | `theorem decay_two_sided_of_cutBal {d ℓ : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hpos : ∀ j, 1 ≤ j → 0 < lam j) (hℓ : D.m0 d ≤ ℓ) : ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ ≤ c₂ ∧ ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j ∧ lam j ≤ c₂ * (j : ℝ) ^ (-D.p)` |
+| 745 | theorem | `uu_bounded_explicit` | `theorem uu_bounded_explicit {d ℓ : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hℓ : D.m0 d ≤ ℓ) {a b : ℝ} (ha : 0 ≤ a) (hab : ∀ j, 1 ≤ j → j < 2 * ℓ → a ≤ D.uu lam j ∧ D.uu lam j ≤ b) : ∀ j : ℕ, 1 ≤ j → a * Real.exp (-(D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) ≤ D.uu lam j ∧ D.uu lam j ≤ b * Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))` |
+| 778 | theorem | `decay_two_sided_explicit` | `theorem decay_two_sided_explicit {d ℓ : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hℓ : D.m0 d ≤ ℓ) {a b : ℝ} (ha : 0 ≤ a) (hab : ∀ j, 1 ≤ j → j < 2 * ℓ → a ≤ D.uu lam j ∧ D.uu lam j ≤ b) : ∀ j : ℕ, 1 ≤ j → a * Real.exp (-(D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) * (j : ℝ) ^ (-D.p) ≤ lam j ∧ lam j ≤ b * Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ)) * (j : ℝ) ^ (-D.p)` |
 
 ### `GFNBounds/Doubling/R0Bound.lean`
 
@@ -1477,7 +2012,7 @@ In scope: `variable (D : Decay)`, `variable {m : ℕ}`, `variable {m : ℕ}`
 
 **The clipped ramp: the exponent `p = ∞`**  
 
-*strict library; 275 lines; 24 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 282 lines; 24 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `lem:doubling_ramp` (bucket A)
@@ -1488,30 +2023,30 @@ In scope: `variable {S : Setting}`, `variable (S) {N : ℕ}`, `variable (L : Sta
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 49 | def | `rampFn` | `noncomputable def rampFn (N : ℕ) : St → ℝ` |
-| 51 | theorem @[simp] | `rampFn_sink` | `@[simp] theorem rampFn_sink (N : ℕ) : rampFn N .sink = 0` |
-| 54 | theorem | `rampFn_lad` | `theorem rampFn_lad (N j : ℕ) : rampFn N (.lad j) = min (j : ℝ) (N : ℝ)` |
-| 56 | theorem | `rampFn_lad_le` | `theorem rampFn_lad_le (N j : ℕ) (h : j ≤ N) : rampFn N (.lad j) = (j : ℝ)` |
-| 59 | theorem | `rampFn_lad_ge` | `theorem rampFn_lad_ge (N j : ℕ) (h : N ≤ j) : rampFn N (.lad j) = (N : ℝ)` |
-| 62 | theorem | `rampFn_nonneg` | `theorem rampFn_nonneg (N : ℕ) (x : St) : 0 ≤ rampFn N x` |
-| 67 | theorem | `rampFn_le` | `theorem rampFn_le (N : ℕ) (x : St) : rampFn N x ≤ (N : ℝ)` |
-| 72 | theorem | `rampFn_bounded` | `theorem rampFn_bounded (N : ℕ) : ∃ C, ∀ x, \|rampFn N x\| ≤ C` |
-| 82 | theorem | `ramp_defect_src` | `theorem ramp_defect_src (N : ℕ) : rampFn N (.lad 0) - pstar S none (rampFn N) (.lad 0) = 0` |
-| 87 | theorem | `ramp_defect_sink` | `theorem ramp_defect_sink (hN : S.d ≤ N) : rampFn N .sink - pstar S none (rampFn N) .sink = -S.jbar` |
-| 98 | theorem | `ramp_defect_below` | `theorem ramp_defect_below {m : ℕ} (hm : 1 ≤ m) (h2m : 2 * m ≤ N) : rampFn N (.lad m) - pstar S none (rampFn N) (.lad m) = 1 - S.eps m * ((m : ℝ) + 1)` |
-| 111 | theorem | `ramp_defect_straddle` | `theorem ramp_defect_straddle {m : ℕ} (hm : 1 ≤ m) (hmN : m ≤ N) (h2m : N < 2 * m) : rampFn N (.lad m) - pstar S none (rampFn N) (.lad m) = 1 - S.eps m * ((N : ℝ) - (m : ℝ) + 1)` |
-| 124 | theorem | `ramp_defect_above` | `theorem ramp_defect_above {m : ℕ} (hm : 1 ≤ m) (hmN : N < m) : rampFn N (.lad m) - pstar S none (rampFn N) (.lad m) = 0` |
-| 133 | theorem | `ramp_defect_bounded` | `theorem ramp_defect_bounded {γ : ℝ} (hγ : ∀ j : ℕ, 1 ≤ j → ((j : ℝ) + 1) * S.eps j ≤ γ) (hN : S.d ≤ N) (x : St) : \|rampFn N x - pstar S none (rampFn N) x\| ≤ max 1 (max γ S.jbar)` |
-| 171 | def | `rampMean` | `noncomputable def rampMean (N : ℕ) : ℝ` |
-| 173 | theorem | `rampMean_nonneg` | `theorem rampMean_nonneg (N : ℕ) : 0 ≤ L.rampMean N` |
-| 176 | theorem | `rampMean_le` | `theorem rampMean_le (N : ℕ) : L.rampMean N ≤ (N : ℝ)` |
-| 184 | def | `centredRamp` | `noncomputable def centredRamp (N : ℕ) : St → ℝ` |
-| 186 | theorem | `centredRamp_bounded` | `theorem centredRamp_bounded (N : ℕ) : ∃ C, ∀ x, \|L.centredRamp N x\| ≤ C` |
-| 196 | theorem | `tsum_centredRamp` | `theorem tsum_centredRamp (N : ℕ) : ∑' x, L.lam x * L.centredRamp N x = 0` |
-| 207 | theorem | `centredRamp_defect` | `theorem centredRamp_defect (N : ℕ) (x : St) : L.centredRamp N x - pstar S none (L.centredRamp N) x = rampFn N x - pstar S none (rampFn N) x` |
-| 219 | theorem | `exists_centredRamp_ge` | `theorem exists_centredRamp_ge (N : ℕ) : ∃ x : St, (N : ℝ) / 2 ≤ \|L.centredRamp N x\|` |
-| 233 | theorem | `no_bounded_inverse_infty` | `theorem no_bounded_inverse_infty {γ : ℝ} (hγ : ∀ j : ℕ, 1 ≤ j → ((j : ℝ) + 1) * S.eps j ≤ γ) : ¬ ∃ B : ℝ, ∀ (f : St → ℝ) (M D : ℝ), (∑' x, L.lam x * f x = 0) → (∃ x, M ≤ \|f x\|) → (∀ x, \|f x - pstar S none f x\| ≤ D) → M ≤ B * D` |
-| 261 | theorem | `gamma_family` | `theorem gamma_family {c s : ℝ} (hc : 0 < c) (hs : 1 ≤ s) (j : ℕ) (hj : 1 ≤ j) : ((j : ℝ) + 1) * epsCS c s j ≤ c * 2 ^ (1 - s)` |
+| 53 | def | `rampFn` | `noncomputable def rampFn (N : ℕ) : St → ℝ` |
+| 55 | theorem @[simp] | `rampFn_sink` | `@[simp] theorem rampFn_sink (N : ℕ) : rampFn N .sink = 0` |
+| 58 | theorem | `rampFn_lad` | `theorem rampFn_lad (N j : ℕ) : rampFn N (.lad j) = min (j : ℝ) (N : ℝ)` |
+| 60 | theorem | `rampFn_lad_le` | `theorem rampFn_lad_le (N j : ℕ) (h : j ≤ N) : rampFn N (.lad j) = (j : ℝ)` |
+| 63 | theorem | `rampFn_lad_ge` | `theorem rampFn_lad_ge (N j : ℕ) (h : N ≤ j) : rampFn N (.lad j) = (N : ℝ)` |
+| 66 | theorem | `rampFn_nonneg` | `theorem rampFn_nonneg (N : ℕ) (x : St) : 0 ≤ rampFn N x` |
+| 71 | theorem | `rampFn_le` | `theorem rampFn_le (N : ℕ) (x : St) : rampFn N x ≤ (N : ℝ)` |
+| 76 | theorem | `rampFn_bounded` | `theorem rampFn_bounded (N : ℕ) : ∃ C, ∀ x, \|rampFn N x\| ≤ C` |
+| 86 | theorem | `ramp_defect_src` | `theorem ramp_defect_src (N : ℕ) : rampFn N (.lad 0) - pstar S none (rampFn N) (.lad 0) = 0` |
+| 91 | theorem | `ramp_defect_sink` | `theorem ramp_defect_sink (hN : S.d ≤ N) : rampFn N .sink - pstar S none (rampFn N) .sink = -S.jbar` |
+| 102 | theorem | `ramp_defect_below` | `theorem ramp_defect_below {m : ℕ} (hm : 1 ≤ m) (h2m : 2 * m ≤ N) : rampFn N (.lad m) - pstar S none (rampFn N) (.lad m) = 1 - S.eps m * ((m : ℝ) + 1)` |
+| 115 | theorem | `ramp_defect_straddle` | `theorem ramp_defect_straddle {m : ℕ} (hm : 1 ≤ m) (hmN : m ≤ N) (h2m : N < 2 * m) : rampFn N (.lad m) - pstar S none (rampFn N) (.lad m) = 1 - S.eps m * ((N : ℝ) - (m : ℝ) + 1)` |
+| 128 | theorem | `ramp_defect_above` | `theorem ramp_defect_above {m : ℕ} (hm : 1 ≤ m) (hmN : N < m) : rampFn N (.lad m) - pstar S none (rampFn N) (.lad m) = 0` |
+| 137 | theorem | `ramp_defect_bounded` | `theorem ramp_defect_bounded {γ : ℝ} (hγ : ∀ j : ℕ, 1 ≤ j → ((j : ℝ) + 1) * S.eps j ≤ γ) (hN : S.d ≤ N) (x : St) : \|rampFn N x - pstar S none (rampFn N) x\| ≤ max 1 (max γ S.jbar)` |
+| 175 | def | `rampMean` | `noncomputable def rampMean (N : ℕ) : ℝ` |
+| 177 | theorem | `rampMean_nonneg` | `theorem rampMean_nonneg (N : ℕ) : 0 ≤ L.rampMean N` |
+| 180 | theorem | `rampMean_le` | `theorem rampMean_le (N : ℕ) : L.rampMean N ≤ (N : ℝ)` |
+| 188 | def | `centredRamp` | `noncomputable def centredRamp (N : ℕ) : St → ℝ` |
+| 190 | theorem | `centredRamp_bounded` | `theorem centredRamp_bounded (N : ℕ) : ∃ C, ∀ x, \|L.centredRamp N x\| ≤ C` |
+| 200 | theorem | `tsum_centredRamp` | `theorem tsum_centredRamp (N : ℕ) : ∑' x, L.lam x * L.centredRamp N x = 0` |
+| 211 | theorem | `centredRamp_defect` | `theorem centredRamp_defect (N : ℕ) (x : St) : L.centredRamp N x - pstar S none (L.centredRamp N) x = rampFn N x - pstar S none (rampFn N) x` |
+| 223 | theorem | `exists_centredRamp_ge` | `theorem exists_centredRamp_ge (N : ℕ) : ∃ x : St, (N : ℝ) / 2 ≤ \|L.centredRamp N x\|` |
+| 239 | theorem | `no_bounded_inverse_infty` | `theorem no_bounded_inverse_infty {γ : ℝ} (hγ : ∀ j : ℕ, 1 ≤ j → ((j : ℝ) + 1) * S.eps j ≤ γ) : ¬ ∃ B : ℝ, ∀ (f : St → ℝ) (M D : ℝ), (∃ C, ∀ x, \|f x\| ≤ C) → (∑' x, L.lam x * f x = 0) → (∃ x, M ≤ \|f x\|) → (∀ x, \|f x - pstar S none f x\| ≤ D) → M ≤ B * D` |
+| 268 | theorem | `gamma_family` | `theorem gamma_family {c s : ℝ} (hc : 0 < c) (hs : 1 ≤ s) (j : ℕ) (hj : 1 ≤ j) : ((j : ℝ) + 1) * epsCS c s j ≤ c * 2 ^ (1 - s)` |
 
 ### `GFNBounds/Doubling/Range.lean`
 
@@ -1560,6 +2095,29 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`
 | 95 | theorem | `Stat.lam_double_ge` | `theorem Stat.lam_double_ge (L : Stat S cap) {j : ℕ} (hj : 1 ≤ j) (hD : HasDouble cap j) : L.lam (.lad j) * S.eps j ≤ L.lam (.lad (2 * j))` |
 | 101 | theorem | `Stat.lam_le_prev` | `theorem Stat.lam_le_prev (L : Stat S cap) {m : ℕ} (hm : 1 ≤ m) : L.lam (.lad m) * (1 - S.eps m) ≤ L.lam (.lad (m - 1))` |
 
+### `GFNBounds/Doubling/RayleighBridge.lean`
+
+**From the `L²(λ)` Rayleigh inequality to the mass layer**  
+
+*strict library; 114 lines; 7 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `lem:doubling_operator` (bucket B), ✅ `lem:doubling_truncation_irreducible` (bucket A)
+
+
+In scope: `variable {S : Setting} {cap : Option ℕ} (L : Stat S cap)`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 36 | theorem | `memLp_two_of_bounded` | `theorem memLp_two_of_bounded {f : St → ℝ} (hf : ∃ C, ∀ x, \|f x\| ≤ C) : MemLp f 2 L.mu` |
+| 47 | theorem | `norm_sq_eq_mass_of_ae` | `theorem norm_sq_eq_mass_of_ae {F : Lp ℝ 2 L.mu} {g : St → ℝ} (h : ⇑F =ᵐ[L.mu] g) (hg : MemLp g 2 L.mu) : ‖F‖ ^ 2 = L.mass 2 g` |
+| 52 | theorem | `tsum_lam_mul_congr_ae` | `theorem tsum_lam_mul_congr_ae {F : Lp ℝ 2 L.mu} {g : St → ℝ} (h : ⇑F =ᵐ[L.mu] g) : ∑' x, L.lam x * (F : St → ℝ) x = ∑' x, L.lam x * g x` |
+| 60 | theorem | `coeFn_sub_pstarL2_toLp` | `theorem coeFn_sub_pstarL2_toLp (hrow : RowOnChain S cap) {f : St → ℝ} (hf : MemLp f 2 L.mu) : ⇑(hf.toLp f - L.pstarL2 hrow (hf.toLp f)) =ᵐ[L.mu] fun x => f x - pstar S cap f x` |
+| 70 | theorem | `rayleigh_of_leftInverse` | `theorem rayleigh_of_leftInverse (hrow : RowOnChain S cap) {Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu} (hS : Sop * (1 - L.pstarL2 hrow) = 1 - L.piL2) (F : Lp ℝ 2 L.mu) : ‖F - L.piL2 F‖ ≤ ‖Sop‖ * ‖F - L.pstarL2 hrow F‖` |
+| 85 | theorem | `mass_le_of_rayleighL2` | `theorem mass_le_of_rayleighL2 (hrow : RowOnChain S cap) {B : ℝ} (hB : ∀ F : Lp ℝ 2 L.mu, ‖F - L.piL2 F‖ ≤ B * ‖F - L.pstarL2 hrow F‖) {f : St → ℝ} (hf : ∃ C, ∀ x, \|f x\| ≤ C) (hmean : ∑' x, L.lam x * f x = 0) : L.mass 2 f ≤ B ^ 2 * L.mass 2 (fun x => f x - pstar S cap f x)` |
+| 106 | theorem | `mass_le_of_leftInverse` | `theorem mass_le_of_leftInverse (hrow : RowOnChain S cap) {Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu} (hS : Sop * (1 - L.pstarL2 hrow) = 1 - L.piL2) {f : St → ℝ} (hf : ∃ C, ∀ x, \|f x\| ≤ C) (hmean : ∑' x, L.lam x * f x = 0) : L.mass 2 f ≤ ‖Sop‖ ^ 2 * L.mass 2 (fun x => f x - pstar S cap f x)` |
+
 ### `GFNBounds/Doubling/Setting.lean`
 
 **The doubling graph: state space, backward policy, and invariant sequences**  
@@ -1575,36 +2133,36 @@ In scope: `variable (S : Setting)`, `variable {S : Setting} {cap : Option ℕ} {
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 61 | inductive | `St` | `inductive St` |
-| 70 | abbrev @[match_pattern] | `src` | `@[match_pattern] abbrev src : St` |
-| 73 | instance | `_` | `instance : Countable St` |
-| 77 | instance | `_` | `instance : Inhabited St` |
-| 86 | def | `HasDouble` | `def HasDouble : Option ℕ → ℕ → Prop \| none, _ => True \| some K, j => 2 * j ≤ K instance : ∀ (cap : Option ℕ) (j : ℕ), Decidable (HasDouble cap j) \| none, _ => .isTrue trivial \| some K, j => inferInstanceAs (Decidable (2 * j ≤ K)) @[simp] theorem hasDouble_none (j : ℕ) : HasDouble none j` |
-| 96 | theorem @[simp] | `hasDouble_some` | `@[simp] theorem hasDouble_some (K j : ℕ) : HasDouble (some K) j ↔ 2 * j ≤ K` |
-| 101 | theorem | `hasDouble_mono` | `theorem hasDouble_mono {cap : Option ℕ} {m j : ℕ} (h : HasDouble cap m) (hj : j ≤ m) : HasDouble cap j` |
-| 121 | def | `OnChain` | `def OnChain : Option ℕ → St → Prop \| none, _ => True \| some K, .lad j => j ≤ K \| some _, .sink => True instance : ∀ (cap : Option ℕ) (x : St), Decidable (OnChain cap x) \| none, _ => .isTrue trivial \| some K, .lad j => inferInstanceAs (Decidable (j ≤ K)) \| some _, .sink => .isTrue trivial @[simp] theorem onChain_none (x : St) : OnChain none x` |
-| 132 | theorem @[simp] | `onChain_sink` | `@[simp] theorem onChain_sink (cap : Option ℕ) : OnChain cap .sink` |
-| 133 | theorem @[simp] | `onChain_some_lad` | `@[simp] theorem onChain_some_lad (K j : ℕ) : OnChain (some K) (.lad j) ↔ j ≤ K` |
-| 137 | theorem | `onChain_double` | `theorem onChain_double {cap : Option ℕ} {j : ℕ} (h : HasDouble cap j) : OnChain cap (.lad (2 * j))` |
-| 144 | theorem | `onChain_lad_of_hasDouble` | `theorem onChain_lad_of_hasDouble {cap : Option ℕ} {m j : ℕ} (h : HasDouble cap m) (hj : j ≤ m) : OnChain cap (.lad j)` |
-| 158 | def | `window` | `def window (m : ℕ) : Finset ℕ` |
-| 160 | theorem | `mem_window` | `theorem mem_window {m j : ℕ} : j ∈ window m ↔ (m + 1) / 2 ≤ j ∧ j < m` |
-| 162 | theorem | `window_lt` | `theorem window_lt {m j : ℕ} (h : j ∈ window m) : j < m` |
-| 173 | structure | `Setting` | `structure Setting` |
-| 195 | def | `jbar` | `noncomputable def jbar : ℝ` |
-| 197 | theorem | `epsMax_pos` | `theorem epsMax_pos : 0 < S.epsMax` |
-| 199 | theorem | `eps_lt_one` | `theorem eps_lt_one ⦃j : ℕ⦄ (hj : 1 ≤ j) : S.eps j < 1` |
-| 202 | theorem | `one_sub_eps_pos` | `theorem one_sub_eps_pos ⦃j : ℕ⦄ (hj : 1 ≤ j) : 0 < 1 - S.eps j` |
-| 216 | def | `pstar` | `noncomputable def pstar (S : Setting) (cap : Option ℕ) (f : St → ℝ) : St → ℝ \| .lad 0 => f .sink \| .lad (j + 1) => if HasDouble cap (j + 1) then S.eps (j + 1) * f (.lad (2 * (j + 1))) + (1 - S.eps (j + 1)) * f (.lad j) else f (.lad j) \| .sink => ∑ k ∈ Finset.Icc 1 S.d, S.row k * f (.lad k) variable {S : Setting} {cap : Option ℕ} {f g : St → ℝ} @[simp] theorem pstar_src : pstar S cap f .src = f .sink` |
-| 229 | theorem @[simp] | `pstar_sink` | `@[simp] theorem pstar_sink : pstar S cap f .sink = ∑ k ∈ Finset.Icc 1 S.d, S.row k * f (.lad k)` |
-| 232 | theorem | `pstar_lad_succ` | `theorem pstar_lad_succ (j : ℕ) : pstar S cap f (.lad (j + 1)) = if HasDouble cap (j + 1) then S.eps (j + 1) * f (.lad (2 * (j + 1))) + (1 - S.eps (j + 1)) * f (.lad j) else f (.lad j)` |
-| 239 | theorem | `pstar_lad_of_hasDouble` | `theorem pstar_lad_of_hasDouble {j : ℕ} (hj : 1 ≤ j) (h : HasDouble cap j) : pstar S cap f (.lad j) = S.eps j * f (.lad (2 * j)) + (1 - S.eps j) * f (.lad (j - 1))` |
-| 246 | theorem | `pstar_lad_of_not_hasDouble` | `theorem pstar_lad_of_not_hasDouble {j : ℕ} (hj : 1 ≤ j) (h : ¬ HasDouble cap j) : pstar S cap f (.lad j) = f (.lad (j - 1))` |
-| 251 | theorem | `pstar_add` | `theorem pstar_add : pstar S cap (f + g) = pstar S cap f + pstar S cap g` |
-| 260 | theorem | `pstar_smul` | `theorem pstar_smul (c : ℝ) : pstar S cap (c • f) = c • pstar S cap f` |
-| 271 | theorem | `pstar_nonneg` | `theorem pstar_nonneg (hf : ∀ x, 0 ≤ f x) (x : St) : 0 ≤ pstar S cap f x` |
-| 285 | theorem | `pstar_bounded` | `theorem pstar_bounded {C : ℝ} (hC : ∀ x, \|f x\| ≤ C) (x : St) : \|pstar S cap f x\| ≤ C` |
-| 311 | theorem @[simp] | `pstar_const` | `@[simp] theorem pstar_const (c : ℝ) : pstar S cap (fun _ => c) = fun _ => c` |
+| 62 | inductive | `St` | `inductive St` |
+| 71 | abbrev @[match_pattern] | `src` | `@[match_pattern] abbrev src : St` |
+| 74 | instance | `_` | `instance : Countable St` |
+| 78 | instance | `_` | `instance : Inhabited St` |
+| 87 | def | `HasDouble` | `def HasDouble : Option ℕ → ℕ → Prop \| none, _ => True \| some K, j => 2 * j ≤ K instance : ∀ (cap : Option ℕ) (j : ℕ), Decidable (HasDouble cap j) \| none, _ => .isTrue trivial \| some K, j => inferInstanceAs (Decidable (2 * j ≤ K)) @[simp] theorem hasDouble_none (j : ℕ) : HasDouble none j` |
+| 97 | theorem @[simp] | `hasDouble_some` | `@[simp] theorem hasDouble_some (K j : ℕ) : HasDouble (some K) j ↔ 2 * j ≤ K` |
+| 102 | theorem | `hasDouble_mono` | `theorem hasDouble_mono {cap : Option ℕ} {m j : ℕ} (h : HasDouble cap m) (hj : j ≤ m) : HasDouble cap j` |
+| 122 | def | `OnChain` | `def OnChain : Option ℕ → St → Prop \| none, _ => True \| some K, .lad j => j ≤ K \| some _, .sink => True instance : ∀ (cap : Option ℕ) (x : St), Decidable (OnChain cap x) \| none, _ => .isTrue trivial \| some K, .lad j => inferInstanceAs (Decidable (j ≤ K)) \| some _, .sink => .isTrue trivial @[simp] theorem onChain_none (x : St) : OnChain none x` |
+| 133 | theorem @[simp] | `onChain_sink` | `@[simp] theorem onChain_sink (cap : Option ℕ) : OnChain cap .sink` |
+| 134 | theorem @[simp] | `onChain_some_lad` | `@[simp] theorem onChain_some_lad (K j : ℕ) : OnChain (some K) (.lad j) ↔ j ≤ K` |
+| 138 | theorem | `onChain_double` | `theorem onChain_double {cap : Option ℕ} {j : ℕ} (h : HasDouble cap j) : OnChain cap (.lad (2 * j))` |
+| 145 | theorem | `onChain_lad_of_hasDouble` | `theorem onChain_lad_of_hasDouble {cap : Option ℕ} {m j : ℕ} (h : HasDouble cap m) (hj : j ≤ m) : OnChain cap (.lad j)` |
+| 159 | def | `window` | `def window (m : ℕ) : Finset ℕ` |
+| 161 | theorem | `mem_window` | `theorem mem_window {m j : ℕ} : j ∈ window m ↔ (m + 1) / 2 ≤ j ∧ j < m` |
+| 163 | theorem | `window_lt` | `theorem window_lt {m j : ℕ} (h : j ∈ window m) : j < m` |
+| 174 | structure | `Setting` | `structure Setting` |
+| 196 | def | `jbar` | `noncomputable def jbar : ℝ` |
+| 198 | theorem | `epsMax_pos` | `theorem epsMax_pos : 0 < S.epsMax` |
+| 200 | theorem | `eps_lt_one` | `theorem eps_lt_one ⦃j : ℕ⦄ (hj : 1 ≤ j) : S.eps j < 1` |
+| 203 | theorem | `one_sub_eps_pos` | `theorem one_sub_eps_pos ⦃j : ℕ⦄ (hj : 1 ≤ j) : 0 < 1 - S.eps j` |
+| 217 | def | `pstar` | `noncomputable def pstar (S : Setting) (cap : Option ℕ) (f : St → ℝ) : St → ℝ \| .lad 0 => f .sink \| .lad (j + 1) => if HasDouble cap (j + 1) then S.eps (j + 1) * f (.lad (2 * (j + 1))) + (1 - S.eps (j + 1)) * f (.lad j) else f (.lad j) \| .sink => ∑ k ∈ Finset.Icc 1 S.d, S.row k * f (.lad k) variable {S : Setting} {cap : Option ℕ} {f g : St → ℝ} @[simp] theorem pstar_src : pstar S cap f .src = f .sink` |
+| 230 | theorem @[simp] | `pstar_sink` | `@[simp] theorem pstar_sink : pstar S cap f .sink = ∑ k ∈ Finset.Icc 1 S.d, S.row k * f (.lad k)` |
+| 233 | theorem | `pstar_lad_succ` | `theorem pstar_lad_succ (j : ℕ) : pstar S cap f (.lad (j + 1)) = if HasDouble cap (j + 1) then S.eps (j + 1) * f (.lad (2 * (j + 1))) + (1 - S.eps (j + 1)) * f (.lad j) else f (.lad j)` |
+| 240 | theorem | `pstar_lad_of_hasDouble` | `theorem pstar_lad_of_hasDouble {j : ℕ} (hj : 1 ≤ j) (h : HasDouble cap j) : pstar S cap f (.lad j) = S.eps j * f (.lad (2 * j)) + (1 - S.eps j) * f (.lad (j - 1))` |
+| 247 | theorem | `pstar_lad_of_not_hasDouble` | `theorem pstar_lad_of_not_hasDouble {j : ℕ} (hj : 1 ≤ j) (h : ¬ HasDouble cap j) : pstar S cap f (.lad j) = f (.lad (j - 1))` |
+| 252 | theorem | `pstar_add` | `theorem pstar_add : pstar S cap (f + g) = pstar S cap f + pstar S cap g` |
+| 261 | theorem | `pstar_smul` | `theorem pstar_smul (c : ℝ) : pstar S cap (c • f) = c • pstar S cap f` |
+| 272 | theorem | `pstar_nonneg` | `theorem pstar_nonneg (hf : ∀ x, 0 ≤ f x) (x : St) : 0 ≤ pstar S cap f x` |
+| 286 | theorem | `pstar_bounded` | `theorem pstar_bounded {C : ℝ} (hC : ∀ x, \|f x\| ≤ C) (x : St) : \|pstar S cap f x\| ≤ C` |
+| 312 | theorem @[simp] | `pstar_const` | `@[simp] theorem pstar_const (c : ℝ) : pstar S cap (fun _ => c) = fun _ => c` |
 | 335 | structure | `Stat` | `structure Stat (S : Setting) (cap : Option ℕ)` |
 | 351 | theorem | `summable_mul` | `theorem summable_mul {f : St → ℝ} (hf : ∃ C, ∀ x, \|f x\| ≤ C) : Summable (fun x => L.lam x * f x)` |
 | 360 | theorem | `tsum_sub_pstar` | `theorem tsum_sub_pstar {f : St → ℝ} (hf : ∃ C, ∀ x, \|f x\| ≤ C) : ∑' x, L.lam x * (f x - pstar S cap f x) = 0` |
@@ -1613,7 +2171,7 @@ In scope: `variable (S : Setting)`, `variable {S : Setting} {cap : Option ℕ} {
 
 **`theo:doubling_sharp`: the rescaled profile converges, and its limit is determined**  
 
-*strict library; 265 lines; 6 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 267 lines; 6 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `theo:doubling_sharp` (bucket A), ✅ `theo:doubling_decay` (bucket A)
@@ -1624,18 +2182,18 @@ In scope: `variable (D : Decay)`, `variable {d L : ℕ} {lam : ℕ → ℝ} {c�
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 82 | theorem | `cutBal_unique` | `theorem cutBal_unique {d : ℕ} {lam lam' : ℕ → ℝ} (h : D.CutBal d lam ⊤) (h' : D.CutBal d lam' ⊤) (hagree : ∀ j, 1 ≤ j → j ≤ d → lam j = lam' j) : ∀ m : ℕ, 1 ≤ m → lam m = lam' m` |
-| 102 | theorem | `descP_diff_eq` | `theorem descP_diff_eq {ℓ : ℕ} (u : ℕ → ℝ) {y y' : ℕ} (hy : ℓ ≤ y) (hy' : ℓ ≤ y') : D.descP ℓ u y - D.descP ℓ u y' = ∑ k ∈ Finset.Ico ℓ (2 * ℓ), u k * (D.exitLaw ℓ y k - D.exitLaw ℓ y' k)` |
-| 115 | theorem | `descP_uu_diff_le` | `theorem descP_uu_diff_le (hc₁ : 0 < c₁) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) {ℓ : ℕ} (hℓ : 20 ≤ ℓ) (hℓτ : 32 * D.c * D.tau ≤ (ℓ : ℝ)) (i : ℕ) {m m' : ℕ} (hm : 2 ^ i * ℓ ≤ m) (hm' : 2 ^ i * ℓ ≤ m') : \|D.descP ℓ (D.uu lam) m - D.descP ℓ (D.uu lam) m'\| ≤ c₂ * (1 - D.omeg) ^ i` |
-| 146 | theorem | `uu_sub_descP_le` | `theorem uu_sub_descP_le (hcut : D.CutBal d lam ⊤) (hLd : d < 2 * L) (hc₃ : 0 ≤ c₃) (hc₂ : 0 ≤ c₂) (hweight : ∀ ℓ y : ℕ, L ≤ ℓ → 2 * ℓ ≤ y → \|D.descW ℓ (D.uu lam) y - D.descP ℓ (D.uu lam) y\| ≤ c₂ * c₃ / ℓ) {ℓ : ℕ} (hℓ : L ≤ ℓ) (y : ℕ) : \|D.uu lam y - D.descP ℓ (D.uu lam) y\| ≤ c₂ * c₃ / ℓ` |
-| 163 | theorem | `uu_diff_le` | `theorem uu_diff_le (hcut : D.CutBal d lam ⊤) (hLd : d < 2 * L) (hL : 20 ≤ L) (hLτ : 32 * D.c * D.tau ≤ (L : ℝ)) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) (hweight : ∀ ℓ y : ℕ, L ≤ ℓ → 2 * ℓ ≤ y → \|D.descW ℓ (D.uu lam) y - D.descP ℓ (D.uu lam) y\| ≤ c₂ * c₃ / ℓ) {ℓ : ℕ} (hℓ : L ≤ ℓ) (i : ℕ) {m m' : ℕ} (hm : 2 ^ i * ℓ ≤ m) (hm' : 2 ^ i * ℓ ≤ m') : \|D.uu lam m - D.uu lam m'\| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)` |
-| 208 | theorem | `sharp_limit` | `theorem sharp_limit (hcut : D.CutBal d lam ⊤) (hLd : d < 2 * L) (hL : 20 ≤ L) (hLτ : 32 * D.c * D.tau ≤ (L : ℝ)) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) (hweight : ∀ ℓ y : ℕ, L ≤ ℓ → 2 * ℓ ≤ y → \|D.descW ℓ (D.uu lam) y - D.descP ℓ (D.uu lam) y\| ≤ c₂ * c₃ / ℓ) : ∃ C : ℝ, Tendsto (fun m : ℕ => D.uu lam m) atTop (𝓝 C) ∧ c₁ ≤ C ∧ C ≤ c₂ ∧ ∀ ℓ i m : ℕ, L ≤ ℓ → 2 ^ i * ℓ ≤ m → \|D.uu lam m - C\| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)` |
+| 84 | theorem | `cutBal_unique` | `theorem cutBal_unique {d : ℕ} {lam lam' : ℕ → ℝ} (h : D.CutBal d lam ⊤) (h' : D.CutBal d lam' ⊤) (hagree : ∀ j, 1 ≤ j → j ≤ d → lam j = lam' j) : ∀ m : ℕ, 1 ≤ m → lam m = lam' m` |
+| 104 | theorem | `descP_diff_eq` | `theorem descP_diff_eq {ℓ : ℕ} (u : ℕ → ℝ) {y y' : ℕ} (hy : ℓ ≤ y) (hy' : ℓ ≤ y') : D.descP ℓ u y - D.descP ℓ u y' = ∑ k ∈ Finset.Ico ℓ (2 * ℓ), u k * (D.exitLaw ℓ y k - D.exitLaw ℓ y' k)` |
+| 117 | theorem | `descP_uu_diff_le` | `theorem descP_uu_diff_le (hc₁ : 0 < c₁) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) {ℓ : ℕ} (hℓ : 20 ≤ ℓ) (hℓτ : 32 * D.c * D.tau ≤ (ℓ : ℝ)) (i : ℕ) {m m' : ℕ} (hm : 2 ^ i * ℓ ≤ m) (hm' : 2 ^ i * ℓ ≤ m') : \|D.descP ℓ (D.uu lam) m - D.descP ℓ (D.uu lam) m'\| ≤ c₂ * (1 - D.omeg) ^ i` |
+| 148 | theorem | `uu_sub_descP_le` | `theorem uu_sub_descP_le (hcut : D.CutBal d lam ⊤) (hLd : d < 2 * L) (hc₃ : 0 ≤ c₃) (hc₂ : 0 ≤ c₂) (hweight : ∀ ℓ y : ℕ, L ≤ ℓ → 2 * ℓ ≤ y → \|D.descW ℓ (D.uu lam) y - D.descP ℓ (D.uu lam) y\| ≤ c₂ * c₃ / ℓ) {ℓ : ℕ} (hℓ : L ≤ ℓ) (y : ℕ) : \|D.uu lam y - D.descP ℓ (D.uu lam) y\| ≤ c₂ * c₃ / ℓ` |
+| 165 | theorem | `uu_diff_le` | `theorem uu_diff_le (hcut : D.CutBal d lam ⊤) (hLd : d < 2 * L) (hL : 20 ≤ L) (hLτ : 32 * D.c * D.tau ≤ (L : ℝ)) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) (hweight : ∀ ℓ y : ℕ, L ≤ ℓ → 2 * ℓ ≤ y → \|D.descW ℓ (D.uu lam) y - D.descP ℓ (D.uu lam) y\| ≤ c₂ * c₃ / ℓ) {ℓ : ℕ} (hℓ : L ≤ ℓ) (i : ℕ) {m m' : ℕ} (hm : 2 ^ i * ℓ ≤ m) (hm' : 2 ^ i * ℓ ≤ m') : \|D.uu lam m - D.uu lam m'\| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)` |
+| 210 | theorem | `sharp_limit` | `theorem sharp_limit (hcut : D.CutBal d lam ⊤) (hLd : d < 2 * L) (hL : 20 ≤ L) (hLτ : 32 * D.c * D.tau ≤ (L : ℝ)) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) (hweight : ∀ ℓ y : ℕ, L ≤ ℓ → 2 * ℓ ≤ y → \|D.descW ℓ (D.uu lam) y - D.descP ℓ (D.uu lam) y\| ≤ c₂ * c₃ / ℓ) : ∃ C : ℝ, Tendsto (fun m : ℕ => D.uu lam m) atTop (𝓝 C) ∧ c₁ ≤ C ∧ C ≤ c₂ ∧ ∀ ℓ i m : ℕ, L ≤ ℓ → 2 ^ i * ℓ ≤ m → \|D.uu lam m - C\| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)` |
 
 ### `GFNBounds/Doubling/SharpFull.lean`
 
 **`theo:doubling_sharp`, unconditional**  
 
-*strict library; 140 lines; 2 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 206 lines; 5 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `theo:doubling_sharp` (bucket A), ✅ `theo:doubling_decay` (bucket A)
@@ -1648,12 +2206,15 @@ In scope: `variable (D : Decay)`
 |---|---|---|---|
 | 67 | theorem | `uu_bounded_of_cutBal` | `theorem uu_bounded_of_cutBal {d ℓ : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hpos : ∀ j, 1 ≤ j → 0 < lam j) (hℓ : D.m0 d ≤ ℓ) : ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ ≤ c₂ ∧ ∀ j : ℕ, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂` |
 | 97 | theorem | `sharp_of_cutBal` | `theorem sharp_of_cutBal {d : ℕ} {lam : ℕ → ℝ} (hcut : D.CutBal d lam ⊤) (hpos : ∀ j, 1 ≤ j → 0 < lam j) : ∃ C c₁ c₂ c₆ : ℝ, 0 < c₁ ∧ c₁ ≤ C ∧ C ≤ c₂ ∧ 0 < c₆ ∧ (∀ j : ℕ, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) ∧ Tendsto (fun m : ℕ => lam m * (m : ℝ) ^ D.p) atTop (𝓝 C) ∧ ∀ m : ℕ, 1 ≤ m → \|lam m * (m : ℝ) ^ D.p - C\| ≤ c₆ * (m : ℝ) ^ (-D.vartheta)` |
+| 140 | def | `levelL` | `noncomputable def levelL (D : Decay) (d : ℕ) : ℕ` |
+| 145 | def | `c6` | `noncomputable def c6 (D : Decay) (d : ℕ) (c₂ : ℝ) : ℝ` |
+| 154 | theorem | `sharp_explicit` | `theorem sharp_explicit {d ℓ : ℕ} {lam : ℕ → ℝ} (hcut : D.CutBal d lam ⊤) (hℓ : D.m0 d ≤ ℓ) {a b : ℝ} (ha : 0 < a) (hab : ∀ j, 1 ≤ j → j < 2 * ℓ → a ≤ D.uu lam j ∧ D.uu lam j ≤ b) : ∃ C : ℝ, a * Real.exp (-(D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) ≤ C ∧ C ≤ b * Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ)) ∧ Tendsto (fun m : ℕ => lam m * (m : ℝ) ^ D.p) atTop (𝓝 C) ∧ ∀ m : ℕ, 1 ≤ m → \|lam m * (m : ℝ) ^ D.p - C\| ≤ D.c6 d (b * Real.exp (D.c5 * (16 * D.c * D.tau) / (ℓ : ℝ))) * (m : ℝ) ^ (-D.vartheta)` |
 
 ### `GFNBounds/Doubling/SharpRate.lean`
 
 **`eq:doubling_rate`: the sharp asymptotic carries a polynomial rate**  
 
-*strict library; 293 lines; 12 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 314 lines; 13 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `theo:doubling_sharp` (bucket A)
@@ -1664,18 +2225,19 @@ In scope: `variable (D : Decay)`, `variable {d L : ℕ} {lam : ℕ → ℝ} {c�
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 65 | def | `alph` | `noncomputable def alph : ℝ` |
-| 69 | def | `vartheta` | `noncomputable def vartheta : ℝ` |
-| 71 | theorem | `one_sub_omeg_pos` | `theorem one_sub_omeg_pos : 0 < 1 - D.omeg` |
-| 73 | theorem | `one_sub_omeg_lt_one` | `theorem one_sub_omeg_lt_one : 1 - D.omeg < 1` |
-| 76 | theorem | `alph_pos` | `theorem alph_pos : 0 < D.alph` |
-| 81 | theorem | `two_rpow_neg_alph` | `theorem two_rpow_neg_alph : (2 : ℝ) ^ (-D.alph) = 1 - D.omeg` |
-| 85 | theorem | `vartheta_pos` | `theorem vartheta_pos : 0 < D.vartheta` |
-| 88 | theorem | `vartheta_lt_one` | `theorem vartheta_lt_one : D.vartheta < 1` |
-| 93 | theorem | `alph_mul_one_sub` | `theorem alph_mul_one_sub : D.alph * (1 - D.vartheta) = D.vartheta` |
-| 105 | theorem | `rate_of_large` | `theorem rate_of_large (hL : 20 ≤ L) (hc₂ : 0 < c₂) (hc₃ : 0 ≤ c₃) (hCbound : ∀ ℓ i m : ℕ, L ≤ ℓ → 2 ^ i * ℓ ≤ m → \|D.uu lam m - C\| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)) {m : ℕ} (hm1 : 1 ≤ m) (hmL : (L : ℝ) ≤ (m : ℝ) ^ D.vartheta) : \|D.uu lam m - C\| ≤ c₂ * (4 ^ D.alph + 2 * c₃) * (m : ℝ) ^ (-D.vartheta)` |
-| 201 | theorem | `sharp_rate` | `theorem sharp_rate (hL : 20 ≤ L) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) (hC1 : c₁ ≤ C) (hC2 : C ≤ c₂) (hCbound : ∀ ℓ i m : ℕ, L ≤ ℓ → 2 ^ i * ℓ ≤ m → \|D.uu lam m - C\| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)) : ∃ c₆ : ℝ, 0 < c₆ ∧ ∀ m : ℕ, 1 ≤ m → \|D.uu lam m - C\| ≤ c₆ * (m : ℝ) ^ (-D.vartheta)` |
-| 275 | theorem | `sharp` | `theorem sharp (hcut : D.CutBal d lam ⊤) (hLd : d < 2 * L) (hL : 20 ≤ L) (hLτ : 32 * D.c * D.tau ≤ (L : ℝ)) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) (hweight : ∀ ℓ y : ℕ, L ≤ ℓ → 2 * ℓ ≤ y → \|D.descW ℓ (D.uu lam) y - D.descP ℓ (D.uu lam) y\| ≤ c₂ * c₃ / ℓ) : ∃ C c₆ : ℝ, 0 < c₆ ∧ c₁ ≤ C ∧ C ≤ c₂ ∧ Tendsto (fun m : ℕ => lam m * (m : ℝ) ^ D.p) atTop (𝓝 C) ∧ ∀ m : ℕ, 1 ≤ m → \|lam m * (m : ℝ) ^ D.p - C\| ≤ c₆ * (m : ℝ) ^ (-D.vartheta)` |
+| 67 | def | `alph` | `noncomputable def alph : ℝ` |
+| 71 | def | `vartheta` | `noncomputable def vartheta : ℝ` |
+| 73 | theorem | `one_sub_omeg_pos` | `theorem one_sub_omeg_pos : 0 < 1 - D.omeg` |
+| 75 | theorem | `one_sub_omeg_lt_one` | `theorem one_sub_omeg_lt_one : 1 - D.omeg < 1` |
+| 78 | theorem | `alph_pos` | `theorem alph_pos : 0 < D.alph` |
+| 83 | theorem | `two_rpow_neg_alph` | `theorem two_rpow_neg_alph : (2 : ℝ) ^ (-D.alph) = 1 - D.omeg` |
+| 87 | theorem | `vartheta_pos` | `theorem vartheta_pos : 0 < D.vartheta` |
+| 90 | theorem | `vartheta_lt_one` | `theorem vartheta_lt_one : D.vartheta < 1` |
+| 95 | theorem | `alph_mul_one_sub` | `theorem alph_mul_one_sub : D.alph * (1 - D.vartheta) = D.vartheta` |
+| 107 | theorem | `rate_of_large` | `theorem rate_of_large (hL : 20 ≤ L) (hc₂ : 0 < c₂) (hc₃ : 0 ≤ c₃) (hCbound : ∀ ℓ i m : ℕ, L ≤ ℓ → 2 ^ i * ℓ ≤ m → \|D.uu lam m - C\| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)) {m : ℕ} (hm1 : 1 ≤ m) (hmL : (L : ℝ) ≤ (m : ℝ) ^ D.vartheta) : \|D.uu lam m - C\| ≤ c₂ * (4 ^ D.alph + 2 * c₃) * (m : ℝ) ^ (-D.vartheta)` |
+| 204 | theorem | `sharp_rate_explicit` | `theorem sharp_rate_explicit (hL : 20 ≤ L) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) (hC1 : c₁ ≤ C) (hC2 : C ≤ c₂) (hCbound : ∀ ℓ i m : ℕ, L ≤ ℓ → 2 ^ i * ℓ ≤ m → \|D.uu lam m - C\| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)) : ∀ m : ℕ, 1 ≤ m → \|D.uu lam m - C\| ≤ (c₂ * (4 ^ D.alph + 2 * c₃) + c₂ * ((max 1 ⌈(L : ℝ) ^ (1 / D.vartheta)⌉₊ : ℕ) : ℝ) ^ D.vartheta) * (m : ℝ) ^ (-D.vartheta)` |
+| 271 | theorem | `sharp_rate` | `theorem sharp_rate (hL : 20 ≤ L) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) (hC1 : c₁ ≤ C) (hC2 : C ≤ c₂) (hCbound : ∀ ℓ i m : ℕ, L ≤ ℓ → 2 ^ i * ℓ ≤ m → \|D.uu lam m - C\| ≤ c₂ * (1 - D.omeg) ^ i + 2 * (c₂ * c₃ / ℓ)) : ∃ c₆ : ℝ, 0 < c₆ ∧ ∀ m : ℕ, 1 ≤ m → \|D.uu lam m - C\| ≤ c₆ * (m : ℝ) ^ (-D.vartheta)` |
+| 296 | theorem | `sharp` | `theorem sharp (hcut : D.CutBal d lam ⊤) (hLd : d < 2 * L) (hL : 20 ≤ L) (hLτ : 32 * D.c * D.tau ≤ (L : ℝ)) (hc₁ : 0 < c₁) (hc₃ : 0 ≤ c₃) (hbd : ∀ j, 1 ≤ j → c₁ ≤ D.uu lam j ∧ D.uu lam j ≤ c₂) (hweight : ∀ ℓ y : ℕ, L ≤ ℓ → 2 * ℓ ≤ y → \|D.descW ℓ (D.uu lam) y - D.descP ℓ (D.uu lam) y\| ≤ c₂ * c₃ / ℓ) : ∃ C c₆ : ℝ, 0 < c₆ ∧ c₁ ≤ C ∧ C ≤ c₂ ∧ Tendsto (fun m : ℕ => lam m * (m : ℝ) ^ D.p) atTop (𝓝 C) ∧ ∀ m : ℕ, 1 ≤ m → \|lam m * (m : ℝ) ^ D.p - C\| ≤ c₆ * (m : ℝ) ^ (-D.vartheta)` |
 
 ### `GFNBounds/Doubling/Sojourn.lean`
 
@@ -1737,7 +2299,7 @@ In scope: `variable (D : Decay)`, `variable {z : ℕ}`, `variable (D : Decay)`
 *strict library; 333 lines; 21 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:doubling_phase` (bucket C), 🟡 `theo:doubling_main` (bucket B), ✅ `prop:doubling_length` (bucket A)
+Certifies: 🟡 `prop:doubling_phase` (bucket C), 🟡 `theo:doubling_main` (bucket C), ✅ `prop:doubling_length` (bucket A)
 
 
 In scope: `variable {S : Setting}`
@@ -1823,7 +2385,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`
 
 **The tail of the invariant measure**  
 
-*strict library; 423 lines; 14 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 580 lines; 19 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `cor:doubling_tail` (bucket A)
@@ -1847,7 +2409,12 @@ In scope: `variable {p : ℝ}`, `variable (D : Decay)`
 | 238 | def | `tailSeq` | `noncomputable def tailSeq (lam : ℕ → ℝ) (m : ℕ) : ℝ` |
 | 251 | theorem | `tail_bounds` | `theorem tail_bounds {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam) (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j) (habove : ∀ j : ℕ, 1 ≤ j → lam j ≤ c₂ * (j : ℝ) ^ (-D.p)) {m : ℕ} (hm : 1 ≤ m) : c₁ * ((m : ℝ) ^ (1 - D.p) / (D.p - 1)) ≤ tailSeq lam m ∧ tailSeq lam m ≤ c₂ * ((m : ℝ) ^ (-D.p) + (m : ℝ) ^ (1 - D.p) / (D.p - 1))` |
 | 283 | theorem | `tail_ratio_ge` | `theorem tail_ratio_ge {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam) (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j) (habove : ∀ j : ℕ, 1 ≤ j → lam j ≤ c₂ * (j : ℝ) ^ (-D.p)) {m : ℕ} (hm : 1 ≤ m) : c₁ * (m : ℝ) * lam m ≤ c₂ * (D.p - 1) * tailSeq lam m` |
-| 318 | theorem | `tail_sharp` | `theorem tail_sharp {lam : ℕ → ℝ} {C t : ℝ} (hsum : Summable lam) {m₀ m : ℕ} (hm : m₀ ≤ m) (hm1 : 1 ≤ m) (hclose : ∀ j : ℕ, m₀ ≤ j → \|lam j * (j : ℝ) ^ D.p - C\| ≤ t) : \|(D.p - 1) * (m : ℝ) ^ (D.p - 1) * tailSeq lam m - C\| ≤ t * (1 + (D.p - 1) / (m : ℝ)) + \|C\| * ((D.p - 1) / (m : ℝ))` |
+| 311 | theorem | `tail_ratio_le` | `theorem tail_ratio_le {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam) (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j) (habove : ∀ j : ℕ, 1 ≤ j → lam j ≤ c₂ * (j : ℝ) ^ (-D.p)) {m : ℕ} (hm : 1 ≤ m) : c₁ * (D.p - 1) * tailSeq lam m ≤ c₂ * D.p * (m : ℝ) * lam m` |
+| 347 | theorem | `tendsto_tailSeq_zero` | `theorem tendsto_tailSeq_zero {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam) (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j) (habove : ∀ j : ℕ, 1 ≤ j → lam j ≤ c₂ * (j : ℝ) ^ (-D.p)) : Tendsto (tailSeq lam) atTop (𝓝 0)` |
+| 377 | theorem | `tendsto_tail_ratio_atTop` | `theorem tendsto_tail_ratio_atTop {lam : ℕ → ℝ} {c₁ c₂ : ℝ} (hsum : Summable lam) (hc1 : 0 < c₁) (hbelow : ∀ j : ℕ, 1 ≤ j → c₁ * (j : ℝ) ^ (-D.p) ≤ lam j) (habove : ∀ j : ℕ, 1 ≤ j → lam j ≤ c₂ * (j : ℝ) ^ (-D.p)) : Tendsto (fun m : ℕ => tailSeq lam m / lam m) atTop atTop` |
+| 411 | theorem | `tail_sharp` | `theorem tail_sharp {lam : ℕ → ℝ} {C t : ℝ} (hsum : Summable lam) {m₀ m : ℕ} (hm : m₀ ≤ m) (hm1 : 1 ≤ m) (hclose : ∀ j : ℕ, m₀ ≤ j → \|lam j * (j : ℝ) ^ D.p - C\| ≤ t) : \|(D.p - 1) * (m : ℝ) ^ (D.p - 1) * tailSeq lam m - C\| ≤ t * (1 + (D.p - 1) / (m : ℝ)) + \|C\| * ((D.p - 1) / (m : ℝ))` |
+| 517 | theorem | `tendsto_tail_sharp` | `theorem tendsto_tail_sharp {lam : ℕ → ℝ} {C : ℝ} (hsum : Summable lam) (hlim : Tendsto (fun j : ℕ => lam j * (j : ℝ) ^ D.p) atTop (𝓝 C)) : Tendsto (fun m : ℕ => (D.p - 1) * (m : ℝ) ^ (D.p - 1) * tailSeq lam m) atTop (𝓝 C)` |
+| 559 | theorem | `tendsto_tail_ratio_sharp` | `theorem tendsto_tail_ratio_sharp {lam : ℕ → ℝ} {C : ℝ} (hsum : Summable lam) (hC : 0 < C) (hpos : ∀ m : ℕ, 1 ≤ m → 0 < lam m) (hlim : Tendsto (fun j : ℕ => lam j * (j : ℝ) ^ D.p) atTop (𝓝 C)) : Tendsto (fun m : ℕ => (D.p - 1) * tailSeq lam m / ((m : ℝ) * lam m)) atTop (𝓝 1)` |
 
 ### `GFNBounds/Doubling/TotalVariation.lean`
 
@@ -1946,7 +2513,7 @@ In scope: `variable {S : Setting} {K : ℕ}`
 
 **The diffusion operator is unbounded**  
 
-*strict library; 458 lines; 16 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 459 lines; 16 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `theo:doubling_unbounded` (bucket A)
@@ -1957,22 +2524,41 @@ In scope: `variable {S : Setting}`, `variable (L : Stat S none)`, `variable (L :
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 64 | theorem | `hasSum_tailShift` | `theorem hasSum_tailShift (m : ℕ) : HasSum (fun k : ℕ => L.lam (.lad (k + m))) (L.tailMass m)` |
-| 89 | theorem | `summable_lad` | `theorem summable_lad : Summable (fun j : ℕ => L.lam (.lad j))` |
-| 95 | theorem | `tailMass_succ` | `theorem tailMass_succ (m : ℕ) : L.tailMass m = L.lam (.lad m) + L.tailMass (m + 1)` |
-| 109 | theorem | `tailMass_tendsto_zero` | `theorem tailMass_tendsto_zero : Tendsto L.tailMass atTop (𝓝 0)` |
-| 115 | theorem | `tailMass_pos` | `theorem tailMass_pos (m : ℕ) : 0 < L.tailMass m` |
-| 120 | theorem | `coTail_pos` | `theorem coTail_pos {m : ℕ} (hm : 1 < m) : 0 < 1 - L.tailMass m` |
-| 128 | def | `GrowthCond` | `def GrowthCond (S : Setting) : Prop` |
-| 139 | theorem | `lam_pow_two_ge` | `theorem lam_pow_two_ge (D : ℕ) : L.lam (.lad 1) * ∏ i ∈ Finset.range D, S.eps (2 ^ i) ≤ L.lam (.lad (2 ^ D))` |
-| 163 | theorem | `exists_tailRatio_gt` | `theorem exists_tailRatio_gt (hstar : GrowthCond S) (Q : ℝ) (m₁ : ℕ) : ∃ m, m₁ ≤ m ∧ Q * L.lam (.lad m) < L.tailMass m` |
-| 268 | theorem | `centredTail_bounded` | `theorem centredTail_bounded {cap : Option ℕ} (L : Stat S cap) (m : ℕ) : ∃ C, ∀ x, \|L.centredTail m x\| ≤ C` |
-| 280 | theorem | `mass_ratio_bound` | `theorem mass_ratio_bound {cap : Option ℕ} (L : Stat S cap) {m : ℕ} (hdm : S.d < m) (hD : HasDouble cap m) {p : ℝ} (hp : 1 ≤ p) (hLpos : 0 < L.tailMass m) (hhalf : (1 : ℝ) / 2 ≤ 1 - L.tailMass m) {t : ℝ} (ht : 0 < t) (hsmall : 2 * L.lam (.lad m) ≤ t * (L.tailMass m * (1 / 2) ^ p)) : L.mass p (fun x => L.centredTail m x - pstar S cap (L.centredTail m) x) ≤ t * L.mass p (L.centredTail m)` |
-| 301 | theorem | `exists_small_mass_ratio` | `theorem exists_small_mass_ratio (hstar : GrowthCond S) {p : ℝ} (hp : 1 ≤ p) {t : ℝ} (ht : 0 < t) : ∃ m, S.d < m ∧ L.mass p (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ t * L.mass p (L.centredTail m)` |
-| 325 | theorem | `no_bounded_inverse` | `theorem no_bounded_inverse (hstar : GrowthCond S) {p : ℝ} (hp : 1 ≤ p) : ¬ ∃ B : ℝ, ∀ f : St → ℝ, (∃ C, ∀ x, \|f x\| ≤ C) → (∑' x, L.lam x * f x = 0) → L.mass p f ≤ B * L.mass p (fun x => f x - pstar S none f x)` |
-| 356 | theorem | `growthCond_of_family` | `theorem growthCond_of_family {c s : ℝ} (hc : 0 < c) (hs : 0 ≤ s) (S : Setting) (heps : ∀ j, S.eps j = epsCS c s j) : GrowthCond S` |
-| 415 | theorem | `geometric_sum` | `theorem geometric_sum {a rho : ℝ} (ha : 0 < a) (hrho : 0 < rho) (S : Setting) (heps : ∀ j, S.eps j = a * rho ^ j) (D : ℕ) : ∑ i ∈ Finset.range D, Real.log (1 / S.eps (2 ^ i)) = (D : ℝ) * Real.log (1 / a) + ((2 : ℝ) ^ D - 1) * Real.log (1 / rho)` |
-| 435 | theorem | `not_growthCond_geometric` | `theorem not_growthCond_geometric {a rho : ℝ} (ha : 0 < a) (hrho : 0 < rho) (hrho1 : rho < 1) (S : Setting) (heps : ∀ j, S.eps j = a * rho ^ j) : ¬ GrowthCond S` |
+| 65 | theorem | `hasSum_tailShift` | `theorem hasSum_tailShift (m : ℕ) : HasSum (fun k : ℕ => L.lam (.lad (k + m))) (L.tailMass m)` |
+| 90 | theorem | `summable_lad` | `theorem summable_lad : Summable (fun j : ℕ => L.lam (.lad j))` |
+| 96 | theorem | `tailMass_succ` | `theorem tailMass_succ (m : ℕ) : L.tailMass m = L.lam (.lad m) + L.tailMass (m + 1)` |
+| 110 | theorem | `tailMass_tendsto_zero` | `theorem tailMass_tendsto_zero : Tendsto L.tailMass atTop (𝓝 0)` |
+| 116 | theorem | `tailMass_pos` | `theorem tailMass_pos (m : ℕ) : 0 < L.tailMass m` |
+| 121 | theorem | `coTail_pos` | `theorem coTail_pos {m : ℕ} (hm : 1 < m) : 0 < 1 - L.tailMass m` |
+| 129 | def | `GrowthCond` | `def GrowthCond (S : Setting) : Prop` |
+| 140 | theorem | `lam_pow_two_ge` | `theorem lam_pow_two_ge (D : ℕ) : L.lam (.lad 1) * ∏ i ∈ Finset.range D, S.eps (2 ^ i) ≤ L.lam (.lad (2 ^ D))` |
+| 164 | theorem | `exists_tailRatio_gt` | `theorem exists_tailRatio_gt (hstar : GrowthCond S) (Q : ℝ) (m₁ : ℕ) : ∃ m, m₁ ≤ m ∧ Q * L.lam (.lad m) < L.tailMass m` |
+| 269 | theorem | `centredTail_bounded` | `theorem centredTail_bounded {cap : Option ℕ} (L : Stat S cap) (m : ℕ) : ∃ C, ∀ x, \|L.centredTail m x\| ≤ C` |
+| 281 | theorem | `mass_ratio_bound` | `theorem mass_ratio_bound {cap : Option ℕ} (L : Stat S cap) {m : ℕ} (hdm : S.d < m) (hD : HasDouble cap m) {p : ℝ} (hp : 1 ≤ p) (hLpos : 0 < L.tailMass m) (hhalf : (1 : ℝ) / 2 ≤ 1 - L.tailMass m) {t : ℝ} (ht : 0 < t) (hsmall : 2 * L.lam (.lad m) ≤ t * (L.tailMass m * (1 / 2) ^ p)) : L.mass p (fun x => L.centredTail m x - pstar S cap (L.centredTail m) x) ≤ t * L.mass p (L.centredTail m)` |
+| 302 | theorem | `exists_small_mass_ratio` | `theorem exists_small_mass_ratio (hstar : GrowthCond S) {p : ℝ} (hp : 1 ≤ p) {t : ℝ} (ht : 0 < t) : ∃ m, S.d < m ∧ L.mass p (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ t * L.mass p (L.centredTail m)` |
+| 326 | theorem | `no_bounded_inverse` | `theorem no_bounded_inverse (hstar : GrowthCond S) {p : ℝ} (hp : 1 ≤ p) : ¬ ∃ B : ℝ, ∀ f : St → ℝ, (∃ C, ∀ x, \|f x\| ≤ C) → (∑' x, L.lam x * f x = 0) → L.mass p f ≤ B * L.mass p (fun x => f x - pstar S none f x)` |
+| 357 | theorem | `growthCond_of_family` | `theorem growthCond_of_family {c s : ℝ} (hc : 0 < c) (hs : 0 ≤ s) (S : Setting) (heps : ∀ j, S.eps j = epsCS c s j) : GrowthCond S` |
+| 416 | theorem | `geometric_sum` | `theorem geometric_sum {a rho : ℝ} (ha : 0 < a) (hrho : 0 < rho) (S : Setting) (heps : ∀ j, S.eps j = a * rho ^ j) (D : ℕ) : ∑ i ∈ Finset.range D, Real.log (1 / S.eps (2 ^ i)) = (D : ℝ) * Real.log (1 / a) + ((2 : ℝ) ^ D - 1) * Real.log (1 / rho)` |
+| 436 | theorem | `not_growthCond_geometric` | `theorem not_growthCond_geometric {a rho : ℝ} (ha : 0 < a) (hrho : 0 < rho) (hrho1 : rho < 1) (S : Setting) (heps : ∀ j, S.eps j = a * rho ^ j) : ¬ GrowthCond S` |
+
+### `GFNBounds/Doubling/UnboundedL2.lean`
+
+**The diffusion operator is unbounded: the `p = 2` clauses**  
+
+*strict library; 76 lines; 3 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `theo:doubling_unbounded` (bucket A), 🟡 `theo:doubling_main` (bucket C), ✅ `def:doubling_setting` (bucket A)
+
+
+In scope: `variable {S : Setting} (L : Stat S none)`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 46 | theorem | `no_diffusionOp` | `theorem no_diffusionOp (hstar : GrowthCond S) : ¬ ∃ Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, Sop * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2` |
+| 55 | theorem | `not_tendsto_partialSum` | `theorem not_tendsto_partialSum (hstar : GrowthCond S) : ¬ ∃ U : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, Tendsto (partialSum (L.pstarL2 (rowOnChain_none S)) L.piL2) atTop (𝓝 U)` |
+| 65 | theorem | `not_summable_betaHat` | `theorem not_summable_betaHat (hstar : GrowthCond S) : ¬ Summable (L.betaHat (rowOnChain_none S))` |
 
 ### `GFNBounds/Doubling/Unsolvable.lean`
 
@@ -2034,7 +2620,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 *strict library; 300 lines; 12 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_weight` (bucket A), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), 🟡 `lem:doubling_descent` (bucket B), ✅ `lem:doubling_escape` (bucket A)
+Certifies: 🟡 `lem:doubling_weight` (bucket C), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), 🟡 `lem:doubling_descent` (bucket B), ✅ `lem:doubling_escape` (bucket A)
 
 
 In scope: `variable (D : Decay)`
@@ -2073,6 +2659,265 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | 53 | theorem | `sum_window_ge` | `theorem sum_window_ge {r : ℝ} (hr : 0 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / r ≤ ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r - 1)` |
 | 70 | theorem | `sum_window_le` | `theorem sum_window_le {r : ℝ} (hr : 0 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r - 1) ≤ (a : ℝ) ^ (-r - 1) + ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / r` |
 
+### `GFNBounds/Graph/Setting.lean`
+
+**Finite marked graphs, their loop closure, and the invariant measure of the backward chain**  
+
+*strict library; 610 lines; 42 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `def:path_connected` (bucket A), ✅ `def:loop_closure` (bucket A), ✅ `theo:universality_graphs` (bucket B)
+
+
+In scope: `variable {V : Type*} (G : MarkedGraph V)`, `variable {G}`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : MarkedGraph V} (B : BackwardPolicy G)`, `variable {B}`, `variable (B)`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 166 | structure | `MarkedGraph` | `structure MarkedGraph (V : Type*)` |
+| 185 | abbrev | `Reach` | `abbrev Reach : V → V → Prop` |
+| 189 | def | `PathConnected` | `def PathConnected : Prop` |
+| 193 | def | `hatEdge` | `def hatEdge (x y : V) : Prop` |
+| 198 | theorem | `hatEdge_wrap` | `theorem hatEdge_wrap : G.hatEdge G.snk G.src` |
+| 201 | theorem | `eq_snk_of_hatEdge_into_src` | `theorem eq_snk_of_hatEdge_into_src {x : V} (h : G.hatEdge x G.src) : x = G.snk` |
+| 207 | theorem | `PathConnected.from_src` | `theorem PathConnected.from_src (h : G.PathConnected) (s : V) : G.Reach G.src s` |
+| 210 | theorem | `PathConnected.to_snk` | `theorem PathConnected.to_snk (h : G.PathConnected) (s : V) : G.Reach s G.snk` |
+| 214 | theorem | `PathConnected.reach_src_snk` | `theorem PathConnected.reach_src_snk (h : G.PathConnected) (s : V) : G.Reach G.src G.snk` |
+| 220 | theorem | `exists_hatEdge_into` | `theorem exists_hatEdge_into (h : G.PathConnected) (x : V) : ∃ y, G.hatEdge y x` |
+| 239 | structure | `BackwardPolicy` | `structure BackwardPolicy (G : MarkedGraph V)` |
+| 258 | def | `phat` | `noncomputable def phat : V → V → ℝ` |
+| 261 | theorem @[simp] | `phat_src_snk` | `@[simp] theorem phat_src_snk : B.phat G.src G.snk = 1` |
+| 263 | theorem | `phat_src_of_ne` | `theorem phat_src_of_ne {s' : V} (h : s' ≠ G.snk) : B.phat G.src s' = 0` |
+| 265 | theorem | `phat_of_ne_src` | `theorem phat_of_ne_src {s s' : V} (h : s ≠ G.src) : B.phat s s' = B.pb s s'` |
+| 268 | theorem | `phat_nonneg` | `theorem phat_nonneg (s s' : V) : 0 ≤ B.phat s s'` |
+| 278 | theorem | `phat_row_sum` | `theorem phat_row_sum (s : V) : ∑ s', B.phat s s' = 1` |
+| 289 | theorem | `phat_supp` | `theorem phat_supp {s s' : V} (h : B.phat s s' ≠ 0) : G.hatEdge s' s` |
+| 304 | theorem | `src_row_unique` | `theorem src_row_unique (q : V → ℝ) (htot : ∑ s', q s' = 1) (hsupp : ∀ s', q s' ≠ 0 → G.hatEdge s' G.src) : q = fun s' => if s' = G.snk then 1 else 0` |
+| 324 | theorem | `phat_unique_extension` | `theorem phat_unique_extension (Q : V → V → ℝ) (hrow : ∀ s, ∑ s', Q s s' = 1) (hsupp : ∀ s s', Q s s' ≠ 0 → G.hatEdge s' s) (hoff : ∀ ⦃s⦄, s ≠ G.src → Q s = B.pb s) : Q = B.phat` |
+| 339 | def | `PositiveOnEdges` | `def PositiveOnEdges : Prop` |
+| 342 | theorem | `phat_pos_of_edge` | `theorem phat_pos_of_edge (hpos : B.PositiveOnEdges) {x y : V} (h : G.Edge x y) : 0 < B.phat y x` |
+| 351 | def | `BStep` | `def BStep (x y : V) : Prop` |
+| 354 | abbrev | `BReach` | `abbrev BReach : V → V → Prop` |
+| 356 | theorem | `bstep_wrap` | `theorem bstep_wrap : B.BStep G.src G.snk` |
+| 360 | theorem | `bstep_of_edge` | `theorem bstep_of_edge (hpos : B.PositiveOnEdges) {x y : V} (h : G.Edge x y) : B.BStep y x` |
+| 364 | theorem | `breach_of_reach` | `theorem breach_of_reach (hpos : B.PositiveOnEdges) {a b : V} (h : G.Reach a b) : B.BReach b a` |
+| 372 | theorem | `breach_all` | `theorem breach_all (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (x y : V) : B.BReach x y` |
+| 383 | structure | `IsInvProb` | `structure IsInvProb (lam : V → ℝ) : Prop` |
+| 393 | def | `densMap` | `noncomputable def densMap : (V → ℝ) →ₗ[ℝ] (V → ℝ)` |
+| 401 | theorem | `densMap_apply` | `theorem densMap_apply (l : V → ℝ) (y : V) : B.densMap l y = ∑ x, l x * B.phat x y` |
+| 404 | theorem | `sum_densMap` | `theorem sum_densMap (l : V → ℝ) : ∑ y, B.densMap l y = ∑ x, l x` |
+| 412 | theorem | `exists_fixed` | `theorem exists_fixed : ∃ l : V → ℝ, l ≠ 0 ∧ B.densMap l = l` |
+| 440 | theorem | `exists_invProb` | `theorem exists_invProb : ∃ lam : V → ℝ, B.IsInvProb lam` |
+| 475 | theorem | `IsInvProb.pos_of_bstep` | `theorem IsInvProb.pos_of_bstep {lam : V → ℝ} (h : B.IsInvProb lam) {x y : V} (hs : B.BStep x y) (hx : 0 < lam x) : 0 < lam y` |
+| 485 | theorem | `IsInvProb.pos_of_breach` | `theorem IsInvProb.pos_of_breach {lam : V → ℝ} (h : B.IsInvProb lam) {x y : V} (hr : B.BReach x y) (hx : 0 < lam x) : 0 < lam y` |
+| 492 | theorem | `IsInvProb.exists_pos` | `theorem IsInvProb.exists_pos {lam : V → ℝ} (h : B.IsInvProb lam) : ∃ x, 0 < lam x` |
+| 505 | theorem | `IsInvProb.pos` | `theorem IsInvProb.pos (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (y : V) : 0 < lam y` |
+| 513 | theorem | `eq_zero_of_breach` | `theorem eq_zero_of_breach {nu : V → ℝ} (hnn : ∀ x, 0 ≤ nu x) (hinv : ∀ y, ∑ x, nu x * B.phat x y = nu y) {x0 : V} (h0 : nu x0 = 0) {x : V} (hr : B.BReach x x0) : nu x = 0` |
+| 536 | theorem | `invProb_unique` | `theorem invProb_unique (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam lam' : V → ℝ} (h : B.IsInvProb lam) (h' : B.IsInvProb lam') : lam = lam'` |
+| 572 | theorem | `IsInvProb.lam_snk_eq_src` | `theorem IsInvProb.lam_snk_eq_src {lam : V → ℝ} (h : B.IsInvProb lam) : lam G.snk = lam G.src` |
+| 598 | theorem | `universality_graphs_one` | `theorem universality_graphs_one (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) : (∀ x y : V, B.BReach x y) ∧ (∃ lam : V → ℝ, B.IsInvProb lam) ∧ (∀ lam lam' : V → ℝ, B.IsInvProb lam → B.IsInvProb lam' → lam = lam') ∧ (∀ lam : V → ℝ, B.IsInvProb lam → (∀ x, 0 < lam x) ∧ lam G.snk = lam G.src)` |
+
+### `GFNBounds/Graph/Universality.lean`
+
+**The frozen-backward family: the balanced ray, and the flow left by cutting the wrap edge**  
+
+*strict library; 546 lines; 38 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `theo:universality_graphs` (bucket B)
+
+
+In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable (G : MarkedGraph V)`, `variable {G}`, `variable {G : MarkedGraph V} (B : BackwardPolicy G)`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 174 | def | `internal` | `def internal : Finset V` |
+| 179 | theorem | `mem_internal` | `theorem mem_internal {v : V} : v ∈ G.internal ↔ v ≠ G.src ∧ v ≠ G.snk` |
+| 185 | theorem | `internal_eq_erase_src` | `theorem internal_eq_erase_src : G.internal = (Finset.univ.erase G.snk).erase G.src` |
+| 199 | theorem | `isInvProb_normalized` | `theorem isInvProb_normalized {f : V → ℝ} (hnn : ∀ x, 0 ≤ f x) (hpos : 0 < ∑ z, f z) (hinv : ∀ y, ∑ x, f x * B.phat x y = f y) : B.IsInvProb (fun x => f x / ∑ z, f z)` |
+| 213 | theorem | `eq_smul_invProb` | `theorem eq_smul_invProb (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam f : V → ℝ} (h : B.IsInvProb lam) (hnn : ∀ x, 0 ≤ f x) (hne : f ≠ 0) (hinv : ∀ y, ∑ x, f x * B.phat x y = f y) : 0 < ∑ z, f z ∧ ∀ x, f x = (∑ z, f z) * lam x` |
+| 238 | def | `FrozenBalance` | `def FrozenBalance (pf : V → V → ℝ) (fout : V → ℝ) : Prop` |
+| 244 | def | `reversal` | `noncomputable def reversal (lam : V → ℝ) (u v : V) : ℝ` |
+| 247 | theorem | `reversal_nonneg` | `theorem reversal_nonneg {lam : V → ℝ} (hlam : ∀ x, 0 ≤ lam x) (u v : V) : 0 ≤ B.reversal lam u v` |
+| 252 | theorem | `sum_reversal` | `theorem sum_reversal {lam : V → ℝ} (h : B.IsInvProb lam) {u : V} (hu : lam u ≠ 0) : ∑ v, B.reversal lam u v = 1` |
+| 260 | theorem | `frozenBalance_reversal` | `theorem frozenBalance_reversal {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (c : ℝ) : B.FrozenBalance (B.reversal lam) (fun x => c * lam x)` |
+| 271 | theorem | `frozenBalance_eq` | `theorem frozenBalance_eq (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) {pf : V → V → ℝ} {fout : V → ℝ} (hrow : ∀ u, ∑ v, pf u v = 1) (hnn : ∀ x, 0 ≤ fout x) (hne : fout ≠ 0) (hfb : B.FrozenBalance pf fout) : 0 < ∑ z, fout z ∧ (∀ x, fout x = (∑ z, fout z) * lam x) ∧ pf = B.reversal lam` |
+| 301 | theorem | `universality_graphs_two` | `theorem universality_graphs_two (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) : (∀ (pf : V → V → ℝ) (fout : V → ℝ), (∀ u, ∑ v, pf u v = 1) → (∀ x, 0 ≤ fout x) → fout ≠ 0 → B.FrozenBalance pf fout → ∃ c : ℝ, 0 < c ∧ (∀ x, fout x = c * lam x) ∧ pf = B.reversal lam) ∧ (∀ c : ℝ, 0 < c → B.FrozenBalance (B.reversal lam) (fun x => c * lam x)) ∧ (∀ u v, 0 ≤ B.reversal lam u v) ∧ (∀ u, ∑ v, B.reversal lam u v = 1)` |
+| 319 | def | `edgeFlow` | `noncomputable def edgeFlow (lam : V → ℝ) (c : ℝ) (u v : V) : ℝ` |
+| 322 | def | `initFlow` | `noncomputable def initFlow (lam : V → ℝ) (c : ℝ) (v : V) : ℝ` |
+| 325 | def | `termFlow` | `noncomputable def termFlow (lam : V → ℝ) (c : ℝ) (x : V) : ℝ` |
+| 329 | def | `outflowStar` | `noncomputable def outflowStar (lam : V → ℝ) (c : ℝ) (u : V) : ℝ` |
+| 336 | def | `fwdStar` | `noncomputable def fwdStar (lam : V → ℝ) (c : ℝ) (u v : V) : ℝ` |
+| 342 | def | `fmDefect` | `noncomputable def fmDefect (lam : V → ℝ) (c : ℝ) (v : V) : ℝ` |
+| 348 | theorem | `phat_snk_of_ne_src` | `theorem phat_snk_of_ne_src {v : V} (hv : v ≠ G.src) : B.phat v G.snk = 0` |
+| 354 | theorem | `edgeFlow_nonneg` | `theorem edgeFlow_nonneg {lam : V → ℝ} (hlam : ∀ x, 0 ≤ lam x) {c : ℝ} (hc : 0 ≤ c) (u v : V) : 0 ≤ B.edgeFlow lam c u v` |
+| 360 | theorem | `sum_edgeFlow_out` | `theorem sum_edgeFlow_out {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) (u : V) : ∑ v, B.edgeFlow lam c u v = c * lam u` |
+| 368 | theorem | `sum_edgeFlow_in` | `theorem sum_edgeFlow_in (lam : V → ℝ) (c : ℝ) (v : V) : ∑ u, B.edgeFlow lam c u v = c * lam v` |
+| 375 | theorem | `edgeFlow_wrap` | `theorem edgeFlow_wrap (lam : V → ℝ) (c : ℝ) : B.edgeFlow lam c G.snk G.src = c * lam G.src` |
+| 380 | theorem | `edgeFlow_snk_out` | `theorem edgeFlow_snk_out (lam : V → ℝ) (c : ℝ) {v : V} (hv : v ≠ G.src) : B.edgeFlow lam c G.snk v = 0` |
+| 385 | theorem | `edgeFlow_to_src` | `theorem edgeFlow_to_src (lam : V → ℝ) (c : ℝ) {u : V} (hu : u ≠ G.snk) : B.edgeFlow lam c u G.src = 0` |
+| 392 | theorem | `outflowStar_eq_sum` | `theorem outflowStar_eq_sum {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) (u : V) : B.outflowStar lam c u = ∑ v ∈ Finset.univ.erase G.snk, B.edgeFlow lam c u v` |
+| 402 | theorem | `outflowStar_nonneg` | `theorem outflowStar_nonneg {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) (u : V) : 0 ≤ B.outflowStar lam c u` |
+| 410 | theorem | `edgeFlow_eq_zero_of_outflowStar` | `theorem edgeFlow_eq_zero_of_outflowStar {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) {u : V} (hu : B.outflowStar lam c u = 0) {v : V} (hv : v ≠ G.snk) : B.edgeFlow lam c u v = 0` |
+| 421 | theorem | `outflowStar_mul_fwdStar` | `theorem outflowStar_mul_fwdStar {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) (u : V) {v : V} (hv : v ≠ G.snk) : B.outflowStar lam c u * B.fwdStar lam c u v = B.edgeFlow lam c u v` |
+| 430 | theorem | `sum_fwdStar` | `theorem sum_fwdStar {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) {u : V} (hu : B.outflowStar lam c u ≠ 0) : ∑ v ∈ Finset.univ.erase G.snk, B.fwdStar lam c u v = 1` |
+| 439 | theorem | `sum_fwdStar_internal` | `theorem sum_fwdStar_internal {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) {u : V} (husnk : u ≠ G.snk) (hu : B.outflowStar lam c u ≠ 0) : ∑ v ∈ G.internal, B.fwdStar lam c u v = 1` |
+| 454 | theorem | `sum_initFlow` | `theorem sum_initFlow {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) : ∑ v, B.initFlow lam c v = c * lam G.src` |
+| 459 | theorem | `termFlow_eq_target` | `theorem termFlow_eq_target {lam : V → ℝ} (h : B.IsInvProb lam) {c Z : ℝ} (hcZ : c * lam G.src = Z) (x : V) : B.termFlow lam c x = Z * B.pb G.snk x` |
+| 466 | theorem | `termFlow_pos_of_edge` | `theorem termFlow_pos_of_edge (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) {c : ℝ} (hc : 0 < c) {x : V} (hx : G.Edge x G.snk) : 0 < B.termFlow lam c x` |
+| 474 | theorem | `fmDefect_eq_zero` | `theorem fmDefect_eq_zero {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) {v : V} (hv : v ∈ G.internal) : B.fmDefect lam c v = 0` |
+| 499 | theorem | `flow_matching` | `theorem flow_matching {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) {v : V} (hv : v ∈ G.internal) : B.initFlow lam c v + (∑ u ∈ G.internal, B.outflowStar lam c u * B.fwdStar lam c u v) = B.termFlow lam c v + B.outflowStar lam c v` |
+| 512 | theorem | `residuals_eq_zero` | `theorem residuals_eq_zero {lam : V → ℝ} (h : B.IsInvProb lam) {c : ℝ} (hc : 0 ≤ c) {v : V} (hv : v ∈ G.internal) : (B.fmDefect lam c v)⁻ = 0 ∧ (B.fmDefect lam c v)⁺ = 0` |
+| 525 | theorem | `universality_graphs_three` | `theorem universality_graphs_three (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) {Z c : ℝ} (hZ : 0 < Z) (hc : c = Z / lam G.src) : 0 < c ∧ c * lam G.src = Z ∧ B.edgeFlow lam c G.snk G.src = Z ∧ (∑ v, B.initFlow lam c v) = Z ∧ (∀ x, B.termFlow lam c x = Z * B.pb G.snk x) ∧ (∀ x, G.Edge x G.snk → 0 < B.termFlow lam c x) ∧ (∀ u, 0 ≤ B.outflowStar lam c u) ∧ (∀ v ∈ G.internal, B.fmDefect lam c v = 0)` |
+
+### `GFNBounds/Silva/Basic.lean`
+
+**Appendix B: the shared vocabulary**  
+
+*strict library; 153 lines; 15 declarations.*
+
+
+Certifies: ✅ `prop:silva_explicit` (bucket A), ✅ `prop:silva_no_uniform` (bucket A)
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 56 | def | `tv` | `noncomputable def tv {X : Type*} [Fintype X] (p q : X → ℝ) : ℝ` |
+| 61 | def | `chiSq` | `noncomputable def chiSq {X : Type*} [Fintype X] (q p : X → ℝ) : ℝ` |
+| 65 | def | `unif` | `noncomputable def unif (X : Type*) [Fintype X] : X → ℝ` |
+| 70 | def | `logRatio` | `noncomputable def logRatio {X T : Type*} (π : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) (x : X) (t : T) : ℝ` |
+| 77 | def | `residual` | `noncomputable def residual {X T : Type*} [Fintype X] [Fintype T] (pET π : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) : ℝ` |
+| 82 | theorem | `residual_eq` | `theorem residual_eq {X T : Type*} [Fintype X] [Fintype T] (pET π : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) : residual pET π pB pF = ∑ x, pET x * ∑ t, pB x t * Real.log (pF t / (π x * pB x t)) ^ 2` |
+| 90 | def | `MprimeLe` | `def MprimeLe {X T : Type*} [Fintype X] [Fintype T] (pB : X → T → ℝ) (pF : T → ℝ) (π : X → ℝ) (c : ℝ) : Prop` |
+| 98 | theorem | `chiSq_nonneg` | `theorem chiSq_nonneg {X : Type*} [Fintype X] {q p : X → ℝ} (hp : ∀ x, 0 ≤ p x) : 0 ≤ chiSq q p` |
+| 103 | theorem | `chiSq_self` | `theorem chiSq_self {X : Type*} [Fintype X] (p : X → ℝ) : chiSq p p = 0` |
+| 107 | theorem | `sum_unif` | `theorem sum_unif {X : Type*} [Fintype X] (h : (Fintype.card X : ℝ) ≠ 0) : ∑ x, unif X x = 1` |
+| 114 | theorem | `sum_sq_div_eq_one_add_chiSq` | `theorem sum_sq_div_eq_one_add_chiSq {X : Type*} [Fintype X] {q p : X → ℝ} (hp : ∀ x, 0 < p x) (hq1 : ∑ x, q x = 1) (hp1 : ∑ x, p x = 1) : ∑ x, q x ^ 2 / p x = 1 + chiSq q p` |
+| 132 | def | `wSupport` | `noncomputable def wSupport {X T : Type*} [Fintype X] [Fintype T] (pB : X → T → ℝ) : Finset (X × T)` |
+| 137 | def | `wMin` | `noncomputable def wMin {X T : Type*} [Fintype X] [Fintype T] (pET : X → ℝ) (pB : X → T → ℝ) (h : (wSupport pB).Nonempty) : ℝ` |
+| 141 | theorem | `wMin_le` | `theorem wMin_le {X T : Type*} [Fintype X] [Fintype T] {pET : X → ℝ} {pB : X → T → ℝ} (h : (wSupport pB).Nonempty) {x : X} {t : T} (ht : 0 < pB x t) : wMin pET pB h ≤ pET x * pB x t` |
+| 147 | theorem | `wMin_pos` | `theorem wMin_pos {X T : Type*} [Fintype X] [Fintype T] {pET : X → ℝ} {pB : X → T → ℝ} (h : (wSupport pB).Nonempty) (hET : ∀ x, 0 < pET x) : 0 < wMin pET pB h` |
+
+### `GFNBounds/Silva/Explicit.lean`
+
+**The Silva et al. total-variation bound, with the constant written out**  
+
+*strict library; 318 lines; 5 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `prop:silva_explicit` (bucket A)
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 119 | theorem | `sq_sub_weighted_le` | `theorem sq_sub_weighted_le {T : Type*} [Fintype T] {w f : T → ℝ} {c : ℝ} (hw : ∀ τ, 0 ≤ w τ) (hw1 : ∑ τ, w τ = 1) : (c - ∑ τ, w τ * f τ) ^ 2 ≤ ∑ τ, w τ * (c - f τ) ^ 2` |
+| 139 | theorem | `logLipschitz` | `theorem logLipschitz {a b C : ℝ} (ha : 0 < a) (hb : 0 < b) (haC : a ≤ C) (hbC : b ≤ C) : \|a - b\| ≤ C * \|Real.log a - Real.log b\|` |
+| 172 | theorem | `sq_sub_le_sq_mul_log_sq` | `theorem sq_sub_le_sq_mul_log_sq {a b C : ℝ} (ha : 0 < a) (hb : 0 < b) (haC : a ≤ C) (hbC : b ≤ C) : (a - b) ^ 2 ≤ C ^ 2 * Real.log (a / b) ^ 2` |
+| 192 | theorem | `tv_le_sqrt_residual` | `theorem tv_le_sqrt_residual {X T : Type*} [Fintype X] [Fintype T] {pET π pT : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} {M Pinf : ℝ} (hET_pos : ∀ x, 0 < pET x) (hET_sum : ∑ x, pET x = 1) (hπ_pos : ∀ x, 0 < π x) (hB_nonneg : ∀ x τ, 0 ≤ pB x τ) (hB_sum : ∀ x, ∑ τ, pB x τ = 1) (hF_pos : ∀ x τ, 0 < pB x τ → 0 < pF τ) (hdom : ∀ x, pT x = ∑ τ, pB x τ * (pF τ / pB x τ)) (hM : ∀ x τ, 0 < pB x τ → pF τ / pB x τ ≤ M) (hPinf : ∀ x, π x ≤ Pinf) : tv pT π ≤ (Fintype.card X : ℝ) / 2 * max M Pinf * Real.sqrt ((1 + chiSq (unif X) pET) * residual pET π pB pF)` |
+| 295 | theorem | `tv_le_sqrt_residual_max` | `theorem tv_le_sqrt_residual_max {X T : Type*} [Fintype X] [Fintype T] {pET π pT : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} (hX : (Finset.univ : Finset X).Nonempty) (hsupp : ((Finset.univ : Finset (X × T)).filter fun p => 0 < pB p.1 p.2).Nonempty) (hET_pos : ∀ x, 0 < pET x) (hET_sum : ∑ x, pET x = 1) (hπ_pos : ∀ x, 0 < π x) (hB_nonneg : ∀ x τ, 0 ≤ pB x τ) (hB_sum : ∀ x, ∑ τ, pB x τ = 1) (hF_pos : ∀ x τ, 0 < pB x τ → 0 < pF τ) (hdom : ∀ x, pT x = ∑ τ, pB x τ * (pF τ / pB x τ)) : tv pT π ≤ (Fintype.card X : ℝ) / 2 * max (((Finset.univ : Finset (X × T)).filter fun p => 0 < pB p.1 p.2).sup' hsupp fun p => pF p.2 / pB p.1 p.2) ((Finset.univ : Finset X).sup' hX π) * Real.sqrt ((1 + chiSq (unif X) pET) * residual pET π pB pF)` |
+
+### `GFNBounds/Silva/NoUniform.lean`
+
+**The state-space dependence of the Silva bound is unavoidable**  
+
+*strict library; 513 lines; 28 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `prop:silva_no_uniform` (bucket A)
+
+
+In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*} [DecidableEq X]`, `variable [Fintype X]`, `variable {K : ℕ} (hK : 0 < K)`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 123 | theorem | `abs_exp_sub_one_le` | `theorem abs_exp_sub_one_le {u s : ℝ} (h : \|u\| ≤ s) : \|Real.exp u - 1\| ≤ Real.exp s - 1` |
+| 137 | theorem | `tv_le_exp_sqrt_energy` | `theorem tv_le_exp_sqrt_energy {pET : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} {π pT : X → ℝ} {w : ℝ} (hπ : ∀ x, 0 < π x) (hπ1 : ∑ x, π x = 1) (hET : ∀ x, 0 ≤ pET x) (hB : ∀ x t, 0 ≤ pB x t) (hB1 : ∀ x, ∑ t, pB x t = 1) (hF : ∀ x t, 0 < pB x t → 0 < pF t) (hdom : ∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) (hw : 0 < w) (hwle : ∀ x t, 0 < pB x t → w ≤ pET x * pB x t) : tv pT π ≤ 2⁻¹ * (Real.exp (Real.sqrt (residual pET π pB pF / w)) - 1)` |
+| 213 | theorem | `tv_le_exp_sqrt_energy_wmin` | `theorem tv_le_exp_sqrt_energy_wmin {pET : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} {π pT : X → ℝ} (h : (wSupport pB).Nonempty) (hπ : ∀ x, 0 < π x) (hπ1 : ∑ x, π x = 1) (hET : ∀ x, 0 < pET x) (hB : ∀ x t, 0 ≤ pB x t) (hB1 : ∀ x, ∑ t, pB x t = 1) (hF : ∀ x t, 0 < pB x t → 0 < pF t) (hdom : ∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) : tv pT π ≤ 2⁻¹ * (Real.exp (Real.sqrt (residual pET π pB pF / wMin pET pB h)) - 1)` |
+| 239 | def | `deltaPB` | `def deltaPB (X : Type*) [DecidableEq X] : X → X → ℝ` |
+| 241 | theorem | `deltaPB_nonneg` | `theorem deltaPB_nonneg (x t : X) : 0 ≤ deltaPB X x t` |
+| 244 | theorem | `deltaPB_pos_iff` | `theorem deltaPB_pos_iff {x t : X} : 0 < deltaPB X x t ↔ t = x` |
+| 249 | theorem | `deltaPB_sum` | `theorem deltaPB_sum (x : X) : ∑ t, deltaPB X x t = 1` |
+| 253 | theorem | `hdom_deltaPB` | `theorem hdom_deltaPB (pF : X → ℝ) (x : X) : pF x = ∑ t, deltaPB X x t * (pF t / deltaPB X x t)` |
+| 258 | theorem | `energy_deltaPB` | `theorem energy_deltaPB (pET pF π : X → ℝ) : residual pET π (deltaPB X) pF = ∑ x, pET x * Real.log (pF x / π x) ^ 2` |
+| 270 | abbrev | `Star` | `abbrev Star (K : ℕ)` |
+| 273 | def | `starPi` | `noncomputable def starPi (K : ℕ) : Star K → ℝ \| .inl _ => 1 / 4 \| .inr _ => 1 / (2 * K) / `p_F(s_o→bᵢ) = 1/(2K)`. -/ noncomputable def starPF (K : ℕ) : Star K → ℝ \| .inl false => 3 / 8 \| .inl true => 1 / 8 \| .inr _ => 1 / (2 * K) / noncomputable def starPET (K : ℕ) : Star K → ℝ` |
+| 287 | theorem | `card_star` | `theorem card_star (K : ℕ) : (Fintype.card (Star K) : ℝ) = (K : ℝ) + 2` |
+| 293 | theorem | `starPET_pos` | `theorem starPET_pos (K : ℕ) (x : Star K) : 0 < starPET K x` |
+| 297 | theorem | `starPET_sum` | `theorem starPET_sum (K : ℕ) : ∑ x, starPET K x = 1` |
+| 303 | theorem | `star_chiSq` | `theorem star_chiSq (K : ℕ) : chiSq (unif (Star K)) (starPET K) = 0` |
+| 309 | theorem | `star_tv` | `theorem star_tv (K : ℕ) : tv (starPF K) (starPi K) = 1 / 8` |
+| 327 | theorem | `starK_pos` | `theorem starK_pos : (0 : ℝ) < K` |
+| 329 | theorem | `starK_one` | `theorem starK_one : (1 : ℝ) ≤ K` |
+| 333 | theorem | `starPi_pos` | `theorem starPi_pos (x : Star K) : 0 < starPi K x` |
+| 339 | theorem | `starPF_pos` | `theorem starPF_pos (x : Star K) : 0 < starPF K x` |
+| 345 | theorem | `starPi_sum` | `theorem starPi_sum : ∑ x, starPi K x = 1` |
+| 355 | theorem | `starPF_sum` | `theorem starPF_sum : ∑ x, starPF K x = 1` |
+| 368 | theorem | `star_Mprime` | `theorem star_Mprime : MprimeLe (deltaPB (Star K)) (starPF K) (starPi K) 1` |
+| 393 | theorem | `star_energy` | `theorem star_energy : residual (starPET K) (starPi K) (deltaPB (Star K)) (starPF K) = ((Real.log (3 / 2)) ^ 2 + (Real.log 2) ^ 2) / ((K : ℝ) + 2)` |
+| 416 | theorem | `log_sq_sum_le_one` | `theorem log_sq_sum_le_one : (Real.log (3 / 2)) ^ 2 + (Real.log 2) ^ 2 ≤ 1` |
+| 428 | theorem | `exists_star_witness` | `theorem exists_star_witness {ε : ℝ} (hε : 0 < ε) : ∃ K : ℕ, 0 < K ∧ (∀ x, 0 < starPi K x) ∧ (∀ x, 0 < starPF K x) ∧ (∑ x, starPi K x = 1) ∧ (∑ x, starPF K x = 1) ∧ (∀ x, 0 < starPET K x) ∧ (∑ x, starPET K x = 1) ∧ chiSq (unif (Star K)) (starPET K) = 0 ∧ MprimeLe (deltaPB (Star K)) (starPF K) (starPi K) 1 ∧ 0 < residual (starPET K) (starPi K) (deltaPB (Star K)) (starPF K) ∧ residual (starPET K) (starPi K) (deltaPB (Star K)) (starPF K) ≤ ε ∧ tv (starPF K) (starPi K) = 1 / 8` |
+| 462 | theorem | `no_state_space_free_bound` | `theorem no_state_space_free_bound : ¬ ∃ F : ℝ → ℝ, Tendsto F (𝓝[>] (0 : ℝ)) (𝓝 0) ∧ ∀ (X T : Type) [Fintype X] [Fintype T] (pET : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) (π pT : X → ℝ), (∀ x, 0 < π x) → (∑ x, π x = 1) → (∀ x, 0 < pET x) → (∑ x, pET x = 1) → (∀ x t, 0 ≤ pB x t) → (∀ x, ∑ t, pB x t = 1) → (∀ x t, 0 < pB x t → 0 < pF t) → (∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) → chiSq (unif X) pET = 0 → MprimeLe pB pF π 1 → tv pT π ≤ F (residual pET π pB pF)` |
+| 495 | theorem | `no_three_argument_bound` | `theorem no_three_argument_bound : ¬ ∃ F : ℝ → ℝ → ℝ → ℝ, Tendsto (fun e => F e 0 1) (𝓝[>] (0 : ℝ)) (𝓝 0) ∧ ∀ (X T : Type) [Fintype X] [Fintype T] (pET : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) (π pT : X → ℝ) (c : ℝ), (∀ x, 0 < π x) → (∑ x, π x = 1) → (∀ x, 0 < pET x) → (∑ x, pET x = 1) → (∀ x t, 0 ≤ pB x t) → (∀ x, ∑ t, pB x t = 1) → (∀ x t, 0 < pB x t → 0 < pF t) → (∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) → MprimeLe pB pF π c → tv pT π ≤ F (residual pET π pB pF) (chiSq (unif X) pET) c` |
+
+### `scaffold/GFNBoundsScaffold/Core/Kernel.lean`
+
+**The density action of a Markov kernel, and the two conditions `Core.Flow` assumes**  
+
+*scaffold library; 602 lines; 41 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `theo:universality_L2_full` (bucket B)
+
+
+In scope: `variable {α : Type*} [MeasurableSpace α]`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 116 | theorem | `bind_absolutelyContinuous_bind` | `theorem bind_absolutelyContinuous_bind (κ : Kernel α α) {μ ν : Measure α} (h : μ ≪ ν) : μ.bind ⇑κ ≪ ν.bind ⇑κ` |
+| 125 | theorem | `bind_add_measure` | `theorem bind_add_measure (κ : Kernel α α) (μ₁ μ₂ : Measure α) : (μ₁ + μ₂).bind ⇑κ = μ₁.bind ⇑κ + μ₂.bind ⇑κ` |
+| 135 | theorem | `bind_withDensity_absolutelyContinuous` | `theorem bind_withDensity_absolutelyContinuous (κ : Kernel α α) {ν : Measure α} (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : (ν.withDensity f).bind ⇑κ ≪ ν` |
+| 142 | theorem | `bind_withDensity_univ` | `theorem bind_withDensity_univ (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) (f : α → ℝ≥0∞) : ((ν.withDensity f).bind ⇑κ) Set.univ = ∫⁻ x, f x ∂ν` |
+| 149 | theorem | `isFiniteMeasure_bind_withDensity` | `theorem isFiniteMeasure_bind_withDensity (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) {f : α → ℝ≥0∞} (hf : ∫⁻ x, f x ∂ν ≠ ⊤) : IsFiniteMeasure ((ν.withDensity f).bind ⇑κ)` |
+| 158 | def | `bindDensity` | `noncomputable def bindDensity (κ : Kernel α α) (ν : Measure α) (f : α → ℝ≥0∞) : α → ℝ≥0∞` |
+| 164 | theorem | `bindDensity_congr` | `theorem bindDensity_congr (κ : Kernel α α) (ν : Measure α) {f g : α → ℝ≥0∞} (h : f =ᵐ[ν] g) : bindDensity κ ν f = bindDensity κ ν g` |
+| 169 | theorem | `measurable_bindDensity` | `theorem measurable_bindDensity (κ : Kernel α α) (ν : Measure α) (f : α → ℝ≥0∞) : Measurable (bindDensity κ ν f)` |
+| 176 | theorem | `withDensity_bindDensity` | `theorem withDensity_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : ν.withDensity (bindDensity κ ν f) = (ν.withDensity f).bind ⇑κ` |
+| 184 | theorem | `lintegral_bindDensity` | `theorem lintegral_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : ∫⁻ x, bindDensity κ ν f x ∂ν = ∫⁻ x, f x ∂ν` |
+| 195 | theorem | `bindDensity_one` | `theorem bindDensity_one (κ : Kernel α α) {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) : bindDensity κ ν 1 =ᵐ[ν] 1` |
+| 201 | theorem | `bindDensity_zero` | `theorem bindDensity_zero (κ : Kernel α α) (ν : Measure α) : bindDensity κ ν 0 =ᵐ[ν] 0` |
+| 206 | theorem | `bindDensity_add` | `theorem bindDensity_add (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {f g : α → ℝ≥0∞} (hf : AEMeasurable f ν) (hfi : ∫⁻ x, f x ∂ν ≠ ⊤) (hgi : ∫⁻ x, g x ∂ν ≠ ⊤) : bindDensity κ ν (f + g) =ᵐ[ν] bindDensity κ ν f + bindDensity κ ν g` |
+| 225 | theorem | `bindDensity_smul` | `theorem bindDensity_smul (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {c : ℝ≥0∞} (hc : c ≠ ⊤) {f : α → ℝ≥0∞} (hf : AEMeasurable f ν) (hfi : ∫⁻ x, f x ∂ν ≠ ⊤) : bindDensity κ ν (c • f) =ᵐ[ν] c • bindDensity κ ν f` |
+| 247 | def | `densityAction` | `noncomputable def densityAction (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : α → ℝ` |
+| 253 | theorem | `densityAction_congr` | `theorem densityAction_congr (κ : Kernel α α) (ν : Measure α) {f g : α → ℝ} (h : f =ᵐ[ν] g) : densityAction κ ν f = densityAction κ ν g` |
+| 265 | theorem | `measurable_densityAction` | `theorem measurable_densityAction (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : Measurable (densityAction κ ν f)` |
+| 271 | theorem | `lintegral_ofReal_ne_top` | `theorem lintegral_ofReal_ne_top {ν : Measure α} {f : α → ℝ} (hf : Integrable f ν) : ∫⁻ x, ENNReal.ofReal (f x) ∂ν ≠ ⊤` |
+| 278 | theorem | `bindDensity_ofReal_lt_top` | `theorem bindDensity_ofReal_lt_top (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∀ᵐ x ∂ν, bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x < ⊤` |
+| 285 | theorem | `integrable_toReal_bindDensity` | `theorem integrable_toReal_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : Integrable (fun x => (bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x).toReal) ν` |
+| 291 | theorem | `integral_toReal_bindDensity` | `theorem integral_toReal_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∫ x, (bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x).toReal ∂ν = (∫⁻ x, ENNReal.ofReal (f x) ∂ν).toReal` |
+| 303 | theorem | `integral_densityAction` | `theorem integral_densityAction (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∫ x, densityAction κ ν f x ∂ν = ∫ x, f x ∂ν` |
+| 315 | theorem | `densityAction_one` | `theorem densityAction_one (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) : densityAction κ ν 1 =ᵐ[ν] 1` |
+| 329 | theorem | `max_add_aux` | `theorem max_add_aux (u v : ℝ) : max (u + v) 0 + max (-u) 0 + max (-v) 0 = max (-(u + v)) 0 + max u 0 + max v 0` |
+| 342 | theorem | `ofReal_add_aux` | `theorem ofReal_add_aux (u v : ℝ) : ENNReal.ofReal (u + v) + ENNReal.ofReal (-u) + ENNReal.ofReal (-v) = ENNReal.ofReal (-(u + v)) + ENNReal.ofReal u + ENNReal.ofReal v` |
+| 357 | theorem | `lintegral_add_ne_top` | `theorem lintegral_add_ne_top {ν : Measure α} {u v : α → ℝ≥0∞} (hu : AEMeasurable u ν) (hun : ∫⁻ x, u x ∂ν ≠ ⊤) (hvn : ∫⁻ x, v x ∂ν ≠ ⊤) : ∫⁻ x, (u + v) x ∂ν ≠ ⊤` |
+| 364 | theorem | `bindDensity_add₃` | `theorem bindDensity_add₃ (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {u v w : α → ℝ≥0∞} (hu : AEMeasurable u ν) (hv : AEMeasurable v ν) (hun : ∫⁻ x, u x ∂ν ≠ ⊤) (hvn : ∫⁻ x, v x ∂ν ≠ ⊤) (hwn : ∫⁻ x, w x ∂ν ≠ ⊤) : bindDensity κ ν (u + v + w) =ᵐ[ν] bindDensity κ ν u + bindDensity κ ν v + bindDensity κ ν w` |
+| 378 | theorem | `aemeasurable_ofReal` | `theorem aemeasurable_ofReal {ν : Measure α} {f : α → ℝ} (hf : Integrable f ν) : AEMeasurable (fun y => ENNReal.ofReal (f y)) ν` |
+| 387 | theorem | `densityAction_add` | `theorem densityAction_add (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f g : α → ℝ} (hf : Integrable f ν) (hg : Integrable g ν) : densityAction κ ν (fun x => f x + g x) =ᵐ[ν] fun x => densityAction κ ν f x + densityAction κ ν g x` |
+| 427 | theorem | `densityAction_neg` | `theorem densityAction_neg (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : densityAction κ ν (fun x => -f x) = fun x => -densityAction κ ν f x` |
+| 434 | theorem | `densityAction_smul_nonneg` | `theorem densityAction_smul_nonneg (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {r : ℝ} (hr : 0 ≤ r) {f : α → ℝ} (hf : Integrable f ν) : densityAction κ ν (fun x => r * f x) =ᵐ[ν] fun x => r * densityAction κ ν f x` |
+| 457 | theorem | `densityAction_smul` | `theorem densityAction_smul (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (r : ℝ) {f : α → ℝ} (hf : Integrable f ν) : densityAction κ ν (fun x => r * f x) =ᵐ[ν] fun x => r * densityAction κ ν f x` |
+| 482 | structure | `IsBoundedDensityAction` | `structure IsBoundedDensityAction (κ : Kernel α α) (ν : Measure α) (p : ℝ≥0∞) (C : ℝ) : Prop` |
+| 493 | def | `densityActionLM` | `noncomputable def densityActionLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : Lp ℝ p ν →ₗ[ℝ] Lp ℝ p ν` |
+| 527 | def | `densityActionCLM` | `noncomputable def densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : Lp ℝ p ν →L[ℝ] Lp ℝ p ν` |
+| 542 | theorem | `norm_densityActionCLM_le` | `theorem norm_densityActionCLM_le (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : ‖densityActionCLM κ ν p hinv hb‖ ≤ C` |
+| 548 | theorem | `coeFn_densityActionCLM` | `theorem coeFn_densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (F : Lp ℝ p ν) : ⇑(densityActionCLM κ ν p hinv hb F) =ᵐ[ν] densityAction κ ν ⇑F` |
+| 555 | theorem | `densityActionCLM_constOne` | `theorem densityActionCLM_constOne (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : densityActionCLM κ ν p hinv hb (constOne ν p) = constOne ν p` |
+| 565 | theorem | `integral_densityActionCLM` | `theorem integral_densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (F : Lp ℝ p ν) : ∫ x, (densityActionCLM κ ν p hinv hb F) x ∂ν = ∫ x, F x ∂ν` |
+| 582 | theorem | `weaklyUniversal_of_kernel` | `theorem weaklyUniversal_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν p hinv hb) ^ n - meanProj ν p‖) (hp : p ≠ ⊤) : WeaklyUniversal (densityActionCLM κ ν p hinv hb) (meanProj ν p)` |
+| 593 | theorem | `weaklyUniversalAt_of_kernel` | `theorem weaklyUniversalAt_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν p hinv hb) ^ n - meanProj ν p‖) (hp : p ≠ ⊤) {f_init f_term : Lp ℝ p ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : WeaklyUniversalAt (densityActionCLM κ ν p hinv hb) (f_term - f_init)` |
+
 ## Name index
 
 | name | module |
@@ -2083,12 +2928,21 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `A_one_eq` | `GFNBounds.Doubling.Expansion` |
 | `A_one_neg` | `GFNBounds.Doubling.Expansion` |
 | `A_zero_pos` | `GFNBounds.Doubling.Expansion` |
+| `B` | `GFNBounds.Core.Mixing` |
+| `BReach` | `GFNBounds.Graph.Setting` |
+| `BStep` | `GFNBounds.Graph.Setting` |
+| `B_nonneg` | `GFNBounds.Core.Mixing` |
+| `BackwardPolicy` | `GFNBounds.Graph.Setting` |
+| `Balanced` | `GFNBounds.Balance.MassIdentity` |
 | `CVec` | `GFNBounds.Doubling.TruncationStat` |
 | `CutBal` | `GFNBounds.Doubling.DecayNotation` |
 | `CutBalanceSeq` | `GFNBounds.Doubling.CutBalance` |
+| `Decay.ofC` | `GFNBounds.Doubling.Main` |
+| `Decay.ofC_c` | `GFNBounds.Doubling.Main` |
 | `Decay.sojGF` | `GFNBounds.Doubling.Sojourn` |
 | `Decay.sojMean` | `GFNBounds.Doubling.Sojourn` |
 | `Edge` | `GFNBounds.Doubling.Irreducible` |
+| `FrozenBalance` | `GFNBounds.Graph.Universality` |
 | `Gam` | `GFNBounds.Doubling.Expansion` |
 | `Gamma_lt_one` | `GFNBounds.Doubling.Expansion` |
 | `Gamma_pos` | `GFNBounds.Doubling.Expansion` |
@@ -2096,6 +2950,14 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `HasDouble` | `GFNBounds.Doubling.Setting` |
 | `Icc_one_eq_Ioc_zero` | `GFNBounds.Doubling.PhaseEmpty` |
 | `Icc_succ_eq_Ioc` | `GFNBounds.Doubling.PhaseEmpty` |
+| `Invariant` | `GFNBounds.Balance.MassIdentity` |
+| `IsBoundedDensityAction` | `GFNBoundsScaffold.Core.Kernel` |
+| `IsInvProb` | `GFNBounds.Graph.Setting` |
+| `IsInvProb.exists_pos` | `GFNBounds.Graph.Setting` |
+| `IsInvProb.lam_snk_eq_src` | `GFNBounds.Graph.Setting` |
+| `IsInvProb.pos` | `GFNBounds.Graph.Setting` |
+| `IsInvProb.pos_of_breach` | `GFNBounds.Graph.Setting` |
+| `IsInvProb.pos_of_bstep` | `GFNBounds.Graph.Setting` |
 | `Jhigh` | `GFNBounds.Doubling.HarmonicWindow` |
 | `Jhigh_nonempty` | `GFNBounds.Doubling.HarmonicWindow` |
 | `Jhigh_subset` | `GFNBounds.Doubling.HarmonicWindow` |
@@ -2106,8 +2968,16 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `Jlow_subset_window` | `GFNBounds.Doubling.HarmonicWindow` |
 | `LadderStep` | `GFNBounds.Doubling.Excursion` |
 | `LadderStep.le_succ_add_one` | `GFNBounds.Doubling.Excursion` |
+| `MarkedGraph` | `GFNBounds.Graph.Setting` |
+| `Mixing` | `GFNBounds.Core.Mixing` |
+| `MprimeLe` | `GFNBounds.Silva.Basic` |
 | `OnChain` | `GFNBounds.Doubling.Setting` |
+| `PathConnected` | `GFNBounds.Graph.Setting` |
+| `PathConnected.from_src` | `GFNBounds.Graph.Setting` |
+| `PathConnected.reach_src_snk` | `GFNBounds.Graph.Setting` |
+| `PathConnected.to_snk` | `GFNBounds.Graph.Setting` |
 | `Phi` | `GFNBounds.Doubling.DecayNotation` |
+| `PositiveOnEdges` | `GFNBounds.Graph.Setting` |
 | `PreStat` | `GFNBounds.Doubling.Irreducible` |
 | `PreStat.toStatNone` | `GFNBounds.Doubling.Irreducible` |
 | `PreStat.toStatSome` | `GFNBounds.Doubling.Irreducible` |
@@ -2118,12 +2988,14 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `R0_pos` | `GFNBounds.Doubling.DescentLaw` |
 | `R0_sub_one_le` | `GFNBounds.Doubling.R0Bound` |
 | `Ralpha` | `GFNBounds.Doubling.DecayNotation` |
-| `Reach` | `GFNBounds.Doubling.Irreducible` |
+| `Reach` | `GFNBounds.Graph.Setting` |
 | `RowOnChain` | `GFNBounds.Doubling.LpLayer` |
+| `S` | `GFNBounds.Core.Mixing` |
 | `Setting` | `GFNBounds.Doubling.Setting` |
 | `Setting.ofFamily` | `GFNBounds.Doubling.Range` |
 | `Setting.ofFamily_eps` | `GFNBounds.Doubling.Range` |
 | `St` | `GFNBounds.Doubling.Setting` |
+| `Star` | `GFNBounds.Silva.NoUniform` |
 | `Stat` | `GFNBounds.Doubling.Setting` |
 | `Stat.centredTail` | `GFNBounds.Doubling.PerCutNorms` |
 | `Stat.flux_nonneg` | `GFNBounds.Doubling.Ratios` |
@@ -2154,8 +3026,13 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `Stat.tailMass_nonneg` | `GFNBounds.Doubling.PerCutNorms` |
 | `Stat.toPreStat` | `GFNBounds.Doubling.TruncationStat` |
 | `Stat.tsum_centredTail` | `GFNBounds.Doubling.PerCutNorms` |
+| `StrictlyUnimodal` | `GFNBounds.Balance.MassIdentity` |
+| `StronglyUniversalAt` | `GFNBounds.Core.Universality` |
+| `StronglyUniversalAt.weaklyUniversalAt` | `GFNBounds.Core.Universality` |
 | `Wdrift_core` | `GFNBounds.Doubling.Lyapunov` |
 | `Wdrift_family` | `GFNBounds.Doubling.Lyapunov` |
+| `WeaklyUniversal` | `GFNBounds.Core.Universality` |
+| `WeaklyUniversalAt` | `GFNBounds.Core.Universality` |
 | `Wpow` | `GFNBounds.Doubling.Lyapunov` |
 | `Wpow_antitone` | `GFNBounds.Doubling.Lyapunov` |
 | `Wpow_below_inf` | `GFNBounds.Doubling.Lyapunov` |
@@ -2176,6 +3053,7 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `abs_b_le_block` | `GFNBounds.Doubling.Product` |
 | `abs_descP_le` | `GFNBounds.Doubling.Weight` |
 | `abs_descW_sub_descP_le` | `GFNBounds.Doubling.Weight` |
+| `abs_exp_sub_one_le` | `GFNBounds.Silva.NoUniform` |
 | `abs_pstar_le` | `GFNBounds.Doubling.Adjoint` |
 | `abs_rpow_add3_le` | `GFNBounds.Doubling.Adjoint` |
 | `abs_rpow_add_le` | `GFNBounds.Doubling.LpContraction` |
@@ -2183,6 +3061,7 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `abs_rpow_pstar_le` | `GFNBounds.Doubling.LpContraction` |
 | `abs_rpow_two` | `GFNBounds.Doubling.LpLayer` |
 | `abs_rpow_two'` | `GFNBounds.Doubling.Adjoint` |
+| `abs_sub_posPart_le` | `GFNBounds.Core.StableBound` |
 | `abs_sum_sub_le` | `GFNBounds.Doubling.TotalVariation` |
 | `adjoint_densL2` | `GFNBounds.Doubling.AdjointL2` |
 | `adjoint_densL2_pow_sub_piL2` | `GFNBounds.Doubling.AdjointL2` |
@@ -2191,22 +3070,47 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `ae_eq_of_onChain` | `GFNBounds.Doubling.LpLayer` |
 | `ae_iff_eq` | `GFNBounds.Doubling.LpLayer` |
 | `ae_iff_onChain` | `GFNBounds.Doubling.LpLayer` |
+| `aemeasurable_ofReal` | `GFNBoundsScaffold.Core.Kernel` |
 | `aestronglyMeasurable` | `GFNBounds.Doubling.LpLayer` |
 | `alph` | `GFNBounds.Doubling.SharpRate` |
 | `alph_mul_one_sub` | `GFNBounds.Doubling.SharpRate` |
 | `alph_pos` | `GFNBounds.Doubling.SharpRate` |
+| `applies.` | `GFNBounds.Core.Universality` |
 | `avg_of_cutBal` | `GFNBounds.Doubling.DecayNotation` |
+| `balanced_of_critical` | `GFNBounds.Balance.MassIdentity` |
+| `balanced_of_critical_graph` | `GFNBounds.Balance.MassIdentity` |
 | `base_mul_epsCS` | `GFNBounds.Doubling.Drift` |
 | `base_pos` | `GFNBounds.Doubling.Range` |
+| `beta` | `GFNBounds.Core.Mixing` |
 | `betaHat` | `GFNBounds.Doubling.AdjointL2` |
+| `beta_nonneg` | `GFNBounds.Core.Mixing` |
+| `bindDensity` | `GFNBoundsScaffold.Core.Kernel` |
+| `bindDensity_add` | `GFNBoundsScaffold.Core.Kernel` |
+| `bindDensity_add₃` | `GFNBoundsScaffold.Core.Kernel` |
+| `bindDensity_congr` | `GFNBoundsScaffold.Core.Kernel` |
+| `bindDensity_ofReal_lt_top` | `GFNBoundsScaffold.Core.Kernel` |
+| `bindDensity_one` | `GFNBoundsScaffold.Core.Kernel` |
+| `bindDensity_smul` | `GFNBoundsScaffold.Core.Kernel` |
+| `bindDensity_zero` | `GFNBoundsScaffold.Core.Kernel` |
+| `bind_absolutelyContinuous_bind` | `GFNBoundsScaffold.Core.Kernel` |
+| `bind_add_measure` | `GFNBoundsScaffold.Core.Kernel` |
+| `bind_withDensity_absolutelyContinuous` | `GFNBoundsScaffold.Core.Kernel` |
+| `bind_withDensity_univ` | `GFNBoundsScaffold.Core.Kernel` |
 | `block` | `GFNBounds.Doubling.DecayNotation` |
 | `block_eq` | `GFNBounds.Doubling.Coupling` |
 | `block_ratio` | `GFNBounds.Doubling.Truncation` |
+| `breach_all` | `GFNBounds.Graph.Setting` |
+| `breach_of_reach` | `GFNBounds.Graph.Setting` |
+| `bstep_of_edge` | `GFNBounds.Graph.Setting` |
+| `bstep_wrap` | `GFNBounds.Graph.Setting` |
 | `c3` | `GFNBounds.Doubling.Weight` |
 | `c3_nonneg` | `GFNBounds.Doubling.Weight` |
 | `c5` | `GFNBounds.Doubling.Sojourn` |
 | `c5_pos` | `GFNBounds.Doubling.Weight` |
+| `c6` | `GFNBounds.Doubling.SharpFull` |
+| `c_mul_log_two_lt_one` | `GFNBounds.Doubling.Main` |
 | `c_mul_tau` | `GFNBounds.Doubling.Expansion` |
+| `card_star` | `GFNBounds.Silva.NoUniform` |
 | `cast_pred` | `GFNBounds.Doubling.Lyapunov` |
 | `centredRamp` | `GFNBounds.Doubling.Ramp` |
 | `centredRamp_bounded` | `GFNBounds.Doubling.Ramp` |
@@ -2215,14 +3119,29 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `centredTail_defect` | `GFNBounds.Doubling.PerCutNorms` |
 | `chainFinset` | `GFNBounds.Doubling.TruncationStat` |
 | `chainFinset_nonempty` | `GFNBounds.Doubling.TruncationStat` |
+| `chiSq` | `GFNBounds.Silva.Basic` |
+| `chiSq_nonneg` | `GFNBounds.Silva.Basic` |
+| `chiSq_self` | `GFNBounds.Silva.Basic` |
+| `climit` | `GFNBounds.Doubling.ConstantFunctional` |
+| `climit_eq_sum` | `GFNBounds.Doubling.ConstantFunctional` |
 | `coTail_pos` | `GFNBounds.Doubling.Unbounded` |
+| `coeFn_constOne` | `GFNBounds.Core.UniversalityLp` |
 | `coeFn_defect` | `GFNBounds.Doubling.Unsolvable` |
 | `coeFn_defect_toLp` | `GFNBounds.Doubling.Unsolvable` |
 | `coeFn_densL2` | `GFNBounds.Doubling.AdjointL2` |
 | `coeFn_densLp` | `GFNBounds.Doubling.AdjointL2` |
+| `coeFn_densityActionCLM` | `GFNBoundsScaffold.Core.Kernel` |
 | `coeFn_oneLp` | `GFNBounds.Doubling.Unsolvable` |
 | `coeFn_pstarL2` | `GFNBounds.Doubling.LpLayer` |
 | `coeFn_pstarLp` | `GFNBounds.Doubling.LpLayer` |
+| `coeFn_sub_pstarL2_toLp` | `GFNBounds.Doubling.RayleighBridge` |
+| `coeFn_truncation` | `GFNBounds.Core.UniversalityLp` |
+| `coercivity` | `GFNBounds.Core.Mixing` |
+| `coercivity_div` | `GFNBounds.Core.Mixing` |
+| `comp_meanProj` | `GFNBounds.Core.Flow` |
+| `constOne` | `GFNBounds.Core.UniversalityLp` |
+| `constant_eq` | `GFNBounds.Doubling.ConstantFunctional` |
+| `constant_functional` | `GFNBounds.Doubling.ConstantFunctional` |
 | `continuous_psi` | `GFNBounds.Doubling.Cramer` |
 | `continuous_two_rpow` | `GFNBounds.Doubling.Cramer` |
 | `coupling` | `GFNBounds.Doubling.Coupling` |
@@ -2262,15 +3181,21 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `decay_block` | `GFNBounds.Doubling.Descent` |
 | `decay_block_of_cutBal` | `GFNBounds.Doubling.Product` |
 | `decay_two_sided` | `GFNBounds.Doubling.Descent` |
+| `decay_two_sided_explicit` | `GFNBounds.Doubling.Product` |
 | `decay_two_sided_of_cutBal` | `GFNBounds.Doubling.Product` |
 | `defect` | `GFNBounds.Doubling.Unsolvable` |
 | `defectRange` | `GFNBounds.Doubling.Unsolvable` |
 | `defectRange_le_kerPi` | `GFNBounds.Doubling.Unsolvable` |
 | `defectRange_ne_kerPi` | `GFNBounds.Doubling.Unsolvable` |
 | `defect_apply` | `GFNBounds.Doubling.Unsolvable` |
+| `defect_eq_truncation` | `GFNBounds.Core.Universality` |
 | `defect_oneLp` | `GFNBounds.Doubling.Unsolvable` |
 | `defect_sub_mean` | `GFNBounds.Doubling.Unsolvable` |
 | `delta` | `GFNBounds.Doubling.DecayNotation` |
+| `deltaPB` | `GFNBounds.Silva.NoUniform` |
+| `deltaPB_nonneg` | `GFNBounds.Silva.NoUniform` |
+| `deltaPB_pos_iff` | `GFNBounds.Silva.NoUniform` |
+| `deltaPB_sum` | `GFNBounds.Silva.NoUniform` |
 | `delta_lt_two` | `GFNBounds.Doubling.DecayNotation` |
 | `dens` | `GFNBounds.Doubling.Adjoint` |
 | `densL2` | `GFNBounds.Doubling.AdjointL2` |
@@ -2279,8 +3204,8 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `densLp` | `GFNBounds.Doubling.AdjointL2` |
 | `densLp_add` | `GFNBounds.Doubling.AdjointL2` |
 | `densLp_smul` | `GFNBounds.Doubling.AdjointL2` |
-| `densMap` | `GFNBounds.Doubling.TruncationStat` |
-| `densMap_apply` | `GFNBounds.Doubling.TruncationStat` |
+| `densMap` | `GFNBounds.Graph.Setting` |
+| `densMap_apply` | `GFNBounds.Graph.Setting` |
 | `dens_add` | `GFNBounds.Doubling.AdjointL2` |
 | `dens_congr_onChain` | `GFNBounds.Doubling.AdjointL2` |
 | `dens_const` | `GFNBounds.Doubling.Adjoint` |
@@ -2290,6 +3215,16 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `dens_lad` | `GFNBounds.Doubling.Adjoint` |
 | `dens_sink` | `GFNBounds.Doubling.Adjoint` |
 | `dens_smul` | `GFNBounds.Doubling.AdjointL2` |
+| `densityAction` | `GFNBoundsScaffold.Core.Kernel` |
+| `densityActionCLM` | `GFNBoundsScaffold.Core.Kernel` |
+| `densityActionCLM_constOne` | `GFNBoundsScaffold.Core.Kernel` |
+| `densityActionLM` | `GFNBoundsScaffold.Core.Kernel` |
+| `densityAction_add` | `GFNBoundsScaffold.Core.Kernel` |
+| `densityAction_congr` | `GFNBoundsScaffold.Core.Kernel` |
+| `densityAction_neg` | `GFNBoundsScaffold.Core.Kernel` |
+| `densityAction_one` | `GFNBoundsScaffold.Core.Kernel` |
+| `densityAction_smul` | `GFNBoundsScaffold.Core.Kernel` |
+| `densityAction_smul_nonneg` | `GFNBoundsScaffold.Core.Kernel` |
 | `deriv_psi` | `GFNBounds.Doubling.Cramer` |
 | `descOne` | `GFNBounds.Doubling.Descent` |
 | `descOne_of_ge` | `GFNBounds.Doubling.Descent` |
@@ -2326,26 +3261,39 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `eLpNorm_pstar_le` | `GFNBounds.Doubling.LpContraction` |
 | `eLpNorm_pstar_le_of_memLp` | `GFNBounds.Doubling.LpContraction` |
 | `eLpNorm_two_pstar_le` | `GFNBounds.Doubling.LpLayer` |
+| `edgeFlow` | `GFNBounds.Graph.Universality` |
+| `edgeFlow_eq_zero_of_outflowStar` | `GFNBounds.Graph.Universality` |
+| `edgeFlow_nonneg` | `GFNBounds.Graph.Universality` |
+| `edgeFlow_snk_out` | `GFNBounds.Graph.Universality` |
+| `edgeFlow_to_src` | `GFNBounds.Graph.Universality` |
+| `edgeFlow_wrap` | `GFNBounds.Graph.Universality` |
 | `edge_pstar_pos` | `GFNBounds.Doubling.Irreducible` |
 | `ell2` | `GFNBounds.Doubling.Escape` |
 | `ell2_le_m0` | `GFNBounds.Doubling.Product` |
 | `ell3` | `GFNBounds.Doubling.Weight` |
+| `energy_deltaPB` | `GFNBounds.Silva.NoUniform` |
 | `eps` | `GFNBounds.Doubling.DecayNotation` |
 | `epsCS` | `GFNBounds.Doubling.Range` |
 | `epsCS_antitone` | `GFNBounds.Doubling.Range` |
 | `epsCS_le_one_val` | `GFNBounds.Doubling.Range` |
 | `epsCS_one` | `GFNBounds.Doubling.Range` |
+| `epsCS_one_apply` | `GFNBounds.Doubling.Main` |
 | `epsCS_one_lt_one` | `GFNBounds.Doubling.Range` |
 | `epsCS_pos` | `GFNBounds.Doubling.Range` |
 | `epsMax_pos` | `GFNBounds.Doubling.Setting` |
 | `eps_eq` | `GFNBounds.Doubling.DecayNotation` |
+| `eps_eq_decay_eps` | `GFNBounds.Doubling.Main` |
 | `eps_family_sq` | `GFNBounds.Doubling.Lyapunov` |
 | `eps_le_half` | `GFNBounds.Doubling.DecayNotation` |
 | `eps_lt_one` | `GFNBounds.Doubling.Setting` |
 | `eps_pos` | `GFNBounds.Doubling.DecayNotation` |
+| `eq_meanProj_of_invariant` | `GFNBounds.Core.Flow` |
 | `eq_mean_of_var_zero` | `GFNBounds.Doubling.FixedPointsP` |
+| `eq_smul_invProb` | `GFNBounds.Graph.Universality` |
 | `eq_smul_oneLp_of_fixed` | `GFNBounds.Doubling.Unsolvable` |
 | `eq_smul_oneLp_of_pstarL2_fixed` | `GFNBounds.Doubling.OperatorL2` |
+| `eq_snk_of_hatEdge_into_src` | `GFNBounds.Graph.Setting` |
+| `eq_zero_of_breach` | `GFNBounds.Graph.Setting` |
 | `eq_zero_of_mem_kerPi_of_fixed` | `GFNBounds.Doubling.Unsolvable` |
 | `eq_zero_of_three_nonneg` | `GFNBounds.Doubling.FixedPointsP` |
 | `escape` | `GFNBounds.Doubling.Escape` |
@@ -2361,8 +3309,10 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `exists_bhat` | `GFNBounds.Doubling.OperatorL2` |
 | `exists_centredRamp_ge` | `GFNBounds.Doubling.Ramp` |
 | `exists_diffusionOp` | `GFNBounds.Doubling.OperatorL2` |
-| `exists_fixed` | `GFNBounds.Doubling.TruncationStat` |
+| `exists_fixed` | `GFNBounds.Graph.Setting` |
+| `exists_hatEdge_into` | `GFNBounds.Graph.Setting` |
 | `exists_height_drift_neg` | `GFNBounds.Doubling.Lyapunov` |
+| `exists_invProb` | `GFNBounds.Graph.Setting` |
 | `exists_inverse` | `GFNBounds.Doubling.OperatorFinite` |
 | `exists_logHeight_drift_nonpos` | `GFNBounds.Doubling.Lyapunov` |
 | `exists_lower_bound_of_bijective` | `GFNBounds.Doubling.Unsolvable` |
@@ -2373,6 +3323,7 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `exists_row_pos` | `GFNBounds.Doubling.Irreducible` |
 | `exists_small_defect` | `GFNBounds.Doubling.Unsolvable` |
 | `exists_small_mass_ratio` | `GFNBounds.Doubling.Unbounded` |
+| `exists_star_witness` | `GFNBounds.Silva.NoUniform` |
 | `exists_stat` | `GFNBounds.Doubling.TruncationStat` |
 | `exists_stat_none` | `GFNBounds.Doubling.StatExists` |
 | `exists_stat_none_of_summable` | `GFNBounds.Doubling.PhaseExists` |
@@ -2401,23 +3352,35 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `extend_add` | `GFNBounds.Doubling.Constant` |
 | `extend_congr_high` | `GFNBounds.Doubling.Constant` |
 | `extend_cutBal` | `GFNBounds.Doubling.Constant` |
+| `extend_eq_sum_ind` | `GFNBounds.Doubling.ConstantFunctional` |
+| `extend_nonneg` | `GFNBounds.Doubling.ConstantFunctional` |
 | `extend_of_gt` | `GFNBounds.Doubling.Constant` |
 | `extend_of_le` | `GFNBounds.Doubling.Constant` |
 | `extend_pos` | `GFNBounds.Doubling.Constant` |
 | `extend_smul` | `GFNBounds.Doubling.Constant` |
+| `extend_sum` | `GFNBounds.Doubling.ConstantFunctional` |
 | `extend_unique` | `GFNBounds.Doubling.Constant` |
+| `extend_zero` | `GFNBounds.Doubling.ConstantFunctional` |
 | `finite_onChain` | `GFNBounds.Doubling.OperatorL2` |
 | `finset_sum_le_tailMass` | `GFNBounds.Doubling.Truncation` |
 | `fixed_const` | `GFNBounds.Doubling.FixedPoints` |
 | `fixed_const_memLp` | `GFNBounds.Doubling.LpLayer` |
 | `fixed_of_mem_orthogonal_range` | `GFNBounds.Doubling.Unsolvable` |
 | `floor_lt_self` | `GFNBounds.Doubling.Escape` |
+| `flow_matching` | `GFNBounds.Graph.Universality` |
+| `fmDefect` | `GFNBounds.Graph.Universality` |
+| `fmDefect_eq_zero` | `GFNBounds.Graph.Universality` |
+| `fmL1_le_holderConst_mul_loss` | `GFNBounds.Core.StableBound` |
 | `foot_le` | `GFNBounds.Doubling.R0Bound` |
 | `foot_le_floor` | `GFNBounds.Doubling.Escape` |
 | `foot_le_self` | `GFNBounds.Doubling.R0Bound` |
 | `foot_rpow_le` | `GFNBounds.Doubling.R0Bound` |
 | `foot_shift_ge` | `GFNBounds.Doubling.Escape` |
 | `four_rpow` | `GFNBounds.Doubling.Drift` |
+| `frozenBalance_eq` | `GFNBounds.Graph.Universality` |
+| `frozenBalance_reversal` | `GFNBounds.Graph.Universality` |
+| `funAct` | `GFNBounds.Balance.MassIdentity` |
+| `fwdStar` | `GFNBounds.Graph.Universality` |
 | `gam` | `GFNBounds.Doubling.Escape` |
 | `gam_lt_half` | `GFNBounds.Doubling.Escape` |
 | `gam_pos` | `GFNBounds.Doubling.Escape` |
@@ -2426,6 +3389,9 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `geom_iterate` | `GFNBounds.Doubling.TotalVariation` |
 | `geom_sum_le_inv` | `GFNBounds.Doubling.Sojourn` |
 | `geometric_sum` | `GFNBounds.Doubling.Unbounded` |
+| `global_dichotomy_full_one` | `GFNBounds.Balance.MassIdentity` |
+| `gradDensity` | `GFNBounds.Balance.MassIdentity` |
+| `gradMass` | `GFNBounds.Balance.MassIdentity` |
 | `growthCond_of_family` | `GFNBounds.Doubling.Unbounded` |
 | `half_le_R0` | `GFNBounds.Doubling.Sojourn` |
 | `half_rpow` | `GFNBounds.Doubling.R0Bound` |
@@ -2448,6 +3414,10 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `hasSum_powerTail` | `GFNBounds.Doubling.Tail` |
 | `hasSum_st` | `GFNBounds.Doubling.PointwiseInv` |
 | `hasSum_tailShift` | `GFNBounds.Doubling.Unbounded` |
+| `hatDist_le` | `GFNBounds.Core.StableBound` |
+| `hatEdge` | `GFNBounds.Graph.Setting` |
+| `hatEdge_wrap` | `GFNBounds.Graph.Setting` |
+| `hdom_deltaPB` | `GFNBounds.Silva.NoUniform` |
 | `head_shift_le` | `GFNBounds.Doubling.Escape` |
 | `height` | `GFNBounds.Doubling.Drift` |
 | `height_drift_le_neg_half` | `GFNBounds.Doubling.Lyapunov` |
@@ -2480,13 +3450,17 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `hitLad_src` | `GFNBounds.Doubling.Length` |
 | `hitLad_succ` | `GFNBounds.Doubling.Length` |
 | `hitLad_zero` | `GFNBounds.Doubling.Length` |
+| `holderConst` | `GFNBounds.Core.StableBound` |
 | `inTail` | `GFNBounds.Doubling.PerCutIdentity` |
 | `incr_le` | `GFNBounds.Doubling.Tail` |
 | `incr_le'` | `GFNBounds.Doubling.WindowSum` |
+| `ind` | `GFNBounds.Doubling.ConstantFunctional` |
 | `indB` | `GFNBounds.Doubling.Sojourn` |
 | `indB_eq_zero` | `GFNBounds.Doubling.Sojourn` |
 | `indB_le_one` | `GFNBounds.Doubling.Sojourn` |
 | `indB_nonneg` | `GFNBounds.Doubling.Sojourn` |
+| `ind_nonneg` | `GFNBounds.Doubling.ConstantFunctional` |
+| `initFlow` | `GFNBounds.Graph.Universality` |
 | `inner_densL2_left` | `GFNBounds.Doubling.AdjointL2` |
 | `inner_eq_tsum` | `GFNBounds.Doubling.AdjointL2` |
 | `inner_eq_tsum_of_ae` | `GFNBounds.Doubling.AdjointL2` |
@@ -2496,12 +3470,32 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `inner_oneLp_self` | `GFNBounds.Doubling.AdjointL2` |
 | `instFiniteDimensionalLp` | `GFNBounds.Doubling.OperatorL2` |
 | `instIsProbabilityMeasure` | `GFNBounds.Doubling.LpLayer` |
+| `integrable_of_Lp` | `GFNBounds.Core.Flow` |
+| `integrable_toReal_bindDensity` | `GFNBoundsScaffold.Core.Kernel` |
+| `integralCLM` | `GFNBounds.Core.Flow` |
+| `integralCLM_apply` | `GFNBounds.Core.Flow` |
+| `integralLM` | `GFNBounds.Core.Flow` |
+| `integral_constOne` | `GFNBounds.Core.Flow` |
+| `integral_densityAction` | `GFNBoundsScaffold.Core.Kernel` |
+| `integral_densityActionCLM` | `GFNBoundsScaffold.Core.Kernel` |
 | `integral_eq_tsum` | `GFNBounds.Doubling.Unsolvable` |
+| `integral_funAct` | `GFNBounds.Balance.MassIdentity` |
+| `integral_gradDensity` | `GFNBounds.Balance.MassIdentity` |
+| `integral_gradDensity_potential` | `GFNBounds.Balance.MassIdentity` |
+| `integral_le_measure_rpow_mul` | `GFNBounds.Core.StableBound` |
+| `integral_le_of_le_smul` | `GFNBounds.Core.StableBound` |
 | `integral_rpow_window` | `GFNBounds.Doubling.Exponent` |
+| `integral_toReal_bindDensity` | `GFNBoundsScaffold.Core.Kernel` |
+| `internal` | `GFNBounds.Graph.Universality` |
+| `internal_eq_erase_src` | `GFNBounds.Graph.Universality` |
+| `invProb_unique` | `GFNBounds.Graph.Setting` |
 | `inv_of_pointwise` | `GFNBounds.Doubling.PointwiseInv` |
+| `invariant_of_isInvProb` | `GFNBounds.Balance.MassIdentity` |
 | `isEmpty_stat_of_family_ge_one` | `GFNBounds.Doubling.PhaseEmpty` |
 | `isEmpty_stat_of_family_lt_one` | `GFNBounds.Doubling.PhaseEmpty` |
 | `isEmpty_stat_of_supercritical` | `GFNBounds.Doubling.PhaseEmpty` |
+| `isFiniteMeasure_bind_withDensity` | `GFNBoundsScaffold.Core.Kernel` |
+| `isInvProb_normalized` | `GFNBounds.Graph.Universality` |
 | `jbar` | `GFNBounds.Doubling.Setting` |
 | `jensen_gap_zero` | `GFNBounds.Doubling.FixedPoints` |
 | `jensen_gap_zero_memLp` | `GFNBounds.Doubling.LpLayer` |
@@ -2550,12 +3544,19 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `le_of_mem_window_of_ge` | `GFNBounds.Doubling.Descent` |
 | `le_pow_mul` | `GFNBounds.Doubling.Coupling` |
 | `le_term` | `GFNBounds.Doubling.R0Bound` |
+| `levelL` | `GFNBounds.Doubling.SharpFull` |
+| `liftedOutflow` | `GFNBounds.Core.Universality` |
+| `liftedOutflow_eq` | `GFNBounds.Core.Universality` |
+| `liftedOutflow_nonneg` | `GFNBounds.Core.Universality` |
 | `linSuper` | `GFNBounds.Doubling.Supersolution` |
 | `linSuper_eq` | `GFNBounds.Doubling.Supersolution` |
 | `linSuper_ge` | `GFNBounds.Doubling.Supersolution` |
 | `linSuper_lad` | `GFNBounds.Doubling.Supersolution` |
 | `linSuper_nonneg` | `GFNBounds.Doubling.Supersolution` |
+| `lintegral_add_ne_top` | `GFNBoundsScaffold.Core.Kernel` |
+| `lintegral_bindDensity` | `GFNBoundsScaffold.Core.Kernel` |
 | `lintegral_eq_tsum` | `GFNBounds.Doubling.LpLayer` |
+| `lintegral_ofReal_ne_top` | `GFNBoundsScaffold.Core.Kernel` |
 | `lintegral_rpow_enorm` | `GFNBounds.Doubling.LpLayer` |
 | `lintegral_rpow_enorm_eq_mass` | `GFNBounds.Doubling.LpLayer` |
 | `logHeight` | `GFNBounds.Doubling.Lyapunov` |
@@ -2563,14 +3564,18 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `logHeight_pstar_sub` | `GFNBounds.Doubling.Lyapunov` |
 | `logHeight_sink` | `GFNBounds.Doubling.Lyapunov` |
 | `logHeight_src` | `GFNBounds.Doubling.Lyapunov` |
+| `logLipschitz` | `GFNBounds.Silva.Explicit` |
+| `logRatio` | `GFNBounds.Silva.Basic` |
 | `log_eight_five_ge` | `GFNBounds.Doubling.HarmonicWindow` |
 | `log_eight_five_lt_one` | `GFNBounds.Doubling.HarmonicWindow` |
 | `log_eight_five_pos` | `GFNBounds.Doubling.HarmonicWindow` |
 | `log_five_four_ge` | `GFNBounds.Doubling.HarmonicWindow` |
 | `log_five_four_lt_one` | `GFNBounds.Doubling.HarmonicWindow` |
 | `log_five_four_pos` | `GFNBounds.Doubling.HarmonicWindow` |
+| `log_sq_sum_le_one` | `GFNBounds.Silva.NoUniform` |
 | `log_step_le` | `GFNBounds.Doubling.HarmonicWindow` |
 | `log_two_pos` | `GFNBounds.Doubling.Cramer` |
+| `lossGradDensity` | `GFNBounds.Balance.MassIdentity` |
 | `lt_ell2` | `GFNBounds.Doubling.Escape` |
 | `lt_m0` | `GFNBounds.Doubling.Product` |
 | `m0` | `GFNBounds.Doubling.Product` |
@@ -2578,49 +3583,98 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `mact_lad` | `GFNBounds.Doubling.Balance` |
 | `mact_lam` | `GFNBounds.Doubling.Balance` |
 | `mact_vanish_offChain` | `GFNBounds.Doubling.Adjoint` |
+| `main_constant_determined` | `GFNBounds.Doubling.Main` |
+| `main_constant_functional` | `GFNBounds.Doubling.Main` |
+| `main_invariant_measure` | `GFNBounds.Doubling.Main` |
 | `main_irreducible` | `GFNBounds.Doubling.Main` |
+| `main_phase` | `GFNBounds.Doubling.Main` |
 | `main_rate` | `GFNBounds.Doubling.Main` |
+| `main_sigmaBar_eq` | `GFNBounds.Doubling.Main` |
 | `main_sigmaBar_le` | `GFNBounds.Doubling.Main` |
+| `main_truncation_bhat` | `GFNBounds.Doubling.Main` |
 | `main_truncation_irreducible` | `GFNBounds.Doubling.Main` |
+| `main_truncation_sqrtK` | `GFNBounds.Doubling.Main` |
 | `main_unbounded` | `GFNBounds.Doubling.Main` |
 | `main_unbounded_infty` | `GFNBounds.Doubling.Main` |
+| `main_unbounded_two` | `GFNBounds.Doubling.Main` |
+| `main_unsolvable` | `GFNBounds.Doubling.Main` |
 | `mass_cutFn` | `GFNBounds.Doubling.PerCutNorms` |
 | `mass_cutFn_le_mid` | `GFNBounds.Doubling.PerCutNorms` |
 | `mass_cutFn_le_two` | `GFNBounds.Doubling.PerCutNorms` |
+| `mass_defect_le` | `GFNBounds.Core.StableBound` |
 | `mass_dens_le` | `GFNBounds.Doubling.Adjoint` |
+| `mass_floor` | `GFNBounds.Core.StableBound` |
+| `mass_le_of_leftInverse` | `GFNBounds.Doubling.RayleighBridge` |
+| `mass_le_of_rayleighL2` | `GFNBounds.Doubling.RayleighBridge` |
 | `mass_nonneg` | `GFNBounds.Doubling.LpLayer` |
 | `mass_pstar_le` | `GFNBounds.Doubling.LpContraction` |
 | `mass_ratio_bound` | `GFNBounds.Doubling.Unbounded` |
 | `mass_two_pstar_le` | `GFNBounds.Doubling.LpLayer` |
+| `max_add_aux` | `GFNBoundsScaffold.Core.Kernel` |
+| `meanProj` | `GFNBounds.Core.Flow` |
+| `meanProj_apply` | `GFNBounds.Core.Flow` |
+| `meanProj_comp_left` | `GFNBounds.Core.Flow` |
+| `meanProj_constOne` | `GFNBounds.Core.Flow` |
+| `meanProj_idem` | `GFNBounds.Core.Flow` |
+| `meanProj_sub_eq_zero` | `GFNBounds.Core.Flow` |
+| `measurable_bindDensity` | `GFNBoundsScaffold.Core.Kernel` |
+| `measurable_densityAction` | `GFNBoundsScaffold.Core.Kernel` |
 | `memLp_centredTail` | `GFNBounds.Doubling.Unsolvable` |
 | `memLp_dens` | `GFNBounds.Doubling.Adjoint` |
 | `memLp_iff` | `GFNBounds.Doubling.LpLayer` |
 | `memLp_pstar` | `GFNBounds.Doubling.LpContraction` |
 | `memLp_two_iff` | `GFNBounds.Doubling.LpLayer` |
+| `memLp_two_of_bounded` | `GFNBounds.Doubling.RayleighBridge` |
 | `memLp_two_pstar` | `GFNBounds.Doubling.LpLayer` |
 | `mem_Jhigh` | `GFNBounds.Doubling.HarmonicWindow` |
 | `mem_Jlow` | `GFNBounds.Doubling.HarmonicWindow` |
 | `mem_block` | `GFNBounds.Doubling.DecayNotation` |
 | `mem_chainFinset` | `GFNBounds.Doubling.TruncationStat` |
+| `mem_internal` | `GFNBounds.Graph.Universality` |
 | `mem_kerPi_iff` | `GFNBounds.Doubling.Unsolvable` |
 | `mem_window` | `GFNBounds.Doubling.Setting` |
 | `mix` | `GFNBounds.Doubling.TotalVariation` |
 | `mix_apply` | `GFNBounds.Doubling.TotalVariation` |
+| `mixing_of_massPreserving` | `GFNBounds.Core.Flow` |
 | `mu` | `GFNBounds.Doubling.LpLayer` |
 | `mu_singleton` | `GFNBounds.Doubling.LpLayer` |
 | `mu_singleton_ne_zero_iff` | `GFNBounds.Doubling.LpLayer` |
+| `negMass_le` | `GFNBounds.Core.StableBound` |
+| `negPart_le_abs_sub` | `GFNBounds.Core.StableBound` |
 | `no_bounded_inverse` | `GFNBounds.Doubling.Unbounded` |
 | `no_bounded_inverse_infty` | `GFNBounds.Doubling.Ramp` |
+| `no_diffusionOp` | `GFNBounds.Doubling.UnboundedL2` |
+| `no_distant_equilibrium_one` | `GFNBounds.Balance.MassIdentity` |
+| `no_distant_equilibrium_one_graph` | `GFNBounds.Balance.MassIdentity` |
+| `no_state_space_free_bound` | `GFNBounds.Silva.NoUniform` |
+| `no_three_argument_bound` | `GFNBounds.Silva.NoUniform` |
+| `norm_S_apply_le` | `GFNBounds.Core.Mixing` |
+| `norm_S_le` | `GFNBounds.Core.Mixing` |
+| `norm_defect_le_residuals` | `GFNBounds.Core.Universality` |
 | `norm_densL2_le` | `GFNBounds.Doubling.AdjointL2` |
 | `norm_densLp_le` | `GFNBounds.Doubling.AdjointL2` |
+| `norm_densityActionCLM_le` | `GFNBoundsScaffold.Core.Kernel` |
+| `norm_integralCLM_le` | `GFNBounds.Core.Flow` |
+| `norm_integral_le_holder` | `GFNBounds.Core.Flow` |
+| `norm_le_norm_posPart_add_norm_negPart` | `GFNBounds.Core.Universality` |
+| `norm_negPart_le` | `GFNBounds.Core.Universality` |
 | `norm_oneLp` | `GFNBounds.Doubling.Unsolvable` |
 | `norm_pstarL2_le` | `GFNBounds.Doubling.LpLayer` |
 | `norm_pstarL2_pow_sub_piL2` | `GFNBounds.Doubling.AdjointL2` |
 | `norm_pstarLp_le` | `GFNBounds.Doubling.LpLayer` |
 | `norm_sq_eq_mass` | `GFNBounds.Doubling.Unsolvable` |
+| `norm_sq_eq_mass_of_ae` | `GFNBounds.Doubling.RayleighBridge` |
+| `normalization_bound` | `GFNBounds.Core.StableBound` |
 | `not_growthCond_geometric` | `GFNBounds.Doubling.Unbounded` |
 | `not_inTail_of_lt` | `GFNBounds.Doubling.PerCutIdentity` |
 | `not_mem_window_self` | `GFNBounds.Doubling.PerCutNorms` |
+| `not_summable_betaHat` | `GFNBounds.Doubling.UnboundedL2` |
+| `not_tendsto_partialSum` | `GFNBounds.Doubling.UnboundedL2` |
+| `nu` | `GFNBounds.Doubling.ConstantFunctional` |
+| `nu_eq_zero` | `GFNBounds.Doubling.ConstantFunctional` |
+| `nu_nonneg` | `GFNBounds.Doubling.ConstantFunctional` |
+| `of` | `GFNBounds.Core.Mixing` |
+| `ofReal_add_aux` | `GFNBoundsScaffold.Core.Kernel` |
 | `omeg` | `GFNBounds.Doubling.Doeblin` |
 | `omeg_ge` | `GFNBounds.Doubling.Doeblin` |
 | `omeg_le_case_one` | `GFNBounds.Doubling.Doeblin` |
@@ -2655,6 +3709,10 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `one_sub_omeg_pos` | `GFNBounds.Doubling.SharpRate` |
 | `one_sub_rpow_neg_le` | `GFNBounds.Doubling.Lyapunov` |
 | `orthogonal_defectRange` | `GFNBounds.Doubling.Unsolvable` |
+| `outflowStar` | `GFNBounds.Graph.Universality` |
+| `outflowStar_eq_sum` | `GFNBounds.Graph.Universality` |
+| `outflowStar_mul_fwdStar` | `GFNBounds.Graph.Universality` |
+| `outflowStar_nonneg` | `GFNBounds.Graph.Universality` |
 | `p_add_one_pos` | `GFNBounds.Doubling.Expansion` |
 | `p_gt_one` | `GFNBounds.Doubling.DecayNotation` |
 | `p_pos` | `GFNBounds.Doubling.DecayNotation` |
@@ -2666,6 +3724,16 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `partial_sum_weighted_le` | `GFNBounds.Doubling.PhaseExists` |
 | `percut_K` | `GFNBounds.Doubling.Truncation` |
 | `percut_id` | `GFNBounds.Doubling.PerCutIdentity` |
+| `phat` | `GFNBounds.Graph.Setting` |
+| `phat_nonneg` | `GFNBounds.Graph.Setting` |
+| `phat_of_ne_src` | `GFNBounds.Graph.Setting` |
+| `phat_pos_of_edge` | `GFNBounds.Graph.Setting` |
+| `phat_row_sum` | `GFNBounds.Graph.Setting` |
+| `phat_snk_of_ne_src` | `GFNBounds.Graph.Universality` |
+| `phat_src_of_ne` | `GFNBounds.Graph.Setting` |
+| `phat_src_snk` | `GFNBounds.Graph.Setting` |
+| `phat_supp` | `GFNBounds.Graph.Setting` |
+| `phat_unique_extension` | `GFNBounds.Graph.Setting` |
 | `phi` | `GFNBounds.Doubling.Lyapunov` |
 | `phi_eq_neg_psi` | `GFNBounds.Doubling.Lyapunov` |
 | `phi_pos` | `GFNBounds.Doubling.Lyapunov` |
@@ -2680,6 +3748,12 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `pi_mul_resolventOp` | `GFNBounds.Doubling.OperatorFinite` |
 | `pk` | `GFNBounds.Doubling.Sojourn` |
 | `pk_nonneg` | `GFNBounds.Doubling.Sojourn` |
+| `poisson_left` | `GFNBounds.Core.Mixing` |
+| `poisson_left_apply` | `GFNBounds.Core.Mixing` |
+| `poisson_right` | `GFNBounds.Core.Mixing` |
+| `poisson_right_apply` | `GFNBounds.Core.Mixing` |
+| `poisson_solved` | `GFNBounds.Core.Mixing` |
+| `posPart_mass` | `GFNBounds.Core.StableBound` |
 | `pos_of_irreducible` | `GFNBounds.Doubling.Irreducible` |
 | `pow_mul_pi` | `GFNBounds.Doubling.Operator` |
 | `powerTail` | `GFNBounds.Doubling.Tail` |
@@ -2699,6 +3773,7 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `prodW_step_le` | `GFNBounds.Doubling.Product` |
 | `prodW_two_sided` | `GFNBounds.Doubling.Product` |
 | `prodW_two_sided_paper` | `GFNBounds.Doubling.Product` |
+| `proj_idem` | `GFNBounds.Core.Mixing` |
 | `psi` | `GFNBounds.Doubling.Cramer` |
 | `psi_neg_of_between` | `GFNBounds.Doubling.Cramer` |
 | `psi_neg_of_mem_openSegment` | `GFNBounds.Doubling.Cramer` |
@@ -2744,6 +3819,7 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `ptFn_nonneg` | `GFNBounds.Doubling.Irreducible` |
 | `ptFn_of_ne` | `GFNBounds.Doubling.Irreducible` |
 | `ptFn_self` | `GFNBounds.Doubling.Irreducible` |
+| `pushMass` | `GFNBounds.Balance.MassIdentity` |
 | `qm` | `GFNBounds.Doubling.DecayNotation` |
 | `qm_eq` | `GFNBounds.Doubling.DecayNotation` |
 | `qm_pos` | `GFNBounds.Doubling.DecayNotation` |
@@ -2766,7 +3842,11 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `ramp_defect_src` | `GFNBounds.Doubling.Ramp` |
 | `ramp_defect_straddle` | `GFNBounds.Doubling.Ramp` |
 | `rate_of_large` | `GFNBounds.Doubling.SharpRate` |
+| `ratio` | `GFNBounds.Balance.MassIdentity` |
+| `ratio_eq_one_iff_balanced` | `GFNBounds.Balance.MassIdentity` |
+| `ratio_pos` | `GFNBounds.Balance.MassIdentity` |
 | `rayleigh_family` | `GFNBounds.Doubling.Family` |
+| `rayleigh_of_leftInverse` | `GFNBounds.Doubling.RayleighBridge` |
 | `reach_all_none` | `GFNBounds.Doubling.Irreducible` |
 | `reach_all_some` | `GFNBounds.Doubling.Irreducible` |
 | `reach_dec` | `GFNBounds.Doubling.Irreducible` |
@@ -2777,12 +3857,21 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `reach_pow_two` | `GFNBounds.Doubling.Irreducible` |
 | `remC` | `GFNBounds.Doubling.Lyapunov` |
 | `remC_nonneg` | `GFNBounds.Doubling.Lyapunov` |
+| `resInit` | `GFNBounds.Core.Universality` |
+| `resTerm` | `GFNBounds.Core.Universality` |
+| `residual` | `GFNBounds.Silva.Basic` |
+| `residual_eq` | `GFNBounds.Silva.Basic` |
+| `residuals_eq_zero` | `GFNBounds.Graph.Universality` |
+| `residuals_le` | `GFNBounds.Core.Universality` |
+| `residuals_le_two_norm_defect` | `GFNBounds.Core.Universality` |
 | `resolventOp_injective` | `GFNBounds.Doubling.OperatorFinite` |
 | `resolventOp_mul_pi` | `GFNBounds.Doubling.OperatorFinite` |
 | `resolvent_identities` | `GFNBounds.Doubling.Operator` |
 | `resolvent_identities_of_inverse` | `GFNBounds.Doubling.OperatorFinite` |
 | `resolvent_inverse` | `GFNBounds.Doubling.Operator` |
 | `resolvent_norm_le` | `GFNBounds.Doubling.Operator` |
+| `reversal` | `GFNBounds.Graph.Universality` |
+| `reversal_nonneg` | `GFNBounds.Graph.Universality` |
 | `rowOnChain_none` | `GFNBounds.Doubling.LpLayer` |
 | `rowOnChain_some` | `GFNBounds.Doubling.LpLayer` |
 | `rowTail` | `GFNBounds.Doubling.StatExists` |
@@ -2801,9 +3890,11 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `sbar_mono` | `GFNBounds.Doubling.Kac` |
 | `sbar_nonneg` | `GFNBounds.Doubling.Kac` |
 | `sharp` | `GFNBounds.Doubling.SharpRate` |
+| `sharp_explicit` | `GFNBounds.Doubling.SharpFull` |
 | `sharp_limit` | `GFNBounds.Doubling.Sharp` |
 | `sharp_of_cutBal` | `GFNBounds.Doubling.SharpFull` |
 | `sharp_rate` | `GFNBounds.Doubling.SharpRate` |
+| `sharp_rate_explicit` | `GFNBounds.Doubling.SharpRate` |
 | `shift_dec` | `GFNBounds.Doubling.Lyapunov` |
 | `shift_double` | `GFNBounds.Doubling.Lyapunov` |
 | `sigmaBar_le` | `GFNBounds.Doubling.Supersolution` |
@@ -2823,12 +3914,31 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `sqTau_pos` | `GFNBounds.Doubling.Escape` |
 | `sqTau_sq` | `GFNBounds.Doubling.Escape` |
 | `sq_pstar_le` | `GFNBounds.Doubling.FixedPoints` |
+| `sq_sub_le_sq_mul_log_sq` | `GFNBounds.Silva.Explicit` |
+| `sq_sub_weighted_le` | `GFNBounds.Silva.Explicit` |
 | `sqrtK` | `GFNBounds.Doubling.Truncation` |
 | `sqrt_two_lt` | `GFNBounds.Doubling.Escape` |
 | `sqrt_two_pos` | `GFNBounds.Doubling.Escape` |
 | `sqrt_two_rpow` | `GFNBounds.Doubling.Escape` |
 | `src` | `GFNBounds.Doubling.Setting` |
+| `src_row_unique` | `GFNBounds.Graph.Setting` |
 | `stEquiv` | `GFNBounds.Doubling.PointwiseInv` |
+| `stableConst` | `GFNBounds.Core.StableBound` |
+| `stableLoss` | `GFNBounds.Core.StableBound` |
+| `stable_bound` | `GFNBounds.Core.StableBound` |
+| `starK_one` | `GFNBounds.Silva.NoUniform` |
+| `starK_pos` | `GFNBounds.Silva.NoUniform` |
+| `starPET_pos` | `GFNBounds.Silva.NoUniform` |
+| `starPET_sum` | `GFNBounds.Silva.NoUniform` |
+| `starPF_pos` | `GFNBounds.Silva.NoUniform` |
+| `starPF_sum` | `GFNBounds.Silva.NoUniform` |
+| `starPi` | `GFNBounds.Silva.NoUniform` |
+| `starPi_pos` | `GFNBounds.Silva.NoUniform` |
+| `starPi_sum` | `GFNBounds.Silva.NoUniform` |
+| `star_Mprime` | `GFNBounds.Silva.NoUniform` |
+| `star_chiSq` | `GFNBounds.Silva.NoUniform` |
+| `star_energy` | `GFNBounds.Silva.NoUniform` |
+| `star_tv` | `GFNBounds.Silva.NoUniform` |
 | `statMeas` | `GFNBounds.Doubling.StatExists` |
 | `statMeas_pos` | `GFNBounds.Doubling.StatExists` |
 | `statMeas_sink` | `GFNBounds.Doubling.StatExists` |
@@ -2846,6 +3956,9 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `stepCost_nonneg` | `GFNBounds.Doubling.Length` |
 | `stepCost_succ` | `GFNBounds.Doubling.Length` |
 | `stepCost_zero` | `GFNBounds.Doubling.Length` |
+| `strictlyUnimodal_logSqDeriv` | `GFNBounds.Balance.MassIdentity` |
+| `strictlyUnimodal_sqDeriv` | `GFNBounds.Balance.MassIdentity` |
+| `stronglyUniversalAt_of_le` | `GFNBounds.Core.Universality` |
 | `sub_mean_mem_kerPi` | `GFNBounds.Doubling.Unsolvable` |
 | `sum_Ico_rpow_sub_integral_le` | `GFNBounds.Doubling.Exponent` |
 | `sum_Jhigh_ge` | `GFNBounds.Doubling.HarmonicWindow` |
@@ -2854,20 +3967,30 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `sum_Jlow_half` | `GFNBounds.Doubling.HarmonicWindow` |
 | `sum_Jlow_pos` | `GFNBounds.Doubling.HarmonicWindow` |
 | `sum_abs_eq` | `GFNBounds.Doubling.TotalVariation` |
-| `sum_densMap` | `GFNBounds.Doubling.TruncationStat` |
+| `sum_densMap` | `GFNBounds.Graph.Setting` |
 | `sum_dirac_gen` | `GFNBounds.Doubling.PerCutIdentity` |
+| `sum_edgeFlow_in` | `GFNBounds.Graph.Universality` |
+| `sum_edgeFlow_out` | `GFNBounds.Graph.Universality` |
 | `sum_eps_dirac` | `GFNBounds.Doubling.PerCutIdentity` |
 | `sum_extendCVec` | `GFNBounds.Doubling.TruncationStat` |
+| `sum_fwdStar` | `GFNBounds.Graph.Universality` |
+| `sum_fwdStar_internal` | `GFNBounds.Graph.Universality` |
+| `sum_initFlow` | `GFNBounds.Graph.Universality` |
 | `sum_kern` | `GFNBounds.Doubling.TruncationStat` |
+| `sum_nu_pos` | `GFNBounds.Doubling.ConstantFunctional` |
 | `sum_pk` | `GFNBounds.Doubling.Sojourn` |
+| `sum_reversal` | `GFNBounds.Graph.Universality` |
 | `sum_rowTail_le` | `GFNBounds.Doubling.StatExists` |
 | `sum_shift_ge` | `GFNBounds.Doubling.Escape` |
+| `sum_sq_div_eq_one_add_chiSq` | `GFNBounds.Silva.Basic` |
+| `sum_unif` | `GFNBounds.Silva.Basic` |
 | `sum_window_ge` | `GFNBounds.Doubling.WindowSum` |
 | `sum_window_le` | `GFNBounds.Doubling.WindowSum` |
 | `sum_wm` | `GFNBounds.Doubling.DecayNotation` |
 | `summable_abs_lad` | `GFNBounds.Doubling.Balance` |
 | `summable_abs_lad_mul` | `GFNBounds.Doubling.Adjoint` |
 | `summable_abs_lad_of_sq` | `GFNBounds.Doubling.Adjoint` |
+| `summable_beta` | `GFNBounds.Core.Mixing` |
 | `summable_lad` | `GFNBounds.Doubling.Unbounded` |
 | `summable_lam_abs` | `GFNBounds.Doubling.Unsolvable` |
 | `summable_lam_dens` | `GFNBounds.Doubling.Adjoint` |
@@ -2881,6 +4004,7 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `summable_rpow_neg` | `GFNBounds.Doubling.Tail` |
 | `summable_statSeq` | `GFNBounds.Doubling.StatExists` |
 | `summable_statSeq_of_threshold` | `GFNBounds.Doubling.PhaseExists` |
+| `summable_terms` | `GFNBounds.Core.Mixing` |
 | `surv` | `GFNBounds.Doubling.Sojourn` |
 | `surv_antitone` | `GFNBounds.Doubling.Sojourn` |
 | `surv_eq_zero_of_lt` | `GFNBounds.Doubling.Sojourn` |
@@ -2906,26 +4030,43 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `tail_bounds` | `GFNBounds.Doubling.Tail` |
 | `tail_lower` | `GFNBounds.Doubling.Truncation` |
 | `tail_ratio_ge` | `GFNBounds.Doubling.Tail` |
+| `tail_ratio_le` | `GFNBounds.Doubling.Tail` |
 | `tail_sharp` | `GFNBounds.Doubling.Tail` |
 | `tau` | `GFNBounds.Doubling.DecayNotation` |
 | `tau_gt_two` | `GFNBounds.Doubling.DecayNotation` |
 | `tau_pos` | `GFNBounds.Doubling.DecayNotation` |
 | `tau_sub_one_pos` | `GFNBounds.Doubling.Expansion` |
 | `telescope_Ico` | `GFNBounds.Doubling.WindowSum` |
+| `tendsto_climit_of_pos` | `GFNBounds.Doubling.ConstantFunctional` |
+| `tendsto_extend` | `GFNBounds.Doubling.ConstantFunctional` |
 | `tendsto_foot_atTop` | `GFNBounds.Doubling.Exponent` |
 | `tendsto_foot_ratio` | `GFNBounds.Doubling.Exponent` |
 | `tendsto_hitLad` | `GFNBounds.Doubling.Length` |
+| `tendsto_ind` | `GFNBounds.Doubling.ConstantFunctional` |
 | `tendsto_ladT_iterate_id` | `GFNBounds.Doubling.Length` |
 | `tendsto_ladT_iterate_stepCost` | `GFNBounds.Doubling.Length` |
 | `tendsto_min_nat` | `GFNBounds.Doubling.Unsolvable` |
 | `tendsto_min_natCast` | `GFNBounds.Doubling.LpLayer` |
 | `tendsto_mpow_foot` | `GFNBounds.Doubling.Exponent` |
+| `tendsto_of_cutBal` | `GFNBounds.Doubling.ConstantFunctional` |
+| `tendsto_partialSum` | `GFNBounds.Core.Mixing` |
 | `tendsto_pow` | `GFNBounds.Doubling.Operator` |
 | `tendsto_pstar` | `GFNBounds.Doubling.LpLayer` |
 | `tendsto_shift_rpow` | `GFNBounds.Doubling.Tail` |
+| `tendsto_tailSeq_zero` | `GFNBounds.Doubling.Tail` |
+| `tendsto_tail_ratio_atTop` | `GFNBounds.Doubling.Tail` |
+| `tendsto_tail_ratio_sharp` | `GFNBounds.Doubling.Tail` |
+| `tendsto_tail_sharp` | `GFNBounds.Doubling.Tail` |
+| `tendsto_truncation_norm` | `GFNBounds.Core.UniversalityLp` |
 | `tendsto_windowPower` | `GFNBounds.Doubling.Exponent` |
 | `tendsto_windowV` | `GFNBounds.Doubling.Exponent` |
+| `termFlow` | `GFNBounds.Graph.Universality` |
+| `termFlow_eq_target` | `GFNBounds.Graph.Universality` |
+| `termFlow_pos_of_edge` | `GFNBounds.Graph.Universality` |
+| `term_eq_zero_iff` | `GFNBounds.Balance.MassIdentity` |
 | `term_le` | `GFNBounds.Doubling.R0Bound` |
+| `term_neg` | `GFNBounds.Balance.MassIdentity` |
+| `term_nonpos` | `GFNBounds.Balance.MassIdentity` |
 | `thirty_two_lt` | `GFNBounds.Doubling.Escape` |
 | `thr_of_block` | `GFNBounds.Doubling.Sojourn` |
 | `thr_of_level` | `GFNBounds.Doubling.Escape` |
@@ -2935,12 +4076,15 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `toStat` | `GFNBounds.Doubling.Irreducible` |
 | `topologicalClosure_defectRange` | `GFNBounds.Doubling.Unsolvable` |
 | `truncStat` | `GFNBounds.Doubling.TruncationStat` |
+| `truncation` | `GFNBounds.Core.Universality` |
+| `truncation_nonneg` | `GFNBounds.Core.Universality` |
 | `tsum_centredRamp` | `GFNBounds.Doubling.Ramp` |
 | `tsum_dens_mul` | `GFNBounds.Doubling.Adjoint` |
 | `tsum_dens_mul_sq` | `GFNBounds.Doubling.Adjoint` |
 | `tsum_jensen_gap` | `GFNBounds.Doubling.FixedPoints` |
 | `tsum_lam_congr_ae` | `GFNBounds.Doubling.Unsolvable` |
 | `tsum_lam_dens` | `GFNBounds.Doubling.Adjoint` |
+| `tsum_lam_mul_congr_ae` | `GFNBounds.Doubling.RayleighBridge` |
 | `tsum_lam_mul_cutFn` | `GFNBounds.Doubling.CutBalance` |
 | `tsum_lam_mul_dirac` | `GFNBounds.Doubling.CutBalance` |
 | `tsum_lam_pstar_sq` | `GFNBounds.Doubling.Adjoint` |
@@ -2950,12 +4094,24 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `tsum_pstar_eq_of_nonneg` | `GFNBounds.Doubling.Unsolvable` |
 | `tsum_pstar_le` | `GFNBounds.Doubling.LpLayer` |
 | `tsum_sub_pstar` | `GFNBounds.Doubling.Setting` |
+| `tv` | `GFNBounds.Silva.Basic` |
+| `tvD` | `GFNBounds.Core.StableBound` |
+| `tvD_comm` | `GFNBounds.Core.StableBound` |
+| `tvD_nonneg` | `GFNBounds.Core.StableBound` |
+| `tvD_normalization` | `GFNBounds.Core.StableBound` |
+| `tvD_normalization_le` | `GFNBounds.Core.StableBound` |
+| `tvD_triangle` | `GFNBounds.Core.StableBound` |
 | `tvOn` | `GFNBounds.Doubling.TotalVariation` |
 | `tvOn_comm` | `GFNBounds.Doubling.TotalVariation` |
 | `tvOn_le_one` | `GFNBounds.Doubling.TotalVariation` |
 | `tvOn_mix_le` | `GFNBounds.Doubling.TotalVariation` |
 | `tvOn_nonneg` | `GFNBounds.Doubling.TotalVariation` |
 | `tvOn_self` | `GFNBounds.Doubling.TotalVariation` |
+| `tv_le_exp_sqrt_energy` | `GFNBounds.Silva.NoUniform` |
+| `tv_le_exp_sqrt_energy_wmin` | `GFNBounds.Silva.NoUniform` |
+| `tv_le_sqrt_residual` | `GFNBounds.Silva.Explicit` |
+| `tv_le_sqrt_residual_max` | `GFNBounds.Silva.Explicit` |
+| `tv_le_two_fmL1` | `GFNBounds.Core.StableBound` |
 | `two_gam_eq` | `GFNBounds.Doubling.Escape` |
 | `two_log_two_gt_one` | `GFNBounds.Doubling.Cramer` |
 | `two_rpow_eq` | `GFNBounds.Doubling.Cramer` |
@@ -2965,8 +4121,13 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `two_step` | `GFNBounds.Doubling.Sojourn` |
 | `uavg_of_avg` | `GFNBounds.Doubling.DecayNotation` |
 | `uavg_of_cutBal` | `GFNBounds.Doubling.DecayNotation` |
+| `unif` | `GFNBounds.Silva.Basic` |
+| `universality_graphs_one` | `GFNBounds.Graph.Setting` |
+| `universality_graphs_three` | `GFNBounds.Graph.Universality` |
+| `universality_graphs_two` | `GFNBounds.Graph.Universality` |
 | `uu` | `GFNBounds.Doubling.DecayNotation` |
 | `uu_bounded` | `GFNBounds.Doubling.Descent` |
+| `uu_bounded_explicit` | `GFNBounds.Doubling.Product` |
 | `uu_bounded_of_cutBal` | `GFNBounds.Doubling.SharpFull` |
 | `uu_diff_le` | `GFNBounds.Doubling.Sharp` |
 | `uu_sub_descP_le` | `GFNBounds.Doubling.Sharp` |
@@ -2991,7 +4152,18 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `wLog_superlinear` | `GFNBounds.Doubling.Length` |
 | `wLog_two_mul_le` | `GFNBounds.Doubling.Length` |
 | `wLog_zero` | `GFNBounds.Doubling.Length` |
+| `wMin` | `GFNBounds.Silva.Basic` |
+| `wMin_le` | `GFNBounds.Silva.Basic` |
+| `wMin_pos` | `GFNBounds.Silva.Basic` |
+| `wSupport` | `GFNBounds.Silva.Basic` |
 | `w_sum` | `GFNBounds.Doubling.Adjoint` |
+| `weaklyUniversalAt_Lp` | `GFNBounds.Core.UniversalityLp` |
+| `weaklyUniversalAt_of_equalMass` | `GFNBounds.Core.Flow` |
+| `weaklyUniversalAt_of_kernel` | `GFNBoundsScaffold.Core.Kernel` |
+| `weaklyUniversalAt_of_tendsto` | `GFNBounds.Core.Universality` |
+| `weaklyUniversal_Lp` | `GFNBounds.Core.UniversalityLp` |
+| `weaklyUniversal_of_kernel` | `GFNBoundsScaffold.Core.Kernel` |
+| `weaklyUniversal_of_massPreserving` | `GFNBounds.Core.Flow` |
 | `weight_bound` | `GFNBounds.Doubling.Weight` |
 | `weight_step` | `GFNBounds.Doubling.Weight` |
 | `window` | `GFNBounds.Doubling.Setting` |
@@ -3006,6 +4178,7 @@ Certifies: 🟡 `lem:doubling_expansion` (bucket C)
 | `window_succ_sum` | `GFNBounds.Doubling.StatExists` |
 | `window_swap` | `GFNBounds.Doubling.Summable` |
 | `window_swap_shift` | `GFNBounds.Doubling.PhaseEmpty` |
+| `withDensity_bindDensity` | `GFNBoundsScaffold.Core.Kernel` |
 | `wm` | `GFNBounds.Doubling.DecayNotation` |
 | `wm_ge_shift` | `GFNBounds.Doubling.Escape` |
 | `wm_nonneg` | `GFNBounds.Doubling.DecayNotation` |

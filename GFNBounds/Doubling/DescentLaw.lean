@@ -45,9 +45,9 @@ used. That bound is `R0Bound.R0_between`, effective at `32cτ ≤ z`.
 * Nothing here says that `descP ℓ g m` is an expectation for an actual stochastic process; the
   recursion *is* the definition, exactly as in `Descent.lean`. What is proved is that it is an
   average: non-negative, normalised, carried by `[ℓ,2ℓ)`.
-* `descP` is *not* related here to `descW`: the two differ by the weight `Z_ℓ`, and
-  `lem:doubling_weight` — which bounds `E|Z_ℓ − 1|` and needs `lem:doubling_product` — is not
-  proved in this library. `Sharp.lean` carries that bound as a hypothesis.
+* `descP` is *not* related here to `descW`: the two differ by the weight `Z_ℓ`. The bound on
+  their difference — `lem:doubling_weight` in the transform form `Sharp.lean` consumes — is
+  `Decay.weight_bound` in `Weight.lean`, with effective constants.
 * The recursion is total: at `m < 2ℓ` it returns `g m` whatever `m` is, so statements are
   restricted to `ℓ ≤ m` where the paper's chain lives.
 

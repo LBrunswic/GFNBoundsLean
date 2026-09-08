@@ -1,0 +1,41 @@
+% ---------------------------------------------------------------------------
+% blueprint/src/macros/print.tex --- pdf-only macros.
+%
+% Two jobs: neutralise the macros that only mean something on the web, and make
+% the appendix's Unicode printable. Latin Modern has neither the Greek nor the
+% symbols the text uses, so both the text and the mono font are given a
+% luaotfload fallback chain; this is why latexmkrc runs lualatex, not xelatex.
+% ---------------------------------------------------------------------------
+
+% --- Dummy macros that make sense only for the web version -----------------
+\newcommand{\lean}[1]{}
+\newcommand{\discussion}[1]{}
+\newcommand{\leanok}{}
+\newcommand{\mathlibok}{}
+\newcommand{\notready}{}
+% \uses and \proves must still check that their arguments are real labels: the
+% invisible \ref makes LaTeX warn on a typo without printing anything.
+\ExplSyntaxOn
+\NewDocumentCommand{\uses}{m}
+ {\clist_map_inline:nn{#1}{\vphantom{\ref{##1}}}%
+  \ignorespaces}
+\NewDocumentCommand{\proves}{m}
+ {\clist_map_inline:nn{#1}{\vphantom{\ref{##1}}}%
+  \ignorespaces}
+\ExplSyntaxOff
+
+% --- fonts -----------------------------------------------------------------
+\directlua{
+  luaotfload.add_fallback("textfb", {
+    "DejaVuSerif:mode=node;",
+    "DejaVuSans:mode=node;",
+    "FreeSerif:mode=node;",
+    "AsanaMath:mode=node;",
+    "DejaVuMathTeXGyre:mode=node;"
+  })
+}
+\setmainfont{Latin Modern Roman}[RawFeature={fallback=textfb}]
+\setmonofont{DejaVu Sans Mono}[Scale=0.85, RawFeature={fallback=textfb}]
+
+% The one figure of the last subsection; see macros/web.tex for the other half.
+\newcommand{\onlyprint}[1]{\includegraphics[width=\linewidth]{#1}}

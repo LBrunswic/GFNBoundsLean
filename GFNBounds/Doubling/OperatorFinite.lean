@@ -33,10 +33,10 @@ identities), and the conclusion of `lem:doubling_fixed_points` in the form
 
 * **This is the algebra of item (2), not its instantiation.** What is *not* here is
   `FiniteDimensional ℝ (Lp ℝ 2 λ^K)` and the construction of `Π` as a `ContinuousLinearMap` on
-  that space; both wait on the Bochner-integral half of the `LpLayer` dictionary, which is not
-  built (`Adjoint.lean`, SCOPE). So `lem:doubling_operator`(2) is **advanced, not closed**: the
-  first of its three clauses is `FixedPointsP.ker_eq_const`, and the second and third are the
-  theorem below *modulo* that instantiation.
+  that space; both are in `AdjointL2.lean` / `OperatorL2.lean`, where `Stat.exists_diffusionOp`
+  instantiates the theorem below and closes `lem:doubling_operator`(2): the first of its three
+  clauses is `FixedPointsP.ker_eq_const`, the second and third are the theorem below at that
+  instance.
 * **Uniqueness of the invariant probability on a finite irreducible chain is not proved and not
   used.** The paper invokes it to identify `λ`; here `λ` is whatever `Stat` supplies, and the
   argument needs only that it is *an* invariant probability positive on the chain.

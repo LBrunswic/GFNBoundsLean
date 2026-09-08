@@ -23,8 +23,12 @@ The five cases of the paper's first bullet are `ramp_defect_src`, `ramp_defect_b
 inequalities of `eq:doubling_ramp` are stated in the two forms that supremum consumes: a pointwise
 upper bound `∀ x, |·| ≤ max(1,γ,j̄)` for the defect, and an attained lower bound `∃ x, N/2 ≤ |·|`
 for the function. `no_bounded_inverse_infty` is then phrased against any `B` bounding an attained
-lower bound of `‖f‖` by a uniform upper bound of `‖(Id−P⋆)f‖`, which is exactly what
-`‖f‖_∞ ≤ ‖S‖ ‖(Id−P⋆)f‖_∞` supplies. Nothing here depends on the `Lp` layer.
+lower bound of `‖f‖` by a uniform upper bound of `‖(Id−P⋆)f‖`, **over the bounded mean-zero
+`f`**, which is exactly what `‖f‖_∞ ≤ ‖S‖ ‖(Id−P⋆)f‖_∞` supplies for `f ∈ L^∞(λ)`. The
+boundedness hypothesis on `f` is load-bearing: without it the statement is satisfied trivially by
+the unclipped height `V`, whose defect is bounded by `max(1,γ,j̄)` while `V` itself is unbounded,
+and says nothing about `L^∞(λ)`. (The 2026-09-07 morning version lacked it and was repaired the
+same evening.) Nothing here depends on the `Lp` layer.
 
 ## Hypothesis checklist against `lem:doubling_ramp`
 
@@ -228,12 +232,14 @@ theorem exists_centredRamp_ge (N : ℕ) : ∃ x : St, (N : ℝ) / 2 ≤ |L.centr
     linarith
 
 /-- **`lem:doubling_ramp`, the conclusion.** No constant `B` bounds an attained lower bound of
-`‖f‖_∞` by a uniform upper bound of `‖(Id−P⋆)f‖_∞` over the bounded mean-zero `f`: the clipped
-ramps drive the `L^∞` Rayleigh quotient to zero. -/
+`‖f‖_∞` by a uniform upper bound of `‖(Id−P⋆)f‖_∞` over the **bounded** mean-zero `f`: the
+clipped ramps drive the `L^∞` Rayleigh quotient to zero. A bounded `S` on `L^∞(λ)` with
+`S(Id−P⋆) = Id−Π` would supply `B = ‖S‖` for exactly these `f`, so this is the paper's "no bounded
+`S`". The witnesses are the centred clipped ramps, bounded by `centredRamp_bounded`. -/
 theorem no_bounded_inverse_infty {γ : ℝ}
     (hγ : ∀ j : ℕ, 1 ≤ j → ((j : ℝ) + 1) * S.eps j ≤ γ) :
     ¬ ∃ B : ℝ, ∀ (f : St → ℝ) (M D : ℝ),
-        (∑' x, L.lam x * f x = 0) → (∃ x, M ≤ |f x|) →
+        (∃ C, ∀ x, |f x| ≤ C) → (∑' x, L.lam x * f x = 0) → (∃ x, M ≤ |f x|) →
         (∀ x, |f x - pstar S none f x| ≤ D) → M ≤ B * D := by
   rintro ⟨B, hB⟩
   set C : ℝ := max 1 (max γ S.jbar) with hC
@@ -249,7 +255,8 @@ theorem no_bounded_inverse_infty {γ : ℝ}
     intro y
     rw [L.centredRamp_defect N y]
     exact ramp_defect_bounded S hγ hNd y
-  have hmain := hB (L.centredRamp N) ((N : ℝ) / 2) C (L.tsum_centredRamp N) ⟨x, hx⟩ hdef
+  have hmain := hB (L.centredRamp N) ((N : ℝ) / 2) C (L.centredRamp_bounded N)
+    (L.tsum_centredRamp N) ⟨x, hx⟩ hdef
   have hBle : B ≤ max B 0 := le_max_left _ _
   nlinarith [hmain, hNB, hCpos, hBle]
 

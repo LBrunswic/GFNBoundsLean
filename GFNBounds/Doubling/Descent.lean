@@ -35,11 +35,14 @@ as a hypothesis here; see SCOPE.
 
 ## SCOPE (disclosed)
 
-* `lem:doubling_expansion`, `lem:doubling_escape` and `lem:doubling_product` are **not** proved.
-  `theo:doubling_decay` therefore carries the two-sided bound on `descOne` as a hypothesis
-  (`hlo`, `hhi`), which is precisely `eq:doubling_product` at `b := R_0 − 1`, `H := c₄`. Nothing
-  else of the decay block is assumed. The constants `c₄, ℓ₁, γ, c₅, ℓ₂, m₀` are consequently not
-  named here: the level `ℓ` and the two bounds are parameters.
+* This file carries the two-sided bound on `descOne` as a hypothesis (`hlo`, `hhi`) — precisely
+  `eq:doubling_product` at `b := R_0 − 1`, `H := c₄` — so that the descent block is stated for
+  any level `ℓ` and any two bounds. Those hypotheses are **discharged** in `Product.lean`
+  (`Decay.descOne_two_sided`, from `lem:doubling_escape` and `lem:doubling_product`, both
+  proved), and `decay_block_of_cutBal` / `decay_two_sided_of_cutBal` there are the unconditional
+  forms of `theo:doubling_decay`; `lem:doubling_expansion`'s `eq:doubling_Rexp` remains unproved
+  but is not consumed (`R0Bound.lean`). The constants `c₄, γ, c₅, ℓ₂, m₀` are named in
+  `R0Bound.lean`, `Escape.lean`, `Sojourn.lean` and `Product.lean`, not here.
 * The paper's `R_0(y) > 0` (needed for the transition law to be a probability) is not needed by
   the recursion, which never divides; `w_m ≥ 0` is what `descW_between` uses.
 * `Y_{N_ℓ} ∈ [ℓ, 2ℓ)` appears as the hypothesis pattern `∀ j, ℓ ≤ j → j < 2ℓ → …` of

@@ -1,0 +1,37 @@
+Let $0<c_1\leq c_2$ bound the rescaled profile by
+Theorem~\ref{theo:doubling_decay}\emph{(2)}. The argument is a contraction estimate on dyadic
+blocks, run at a level $\ell\geq\ell_4$.
+
+\emph{Two states of one block.} For $y,y'\in I_i(\ell)$ with $i\geq1$, splitting
+$Z_\ell u_{Y_{N_\ell}}=u_{Y_{N_\ell}}+(Z_\ell-1)u_{Y_{N_\ell}}$ in \eqref{eq:doubling_pathid}
+writes $u_y$ as $\int u\,d\pi_y$ plus an error of modulus at most $c_2c_3/\ell$ by
+\eqref{eq:doubling_weight}, where $\pi_y$ is the law of the exit state and lives on
+$[\ell,2\ell)$. Since $\bigl|\int f\,d(\pi-\pi')\bigr|\leq(\sup f-\inf f)\TV(\pi\|\pi')$ for
+probabilities of equal mass, and since $\sup u-\inf u\leq c_2$ on that block,
+\eqref{eq:doubling_coupling} bounds the difference of the two main terms by
+$c_2(1-\omega)^{i}$. Hence $|u_y-u_{y'}|\leq c_2(1-\omega)^{i}+2c_2c_3/\ell$; at $i=0$ the
+bound is immediate from $0<u\leq c_2$.
+
+\emph{Two states above $2^{i}\ell$.} If $m$ and $m'$ lie in different blocks $I_j(\ell)$ and
+$I_{j'}(\ell)$ with $i\leq j<j'$, run the descent from $m'$ at the level $\ell':=2^{j}\ell$,
+whose exit lands in $I_j(\ell)$ where $m$ already is; the previous estimate handles that pair
+and \eqref{eq:doubling_weight} at the level $\ell'\geq\ell$ handles the weight, giving
+$|u_m-u_{m'}|\leq c_2(1-\omega)^{i}+3c_2c_3/\ell$.
+
+\emph{Convergence and its rate.} Both terms can be made small --- the first by taking $i$
+large, the second by taking $\ell$ large --- so $(u_m)_m$ is Cauchy and converges to a limit
+$C$, which lies in $[c_1',c_2']$ for any pair satisfying \eqref{eq:doubling_decay}. For the
+rate, put $\alpha:=\log_2\bigl(1/(1-\omega)\bigr)$ and $\vartheta:=\alpha/(1+\alpha)$, and at a
+given $m$ choose $\ell:=\lceil m^{\vartheta}\rceil$ and $i:=\lfloor\log_2(m/\ell)\rfloor$.
+Letting $m'\rightarrow\infty$ in the previous estimate gives
+$|u_m-C|\leq c_2(1-\omega)^{i}+3c_2c_3/\ell$, and this choice balances the two: $1/\ell\leq
+m^{-\vartheta}$, while $2^{i+1}>m/\ell$ and $\alpha(1-\vartheta)=\vartheta$ turn
+$(1-\omega)^{i}=2^{-\alpha i}$ into at most $4^{\alpha}m^{-\vartheta}$. That is
+\eqref{eq:doubling_rate}, with $c_6$ depending only on $c$, $d$ and
+$\lambda_1,\dots,\lambda_{2m_0}$.
+
+\emph{The limit is determined by the boundary data.} By
+Lemma~\ref{lem:doubling_averaging}\emph{(1)} the average \eqref{eq:doubling_avg} holds at every
+$m>d$ and expresses $\lambda_m$ through $c$ and $\lambda_{\lceil m/2\rceil},\dots,\lambda_{m-1}$,
+whose indices are all smaller; by induction the whole sequence, and with it $C$, is determined
+by $c$, $d$ and $\lambda_1,\dots,\lambda_d$.

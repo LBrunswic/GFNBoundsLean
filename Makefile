@@ -9,10 +9,17 @@ SHELL := /bin/bash
 # from the lakefile. `lake build GFNBounds` alone already certifies the strict library is
 # sorry-free: it is built with `warningAsError := true`, which turns Lean's own
 # "declaration uses 'sorry'" warning into an error.
+#
+# `lake build` trusts the environment the elaborator produced. `kernel_replay.py` drives
+# `leanchecker` (toolchain-shipped since v4.28; the standalone lean4checker was archived
+# 2026-03-25) over one module at a time, replaying every declaration through the kernel from the
+# .olean files -- which is what rules out an environment reached by metaprogramming rather than
+# by proof. Per module, not whole-library: the whole library at once was OOM-killed at 42 GB.
+# 84 modules, 90 seconds, 6.2 GB peak. Mathlib is imported and trusted; it runs this in its own CI.
 
-.PHONY: check build scaffold audit map kb facts appendix browser dashboard deploy clean
+.PHONY: check build scaffold audit certificate map kb facts appendix browser dashboard deploy clean
 
-check: build scaffold audit
+check: build scaffold audit certificate
 
 build:
 	lake build GFNBounds 2>&1 | tee build.log
@@ -25,11 +32,22 @@ audit:
 	python3 scripts/axiom_audit.py build.log
 	python3 scripts/root_closure.py
 	lake env lean scripts/AxiomSweep.lean
+	python3 scripts/kernel_replay.py
 	python3 scripts/trace_check.py
 	python3 scripts/coverage.py
 	python3 scripts/repo_map.py
 	python3 scripts/kb.py lint
 	python3 scripts/kb.py index
+
+# What this commit certifies, for a reader with no Mathlib: the commit, the toolchain, the
+# Mathlib rev, the gates it passed, and the sha256 of the lean-facts.json beside it. Depends on
+# `facts` because a certificate that does not pin the statement dump certifies nothing the paper
+# can use. This is the artifact the paper repository's `certificate-fresh` gate reads.
+#
+# It runs LAST in `check`, and the gate results are recorded by construction: with pipefail and
+# no `-` prefixes, any earlier failure aborts before this ever runs.
+certificate: facts
+	python3 scripts/certificate.py
 
 # The map of the library that a sub-session reads before it touches anything.
 map:

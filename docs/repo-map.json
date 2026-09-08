@@ -7,6 +7,7 @@
    "scope_disclosed": false,
    "imports": [
     "GFNBounds.Core.Flow",
+    "GFNBounds.Core.Kernel",
     "GFNBounds.Core.Mixing",
     "GFNBounds.Core.StableBound",
     "GFNBounds.Core.Universality",
@@ -76,10 +77,14 @@
     "GFNBounds.Silva.NoUniform",
     "GFNBounds.Balance.MassIdentity",
     "GFNBounds.Graph.Universality",
+    "GFNBounds.Graph.Morozov",
+    "GFNBounds.Graph.FrozenUnstable",
+    "GFNBounds.Core.StrongUniversality",
+    "GFNBounds.Balance.Lift",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 71,
+   "lines": 76,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -149,6 +154,656 @@
    "decls": [],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/Lift.lean",
+   "title": "The edge lift: detailed balance is flow matching one step up",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.MassIdentity",
+    "GFNBounds.Graph.Universality"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable {G : MarkedGraph V} {B : BackwardPolicy G}"
+   ],
+   "lines": 824,
+   "decls": [
+    {
+     "name": "sum_rotate",
+     "full": "GFNBounds.Balance.sum_rotate",
+     "kind": "theorem",
+     "line": 191,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_rotate (F : V → V → V → ℝ) : ∑ a, ∑ b, ∑ c, F a b c = ∑ b, ∑ c, ∑ a, F a b c",
+     "doc": "Moving the outermost of three summation indices to the innermost position."
+    },
+    {
+     "name": "marg₁",
+     "full": "GFNBounds.Balance.marg₁",
+     "kind": "def",
+     "line": 200,
+     "attrs": "",
+     "private": false,
+     "statement": "def marg₁ (mu : V → V → ℝ) : V → ℝ",
+     "doc": "The **first marginal** `m₁μ(s) = ∑_{s'} μ(s,s')` — the marginal in the *first* coordinate, which is what `μ = F ⊗ π_→^μ` (`proofs.tex:525`) means by `F := m₁μ`."
+    },
+    {
+     "name": "marg₂",
+     "full": "GFNBounds.Balance.marg₂",
+     "kind": "def",
+     "line": 205,
+     "attrs": "",
+     "private": false,
+     "statement": "def marg₂ (mu : V → V → ℝ) : V → ℝ",
+     "doc": "The **second marginal** `m₂μ(s') = ∑_s μ(s,s')`."
+    },
+    {
+     "name": "edgeKernel",
+     "full": "GFNBounds.Balance.edgeKernel",
+     "kind": "def",
+     "line": 216,
+     "attrs": "",
+     "private": false,
+     "statement": "def edgeKernel (pb : V → V → ℝ) (s _s' z w : V) : ℝ",
+     "doc": "**`def:edge_lift`, the kernel** (`proofs.tex:505–508`)."
+    },
+    {
+     "name": "edgeKernel_nonneg",
+     "full": "GFNBounds.Balance.edgeKernel_nonneg",
+     "kind": "theorem",
+     "line": 220,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeKernel_nonneg {pb : V → V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (s s' z w : V) : 0 ≤ edgeKernel pb s s' z w",
+     "doc": "`K₂` is non-negative."
+    },
+    {
+     "name": "edgeKernel_total",
+     "full": "GFNBounds.Balance.edgeKernel_total",
+     "kind": "theorem",
+     "line": 228,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeKernel_total {pb : V → V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (s s' : V) : ∑ z, ∑ w, edgeKernel pb s s' z w = 1",
+     "doc": "`K₂` is a Markov kernel on `𝒮²`: each row sums to `1`."
+    },
+    {
+     "name": "edgeMeasure",
+     "full": "GFNBounds.Balance.edgeMeasure",
+     "kind": "def",
+     "line": 240,
+     "attrs": "",
+     "private": false,
+     "statement": "def edgeMeasure (pb : V → V → ℝ) (lam : V → ℝ) : V → V → ℝ",
+     "doc": "**`def:edge_lift`, the edge measure** (`proofs.tex:509`): `λ₂(ds ds') := π_←(s' → ds) λ(ds')`, i.e."
+    },
+    {
+     "name": "edgeMeasure_nonneg",
+     "full": "GFNBounds.Balance.edgeMeasure_nonneg",
+     "kind": "theorem",
+     "line": 244,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeMeasure_nonneg {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hlam : ∀ x, 0 ≤ lam x) (s s' : V) : 0 ≤ edgeMeasure pb lam s s'",
+     "doc": "`λ₂ ≥ 0`."
+    },
+    {
+     "name": "marg₂_edgeMeasure",
+     "full": "GFNBounds.Balance.marg₂_edgeMeasure",
+     "kind": "theorem",
+     "line": 251,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem marg₂_edgeMeasure {pb : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) : marg₂ (edgeMeasure pb lam) = lam",
+     "doc": "**`λ₂` has second marginal `λ`** (`proofs.tex:521`, \"both marginals of `λ₂` equal `λ`\")."
+    },
+    {
+     "name": "marg₁_edgeMeasure",
+     "full": "GFNBounds.Balance.marg₁_edgeMeasure",
+     "kind": "theorem",
+     "line": 259,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem marg₁_edgeMeasure {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Invariant pb lam) : marg₁ (edgeMeasure pb lam) = lam",
+     "doc": "**`λ₂` has first marginal `λ`** (`proofs.tex:521`, and the \"`λπ_← = λ`\" of the invariance step)."
+    },
+    {
+     "name": "edgeMeasure_total",
+     "full": "GFNBounds.Balance.edgeMeasure_total",
+     "kind": "theorem",
+     "line": 267,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeMeasure_total {pb : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (htot : ∑ x, lam x = 1) : ∑ s, ∑ s', edgeMeasure pb lam s s' = 1",
+     "doc": "`λ₂` is a probability measure on `𝒮²` when `λ` is one on `𝒮`."
+    },
+    {
+     "name": "pushEdge",
+     "full": "GFNBounds.Balance.pushEdge",
+     "kind": "def",
+     "line": 280,
+     "attrs": "",
+     "private": false,
+     "statement": "def pushEdge (pb : V → V → ℝ) (mu : V → V → ℝ) : V → V → ℝ",
+     "doc": "The action of `K₂` on measures: `μ ↦ μK₂`, written out as `(μK₂)(z,w) = ∑_{s,s'} μ(s,s') K₂((s,s') → (z,w))`."
+    },
+    {
+     "name": "pushEdge_apply",
+     "full": "GFNBounds.Balance.pushEdge_apply",
+     "kind": "theorem",
+     "line": 289,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pushEdge_apply (pb : V → V → ℝ) (mu : V → V → ℝ) (z w : V) : pushEdge pb mu z w = pb w z * marg₁ mu w",
+     "doc": "**`eq:muK2_density`** (`proofs.tex:517–520`), in its division-free form: (μK₂)(s,s') = π_←(s' → s) · (m₁μ)(s'), which is the paper's `μK₂(ds ds') = π_←(s' → ds)(m₁μ)(ds')`."
+    },
+    {
+     "name": "pushEdge_eq_edgeMeasure_mul",
+     "full": "GFNBounds.Balance.pushEdge_eq_edgeMeasure_mul",
+     "kind": "theorem",
+     "line": 305,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pushEdge_eq_edgeMeasure_mul (pb : V → V → ℝ) (lam : V → ℝ) (mu : V → V → ℝ) {s s' : V} (h : lam s' ≠ 0) : pushEdge pb mu s s' = edgeMeasure pb lam s s' * (marg₁ mu s' / lam s')",
+     "doc": "**`eq:muK2_density`** as the paper writes it, as a density against `λ₂`: d(μK₂)/dλ₂ (s,s') = d(m₁μ)/dλ (s')."
+    },
+    {
+     "name": "pushEdge_edgeMeasure",
+     "full": "GFNBounds.Balance.pushEdge_edgeMeasure",
+     "kind": "theorem",
+     "line": 315,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pushEdge_edgeMeasure {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Invariant pb lam) : pushEdge pb (edgeMeasure pb lam) = edgeMeasure pb lam",
+     "doc": "**`lem:lift_wellposed`, invariance** (`proofs.tex:512`, proved at `proofs.tex:521`: \"taking `μ = λ₂`, whose first marginal is `λπ_← = λ`, yields invariance\")."
+    },
+    {
+     "name": "dualEdgeKernel",
+     "full": "GFNBounds.Balance.dualEdgeKernel",
+     "kind": "def",
+     "line": 329,
+     "attrs": "",
+     "private": false,
+     "statement": "def dualEdgeKernel (pf : V → V → ℝ) (_s s' z w : V) : ℝ",
+     "doc": "**`lem:lift_wellposed`, the dual kernel** (`proofs.tex:513`): the edge lift `(s,s') ↦ (s', π_→^λ(s'))` of the dual forward policy, i.e."
+    },
+    {
+     "name": "edgeKernel_dual",
+     "full": "GFNBounds.Balance.edgeKernel_dual",
+     "kind": "theorem",
+     "line": 340,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeKernel_dual {pb pf : V → V → ℝ} {lam : V → ℝ} (hpf : ∀ u v, lam u * pf u v = lam v * pb v u) (s s' z w : V) : edgeMeasure pb lam s s' * edgeKernel pb s s' z w = edgeMeasure pb lam z w * dualEdgeKernel pf z w s s'",
+     "doc": "**`lem:lift_wellposed`, the duality identity** `λ₂ ⊗ K₂* = K₂ ⊗ λ₂` (`proofs.tex:521`), read pointwise on a finite space: λ₂(s,s') · K₂((s,s') → (z,w)) = λ₂(z,w) · K₂*((z,w) → (s,s'))."
+    },
+    {
+     "name": "funActEdge",
+     "full": "GFNBounds.Balance.funActEdge",
+     "kind": "def",
+     "line": 353,
+     "attrs": "",
+     "private": false,
+     "statement": "def funActEdge (pb : V → V → ℝ) (f : V → V → ℝ) : V → V → ℝ",
+     "doc": "The action of `K₂` on **functions**: `(K₂f)(s,s') = ∑_{z,w} K₂((s,s') → (z,w)) f(z,w)`."
+    },
+    {
+     "name": "funActEdge_apply",
+     "full": "GFNBounds.Balance.funActEdge_apply",
+     "kind": "theorem",
+     "line": 358,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funActEdge_apply (pb : V → V → ℝ) (f : V → V → ℝ) (s s' : V) : funActEdge pb f s s' = ∑ z, pb s z * f z s",
+     "doc": "`(K₂f)(s,s') = ∫ f(z,s) π_←(s → dz)`: the value depends on `s` alone, the new second coordinate being the old first one."
+    },
+    {
+     "name": "dualFunActEdge",
+     "full": "GFNBounds.Balance.dualFunActEdge",
+     "kind": "def",
+     "line": 367,
+     "attrs": "",
+     "private": false,
+     "statement": "def dualFunActEdge (pf : V → V → ℝ) (f : V → V → ℝ) : V → V → ℝ",
+     "doc": "The action of `K₂*` on functions."
+    },
+    {
+     "name": "dualFunActEdge_apply",
+     "full": "GFNBounds.Balance.dualFunActEdge_apply",
+     "kind": "theorem",
+     "line": 371,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dualFunActEdge_apply (pf : V → V → ℝ) (f : V → V → ℝ) (s s' : V) : dualFunActEdge pf f s s' = ∑ w, pf s' w * f s' w",
+     "doc": "`(K₂*f)(s,s') = ∫ f(s',w) π_→^λ(s' → dw)`."
+    },
+    {
+     "name": "inner_funActEdge",
+     "full": "GFNBounds.Balance.inner_funActEdge",
+     "kind": "theorem",
+     "line": 387,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inner_funActEdge {pb pf : V → V → ℝ} {lam : V → ℝ} (hpf : ∀ u v, lam u * pf u v = lam v * pb v u) (f g : V → V → ℝ) : ∑ s, ∑ s', edgeMeasure pb lam s s' * funActEdge pb f s s' * g s s' = ∑ s, ∑ s', edgeMeasure pb lam s s' * f s s' * dualFunActEdge pf g s s'",
+     "doc": "**`lem:lift_wellposed`, the dual clause in its `L²(λ₂)` form**: `⟨K₂ f, g⟩_{λ₂} = ⟨f, K₂* g⟩_{λ₂}`, so the edge lift of the dual forward policy *is* the adjoint."
+    },
+    {
+     "name": "disint",
+     "full": "GFNBounds.Balance.disint",
+     "kind": "def",
+     "line": 415,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def disint (mu : V → V → ℝ) : V → V → ℝ",
+     "doc": "The **disintegration** `π_→^μ` of an edge flow: `π_→^μ(s → s') = μ(s,s')/F(s)` with `F = m₁μ` (`proofs.tex:525`)."
+    },
+    {
+     "name": "marg₁_mul_disint",
+     "full": "GFNBounds.Balance.marg₁_mul_disint",
+     "kind": "theorem",
+     "line": 425,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem marg₁_mul_disint {mu : V → V → ℝ} (hmu : ∀ s s', 0 ≤ mu s s') (s s' : V) : marg₁ mu s * disint mu s s' = mu s s'",
+     "doc": "**The disintegration reassembles, everywhere**: `F(s) · π_→^μ(s → s') = μ(s,s')` for every `(s,s')`, with no positivity hypothesis on `F`."
+    },
+    {
+     "name": "DetailedBalance",
+     "full": "GFNBounds.Balance.DetailedBalance",
+     "kind": "def",
+     "line": 437,
+     "attrs": "",
+     "private": false,
+     "statement": "def DetailedBalance (pb : V → V → ℝ) (F : V → ℝ) (pf : V → V → ℝ) : Prop",
+     "doc": "**Detailed balance of `(F, π_→)` with respect to `π_←`** (`proofs.tex:530`): `F(s) π_→(s → s') = F(s') π_←(s' → s)` at every pair."
+    },
+    {
+     "name": "db_lift_ratio",
+     "full": "GFNBounds.Balance.db_lift_ratio",
+     "kind": "theorem",
+     "line": 447,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem db_lift_ratio {pb : V → V → ℝ} {mu : V → V → ℝ} (hmu : ∀ s s', 0 ≤ mu s s') (s s' : V) : pushEdge pb mu s s' / mu s s' = marg₁ mu s' * pb s' s / (marg₁ mu s * disint mu s s')",
+     "doc": "**`prop:db_lift`, the ratio identity** (`proofs.tex:534`): the lifted balance ratio `d(μK₂)/dμ` *is* the detailed-balance edge ratio F(s') π_←(s' → s) / (F(s) π_→^μ(s → s'))."
+    },
+    {
+     "name": "db_lift_loss",
+     "full": "GFNBounds.Balance.db_lift_loss",
+     "kind": "theorem",
+     "line": 459,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem db_lift_loss {pb : V → V → ℝ} {mu : V → V → ℝ} (hmu : ∀ s s', 0 ≤ mu s s') (g : ℝ → ℝ) (nu : V → V → ℝ) : ∑ s, ∑ s', nu s s' * g (pushEdge pb mu s s' / mu s s') = ∑ s, ∑ s', nu s s' * g (marg₁ mu s' * pb s' s / (marg₁ mu s * disint mu s s'))",
+     "doc": "**`prop:db_lift`, the loss identity** (`proofs.tex:526–529`): for **any** `g` and any training distribution `ν̂` on `𝒮²`, ∫ g(d(μK₂)/dμ) dν̂ = ∫ g( F(ds')π_←(s'→ds) / (F(ds)π_→^μ(s→ds')) ) dν̂, the `g`-divergence detailed-balance loss with frozen backward policy."
+    },
+    {
+     "name": "db_lift_iff",
+     "full": "GFNBounds.Balance.db_lift_iff",
+     "kind": "theorem",
+     "line": 471,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem db_lift_iff {pb : V → V → ℝ} {mu : V → V → ℝ} (hmu : ∀ s s', 0 ≤ mu s s') : pushEdge pb mu = mu ↔ DetailedBalance pb (marg₁ mu) (disint mu)",
+     "doc": "**`prop:db_lift`, the \"in particular\"** (`proofs.tex:530`): `μK₂ = μ` if and only if `(F, π_→^μ)` satisfies detailed balance with respect to `π_←`."
+    },
+    {
+     "name": "l2sq",
+     "full": "GFNBounds.Balance.l2sq",
+     "kind": "def",
+     "line": 488,
+     "attrs": "",
+     "private": false,
+     "statement": "def l2sq (w f : V → ℝ) : ℝ",
+     "doc": "`‖f‖²_{L²(λ)} = ∑_x λ(x) f(x)²`, the finite-space reading of the paper's `L²(λ)` norm."
+    },
+    {
+     "name": "l2sq₂",
+     "full": "GFNBounds.Balance.l2sq₂",
+     "kind": "def",
+     "line": 491,
+     "attrs": "",
+     "private": false,
+     "statement": "def l2sq₂ (w f : V → V → ℝ) : ℝ",
+     "doc": "`‖f‖²_{L²(λ₂)} = ∑_{s,s'} λ₂(s,s') f(s,s')²`."
+    },
+    {
+     "name": "l2norm",
+     "full": "GFNBounds.Balance.l2norm",
+     "kind": "def",
+     "line": 494,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def l2norm (w f : V → ℝ) : ℝ",
+     "doc": "`‖f‖_{L²(λ)}`."
+    },
+    {
+     "name": "l2norm₂",
+     "full": "GFNBounds.Balance.l2norm₂",
+     "kind": "def",
+     "line": 497,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def l2norm₂ (w f : V → V → ℝ) : ℝ",
+     "doc": "`‖f‖_{L²(λ₂)}`."
+    },
+    {
+     "name": "sq_sum_le_sum_sq",
+     "full": "GFNBounds.Balance.sq_sum_le_sum_sq",
+     "kind": "theorem",
+     "line": 502,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sq_sum_le_sum_sq {p φ : V → ℝ} (hp : ∀ z, 0 ≤ p z) (hp1 : ∑ z, p z = 1) : (∑ z, p z * φ z) ^ 2 ≤ ∑ z, p z * φ z ^ 2",
+     "doc": "**Jensen against a probability weight**: `(∑ p φ)² ≤ ∑ p φ²` when `p ≥ 0` and `∑ p = 1`."
+    },
+    {
+     "name": "condFwd",
+     "full": "GFNBounds.Balance.condFwd",
+     "kind": "def",
+     "line": 514,
+     "attrs": "",
+     "private": false,
+     "statement": "def condFwd (pf : V → V → ℝ) (f : V → V → ℝ) : V → ℝ",
+     "doc": "The **forward** conditional expectation `(E f)(x) = ∫ f(x,w) π_→^λ(x → dw)`, the average of `f` over the second coordinate given the first, under `λ₂`."
+    },
+    {
+     "name": "marg₁_smul_edgeMeasure",
+     "full": "GFNBounds.Balance.marg₁_smul_edgeMeasure",
+     "kind": "theorem",
+     "line": 520,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem marg₁_smul_edgeMeasure {pb pf : V → V → ℝ} {lam : V → ℝ} (hpf : ∀ u v, lam u * pf u v = lam v * pb v u) (f : V → V → ℝ) (x : V) : marg₁ (fun s s' => f s s' * edgeMeasure pb lam s s') x = lam x * condFwd pf f x",
+     "doc": "`d(m₁(f λ₂))/dλ = E f` — the first marginal of the measure with `λ₂`-density `f` is `λ · (E f)`, the average of `f` against the **forward** conditional."
+    },
+    {
+     "name": "pushEdge_density",
+     "full": "GFNBounds.Balance.pushEdge_density",
+     "kind": "theorem",
+     "line": 531,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pushEdge_density {pb pf : V → V → ℝ} {lam : V → ℝ} (hpf : ∀ u v, lam u * pf u v = lam v * pb v u) (f : V → V → ℝ) (s s' : V) : pushEdge pb (fun a b => f a b * edgeMeasure pb lam a b) s s' = edgeMeasure pb lam s s' * condFwd pf f s'",
+     "doc": "**The `λ₂`-density action of `K₂`**: if `μ = f λ₂` then `μK₂ = ((s,s') ↦ (E f)(s')) λ₂`."
+    },
+    {
+     "name": "l2sq_condFwd_le",
+     "full": "GFNBounds.Balance.l2sq_condFwd_le",
+     "kind": "theorem",
+     "line": 540,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem l2sq_condFwd_le {pb pf : V → V → ℝ} {lam : V → ℝ} (hpfnn : ∀ u v, 0 ≤ pf u v) (hpfrow : ∀ u, ∑ v, pf u v = 1) (hpf : ∀ u v, lam u * pf u v = lam v * pb v u) (hlam : ∀ x, 0 ≤ lam x) (f : V → V → ℝ) : l2sq lam (condFwd pf f) ≤ l2sq₂ (edgeMeasure pb lam) f",
+     "doc": "**Jensen for the forward conditional**: `‖E f‖_{L²(λ)} ≤ ‖f‖_{L²(λ₂)}`, squared."
+    },
+    {
+     "name": "edgeDensAct_contraction",
+     "full": "GFNBounds.Balance.edgeDensAct_contraction",
+     "kind": "theorem",
+     "line": 567,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeDensAct_contraction {pb pf : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (hpfnn : ∀ u v, 0 ≤ pf u v) (hpfrow : ∀ u, ∑ v, pf u v = 1) (hpf : ∀ u v, lam u * pf u v = lam v * pb v u) (hlam : ∀ x, 0 ≤ lam x) (f : V → V → ℝ) : l2sq₂ (edgeMeasure pb lam) (fun _ s' => condFwd pf f s') ≤ l2sq₂ (edgeMeasure pb lam) f",
+     "doc": "**`lem:lift_wellposed`, the contraction** (`proofs.tex:512`, proved at `proofs.tex:521`): `‖μK₂‖_{𝓜²(λ₂)} ≤ ‖μ‖_{𝓜²(λ₂)}`, read on `λ₂`-densities and squared."
+    },
+    {
+     "name": "edgeDensAct_contraction_norm",
+     "full": "GFNBounds.Balance.edgeDensAct_contraction_norm",
+     "kind": "theorem",
+     "line": 586,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeDensAct_contraction_norm {pb pf : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (hpfnn : ∀ u v, 0 ≤ pf u v) (hpfrow : ∀ u, ∑ v, pf u v = 1) (hpf : ∀ u v, lam u * pf u v = lam v * pb v u) (hlam : ∀ x, 0 ≤ lam x) (f : V → V → ℝ) : l2norm₂ (edgeMeasure pb lam) (fun _ s' => condFwd pf f s') ≤ l2norm₂ (edgeMeasure pb lam) f",
+     "doc": "The contraction in norm form: `‖K₂ f‖_{L²(λ₂)} ≤ ‖f‖_{L²(λ₂)}`."
+    },
+    {
+     "name": "condBack",
+     "full": "GFNBounds.Balance.condBack",
+     "kind": "def",
+     "line": 596,
+     "attrs": "",
+     "private": false,
+     "statement": "def condBack (pb : V → V → ℝ) (f : V → V → ℝ) : V → ℝ",
+     "doc": "The **backward** conditional `g_f(x) := ∫ f(z,x) π_←(x → dz)` of `proofs.tex:555`."
+    },
+    {
+     "name": "funActEdge_eq_condBack",
+     "full": "GFNBounds.Balance.funActEdge_eq_condBack",
+     "kind": "theorem",
+     "line": 599,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funActEdge_eq_condBack (pb : V → V → ℝ) (f : V → V → ℝ) : funActEdge pb f = fun s _ => condBack pb f s",
+     "doc": "`(K₂ f)(s,s') = g_f(s)`, the `n = 1` case of `proofs.tex:555`."
+    },
+    {
+     "name": "funActEdge_iterate",
+     "full": "GFNBounds.Balance.funActEdge_iterate",
+     "kind": "theorem",
+     "line": 608,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funActEdge_iterate (pb : V → V → ℝ) (f : V → V → ℝ) (m : ℕ) : (funActEdge pb)^[m + 1] f = fun s _ => (funAct pb)^[m] (condBack pb f) s",
+     "doc": "**`(K₂^n f)(s,s') = (P^{n−1} g_f)(s)`** (`proofs.tex:555`), where `P` is the function action of `π_←` — `GFNBounds.Balance.funAct`, reused from `MassIdentity`."
+    },
+    {
+     "name": "edgeMean",
+     "full": "GFNBounds.Balance.edgeMean",
+     "kind": "def",
+     "line": 619,
+     "attrs": "",
+     "private": false,
+     "statement": "def edgeMean (pb : V → V → ℝ) (lam : V → ℝ) (f : V → V → ℝ) : ℝ",
+     "doc": "`Π₂ f = ∫ g_f dλ` (`proofs.tex:555`), the mean projection of `L²(λ₂)`."
+    },
+    {
+     "name": "edgeMean_eq_integral",
+     "full": "GFNBounds.Balance.edgeMean_eq_integral",
+     "kind": "theorem",
+     "line": 625,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeMean_eq_integral (pb : V → V → ℝ) (lam : V → ℝ) (f : V → V → ℝ) : edgeMean pb lam f = ∑ s, ∑ s', edgeMeasure pb lam s s' * f s s'",
+     "doc": "`Π₂ f = ∫ f dλ₂`: the paper's `∫ g_f dλ` really is the mean of `f` against the edge measure."
+    },
+    {
+     "name": "l2sq₂_of_fst",
+     "full": "GFNBounds.Balance.l2sq₂_of_fst",
+     "kind": "theorem",
+     "line": 635,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem l2sq₂_of_fst {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Invariant pb lam) (G : V → ℝ) : l2sq₂ (edgeMeasure pb lam) (fun s _ => G s) = l2sq lam G",
+     "doc": "A function of the **first** coordinate has the same `L²(λ₂)` norm as its `L²(λ)` norm: the first marginal of `λ₂` is `λ` (`marg₁_edgeMeasure`, which is where invariance enters)."
+    },
+    {
+     "name": "l2sq_condBack_le",
+     "full": "GFNBounds.Balance.l2sq_condBack_le",
+     "kind": "theorem",
+     "line": 644,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem l2sq_condBack_le {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (hlam : ∀ x, 0 ≤ lam x) (f : V → V → ℝ) : l2sq lam (condBack pb f) ≤ l2sq₂ (edgeMeasure pb lam) f",
+     "doc": "**Jensen for the backward conditional** (`proofs.tex:555`): `‖g_f‖_{L²(λ)} ≤ ‖f‖_{L²(λ₂)}`, squared."
+    },
+    {
+     "name": "edgeDeviation",
+     "full": "GFNBounds.Balance.edgeDeviation",
+     "kind": "def",
+     "line": 662,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def edgeDeviation (pb : V → V → ℝ) (lam : V → ℝ) (n : ℕ) (f : V → V → ℝ) : V → V → ℝ",
+     "doc": "`K₂^n − Π₂` on `L²(λ₂)`, whose operator norm is the paper's `β̂_n`."
+    },
+    {
+     "name": "deviation",
+     "full": "GFNBounds.Balance.deviation",
+     "kind": "def",
+     "line": 667,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def deviation (pb : V → V → ℝ) (lam : V → ℝ) (n : ℕ) (g : V → ℝ) : V → ℝ",
+     "doc": "`P^n − Π` on `L²(λ)`, whose operator norm is the paper's `β_n`."
+    },
+    {
+     "name": "lift_mixing",
+     "full": "GFNBounds.Balance.lift_mixing",
+     "kind": "theorem",
+     "line": 682,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lift_mixing {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) {b : ℝ} (hb : 0 ≤ b) {n : ℕ} (hbeta : ∀ g : V → ℝ, l2norm lam (deviation pb lam n g) ≤ b * l2norm lam g) (f : V → V → ℝ) : l2norm₂ (edgeMeasure pb lam) (edgeDeviation pb lam (n + 1) f) ≤ b * l2norm₂ (edgeMeasure pb lam) f",
+     "doc": "**`lem:lift_mixing`** (`proofs.tex:550–551`, proof `proofs.tex:554–561`), as the transfer of bounds it is: > every `b ≥ 0` with `‖(P^n − Π) g‖_{L²(λ)} ≤ b ‖g‖_{L²(λ)}` for all `g` also satisfies > `‖(K₂^{n+1} − Π₂) f‖_{L²(λ₂)} ≤ b ‖f‖_{L²(λ₂)}` for all `f`, which read on the least such `b` is `β̂_{n+1} ≤ β_n`, i.e."
+    },
+    {
+     "name": "OpBound",
+     "full": "GFNBounds.Balance.OpBound",
+     "kind": "def",
+     "line": 704,
+     "attrs": "",
+     "private": false,
+     "statement": "def OpBound (w : V → ℝ) (A : (V → ℝ) → (V → ℝ)) (b : ℝ) : Prop",
+     "doc": "`b` is an operator-norm bound for `A` on `L²(λ)`."
+    },
+    {
+     "name": "OpBound₂",
+     "full": "GFNBounds.Balance.OpBound₂",
+     "kind": "def",
+     "line": 708,
+     "attrs": "",
+     "private": false,
+     "statement": "def OpBound₂ (w : V → V → ℝ) (A : (V → V → ℝ) → (V → V → ℝ)) (b : ℝ) : Prop",
+     "doc": "`b` is an operator-norm bound for `A` on `L²(λ₂)`."
+    },
+    {
+     "name": "opNorm",
+     "full": "GFNBounds.Balance.opNorm",
+     "kind": "def",
+     "line": 712,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def opNorm (w : V → ℝ) (A : (V → ℝ) → (V → ℝ)) : ℝ",
+     "doc": "The operator norm on `L²(λ)`, as the infimum of the bounds."
+    },
+    {
+     "name": "opNorm₂",
+     "full": "GFNBounds.Balance.opNorm₂",
+     "kind": "def",
+     "line": 716,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def opNorm₂ (w : V → V → ℝ) (A : (V → V → ℝ) → (V → V → ℝ)) : ℝ",
+     "doc": "The operator norm on `L²(λ₂)`, as the infimum of the bounds — the paper's `β̂_n` at `A = K₂^n − Π₂`."
+    },
+    {
+     "name": "bddBelow_opBound₂",
+     "full": "GFNBounds.Balance.bddBelow_opBound₂",
+     "kind": "theorem",
+     "line": 721,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bddBelow_opBound₂ (w : V → V → ℝ) (A : (V → V → ℝ) → (V → V → ℝ)) : BddBelow {b | OpBound₂ w A b}",
+     "doc": "The set of bounds is bounded below by `0`, which is all `csInf_le` needs."
+    },
+    {
+     "name": "lift_mixing_opNorm",
+     "full": "GFNBounds.Balance.lift_mixing_opNorm",
+     "kind": "theorem",
+     "line": 726,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lift_mixing_opNorm {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) {b : ℝ} {n : ℕ} (hbeta : OpBound lam (deviation pb lam n) b) : opNorm₂ (edgeMeasure pb lam) (edgeDeviation pb lam (n + 1)) ≤ b",
+     "doc": "**`lem:lift_mixing` on the operator norm**: `β̂_{n+1} ≤ b` for every bound `b` of `P^n − Π`."
+    },
+    {
+     "name": "lift_mixing_opNorm_le",
+     "full": "GFNBounds.Balance.lift_mixing_opNorm_le",
+     "kind": "theorem",
+     "line": 740,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lift_mixing_opNorm_le {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) {n : ℕ} (hattained : OpBound lam (deviation pb lam n) (opNorm lam (deviation pb lam n))) : opNorm₂ (edgeMeasure pb lam) (edgeDeviation pb lam (n + 1)) ≤ opNorm lam (deviation pb lam n)",
+     "doc": "**`lem:lift_mixing` verbatim**: `β̂_{n+1} ≤ β_n`, i.e."
+    },
+    {
+     "name": "lam_mul_reversal",
+     "full": "GFNBounds.Balance.lam_mul_reversal",
+     "kind": "theorem",
+     "line": 768,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lam_mul_reversal {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (u v : V) : lam u * B.reversal lam u v = lam v * B.phat v u",
+     "doc": "**`Graph.Universality.reversal` is the paper's dual forward policy**: `λ ⊗ π_→^λ = π_← ⊗ λ` in coordinates, `λ(u)·π_→^λ(u → v) = λ(v)·π̂_←(v → u)`."
+    },
+    {
+     "name": "pushEdge_edgeMeasure_graph",
+     "full": "GFNBounds.Balance.pushEdge_edgeMeasure_graph",
+     "kind": "theorem",
+     "line": 773,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pushEdge_edgeMeasure_graph {lam : V → ℝ} (h : B.IsInvProb lam) : pushEdge B.phat (edgeMeasure B.phat lam) = edgeMeasure B.phat lam",
+     "doc": "**`lem:lift_wellposed`, invariance, on a marked graph.**"
+    },
+    {
+     "name": "edgeKernel_dual_graph",
+     "full": "GFNBounds.Balance.edgeKernel_dual_graph",
+     "kind": "theorem",
+     "line": 779,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeKernel_dual_graph (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (s s' z w : V) : edgeMeasure B.phat lam s s' * edgeKernel B.phat s s' z w = edgeMeasure B.phat lam z w * dualEdgeKernel (B.reversal lam) z w s s'",
+     "doc": "**`lem:lift_wellposed`, the duality identity, on a marked graph**, with the dual kernel built from `Graph.Universality.reversal`."
+    },
+    {
+     "name": "inner_funActEdge_graph",
+     "full": "GFNBounds.Balance.inner_funActEdge_graph",
+     "kind": "theorem",
+     "line": 787,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inner_funActEdge_graph (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (f g : V → V → ℝ) : ∑ s, ∑ s', edgeMeasure B.phat lam s s' * funActEdge B.phat f s s' * g s s' = ∑ s, ∑ s', edgeMeasure B.phat lam s s' * f s s' * dualFunActEdge (B.reversal lam) g s s'",
+     "doc": "**`lem:lift_wellposed`, the adjoint, on a marked graph**: the edge lift of the `λ`-reversal is the `L²(λ₂)`-adjoint of `K₂`."
+    },
+    {
+     "name": "edgeDensAct_contraction_graph",
+     "full": "GFNBounds.Balance.edgeDensAct_contraction_graph",
+     "kind": "theorem",
+     "line": 797,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeDensAct_contraction_graph (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (f : V → V → ℝ) : l2sq₂ (edgeMeasure B.phat lam) (fun _ s' => condFwd (B.reversal lam) f s') ≤ l2sq₂ (edgeMeasure B.phat lam) f",
+     "doc": "**`lem:lift_wellposed`, the contraction, on a marked graph.** The three properties of the reversal it needs — non-negativity, row sums `1`, and the defining identity — are `reversal_nonneg`, `sum_reversal` and `lam_mul_reversal`; none is rebuilt."
+    },
+    {
+     "name": "db_lift_iff_graph",
+     "full": "GFNBounds.Balance.db_lift_iff_graph",
+     "kind": "theorem",
+     "line": 809,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem db_lift_iff_graph {mu : V → V → ℝ} (hmu : ∀ s s', 0 ≤ mu s s') : pushEdge B.phat mu = mu ↔ DetailedBalance B.phat (marg₁ mu) (disint mu)",
+     "doc": "**`prop:db_lift`, the \"in particular\", on a marked graph**: an edge flow is `K₂`-invariant exactly when its first marginal and its disintegration are in detailed balance with the frozen backward policy."
+    },
+    {
+     "name": "lift_mixing_graph",
+     "full": "GFNBounds.Balance.lift_mixing_graph",
+     "kind": "theorem",
+     "line": 814,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lift_mixing_graph {lam : V → ℝ} (h : B.IsInvProb lam) {b : ℝ} (hb : 0 ≤ b) {n : ℕ} (hbeta : ∀ g : V → ℝ, l2norm lam (deviation B.phat lam n g) ≤ b * l2norm lam g) (f : V → V → ℝ) : l2norm₂ (edgeMeasure B.phat lam) (edgeDeviation B.phat lam (n + 1) f) ≤ b * l2norm₂ (edgeMeasure B.phat lam) f",
+     "doc": "**`lem:lift_mixing` on a marked graph.**"
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -417,7 +1072,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -613,6 +1268,474 @@
      "private": false,
      "statement": "theorem eq_meanProj_of_invariant (h : Mixing P (meanProj ν p)) {g : Lp ℝ p ν} (hg : P g = g) : g = ((∫ x, g x ∂ν) / (ν Set.univ).toReal) • constOne ν p",
      "doc": "**Summable mixing against the mean projection is an ergodicity hypothesis.** The paper's `Π` is the projection onto the invariant densities and coincides with the mean projection because `π⋆` is ergodic."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Core/Kernel.lean",
+   "title": "The density action of a Markov kernel, and the two conditions `Core.Flow` assumes",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Core.Flow"
+   ],
+   "variables": [
+    "variable {α : Type*} [MeasurableSpace α]"
+   ],
+   "lines": 661,
+   "decls": [
+    {
+     "name": "bind_absolutelyContinuous_bind",
+     "full": "GFNBounds.Core.bind_absolutelyContinuous_bind",
+     "kind": "theorem",
+     "line": 129,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bind_absolutelyContinuous_bind (κ : Kernel α α) {μ ν : Measure α} (h : μ ≪ ν) : μ.bind ⇑κ ≪ ν.bind ⇑κ",
+     "doc": "**A kernel push preserves domination**: `μ ≪ ν` implies `μ π⋆ ≪ ν π⋆`."
+    },
+    {
+     "name": "bind_add_measure",
+     "full": "GFNBounds.Core.bind_add_measure",
+     "kind": "theorem",
+     "line": 138,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bind_add_measure (κ : Kernel α α) (μ₁ μ₂ : Measure α) : (μ₁ + μ₂).bind ⇑κ = μ₁.bind ⇑κ + μ₂.bind ⇑κ",
+     "doc": "`bind` is additive in the measure: `(μ₁ + μ₂) π⋆ = μ₁ π⋆ + μ₂ π⋆`."
+    },
+    {
+     "name": "bind_withDensity_absolutelyContinuous",
+     "full": "GFNBounds.Core.bind_withDensity_absolutelyContinuous",
+     "kind": "theorem",
+     "line": 148,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bind_withDensity_absolutelyContinuous (κ : Kernel α α) {ν : Measure α} (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : (ν.withDensity f).bind ⇑κ ≪ ν",
+     "doc": "**`(f ν) π⋆ ≪ ν`, from invariance alone.** This is the main text's \"invariance makes the density action `P⋆ f := d((f ν_B) π⋆)/dν_B` well defined on `L¹(ν_B)`\" (`universality.tex:26–27`), and it is a theorem, not a hypothesis."
+    },
+    {
+     "name": "bind_withDensity_univ",
+     "full": "GFNBounds.Core.bind_withDensity_univ",
+     "kind": "theorem",
+     "line": 155,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bind_withDensity_univ (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) (f : α → ℝ≥0∞) : ((ν.withDensity f).bind ⇑κ) Set.univ = ∫⁻ x, f x ∂ν",
+     "doc": "**The mass of `(f ν) π⋆` is the mass of `f ν`** — stochasticity of the kernel, and not invariance of the measure."
+    },
+    {
+     "name": "isFiniteMeasure_bind_withDensity",
+     "full": "GFNBounds.Core.isFiniteMeasure_bind_withDensity",
+     "kind": "theorem",
+     "line": 162,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isFiniteMeasure_bind_withDensity (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) {f : α → ℝ≥0∞} (hf : ∫⁻ x, f x ∂ν ≠ ⊤) : IsFiniteMeasure ((ν.withDensity f).bind ⇑κ)",
+     "doc": "`(f ν) π⋆` is a finite measure as soon as `f` has finite `ν`-integral."
+    },
+    {
+     "name": "bindDensity",
+     "full": "GFNBounds.Core.bindDensity",
+     "kind": "def",
+     "line": 171,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def bindDensity (κ : Kernel α α) (ν : Measure α) (f : α → ℝ≥0∞) : α → ℝ≥0∞",
+     "doc": "**The density action `T f := d((f ν) π⋆)/dν`** of the main text (`universality.tex:26–27`), on non-negative densities."
+    },
+    {
+     "name": "bindDensity_congr",
+     "full": "GFNBounds.Core.bindDensity_congr",
+     "kind": "theorem",
+     "line": 177,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bindDensity_congr (κ : Kernel α α) (ν : Measure α) {f g : α → ℝ≥0∞} (h : f =ᵐ[ν] g) : bindDensity κ ν f = bindDensity κ ν g",
+     "doc": "`T` depends on `f` only through its `ν`-a.e."
+    },
+    {
+     "name": "measurable_bindDensity",
+     "full": "GFNBounds.Core.measurable_bindDensity",
+     "kind": "theorem",
+     "line": 182,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem measurable_bindDensity (κ : Kernel α α) (ν : Measure α) (f : α → ℝ≥0∞) : Measurable (bindDensity κ ν f)",
+     "doc": "`T f` is measurable, with no hypothesis on `f`: a Radon–Nikodym derivative always is."
+    },
+    {
+     "name": "withDensity_bindDensity",
+     "full": "GFNBounds.Core.withDensity_bindDensity",
+     "kind": "theorem",
+     "line": 190,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem withDensity_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : ν.withDensity (bindDensity κ ν f) = (ν.withDensity f).bind ⇑κ",
+     "doc": "**`T f` is a genuine density for `(f ν) π⋆`.** This is the well-definedness assertion of `universality.tex:26–27`."
+    },
+    {
+     "name": "lintegral_bindDensity",
+     "full": "GFNBounds.Core.lintegral_bindDensity",
+     "kind": "theorem",
+     "line": 198,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lintegral_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : ∫⁻ x, bindDensity κ ν f x ∂ν = ∫⁻ x, f x ∂ν",
+     "doc": "**`∫ T f dν = ∫ f dν`** — the non-negative half of `hint`."
+    },
+    {
+     "name": "bindDensity_one",
+     "full": "GFNBounds.Core.bindDensity_one",
+     "kind": "theorem",
+     "line": 209,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bindDensity_one (κ : Kernel α α) {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) : bindDensity κ ν 1 =ᵐ[ν] 1",
+     "doc": "**`T 𝟏 = 𝟏`** — the non-negative half of `hone`, and pure invariance: `𝟏 ν = ν`, so `(𝟏 ν) π⋆ = ν π⋆ = ν` and `dν/dν = 𝟏`."
+    },
+    {
+     "name": "bindDensity_zero",
+     "full": "GFNBounds.Core.bindDensity_zero",
+     "kind": "theorem",
+     "line": 215,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bindDensity_zero (κ : Kernel α α) (ν : Measure α) : bindDensity κ ν 0 =ᵐ[ν] 0",
+     "doc": "`T 0 = 0`: the zero density pushes to the zero measure."
+    },
+    {
+     "name": "bindDensity_add",
+     "full": "GFNBounds.Core.bindDensity_add",
+     "kind": "theorem",
+     "line": 220,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bindDensity_add (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {f g : α → ℝ≥0∞} (hf : AEMeasurable f ν) (hfi : ∫⁻ x, f x ∂ν ≠ ⊤) (hgi : ∫⁻ x, g x ∂ν ≠ ⊤) : bindDensity κ ν (f + g) =ᵐ[ν] bindDensity κ ν f + bindDensity κ ν g",
+     "doc": "**`T` is additive**, `ν`-a.e., on densities of finite integral."
+    },
+    {
+     "name": "bindDensity_smul",
+     "full": "GFNBounds.Core.bindDensity_smul",
+     "kind": "theorem",
+     "line": 239,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bindDensity_smul (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {c : ℝ≥0∞} (hc : c ≠ ⊤) {f : α → ℝ≥0∞} (hf : AEMeasurable f ν) (hfi : ∫⁻ x, f x ∂ν ≠ ⊤) : bindDensity κ ν (c • f) =ᵐ[ν] c • bindDensity κ ν f",
+     "doc": "**`T` is positively homogeneous**, `ν`-a.e., for a finite scalar."
+    },
+    {
+     "name": "densityAction",
+     "full": "GFNBounds.Core.densityAction",
+     "kind": "def",
+     "line": 261,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def densityAction (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : α → ℝ",
+     "doc": "**The density action `P⋆ f := d((f ν) π⋆)/dν` on signed densities.** A signed density is split into its positive and negative parts, each pushed by `T = bindDensity`, and the two densities subtracted."
+    },
+    {
+     "name": "densityAction_congr",
+     "full": "GFNBounds.Core.densityAction_congr",
+     "kind": "theorem",
+     "line": 267,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densityAction_congr (κ : Kernel α α) (ν : Measure α) {f g : α → ℝ} (h : f =ᵐ[ν] g) : densityAction κ ν f = densityAction κ ν g",
+     "doc": "`P⋆` depends on `f` only through its `ν`-a.e."
+    },
+    {
+     "name": "measurable_densityAction",
+     "full": "GFNBounds.Core.measurable_densityAction",
+     "kind": "theorem",
+     "line": 279,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem measurable_densityAction (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : Measurable (densityAction κ ν f)",
+     "doc": "`P⋆ f` is measurable, with no hypothesis on `f`."
+    },
+    {
+     "name": "lintegral_ofReal_ne_top",
+     "full": "GFNBounds.Core.lintegral_ofReal_ne_top",
+     "kind": "theorem",
+     "line": 285,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lintegral_ofReal_ne_top {ν : Measure α} {f : α → ℝ} (hf : Integrable f ν) : ∫⁻ x, ENNReal.ofReal (f x) ∂ν ≠ ⊤",
+     "doc": "The positive part of an integrable function has finite `ν`-integral."
+    },
+    {
+     "name": "bindDensity_ofReal_lt_top",
+     "full": "GFNBounds.Core.bindDensity_ofReal_lt_top",
+     "kind": "theorem",
+     "line": 292,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bindDensity_ofReal_lt_top (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∀ᵐ x ∂ν, bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x < ⊤",
+     "doc": "`T f⁺` has finite `ν`-integral, hence is a.e."
+    },
+    {
+     "name": "integrable_toReal_bindDensity",
+     "full": "GFNBounds.Core.integrable_toReal_bindDensity",
+     "kind": "theorem",
+     "line": 299,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integrable_toReal_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : Integrable (fun x => (bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x).toReal) ν",
+     "doc": "`(T f⁺).toReal` is `ν`-integrable, with `∫ (T f⁺).toReal dν = ∫ f⁺ dν`."
+    },
+    {
+     "name": "integral_toReal_bindDensity",
+     "full": "GFNBounds.Core.integral_toReal_bindDensity",
+     "kind": "theorem",
+     "line": 305,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_toReal_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∫ x, (bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x).toReal ∂ν = (∫⁻ x, ENNReal.ofReal (f x) ∂ν).toReal",
+     "doc": ""
+    },
+    {
+     "name": "integral_densityAction",
+     "full": "GFNBounds.Core.integral_densityAction",
+     "kind": "theorem",
+     "line": 317,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_densityAction (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∫ x, densityAction κ ν f x ∂ν = ∫ x, f x ∂ν",
+     "doc": "**`hint`, in the paper's own terms**: `∫ P⋆ f dν = ∫ f dν` for every `ν`-integrable `f`."
+    },
+    {
+     "name": "densityAction_one",
+     "full": "GFNBounds.Core.densityAction_one",
+     "kind": "theorem",
+     "line": 329,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densityAction_one (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) : densityAction κ ν 1 =ᵐ[ν] 1",
+     "doc": "**`hone`**: `P⋆ 𝟏 = 𝟏` a.e."
+    },
+    {
+     "name": "max_add_aux",
+     "full": "GFNBounds.Core.max_add_aux",
+     "kind": "theorem",
+     "line": 343,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem max_add_aux (u v : ℝ) : max (u + v) 0 + max (-u) 0 + max (-v) 0 = max (-(u + v)) 0 + max u 0 + max v 0",
+     "doc": "The real identity behind additivity of `P⋆`: `(u+v)⁺ + u⁻ + v⁻ = (u+v)⁻ + u⁺ + v⁺`."
+    },
+    {
+     "name": "ofReal_add_aux",
+     "full": "GFNBounds.Core.ofReal_add_aux",
+     "kind": "theorem",
+     "line": 356,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ofReal_add_aux (u v : ℝ) : ENNReal.ofReal (u + v) + ENNReal.ofReal (-u) + ENNReal.ofReal (-v) = ENNReal.ofReal (-(u + v)) + ENNReal.ofReal u + ENNReal.ofReal v",
+     "doc": "The same identity in `ℝ≥0∞`, which is where `T` consumes it."
+    },
+    {
+     "name": "lintegral_add_ne_top",
+     "full": "GFNBounds.Core.lintegral_add_ne_top",
+     "kind": "theorem",
+     "line": 371,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lintegral_add_ne_top {ν : Measure α} {u v : α → ℝ≥0∞} (hu : AEMeasurable u ν) (hun : ∫⁻ x, u x ∂ν ≠ ⊤) (hvn : ∫⁻ x, v x ∂ν ≠ ⊤) : ∫⁻ x, (u + v) x ∂ν ≠ ⊤",
+     "doc": "`∫ (u + v) dν` is finite when both summands are."
+    },
+    {
+     "name": "bindDensity_add₃",
+     "full": "GFNBounds.Core.bindDensity_add₃",
+     "kind": "theorem",
+     "line": 378,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bindDensity_add₃ (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {u v w : α → ℝ≥0∞} (hu : AEMeasurable u ν) (hv : AEMeasurable v ν) (hun : ∫⁻ x, u x ∂ν ≠ ⊤) (hvn : ∫⁻ x, v x ∂ν ≠ ⊤) (hwn : ∫⁻ x, w x ∂ν ≠ ⊤) : bindDensity κ ν (u + v + w) =ᵐ[ν] bindDensity κ ν u + bindDensity κ ν v + bindDensity κ ν w",
+     "doc": "`T` on a sum of three densities of finite integral."
+    },
+    {
+     "name": "aemeasurable_ofReal",
+     "full": "GFNBounds.Core.aemeasurable_ofReal",
+     "kind": "theorem",
+     "line": 392,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem aemeasurable_ofReal {ν : Measure α} {f : α → ℝ} (hf : Integrable f ν) : AEMeasurable (fun y => ENNReal.ofReal (f y)) ν",
+     "doc": "The positive part of an integrable function is `ν`-a.e."
+    },
+    {
+     "name": "densityAction_add",
+     "full": "GFNBounds.Core.densityAction_add",
+     "kind": "theorem",
+     "line": 401,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densityAction_add (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f g : α → ℝ} (hf : Integrable f ν) (hg : Integrable g ν) : densityAction κ ν (fun x => f x + g x) =ᵐ[ν] fun x => densityAction κ ν f x + densityAction κ ν g x",
+     "doc": "**`P⋆` is additive**, `ν`-a.e., on `ν`-integrable densities."
+    },
+    {
+     "name": "densityAction_neg",
+     "full": "GFNBounds.Core.densityAction_neg",
+     "kind": "theorem",
+     "line": 441,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densityAction_neg (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : densityAction κ ν (fun x => -f x) = fun x => -densityAction κ ν f x",
+     "doc": "`P⋆(-f) = -P⋆ f`, by definition: negation swaps the positive and negative parts."
+    },
+    {
+     "name": "densityAction_smul_nonneg",
+     "full": "GFNBounds.Core.densityAction_smul_nonneg",
+     "kind": "theorem",
+     "line": 448,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densityAction_smul_nonneg (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {r : ℝ} (hr : 0 ≤ r) {f : α → ℝ} (hf : Integrable f ν) : densityAction κ ν (fun x => r * f x) =ᵐ[ν] fun x => r * densityAction κ ν f x",
+     "doc": "`P⋆` is homogeneous under a non-negative scalar."
+    },
+    {
+     "name": "densityAction_smul",
+     "full": "GFNBounds.Core.densityAction_smul",
+     "kind": "theorem",
+     "line": 471,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densityAction_smul (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (r : ℝ) {f : α → ℝ} (hf : Integrable f ν) : densityAction κ ν (fun x => r * f x) =ᵐ[ν] fun x => r * densityAction κ ν f x",
+     "doc": "**`P⋆` is homogeneous**, `ν`-a.e., under every real scalar."
+    },
+    {
+     "name": "IsBoundedDensityAction",
+     "full": "GFNBounds.Core.IsBoundedDensityAction",
+     "kind": "structure",
+     "line": 496,
+     "attrs": "",
+     "private": false,
+     "statement": "structure IsBoundedDensityAction (κ : Kernel α α) (ν : Measure α) (p : ℝ≥0∞) (C : ℝ) : Prop",
+     "doc": "**The paper's boundedness hypothesis on the parameterization**, and the only hypothesis of `theo:universality_L2_full` that this file assumes rather than derives."
+    },
+    {
+     "name": "densityActionLM",
+     "full": "GFNBounds.Core.densityActionLM",
+     "kind": "def",
+     "line": 507,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def densityActionLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : Lp ℝ p ν →ₗ[ℝ] Lp ℝ p ν",
+     "doc": "`P⋆` as a linear map on `L^p(ν)`."
+    },
+    {
+     "name": "densityActionCLM",
+     "full": "GFNBounds.Core.densityActionCLM",
+     "kind": "def",
+     "line": 541,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : Lp ℝ p ν →L[ℝ] Lp ℝ p ν",
+     "doc": "**`P⋆` as a `ContinuousLinearMap` on `L^p(ν)`**, with the paper's own operator-norm bound `C` as the continuity constant."
+    },
+    {
+     "name": "norm_densityActionCLM_le",
+     "full": "GFNBounds.Core.norm_densityActionCLM_le",
+     "kind": "theorem",
+     "line": 556,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_densityActionCLM_le (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : ‖densityActionCLM κ ν p hinv hb‖ ≤ C",
+     "doc": "`‖P⋆‖_{L^p→L^p} ≤ C`: the paper's constant bounds the operator norm, as rule 3 asks."
+    },
+    {
+     "name": "coeFn_densityActionCLM",
+     "full": "GFNBounds.Core.coeFn_densityActionCLM",
+     "kind": "theorem",
+     "line": 562,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coeFn_densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (F : Lp ℝ p ν) : ⇑(densityActionCLM κ ν p hinv hb F) =ᵐ[ν] densityAction κ ν ⇑F",
+     "doc": "The `L^p` operator applied to `F` is represented by `P⋆` applied to any representative."
+    },
+    {
+     "name": "densityActionCLM_constOne",
+     "full": "GFNBounds.Core.densityActionCLM_constOne",
+     "kind": "theorem",
+     "line": 569,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densityActionCLM_constOne (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : densityActionCLM κ ν p hinv hb (constOne ν p) = constOne ν p",
+     "doc": "**`hone` on `L^p(ν)`**: `P⋆ 𝟏 = 𝟏`, the paper's `(Id − P⋆) 𝟏 = 0` (`proofs.tex:100`)."
+    },
+    {
+     "name": "integral_densityActionCLM",
+     "full": "GFNBounds.Core.integral_densityActionCLM",
+     "kind": "theorem",
+     "line": 579,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (F : Lp ℝ p ν) : ∫ x, (densityActionCLM κ ν p hinv hb F) x ∂ν = ∫ x, F x ∂ν",
+     "doc": "**`hint` on `L^p(ν)`**: `∫ P⋆ f dν = ∫ f dν`."
+    },
+    {
+     "name": "weaklyUniversal_of_kernel",
+     "full": "GFNBounds.Core.weaklyUniversal_of_kernel",
+     "kind": "theorem",
+     "line": 596,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem weaklyUniversal_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν p hinv hb) ^ n - meanProj ν p‖) (hp : p ≠ ⊤) : WeaklyUniversal (densityActionCLM κ ν p hinv hb) (meanProj ν p)",
+     "doc": "**`theo:universality_L2_full`'s weak half, from the paper's own hypotheses about the kernel.** `π⋆` is a Markov kernel, `ν` is finite and `π⋆`-invariant, `P⋆` is bounded on `L^p(ν)` with constant `C` — the paper's requirement on the parameterization — and the mixing coefficients `β_n = ‖P⋆^n − Π‖` are summable."
+    },
+    {
+     "name": "weaklyUniversalAt_of_kernel",
+     "full": "GFNBounds.Core.weaklyUniversalAt_of_kernel",
+     "kind": "theorem",
+     "line": 607,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem weaklyUniversalAt_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν p hinv hb) ^ n - meanProj ν p‖) (hp : p ≠ ⊤) {f_init f_term : Lp ℝ p ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : WeaklyUniversalAt (densityActionCLM κ ν p hinv hb) (f_term - f_init)",
+     "doc": "**The same, at one admissible pair**: two densities in `L^p(ν)` of equal total mass are joined to arbitrary accuracy by a non-negative outflow against the kernel `π⋆`."
+    },
+    {
+     "name": "bind_id",
+     "full": "GFNBounds.Core.bind_id",
+     "kind": "theorem",
+     "line": 619,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bind_id (ν : Measure α) : ν.bind ⇑(Kernel.id : Kernel α α) = ν",
+     "doc": "Every measure is invariant under the identity kernel."
+    },
+    {
+     "name": "bindDensity_id",
+     "full": "GFNBounds.Core.bindDensity_id",
+     "kind": "theorem",
+     "line": 625,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bindDensity_id (ν : Measure α) [SigmaFinite ν] {f : α → ℝ≥0∞} (hf : AEMeasurable f ν) : bindDensity (Kernel.id : Kernel α α) ν f =ᵐ[ν] f",
+     "doc": "The identity kernel has the identity density action on non-negative densities."
+    },
+    {
+     "name": "densityAction_id",
+     "full": "GFNBounds.Core.densityAction_id",
+     "kind": "theorem",
+     "line": 632,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densityAction_id (ν : Measure α) [SigmaFinite ν] {f : α → ℝ} (hf : AEMeasurable f ν) : densityAction (Kernel.id : Kernel α α) ν f =ᵐ[ν] f",
+     "doc": "The identity kernel has the identity density action."
+    },
+    {
+     "name": "isBoundedDensityAction_id",
+     "full": "GFNBounds.Core.isBoundedDensityAction_id",
+     "kind": "theorem",
+     "line": 653,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isBoundedDensityAction_id (ν : Measure α) [SigmaFinite ν] (p : ℝ≥0∞) : IsBoundedDensityAction (Kernel.id : Kernel α α) ν p 1",
+     "doc": "**`IsBoundedDensityAction` is satisfiable**, so `weaklyUniversal_of_kernel` is not vacuous: the identity kernel is Markov, every measure is invariant under it (`bind_id`), and its density action is the identity, of operator norm `1`."
     }
    ],
    "library": "strict",
@@ -844,7 +1967,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -1083,6 +2206,227 @@
     }
    ],
    "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Core/StrongUniversality.lean",
+   "title": "Strong universality at `p = +∞`, and the transfer of the realized outflow to every `L^r`",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Core.Kernel"
+   ],
+   "variables": [
+    "variable {α : Type*} [MeasurableSpace α] {ν : Measure α}",
+    "variable [IsFiniteMeasure ν]",
+    "variable {E : Type*} [NormedAddCommGroup E] [Lattice E] [NormedSpace ℝ E]",
+    "variable {r : ℝ≥0∞} [Fact (1 ≤ r)] {P : Lp ℝ ⊤ ν →L[ℝ] Lp ℝ ⊤ ν}"
+   ],
+   "lines": 355,
+   "decls": [
+    {
+     "name": "ae_le_norm_top",
+     "full": "GFNBounds.Core.ae_le_norm_top",
+     "kind": "theorem",
+     "line": 135,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ae_le_norm_top (g : Lp ℝ ⊤ ν) : ∀ᵐ x ∂ν, g x ≤ ‖g‖",
+     "doc": "**`g ≤ ‖g‖` a.e., on `L^∞(ν)`.** The essential supremum dominates a.e., and on `L^∞` it is finite, so the `ℝ≥0∞` inequality `‖g x‖ₑ ≤ eLpNormEssSup g ν` may be read in `ℝ`."
+    },
+    {
+     "name": "le_norm_smul_constOne",
+     "full": "GFNBounds.Core.le_norm_smul_constOne",
+     "kind": "theorem",
+     "line": 151,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_norm_smul_constOne (g : Lp ℝ ⊤ ν) : g ≤ ‖g‖ • constOne ν ⊤",
+     "doc": "**The order hypothesis of `stronglyUniversalAt_of_le`, discharged at `p = +∞`**: `g ≤ ‖g‖ • 𝟏` in the `L^∞(ν)` order."
+    },
+    {
+     "name": "stronglyUniversalAt_top",
+     "full": "GFNBounds.Core.stronglyUniversalAt_top",
+     "kind": "theorem",
+     "line": 166,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stronglyUniversalAt_top {P Pi : Lp ℝ ⊤ ν →L[ℝ] Lp ℝ ⊤ ν} {θ : Lp ℝ ⊤ ν} (h : Mixing P Pi) (hone : P (constOne ν ⊤) = constOne ν ⊤) (hθ : Pi θ = 0) : StronglyUniversalAt P θ",
+     "doc": "**`theo:universality_L2_full`'s `p = +∞` clause, at one admissible pair.** \"Taking `η := ‖Sθ‖_{L^∞(ν_B)}` gives `δf_init = δf_term = 0`, and the flow-matching constraint holds exactly\" (`proofs.tex:73`)."
+    },
+    {
+     "name": "StronglyUniversal",
+     "full": "GFNBounds.Core.StronglyUniversal",
+     "kind": "def",
+     "line": 181,
+     "attrs": "",
+     "private": false,
+     "statement": "def StronglyUniversal (P Pi : E →L[ℝ] E) : Prop",
+     "doc": "**`def:universality`, strong form, with its pair quantifier closed**: the family `Θ = {P} × E⁺` is strongly universal when *every* admissible pair is realized exactly — not merely approached."
+    },
+    {
+     "name": "StronglyUniversal.weaklyUniversal",
+     "full": "GFNBounds.Core.StronglyUniversal.weaklyUniversal",
+     "kind": "theorem",
+     "line": 184,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem StronglyUniversal.weaklyUniversal [HasSolidNorm E] [IsOrderedAddMonoid E] {P Pi : E →L[ℝ] E} (h : StronglyUniversal P Pi) : WeaklyUniversal P Pi",
+     "doc": ""
+    },
+    {
+     "name": "stronglyUniversal_top",
+     "full": "GFNBounds.Core.stronglyUniversal_top",
+     "kind": "theorem",
+     "line": 192,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stronglyUniversal_top {P Pi : Lp ℝ ⊤ ν →L[ℝ] Lp ℝ ⊤ ν} (h : Mixing P Pi) (hone : P (constOne ν ⊤) = constOne ν ⊤) : StronglyUniversal P Pi",
+     "doc": "**`theo:universality_L2_full`'s `p = +∞` clause, for the family**: under summable `L^∞`-mixing and with `P` fixing the constants, `Θ = {P} × L^∞_+(ν)` is strongly universal."
+    },
+    {
+     "name": "stronglyUniversal_of_kernel_top",
+     "full": "GFNBounds.Core.stronglyUniversal_of_kernel_top",
+     "kind": "theorem",
+     "line": 204,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stronglyUniversal_of_kernel_top (κ : ProbabilityTheory.Kernel α α) [ProbabilityTheory.IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν ⊤ C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν ⊤ hinv hb) ^ n - meanProj ν ⊤‖) : StronglyUniversal (densityActionCLM κ ν ⊤ hinv hb) (meanProj ν ⊤)",
+     "doc": "**Strong universality at `p = +∞`, from the paper's hypotheses on the kernel.** `π⋆` a Markov kernel, `ν` finite and `π⋆`-invariant, the density action bounded on `L^∞(ν)`, the mixing coefficients summable there."
+    },
+    {
+     "name": "stronglyUniversalAt_of_kernel_top",
+     "full": "GFNBounds.Core.stronglyUniversalAt_of_kernel_top",
+     "kind": "theorem",
+     "line": 216,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stronglyUniversalAt_of_kernel_top (κ : ProbabilityTheory.Kernel α α) [ProbabilityTheory.IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν ⊤ C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν ⊤ hinv hb) ^ n - meanProj ν ⊤‖) {f_init f_term : Lp ℝ ⊤ ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : StronglyUniversalAt (densityActionCLM κ ν ⊤ hinv hb) (f_term - f_init)",
+     "doc": "**The same at one admissible pair**, in the paper's own terms: two densities in `L^∞(ν)` of equal total mass are joined *exactly* — not approximately — by a non-negative outflow."
+    },
+    {
+     "name": "inclTop",
+     "full": "GFNBounds.Core.inclTop",
+     "kind": "def",
+     "line": 229,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def inclTop (ν : Measure α) [IsFiniteMeasure ν] (r : ℝ≥0∞) (f : Lp ℝ ⊤ ν) : Lp ℝ r ν",
+     "doc": "**The inclusion `L^∞(ν) ↪ L^r(ν)`**, `ν` finite."
+    },
+    {
+     "name": "memLp_of_top",
+     "full": "GFNBounds.Core.memLp_of_top",
+     "kind": "theorem",
+     "line": 234,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem memLp_of_top (r : ℝ≥0∞) (f : Lp ℝ ⊤ ν) : MemLp (⇑f) r ν",
+     "doc": "An `L^∞(ν)` function is in every `L^r(ν)`: finiteness of `ν` and nothing else."
+    },
+    {
+     "name": "coeFn_inclTop",
+     "full": "GFNBounds.Core.coeFn_inclTop",
+     "kind": "theorem",
+     "line": 237,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coeFn_inclTop (r : ℝ≥0∞) (f : Lp ℝ ⊤ ν) : ⇑(inclTop ν r f) =ᵐ[ν] ⇑f",
+     "doc": ""
+    },
+    {
+     "name": "inclTop_nonneg",
+     "full": "GFNBounds.Core.inclTop_nonneg",
+     "kind": "theorem",
+     "line": 241,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inclTop_nonneg {r : ℝ≥0∞} {f : Lp ℝ ⊤ ν} (hf : 0 ≤ f) : 0 ≤ inclTop ν r f",
+     "doc": "The inclusion is order-preserving, the `Lp` order being the a.e."
+    },
+    {
+     "name": "coeFn_defect",
+     "full": "GFNBounds.Core.coeFn_defect",
+     "kind": "theorem",
+     "line": 249,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coeFn_defect {p : ℝ≥0∞} [Fact (1 ≤ p)] (P : Lp ℝ p ν →L[ℝ] Lp ℝ p ν) (θ fout : Lp ℝ p ν) : ⇑(defect P θ fout) =ᵐ[ν] fun x => (P fout) x - fout x - θ x",
+     "doc": "The defect, read pointwise: `D = P f_out − f_out − θ` a.e."
+    },
+    {
+     "name": "exists_outflow_memLp_of_top",
+     "full": "GFNBounds.Core.exists_outflow_memLp_of_top",
+     "kind": "theorem",
+     "line": 263,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_outflow_memLp_of_top {P Pi : Lp ℝ ⊤ ν →L[ℝ] Lp ℝ ⊤ ν} {θ : Lp ℝ ⊤ ν} (h : Mixing P Pi) (hone : P (constOne ν ⊤) = constOne ν ⊤) (hθ : Pi θ = 0) : ∃ fout : Lp ℝ ⊤ ν, 0 ≤ fout ∧ (∀ r : ℝ≥0∞, MemLp (⇑fout) r ν) ∧ ∀ᵐ x ∂ν, (P fout) x = fout x + θ x",
+     "doc": "**The transfer, in the form that assumes nothing at `r`.** The `p = +∞` construction produces a non-negative outflow that lies in *every* `L^r(ν)` and satisfies the flow-matching constraint as an a.e."
+    },
+    {
+     "name": "CompatibleAcrossTop",
+     "full": "GFNBounds.Core.CompatibleAcrossTop",
+     "kind": "def",
+     "line": 284,
+     "attrs": "",
+     "private": false,
+     "statement": "def CompatibleAcrossTop (ν : Measure α) [IsFiniteMeasure ν] (r : ℝ≥0∞) [Fact (1 ≤ r)] (P : Lp ℝ ⊤ ν →L[ℝ] Lp ℝ ⊤ ν) (Q : Lp ℝ r ν →L[ℝ] Lp ℝ r ν) : Prop",
+     "doc": "**The compatibility an operator-level transfer consumes**: `Q` on `L^r(ν)` and `P` on `L^∞(ν)` agree a.e."
+    },
+    {
+     "name": "coeFn_defect_inclTop",
+     "full": "GFNBounds.Core.coeFn_defect_inclTop",
+     "kind": "theorem",
+     "line": 295,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coeFn_defect_inclTop (hc : CompatibleAcrossTop ν r P Q) (θ fout : Lp ℝ ⊤ ν) : ⇑(defect Q (inclTop ν r θ) (inclTop ν r fout)) =ᵐ[ν] ⇑(defect P θ fout)",
+     "doc": "The two defects are the same function: `D` at `r` computed on the included data agrees a.e."
+    },
+    {
+     "name": "defect_inclTop_eq_zero",
+     "full": "GFNBounds.Core.defect_inclTop_eq_zero",
+     "kind": "theorem",
+     "line": 302,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem defect_inclTop_eq_zero (hc : CompatibleAcrossTop ν r P Q) {θ fout : Lp ℝ ⊤ ν} (h : defect P θ fout = 0) : defect Q (inclTop ν r θ) (inclTop ν r fout) = 0",
+     "doc": "An exactly flow-matching outflow at `p = +∞` is exactly flow-matching at `r`."
+    },
+    {
+     "name": "stronglyUniversalAt_inclTop",
+     "full": "GFNBounds.Core.stronglyUniversalAt_inclTop",
+     "kind": "theorem",
+     "line": 315,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stronglyUniversalAt_inclTop (hc : CompatibleAcrossTop ν r P Q) {θ : Lp ℝ ⊤ ν} (h : StronglyUniversalAt P θ) : StronglyUniversalAt Q (inclTop ν r θ)",
+     "doc": "**The cross-`p` transfer**, `def:universality`'s \"realization at one `p` implies it at every `p ≥ 1`\": a pair realized exactly in `L^∞(ν)` is realized exactly in `L^r(ν)`, by the same outflow."
+    },
+    {
+     "name": "compatibleAcrossTop_densityActionCLM",
+     "full": "GFNBounds.Core.compatibleAcrossTop_densityActionCLM",
+     "kind": "theorem",
+     "line": 327,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem compatibleAcrossTop_densityActionCLM (κ : ProbabilityTheory.Kernel α α) [ProbabilityTheory.IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (r : ℝ≥0∞) [Fact (1 ≤ r)] {C C' : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν ⊤ C) (hb' : IsBoundedDensityAction κ ν r C') : CompatibleAcrossTop ν r (densityActionCLM κ ν ⊤ hinv hb) (densityActionCLM κ ν r hinv hb')",
+     "doc": "**The compatibility, discharged for a Markov kernel.** `densityAction κ ν` is a map on functions `α → ℝ` and knows nothing about `p`; `coeFn_densityActionCLM` says the operator at either exponent is represented by it, and `densityAction_congr` says it only sees the a.e."
+    },
+    {
+     "name": "stronglyUniversalAt_of_kernel_Lr",
+     "full": "GFNBounds.Core.stronglyUniversalAt_of_kernel_Lr",
+     "kind": "theorem",
+     "line": 345,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stronglyUniversalAt_of_kernel_Lr (κ : ProbabilityTheory.Kernel α α) [ProbabilityTheory.IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (r : ℝ≥0∞) [Fact (1 ≤ r)] {C C' : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν ⊤ C) (hb' : IsBoundedDensityAction κ ν r C') (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν ⊤ hinv hb) ^ n - meanProj ν ⊤‖) {θ : Lp ℝ ⊤ ν} (hθ : meanProj ν ⊤ θ = 0) : StronglyUniversalAt (densityActionCLM κ ν r hinv hb') (inclTop ν r θ)",
+     "doc": "**`proofs.tex:114`'s last sentence, inside `defect`**: the outflow constructed at `p = +∞` realizes the infimum in `L^r(ν)` as well."
+    }
+   ],
+   "library": "strict",
    "tracked": false,
    "root_reachable": true
   },
@@ -1314,7 +2658,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -1392,7 +2736,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -2552,7 +3896,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -9526,7 +10870,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -12045,7 +13389,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -12658,6 +14002,1384 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Graph/FrozenUnstable.lean",
+   "title": "Freezing the backward policy does not restore stability, and the loop closure is what makes the frozen family nonempty",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.MassIdentity",
+    "GFNBounds.Graph.Universality"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]",
+    "variable [DecidableEq V]",
+    "variable {G : MarkedGraph V} (B : BackwardPolicy G)"
+   ],
+   "lines": 711,
+   "decls": [
+    {
+     "name": "edgeInflow",
+     "full": "GFNBounds.Graph.edgeInflow",
+     "kind": "def",
+     "line": 200,
+     "attrs": "",
+     "private": false,
+     "statement": "def edgeInflow (F : V → V → ℝ) : V → ℝ",
+     "doc": "**`prop:frozen_unstable_full`, the inflow of an edgeflow** (`proofs.tex:673`): `μ_F(v) := ∑_u F(u → v)`."
+    },
+    {
+     "name": "edgeOutflow",
+     "full": "GFNBounds.Graph.edgeOutflow",
+     "kind": "def",
+     "line": 203,
+     "attrs": "",
+     "private": false,
+     "statement": "def edgeOutflow (F : V → V → ℝ) : V → ℝ",
+     "doc": "The outflow of an edgeflow, `∑_v F(u → v)`."
+    },
+    {
+     "name": "IsCirculation",
+     "full": "GFNBounds.Graph.IsCirculation",
+     "kind": "def",
+     "line": 208,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsCirculation (F : V → V → ℝ) : Prop",
+     "doc": "**A `0`-flow**, in the sense `eq:def_stability` quantifies over (`cv_divergence.tex:179–181`): an edgeflow that neither creates nor destroys mass at any vertex, i.e."
+    },
+    {
+     "name": "MarkedCirculation",
+     "full": "GFNBounds.Graph.MarkedCirculation",
+     "kind": "structure",
+     "line": 216,
+     "attrs": "",
+     "private": false,
+     "statement": "structure MarkedCirculation (G : MarkedGraph V)",
+     "doc": "**`prop:frozen_unstable_full`, the unit circulation `1_γ`** (`proofs.tex:663`), as the hypothesis bundle its proof consumes: a non-negative circulation, not identically zero, with zero inflow at both marks."
+    },
+    {
+     "name": "exists_apply_ne_zero",
+     "full": "GFNBounds.Graph.exists_apply_ne_zero",
+     "kind": "theorem",
+     "line": 232,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_apply_ne_zero {c : V → V → ℝ} (hne : c ≠ 0) : ∃ u v, c u v ≠ 0",
+     "doc": "A non-zero edgeflow is non-zero at some transition, in the form the sums below want."
+    },
+    {
+     "name": "MarkedCirculation.exists_ne_zero",
+     "full": "GFNBounds.Graph.MarkedCirculation.exists_ne_zero",
+     "kind": "theorem",
+     "line": 240,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem MarkedCirculation.exists_ne_zero {G : MarkedGraph V} (γ : MarkedCirculation G) : ∃ u v, γ.circ u v ≠ 0",
+     "doc": "`1_γ` is somewhere non-zero."
+    },
+    {
+     "name": "epsCirc",
+     "full": "GFNBounds.Graph.epsCirc",
+     "kind": "def",
+     "line": 245,
+     "attrs": "",
+     "private": false,
+     "statement": "def epsCirc (eps : ℝ) (c : V → V → ℝ) : V → V → ℝ",
+     "doc": "**`prop:frozen_unstable_full`, the `0`-flow `F₀ := ε 1_γ`** (`proofs.tex:665`)."
+    },
+    {
+     "name": "epsCirc_apply",
+     "full": "GFNBounds.Graph.epsCirc_apply",
+     "kind": "theorem",
+     "line": 249,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem epsCirc_apply (eps : ℝ) (c : V → V → ℝ) (u v : V) : epsCirc eps c u v = eps * c u v",
+     "doc": "`ε 1_γ`, evaluated."
+    },
+    {
+     "name": "epsCirc_nonneg",
+     "full": "GFNBounds.Graph.epsCirc_nonneg",
+     "kind": "theorem",
+     "line": 253,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem epsCirc_nonneg {eps : ℝ} (heps : 0 ≤ eps) {c : V → V → ℝ} (hc : ∀ u v, 0 ≤ c u v) (u v : V) : 0 ≤ epsCirc eps c u v",
+     "doc": "`F₀ = ε 1_γ ≥ 0` for `ε ≥ 0` — the first conjunct of the proposition's display."
+    },
+    {
+     "name": "edgeInflow_epsCirc",
+     "full": "GFNBounds.Graph.edgeInflow_epsCirc",
+     "kind": "theorem",
+     "line": 258,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_epsCirc (eps : ℝ) (c : V → V → ℝ) (v : V) : edgeInflow (epsCirc eps c) v = eps * edgeInflow c v",
+     "doc": "The inflow of `ε 1_γ` is `ε ∂γ`."
+    },
+    {
+     "name": "edgeOutflow_epsCirc",
+     "full": "GFNBounds.Graph.edgeOutflow_epsCirc",
+     "kind": "theorem",
+     "line": 263,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeOutflow_epsCirc (eps : ℝ) (c : V → V → ℝ) (u : V) : edgeOutflow (epsCirc eps c) u = eps * edgeOutflow c u",
+     "doc": "The outflow of `ε 1_γ` is `ε` times that of `1_γ`."
+    },
+    {
+     "name": "isCirculation_epsCirc",
+     "full": "GFNBounds.Graph.isCirculation_epsCirc",
+     "kind": "theorem",
+     "line": 270,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isCirculation_epsCirc (eps : ℝ) {c : V → V → ℝ} (hc : IsCirculation c) : IsCirculation (epsCirc eps c)",
+     "doc": "**`F₀ = ε1_γ` is a `0`-flow**: scaling a circulation gives a circulation."
+    },
+    {
+     "name": "sum_edgeInflow_pos",
+     "full": "GFNBounds.Graph.sum_edgeInflow_pos",
+     "kind": "theorem",
+     "line": 277,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_edgeInflow_pos {c : V → V → ℝ} (hnn : ∀ u v, 0 ≤ c u v) (hne : c ≠ 0) : 0 < ∑ v, edgeInflow c v",
+     "doc": "**`∂γ ≠ 0`** in the only form the proof of `𝓛_{g,ν}(F) > 0` needs: the total mass of the inflow of a non-negative, non-zero edgeflow is positive."
+    },
+    {
+     "name": "stateRatio",
+     "full": "GFNBounds.Graph.BackwardPolicy.stateRatio",
+     "kind": "def",
+     "line": 296,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def stateRatio (mu : V → ℝ) : V → ℝ",
+     "doc": "**`prop:frozen_unstable_full`, the ratio `r = d(μ π̂_←)/dμ`** (`proofs.tex:673`), in the coordinates of `GFNBounds.Balance`: `μ = u λ` at `λ := μ` and `u := 1`, so that `ratio π̂_← μ 1 = (μ π̂_←)/μ`."
+    },
+    {
+     "name": "stateRatio_apply",
+     "full": "GFNBounds.Graph.BackwardPolicy.stateRatio_apply",
+     "kind": "theorem",
+     "line": 298,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stateRatio_apply (mu : V → ℝ) (y : V) : B.stateRatio mu y = (∑ x, mu x * B.phat x y) / mu y",
+     "doc": ""
+    },
+    {
+     "name": "balanced_iff",
+     "full": "GFNBounds.Graph.BackwardPolicy.balanced_iff",
+     "kind": "theorem",
+     "line": 303,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem balanced_iff (mu : V → ℝ) : Balance.Balanced B.phat mu 1 ↔ ∀ y, ∑ x, mu x * B.phat x y = mu y",
+     "doc": "`GFNBounds.Balance`'s `Balanced` at these coordinates is invariance of the state flow."
+    },
+    {
+     "name": "stateRatio_eq_one_iff",
+     "full": "GFNBounds.Graph.BackwardPolicy.stateRatio_eq_one_iff",
+     "kind": "theorem",
+     "line": 309,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stateRatio_eq_one_iff {mu : V → ℝ} (hmu : ∀ y, 0 < mu y) : (∀ y, B.stateRatio mu y = 1) ↔ ∀ y, ∑ x, mu x * B.phat x y = mu y",
+     "doc": "**`r ≡ 1` if and only if the state flow is `π̂_←`-invariant** — `ratio_eq_one_iff_balanced` of `GFNBounds.Balance`, read here."
+    },
+    {
+     "name": "fmLoss",
+     "full": "GFNBounds.Graph.BackwardPolicy.fmLoss",
+     "kind": "def",
+     "line": 320,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def fmLoss (g : ℝ → ℝ) (nu mu : V → ℝ) : ℝ",
+     "doc": "**`prop:frozen_unstable_full`, the FM loss with a frozen backward policy** (`proofs.tex:673`): `𝓛_{g,ν}(μ) = ∫ g(r) dν = ∑_x ν(x) g(r(x))`, a function of the state flow alone."
+    },
+    {
+     "name": "exists_phat_pos_into",
+     "full": "GFNBounds.Graph.BackwardPolicy.exists_phat_pos_into",
+     "kind": "theorem",
+     "line": 324,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_phat_pos_into {lam : V → ℝ} (h : B.IsInvProb lam) (hlam : ∀ x, 0 < lam x) (y : V) : ∃ x, 0 < B.phat x y",
+     "doc": "Every state receives mass from somewhere under `π̂_←`: an invariant probability that is positive somewhere is positive at `y`, so some term of `∑_x λ(x) π̂_←(x → y) = λ(y) > 0` is."
+    },
+    {
+     "name": "stateRatio_pos",
+     "full": "GFNBounds.Graph.BackwardPolicy.stateRatio_pos",
+     "kind": "theorem",
+     "line": 337,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stateRatio_pos {lam : V → ℝ} (h : B.IsInvProb lam) (hlam : ∀ x, 0 < lam x) {mu : V → ℝ} (hmu : ∀ x, 0 < mu x) (y : V) : 0 < B.stateRatio mu y",
+     "doc": "**The ratio is positive at every state flow of positive density.** The paper's `g > 0` elsewhere is a statement on `ℝ_{>0}`, so this is what lets it be applied."
+    },
+    {
+     "name": "fmLoss_eq_zero",
+     "full": "GFNBounds.Graph.BackwardPolicy.fmLoss_eq_zero",
+     "kind": "theorem",
+     "line": 346,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fmLoss_eq_zero {mu : V → ℝ} (hmu : ∀ y, 0 < mu y) (hinv : ∀ y, ∑ x, mu x * B.phat x y = mu y) {g : ℝ → ℝ} (hg1 : g 1 = 0) (nu : V → ℝ) : B.fmLoss g nu mu = 0",
+     "doc": "**`𝓛_{g,ν}(F + F₀) = 0`** (`proofs.tex:678`), in its general form: at a state flow that is `π̂_←`-invariant the ratio is `≡ 1` and `g(1) = 0`."
+    },
+    {
+     "name": "fmLoss_pos",
+     "full": "GFNBounds.Graph.BackwardPolicy.fmLoss_pos",
+     "kind": "theorem",
+     "line": 354,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fmLoss_pos {mu : V → ℝ} (hr : ∀ y, 0 < B.stateRatio mu y) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nu : V → ℝ} (hnu : ∀ x, 0 < nu x) {y : V} (hy : B.stateRatio mu y ≠ 1) : 0 < B.fmLoss g nu mu",
+     "doc": "**`𝓛_{g,ν}(F) > 0`** (`proofs.tex:676`), in its general form: `ν > 0`, `g ≥ 0` on the ratios and `g > 0` at one of them."
+    },
+    {
+     "name": "AdmissibleEps",
+     "full": "GFNBounds.Graph.BackwardPolicy.AdmissibleEps",
+     "kind": "def",
+     "line": 368,
+     "attrs": "",
+     "private": false,
+     "statement": "def AdmissibleEps (lam : V → ℝ) (eps : ℝ) (c : V → V → ℝ) : Prop",
+     "doc": "**`prop:frozen_unstable_full`, the admissible `ε`** (`proofs.tex:664`): `2 ε 1_γ ≤ F*` edgewise, which is the form the *Admissibility* step uses and, for a `{0,1}`-valued `1_γ`, is the statement's `ε ≤ ½ min_{(u→v)∈γ} F*(u→v)`."
+    },
+    {
+     "name": "perturbedFlow",
+     "full": "GFNBounds.Graph.BackwardPolicy.perturbedFlow",
+     "kind": "def",
+     "line": 373,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def perturbedFlow (lam : V → ℝ) (eps : ℝ) (c : V → V → ℝ) : V → V → ℝ",
+     "doc": "**`prop:frozen_unstable_full`, the perturbed edgeflow `F := F* − ε1_γ`** (`proofs.tex:665`)."
+    },
+    {
+     "name": "edgeFlow_pos_of_hatEdge",
+     "full": "GFNBounds.Graph.BackwardPolicy.edgeFlow_pos_of_hatEdge",
+     "kind": "theorem",
+     "line": 379,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeFlow_pos_of_hatEdge (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) {c : ℝ} (hc : 0 < c) {u v : V} (he : G.hatEdge u v) : 0 < B.edgeFlow lam c u v",
+     "doc": "**`prop:frozen_unstable_full`, *Admissibility*, first half** (`proofs.tex:675`): `λ > 0` and `π̂_← > 0` give `F* > 0` on every edge of `Ĝ` — on an edge of `G` by `PositiveOnEdges`, on the wrap edge because `π̂_←(s₀ → s_f) = 1`."
+    },
+    {
+     "name": "exists_admissibleEps",
+     "full": "GFNBounds.Graph.BackwardPolicy.exists_admissibleEps",
+     "kind": "theorem",
+     "line": 395,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_admissibleEps (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) : ∃ eps : ℝ, 0 < eps ∧ B.AdmissibleEps lam eps γ.circ",
+     "doc": "**`prop:frozen_unstable_full`, *Admissibility*, second half** (`proofs.tex:675`): \"`ε` is well defined and positive\"."
+    },
+    {
+     "name": "epsCirc_le_perturbedFlow",
+     "full": "GFNBounds.Graph.BackwardPolicy.epsCirc_le_perturbedFlow",
+     "kind": "theorem",
+     "line": 430,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem epsCirc_le_perturbedFlow {lam : V → ℝ} {eps : ℝ} {c : V → V → ℝ} (hadm : B.AdmissibleEps lam eps c) (u v : V) : epsCirc eps c u v ≤ B.perturbedFlow lam eps c u v",
+     "doc": "**`prop:frozen_unstable_full`, *Admissibility*** (`proofs.tex:675`): `2ε1_γ ≤ F*` edgewise gives `F₀ = ε1_γ ≤ F* − ε1_γ = F`."
+    },
+    {
+     "name": "perturbedFlow_add_epsCirc",
+     "full": "GFNBounds.Graph.BackwardPolicy.perturbedFlow_add_epsCirc",
+     "kind": "theorem",
+     "line": 438,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem perturbedFlow_add_epsCirc (lam : V → ℝ) (eps : ℝ) (c : V → V → ℝ) : B.perturbedFlow lam eps c + epsCirc eps c = B.edgeFlow lam 1",
+     "doc": "**`F + F₀ = F*`** (`proofs.tex:678`)."
+    },
+    {
+     "name": "edgeInflow_edgeFlow_one",
+     "full": "GFNBounds.Graph.BackwardPolicy.edgeInflow_edgeFlow_one",
+     "kind": "theorem",
+     "line": 444,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_edgeFlow_one (lam : V → ℝ) : edgeInflow (B.edgeFlow lam 1) = lam",
+     "doc": "**`μ_{F*} = λ`** (`proofs.tex:673`), \"since the rows of `π̂_←` sum to `1`\"."
+    },
+    {
+     "name": "edgeInflow_perturbedFlow",
+     "full": "GFNBounds.Graph.BackwardPolicy.edgeInflow_perturbedFlow",
+     "kind": "theorem",
+     "line": 449,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_perturbedFlow (lam : V → ℝ) (eps : ℝ) (c : V → V → ℝ) (v : V) : edgeInflow (B.perturbedFlow lam eps c) v = lam v - eps * edgeInflow c v",
+     "doc": "**`μ_F = λ − ε ∂γ`** (`proofs.tex:676`)."
+    },
+    {
+     "name": "edgeInflow_perturbedFlow_ge",
+     "full": "GFNBounds.Graph.BackwardPolicy.edgeInflow_perturbedFlow_ge",
+     "kind": "theorem",
+     "line": 462,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_perturbedFlow_ge {lam : V → ℝ} {eps : ℝ} {c : V → V → ℝ} (hadm : B.AdmissibleEps lam eps c) (v : V) : lam v / 2 ≤ edgeInflow (B.perturbedFlow lam eps c) v",
+     "doc": "**The perturbed state flow is at least `λ/2`, hence positive.** This is the point at which `eq_smul_invProb` — uniqueness of the invariant measure among *non-negative* vectors — becomes applicable to `μ_F`, and the paper's `ε` hypothesis is exactly what buys it: summing `ε 1_γ(u→v) ≤ ½ F*(u→v)` over `u` against `∑_u F*(u→v) = λ(v)` gives `ε ∂γ(v) ≤ ½ λ(v)`."
+    },
+    {
+     "name": "sum_edgeInflow_perturbedFlow",
+     "full": "GFNBounds.Graph.BackwardPolicy.sum_edgeInflow_perturbedFlow",
+     "kind": "theorem",
+     "line": 479,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_edgeInflow_perturbedFlow {lam : V → ℝ} (h : B.IsInvProb lam) (eps : ℝ) (c : V → V → ℝ) : ∑ v, edgeInflow (B.perturbedFlow lam eps c) v = 1 - eps * ∑ v, edgeInflow c v",
+     "doc": "The total mass of the perturbed state flow, `∑ μ_F = 1 − ε ∑_v ∂γ(v)`."
+    },
+    {
+     "name": "isCirculation_perturbedFlow",
+     "full": "GFNBounds.Graph.BackwardPolicy.isCirculation_perturbedFlow",
+     "kind": "theorem",
+     "line": 486,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isCirculation_perturbedFlow {lam : V → ℝ} (h : B.IsInvProb lam) (eps : ℝ) {c : V → V → ℝ} (hc : IsCirculation c) : IsCirculation (B.perturbedFlow lam eps c)",
+     "doc": "**`F = F* − ε1_γ` is again a `0`-flow**: `F*` is a circulation (`theo:universality_graphs`*(3)*, `proofs.tex:995–996`) and so is `ε1_γ`."
+    },
+    {
+     "name": "not_invariant_perturbedFlow",
+     "full": "GFNBounds.Graph.BackwardPolicy.not_invariant_perturbedFlow",
+     "kind": "theorem",
+     "line": 508,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem not_invariant_perturbedFlow (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (γ : MarkedCirculation G) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : ¬ ∀ y, ∑ x, edgeInflow (B.perturbedFlow lam eps γ.circ) x * B.phat x y = edgeInflow (B.perturbedFlow lam eps γ.circ) y",
+     "doc": "**`prop:frozen_unstable_full`, the step `𝓛_{g,ν}(F) > 0` rests on** (`proofs.tex:676`): `μ_F π̂_← ≠ μ_F`."
+    },
+    {
+     "name": "frozen_unstable_full_fm",
+     "full": "GFNBounds.Graph.BackwardPolicy.frozen_unstable_full_fm",
+     "kind": "theorem",
+     "line": 554,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem frozen_unstable_full_fm (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (γ : MarkedCirculation G) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nu : V → ℝ} (hnu : ∀ x, 0 < nu x) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : (∀ u v, 0 ≤ epsCirc eps γ.circ u v) ∧ (∀ u v, epsCirc eps γ.circ u v ≤ B.perturbedFlow lam eps γ.circ u v) ∧ B.fmLoss g nu (edgeInflow (B.perturbedFlow lam eps γ.circ + epsCirc eps γ.circ)) = 0 ∧ 0 < B.fmLoss g nu (edgeInflow (B.perturbedFlow lam eps γ.circ))",
+     "doc": "**`prop:frozen_unstable_full`, the FM half** (statement `proofs.tex:659–669`, proof `proofs.tex:671–683`), in one statement."
+    },
+    {
+     "name": "pcut",
+     "full": "GFNBounds.Graph.BackwardPolicy.pcut",
+     "kind": "def",
+     "line": 585,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def pcut : V → V → ℝ",
+     "doc": "**`rem:loop_closure_necessary`, the backward kernel of `G` itself** (`proofs.tex:1014`): `π_←` with the row at `s₀` emptied."
+    },
+    {
+     "name": "pcut_src",
+     "full": "GFNBounds.Graph.BackwardPolicy.pcut_src",
+     "kind": "theorem",
+     "line": 587,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem pcut_src (s' : V) : B.pcut G.src s' = 0",
+     "doc": ""
+    },
+    {
+     "name": "pcut_of_ne_src",
+     "full": "GFNBounds.Graph.BackwardPolicy.pcut_of_ne_src",
+     "kind": "theorem",
+     "line": 589,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pcut_of_ne_src {s : V} (hs : s ≠ G.src) (s' : V) : B.pcut s s' = B.pb s s'",
+     "doc": ""
+    },
+    {
+     "name": "pcut_nonneg",
+     "full": "GFNBounds.Graph.BackwardPolicy.pcut_nonneg",
+     "kind": "theorem",
+     "line": 592,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pcut_nonneg (s s' : V) : 0 ≤ B.pcut s s'",
+     "doc": ""
+    },
+    {
+     "name": "pcut_row_sum_of_ne_src",
+     "full": "GFNBounds.Graph.BackwardPolicy.pcut_row_sum_of_ne_src",
+     "kind": "theorem",
+     "line": 598,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pcut_row_sum_of_ne_src {s : V} (hs : s ≠ G.src) : ∑ s', B.pcut s s' = 1",
+     "doc": "Off the source, `π_←` is a probability: `pcut` inherits `row_sum`."
+    },
+    {
+     "name": "pcut_row_sum_src",
+     "full": "GFNBounds.Graph.BackwardPolicy.pcut_row_sum_src",
+     "kind": "theorem",
+     "line": 603,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pcut_row_sum_src : ∑ s', B.pcut G.src s' = 0",
+     "doc": "At the source the row is empty: this is the deficit the marginal argument reads off."
+    },
+    {
+     "name": "CutBalance",
+     "full": "GFNBounds.Graph.BackwardPolicy.CutBalance",
+     "kind": "def",
+     "line": 609,
+     "attrs": "",
+     "private": false,
+     "statement": "def CutBalance (pf : V → V → ℝ) (fout : V → ℝ) : Prop",
+     "doc": "**`rem:loop_closure_necessary`, the frozen-backward family on `G`** (`proofs.tex:1014`): the family `Θ_{π_←}` of `theo:universality_graphs`*(2)* with `π̂_←` replaced by the kernel of `G` itself, in the same coordinates — `f_out(u) π_→(u → v) = π_←(v → u) f_out(v)` at every transition."
+    },
+    {
+     "name": "cutBalance_zero",
+     "full": "GFNBounds.Graph.BackwardPolicy.cutBalance_zero",
+     "kind": "theorem",
+     "line": 614,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cutBalance_zero (pf : V → V → ℝ) : B.CutBalance pf 0",
+     "doc": "The family is not empty: `f_out ≡ 0` is in it, whatever the forward policy."
+    },
+    {
+     "name": "cutBalance_invariant",
+     "full": "GFNBounds.Graph.BackwardPolicy.cutBalance_invariant",
+     "kind": "theorem",
+     "line": 621,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cutBalance_invariant {pf : V → V → ℝ} {fout : V → ℝ} (hrow : ∀ u, ∑ v, pf u v = 1) (hcb : B.CutBalance pf fout) (u : V) : ∑ v, fout v * B.pcut v u = fout u",
+     "doc": "**`rem:loop_closure_necessary`, the marginal argument** (`proofs.tex:1014`): summing the constraint over `v` at fixed `u`, the rows of `π_→` summing to `1`, makes `f_out μ` invariant under `π_←`."
+    },
+    {
+     "name": "cutBalance_src_eq_zero",
+     "full": "GFNBounds.Graph.BackwardPolicy.cutBalance_src_eq_zero",
+     "kind": "theorem",
+     "line": 636,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cutBalance_src_eq_zero {pf : V → V → ℝ} {fout : V → ℝ} (hrow : ∀ u, ∑ v, pf u v = 1) (hcb : B.CutBalance pf fout) : fout G.src = 0",
+     "doc": "**`rem:loop_closure_necessary`: the marginal argument forces `f_out(s₀) = 0`** (`proofs.tex:1014`)."
+    },
+    {
+     "name": "cutInvariant_step",
+     "full": "GFNBounds.Graph.BackwardPolicy.cutInvariant_step",
+     "kind": "theorem",
+     "line": 665,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cutInvariant_step (hbpos : B.PositiveOnEdges) {fout : V → ℝ} (hnn : ∀ x, 0 ≤ fout x) (hinv : ∀ u, ∑ v, fout v * B.pcut v u = fout u) {u v : V} (he : G.Edge u v) (hu : fout u = 0) : fout v = 0",
+     "doc": "**`rem:loop_closure_necessary`: the zero propagates along the edges of `G`.** Invariance under `π_←` reads `f_out(u) = ∑_v f_out(v) π_←(v → u)` with every term non-negative, so `f_out(u) = 0` kills every term; and `π_←(v → u) > 0` at every out-neighbour `v` of `u`, by `PositiveOnEdges` and because such a `v` is not the source."
+    },
+    {
+     "name": "iterated",
+     "full": "GFNBounds.Graph.BackwardPolicy.iterated",
+     "kind": "lemma",
+     "line": 682,
+     "attrs": "",
+     "private": false,
+     "statement": "lemma iterated along `Relation.ReflTransGen`. -/ theorem cutInvariant_eq_zero_of_reach (hbpos : B.PositiveOnEdges) {fout : V → ℝ} (hnn : ∀ x, 0 ≤ fout x) (hinv : ∀ u, ∑ v, fout v * B.pcut v u = fout u) {a b : V} (hr : G.Reach a b) (ha : fout a = 0) : fout b = 0",
+     "doc": ""
+    },
+    {
+     "name": "loop_closure_necessary",
+     "full": "GFNBounds.Graph.BackwardPolicy.loop_closure_necessary",
+     "kind": "theorem",
+     "line": 700,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem loop_closure_necessary (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {pf : V → V → ℝ} {fout : V → ℝ} (hrow : ∀ u, ∑ v, pf u v = 1) (hnn : ∀ x, 0 ≤ fout x) (hcb : B.CutBalance pf fout) : fout = 0",
+     "doc": "**`rem:loop_closure_necessary`** (`proofs.tex:1014–1016`): *on `G` itself, i.e."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Graph/Morozov.lean",
+   "title": "The training rate in the variables of Morozov et al., with no Markov chain underneath",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Graph.Setting"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]",
+    "variable {G : MarkedGraph V}",
+    "variable [DecidableEq V]",
+    "variable (B : BackwardPolicy G)",
+    "variable {B}",
+    "variable (B)",
+    "variable {B}",
+    "variable (B)",
+    "variable {B}",
+    "variable (B)",
+    "variable {B}",
+    "variable (B)",
+    "variable {B}",
+    "variable (B)",
+    "variable {B}",
+    "variable (B)",
+    "variable {B}",
+    "variable (B)",
+    "variable {B}",
+    "variable {B : BackwardPolicy G} (L : Leveled G)"
+   ],
+   "lines": 1159,
+   "decls": [
+    {
+     "name": "_",
+     "full": "_",
+     "kind": "instance",
+     "line": 146,
+     "attrs": "",
+     "private": false,
+     "statement": "instance. -/ / noncomputable def maxOver (G : MarkedGraph V) (u : V → ℝ) : ℝ",
+     "doc": ""
+    },
+    {
+     "name": "minOver",
+     "full": "GFNBounds.Graph.minOver",
+     "kind": "def",
+     "line": 153,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def minOver (G : MarkedGraph V) (u : V → ℝ) : ℝ",
+     "doc": "`min_x u(x)` over the vertices of a marked graph."
+    },
+    {
+     "name": "le_maxOver",
+     "full": "GFNBounds.Graph.le_maxOver",
+     "kind": "theorem",
+     "line": 158,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_maxOver (u : V → ℝ) (x : V) : u x ≤ maxOver G u",
+     "doc": ""
+    },
+    {
+     "name": "maxOver_le",
+     "full": "GFNBounds.Graph.maxOver_le",
+     "kind": "theorem",
+     "line": 161,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem maxOver_le {u : V → ℝ} {c : ℝ} (h : ∀ x, u x ≤ c) : maxOver G u ≤ c",
+     "doc": ""
+    },
+    {
+     "name": "minOver_le",
+     "full": "GFNBounds.Graph.minOver_le",
+     "kind": "theorem",
+     "line": 164,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem minOver_le (u : V → ℝ) (x : V) : minOver G u ≤ u x",
+     "doc": ""
+    },
+    {
+     "name": "le_minOver",
+     "full": "GFNBounds.Graph.le_minOver",
+     "kind": "theorem",
+     "line": 167,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_minOver {u : V → ℝ} {c : ℝ} (h : ∀ x, c ≤ u x) : c ≤ minOver G u",
+     "doc": ""
+    },
+    {
+     "name": "minOver_pos",
+     "full": "GFNBounds.Graph.minOver_pos",
+     "kind": "theorem",
+     "line": 170,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem minOver_pos {u : V → ℝ} (h : ∀ x, 0 < u x) : 0 < minOver G u",
+     "doc": ""
+    },
+    {
+     "name": "supAbs",
+     "full": "GFNBounds.Graph.supAbs",
+     "kind": "def",
+     "line": 176,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def supAbs (G : MarkedGraph V) (f : V → ℝ) : ℝ",
+     "doc": "`‖f‖_{L^∞}` on a finite vertex set."
+    },
+    {
+     "name": "le_supAbs",
+     "full": "GFNBounds.Graph.le_supAbs",
+     "kind": "theorem",
+     "line": 178,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_supAbs (f : V → ℝ) (x : V) : |f x| ≤ supAbs G f",
+     "doc": ""
+    },
+    {
+     "name": "supAbs_nonneg",
+     "full": "GFNBounds.Graph.supAbs_nonneg",
+     "kind": "theorem",
+     "line": 181,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem supAbs_nonneg (f : V → ℝ) : 0 ≤ supAbs G f",
+     "doc": ""
+    },
+    {
+     "name": "supAbs_le",
+     "full": "GFNBounds.Graph.supAbs_le",
+     "kind": "theorem",
+     "line": 184,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem supAbs_le {f : V → ℝ} {c : ℝ} (h : ∀ x, |f x| ≤ c) : supAbs G f ≤ c",
+     "doc": ""
+    },
+    {
+     "name": "sigmaStar",
+     "full": "GFNBounds.Graph.sigmaStar",
+     "kind": "def",
+     "line": 189,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def sigmaStar (G : MarkedGraph V) (u : V → ℝ) : ℝ",
+     "doc": "`σ_* := max_x E(σ ∣ X₀ = x)` (`proofs.tex:837`)."
+    },
+    {
+     "name": "le_sigmaStar",
+     "full": "GFNBounds.Graph.le_sigmaStar",
+     "kind": "theorem",
+     "line": 191,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_sigmaStar (u : V → ℝ) (x : V) : u x ≤ sigmaStar G u",
+     "doc": ""
+    },
+    {
+     "name": "ipL2",
+     "full": "GFNBounds.Graph.ipL2",
+     "kind": "def",
+     "line": 200,
+     "attrs": "",
+     "private": false,
+     "statement": "def ipL2 (lam a b : V → ℝ) : ℝ",
+     "doc": "`⟪a ∣ b⟫_{L²(λ)} = ∫ a b dλ`."
+    },
+    {
+     "name": "nrmL2",
+     "full": "GFNBounds.Graph.nrmL2",
+     "kind": "def",
+     "line": 203,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def nrmL2 (lam a : V → ℝ) : ℝ",
+     "doc": "`‖a‖_{L²(λ)}`."
+    },
+    {
+     "name": "meanL2",
+     "full": "GFNBounds.Graph.meanL2",
+     "kind": "def",
+     "line": 207,
+     "attrs": "",
+     "private": false,
+     "statement": "def meanL2 (lam a : V → ℝ) : ℝ",
+     "doc": "`Π a`, the mean of `a` against `λ` — a scalar, `Π` being the mean projection onto the constants (`proofs.tex:22`)."
+    },
+    {
+     "name": "ipL2_self_nonneg",
+     "full": "GFNBounds.Graph.ipL2_self_nonneg",
+     "kind": "theorem",
+     "line": 209,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_self_nonneg {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (a : V → ℝ) : 0 ≤ ipL2 lam a a",
+     "doc": ""
+    },
+    {
+     "name": "nrmL2_nonneg",
+     "full": "GFNBounds.Graph.nrmL2_nonneg",
+     "kind": "theorem",
+     "line": 213,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_nonneg (lam a : V → ℝ) : 0 ≤ nrmL2 lam a",
+     "doc": ""
+    },
+    {
+     "name": "sq_nrmL2",
+     "full": "GFNBounds.Graph.sq_nrmL2",
+     "kind": "theorem",
+     "line": 215,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sq_nrmL2 {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (a : V → ℝ) : nrmL2 lam a ^ 2 = ipL2 lam a a",
+     "doc": ""
+    },
+    {
+     "name": "ipL2_le_mul_nrmL2",
+     "full": "GFNBounds.Graph.ipL2_le_mul_nrmL2",
+     "kind": "theorem",
+     "line": 220,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_le_mul_nrmL2 {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (a b : V → ℝ) : ipL2 lam a b ≤ nrmL2 lam a * nrmL2 lam b",
+     "doc": "**Cauchy–Schwarz in `L²(λ)`.**"
+    },
+    {
+     "name": "nrmL2_le_supAbs",
+     "full": "GFNBounds.Graph.nrmL2_le_supAbs",
+     "kind": "theorem",
+     "line": 233,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_le_supAbs {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1) (a : V → ℝ) : nrmL2 lam a ≤ supAbs G a",
+     "doc": "`‖a‖_{L²(λ)} ≤ ‖a‖_{L^∞}` when `λ` is a probability."
+    },
+    {
+     "name": "sqrt_minOver_mul_abs_le_nrmL2",
+     "full": "GFNBounds.Graph.sqrt_minOver_mul_abs_le_nrmL2",
+     "kind": "theorem",
+     "line": 246,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sqrt_minOver_mul_abs_le_nrmL2 {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (a : V → ℝ) (x : V) : Real.sqrt (minOver G lam) * |a x| ≤ nrmL2 lam a",
+     "doc": "`√λ_min · |a(x)| ≤ ‖a‖_{L²(λ)}`, i.e."
+    },
+    {
+     "name": "visits",
+     "full": "GFNBounds.Graph.visits",
+     "kind": "def",
+     "line": 265,
+     "attrs": "",
+     "private": false,
+     "statement": "def visits (G : MarkedGraph V) (g : V → ℝ) : V → ℝ",
+     "doc": "**`N`**, the paper's visit counts (`proofs.tex:840`): the occupation measure `g` of the backward chain killed at `s₀` — see `BackwardPolicy.IsGreen` — plus the one visit each to `s₀` and `s_f` that the convention `N(s₀) = N(s_f) = 1` records."
+    },
+    {
+     "name": "qact",
+     "full": "GFNBounds.Graph.BackwardPolicy.qact",
+     "kind": "def",
+     "line": 278,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def qact (u : V → ℝ) : V → ℝ",
+     "doc": "The **function action** `Q` of the backward chain: `(Qu)(x) = ∑_y π̂_←(x→y) u(y)`."
+    },
+    {
+     "name": "qact_apply",
+     "full": "GFNBounds.Graph.BackwardPolicy.qact_apply",
+     "kind": "theorem",
+     "line": 282,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem qact_apply (u : V → ℝ) (x : V) : B.qact u x = ∑ y, B.phat x y * u y",
+     "doc": ""
+    },
+    {
+     "name": "qact_const",
+     "full": "GFNBounds.Graph.BackwardPolicy.qact_const",
+     "kind": "theorem",
+     "line": 284,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem qact_const (c : ℝ) (x : V) : B.qact (fun _ => c) x = c",
+     "doc": ""
+    },
+    {
+     "name": "qact_sub",
+     "full": "GFNBounds.Graph.BackwardPolicy.qact_sub",
+     "kind": "theorem",
+     "line": 287,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem qact_sub (u u' : V → ℝ) (x : V) : B.qact (fun z => u z - u' z) x = B.qact u x - B.qact u' x",
+     "doc": ""
+    },
+    {
+     "name": "qact_neg",
+     "full": "GFNBounds.Graph.BackwardPolicy.qact_neg",
+     "kind": "theorem",
+     "line": 291,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem qact_neg (u : V → ℝ) (x : V) : B.qact (fun z => -u z) x = -B.qact u x",
+     "doc": ""
+    },
+    {
+     "name": "qact_smul",
+     "full": "GFNBounds.Graph.BackwardPolicy.qact_smul",
+     "kind": "theorem",
+     "line": 294,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem qact_smul (c : ℝ) (u : V → ℝ) (x : V) : B.qact (fun z => c * u z) x = c * B.qact u x",
+     "doc": ""
+    },
+    {
+     "name": "qact_le",
+     "full": "GFNBounds.Graph.BackwardPolicy.qact_le",
+     "kind": "theorem",
+     "line": 299,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem qact_le {u : V → ℝ} {c : ℝ} (h : ∀ y, u y ≤ c) (x : V) : B.qact u x ≤ c",
+     "doc": ""
+    },
+    {
+     "name": "le_qact",
+     "full": "GFNBounds.Graph.BackwardPolicy.le_qact",
+     "kind": "theorem",
+     "line": 304,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_qact {u : V → ℝ} {c : ℝ} (h : ∀ y, c ≤ u y) (x : V) : c ≤ B.qact u x",
+     "doc": ""
+    },
+    {
+     "name": "eq_of_bstep_of_min",
+     "full": "GFNBounds.Graph.BackwardPolicy.eq_of_bstep_of_min",
+     "kind": "theorem",
+     "line": 318,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_of_bstep_of_min {φ : V → ℝ} {m : ℝ} (hm : ∀ z, m ≤ φ z) {x : V} (hx : φ x = m) (hs : B.qact φ x ≤ φ x) {y : V} (hxy : B.BStep x y) : φ y = m",
+     "doc": "A minimizer of `φ` at which `φ` is superharmonic passes its value to every state the backward chain can step to."
+    },
+    {
+     "name": "eq_of_breach_of_min",
+     "full": "GFNBounds.Graph.BackwardPolicy.eq_of_breach_of_min",
+     "kind": "theorem",
+     "line": 336,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_of_breach_of_min {φ : V → ℝ} {m : ℝ} (hm : ∀ z, m ≤ φ z) (hoff : ∀ z, φ z = m → B.qact φ z ≤ φ z) {x y : V} (hx : φ x = m) (hr : B.BReach x y) : φ y = m",
+     "doc": "The minimizing set propagates along walks of the backward chain, as long as `φ` is superharmonic at each state it passes."
+    },
+    {
+     "name": "nonneg_of_superharm_off_src",
+     "full": "GFNBounds.Graph.BackwardPolicy.nonneg_of_superharm_off_src",
+     "kind": "theorem",
+     "line": 346,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nonneg_of_superharm_off_src (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {φ : V → ℝ} (h0 : φ G.src = 0) (hs : ∀ x, x ≠ G.src → B.qact φ x ≤ φ x) (x : V) : 0 ≤ φ x",
+     "doc": "**The minimum principle at `s₀`.** A function vanishing at the regeneration state and superharmonic for the backward chain off it is non-negative."
+    },
+    {
+     "name": "IsPoisson",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsPoisson",
+     "kind": "def",
+     "line": 376,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsPoisson (f u : V → ℝ) : Prop",
+     "doc": "**The Poisson system at the regeneration state.** `u(s₀) = 0` and `u = f + Qu` off `s₀`."
+    },
+    {
+     "name": "eq_zero_of_harm_off_src",
+     "full": "GFNBounds.Graph.BackwardPolicy.eq_zero_of_harm_off_src",
+     "kind": "theorem",
+     "line": 383,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_zero_of_harm_off_src (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {d : V → ℝ} (h0 : d G.src = 0) (hh : ∀ x, x ≠ G.src → d x = B.qact d x) : d = 0",
+     "doc": "A function vanishing at `s₀` and `Q`-harmonic off `s₀` vanishes identically: the minimum principle applied to `d` and to `−d`."
+    },
+    {
+     "name": "IsPoisson.unique",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsPoisson.unique",
+     "kind": "theorem",
+     "line": 398,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsPoisson.unique (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {f u u' : V → ℝ} (h : B.IsPoisson f u) (h' : B.IsPoisson f u') : u = u'",
+     "doc": "**The Poisson system has at most one solution.**"
+    },
+    {
+     "name": "poissonMap",
+     "full": "GFNBounds.Graph.BackwardPolicy.poissonMap",
+     "kind": "def",
+     "line": 414,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def poissonMap : (V → ℝ) →ₗ[ℝ] (V → ℝ)",
+     "doc": "The linear map whose kernel is the homogeneous Poisson system: `u ↦ u(s₀)` at `s₀` and `u ↦ u − Qu` elsewhere."
+    },
+    {
+     "name": "poissonMap_apply",
+     "full": "GFNBounds.Graph.BackwardPolicy.poissonMap_apply",
+     "kind": "theorem",
+     "line": 433,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem poissonMap_apply (u : V → ℝ) (x : V) : B.poissonMap u x = if x = G.src then u G.src else u x - B.qact u x",
+     "doc": ""
+    },
+    {
+     "name": "exists_isPoisson",
+     "full": "GFNBounds.Graph.BackwardPolicy.exists_isPoisson",
+     "kind": "theorem",
+     "line": 437,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_isPoisson (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (f : V → ℝ) : ∃ u, B.IsPoisson f u",
+     "doc": "**The Poisson system is solvable, for every source term.**"
+    },
+    {
+     "name": "IsHitExp",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsHitExp",
+     "kind": "def",
+     "line": 467,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsHitExp (u : V → ℝ) : Prop",
+     "doc": "**`E(σ ∣ X₀ = ·)`, characterized**: the Poisson system with unit source."
+    },
+    {
+     "name": "exists_isHitExp",
+     "full": "GFNBounds.Graph.BackwardPolicy.exists_isHitExp",
+     "kind": "theorem",
+     "line": 471,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_isHitExp (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) : ∃ u, B.IsHitExp u",
+     "doc": ""
+    },
+    {
+     "name": "IsHitExp.unique",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsHitExp.unique",
+     "kind": "theorem",
+     "line": 474,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsHitExp.unique (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {u u' : V → ℝ} (h : B.IsHitExp u) (h' : B.IsHitExp u') : u = u'",
+     "doc": ""
+    },
+    {
+     "name": "IsHitExp.nonneg",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsHitExp.nonneg",
+     "kind": "theorem",
+     "line": 479,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsHitExp.nonneg {u : V → ℝ} (hu : B.IsHitExp u) (x : V) : 0 ≤ u x",
+     "doc": "`E(σ ∣ X₀ = x) ≥ 0`: the minimum of `u` can only be at `s₀`, since anywhere else `u` exceeds its own average by `1`."
+    },
+    {
+     "name": "sigmaBar",
+     "full": "GFNBounds.Graph.BackwardPolicy.sigmaBar",
+     "kind": "def",
+     "line": 496,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def sigmaBar (u : V → ℝ) : ℝ",
+     "doc": "`σ̄ := E_{x ∼ π̂_←(s_f→·)} E(σ ∣ X₀ = x)`, the expected backward-trajectory length of Morozov et al."
+    },
+    {
+     "name": "sigmaStar_nonneg",
+     "full": "GFNBounds.Graph.BackwardPolicy.sigmaStar_nonneg",
+     "kind": "theorem",
+     "line": 500,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sigmaStar_nonneg {u : V → ℝ} (hu : B.IsHitExp u) : 0 ≤ sigmaStar G u",
+     "doc": ""
+    },
+    {
+     "name": "sigmaBar_nonneg",
+     "full": "GFNBounds.Graph.BackwardPolicy.sigmaBar_nonneg",
+     "kind": "theorem",
+     "line": 503,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sigmaBar_nonneg {u : V → ℝ} (hu : B.IsHitExp u) : 0 ≤ B.sigmaBar u",
+     "doc": ""
+    },
+    {
+     "name": "phat_snk_eq_zero_of_ne",
+     "full": "GFNBounds.Graph.BackwardPolicy.phat_snk_eq_zero_of_ne",
+     "kind": "theorem",
+     "line": 509,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem phat_snk_eq_zero_of_ne {x : V} (hx : x ≠ G.src) : B.phat x G.snk = 0",
+     "doc": "The only backward transition into `s_f` is from `s₀`: `s_f` has no outgoing edge in `G`."
+    },
+    {
+     "name": "phat_src_src",
+     "full": "GFNBounds.Graph.BackwardPolicy.phat_src_src",
+     "kind": "theorem",
+     "line": 515,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem phat_src_src : B.phat G.src G.src = 0",
+     "doc": "`π̂_←(s₀→s₀) = 0`, the source row being the point mass at `s_f`."
+    },
+    {
+     "name": "IsGreen",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsGreen",
+     "kind": "def",
+     "line": 529,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsGreen (g : V → ℝ) : Prop",
+     "doc": "**The occupation measure of the backward chain killed at `s₀`, characterized**: the renewal equation with the target row as source."
+    },
+    {
+     "name": "eq_smul_lam_of_invariant",
+     "full": "GFNBounds.Graph.BackwardPolicy.eq_smul_lam_of_invariant",
+     "kind": "theorem",
+     "line": 537,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_smul_lam_of_invariant (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam e : V → ℝ} (hl : B.IsInvProb lam) (he : ∀ y, ∑ x, e x * B.phat x y = e y) (x : V) : e x = (∑ z, e z) * lam x",
+     "doc": "**`prop:morozov_rate`*(1)*, one-dimensionality.** An invariant signed measure of the backward chain is a multiple of `λ`: the ratio maximum principle of `theo:universality_graphs`*(1)*, with `eq_zero_of_breach` reused verbatim."
+    },
+    {
+     "name": "IsGreen.flux",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsGreen.flux",
+     "kind": "theorem",
+     "line": 571,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsGreen.flux {g : V → ℝ} (hg : B.IsGreen g) : B.densMap g G.src + B.phat G.snk G.src = 1",
+     "doc": "**The flux identity.** `(g P̂)(s₀) + π̂_←(s_f→s₀) = 1`: the killed chain reaches `s₀` with total mass one."
+    },
+    {
+     "name": "IsGreen.snk",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsGreen.snk",
+     "kind": "theorem",
+     "line": 586,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsGreen.snk {g : V → ℝ} (hg : B.IsGreen g) : g G.snk = 0",
+     "doc": "The killed occupation measure does not charge `s_f`: nothing but `s₀` steps into `s_f`, and `g(s₀) = 0`."
+    },
+    {
+     "name": "IsGreen.unique",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsGreen.unique",
+     "kind": "theorem",
+     "line": 596,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsGreen.unique (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g g' : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) (hg' : B.IsGreen g') : g = g'",
+     "doc": ""
+    },
+    {
+     "name": "greenMap",
+     "full": "GFNBounds.Graph.BackwardPolicy.greenMap",
+     "kind": "def",
+     "line": 637,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def greenMap : (V → ℝ) →ₗ[ℝ] (V → ℝ)",
+     "doc": "The linear map whose kernel is the homogeneous renewal system."
+    },
+    {
+     "name": "greenMap_apply",
+     "full": "GFNBounds.Graph.BackwardPolicy.greenMap_apply",
+     "kind": "theorem",
+     "line": 654,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem greenMap_apply (e : V → ℝ) (y : V) : B.greenMap e y = if y = G.src then e G.src else e y - B.densMap e y",
+     "doc": ""
+    },
+    {
+     "name": "exists_isGreen",
+     "full": "GFNBounds.Graph.BackwardPolicy.exists_isGreen",
+     "kind": "theorem",
+     "line": 658,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_isGreen (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : ∃ g, B.IsGreen g",
+     "doc": "**The renewal system is solvable**: `N` exists."
+    },
+    {
+     "name": "IsGreen.visits_src",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsGreen.visits_src",
+     "kind": "theorem",
+     "line": 709,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsGreen.visits_src {g : V → ℝ} (hg : B.IsGreen g) : visits G g G.src = 1",
+     "doc": "**`prop:morozov_rate`*(1)*, `N(s₀) = 1`** — the paper's convention, here a consequence of `g(s₀) = 0`."
+    },
+    {
+     "name": "IsGreen.visits_snk",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsGreen.visits_snk",
+     "kind": "theorem",
+     "line": 713,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsGreen.visits_snk {g : V → ℝ} (hg : B.IsGreen g) : visits G g G.snk = 1",
+     "doc": "**`prop:morozov_rate`*(1)*, `N(s_f) = 1`** — likewise, from `g(s_f) = 0`."
+    },
+    {
+     "name": "IsGreen.visits_invariant",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsGreen.visits_invariant",
+     "kind": "theorem",
+     "line": 718,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsGreen.visits_invariant {g : V → ℝ} (hg : B.IsGreen g) (y : V) : ∑ x, visits G g x * B.phat x y = visits G g y",
+     "doc": "**`N` is `P̂`-invariant.** The renewal equation off `s₀` plus the flux identity at `s₀`; the two indicator terms carry the wrap `s₀ → s_f` and the target row out of `s_f`."
+    },
+    {
+     "name": "IsGreen.sum_eq_sigmaBar",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsGreen.sum_eq_sigmaBar",
+     "kind": "theorem",
+     "line": 750,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsGreen.sum_eq_sigmaBar {g u : V → ℝ} (hg : B.IsGreen g) (hu : B.IsHitExp u) : ∑ x, g x = B.sigmaBar u",
+     "doc": "**The duality identity.** `∑_x g(x) = σ̄`: pairing the renewal system for `g` against the hitting system for `u` collapses to the total mass on one side and the target-row average on the other."
+    },
+    {
+     "name": "IsGreen.sum_visits",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsGreen.sum_visits",
+     "kind": "theorem",
+     "line": 780,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsGreen.sum_visits {g u : V → ℝ} (hg : B.IsGreen g) (hu : B.IsHitExp u) : ∑ x, visits G g x = 2 + B.sigmaBar u",
+     "doc": "`∑_x N(x) = 2 + σ̄`: the expected length of one excursion from `s₀`, which is what Kac's formula divides by."
+    },
+    {
+     "name": "two_add_sigmaBar_pos",
+     "full": "GFNBounds.Graph.BackwardPolicy.two_add_sigmaBar_pos",
+     "kind": "theorem",
+     "line": 792,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem two_add_sigmaBar_pos {u : V → ℝ} (hu : B.IsHitExp u) : 0 < 2 + B.sigmaBar u",
+     "doc": ""
+    },
+    {
+     "name": "lam_eq_visits_div",
+     "full": "GFNBounds.Graph.BackwardPolicy.lam_eq_visits_div",
+     "kind": "theorem",
+     "line": 801,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lam_eq_visits_div (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g u : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) (hu : B.IsHitExp u) (x : V) : lam x = visits G g x / (2 + B.sigmaBar u)",
+     "doc": "**`prop:morozov_rate`*(1)***: `λ(x) = N(x)/(2 + σ̄)` for every `x`."
+    },
+    {
+     "name": "lam_src_eq",
+     "full": "GFNBounds.Graph.BackwardPolicy.lam_src_eq",
+     "kind": "theorem",
+     "line": 809,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lam_src_eq (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g u : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) (hu : B.IsHitExp u) : lam G.src = 1 / (2 + B.sigmaBar u)",
+     "doc": "**`prop:morozov_rate`*(1)*, at the source**: `λ(s₀) = 1/(2+σ̄)`."
+    },
+    {
+     "name": "lam_snk_eq",
+     "full": "GFNBounds.Graph.BackwardPolicy.lam_snk_eq",
+     "kind": "theorem",
+     "line": 815,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lam_snk_eq (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g u : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) (hu : B.IsHitExp u) : lam G.snk = 1 / (2 + B.sigmaBar u)",
+     "doc": "**`prop:morozov_rate`*(1)*, at the sink**: `λ(s_f) = 1/(2+σ̄)`."
+    },
+    {
+     "name": "IsGreen.visits_pos",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsGreen.visits_pos",
+     "kind": "theorem",
+     "line": 822,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsGreen.visits_pos (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g u : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) (hu : B.IsHitExp u) (x : V) : 0 < visits G g x",
+     "doc": "**`min_x N(x) > 0`**, which is what makes `B̂_σ` a finite constant: `N = (2+σ̄)λ` and `λ > 0`."
+    },
+    {
+     "name": "pdens",
+     "full": "GFNBounds.Graph.BackwardPolicy.pdens",
+     "kind": "def",
+     "line": 838,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def pdens (lam a : V → ℝ) : V → ℝ",
+     "doc": "The **density action** `P` of the backward chain, read on `L²(λ)` densities (`proofs.tex:22`, `proofs.tex:407`): `(Pa)(y) = (∑_x λ(x) π̂_←(x→y) a(x))/λ(y)`, which is the function action of the `λ`-reversal."
+    },
+    {
+     "name": "ipL2_pdens_qact",
+     "full": "GFNBounds.Graph.BackwardPolicy.ipL2_pdens_qact",
+     "kind": "theorem",
+     "line": 844,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_pdens_qact {lam : V → ℝ} (hp : ∀ x, 0 < lam x) (a b : V → ℝ) : ipL2 lam (B.pdens lam a) b = ipL2 lam a (B.qact b)",
+     "doc": "**`P` and `Q` are `L²(λ)`-adjoint** (`proofs.tex:861`), by a swap of two finite sums."
+    },
+    {
+     "name": "pdens_const",
+     "full": "GFNBounds.Graph.BackwardPolicy.pdens_const",
+     "kind": "theorem",
+     "line": 857,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pdens_const {lam : V → ℝ} (hl : B.IsInvProb lam) (hp : ∀ x, 0 < lam x) (c : ℝ) (y : V) : B.pdens lam (fun _ => c) y = c",
+     "doc": "`P` fixes the constants: `λ` is invariant."
+    },
+    {
+     "name": "pdens_sub",
+     "full": "GFNBounds.Graph.BackwardPolicy.pdens_sub",
+     "kind": "theorem",
+     "line": 863,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pdens_sub (lam a a' : V → ℝ) (y : V) : B.pdens lam (fun z => a z - a' z) y = B.pdens lam a y - B.pdens lam a' y",
+     "doc": ""
+    },
+    {
+     "name": "IsPoisson.at_src",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsPoisson.at_src",
+     "kind": "theorem",
+     "line": 872,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsPoisson.at_src {lam f w : V → ℝ} (hl : B.IsInvProb lam) (hp : ∀ x, 0 < lam x) (hw : B.IsPoisson f w) (hf : meanL2 lam f = 0) : ∀ x, w x - B.qact w x = f x",
+     "doc": "**The Poisson solution is closed at `s₀` too** when the source is mean-zero (`proofs.tex:865`): the paper gets it from the occupation identity of item *(1)*, here it is invariance of `λ` tested against `u − Qu`."
+    },
+    {
+     "name": "IsPoisson.le_smul_hitExp",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsPoisson.le_smul_hitExp",
+     "kind": "theorem",
+     "line": 910,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsPoisson.le_smul_hitExp (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {f w u : V → ℝ} {c : ℝ} (hw : B.IsPoisson f w) (hu : B.IsHitExp u) (hc : ∀ x, f x ≤ c) (x : V) : w x ≤ c * u x",
+     "doc": "**`‖u_f‖_∞ ≤ ‖f‖_∞ σ_*`, the comparison form.** `φ := c·u − w` vanishes at `s₀` and is superharmonic off it, `c − f ≥ 0` being the slack; the minimum principle does the rest."
+    },
+    {
+     "name": "IsPoisson.neg",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsPoisson.neg",
+     "kind": "theorem",
+     "line": 926,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsPoisson.neg {f w : V → ℝ} (hw : B.IsPoisson f w) : B.IsPoisson (fun z => -f z) (fun z => -w z)",
+     "doc": ""
+    },
+    {
+     "name": "IsPoisson.abs_le_supAbs_mul_sigmaStar",
+     "full": "GFNBounds.Graph.BackwardPolicy.IsPoisson.abs_le_supAbs_mul_sigmaStar",
+     "kind": "theorem",
+     "line": 934,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsPoisson.abs_le_supAbs_mul_sigmaStar (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {f w u : V → ℝ} (hw : B.IsPoisson f w) (hu : B.IsHitExp u) (x : V) : |w x| ≤ supAbs G f * sigmaStar G u",
+     "doc": "**`‖u_f‖_∞ ≤ ‖f‖_∞ σ_*`** (`proofs.tex:868`), both signs."
+    },
+    {
+     "name": "coercivity_lamMin",
+     "full": "GFNBounds.Graph.BackwardPolicy.coercivity_lamMin",
+     "kind": "theorem",
+     "line": 953,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coercivity_lamMin (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam u : V → ℝ} (hl : B.IsInvProb lam) (hu : B.IsHitExp u) (h : V → ℝ) : nrmL2 lam (fun x => h x - meanL2 lam h) ≤ sigmaStar G u / Real.sqrt (minOver G lam) * nrmL2 lam (fun x => h x - B.pdens lam h x)",
+     "doc": "**`prop:morozov_rate`*(2)*, in the `σ_*/√λ_min` form of `proofs.tex:931`**: `‖h − Πh‖_{L²(λ)} ≤ (σ_*/√(min λ)) ‖(I−P)h‖_{L²(λ)}`."
+    },
+    {
+     "name": "coercivity_morozov",
+     "full": "GFNBounds.Graph.BackwardPolicy.coercivity_morozov",
+     "kind": "theorem",
+     "line": 1028,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coercivity_morozov (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g u : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) (hu : B.IsHitExp u) (h : V → ℝ) : nrmL2 lam (fun x => h x - meanL2 lam h) ≤ sigmaStar G u * Real.sqrt ((2 + B.sigmaBar u) / minOver G (visits G g)) * nrmL2 lam (fun x => h x - B.pdens lam h x)",
+     "doc": "**`prop:morozov_rate`*(2)***: `‖h − Πh‖_{L²(λ)} ≤ B̂_σ ‖(I−P)h‖_{L²(λ)}` with `B̂_σ = σ_*√((2+σ̄)/min_x N(x))`."
+    },
+    {
+     "name": "morozov_rate",
+     "full": "GFNBounds.Graph.BackwardPolicy.morozov_rate",
+     "kind": "theorem",
+     "line": 1069,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem morozov_rate (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g u : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) (hu : B.IsHitExp u) : (∀ x, lam x = visits G g x / (2 + B.sigmaBar u)) ∧ lam G.src = 1 / (2 + B.sigmaBar u) ∧ lam G.snk = 1 / (2 + B.sigmaBar u) ∧ ∀ h : V → ℝ, nrmL2 lam (fun x => h x - meanL2 lam h) ≤ sigmaStar G u * Real.sqrt ((2 + B.sigmaBar u) / minOver G (visits G g)) * nrmL2 lam (fun x => h x - B.pdens lam h x)",
+     "doc": "**`prop:morozov_rate`, items *(1)* and *(2)***, on the loop closure of a finite path-connected marked graph with a backward policy positive on its edges: `λ(x) = N(x)/(2+σ̄)` with `λ(s₀) = λ(s_f) = 1/(2+σ̄)`, and the coercivity with `B̂_σ = σ_*√((2+σ̄)/min N)`."
+    },
+    {
+     "name": "Leveled",
+     "full": "GFNBounds.Graph.Leveled",
+     "kind": "structure",
+     "line": 1092,
+     "attrs": "",
+     "private": false,
+     "statement": "structure Leveled (G : MarkedGraph V)",
+     "doc": "A **leveled** marked graph: a height rising by exactly one along every edge, with the source at height `0`."
+    },
+    {
+     "name": "lvl_mono",
+     "full": "GFNBounds.Graph.Leveled.lvl_mono",
+     "kind": "theorem",
+     "line": 1106,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lvl_mono {x y : V} (h : G.Reach x y) : L.lvl x ≤ L.lvl y",
+     "doc": "The height is monotone along walks of `G`."
+    },
+    {
+     "name": "isHitExp",
+     "full": "GFNBounds.Graph.Leveled.isHitExp",
+     "kind": "theorem",
+     "line": 1114,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isHitExp : B.IsHitExp L.lvl",
+     "doc": "**On a leveled graph the height *is* the hitting time.** Off `s₀` every backward step drops the height by exactly one, so `ℓ = 1 + Qℓ`; with `ℓ(s₀) = 0` that is the hitting system, and by uniqueness `E(σ ∣ X₀ = ·) = ℓ`."
+    },
+    {
+     "name": "sigmaStar_eq",
+     "full": "GFNBounds.Graph.Leveled.sigmaStar_eq",
+     "kind": "theorem",
+     "line": 1129,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sigmaStar_eq (hpc : G.PathConnected) : sigmaStar G L.lvl = L.lvl G.snk",
+     "doc": "`σ_* = t_m`: the sink is the unique maximum of the height, every vertex reaching it."
+    },
+    {
+     "name": "sigmaBar_eq",
+     "full": "GFNBounds.Graph.Leveled.sigmaBar_eq",
+     "kind": "theorem",
+     "line": 1133,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sigmaBar_eq : B.sigmaBar L.lvl = L.lvl G.snk - 1",
+     "doc": "`σ̄ = t_m − 1`: the target row sits one level below the sink."
+    },
+    {
+     "name": "bsigma_le",
+     "full": "GFNBounds.Graph.Leveled.bsigma_le",
+     "kind": "theorem",
+     "line": 1145,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bsigma_le (hpc : G.PathConnected) {N : V → ℝ} (hN : 0 < minOver G N) : sigmaStar G L.lvl * Real.sqrt ((2 + B.sigmaBar L.lvl) / minOver G N) ≤ (L.lvl G.snk + 1) * Real.sqrt ((2 + L.lvl G.snk) / minOver G N)",
+     "doc": "**The leveled witness for `B̂_σ`** (`proofs.tex:855`): with `t_m := ℓ(s_f)`, `B̂_σ ≤ (t_m + 1)√((2 + t_m)/min_x N(x))` — a finite bound with no aperiodicity anywhere, on the graphs where the paper says the mixing constant `B̂` is infinite."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Graph/Setting.lean",
    "title": "Finite marked graphs, their loop closure, and the invariant measure of the backward chain",
    "labels": [],
@@ -13097,7 +15819,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -13498,7 +16220,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -13664,7 +16386,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -13730,7 +16452,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -14031,7 +16753,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -14048,427 +16770,479 @@
    "root_reachable": true
   },
   {
-   "file": "scaffold/GFNBoundsScaffold/Core/Kernel.lean",
-   "title": "The density action of a Markov kernel, and the two conditions `Core.Flow` assumes",
+   "file": "scaffold/GFNBoundsScaffold/Core/Adjoint.lean",
+   "title": "The `λ`-reversal of a Markov kernel, and the `L²(λ)`-adjointness it carries",
    "labels": [],
    "scope_disclosed": true,
    "imports": [
-    "GFNBounds.Core.Flow"
+    "GFNBounds.Graph.Morozov",
+    "GFNBounds.Graph.Universality"
    ],
    "variables": [
-    "variable {α : Type*} [MeasurableSpace α]"
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {G : Graph.MarkedGraph V}"
    ],
-   "lines": 602,
+   "lines": 604,
    "decls": [
     {
-     "name": "bind_absolutelyContinuous_bind",
-     "full": "GFNBounds.Core.bind_absolutelyContinuous_bind",
-     "kind": "theorem",
-     "line": 116,
+     "name": "IsMarkov",
+     "full": "GFNBounds.Core.IsMarkov",
+     "kind": "structure",
+     "line": 130,
      "attrs": "",
      "private": false,
-     "statement": "theorem bind_absolutelyContinuous_bind (κ : Kernel α α) {μ ν : Measure α} (h : μ ≪ ν) : μ.bind ⇑κ ≪ ν.bind ⇑κ",
-     "doc": "**A kernel push preserves domination**: `μ ≪ ν` implies `μ π⋆ ≪ ν π⋆`."
+     "statement": "structure IsMarkov (A : V → V → ℝ) : Prop",
+     "doc": "A **Markov kernel** on the finite state space `V`: non-negative, with every row summing to `1`."
     },
     {
-     "name": "bind_add_measure",
-     "full": "GFNBounds.Core.bind_add_measure",
-     "kind": "theorem",
-     "line": 125,
+     "name": "IsMarkovOn",
+     "full": "GFNBounds.Core.IsMarkovOn",
+     "kind": "structure",
+     "line": 140,
      "attrs": "",
      "private": false,
-     "statement": "theorem bind_add_measure (κ : Kernel α α) (μ₁ μ₂ : Measure α) : (μ₁ + μ₂).bind ⇑κ = μ₁.bind ⇑κ + μ₂.bind ⇑κ",
-     "doc": "`bind` is additive in the measure: `(μ₁ + μ₂) π⋆ = μ₁ π⋆ + μ₂ π⋆`."
+     "statement": "structure IsMarkovOn (lam : V → ℝ) (A : V → V → ℝ) : Prop",
+     "doc": "A **`λ`-almost-everywhere Markov kernel**: non-negative, with the row at `x` summing to `1` whenever `λ(x) ≠ 0`."
     },
     {
-     "name": "bind_withDensity_absolutelyContinuous",
-     "full": "GFNBounds.Core.bind_withDensity_absolutelyContinuous",
-     "kind": "theorem",
-     "line": 135,
+     "name": "IsInvariant",
+     "full": "GFNBounds.Core.IsInvariant",
+     "kind": "structure",
+     "line": 150,
      "attrs": "",
      "private": false,
-     "statement": "theorem bind_withDensity_absolutelyContinuous (κ : Kernel α α) {ν : Measure α} (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : (ν.withDensity f).bind ⇑κ ≪ ν",
-     "doc": "**`(f ν) π⋆ ≪ ν`, from invariance alone.** This is the main text's \"invariance makes the density action `P⋆ f := d((f ν_B) π⋆)/dν_B` well defined on `L¹(ν_B)`\" (`universality.tex:26–27`), and it is a theorem, not a hypothesis."
+     "statement": "structure IsInvariant (lam : V → ℝ) (A : V → V → ℝ) : Prop",
+     "doc": "A **non-negative invariant measure** `λ`: `λ ≥ 0` and `λT = λ` (`proofs.tex:403`)."
     },
     {
-     "name": "bind_withDensity_univ",
-     "full": "GFNBounds.Core.bind_withDensity_univ",
+     "name": "IsMarkov.toIsMarkovOn",
+     "full": "GFNBounds.Core.IsMarkov.toIsMarkovOn",
      "kind": "theorem",
-     "line": 142,
+     "line": 156,
      "attrs": "",
      "private": false,
-     "statement": "theorem bind_withDensity_univ (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) (f : α → ℝ≥0∞) : ((ν.withDensity f).bind ⇑κ) Set.univ = ∫⁻ x, f x ∂ν",
-     "doc": "**The mass of `(f ν) π⋆` is the mass of `f ν`** — stochasticity of the kernel, and not invariance of the measure."
+     "statement": "theorem IsMarkov.toIsMarkovOn {A : V → V → ℝ} (h : IsMarkov A) (lam : V → ℝ) : IsMarkovOn lam A",
+     "doc": ""
     },
     {
-     "name": "isFiniteMeasure_bind_withDensity",
-     "full": "GFNBounds.Core.isFiniteMeasure_bind_withDensity",
+     "name": "IsMarkovOn.toIsMarkov",
+     "full": "GFNBounds.Core.IsMarkovOn.toIsMarkov",
      "kind": "theorem",
-     "line": 149,
+     "line": 160,
      "attrs": "",
      "private": false,
-     "statement": "theorem isFiniteMeasure_bind_withDensity (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) {f : α → ℝ≥0∞} (hf : ∫⁻ x, f x ∂ν ≠ ⊤) : IsFiniteMeasure ((ν.withDensity f).bind ⇑κ)",
-     "doc": "`(f ν) π⋆` is a finite measure as soon as `f` has finite `ν`-integral."
+     "statement": "theorem IsMarkovOn.toIsMarkov {lam : V → ℝ} {A : V → V → ℝ} (h : IsMarkovOn lam A) (hp : ∀ x, 0 < lam x) : IsMarkov A",
+     "doc": ""
     },
     {
-     "name": "bindDensity",
-     "full": "GFNBounds.Core.bindDensity",
+     "name": "IsInvariant.mul_eq_zero",
+     "full": "GFNBounds.Core.IsInvariant.mul_eq_zero",
+     "kind": "theorem",
+     "line": 166,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsInvariant.mul_eq_zero {lam : V → ℝ} {A : V → V → ℝ} (h : IsInvariant lam A) (hA : ∀ x y, 0 ≤ A x y) {y : V} (hy : lam y = 0) (x : V) : lam x * A x y = 0",
+     "doc": "**A `λ`-null state is unreachable**: if `λ(y) = 0` then every term of `λT(y) = 0` vanishes."
+    },
+    {
+     "name": "IsInvariant.eq_zero_of_ne_zero",
+     "full": "GFNBounds.Core.IsInvariant.eq_zero_of_ne_zero",
+     "kind": "theorem",
+     "line": 174,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsInvariant.eq_zero_of_ne_zero {lam : V → ℝ} {A : V → V → ℝ} (h : IsInvariant lam A) (hA : ∀ x y, 0 ≤ A x y) {x y : V} (hx : lam x ≠ 0) (hy : lam y = 0) : A x y = 0",
+     "doc": "**No transition from a `λ`-charged state to a `λ`-null one**: `λ(x) ≠ 0 = λ(y)` forces `T(x → y) = 0`."
+    },
+    {
+     "name": "reversal",
+     "full": "GFNBounds.Core.reversal",
      "kind": "def",
-     "line": 158,
+     "line": 188,
      "attrs": "",
      "private": false,
-     "statement": "noncomputable def bindDensity (κ : Kernel α α) (ν : Measure α) (f : α → ℝ≥0∞) : α → ℝ≥0∞",
-     "doc": "**The density action `T f := d((f ν) π⋆)/dν`** of the main text (`universality.tex:26–27`), on non-negative densities."
+     "statement": "noncomputable def reversal (lam : V → ℝ) (A : V → V → ℝ) : V → V → ℝ",
+     "doc": "**`lem:adjoint`*(1)*, the `λ`-reversal `T^λ`** (`proofs.tex:405`, entrywise form at `proofs.tex:408`): `T^λ(x → y) = λ(y) T(y → x)/λ(x)`, the disintegration of `T ⊗ λ` over its first marginal `λ`, done by division on a finite space."
     },
     {
-     "name": "bindDensity_congr",
-     "full": "GFNBounds.Core.bindDensity_congr",
+     "name": "reversal_apply",
+     "full": "GFNBounds.Core.reversal_apply",
      "kind": "theorem",
-     "line": 164,
+     "line": 192,
      "attrs": "",
      "private": false,
-     "statement": "theorem bindDensity_congr (κ : Kernel α α) (ν : Measure α) {f g : α → ℝ≥0∞} (h : f =ᵐ[ν] g) : bindDensity κ ν f = bindDensity κ ν g",
-     "doc": "`T` depends on `f` only through its `ν`-a.e."
+     "statement": "theorem reversal_apply (lam : V → ℝ) (A : V → V → ℝ) (x y : V) : reversal lam A x y = lam y * A y x / lam x",
+     "doc": ""
     },
     {
-     "name": "measurable_bindDensity",
-     "full": "GFNBounds.Core.measurable_bindDensity",
+     "name": "reversal_of_eq_zero",
+     "full": "GFNBounds.Core.reversal_of_eq_zero",
      "kind": "theorem",
-     "line": 169,
+     "line": 198,
      "attrs": "",
      "private": false,
-     "statement": "theorem measurable_bindDensity (κ : Kernel α α) (ν : Measure α) (f : α → ℝ≥0∞) : Measurable (bindDensity κ ν f)",
-     "doc": "`T f` is measurable, with no hypothesis on `f`: a Radon–Nikodym derivative always is."
+     "statement": "theorem reversal_of_eq_zero {lam : V → ℝ} {A : V → V → ℝ} {x : V} (hx : lam x = 0) (y : V) : reversal lam A x y = 0",
+     "doc": "Off the support of `λ` the reversal is the zero row — the `λ`-negligible set of `proofs.tex:405`, made visible."
     },
     {
-     "name": "withDensity_bindDensity",
-     "full": "GFNBounds.Core.withDensity_bindDensity",
+     "name": "reversal_nonneg",
+     "full": "GFNBounds.Core.reversal_nonneg",
      "kind": "theorem",
-     "line": 176,
+     "line": 202,
      "attrs": "",
      "private": false,
-     "statement": "theorem withDensity_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : ν.withDensity (bindDensity κ ν f) = (ν.withDensity f).bind ⇑κ",
-     "doc": "**`T f` is a genuine density for `(f ν) π⋆`.** This is the well-definedness assertion of `universality.tex:26–27`, and it consumes invariance (through absolute continuity) and finite mass (through the Lebesgue decomposition)."
+     "statement": "theorem reversal_nonneg {lam : V → ℝ} {A : V → V → ℝ} (hlam : ∀ x, 0 ≤ lam x) (hA : ∀ x y, 0 ≤ A x y) (x y : V) : 0 ≤ reversal lam A x y",
+     "doc": ""
     },
     {
-     "name": "lintegral_bindDensity",
-     "full": "GFNBounds.Core.lintegral_bindDensity",
-     "kind": "theorem",
-     "line": 184,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem lintegral_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) : ∫⁻ x, bindDensity κ ν f x ∂ν = ∫⁻ x, f x ∂ν",
-     "doc": "**`∫ T f dν = ∫ f dν`** — the non-negative half of `hint`."
-    },
-    {
-     "name": "bindDensity_one",
-     "full": "GFNBounds.Core.bindDensity_one",
-     "kind": "theorem",
-     "line": 195,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem bindDensity_one (κ : Kernel α α) {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) : bindDensity κ ν 1 =ᵐ[ν] 1",
-     "doc": "**`T 𝟏 = 𝟏`** — the non-negative half of `hone`, and pure invariance: `𝟏 ν = ν`, so `(𝟏 ν) π⋆ = ν π⋆ = ν` and `dν/dν = 𝟏`."
-    },
-    {
-     "name": "bindDensity_zero",
-     "full": "GFNBounds.Core.bindDensity_zero",
-     "kind": "theorem",
-     "line": 201,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem bindDensity_zero (κ : Kernel α α) (ν : Measure α) : bindDensity κ ν 0 =ᵐ[ν] 0",
-     "doc": "`T 0 = 0`: the zero density pushes to the zero measure."
-    },
-    {
-     "name": "bindDensity_add",
-     "full": "GFNBounds.Core.bindDensity_add",
-     "kind": "theorem",
-     "line": 206,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem bindDensity_add (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {f g : α → ℝ≥0∞} (hf : AEMeasurable f ν) (hfi : ∫⁻ x, f x ∂ν ≠ ⊤) (hgi : ∫⁻ x, g x ∂ν ≠ ⊤) : bindDensity κ ν (f + g) =ᵐ[ν] bindDensity κ ν f + bindDensity κ ν g",
-     "doc": "**`T` is additive**, `ν`-a.e., on densities of finite integral."
-    },
-    {
-     "name": "bindDensity_smul",
-     "full": "GFNBounds.Core.bindDensity_smul",
-     "kind": "theorem",
-     "line": 225,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem bindDensity_smul (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {c : ℝ≥0∞} (hc : c ≠ ⊤) {f : α → ℝ≥0∞} (hf : AEMeasurable f ν) (hfi : ∫⁻ x, f x ∂ν ≠ ⊤) : bindDensity κ ν (c • f) =ᵐ[ν] c • bindDensity κ ν f",
-     "doc": "**`T` is positively homogeneous**, `ν`-a.e., for a finite scalar."
-    },
-    {
-     "name": "densityAction",
-     "full": "GFNBounds.Core.densityAction",
+     "name": "IsReversalPair",
+     "full": "GFNBounds.Core.IsReversalPair",
      "kind": "def",
-     "line": 247,
+     "line": 213,
      "attrs": "",
      "private": false,
-     "statement": "noncomputable def densityAction (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : α → ℝ",
-     "doc": "**The density action `P⋆ f := d((f ν) π⋆)/dν` on signed densities.** A signed density is split into its positive and negative parts, each pushed by `T = bindDensity`, and the two densities subtracted."
+     "statement": "def IsReversalPair (lam : V → ℝ) (A R : V → V → ℝ) : Prop",
+     "doc": "**`lem:adjoint`*(1)*, the characterizing identity** `λ ⊗ R = A ⊗ λ` (`proofs.tex:405`), read entrywise on a finite space: `(λ ⊗ R)(x,y) = λ(x)R(x→y)` and `(A ⊗ λ)(x,y) = A(y→x)λ(y)` (`proofs.tex:412`)."
     },
     {
-     "name": "densityAction_congr",
-     "full": "GFNBounds.Core.densityAction_congr",
+     "name": "IsReversalPair.symm",
+     "full": "GFNBounds.Core.IsReversalPair.symm",
      "kind": "theorem",
-     "line": 253,
+     "line": 220,
      "attrs": "",
      "private": false,
-     "statement": "theorem densityAction_congr (κ : Kernel α α) (ν : Measure α) {f g : α → ℝ} (h : f =ᵐ[ν] g) : densityAction κ ν f = densityAction κ ν g",
-     "doc": "`P⋆` depends on `f` only through its `ν`-a.e."
+     "statement": "theorem IsReversalPair.symm {lam : V → ℝ} {A R : V → V → ℝ} (h : IsReversalPair lam A R) : IsReversalPair lam R A",
+     "doc": "**`lem:adjoint`*(2)*, the flip identity `eq:reversal_flip`** (`proofs.tex:418`): `T^λ ⊗ λ = λ ⊗ T`."
     },
     {
-     "name": "measurable_densityAction",
-     "full": "GFNBounds.Core.measurable_densityAction",
+     "name": "isReversalPair_comm",
+     "full": "GFNBounds.Core.isReversalPair_comm",
      "kind": "theorem",
-     "line": 265,
+     "line": 224,
      "attrs": "",
      "private": false,
-     "statement": "theorem measurable_densityAction (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : Measurable (densityAction κ ν f)",
-     "doc": "`P⋆ f` is measurable, with no hypothesis on `f`."
+     "statement": "theorem isReversalPair_comm {lam : V → ℝ} {A R : V → V → ℝ} : IsReversalPair lam A R ↔ IsReversalPair lam R A",
+     "doc": ""
     },
     {
-     "name": "lintegral_ofReal_ne_top",
-     "full": "GFNBounds.Core.lintegral_ofReal_ne_top",
+     "name": "IsInvariant.isReversalPair_reversal",
+     "full": "GFNBounds.Core.IsInvariant.isReversalPair_reversal",
      "kind": "theorem",
-     "line": 271,
+     "line": 230,
      "attrs": "",
      "private": false,
-     "statement": "theorem lintegral_ofReal_ne_top {ν : Measure α} {f : α → ℝ} (hf : Integrable f ν) : ∫⁻ x, ENNReal.ofReal (f x) ∂ν ≠ ⊤",
-     "doc": "The positive part of an integrable function has finite `ν`-integral."
+     "statement": "theorem IsInvariant.isReversalPair_reversal {lam : V → ℝ} {A : V → V → ℝ} (h : IsInvariant lam A) (hA : ∀ x y, 0 ≤ A x y) : IsReversalPair lam A (reversal lam A)",
+     "doc": "**`lem:adjoint`*(1)*, existence**: the reversal satisfies the characterizing identity — at *every* state, including where `λ` vanishes, because there invariance kills both sides."
     },
     {
-     "name": "bindDensity_ofReal_lt_top",
-     "full": "GFNBounds.Core.bindDensity_ofReal_lt_top",
+     "name": "IsReversalPair.eq_reversal",
+     "full": "GFNBounds.Core.IsReversalPair.eq_reversal",
+     "kind": "theorem",
+     "line": 243,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsReversalPair.eq_reversal {lam : V → ℝ} {A R : V → V → ℝ} (h : IsReversalPair lam A R) {x : V} (hx : lam x ≠ 0) (y : V) : R x y = reversal lam A x y",
+     "doc": "**`lem:adjoint`*(1)*, `λ`-a.e."
+    },
+    {
+     "name": "IsReversalPair.eq_of_ne_zero",
+     "full": "GFNBounds.Core.IsReversalPair.eq_of_ne_zero",
+     "kind": "theorem",
+     "line": 250,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsReversalPair.eq_of_ne_zero {lam : V → ℝ} {A R R' : V → V → ℝ} (h : IsReversalPair lam A R) (h' : IsReversalPair lam A R') {x : V} (hx : lam x ≠ 0) (y : V) : R x y = R' x y",
+     "doc": "**`lem:adjoint`*(1)*, `λ`-a.e."
+    },
+    {
+     "name": "IsInvariant.isMarkovOn_reversal",
+     "full": "GFNBounds.Core.IsInvariant.isMarkovOn_reversal",
+     "kind": "theorem",
+     "line": 256,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsInvariant.isMarkovOn_reversal {lam : V → ℝ} {A : V → V → ℝ} (h : IsInvariant lam A) (hA : ∀ x y, 0 ≤ A x y) : IsMarkovOn lam (reversal lam A)",
+     "doc": "**`lem:adjoint`*(1)*, the reversal is a Markov kernel** — `λ`-almost everywhere, its rows summing to `1` by stationarity of `λ` exactly where `λ` does not vanish."
+    },
+    {
+     "name": "IsReversalPair.isInvariant",
+     "full": "GFNBounds.Core.IsReversalPair.isInvariant",
+     "kind": "theorem",
+     "line": 267,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsReversalPair.isInvariant {lam : V → ℝ} {A R : V → V → ℝ} (hlam : ∀ x, 0 ≤ lam x) (hA : IsMarkov A) (h : IsReversalPair lam A R) : IsInvariant lam R",
+     "doc": "**`lem:adjoint`*(2)*, `λ` is `T^λ`-invariant** (`proofs.tex:416`): `λT^λ` is the second marginal of `λ ⊗ T^λ = T ⊗ λ`, which is `λ`."
+    },
+    {
+     "name": "reversal_reversal",
+     "full": "GFNBounds.Core.reversal_reversal",
      "kind": "theorem",
      "line": 278,
      "attrs": "",
      "private": false,
-     "statement": "theorem bindDensity_ofReal_lt_top (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∀ᵐ x ∂ν, bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x < ⊤",
-     "doc": "`T f⁺` has finite `ν`-integral, hence is a.e."
+     "statement": "theorem reversal_reversal {lam : V → ℝ} {A : V → V → ℝ} (h : IsInvariant lam A) (hA : ∀ x y, 0 ≤ A x y) {x : V} (hx : lam x ≠ 0) (y : V) : reversal lam (reversal lam A) x y = A x y",
+     "doc": "**`lem:adjoint`*(2)*, reversal is an involution `λ`-almost everywhere** (`proofs.tex:406`): `(T^λ)^λ = T` at every state carrying `λ`-mass."
     },
     {
-     "name": "integrable_toReal_bindDensity",
-     "full": "GFNBounds.Core.integrable_toReal_bindDensity",
-     "kind": "theorem",
-     "line": 285,
+     "name": "funAct",
+     "full": "GFNBounds.Core.funAct",
+     "kind": "def",
+     "line": 294,
      "attrs": "",
      "private": false,
-     "statement": "theorem integrable_toReal_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : Integrable (fun x => (bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x).toReal) ν",
-     "doc": "`(T f⁺).toReal` is `ν`-integrable, with `∫ (T f⁺).toReal dν = ∫ f⁺ dν`."
+     "statement": "def funAct (A : V → V → ℝ) (u : V → ℝ) : V → ℝ",
+     "doc": "The **function action** `(Au)(x) = ∑_y A(x→y)u(y)` of a kernel on `L²(λ)` — the paper's `Af` of `proofs.tex:422`, and `Graph.BackwardPolicy.qact` for `π̂_←`."
     },
     {
-     "name": "integral_toReal_bindDensity",
-     "full": "GFNBounds.Core.integral_toReal_bindDensity",
+     "name": "funAct_apply",
+     "full": "GFNBounds.Core.funAct_apply",
      "kind": "theorem",
-     "line": 291,
+     "line": 296,
      "attrs": "",
      "private": false,
-     "statement": "theorem integral_toReal_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∫ x, (bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x).toReal ∂ν = (∫⁻ x, ENNReal.ofReal (f x) ∂ν).toReal",
+     "statement": "theorem funAct_apply (A : V → V → ℝ) (u : V → ℝ) (x : V) : funAct A u x = ∑ y, A x y * u y",
      "doc": ""
     },
     {
-     "name": "integral_densityAction",
-     "full": "GFNBounds.Core.integral_densityAction",
-     "kind": "theorem",
-     "line": 303,
+     "name": "densAct",
+     "full": "GFNBounds.Core.densAct",
+     "kind": "def",
+     "line": 302,
      "attrs": "",
      "private": false,
-     "statement": "theorem integral_densityAction (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f : α → ℝ} (hf : Integrable f ν) : ∫ x, densityAction κ ν f x ∂ν = ∫ x, f x ∂ν",
-     "doc": "**`hint`, in the paper's own terms**: `∫ P⋆ f dν = ∫ f dν` for every `ν`-integrable `f`."
+     "statement": "noncomputable def densAct (lam : V → ℝ) (A : V → V → ℝ) (u : V → ℝ) : V → ℝ",
+     "doc": "The **density action** `μ ↦ μA` of a kernel on `𝓜²(λ)`, read on densities: `(d(μA)/dλ)(y) = (∑_x λ(x)A(x→y)u(x))/λ(y)` for `u = dμ/dλ`."
     },
     {
-     "name": "densityAction_one",
-     "full": "GFNBounds.Core.densityAction_one",
+     "name": "densAct_apply",
+     "full": "GFNBounds.Core.densAct_apply",
      "kind": "theorem",
-     "line": 315,
+     "line": 305,
      "attrs": "",
      "private": false,
-     "statement": "theorem densityAction_one (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) : densityAction κ ν 1 =ᵐ[ν] 1",
-     "doc": "**`hone`**: `P⋆ 𝟏 = 𝟏` a.e."
+     "statement": "theorem densAct_apply (lam : V → ℝ) (A : V → V → ℝ) (u : V → ℝ) (y : V) : densAct lam A u y = (∑ x, lam x * A x y * u x) / lam y",
+     "doc": ""
     },
     {
-     "name": "max_add_aux",
-     "full": "GFNBounds.Core.max_add_aux",
+     "name": "densAct_eq_funAct_reversal",
+     "full": "GFNBounds.Core.densAct_eq_funAct_reversal",
      "kind": "theorem",
-     "line": 329,
+     "line": 311,
      "attrs": "",
      "private": false,
-     "statement": "theorem max_add_aux (u v : ℝ) : max (u + v) 0 + max (-u) 0 + max (-v) 0 = max (-(u + v)) 0 + max u 0 + max v 0",
-     "doc": "The real identity behind additivity of `P⋆`: `(u+v)⁺ + u⁻ + v⁻ = (u+v)⁻ + u⁺ + v⁺`."
+     "statement": "theorem densAct_eq_funAct_reversal (lam : V → ℝ) (A : V → V → ℝ) (u : V → ℝ) : densAct lam A u = funAct (reversal lam A) u",
+     "doc": "**`lem:adjoint`*(3)*, half of \"the density action of each is the function action of the other\"** (`proofs.tex:407`): `d(μT)/dλ = T^λ u`."
     },
     {
-     "name": "ofReal_add_aux",
-     "full": "GFNBounds.Core.ofReal_add_aux",
+     "name": "funAct_eq_densAct_reversal",
+     "full": "GFNBounds.Core.funAct_eq_densAct_reversal",
      "kind": "theorem",
-     "line": 342,
+     "line": 319,
      "attrs": "",
      "private": false,
-     "statement": "theorem ofReal_add_aux (u v : ℝ) : ENNReal.ofReal (u + v) + ENNReal.ofReal (-u) + ENNReal.ofReal (-v) = ENNReal.ofReal (-(u + v)) + ENNReal.ofReal u + ENNReal.ofReal v",
-     "doc": "The same identity in `ℝ≥0∞`, which is where `T` consumes it."
+     "statement": "theorem funAct_eq_densAct_reversal {lam : V → ℝ} {A R : V → V → ℝ} (h : IsReversalPair lam A R) (u : V → ℝ) {y : V} (hy : lam y ≠ 0) : densAct lam R u y = funAct A u y",
+     "doc": "**`lem:adjoint`*(3)*, the other half** (`proofs.tex:442`, \"exchanging the roles of `T` and `T^λ`, legitimate by `eq:reversal_flip`\"): `d(μT^λ)/dλ = Tu`, `λ`-almost everywhere."
     },
     {
-     "name": "lintegral_add_ne_top",
-     "full": "GFNBounds.Core.lintegral_add_ne_top",
+     "name": "ipL2_congr_right",
+     "full": "GFNBounds.Core.ipL2_congr_right",
      "kind": "theorem",
-     "line": 357,
+     "line": 328,
      "attrs": "",
      "private": false,
-     "statement": "theorem lintegral_add_ne_top {ν : Measure α} {u v : α → ℝ≥0∞} (hu : AEMeasurable u ν) (hun : ∫⁻ x, u x ∂ν ≠ ⊤) (hvn : ∫⁻ x, v x ∂ν ≠ ⊤) : ∫⁻ x, (u + v) x ∂ν ≠ ⊤",
-     "doc": "`∫ (u + v) dν` is finite when both summands are."
+     "statement": "theorem ipL2_congr_right {lam : V → ℝ} {a b b' : V → ℝ} (h : ∀ x, lam x ≠ 0 → b x = b' x) : Graph.ipL2 lam a b = Graph.ipL2 lam a b'",
+     "doc": "`⟪a ∣ ·⟫_λ` does not see a change off the support of `λ`."
     },
     {
-     "name": "bindDensity_add₃",
-     "full": "GFNBounds.Core.bindDensity_add₃",
+     "name": "ipL2_congr_left",
+     "full": "GFNBounds.Core.ipL2_congr_left",
      "kind": "theorem",
-     "line": 364,
+     "line": 336,
      "attrs": "",
      "private": false,
-     "statement": "theorem bindDensity_add₃ (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {u v w : α → ℝ≥0∞} (hu : AEMeasurable u ν) (hv : AEMeasurable v ν) (hun : ∫⁻ x, u x ∂ν ≠ ⊤) (hvn : ∫⁻ x, v x ∂ν ≠ ⊤) (hwn : ∫⁻ x, w x ∂ν ≠ ⊤) : bindDensity κ ν (u + v + w) =ᵐ[ν] bindDensity κ ν u + bindDensity κ ν v + bindDensity κ ν w",
-     "doc": "`T` on a sum of three densities of finite integral."
+     "statement": "theorem ipL2_congr_left {lam : V → ℝ} {a a' b : V → ℝ} (h : ∀ x, lam x ≠ 0 → a x = a' x) : Graph.ipL2 lam a b = Graph.ipL2 lam a' b",
+     "doc": "`⟪· ∣ b⟫_λ` does not see a change off the support of `λ`."
     },
     {
-     "name": "aemeasurable_ofReal",
-     "full": "GFNBounds.Core.aemeasurable_ofReal",
+     "name": "nrmL2_congr",
+     "full": "GFNBounds.Core.nrmL2_congr",
      "kind": "theorem",
-     "line": 378,
+     "line": 343,
      "attrs": "",
      "private": false,
-     "statement": "theorem aemeasurable_ofReal {ν : Measure α} {f : α → ℝ} (hf : Integrable f ν) : AEMeasurable (fun y => ENNReal.ofReal (f y)) ν",
-     "doc": "The positive part of an integrable function is `ν`-a.e."
+     "statement": "theorem nrmL2_congr {lam : V → ℝ} {a a' : V → ℝ} (h : ∀ x, lam x ≠ 0 → a x = a' x) : Graph.nrmL2 lam a = Graph.nrmL2 lam a'",
+     "doc": ""
     },
     {
-     "name": "densityAction_add",
-     "full": "GFNBounds.Core.densityAction_add",
+     "name": "ipL2_densAct_funAct",
+     "full": "GFNBounds.Core.ipL2_densAct_funAct",
+     "kind": "theorem",
+     "line": 353,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_densAct_funAct {lam : V → ℝ} {A : V → V → ℝ} (h : IsInvariant lam A) (hA : ∀ x y, 0 ≤ A x y) (u v : V → ℝ) : Graph.ipL2 lam (densAct lam A u) v = Graph.ipL2 lam u (funAct A v)",
+     "doc": "**`lem:adjoint`*(3)*, the adjointness identity in density/function form** (`proofs.tex:433–441`): `⟪μT ∣ ν⟫_λ = ∫ v · (Tv-side) dλ`, here `⟪d(μT)/dλ ∣ v⟫_λ = ⟪u ∣ Tv⟫_λ`."
+    },
+    {
+     "name": "ipL2_densAct_densAct",
+     "full": "GFNBounds.Core.ipL2_densAct_densAct",
+     "kind": "theorem",
+     "line": 372,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_densAct_densAct {lam : V → ℝ} {A R : V → V → ℝ} (h : IsInvariant lam A) (hA : ∀ x y, 0 ≤ A x y) (hR : IsReversalPair lam A R) (u v : V → ℝ) : Graph.ipL2 lam (densAct lam A u) v = Graph.ipL2 lam u (densAct lam R v)",
+     "doc": "**`lem:adjoint`*(3)*, the adjointness of the two density actions** (`proofs.tex:407`): `⟪μT ∣ ν⟫_λ = ⟪μ ∣ νT^λ⟫_λ` for `μ, ν ∈ 𝓜²(λ)`, carried by their densities `u, v`."
+    },
+    {
+     "name": "funAct_mul_self_le",
+     "full": "GFNBounds.Core.funAct_mul_self_le",
      "kind": "theorem",
      "line": 387,
      "attrs": "",
      "private": false,
-     "statement": "theorem densityAction_add (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) {f g : α → ℝ} (hf : Integrable f ν) (hg : Integrable g ν) : densityAction κ ν (fun x => f x + g x) =ᵐ[ν] fun x => densityAction κ ν f x + densityAction κ ν g x",
-     "doc": "**`P⋆` is additive**, `ν`-a.e., on `ν`-integrable densities."
+     "statement": "theorem funAct_mul_self_le {lam : V → ℝ} {A : V → V → ℝ} (hA : IsMarkovOn lam A) {x : V} (hx : lam x ≠ 0) (u : V → ℝ) : funAct A u x * funAct A u x ≤ ∑ y, A x y * (u y * u y)",
+     "doc": "**`eq:reversal_contraction` pointwise** (`proofs.tex:424`): `(Au)(x)² ≤ A(u²)(x)`, Jensen at one state, for a row that is a probability distribution."
     },
     {
-     "name": "densityAction_neg",
-     "full": "GFNBounds.Core.densityAction_neg",
+     "name": "ipL2_funAct_self_le",
+     "full": "GFNBounds.Core.ipL2_funAct_self_le",
      "kind": "theorem",
-     "line": 427,
+     "line": 417,
      "attrs": "",
      "private": false,
-     "statement": "theorem densityAction_neg (κ : Kernel α α) (ν : Measure α) (f : α → ℝ) : densityAction κ ν (fun x => -f x) = fun x => -densityAction κ ν f x",
-     "doc": "`P⋆(-f) = -P⋆ f`, by definition: negation swaps the positive and negative parts."
+     "statement": "theorem ipL2_funAct_self_le {lam : V → ℝ} {A : V → V → ℝ} (hA : IsMarkovOn lam A) (h : IsInvariant lam A) (u : V → ℝ) : Graph.ipL2 lam (funAct A u) (funAct A u) ≤ Graph.ipL2 lam u u",
+     "doc": "**`eq:reversal_contraction`** (`proofs.tex:424–425`): the function action of a kernel leaving `λ` invariant is a contraction of `L²(λ)`."
     },
     {
-     "name": "densityAction_smul_nonneg",
-     "full": "GFNBounds.Core.densityAction_smul_nonneg",
+     "name": "nrmL2_funAct_le",
+     "full": "GFNBounds.Core.nrmL2_funAct_le",
      "kind": "theorem",
-     "line": 434,
+     "line": 443,
      "attrs": "",
      "private": false,
-     "statement": "theorem densityAction_smul_nonneg (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] {r : ℝ} (hr : 0 ≤ r) {f : α → ℝ} (hf : Integrable f ν) : densityAction κ ν (fun x => r * f x) =ᵐ[ν] fun x => r * densityAction κ ν f x",
-     "doc": "`P⋆` is homogeneous under a non-negative scalar."
+     "statement": "theorem nrmL2_funAct_le {lam : V → ℝ} {A : V → V → ℝ} (hA : IsMarkovOn lam A) (h : IsInvariant lam A) (u : V → ℝ) : Graph.nrmL2 lam (funAct A u) ≤ Graph.nrmL2 lam u",
+     "doc": "**`lem:adjoint`*(3)*, the function action is a contraction of `L²(λ)`**."
     },
     {
-     "name": "densityAction_smul",
-     "full": "GFNBounds.Core.densityAction_smul",
+     "name": "nrmL2_densAct_le",
+     "full": "GFNBounds.Core.nrmL2_densAct_le",
      "kind": "theorem",
-     "line": 457,
+     "line": 450,
      "attrs": "",
      "private": false,
-     "statement": "theorem densityAction_smul (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α} [SigmaFinite ν] (r : ℝ) {f : α → ℝ} (hf : Integrable f ν) : densityAction κ ν (fun x => r * f x) =ᵐ[ν] fun x => r * densityAction κ ν f x",
-     "doc": "**`P⋆` is homogeneous**, `ν`-a.e., under every real scalar."
+     "statement": "theorem nrmL2_densAct_le {lam : V → ℝ} {A : V → V → ℝ} (hA : IsMarkov A) (h : IsInvariant lam A) (u : V → ℝ) : Graph.nrmL2 lam (densAct lam A u) ≤ Graph.nrmL2 lam u",
+     "doc": "**`lem:adjoint`*(3)*, the density action is a contraction of `𝓜²(λ)`** — the paper's own route, through `d(μT)/dλ = T^λ u` and the contraction of the reversal's function action."
     },
     {
-     "name": "IsBoundedDensityAction",
-     "full": "GFNBounds.Core.IsBoundedDensityAction",
-     "kind": "structure",
-     "line": 482,
-     "attrs": "",
-     "private": false,
-     "statement": "structure IsBoundedDensityAction (κ : Kernel α α) (ν : Measure α) (p : ℝ≥0∞) (C : ℝ) : Prop",
-     "doc": "**The paper's boundedness hypothesis on the parameterization**, and the only hypothesis of `theo:universality_L2_full` that this file assumes rather than derives."
-    },
-    {
-     "name": "densityActionLM",
-     "full": "GFNBounds.Core.densityActionLM",
-     "kind": "def",
-     "line": 493,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def densityActionLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : Lp ℝ p ν →ₗ[ℝ] Lp ℝ p ν",
-     "doc": "`P⋆` as a linear map on `L^p(ν)`."
-    },
-    {
-     "name": "densityActionCLM",
-     "full": "GFNBounds.Core.densityActionCLM",
-     "kind": "def",
-     "line": 527,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : Lp ℝ p ν →L[ℝ] Lp ℝ p ν",
-     "doc": "**`P⋆` as a `ContinuousLinearMap` on `L^p(ν)`**, with the paper's own operator-norm bound `C` as the continuity constant."
-    },
-    {
-     "name": "norm_densityActionCLM_le",
-     "full": "GFNBounds.Core.norm_densityActionCLM_le",
+     "name": "nrmL2_one_pos",
+     "full": "GFNBounds.Core.nrmL2_one_pos",
      "kind": "theorem",
-     "line": 542,
+     "line": 463,
      "attrs": "",
      "private": false,
-     "statement": "theorem norm_densityActionCLM_le (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : ‖densityActionCLM κ ν p hinv hb‖ ≤ C",
-     "doc": "`‖P⋆‖_{L^p→L^p} ≤ C`: the paper's constant bounds the operator norm, as rule 3 asks."
+     "statement": "theorem nrmL2_one_pos {lam : V → ℝ} (hlam : ∀ x, 0 ≤ lam x) (hne : ∃ x, 0 < lam x) : 0 < Graph.nrmL2 lam (fun _ => (1:ℝ))",
+     "doc": "`‖λ‖_{𝓜²(λ)} > 0`: `λ` is non-zero and finite, so its own density `1` has positive norm."
     },
     {
-     "name": "coeFn_densityActionCLM",
-     "full": "GFNBounds.Core.coeFn_densityActionCLM",
+     "name": "isLeast_opNorm_funAct",
+     "full": "GFNBounds.Core.isLeast_opNorm_funAct",
      "kind": "theorem",
-     "line": 548,
+     "line": 476,
      "attrs": "",
      "private": false,
-     "statement": "theorem coeFn_densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (F : Lp ℝ p ν) : ⇑(densityActionCLM κ ν p hinv hb F) =ᵐ[ν] densityAction κ ν ⇑F",
-     "doc": "The `L^p` operator applied to `F` is represented by `P⋆` applied to any representative."
+     "statement": "theorem isLeast_opNorm_funAct {lam : V → ℝ} {A : V → V → ℝ} (hA : IsMarkovOn lam A) (h : IsInvariant lam A) (hne : ∃ x, 0 < lam x) : IsLeast {c : ℝ | ∀ u, Graph.nrmL2 lam (funAct A u) ≤ c * Graph.nrmL2 lam u} 1",
+     "doc": "**`lem:adjoint`*(3)*, the function action has operator norm exactly `1`**: `1` is the least constant `c` with `‖Au‖_{L²(λ)} ≤ c‖u‖_{L²(λ)}` for every `u`."
     },
     {
-     "name": "densityActionCLM_constOne",
-     "full": "GFNBounds.Core.densityActionCLM_constOne",
+     "name": "isLeast_opNorm_densAct",
+     "full": "GFNBounds.Core.isLeast_opNorm_densAct",
      "kind": "theorem",
-     "line": 555,
+     "line": 489,
      "attrs": "",
      "private": false,
-     "statement": "theorem densityActionCLM_constOne (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) : densityActionCLM κ ν p hinv hb (constOne ν p) = constOne ν p",
-     "doc": "**`hone` on `L^p(ν)`**: `P⋆ 𝟏 = 𝟏`, the paper's `(Id − P⋆) 𝟏 = 0` (`proofs.tex:100`)."
+     "statement": "theorem isLeast_opNorm_densAct {lam : V → ℝ} {A : V → V → ℝ} (hA : IsMarkov A) (h : IsInvariant lam A) (hne : ∃ x, 0 < lam x) : IsLeast {c : ℝ | ∀ u, Graph.nrmL2 lam (densAct lam A u) ≤ c * Graph.nrmL2 lam u} 1",
+     "doc": "**`lem:adjoint`*(3)*, the density action has operator norm exactly `1`**."
     },
     {
-     "name": "integral_densityActionCLM",
-     "full": "GFNBounds.Core.integral_densityActionCLM",
+     "name": "adjoint_finite",
+     "full": "GFNBounds.Core.adjoint_finite",
      "kind": "theorem",
-     "line": 565,
+     "line": 511,
      "attrs": "",
      "private": false,
-     "statement": "theorem integral_densityActionCLM (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (F : Lp ℝ p ν) : ∫ x, (densityActionCLM κ ν p hinv hb F) x ∂ν = ∫ x, F x ∂ν",
-     "doc": "**`hint` on `L^p(ν)`**: `∫ P⋆ f dν = ∫ f dν`."
+     "statement": "theorem adjoint_finite {lam : V → ℝ} {A : V → V → ℝ} (hA : IsMarkov A) (h : IsInvariant lam A) (hne : ∃ x, 0 < lam x) : (IsMarkovOn lam (reversal lam A) ∧ IsReversalPair lam A (reversal lam A)) ∧ (∀ R, IsReversalPair lam A R → ∀ x, lam x ≠ 0 → ∀ y, R x y = reversal lam A x y) ∧ (IsInvariant lam (reversal lam A) ∧ IsReversalPair lam (reversal lam A) A ∧ ∀ x, lam x ≠ 0 → ∀ y, reversal lam (reversal lam A) x y = A x y) ∧ (∀ u v, Graph.ipL2 lam (densAct lam A u) v = Graph.ipL2 lam u (densAct lam (reversal lam A) v)) ∧ (densAct lam A = funAct (reversal lam A) ∧ ∀ u x, lam x ≠ 0 → densAct lam (reversal lam A) u x = funAct A u x) ∧ IsLeast {c : ℝ | ∀ u, Graph.nrmL2 lam (densAct lam A u) ≤ c * Graph.nrmL2 lam u} 1",
+     "doc": "**`lem:adjoint`*(1)*–*(3)* on a finite state space** (`proofs.tex:402–410`), with the paper's `λ`-almost-everywhere qualifications read as \"at every state carrying `λ`-mass\"."
     },
     {
-     "name": "weaklyUniversal_of_kernel",
-     "full": "GFNBounds.Core.weaklyUniversal_of_kernel",
+     "name": "phat_isMarkov",
+     "full": "GFNBounds.Core.phat_isMarkov",
      "kind": "theorem",
-     "line": 582,
+     "line": 554,
      "attrs": "",
      "private": false,
-     "statement": "theorem weaklyUniversal_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν p hinv hb) ^ n - meanProj ν p‖) (hp : p ≠ ⊤) : WeaklyUniversal (densityActionCLM κ ν p hinv hb) (meanProj ν p)",
-     "doc": "**`theo:universality_L2_full`'s weak half, from the paper's own hypotheses about the kernel.** `π⋆` is a Markov kernel, `ν` is finite and `π⋆`-invariant, `P⋆` is bounded on `L^p(ν)` with constant `C` — the paper's requirement on the parameterization — and the mixing coefficients `β_n = ‖P⋆^n − Π‖` are summable."
+     "statement": "theorem phat_isMarkov : IsMarkov B.phat",
+     "doc": "**`lem:adjoint`*(4)*, `T = π̂_←`**: the loop closure is a Markov kernel on `𝒱` (`proofs.tex:408`, \"which on a finite marked graph is the loop closure `π̂_←` […] and not `π_←` itself\")."
     },
     {
-     "name": "weaklyUniversalAt_of_kernel",
-     "full": "GFNBounds.Core.weaklyUniversalAt_of_kernel",
+     "name": "isInvariant_of_isInvProb",
+     "full": "GFNBounds.Core.isInvariant_of_isInvProb",
      "kind": "theorem",
-     "line": 593,
+     "line": 558,
      "attrs": "",
      "private": false,
-     "statement": "theorem weaklyUniversalAt_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν p hinv hb) ^ n - meanProj ν p‖) (hp : p ≠ ⊤) {f_init f_term : Lp ℝ p ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : WeaklyUniversalAt (densityActionCLM κ ν p hinv hb) (f_term - f_init)",
-     "doc": "**The same, at one admissible pair**: two densities in `L^p(ν)` of equal total mass are joined to arbitrary accuracy by a non-negative outflow against the kernel `π⋆`."
+     "statement": "theorem isInvariant_of_isInvProb {lam : V → ℝ} (h : B.IsInvProb lam) : IsInvariant lam B.phat",
+     "doc": "An invariant probability of the backward chain is an invariant measure in the sense of this file."
+    },
+    {
+     "name": "graph_reversal_eq",
+     "full": "GFNBounds.Core.graph_reversal_eq",
+     "kind": "theorem",
+     "line": 564,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem graph_reversal_eq (lam : V → ℝ) : B.reversal lam = reversal lam B.phat",
+     "doc": "**`lem:adjoint`*(4)*, the entrywise formula** (`proofs.tex:408`): `π_→^λ(s → s') = λ(s') π̂_←(s' → s)/λ(s)` is the general finite `λ`-reversal of `π̂_←`, so `theo:universality_graphs`*(2)*'s `Graph.BackwardPolicy.reversal` **is** `reversal`."
+    },
+    {
+     "name": "graph_pdens_eq",
+     "full": "GFNBounds.Core.graph_pdens_eq",
+     "kind": "theorem",
+     "line": 568,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem graph_pdens_eq (lam : V → ℝ) : B.pdens lam = densAct lam B.phat",
+     "doc": "`Graph.BackwardPolicy.pdens`, the density action of `prop:morozov_rate`, is `densAct` of `π̂_←`."
+    },
+    {
+     "name": "graph_qact_eq",
+     "full": "GFNBounds.Core.graph_qact_eq",
+     "kind": "theorem",
+     "line": 572,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem graph_qact_eq : B.qact = funAct B.phat",
+     "doc": "`Graph.BackwardPolicy.qact`, the function action of `prop:morozov_rate`, is `funAct` of `π̂_←`."
+    },
+    {
+     "name": "reversal_hatEdge",
+     "full": "GFNBounds.Core.reversal_hatEdge",
+     "kind": "theorem",
+     "line": 576,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem reversal_hatEdge {lam : V → ℝ} {u v : V} (h : reversal lam B.phat u v ≠ 0) : G.hatEdge u v",
+     "doc": "**`lem:adjoint`*(4)*, the support** (`proofs.tex:444`, \"it is positive only where `π̂_←(s'→s) > 0`, hence only on edges `s → s'` of `Ĝ`\")."
+    },
+    {
+     "name": "reversal_snk_src",
+     "full": "GFNBounds.Core.reversal_snk_src",
+     "kind": "theorem",
+     "line": 585,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem reversal_snk_src {lam : V → ℝ} (h : B.IsInvProb lam) (hp : ∀ x, 0 < lam x) : reversal lam B.phat G.snk G.src = 1",
+     "doc": "**`lem:adjoint`*(4)*, the wrap edge** (`proofs.tex:444`): `π_→^λ(s_f → s₀) = 1`, so `s_f` is not terminal for the forward policy."
     }
    ],
    "library": "scaffold",

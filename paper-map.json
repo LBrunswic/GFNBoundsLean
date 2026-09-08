@@ -1061,10 +1061,11 @@
       "block_sha256": "0ed66bc7c52c82674677c2e68ce93f6c815ef9f4f6e77f715c2eeacccf5fdc43",
       "lean_files": [
         "GFNBounds/Core/Flow.lean",
+        "GFNBounds/Core/Kernel.lean",
         "GFNBounds/Core/Mixing.lean",
+        "GFNBounds/Core/StrongUniversality.lean",
         "GFNBounds/Core/Universality.lean",
-        "GFNBounds/Core/UniversalityLp.lean",
-        "scaffold/GFNBoundsScaffold/Core/Kernel.lean"
+        "GFNBounds/Core/UniversalityLp.lean"
       ],
       "decls": [
         "GFNBounds.Core.defect",
@@ -1091,11 +1092,35 @@
         "GFNBounds.Core.mixing_of_massPreserving",
         "GFNBounds.Core.weaklyUniversal_of_massPreserving",
         "GFNBounds.Core.weaklyUniversalAt_of_equalMass",
-        "GFNBounds.Core.eq_meanProj_of_invariant"
+        "GFNBounds.Core.eq_meanProj_of_invariant",
+        "GFNBounds.Core.bindDensity",
+        "GFNBounds.Core.densityAction",
+        "GFNBounds.Core.bind_absolutelyContinuous_bind",
+        "GFNBounds.Core.bind_withDensity_absolutelyContinuous",
+        "GFNBounds.Core.withDensity_bindDensity",
+        "GFNBounds.Core.integral_densityAction",
+        "GFNBounds.Core.densityAction_one",
+        "GFNBounds.Core.IsBoundedDensityAction",
+        "GFNBounds.Core.densityActionCLM",
+        "GFNBounds.Core.norm_densityActionCLM_le",
+        "GFNBounds.Core.isBoundedDensityAction_id",
+        "GFNBounds.Core.weaklyUniversal_of_kernel",
+        "GFNBounds.Core.weaklyUniversalAt_of_kernel",
+        "GFNBounds.Core.ae_le_norm_top",
+        "GFNBounds.Core.le_norm_smul_constOne",
+        "GFNBounds.Core.stronglyUniversalAt_top",
+        "GFNBounds.Core.StronglyUniversal",
+        "GFNBounds.Core.stronglyUniversal_top",
+        "GFNBounds.Core.stronglyUniversal_of_kernel_top",
+        "GFNBounds.Core.inclTop",
+        "GFNBounds.Core.CompatibleAcrossTop",
+        "GFNBounds.Core.exists_outflow_memLp_of_top",
+        "GFNBounds.Core.compatibleAcrossTop_densityActionCLM",
+        "GFNBounds.Core.stronglyUniversalAt_of_kernel_Lr"
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept. Independently audited against the .tex: no overreach. CLOSED: Step 1 (Core/Mixing, on a Banach space); equ:defect_equivalence both halves; equ:defect_is_truncation; equ:universality_quantitative with the constant 2(1+||P||) on the nose; Step 3's ||psi_eta|| -> 0 for p != inf with no side hypothesis; and weak L^p-universality with def:universality's quantifier over pairs closed. Core/Flow.lean then replaced the assumed hypotheses by DERIVED ones: Pi is no longer a hypothesised operator but the paper's own mean projection `Pi f = (int f dnu / nu(S)) . 1` (proofs.tex:22), built as a CLM; `Pi P = Pi` is derived from P preserving integrals, `P Pi = Pi` from P fixing the constants, and `Pi theta = 0` from equal masses. So `weaklyUniversal_of_massPreserving` needs only (i) P 1 = 1, (ii) P preserves nu-integrals, (iii) summable mixing, (iv) p != inf. REMAINING, and it is one construction: the kernel-to-operator passage, `P_star f = d((f nu) pi_star)/d nu` from a Markov kernel, of which (i) and (ii) are the consequences. That is CLAUDE.md's obstruction 2 and is not built. Also still open: p = inf strong universality and its cross-p transfer. Ergodicity did not vanish into thin air -- `eq_meanProj_of_invariant` proves that under summable mixing against the mean projection every P-invariant L^p element is a.e. constant, so the ergodic content sits in the summability hypothesis and the bundle cannot be satisfied by a P with a non-constant invariant density."
+      "scope_notes": "PARTIAL 2026-09-08 -- but the WEAK HALF IS NOW PROVED FROM THE PAPER'S OWN HYPOTHESES, end to end. `weaklyUniversal_of_kernel` takes exactly: pi_star a Markov kernel, nu a finite measure, nu.bind pi_star = nu (the paper's nu_B pi_star = nu_B), ||pi_star||_{L^p -> L^p} <= C, summable L^p-mixing, p != inf -- and concludes WeaklyUniversal. NO OPERATOR IS HYPOTHESIZED ANYWHERE ON THE PATH: the density action P_star f = d((f.nu) pi_star)/d nu is CONSTRUCTED (`densityAction`, via `bindDensity` = ((nu.withDensity f).bind kappa).rnDeriv nu) and packaged as a CLM. Absolute continuity of (f.nu)pi_star w.r.t. nu is PROVED from invariance alone, not assumed -- so the body's claim that 'invariance makes the density action well defined' is exactly right and nothing else is needed. Sorry-free, axiom-swept, graduated. Chain of files: Core/Kernel (kernel -> operator) -> Core/Flow (the mean projection and the intertwining identities, derived) -> Core/Mixing (Step 1) -> Core/Universality (Step 2) -> Core/UniversalityLp (Step 3). WHAT REMAINS, both disclosed and unchanged: (i) Pi is the MEAN projection, not proved to be the projection onto ker(Id - P_star) -- ergodicity has moved into the summability hypothesis, and `eq_meanProj_of_invariant` proves that is where it went, since under summable mixing against the mean projection every invariant L^p element is a.e. constant; (ii) STRONG universality at p = +inf is NOW CLOSED (`stronglyUniversal_of_kernel_top`, from the same kernel hypotheses), and so is the cross-p transfer AT ONE PAIR (`stronglyUniversalAt_of_kernel_Lr`): the realizing outflow lies in every L^r(nu) and the defect is exactly zero there. The compatibility that makes the transfer possible is a theorem, not a hypothesis, for the paper's own object -- Core/Kernel's `densityAction` is defined pointwise on functions and is p-free, so the CLMs at two exponents are induced by one function-level map. WHAT IS STILL NOT PROVED, and is a different claim: strong L^r-universality of the L^r FAMILY for r < inf. The cross-p clause delivers a realization in L^r for a pair whose densities are in L^inf; a pair merely in L^r is out of reach by this route, since S theta need not be essentially bounded and the construction's eta would not exist. The paper does not claim otherwise -- its p = inf clause is stated under p = inf hypotheses. Also open: non-vacuity at p = inf, since no kernel satisfying the whole p = +inf bundle is exhibited. The boundedness hypothesis cannot be dropped -- it is false for some Markov kernels, and the paper says so three times (universality.tex:6-9, :27-29, proofs.tex:36). A non-vacuity witness is provided (`isBoundedDensityAction_id`) so the hypothesis is not empty."
     },
     {
       "label": "theo:universality_L2_body",
@@ -1149,11 +1174,25 @@
         372
       ],
       "block_sha256": "43eeab852812f3f1227acbf36c15e842327d30712fb7117b8191ddccfdcf12e0",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "Needs KL divergence and self-entropy against a background measure, and Pinsker. Mathlib v4.31 has klDiv but the shape the paper uses (unnormalized, weak-FM, q-dual) needs a layer built on top."
+      "lean_files": [
+        "GFNBounds/Core/ILBound.lean"
+      ],
+      "decls": [
+        "GFNBounds.Core.klD",
+        "GFNBounds.Core.selfEntropy",
+        "GFNBounds.Core.wklfmLoss",
+        "GFNBounds.Core.klD_nonneg",
+        "GFNBounds.Core.il_mass_identity",
+        "GFNBounds.Core.loss_ge_selfEntropy",
+        "GFNBounds.Core.il_holder",
+        "GFNBounds.Core.il_tv_bound",
+        "GFNBounds.Core.loss_le_of_domination",
+        "GFNBounds.Core.isGLB_of_domination",
+        "GFNBounds.Core.loss_eq_selfEntropy_of_domination_zero"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. BOTH BULLETS COVERED and nothing dropped: bullet 1's entropy floor (`loss_ge_selfEntropy`) and its TV bound equ:il_tv_explicit in the paper's exact shape (`il_tv_bound`) -- entropy term, min(1,.) and both external inputs all present -- and bullet 2's `loss_le_of_domination`, `isGLB_of_domination` (inf = H, abstracted to the set of achievable loss values) and `loss_eq_selfEntropy_of_domination_zero` (attainment at eps = 0, with the equ:FM_const equivalence). equ:il_holder is PROVED for 1 < q < inf; the main theorems do not narrow, since they carry its conclusion as a hypothesis and so hold at every q for which that estimate is supplied. THREE EXTERNAL INPUTS, all named hypotheses on reals, never axioms: theo:negative_control (as in Core/StableBound), PINSKER'S INEQUALITY, and the TV triangle inequality (discharged by Core.tvD_triangle for any sampler with a nu_B-density). Mathlib v4.31.0 has `InformationTheory.klDiv` and Gibbs but NO Pinsker and NO total-variation distance -- only Jordan/vector-measure variation, which are measures and not metrics -- so both had to be carried. `Core.tvD` is reused; no third TV convention was introduced, and `stableLoss_eq_lqNormD` ties the L^q convention to Core/StableBound's by rfl. ONE HYPOTHESIS IS ADDED rather than carried -- a restriction, disclosed as such: see the paper finding."
     },
     {
       "label": "lem:adjoint",
@@ -1163,11 +1202,28 @@
         445
       ],
       "block_sha256": "ef3aaa2745b8bf972ca20b49f9bc4c3f3b96541bd8e13b917ffb4f58078a62b4",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "Disintegration of T (x) lambda on a standard Borel space -- Mathlib has ProbabilityTheory.Kernel disintegration -- then the lambda-reversal as an involution and the two density actions as L^2(lambda) adjoints. The layer exists; the work is real. Gates the whole first-variation block."
+      "lean_files": [
+        "GFNBounds/Core/Adjoint.lean"
+      ],
+      "decls": [
+        "GFNBounds.Core.reversal",
+        "GFNBounds.Core.IsReversalPair",
+        "GFNBounds.Core.IsMarkovOn",
+        "GFNBounds.Core.IsInvariant",
+        "GFNBounds.Core.IsInvariant.isReversalPair_reversal",
+        "GFNBounds.Core.IsInvariant.isMarkovOn_reversal",
+        "GFNBounds.Core.IsReversalPair.eq_of_ne_zero",
+        "GFNBounds.Core.IsReversalPair.isInvariant",
+        "GFNBounds.Core.reversal_reversal",
+        "GFNBounds.Core.ipL2_densAct_funAct",
+        "GFNBounds.Core.nrmL2_densAct_le",
+        "GFNBounds.Core.isLeast_opNorm_densAct",
+        "GFNBounds.Core.adjoint_finite",
+        "GFNBounds.Core.graph_reversal_eq"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- FINITE state space, disclosed. All three items on a general kernel over a Fintype with a general NON-NEGATIVE invariant lambda (not tied to a marked graph), so Balance/Lift and the DB block get a reversal layer to build on: (1) existence, Markov-ness a.e. and the characterizing identity lam x * R x y = lam y * A y x, with lambda-a.e. uniqueness; (2) lambda is invariant for the reversal, the flip identity -- the relation is SYMMETRIC, which is the whole content -- and the a.e. involution; (3) mutual adjointness on L^2(lambda), each density action is the other's function action, the contraction, and the operator norm EXACTLY 1 as an `IsLeast` with attainment at lambda. Two things came out better than the paper's phrasing, both stated as such: EXISTENCE IS UNCONDITIONAL -- the identity holds even where lambda(x) = 0, because invariance forces lambda(y)A(y->x) = 0 there, so only Markov-ness of that row degrades (`IsMarkovOn` vs `IsMarkov`); and the INVOLUTION NEEDS ONLY lambda(x) != 0, not lambda(y) != 0, since lambda(x) != 0 = lambda(y) forces A(x->y) = 0. No lambda > 0 is assumed anywhere; 'lambda-a.e.' is `lam x != 0`. `Graph.reversal`, `pdens` and `qact` are all `rfl`-equal to the general definitions, so every theorem applies to the graph objects verbatim. NOT DONE: the general Polish case. Items (1)-(2) are reachable at this Mathlib pin (`Measure.condKernel`, `eq_condKernel_of_measure_eq_compProd`, `Measure.compProd`, `Measure.fst_map_swap`); item (3) is obstruction 2 in full, and ONE PIECE IS GENUINELY MISSING FROM MATHLIB: a kernel-Jensen `(int u d kappa_x)^2 <= int u^2 d kappa_x`, which would have to be built from `inner_mul_le_norm_mul_norm` on L^2(kappa x)."
     },
     {
       "label": "theo:first_variation_full",
@@ -1177,11 +1233,36 @@
         483
       ],
       "block_sha256": "0b6097925ce53dd70e62b54b73fe3fa555584de76feb510a3bf3f888181d4b03",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "D",
-      "scope_notes": "Frechet derivative of mu |-> int g(d(mu T)/d mu) dnu over measures, with a preconditioner nu_G. Needs a calculus-of-variations layer on M^+(S) that Mathlib does not have."
+      "lean_files": [
+        "GFNBounds/Balance/FirstVariation.lean",
+        "GFNBounds/Balance/Flow.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.ratio_expansion",
+        "GFNBounds.Balance.remainder_abs_le",
+        "GFNBounds.Balance.ratio_second_order",
+        "GFNBounds.Balance.hasDerivAt_ratio",
+        "GFNBounds.Balance.hasDerivAt_loss",
+        "GFNBounds.Balance.firstVariation_adjoint",
+        "GFNBounds.Balance.gradDensity_eq_densAct_reversal",
+        "GFNBounds.Balance.hasDerivAt_loss_ipL2",
+        "GFNBounds.Balance.hasDerivAt_loss_ipL2_precond",
+        "GFNBounds.Balance.lossGradDensity_unique",
+        "GFNBounds.Balance.balanced_of_hasDerivAt_zero",
+        "GFNBounds.Balance.freezing_hasDerivAt_zero",
+        "GFNBounds.Balance.twoState_hasDerivAt_loss",
+        "GFNBounds.Balance.IsGradientFlow",
+        "GFNBounds.Balance.hasDerivAt_loss_comp_ipL2",
+        "GFNBounds.Balance.hasDerivAt_loss_flow",
+        "GFNBounds.Balance.hasDerivAt_loss_flow_at",
+        "GFNBounds.Balance.hasDerivAt_loss_flow_line",
+        "GFNBounds.Balance.ipL2_lossGrad_self",
+        "GFNBounds.Balance.nrmL2_const_of_flow",
+        "GFNBounds.Balance.twoState_nrmL2_lossGrad_sq"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- FINITE state space, and it is the KEYSTONE: three strict-library files (Balance/MassIdentity, Balance/Lojasiewicz, Balance/Freezing) had each disclosed this as a missing dependency and treated D = Q phi - r phi as a DEFINITION. It is now a THEOREM. `hasDerivAt_loss_ipL2`: for every direction d, the directional derivative of L at mu is <lossGradDensity ... | d>_{L^2(lambda)}; and `lossGradDensity_unique`: no other function represents those derivatives. So the three disclosures collapse, and each file now carries a dated amendment pointing here. The general preconditioner nu_G = varpi.lambda is covered (`hasDerivAt_loss_ipL2_precond`), so it is NOT a restriction. The paper's own second-order expansion is transcribed verbatim (`ratio_expansion`, `remainder_abs_le`). CROSS-CHECKED NUMERICALLY, not merely proved: `twoState_hasDerivAt_loss` evaluates the theorem on prop:nonlinear_freezing(2)'s two-state chain with g = (x-1)^2 and gets 9/16, computed by hand two ways -- off the perturbed ratios and off the gradient side -- before the Lean was run. A transposed kernel or a flipped sign would have shown there. TWO RESIDUES: the state space is finite, so the general measured-space statement stays bucket D; and criticality is DIRECTIONAL rather than Frechet -- which makes `balanced_of_hasDerivAt_zero` stronger than a Frechet version, since the hypothesis is weaker. The paper's uniform-remainder route, which would give Frechet, is stated as a standalone inequality and disclosed as not carried in that form. TRAJECTORY FORM ADDED (Balance/Flow.lean): `hasDerivAt_loss_comp_ipL2` differentiates the loss along an arbitrary curve, and `hasDerivAt_loss_flow` specializes to the gradient flow. The ODE is stated COMPONENTWISE on a Fintype, so no Frechet layer, no HasFDerivAt on V -> R and no CLM construction was needed -- which is what unblocked six statements previously recorded as needing 'a gradient-flow / LaSalle layer'."
     },
     {
       "label": "cor:gradient_formulas",
@@ -1191,11 +1272,24 @@
         502
       ],
       "block_sha256": "ee9fbdd0200fba0f43d1dbb4eabdde5adf60877b18c9b43513b1ab500f641129",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "D",
-      "scope_notes": "Corollary of theo:first_variation_full; inherits its obstruction."
+      "lean_files": [
+        "GFNBounds/Balance/GradientFormulas.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.hasDerivAt_loss_atStates",
+        "GFNBounds.Balance.hasDerivAt_loss_ipL2_atStates",
+        "GFNBounds.Balance.fmGradDensity_eq",
+        "GFNBounds.Balance.hasDerivAt_fmLoss_ipL2",
+        "GFNBounds.Balance.fmGradDensity_sq_eq",
+        "GFNBounds.Balance.hasDerivAt_fmLoss_sq_ipL2",
+        "GFNBounds.Balance.hasDerivAt_abs_sub_one",
+        "GFNBounds.Balance.hasDerivAt_fmLoss_abs_ipL2",
+        "GFNBounds.Balance.twoState_hasDerivAt_fmLoss",
+        "GFNBounds.Balance.twoState_hasDerivAt_fmLoss_abs"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- a corollary of theo:first_variation_full, exactly as the paper presents it, on a FINITE state space. BOTH DISPLAYS CLOSED for g = (x-1)^2, and the |x-1| case closed OFF the balanced flow. The enabling step was re-cutting the differentiability hypothesis: FirstVariation asks `forall y > 0, HasDerivAt g (gd y) y`, which |x-1| cannot satisfy, but the proof only ever uses it at the finitely many ratio values -- `hasDerivAt_loss_atStates` is the same proof with the pointwise hypothesis. Numerically cross-checked three ways (Lean, by hand off the paper's display, and a Python numerical derivative written from proofs.tex rather than from the Lean definitions): 5/16 for the squared case, 3/8 for the absolute-value case."
     },
     {
       "label": "def:edge_lift",
@@ -1205,11 +1299,27 @@
         510
       ],
       "block_sha256": "b6eb5fb5f001deaefd98b930c89212ba3676548afb09dbc95479791aac820314",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "A kernel construction on S^2 with its stationary edge measure. Straightforward once the kernel layer of lem:adjoint is up."
+      "lean_files": [
+        "GFNBounds/Balance/Lift.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.edgeKernel",
+        "GFNBounds.Balance.edgeMeasure",
+        "GFNBounds.Balance.pushEdge",
+        "GFNBounds.Balance.pushEdge_apply",
+        "GFNBounds.Balance.pushEdge_edgeMeasure",
+        "GFNBounds.Balance.inner_funActEdge",
+        "GFNBounds.Balance.edgeDensAct_contraction",
+        "GFNBounds.Balance.disint",
+        "GFNBounds.Balance.marg₁_mul_disint",
+        "GFNBounds.Balance.db_lift_loss",
+        "GFNBounds.Balance.db_lift_iff",
+        "GFNBounds.Balance.lift_mixing",
+        "GFNBounds.Balance.lift_mixing_opNorm_le"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: the kernel K_2 and the edge measure lambda_2. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
     },
     {
       "label": "lem:lift_wellposed",
@@ -1219,11 +1329,27 @@
         522
       ],
       "block_sha256": "52aacdd8a1978718fa1553e35394c366dba68f36d1e0802e003f8024f7c8b5c6",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "Invariance of lambda_2 under K_2, contraction, and the dual as the forward edge lift. Needs def:edge_lift."
+      "lean_files": [
+        "GFNBounds/Balance/Lift.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.edgeKernel",
+        "GFNBounds.Balance.edgeMeasure",
+        "GFNBounds.Balance.pushEdge",
+        "GFNBounds.Balance.pushEdge_apply",
+        "GFNBounds.Balance.pushEdge_edgeMeasure",
+        "GFNBounds.Balance.inner_funActEdge",
+        "GFNBounds.Balance.edgeDensAct_contraction",
+        "GFNBounds.Balance.disint",
+        "GFNBounds.Balance.marg₁_mul_disint",
+        "GFNBounds.Balance.db_lift_loss",
+        "GFNBounds.Balance.db_lift_iff",
+        "GFNBounds.Balance.lift_mixing",
+        "GFNBounds.Balance.lift_mixing_opNorm_le"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: invariance, the L^2(lambda_2) contraction, and the duality. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
     },
     {
       "label": "prop:db_lift",
@@ -1233,11 +1359,27 @@
         535
       ],
       "block_sha256": "d443dabb698e0ad4935a71f501bf64093d3b4cd89ccedd4f381232860c979d75",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "DB as a lifted balance loss; needs def:edge_lift and the disintegration of an edge flow."
+      "lean_files": [
+        "GFNBounds/Balance/Lift.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.edgeKernel",
+        "GFNBounds.Balance.edgeMeasure",
+        "GFNBounds.Balance.pushEdge",
+        "GFNBounds.Balance.pushEdge_apply",
+        "GFNBounds.Balance.pushEdge_edgeMeasure",
+        "GFNBounds.Balance.inner_funActEdge",
+        "GFNBounds.Balance.edgeDensAct_contraction",
+        "GFNBounds.Balance.disint",
+        "GFNBounds.Balance.marg₁_mul_disint",
+        "GFNBounds.Balance.db_lift_loss",
+        "GFNBounds.Balance.db_lift_iff",
+        "GFNBounds.Balance.lift_mixing",
+        "GFNBounds.Balance.lift_mixing_opNorm_le"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: the ratio identity, the loss identity for every g and nu, and the 'in particular' iff. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
     },
     {
       "label": "cor:db_gradient",
@@ -1247,11 +1389,22 @@
         548
       ],
       "block_sha256": "dfa16aefe103ef8438a4be6333b4b55104739d5553a258e5085137b038594c6b",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "D",
-      "scope_notes": "Corollary of theo:first_variation_full on (S^2, lambda_2, K_2); inherits its obstruction."
+      "lean_files": [
+        "GFNBounds/Balance/GradientFormulas.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.edgeKernelProd",
+        "GFNBounds.Balance.edgeMeasureProd",
+        "GFNBounds.Balance.dualEdgeKernelProd",
+        "GFNBounds.Balance.invariant_edgeKernelProd",
+        "GFNBounds.Balance.isReversalPair_edgeKernelProd",
+        "GFNBounds.Balance.ratio_edgeKernelProd_db",
+        "GFNBounds.Balance.hasDerivAt_dbLoss_ipL2",
+        "GFNBounds.Balance.twoStateEdge_hasDerivAt_dbLoss"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- a corollary of theo:first_variation_full, exactly as the paper presents it, on a FINITE state space. theo:first_variation_full instantiated at T = K_2, lambda = lambda_2, with `isReversalPair_edgeKernelProd` proving that the paper's K_2^{lambda_2} IS lem:lift_wellposed's forward edge kernel -- straight from Lift.edgeKernel_dual, so the duality is USED and not assumed. `ratio_edgeKernelProd_db` identifies r-hat with the DB edge ratio via prop:db_lift, which is what makes the differentiated loss the DB loss. Balance/Lift.lean's curried S^2 was bridged to FirstVariation's single Fintype by instantiating at V x V: three uncurrying defs and six short lemmas, ~40 lines and no mathematics, with Fintype.sum_prod_type used exactly twice. The agent's recommendation, recorded: do NOT restate Lift.lean in Prod shape -- it moves the same 40 lines across the boundary and loses the readable lambda_2(s,s') = pi_back(s'->s) lambda(s'). ONE SUBSTANTIVE GAP, disclosed rather than papered over: the theorem needs lambda_2 > 0 at EVERY pair, i.e. pi_back positive on all of S x S, so as stated it does not cover a sparse marked graph. The paper's own mu ~ lambda_2 confines the edge flow to supp lambda_2, so the correct general statement instantiates on the EDGE SET as a subtype of V x V -- arithmetic on Finset.sum_subtype, not new mathematics. Cross-checked numerically at -17/32, computed through `hasDerivAt_dbLoss_ipL2` itself, which also certifies non-vacuity."
     },
     {
       "label": "lem:lift_mixing",
@@ -1261,11 +1414,27 @@
         561
       ],
       "block_sha256": "6e79027990a3ca16533df0285748cadea2f3df01e5b475a40c016298d5163319",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "beta-hat_n <= beta_(n-1): an operator-norm inequality, easy once the lift layer is up. Bucket C for the layer, not for the argument."
+      "lean_files": [
+        "GFNBounds/Balance/Lift.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.edgeKernel",
+        "GFNBounds.Balance.edgeMeasure",
+        "GFNBounds.Balance.pushEdge",
+        "GFNBounds.Balance.pushEdge_apply",
+        "GFNBounds.Balance.pushEdge_edgeMeasure",
+        "GFNBounds.Balance.inner_funActEdge",
+        "GFNBounds.Balance.edgeDensAct_contraction",
+        "GFNBounds.Balance.disint",
+        "GFNBounds.Balance.marg₁_mul_disint",
+        "GFNBounds.Balance.db_lift_loss",
+        "GFNBounds.Balance.db_lift_iff",
+        "GFNBounds.Balance.lift_mixing",
+        "GFNBounds.Balance.lift_mixing_opNorm_le"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: the transfer beta-hat_{n+1} <= beta_n. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
     },
     {
       "label": "theo:gd_diffusion_full",
@@ -1315,11 +1484,17 @@
         610
       ],
       "block_sha256": "53f1dabc3d18544fcc63e7f2583dfe30a1f0d66d1ba933d7972a891859db1c7e",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "D",
-      "scope_notes": "Decay rate of the linearized flow; needs theo:gd_diffusion_full."
+      "lean_files": [
+        "GFNBounds/Balance/Flow.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.inner_ge_of_mixing",
+        "GFNBounds.Balance.stable_frozen_decay",
+        "GFNBounds.Balance.scalar_decay_check"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. THE CONTINUOUS DISPLAY IS CLOSED, both conjuncts: Pi h_t is conserved and ||h_t - Pi h_t|| <= e^{-rho t} ||h_0 - Pi h_0||, on any real inner-product space, by Gronwall. `inner_ge_of_mixing` supplies the coercivity from Core.Mixing, giving rho = c/B-hat^2 in the paper's shape. THE LINEARIZATION IS A HYPOTHESIS, NOT A DERIVATION, and is disclosed in four places: H := g''(1) A-dagger M_w A comes from theo:gd_diffusion_full, which is bucket D, so the decay is stated for a curve satisfying hdot = -H h with H carrying exactly three properties -- Pi self-adjoint, Pi H = 0, and the coercivity -- and rho is any constant satisfying it rather than g''(1) w_min / B-hat^2. NOT assumed and not needed: H self-adjoint, H >= 0 as an operator, Pi idempotent, rho > 0. NOT DONE: the DISCRETE half (contraction 1 - eps rho per step, which needs ||Hx||^2 <= ||H|| <x,Hx>, i.e. operator facts the abstract H does not carry) and the lem:lift_mixing transfer to the FM and DB losses. Cross-checked for non-vacuity and for the exponent: on E = R with H = 2.id, Pi = 0, h_t = 5 e^{-2t} a genuine solution, the two sides are EQUAL at t = 1 -- so the exponent is exactly rho, not rho/2 or 2 rho."
     },
     {
       "label": "theo:local_convergence_full",
@@ -1343,11 +1518,22 @@
         683
       ],
       "block_sha256": "d9c473ffd177ca69e4ac8e9ed13aff141e21fc1faaebdb4ffe66bb10aee6cf29",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "A finite explicit counterexample -- the balanced edgeflow minus epsilon times a unit circulation -- so no calculus is needed, only the loss functional on a finite graph. Tractable after the finite-graph layer of Milestone 2."
+      "lean_files": [
+        "GFNBounds/Graph/FrozenUnstable.lean"
+      ],
+      "decls": [
+        "GFNBounds.Graph.BackwardPolicy.frozen_unstable_full_fm",
+        "GFNBounds.Graph.MarkedCirculation",
+        "GFNBounds.Graph.BackwardPolicy.AdmissibleEps",
+        "GFNBounds.Graph.BackwardPolicy.perturbedFlow",
+        "GFNBounds.Graph.BackwardPolicy.exists_admissibleEps",
+        "GFNBounds.Graph.BackwardPolicy.edgeInflow_perturbedFlow_ge",
+        "GFNBounds.Graph.BackwardPolicy.not_invariant_perturbedFlow",
+        "GFNBounds.Graph.BackwardPolicy.fmLoss"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. THE FM HALF IS CLOSED, in all four conjuncts: 0 <= F_0 <= F, the loss vanishes at F + F_0 = F*, and it is strictly positive at F. Two things came out better than the brief expected. (a) The inflow mu_F = lambda - eps.d(gamma) is not merely non-negative but >= lambda/2 > 0, and the proof does not go edgewise: eps.d(gamma)(v) = sum_u eps.1_gamma(u->v) <= sum_u (1/2)F*(u->v) = lambda(v)/2, using row-stochasticity of pi_back. So `eq_smul_invProb` applies unchanged and no uniqueness among SIGNED invariant vectors is needed. (b) The cycle is HYPOTHESIZED as a `MarkedCirculation` structure -- non-negative, a circulation, non-zero, vanishing at s_0 and s_f -- rather than constructed, which dodges a combinatorial layer and STRENGTHENS the statement: every 1_gamma of the paper is such a circulation and the converse fails. Non-vacuity of the eps interval is `exists_admissibleEps` with an explicit witness. NOT DONE: the DB half, which goes through prop:db_lift; and `eq:def_stability` is not a formal predicate, so instability is delivered as the four conjuncts rather than as a negation. The loss is a definition here, not derived from Definition 3 of brunswic2024theory."
     },
     {
       "label": "prop:tb_gradient",
@@ -1399,11 +1585,24 @@
         781
       ],
       "block_sha256": "739e73d16ee31c17da7631f26472bc5b661314b64cb68b268af671d4fecc0ff4",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "Constructs a C-infinity generator vanishing on two bands (Mathlib has ContDiffBump) and then argues criticality. Item 1 is a sign computation; items beyond need the first variation."
+      "lean_files": [
+        "GFNBounds/Balance/Freezing.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.flatFactor",
+        "GFNBounds.Balance.FreezingBands",
+        "GFNBounds.Balance.FreezingBands.admissible",
+        "GFNBounds.Balance.contDiff_g",
+        "GFNBounds.Balance.g_pos",
+        "GFNBounds.Balance.deriv_deriv_g_one",
+        "GFNBounds.Balance.abs_g_le",
+        "GFNBounds.Balance.freezing_critical",
+        "GFNBounds.Balance.freezing_item_one",
+        "GFNBounds.Balance.twoState_freezing"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 775 lines, 77 declarations. ITEMS (1) AND (2) CLOSED, with FULL C^infinity and nothing weakened. The generator is CONSTRUCTED, which is the content: `flatFactor p q t := expNegInvGlue (p-t) + expNegInvGlue (t-q)` is C^infinity, lies in [0,2] and vanishes EXACTLY on [p,q]; ContDiffBump was rejected because it pins the value only on the inner ball and outside the outer one, so no sharp zero set can be read off it. All four admissibility clauses are proved -- g(1)=0, g>0 off 1 (for every real x != 1, not just x>0), g''(1)=2, and |g(x)| <= C(1+|x|^2) with C = 8/scale an EXPLICIT FORMULA -- plus g' == 0 on the bands. Item (2)'s two-state instance is fully computed: r = (3/4, 3/2), the frozen set is nonempty and open, D == 0, and every descent step is fixed for every nu and every step size. NOT DONE: item (3) and the closing 'no bound in terms of g''(1), the mixing coefficients and w alone can hold', which quantifies over bounds and presupposes item (3); and item (2)'s beta-hat_n = 0, B-hat = 1, rho = 2 w_min, which need Core.Mixing.beta instantiated at an L^2(lambda) operator -- instead the sentence the paper's own proof opens with is proved, P = Pi and P-dagger = Pi."
     },
     {
       "label": "rem:freezing",
@@ -1428,6 +1627,8 @@
       ],
       "block_sha256": "6ad31ba30230308d8334d9814efe439e973f546096fab58c45882f734f339a64",
       "lean_files": [
+        "GFNBounds/Balance/Flow.lean",
+        "GFNBounds/Balance/Lojasiewicz.lean",
         "GFNBounds/Balance/MassIdentity.lean"
       ],
       "decls": [
@@ -1442,11 +1643,17 @@
         "GFNBounds.Balance.no_distant_equilibrium_one",
         "GFNBounds.Balance.global_dichotomy_full_one",
         "GFNBounds.Balance.balanced_of_critical",
-        "GFNBounds.Balance.strictlyUnimodal_logSqDeriv"
+        "GFNBounds.Balance.strictlyUnimodal_logSqDeriv",
+        "GFNBounds.Balance.le_abs_logSqDeriv_mul_one_sub",
+        "GFNBounds.Balance.no_distant_equilibrium_three",
+        "GFNBounds.Balance.no_distant_equilibrium_three_far",
+        "GFNBounds.Balance.farSet",
+        "GFNBounds.Balance.ipL2_lossGrad_self",
+        "GFNBounds.Balance.nrmL2_const_of_flow"
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED: item (1), the mass identity, in all three of its conjuncts -- the mass equals int g'(r)(1-r)(dnu/dmu) dlambda, it is <= 0, and it is 0 iff mu is balanced -- plus `balanced_of_critical`. Proved once and shared between the two labels. Finite state space, disclosed: every downstream use is on a finite graph and the general case would need obstruction 2 merely to say what Q phi is. THE BOUNDARY, and it is the point of the file: `D := Q phi - r phi` is a Lean DEFINITION, never derived. Identifying it with the gradient of L_{g,nu} is theo:first_variation_full's job, which is bucket D and not formalized -- so what is certified is the mass of THAT EXPRESSION, and the words 'every critical point is balanced' are conditional on that identification. 'Critical' is read as D = 0, not as 'the first variation vanishes in every admissible direction'. Three further weakenings in the safe direction: ergodicity is NOT assumed (only lambda-invariance, so uniqueness of the balanced flow is not certified), lambda need not be a probability, and K need not be row-stochastic. One thing came out stronger than the paper: r > 0 is DERIVED from invariance plus positivity rather than hypothesized as 'essentially bounded away from 0 and infinity'. NOT DONE: items (2)-(3) of the proposition and the convergence half of the dichotomy, which need a gradient-flow / LaSalle layer."
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED: item (1), the mass identity, in all three of its conjuncts -- the mass equals int g'(r)(1-r)(dnu/dmu) dlambda, it is <= 0, and it is 0 iff mu is balanced -- plus `balanced_of_critical`. Proved once and shared between the two labels. Finite state space, disclosed: every downstream use is on a finite graph and the general case would need obstruction 2 merely to say what Q phi is. THE BOUNDARY, and it is the point of the file: `D := Q phi - r phi` is a Lean DEFINITION, never derived. Identifying it with the gradient of L_{g,nu} is theo:first_variation_full's job, which is bucket D and not formalized -- so what is certified is the mass of THAT EXPRESSION, and the words 'every critical point is balanced' are conditional on that identification. 'Critical' is read as D = 0, not as 'the first variation vanishes in every admissible direction'. Three further weakenings in the safe direction: ergodicity is NOT assumed (only lambda-invariance, so uniqueness of the balanced flow is not certified), lambda need not be a probability, and K need not be row-stochastic. One thing came out stronger than the paper: r > 0 is DERIVED from invariance plus positivity rather than hypothesized as 'essentially bounded away from 0 and infinity'. ITEM (3) IS NOW CLOSED TOO -- both the pointwise inequality |g'(x)(1-x)| >= delta^2/2 (each of its four elementary bounds a separate named lemma) and the integrated display, the latter stated over ANY far set and with d nu/d mu >= c_0 abstract, hence more general than the paper's. It needs lambda(S) = 1, which this file carries and MassIdentity does not -- the paper says 'since lambda is a probability measure' at proofs.tex:809, so nothing is wrong, but the hypothesis is genuinely used there and not in item (1). ITEM (2)'s FIRST HALF IS NOW CLOSED as well: `ipL2_lossGrad_self` proves int D u dlambda = 0 as a BARE IDENTITY -- no invariance of lambda, nothing about g -- and `nrmL2_const_of_flow` turns it into the invariant sphere ||u_t|| = ||u_0|| along the gradient flow, which is the paper's 'the gradient flow preserves ||u_t||'. NOT DONE: item (2)'s Lyapunov half (the mass strictly increases, Cauchy-Schwarz on the sphere, LaSalle) and the convergence half of the dichotomy, which need a gradient-flow / LaSalle layer."
     },
     {
       "label": "rem:cycle_no_stalemate",
@@ -1456,11 +1663,27 @@
         818
       ],
       "block_sha256": "5aec37ff81079d4112888b38434d8f13e68aaea9560ca9384b2971773922d0b3",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "A worked five-vertex example. Certifiable as a finite computation once the finite-graph loss layer exists, though the paper files it as a remark."
+      "lean_files": [
+        "GFNBounds/Graph/CycleExample.lean"
+      ],
+      "decls": [
+        "GFNBounds.Graph.CycleExample.cyc",
+        "GFNBounds.Graph.CycleExample.pol",
+        "GFNBounds.Graph.CycleExample.isHitExp",
+        "GFNBounds.Graph.CycleExample.sigmaBar_eq",
+        "GFNBounds.Graph.CycleExample.sigmaBar_ne_paper_value",
+        "GFNBounds.Graph.CycleExample.sigmaBar_unbounded",
+        "GFNBounds.Graph.CycleExample.invProb_eq",
+        "GFNBounds.Graph.CycleExample.invProb_paper",
+        "GFNBounds.Graph.CycleExample.ratio_src",
+        "GFNBounds.Graph.CycleExample.ratio_x3",
+        "GFNBounds.Graph.CycleExample.ratio_counting_src",
+        "GFNBounds.Graph.CycleExample.no_stalemate",
+        "GFNBounds.Graph.CycleExample.cycle_no_stalemate"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 44 declarations on V = Fin 5. All four claims formalized; TWO OF THEM DO NOT COME OUT AS PRINTED, see the paper findings. Claim 2 is exactly right, with q = 1/(5-2p), and its uniqueness goes through theo:universality_graphs(1). Claim 3's r(x_1) = r(x_2) = r(s_f) = 1 hold EXACTLY at every M, not just in the limit, and r(x_3) = p + (1-p)/M -> p. Claim 4 is certified as `no_stalemate`: at the over-inflated configuration the total mass of the gradient density is STRICTLY negative for every training measure of positive density -- by the remark's own route, prop:no_distant_equilibrium(1) plus the observation that r(x_3) < 1 so the configuration is not balanced. `decide` carried the three MarkedGraph side conditions and nothing else; PathConnected is not decidable (ReflTransGen) and was built by hand off the single walk. NOT CERTIFIED, and classified as interpretation rather than claim: the closing 'B-hat blows up and every rate degenerates ... interpolates smoothly toward the instability regime' -- B-hat is an operator norm (obstruction 2), and only its checkable half `sigmaBar_unbounded` is proved. The dynamical continuations (the source refilling at logarithmic speed, the M/log M transient, the handover to theo:local_convergence) are not stated: there is no ODE layer and they do not follow from the computation."
     },
     {
       "label": "theo:global_dichotomy_full",
@@ -1499,11 +1722,24 @@
         873
       ],
       "block_sha256": "60716b3fcfaee28b3bfc676de87d31a3bdbe5ba0e1e7811fbd8dd2a6c664d2bc",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
+      "lean_files": [
+        "GFNBounds/Graph/Morozov.lean"
+      ],
+      "decls": [
+        "GFNBounds.Graph.BackwardPolicy.morozov_rate",
+        "GFNBounds.Graph.BackwardPolicy.lam_eq_visits_div",
+        "GFNBounds.Graph.BackwardPolicy.lam_src_eq",
+        "GFNBounds.Graph.BackwardPolicy.lam_snk_eq",
+        "GFNBounds.Graph.BackwardPolicy.coercivity_morozov",
+        "GFNBounds.Graph.BackwardPolicy.coercivity_lamMin",
+        "GFNBounds.Graph.BackwardPolicy.eq_smul_lam_of_invariant",
+        "GFNBounds.Graph.BackwardPolicy.nonneg_of_superharm_off_src",
+        "GFNBounds.Graph.Leveled",
+        "GFNBounds.Graph.Leveled.bsigma_le"
+      ],
+      "status": "partial",
       "bucket": "B",
-      "scope_notes": "MILESTONE 2. lambda(x) = N(x)/(2 + sigma-bar) on a finite loop closure: Kac's formula. GFNBounds/Doubling/Kac.lean already proves the doubling instance of exactly this WITHOUT a Markov-chain layer, from invariance alone -- the general finite-graph version is the same argument."
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 1159 lines. ITEMS (1) AND (2) CLOSED. The headline finding: **prop:morozov_rate does not need a Markov chain.** Every chain object in it is the unique solution of a square linear system on V, and all three are solvable and uniquely so from what Graph/Setting.lean already proves: E(sigma | X_0 = .) is `IsHitExp`, E(sum_{n<sigma} f(X_n)) is `IsPoisson`, the killed occupation measure is `IsGreen`, and N := g + 1_{s_0} + 1_{s_f}. Existence is LinearMap.injective_iff_surjective; uniqueness is a maximum principle walked down to s_0 along `breach_all`. Item (1) then says `visits` is P-invariant of total mass 2 + sigma_bar, and an invariant SIGNED measure of an irreducible chain is a multiple of lambda. Item (2)'s ||u||_inf <= sigma_* ||f||_inf survives the characterization, as a comparison: phi := c.u - u_f vanishes at s_0 and is superharmonic off it because c - f >= 0 is exactly the slack. ONE DEVIATION, in the safe direction: the paper closes item (2) by transferring coercivity from I-Q to I-P via 'their restricted inverses have the same norm', an operator-adjoint argument, i.e. obstruction 2. That is routed around by a duality pairing -- <h,h> = <h,(I-Q)w> = <(I-P)h,w> -- which uses only pointwise adjointness and no operator norm, so the paper's 'h - u is Q-harmonic hence constant' step is unnecessary and is not formalized. NOT DONE: item (3), which is a claim about how theo:db_stable_frozen, theo:local_convergence and theo:global_dichotomy consume the constant -- none of the three is in this library, and rho_sigma is likewise not stated. The leveled-graph witness is stated in its B-hat_sigma half only (`Leveled.bsigma_le`); the B-hat = +inf half needs the operator-norm layer, so the file exhibits a finite B-hat_sigma where the paper says B-hat is infinite, without certifying that B-hat is infinite."
     },
     {
       "label": "cor:global_lojasiewicz",
@@ -1513,11 +1749,25 @@
         898
       ],
       "block_sha256": "3d0a17aaeb98016d8332691a264abb0503e5e1f9d6ee14eb79a192cf195c21f1",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "C",
-      "scope_notes": "The Lojasiewicz inequality -Ldot >= kappa^2 L^2 is an integral inequality (Cauchy-Schwarz on the mass identity); reading it along the flow needs the flow. The inequality alone is bucket B, the corollary as stated is C."
+      "lean_files": [
+        "GFNBounds/Balance/Flow.lean",
+        "GFNBounds/Balance/Lojasiewicz.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.logSqDeriv",
+        "GFNBounds.Balance.logSq",
+        "GFNBounds.Balance.lossVal",
+        "GFNBounds.Balance.mul_abs_log_le",
+        "GFNBounds.Balance.lojasiewicz_termwise",
+        "GFNBounds.Balance.global_lojasiewicz_static",
+        "GFNBounds.Balance.global_lojasiewicz_sq",
+        "GFNBounds.Balance.lojasiewicz_integrated",
+        "GFNBounds.Balance.global_lojasiewicz_flow",
+        "GFNBounds.Balance.hasDerivAt_logSq"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED 2026-09-08 in BOTH displays, sorry-free, axiom-swept, graduated -- finite state space, disclosed. The static inequality kappa.L <= ||D|| and its squared form came first (Balance/Lojasiewicz.lean); Balance/Flow.lean then closed the flow layer and with it the second display, L(mu_t) <= (L(mu_0)^{-1} + kappa^2 t)^{-1}, with kappa the paper's EXPLICIT formula and not an exists-C. The route: `hasDerivAt_loss_flow` proves -Ldot = ||D||^2 -- provable rather than assumable now that theo:first_variation_full makes D the gradient -- and `lojasiewicz_integrated` integrates the differential inequality. NO EXISTENCE THEOREM IS NEEDED: every claim is 'for any curve satisfying the ODE', which is how the paper's proof reads. A hypothesis was also REMOVED: the sphere constraint ||u_t|| = ||u_0||, assumed in the static file, is a CONCLUSION along the flow (`nrmL2_const_of_flow`, from the bare identity int D u dlambda = 0), so ||u_0|| in kappa is literally ||d mu_0 / d lambda||."
     },
     {
       "label": "theo:training_speed_full",
@@ -1628,11 +1878,18 @@
         1016
       ],
       "block_sha256": "16cdbd0543edce0bcb4888e7e2b79547a3aa605af05f183a99749f5b7b3e02e0",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "D",
-      "scope_notes": "A remark."
+      "lean_files": [
+        "GFNBounds/Graph/FrozenUnstable.lean"
+      ],
+      "decls": [
+        "GFNBounds.Graph.BackwardPolicy.loop_closure_necessary",
+        "GFNBounds.Graph.BackwardPolicy.CutBalance",
+        "GFNBounds.Graph.BackwardPolicy.cutBalance_src_eq_zero",
+        "GFNBounds.Graph.BackwardPolicy.cutInvariant_eq_zero_of_reach"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED 2026-09-08, sorry-free, axiom-swept, graduated -- and by a shorter route than the paper's. The marginal step is the paper's: summing the invariance identity over u gives sum fout = sum fout - fout(s_0), so fout(s_0) = 0, with no sign condition. But instead of the paper's Doeblin argument (leak to s_0 within #V steps, iterate), the zero PROPAGATES FORWARD along the edges of G: fout(u) = sum_v fout(v) pb(v->u) with fout >= 0 forces fout(v) = 0 at every out-neighbour of a vanishing vertex, since pb(v->u) > 0 there and v != s_0 because s_0 has no in-edge; PathConnected reaches every vertex from s_0. No kernel powers, no minorization, no extra hypothesis."
     },
     {
       "label": "rem:graphs_vs_L2",

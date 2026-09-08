@@ -19,43 +19,39 @@ at `FORMALIZATION-LEDGER.md`.
 
 ## Where it stands
 
-The strict library is **`sorry`-free** and every one of its 1,800-odd declarations depends only
-on `propext`, `Classical.choice` and `Quot.sound` (`scripts/AxiomSweep.lean`). The umbrella
-theorem `theo:doubling_main` is assembled item by item in `Main.lean` from closed inputs; the
-coverage table (`docs/COVERAGE.md`) says per statement what is closed, what is partial and why.
-`theo:doubling_decay` and `theo:doubling_sharp` are unconditional from the cut balance and
-positivity, with `m₀`, `ℓ₂`, `ℓ₃`, `c₃`, `c₄ = 16cτ`, `c₅`, `ω`, `ϑ` and `c₆` explicit
-(`Decay.sharp_explicit`); `prop:doubling_unsolvable` is closed on Mathlib's `Lp`, and the `p = 2`
-clauses of `theo:doubling_unbounded` on the same space (`UnboundedL2.lean`).
+The strict library is **`sorry`-free** by compiler enforcement, and every declaration depends only
+on `propext`, `Classical.choice` and `Quot.sound` (`scripts/AxiomSweep.lean`). Per-statement status
+is `docs/COVERAGE.md`; what follows is the shape of it.
 
-What is left divides into the **three obstructions** below, and every non-closed row in the
-coverage table names which one stops it:
+**Appendix B is complete.** Both propositions are closed — `prop:silva_explicit` in two forms (with
+`M`, `‖π‖_∞` as bounds, and with the paper's own maxima), and `prop:silva_no_uniform` in both items
+plus the concluding "no state-space-free bound" clause. The paper's correction to Silva et al. —
+that the constant is `max(M, ‖π‖_∞)` and not `M` — is live in the formalization.
 
-1. **A chain.** Mathlib v4.31.0 has no discrete-time Markov chain theory. Everything the appendix
-   proves *about the chain as a process* — the labels *transient* and *null recurrent* in
-   `prop:doubling_phase`, `E(σ | X₀ = j) = +∞` on the non-positive-recurrent rows, `E|Z_ℓ − 1|` in
-   `lem:doubling_weight` (stated here in the transform form the sharp theorem consumes) — is
-   either restated as what it is used for (existence or non-existence of an invariant
-   probability; a bound on transforms) or not stated. What did **not** need a chain turned out to
-   be most of the appendix: the decay and sharp blocks run on recursions, and Kac's formula
-   (`Kac.lean`) is derived from invariance alone — the identity the lab record measures as
-   `1/λ(s₀) − σ̄ ∈ [1.999999994526, 2.000000000004]`.
-2. **The `L^p` layer with its adjoint** — **built.** `P` is modelled (`Stat.dens`, `Stat.densL2`),
-   `P⋆ = P*` is Mathlib's adjoint (`Stat.adjoint_pstarL2`), the diffusion operator exists on every
-   truncation (`Stat.exists_bhat`), and the mass layer and `Lp` are bridged both ways where the
-   umbrella needs it (`RayleighBridge.lean`). What remains here is bookkeeping: the "in
-   particular" clause of `lem:doubling_operator`(3) and a standalone unconditional item (2) of
-   `cor:doubling_truncation`.
-3. ~~Euler–Maclaurin~~ — **routed around.** `lem:doubling_expansion` was the appendix's one
-   analytic wall, but the descent block consumes only `eq:doubling_R0`, and a first-order
-   telescoping comparison suffices for that. `R0Bound.lean` proves
-   `|R₀(m) − 1| ≤ 16cτ/m` at every `m ≥ 1`, with `½ ≤ R₀ ≤ 2` for `m ≥ 32cτ` — the paper's `c₄`
-   and `ℓ₁`, made **effective**. The refined expansion is now needed only by
-   `rem:doubling_parity` and by `rem:doubling_second_order`, which the paper does not prove either.
+**Appendix A's universality half runs end to end.** `theo:universality_L2_full`'s weak conclusion is
+proved from the paper's *own* hypotheses: a Markov kernel `π⋆`, a finite `ν_B` with `ν_B π⋆ = ν_B`,
+a finite `L^p → L^p` operator norm, summable mixing, `p ≠ ∞`. The density action
+`P⋆ f = d((f ν_B) π⋆)/dν_B` is **constructed** (`Core/Kernel.lean`), not hypothesised, and its
+absolute continuity is proved from invariance alone. The chain is
+`Core/Kernel` → `Core/Flow` → `Core/Mixing` → `Core/Universality` → `Core/UniversalityLp`.
+`theo:universality_graphs`, the discrete counterpart, is closed in all three items
+(`Graph/Setting.lean`, `Graph/Universality.lean`) — including the existence, uniqueness and
+positivity of the invariant probability, which Mathlib does not supply and which had to be proved.
+`theo:RL_CV_bound_full`(1) and the mass identity of `prop:no_distant_equilibrium`(1) are closed.
 
-`theo:doubling_decay` is one lemma away from unconditional, and that lemma
-(`lem:doubling_product`) now needs obstruction 1 alone. `prop:doubling_exponent` — the one
-statement that needed neither obstruction — is closed at every real `p ≠ 0`.
+**Appendix H** is where the library started. `theo:doubling_main` is assembled item by item in
+`Main.lean` from closed inputs. `theo:doubling_decay` and `theo:doubling_sharp` are unconditional
+from the cut balance and positivity, with `m₀`, `ℓ₂`, `ℓ₃`, `c₃`, `c₄ = 16cτ`, `c₅`, `ω`, `ϑ` and
+`c₆` explicit (`Decay.sharp_explicit`); `prop:doubling_unsolvable` is closed on Mathlib's `Lp`, and
+the `p = 2` clauses of `theo:doubling_unbounded` on the same space (`UnboundedL2.lean`).
+
+**What is deliberately not claimed**, and is disclosed in each file's `SCOPE` section: `Π` is the
+mean projection, not proved to be the projection onto the invariant densities — ergodicity has moved
+into the summability hypothesis, and `eq_meanProj_of_invariant` proves that is where it went. Strong
+universality at `p = +∞` and the paper's cross-`p` transfer are not carried. Statements resting on
+theorems the paper *cites* rather than proves — `theo:sampling_theorem` from `bengio2021flow`,
+`theo:negative_control` from `brunswicEGF`, and the gradient formula of `theo:first_variation_full`
+— carry them as named hypotheses, never as axioms, so `#print axioms` stays honest.
 
 ## What this is for
 

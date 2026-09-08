@@ -9,7 +9,7 @@ import GFNBounds.Balance.MassIdentity
 > Take the marked graph with vertices `{s₀,x₁,x₂,x₃,s_f}`, edges `s₀ → x₁`, the cycle
 > `x₁ → x₂ → x₃ → x₁`, and `x₃ → s_f`, loop-closed as in Definition `def:loop_closure`; freeze
 > the backward policy `π_←(x₁ → x₃) = p`, `π_←(x₁ → s₀) = 1 − p`, all other rows being
-> deterministic. The expected backward-trajectory length is `(1+2p)/(1−p) < ∞`: the condition of
+> deterministic. The expected backward-trajectory length is `3/(1−p) < ∞`: the condition of
 > Morozov et al. holds and the circulation cannot explode. The invariant measure gives equal mass
 > `q` to the three cycle states and `(1−p)q` to `s₀` and `s_f`. Over-inflate the cycle: `u = M` on
 > `{x₁,x₂,x₃}` and `u = 1` elsewhere, `M` large. Then, as `M → ∞`, the ratios tend to
@@ -20,7 +20,7 @@ import GFNBounds.Balance.MassIdentity
 > the two forces therefore never forms (consistently with the mass identity); the source refills
 > at logarithmic speed, giving a transient of order `M/log M`, after which the exponential phase
 > of Theorem `theo:local_convergence` takes over. As `p → 1` the cycle closes, the backward-length
-> bound `(1+2p)/(1−p)` and `B̂` blow up, and every rate degenerates: the construction interpolates
+> bound `3/(1−p)` and `B̂` blow up, and every rate degenerates: the construction interpolates
 > smoothly toward the instability regime of Theorem `theo:no_bound_divergence`.
 
 The vertices are `Fin 5`, in the paper's order: `0 = s₀`, `1 = x₁`, `2 = x₂`, `3 = x₃`, `4 = s_f`.
@@ -29,7 +29,12 @@ forms, which is the stronger statement.
 
 ## One correction to the remark, and one reading of an `∼`
 
-**The expected backward-trajectory length is `3/(1−p)`, not `(1+2p)/(1−p)`.** `σ̄` is
+**The paper printed the wrong value here, and it has since been corrected** (2026-09-08; the
+quotation above is the corrected text). What follows records what the discrepancy was and how it
+was settled, because the theorem names below still carry the old value's name.
+
+**The expected backward-trajectory length is `3/(1−p)`, not the `(1+2p)/(1−p)` the remark used to
+print.** `σ̄` is
 `prop:morozov_rate`'s `E_{x ∼ π̂_←(s_f→·)} E(σ ∣ X₀ = x)`; here the target row is the point mass
 at `x₃`, so `σ̄ = E(σ ∣ X₀ = x₃) = 3/(1−p)` (`sigmaBar_eq`). The number `(1+2p)/(1−p)` the remark
 prints is `E(σ ∣ X₀ = x₁)` (`hitExp_x1`), the hitting time from the *other* end of the cycle. The
@@ -85,7 +90,7 @@ instead as the density against the counting measure gives `r(s₀) = M(1−p)` e
 
 | remark | here |
 |---|---|
-| the expected backward-trajectory length is `(1+2p)/(1−p)` | ⚠ **`3/(1−p)`** — `sigmaBar_eq`, `sigmaBar_ne_paper_value`; the printed number is `hitExp_x1` |
+| the expected backward-trajectory length is `3/(1−p)` | ✓ `sigmaBar_eq`. The paper printed `(1+2p)/(1−p)` until 2026-09-08; that value is `hitExp_x1`, and `sigmaBar_ne_paper_value` records that the two differ |
 | … `< ∞`, so Morozov's condition holds | `isHitExp` (the system is solved), `bSigma_eq` (the constant of `prop:morozov_rate`*(2)*) |
 | `λ` gives `q` to `x₁,x₂,x₃` and `(1−p)q` to `s₀,s_f` | ✓ `invProb_paper`, with `q = 1/(5−2p)`; unique by `invProb_eq` |
 | `r(x₁), r(x₂), r(s_f) → 1` | ✓ **exactly** `1` at every `M` — `ratio_x1`, `ratio_x2`, `ratio_snk` |
@@ -259,7 +264,8 @@ theorem hitExp_unique {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) {u : Fin 5 → ℝ}
     (hu : (pol hp0 hp1).IsHitExp u) : u = hitExp p :=
   BackwardPolicy.IsHitExp.unique pathConnected (positiveOnEdges hp0 hp1) hu (isHitExp hp0 hp1)
 
-/-- **The number the remark prints**, `(1+2p)/(1−p)`, is `E(σ ∣ X₀ = x₁)` — the expected hitting
+/-- **The number the remark printed before its 2026-09-08 correction**, `(1+2p)/(1−p)`, is
+`E(σ ∣ X₀ = x₁)` — the expected hitting
 time of `s₀` from the far end of the cycle, not the backward-trajectory length. -/
 theorem hitExp_x1 (p : ℝ) : hitExp p 1 = (1 + 2 * p) / (1 - p) := rfl
 
@@ -273,7 +279,7 @@ theorem sigmaBar_eq {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) :
   rw [BackwardPolicy.qact_apply, phat_eq, Fin.sum_univ_five]
   simp [kern, hitExp]
 
-/-- **The remark's value for `σ̄` is not `σ̄`.** `3/(1−p) = (1+2p)/(1−p)` forces `p = 1`, which the
+/-- **The value the remark used to give for `σ̄` is not `σ̄`.** `3/(1−p) = (1+2p)/(1−p)` forces `p = 1`, which the
 hypothesis excludes, so the two disagree at *every* `p ∈ (0,1)`. Both are finite and both diverge
 as `p → 1`, which is all the remark uses the number for. -/
 theorem sigmaBar_ne_paper_value {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) :
@@ -424,7 +430,7 @@ theorem two_add_sigmaBar_eq {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) :
   ring
 
 /-- **`prop:morozov_rate`*(1)* at `s₀`, on this graph**: `λ(s₀) = 1/(2+σ̄)`. Read backwards with
-claim 2's `λ(s₀) = (1−p)/(5−2p)`, this *forces* `σ̄ = 3/(1−p)`; the remark's `(1+2p)/(1−p)` would
+claim 2's `λ(s₀) = (1−p)/(5−2p)`, this *forces* `σ̄ = 3/(1−p)`; the old `(1+2p)/(1−p)` would
 give `λ(s₀) = (1−p)/3`, which is claim 2 only at `p = 1`. -/
 theorem lam_src_eq_inv_two_add_sigmaBar {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) :
     lam p 0 = 1 / (2 + (pol hp0 hp1).sigmaBar (hitExp p)) := by
@@ -661,7 +667,7 @@ theorem no_stalemate {p M : ℝ} (hp0 : 0 < p) (hp1 : p < 1) (hM : 1 < M)
 
 Two departures from the printed text, both disclosed in the module docstring and neither touching
 what the remark concludes. Claim 1 is stated with the **corrected** backward-trajectory length
-`σ̄ = 3/(1−p)` — the printed `(1+2p)/(1−p)` is `E(σ ∣ X₀ = x₁)`, `hitExp_x1` — and claim 3's
+`σ̄ = 3/(1−p)` — the formerly printed `(1+2p)/(1−p)` is `E(σ ∣ X₀ = x₁)`, `hitExp_x1` — and claim 3's
 `r(s₀)` is stated on the paper's own convention `u = dμ/dλ`, where it is exactly `M`; the printed
 `M(1−p)` is the counting reading, `ratio_counting_src`. Claim 4 is stated as what the mass
 identity delivers: the two forces do not cancel, the gradient mass being *strictly* negative.

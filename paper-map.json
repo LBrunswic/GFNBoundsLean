@@ -1,7 +1,7 @@
 {
   "paper": {
     "path": "/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex",
-    "git_commit": "f13d7d5",
+    "git_commit": "f676def",
     "appendix": "H"
   },
   "statements": [
@@ -1584,7 +1584,7 @@
         759,
         781
       ],
-      "block_sha256": "739e73d16ee31c17da7631f26472bc5b661314b64cb68b268af671d4fecc0ff4",
+      "block_sha256": "fcd9f5afd2c81f73686e730ba285c509aff7d7055c707b4d04df5aa94b894a88",
       "lean_files": [
         "GFNBounds/Balance/Freezing.lean"
       ],
@@ -1602,7 +1602,7 @@
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 775 lines, 77 declarations. ITEMS (1) AND (2) CLOSED, with FULL C^infinity and nothing weakened. The generator is CONSTRUCTED, which is the content: `flatFactor p q t := expNegInvGlue (p-t) + expNegInvGlue (t-q)` is C^infinity, lies in [0,2] and vanishes EXACTLY on [p,q]; ContDiffBump was rejected because it pins the value only on the inner ball and outside the outer one, so no sharp zero set can be read off it. All four admissibility clauses are proved -- g(1)=0, g>0 off 1 (for every real x != 1, not just x>0), g''(1)=2, and |g(x)| <= C(1+|x|^2) with C = 8/scale an EXPLICIT FORMULA -- plus g' == 0 on the bands. Item (2)'s two-state instance is fully computed: r = (3/4, 3/2), the frozen set is nonempty and open, D == 0, and every descent step is fixed for every nu and every step size. NOT DONE: item (3) and the closing 'no bound in terms of g''(1), the mixing coefficients and w alone can hold', which quantifies over bounds and presupposes item (3); and item (2)'s beta-hat_n = 0, B-hat = 1, rho = 2 w_min, which need Core.Mixing.beta instantiated at an L^2(lambda) operator -- instead the sentence the paper's own proof opens with is proved, P = Pi and P-dagger = Pi."
+      "scope_notes": "APPLIED TO THE DRAFT 2026-09-08. PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 775 lines, 77 declarations. ITEMS (1) AND (2) CLOSED, with FULL C^infinity and nothing weakened. The generator is CONSTRUCTED, which is the content: `flatFactor p q t := expNegInvGlue (p-t) + expNegInvGlue (t-q)` is C^infinity, lies in [0,2] and vanishes EXACTLY on [p,q]; ContDiffBump was rejected because it pins the value only on the inner ball and outside the outer one, so no sharp zero set can be read off it. All four admissibility clauses are proved -- g(1)=0, g>0 off 1 (for every real x != 1, not just x>0), g''(1)=2, and |g(x)| <= C(1+|x|^2) with C = 8/scale an EXPLICIT FORMULA -- plus g' == 0 on the bands. Item (2)'s two-state instance is fully computed: r = (3/4, 3/2), the frozen set is nonempty and open, D == 0, and every descent step is fixed for every nu and every step size. NOT DONE: item (3) and the closing 'no bound in terms of g''(1), the mixing coefficients and w alone can hold', which quantifies over bounds and presupposes item (3); and item (2)'s beta-hat_n = 0, B-hat = 1, rho = 2 w_min, which need Core.Mixing.beta instantiated at an L^2(lambda) operator -- instead the sentence the paper's own proof opens with is proved, P = Pi and P-dagger = Pi. THE PAPER-SIDE DEFECT THIS FILE RECORDED IS NOW REPAIRED at proofs.tex:760, verified by an independent proof-checker pass: the hypothesis is satisfiable (witness at 60 digits), all three items still follow verbatim, and neither instantiation broke. One correction to the earlier record: strengthening the CONCLUSION to `g' == 0` on the closures is NOT a free improvement and must not be taken -- item (1) claims the set of such `mu` is OPEN, and the set whose ratio is valued in the CLOSED bands is not open (a `mu` with `r == sup U^-` perturbs out of it), so the open-band conclusion is necessary rather than merely modest."
     },
     {
       "label": "rem:freezing",
@@ -1662,7 +1662,7 @@
         816,
         818
       ],
-      "block_sha256": "5aec37ff81079d4112888b38434d8f13e68aaea9560ca9384b2971773922d0b3",
+      "block_sha256": "bb08d96fdae6c1dc428a90cad8aadf9268ee9c78c76422a9887ac90ad0e66ddb",
       "lean_files": [
         "GFNBounds/Graph/CycleExample.lean"
       ],
@@ -1683,7 +1683,7 @@
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 44 declarations on V = Fin 5. All four claims formalized; TWO OF THEM DO NOT COME OUT AS PRINTED, see the paper findings. Claim 2 is exactly right, with q = 1/(5-2p), and its uniqueness goes through theo:universality_graphs(1). Claim 3's r(x_1) = r(x_2) = r(s_f) = 1 hold EXACTLY at every M, not just in the limit, and r(x_3) = p + (1-p)/M -> p. Claim 4 is certified as `no_stalemate`: at the over-inflated configuration the total mass of the gradient density is STRICTLY negative for every training measure of positive density -- by the remark's own route, prop:no_distant_equilibrium(1) plus the observation that r(x_3) < 1 so the configuration is not balanced. `decide` carried the three MarkedGraph side conditions and nothing else; PathConnected is not decidable (ReflTransGen) and was built by hand off the single walk. NOT CERTIFIED, and classified as interpretation rather than claim: the closing 'B-hat blows up and every rate degenerates ... interpolates smoothly toward the instability regime' -- B-hat is an operator norm (obstruction 2), and only its checkable half `sigmaBar_unbounded` is proved. The dynamical continuations (the source refilling at logarithmic speed, the M/log M transient, the handover to theo:local_convergence) are not stated: there is no ODE layer and they do not follow from the computation."
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 44 declarations on V = Fin 5. All four claims formalized; THREE OF THEM DID NOT COME OUT AS PRINTED, see the paper findings. Claim 1's number was corrected in the draft on 2026-09-08; claims 3 and 4 stand uncorrected. Claim 2 is exactly right, with q = 1/(5-2p), and its uniqueness goes through theo:universality_graphs(1). Claim 3's r(x_1) = r(x_2) = r(s_f) = 1 hold EXACTLY at every M, not just in the limit, and r(x_3) = p + (1-p)/M -> p. Claim 4 is certified as `no_stalemate`: at the over-inflated configuration the total mass of the gradient density is STRICTLY negative for every training measure of positive density -- by the remark's own route, prop:no_distant_equilibrium(1) plus the observation that r(x_3) < 1 so the configuration is not balanced. `decide` carried the three MarkedGraph side conditions and nothing else; PathConnected is not decidable (ReflTransGen) and was built by hand off the single walk. NOT CERTIFIED, and classified as interpretation rather than claim: the closing 'B-hat blows up and every rate degenerates ... interpolates smoothly toward the instability regime' -- B-hat is an operator norm (obstruction 2), and only its checkable half `sigmaBar_unbounded` is proved. The dynamical continuations (the source refilling at logarithmic speed, the M/log M transient, the handover to theo:local_convergence) are not stated: there is no ODE layer and they do not follow from the computation."
     },
     {
       "label": "theo:global_dichotomy_full",

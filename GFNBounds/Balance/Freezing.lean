@@ -71,7 +71,19 @@ rather than decorative. It is delivered in full, with an explicit `g`.
   *gradient descent is stationary* is read as `u ↦ u − η·D` fixing `u`, and *the gradient flow is
   constant* is read as `D = 0` — there is no ODE layer here, and none is claimed. Nothing here
   differentiates `𝓛_{g,ν}` on `𝓜²(λ)`.
-* **The paper's hypothesis on `m` is inconsistent as literally written, and is repaired here in
+* **The paper's hypothesis on `m` was inconsistent as literally written; the draft was repaired
+  on 2026-09-08 (`proofs.tex:760`) and now states exactly what is built here.** What follows
+  records the discrepancy and its resolution, because the declaration names below still speak of
+  a repair. The corrected clause reads: `U⁻`, `U⁺` nonempty bounded open intervals with
+  `closure U⁻ ⊂ (0,1)` and `closure U⁺ ⊂ (1,+∞)`, `m ≡ 0` on `closure U⁻ ∪ closure U⁺`, `m > 0`
+  elsewhere. Note the draft **kept** "bounded": closure containment does not bound `U⁺` above,
+  since `closure (2,+∞) = [2,+∞) ⊆ (1,+∞)`, and boundedness is what puts item (1)'s band-valued
+  `r` in a compact subinterval of `(0,∞)`, which `theo:first_variation_full` consumes. One thing
+  this file must **not** be read as licensing: strengthening the paper's *conclusion* to
+  `g' ≡ 0` on the closures. Item (1) claims the set of such `μ` is open, and the set whose ratio
+  is valued in the closed bands is not — a `μ` with `r ≡ sup U⁻` perturbs out of it.
+
+* **The original defect, for the record, and repaired here in
   the only way continuity permits.** `m` continuous with `m ≡ 0` on `U⁻ ∪ U⁺` and `m > 0`
   *elsewhere* would make the nonempty open set `U⁻ ∪ U⁺` closed in the connected space `ℝ⁺*`,
   hence all of it — contradicting `m(1) = 2`. The zero set of a continuous `m` is closed, so what
@@ -128,14 +140,14 @@ file** proves on its own.
 
 | paper hypothesis | here |
 |---|---|
-| `U⁻ ⊂ (0,1)` nonempty bounded open interval | ⚠ `Set.Ioo a b` with `0 < a < b < 1`: **`b < 1` strictly**, i.e. `closure U⁻ ⊂ (0,1)`. See SCOPE |
+| `U⁻` nonempty bounded open with `closure U⁻ ⊂ (0,1)` | ✓ `Set.Ioo a b` with `0 < a < b < 1`. Agreed with the draft since its 2026-09-08 repair; before that the paper wrote `U⁻ ⊂ (0,1)`, which admitted `b = 1` |
 | `U⁺ ⊂ (1,∞)` nonempty bounded open interval | ⚠ `Set.Ioo c d` with `1 < c < d`: **`1 < c` strictly**. See SCOPE |
 | `m : ℝ⁺* → ℝ₊` | ⚠ `m : ℝ → ℝ` with `0 ≤ m` everywhere; the restriction to `ℝ⁺*` is the paper's, and nothing below needs the domain to be cut |
 | `m` is `C^∞` | ✓ `contDiff_m : ContDiff ℝ ∞ F.m` |
 | `m` bounded | ✓ `m_le_bound : F.m t ≤ F.bound` with `F.bound = 8 / F.scale` — an explicit formula, per the house rule on constants |
 | `m(1) = 2` | ✓ `m_one` |
 | `m ≡ 0` on `U⁻ ∪ U⁺` | ✓ `m_eq_zero_of_mem_bands`, on the closed `[a,b] ∪ [c,d]` ⊇ `U⁻ ∪ U⁺` |
-| `m > 0` elsewhere | ⚠ **repaired**: `m_pos` gives `m > 0` off `[a,b] ∪ [c,d]`. The literal hypothesis is inconsistent; see SCOPE |
+| `m > 0` off `closure U⁻ ∪ closure U⁺` | ✓ `m_pos` gives `m > 0` off `[a,b] ∪ [c,d]`. Agreed with the draft since its 2026-09-08 repair; the literal pre-repair hypothesis was inconsistent, see SCOPE |
 | `g(x) = ∫₁ˣ m(t)(t−1) dt` | ✓ `FreezingBands.g`, definitionally |
 | `(𝒮̂, λ, T)` ergodic | ⚠ weakened to nothing at all for criticality: `freezing_critical` assumes no relation between `K`, `lam` and `u`. `Invariant` is needed only where `MassIdentity`'s `ratio_pos` is used |
 | `μ` with `r` band-valued `λ`-a.e. | ✓ `∀ x, ratio K lam u x ∈ F.bands` |
@@ -341,7 +353,7 @@ theorem m_eq_zero_of_mem_bands {t : ℝ} (h : t ∈ Set.Icc F.a F.b ∪ Set.Icc 
   · simp only [m, flatFactor_eq_zero_iff.2 h, zero_mul, mul_zero]
   · simp only [m, flatFactor_eq_zero_iff.2 h, mul_zero]
 
-/-- **`m > 0` off the bands** (`proofs.tex:760`, repaired: off their *closures*; see SCOPE). -/
+/-- **`m > 0` off the bands' closures** (`proofs.tex:760`, as repaired on 2026-09-08). -/
 theorem m_pos {t : ℝ} (h1 : t ∉ Set.Icc F.a F.b) (h2 : t ∉ Set.Icc F.c F.d) : 0 < F.m t :=
   mul_pos (div_pos (by norm_num) F.scale_pos) (mul_pos (flatFactor_pos h1) (flatFactor_pos h2))
 

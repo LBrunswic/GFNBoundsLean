@@ -131,10 +131,15 @@ def build() -> dict:
     # excluded from the dirtiness it reports: otherwise writing it makes the tree dirty, and it
     # can never truthfully record a clean one.
     self_path = str(OUT.relative_to(ROOT))
+    # NOT via git(): that strips the whole output, which eats the leading space of the first
+    # porcelain line (" M path" -> "M path") and shifts every subsequent slice by one. The
+    # symptom was a certificate that recorded itself as dirty under the name "ocs/...".
+    raw = subprocess.run(
+        ["git", "-C", str(ROOT), "status", "--porcelain"],
+        capture_output=True, text=True, check=True,
+    ).stdout
     dirty_files = [
-        ln
-        for ln in git("status", "--porcelain").splitlines()
-        if ln.strip() and ln[3:].strip() != self_path
+        ln[3:] for ln in raw.splitlines() if ln.strip() and ln[3:].strip() != self_path
     ]
     sorries = json.loads(SORRY.read_text()) if SORRY.exists() else []
 
@@ -148,7 +153,7 @@ def build() -> dict:
         "commit_short": source_commit()[:7],
         "branch": git("rev-parse", "--abbrev-ref", "HEAD"),
         "dirty": bool(dirty_files),
-        "dirty_files": [ln[3:] for ln in dirty_files],
+        "dirty_files": dirty_files,
         "toolchain": (ROOT / "lean-toolchain").read_text().strip(),
         "mathlib": mathlib_rev(),
         "gates": GATES,

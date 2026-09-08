@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+from dataclasses import dataclass
 import json
 import re
 import sys
@@ -40,16 +41,64 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from proof_skeleton import skeleton  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-FACTS = ROOT / "docs" / "lean-facts.json"
-EXPO = ROOT / "blueprint" / "exposition"
-OUT = ROOT / "blueprint" / "src" / "content.tex"
-OUT_PAPER = ROOT / "blueprint" / "appendix_H.tex"
 
-NS = "GFNBounds.Doubling."
+
+@dataclass
+class Chapter:
+    """One namespace of the development, read as one chapter of the appendix."""
+    id: str
+    namespace: str            # e.g. "GFNBounds.Doubling", without the trailing dot
+    title: str
+    label: str
+    sections: list[tuple[str, list[str]]]
+    front: str = ""           # file in the exposition directory, or ""
+    differences: str = ""
+
+    @property
+    def ns(self) -> str:
+        return self.namespace + "."
+
+    @property
+    def headlines(self) -> list[str]:
+        return [self.ns + n for _, names in self.sections for n in names]
+
+
+@dataclass
+class Config:
+    """Where everything lives and what the document contains.
+
+    Defaults reproduce the Doubling-only appendix exactly; `--config` supplies any other shape.
+    Threading this through `emit`/`lint`/`write_graph` is what let the generator grow past one
+    namespace without a second implementation.
+    """
+    chapters: list[Chapter]
+    facts: Path = ROOT / "docs" / "lean-facts.json"
+    expo: Path = ROOT / "blueprint" / "exposition"
+    out: Path = ROOT / "blueprint" / "src" / "content.tex"
+    out_paper: Path = ROOT / "blueprint" / "appendix_H.tex"
+    out_graph: Path = ROOT / "docs" / "lean-graph.dot"
+    lean_root: Path = ROOT
+    title_macro: str = "\\appendixHtitle"
+    title_plain: str = ("The doubling graph: an unbounded diffusion operator at finite "
+                        "backward length")
+    label: str = "app:doubling"
+
+    @property
+    def headlines(self) -> list[str]:
+        return [d for c in self.chapters for d in c.headlines]
+
+    def chapter_of(self, decl: str) -> Chapter | None:
+        return next((c for c in self.chapters if decl.startswith(c.ns)), None)
+
+    @property
+    def single(self) -> bool:
+        """One chapter needs no nesting level, so it keeps the headings it always had."""
+        return len(self.chapters) == 1
+
 
 # The document, in the order it reads.  Each headline theorem is a `main_*` of Main.lean; the
 # grouping is the development's own, not the appendix's.
-SECTIONS: list[tuple[str, list[str]]] = [
+DOUBLING_SECTIONS: list[tuple[str, list[str]]] = [
     ("The chain, and when it settles", [
         "main_irreducible",
         "main_phase",
@@ -79,7 +128,54 @@ SECTIONS: list[tuple[str, list[str]]] = [
     ]),
 ]
 
-HEADLINES = [NS + n for _, names in SECTIONS for n in names]
+DEFAULT_CONFIG = Config(chapters=[
+    Chapter(id="doubling", namespace="GFNBounds.Doubling",
+            title="The doubling graph", label="sec:doubling_results",
+            sections=DOUBLING_SECTIONS, front="_front.tex",
+            differences="_differences.tex"),
+])
+
+
+def load_config(path: Path | None) -> Config:
+    """Read `appendix.toml`, or return the built-in Doubling configuration.
+
+    The built-in is not a fallback so much as the regression test: with no `--config`, this
+    generator must still produce exactly the file it produced before it learned about chapters.
+    """
+    if path is None:
+        return DEFAULT_CONFIG
+    import tomllib
+    raw = tomllib.loads(path.read_text())
+    base = path.resolve().parent
+    paths = raw.get("paths", {})
+
+    def where(key: str, default: Path) -> Path:
+        return (base / paths[key]).resolve() if key in paths else default
+
+    chapters = []
+    for c in raw.get("chapter", []):
+        chapters.append(Chapter(
+            id=c["id"], namespace=c["namespace"], title=c["title"],
+            label=c.get("label", f"sec:{c['id']}_results"),
+            sections=[(s["title"], s["decls"]) for s in c.get("section", [])],
+            front=c.get("front", ""), differences=c.get("differences", ""),
+        ))
+    if not chapters:
+        sys.exit(f"{path}: no [[chapter]] entries")
+    doc = raw.get("document", {})
+    return Config(
+        chapters=chapters,
+        facts=where("facts", DEFAULT_CONFIG.facts),
+        expo=where("exposition", DEFAULT_CONFIG.expo),
+        out=where("out", DEFAULT_CONFIG.out),
+        out_paper=where("out_paper", DEFAULT_CONFIG.out_paper),
+        out_graph=where("out_graph", DEFAULT_CONFIG.out_graph),
+        lean_root=where("lean_root", DEFAULT_CONFIG.lean_root),
+        title_macro=doc.get("title_macro", DEFAULT_CONFIG.title_macro),
+        title_plain=doc.get("title_plain", DEFAULT_CONFIG.title_plain),
+        label=doc.get("label", DEFAULT_CONFIG.label),
+    )
+
 
 STD_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 
@@ -106,10 +202,10 @@ CITE = re.compile(r"\[\[([A-Za-z0-9_.']+)\]\]")
 # inputs
 # --------------------------------------------------------------------------
 
-def load_facts() -> dict:
-    if not FACTS.exists():
-        sys.exit("docs/lean-facts.json is missing; run `lake env lean scripts/lean_facts.lean`")
-    return json.loads(FACTS.read_text())["declarations"]
+def load_facts(cfg: Config) -> dict:
+    if not cfg.facts.exists():
+        sys.exit(f"{cfg.facts} is missing; run `lake env lean scripts/lean_facts.lean`")
+    return json.loads(cfg.facts.read_text())["declarations"]
 
 
 def sig_hash(facts: dict, decl: str) -> str:
@@ -165,8 +261,8 @@ def reachable(facts: dict, decl: str, depth: int = 3) -> set[str]:
 # the exposition layer
 # --------------------------------------------------------------------------
 
-def read_exposition(decl: str) -> dict | None:
-    path = EXPO / f"{decl}.md"
+def read_exposition(cfg: Config, decl: str) -> dict | None:
+    path = cfg.expo / f"{decl}.md"
     if not path.exists():
         return None
     text = path.read_text(encoding="utf8")
@@ -189,11 +285,21 @@ def read_exposition(decl: str) -> dict | None:
     return {"meta": meta, **{k: v.strip() for k, v in body.items()}, "path": path}
 
 
-def render_citations(text: str, facts: dict) -> str:
-    """`[[GFNBounds.Doubling.foo]]` -> a rendered reference to the declaration."""
+def render_citations(cfg: Config, text: str, facts: dict, here: Chapter | None = None) -> str:
+    """`[[GFNBounds.Doubling.foo]]` -> a rendered reference to the declaration.
+
+    Within a chapter the namespace is dropped, as it always was. Across chapters it is not: a
+    bare `main_rate` stops being unique the moment a second namespace joins the document, so a
+    citation reaching out of its chapter keeps the last two components (`Doubling.main_rate`).
+    """
     def one(m):
         name = m.group(1)
-        return "\\leanref{%s}" % name.replace(NS, "").replace("_", r"\_")
+        owner = cfg.chapter_of(name)
+        if here is not None and owner is not here and owner is not None:
+            short = ".".join(name.split(".")[-2:])
+        else:
+            short = name.replace(here.ns if here else "", "")
+        return "\\leanref{%s}" % short.replace("_", r"\_")
     return CITE.sub(one, text)
 
 
@@ -201,11 +307,12 @@ def render_citations(text: str, facts: dict) -> str:
 # the Lean-derived draft, for seeding an exposition file
 # --------------------------------------------------------------------------
 
-def print_skeleton(facts: dict, decl: str) -> None:
-    rec = facts.get(decl) or facts.get(NS + decl)
+def print_skeleton(cfg: Config, facts: dict, decl: str) -> None:
+    full = decl if decl in facts else next(
+        (c.ns + decl for c in cfg.chapters if c.ns + decl in facts), decl)
+    rec = facts.get(full)
     if rec is None:
         sys.exit(f"unknown declaration: {decl}")
-    full = decl if decl in facts else NS + decl
     named = {k for k, v in facts.items() if is_named_result(v)}
     shorts = {k.split(".")[-1] for k in named}
 
@@ -238,9 +345,29 @@ def print_skeleton(facts: dict, decl: str) -> None:
 # the gates
 # --------------------------------------------------------------------------
 
-def lint(facts: dict) -> list[str]:
+def unattached(cfg: Config, facts: dict) -> list[str]:
+    """Gate 7: a certified named theorem that no chapter reaches.
+
+    The house rule is that the appendix accounts for the development. A theorem the library
+    itself calls a result (docstring opening in bold), living in a namespace the document
+    covers, but reachable from no headline, is a result the paper silently omits -- which is
+    the one failure this arrangement cannot detect any other way.
+    """
+    covered: set[str] = set()
+    for decl in cfg.headlines:
+        covered |= closure(facts, decl) | {decl}
+    out = []
+    for name, rec in facts.items():
+        if not name.startswith(tuple(c.ns for c in cfg.chapters)):
+            continue
+        if rec.get("kind") == "theorem" and is_named_result(rec) and name not in covered:
+            out.append(name)
+    return sorted(out)
+
+
+def lint(cfg: Config, facts: dict, strict_unattached: bool = False) -> list[str]:
     problems: list[str] = []
-    for decl in HEADLINES:
+    for decl in cfg.headlines:
         if decl not in facts:
             problems.append(f"{decl}: not in the environment")
             continue
@@ -250,10 +377,10 @@ def lint(facts: dict) -> list[str]:
         if extra:
             problems.append(f"{decl}: rests on {sorted(extra)}")
 
-        expo = read_exposition(decl)
+        expo = read_exposition(cfg, decl)
         if expo is None:
             problems.append(f"{decl}: no exposition file — write "
-                            f"blueprint/exposition/{decl}.md")
+                            f"{(cfg.expo / (decl + '.md'))}")
             continue
         for section in ("statement", "relation", "sketch"):
             if not expo.get(section):
@@ -282,12 +409,23 @@ def lint(facts: dict) -> list[str]:
                     and u not in cited):
                 problems.append(f"{decl}: proof invokes {u} and the sketch does not name it")
 
-    body = OUT.read_text() if OUT.exists() else ""
-    stripped = re.sub(r"^%.*$", "", body, flags=re.M)
-    for pat, what in DENYLIST:
-        for m in re.finditer(pat, stripped):
-            line = stripped[: m.start()].count("\n") + 1
-            problems.append(f"content.tex:{line}: {what}")
+    for path in (cfg.out, cfg.out_paper):
+        body = path.read_text() if path.exists() else ""
+        stripped = re.sub(r"^%.*$", "", body, flags=re.M)
+        for pat, what in DENYLIST:
+            for m in re.finditer(pat, stripped):
+                line = stripped[: m.start()].count("\n") + 1
+                problems.append(f"{path.name}:{line}: {what}")
+
+    orphans = unattached(cfg, facts)
+    if orphans:
+        listed = (cfg.expo.parent / "UNATTACHED")
+        known = set(listed.read_text().split()) if listed.exists() else set()
+        new = [o for o in orphans if o not in known]
+        for o in new:
+            msg = f"{o}: a named theorem no chapter reaches"
+            problems.append(msg) if strict_unattached else print(
+                f"lint: warning: {msg}", file=sys.stderr)
     return problems
 
 
@@ -302,58 +440,77 @@ def esc(s: str) -> str:
              .replace("~", r"\textasciitilde{}"))
 
 
-def preamble(facts: dict, paper_mode: bool) -> str:
-    front = EXPO / "_front.tex"
-    text = front.read_text(encoding="utf8").strip() if front.exists() else ""
-    head = ("\\section{\\appendixHtitle}\\label{app:doubling}" if paper_mode else
-            "\\section{The doubling graph: an unbounded diffusion operator at finite "
-            "backward length}\\label{app:doubling}")
-    return head + "\n\n" + text + "\n"
+def preamble(cfg: Config, facts: dict, paper_mode: bool) -> str:
+    head = (f"\\section{{{cfg.title_macro}}}\\label{{{cfg.label}}}" if paper_mode else
+            f"\\section{{{cfg.title_plain}}}\\label{{{cfg.label}}}")
+    if cfg.single:
+        # One chapter carries the document, so its front matter is the document's and there is
+        # no nesting level to introduce.
+        front = cfg.expo / cfg.chapters[0].front if cfg.chapters[0].front else None
+        text = front.read_text(encoding="utf8").strip() if front and front.exists() else ""
+        return head + "\n\n" + text + "\n"
+    return head + "\n"
 
 
-def emit(facts: dict, paper_mode: bool) -> tuple[str, list[str]]:
-    out = [preamble(facts, paper_mode)]
+def emit(cfg: Config, facts: dict, paper_mode: bool) -> tuple[str, list[str]]:
+    out = [preamble(cfg, facts, paper_mode)]
     missing: list[str] = []
 
-    out.append("\n\\subsection{The results}\\label{sec:doubling_results}\n")
-    for title, names in SECTIONS:
-        out.append(f"\n\\subsubsection{{{title}}}\n")
-        for short in names:
-            decl = NS + short
-            expo = read_exposition(decl)
-            if expo is None:
-                missing.append(decl)
-                continue
-            out.append(f"\n\\begin{{theorem}}\n  \\label{{thm:{short}}}")
-            if not paper_mode:
-                out.append(f"  \\lean{{{decl}}}\\leanok")
-            out.append(render_citations(expo["statement"], facts))
-            out.append("\\end{theorem}\n")
-            out.append("\\begin{proof}")
-            if not paper_mode:
-                out.append("  \\leanok")
-            out.append(render_citations(expo["sketch"], facts))
-            out.append("\\end{proof}\n")
-            out.append("\\noindent " + render_citations(expo["relation"], facts) + "\n")
+    for chapter in cfg.chapters:
+        if cfg.single:
+            out.append(f"\n\\subsection{{The results}}\\label{{{chapter.label}}}\n")
+        else:
+            out.append(f"\n\\subsection{{{chapter.title}}}\\label{{{chapter.label}}}\n")
+            front = cfg.expo / chapter.front if chapter.front else None
+            if front and front.exists():
+                out.append(front.read_text(encoding="utf8").strip() + "\n")
 
-    diffs = EXPO / "_differences.tex"
-    if diffs.exists():
-        out.append("\n" + diffs.read_text(encoding="utf8").strip() + "\n")
-    out.append(index_section(facts))
+        for title, names in chapter.sections:
+            out.append(f"\n\\subsubsection{{{title}}}\n")
+            for short in names:
+                decl = chapter.ns + short
+                expo = read_exposition(cfg, decl)
+                if expo is None:
+                    missing.append(decl)
+                    continue
+                out.append(f"\n\\begin{{theorem}}\n  \\label{{thm:{short}}}")
+                if not paper_mode:
+                    out.append(f"  \\lean{{{decl}}}\\leanok")
+                out.append(render_citations(cfg, expo["statement"], facts, chapter))
+                out.append("\\end{theorem}\n")
+                out.append("\\begin{proof}")
+                if not paper_mode:
+                    out.append("  \\leanok")
+                out.append(render_citations(cfg, expo["sketch"], facts, chapter))
+                out.append("\\end{proof}\n")
+                out.append("\\noindent "
+                           + render_citations(cfg, expo["relation"], facts, chapter) + "\n")
+
+        diffs = cfg.expo / chapter.differences if chapter.differences else None
+        if diffs and diffs.exists():
+            out.append("\n" + diffs.read_text(encoding="utf8").strip() + "\n")
+
+    out.append(index_section(cfg, facts))
     return "\n".join(out) + "\n", missing
 
 
-def index_section(facts: dict) -> str:
+def index_section(cfg: Config, facts: dict) -> str:
     rows = []
-    for _, names in SECTIONS:
-        for short in names:
-            decl = NS + short
-            rec = facts[decl]
-            deep = closure(facts, decl)
-            named = sum(1 for u in deep if is_named_result(facts.get(u, {})))
-            rows.append("\\ref{thm:%s} & \\texttt{\\small %s} & %d & %d \\\\"
-                        % (short, esc(short), named, len(deep)))
+    for chapter in cfg.chapters:
+        if not cfg.single:
+            rows.append("\\multicolumn{4}{@{}l}{\\itshape %s} \\\\" % esc(chapter.title))
+        for _, names in chapter.sections:
+            for short in names:
+                decl = chapter.ns + short
+                rec = facts[decl]
+                deep = closure(facts, decl)
+                named = sum(1 for u in deep if is_named_result(facts.get(u, {})))
+                rows.append("\\ref{thm:%s} & \\texttt{\\small %s} & %d & %d \\\\"
+                            % (short, esc(short), named, len(deep)))
     body = "\n".join(rows)
+    ns_list = [f"\\texttt{{{esc(c.namespace)}}}" for c in cfg.chapters]
+    namespaces = ("namespace " + ns_list[0] if len(ns_list) == 1
+                  else "namespaces " + ", ".join(ns_list[:-1]) + " and " + ns_list[-1])
     return rf"""
 \subsection{{The development}}\label{{sec:doubling_development}}
 
@@ -374,7 +531,7 @@ result & declaration & named results & declarations \\
 \hline
 \end{{tabular}}
 \caption{{The results of this appendix as declarations of the Lean development, in the
-namespace \texttt{{GFNBounds.Doubling}}. The last two columns count what each proof rests on,
+{namespaces}. The last two columns count what each proof rests on,
 unfolded to the bottom of the development: the declarations it reaches, and how many of those
 are results the development names rather than steps internal to one.}}
 \label{{tab:doubling_decls}}
@@ -382,7 +539,7 @@ are results the development names rather than steps internal to one.}}
 """
 
 
-def write_graph(facts: dict) -> Path:
+def write_graph(cfg: Config, facts: dict) -> Path:
     """The verified dependency graph: the headline results and what their proofs invoke.
 
     Edges are `uses_value` from the compiled environment, so an arrow means the proof term of
@@ -394,25 +551,50 @@ def write_graph(facts: dict) -> Path:
              '  rankdir=LR; bgcolor="transparent";',
              '  node [shape=box, fontname="Helvetica", fontsize=10];',
              '  edge [color="#555555", arrowsize=0.7];']
+
+    def node_id(name: str) -> str:
+        """Unique across chapters. `main_rate` stops being unique at the second namespace."""
+        c = cfg.chapter_of(name)
+        if cfg.single or c is None:
+            return name.replace(cfg.chapters[0].ns, "")
+        return ".".join(name.split(".")[-2:])
+
     drawn: set[str] = set()
-    for decl in HEADLINES:
-        short = decl.replace(NS, "")
-        lines.append(f'  "{short}" [style=filled, fillcolor="#d8ecd8", fontsize=11];')
-        drawn.add(short)
-    for decl in HEADLINES:
-        for u in work_deps(facts, decl):
-            rec = facts.get(u, {})
-            if not is_named_result(rec) or rec.get("kind") != "theorem":
-                continue
-            us = u.replace(NS, "")
-            if us not in drawn:
-                lines.append(f'  "{us}" [fillcolor="#eeeeee", style=filled];')
-                drawn.add(us)
-            lines.append(f'  "{decl.replace(NS, "")}" -> "{us}";')
+    fills = ["#d8ecd8", "#dbe6f5", "#f5e6d0", "#e8dcf0", "#f0dcdc"]
+    for i, chapter in enumerate(cfg.chapters):
+        if not cfg.single:
+            lines.append(f'  subgraph cluster_{chapter.id} {{')
+            lines.append(f'    label="{chapter.title}"; fontname="Helvetica"; '
+                         f'fontsize=11; color="#999999";')
+        for decl in chapter.headlines:
+            nid = node_id(decl)
+            indent = "    " if not cfg.single else "  "
+            lines.append(f'{indent}"{nid}" [style=filled, fillcolor="{fills[i % len(fills)]}", '
+                         f'fontsize=11];')
+            drawn.add(nid)
+        if not cfg.single:
+            lines.append("  }")
+
+    for chapter in cfg.chapters:
+        for decl in chapter.headlines:
+            for u in work_deps(facts, decl):
+                rec = facts.get(u, {})
+                if not is_named_result(rec) or rec.get("kind") != "theorem":
+                    continue
+                us, ds = node_id(u), node_id(decl)
+                if us not in drawn:
+                    lines.append(f'  "{us}" [fillcolor="#eeeeee", style=filled];')
+                    drawn.add(us)
+                # An edge leaving its chapter is drawn heavier: those are the places where one
+                # part of the development actually stands on another, and they are the story.
+                owner = cfg.chapter_of(u)
+                cross = owner is not None and owner is not chapter
+                attr = ' [penwidth=2.0, color="#333333"]' if cross else ""
+                lines.append(f'  "{ds}" -> "{us}"{attr};')
     lines.append("}")
-    out = ROOT / "docs" / "lean-graph.dot"
-    out.write_text("\n".join(lines) + "\n")
-    return out
+    cfg.out_graph.parent.mkdir(parents=True, exist_ok=True)
+    cfg.out_graph.write_text("\n".join(lines) + "\n")
+    return cfg.out_graph
 
 
 def main() -> int:
@@ -424,51 +606,69 @@ def main() -> int:
     p.add_argument("--paper", action="store_true", help="also write the paper-ready fragment")
     p.add_argument("--graph", action="store_true",
                    help="write docs/lean-graph.dot, the verified dependency graph")
+    p.add_argument("--config", metavar="TOML", type=Path,
+                   help="chapter configuration; without it, the built-in Doubling appendix")
+    p.add_argument("--strict-unattached", action="store_true",
+                   help="fail, rather than warn, on a named theorem no chapter reaches")
     args = p.parse_args()
 
-    facts = load_facts()
+    cfg = load_config(args.config)
+    facts = load_facts(cfg)
+
+    def rel(path: Path) -> str:
+        try:
+            return str(path.relative_to(ROOT))
+        except ValueError:
+            return str(path)
 
     if args.skeleton:
-        print_skeleton(facts, args.skeleton)
+        print_skeleton(cfg, facts, args.skeleton)
         return 0
 
     if args.lint:
-        problems = lint(facts)
+        problems = lint(cfg, facts, strict_unattached=args.strict_unattached)
         if problems:
             print("lint: %d problem(s)" % len(problems), file=sys.stderr)
             for q in problems:
                 print("  " + q, file=sys.stderr)
             return 1
-        print(f"lint: clean — {len(HEADLINES)} results, statements current, "
-              "every sketch supported by the proof it describes")
+        print(f"lint: clean — {len(cfg.headlines)} results in {len(cfg.chapters)} chapter(s), "
+              "statements current, every sketch supported by the proof it describes")
         return 0
 
-    text, missing = emit(facts, paper_mode=False)
+    text, missing = emit(cfg, facts, paper_mode=False)
     if missing:
         print("missing exposition — write these files:", file=sys.stderr)
         for m in missing:
-            print(f"  blueprint/exposition/{m}.md", file=sys.stderr)
+            print(f"  {cfg.expo / (m + '.md')}", file=sys.stderr)
         return 1
 
     if args.check:
-        if not OUT.exists() or OUT.read_text() != text:
-            print("blueprint/src/content.tex is out of date; run scripts/appendix.py",
-                  file=sys.stderr)
+        stale = []
+        if not cfg.out.exists() or cfg.out.read_text() != text:
+            stale.append(rel(cfg.out))
+        if args.paper:
+            ptext, _ = emit(cfg, facts, paper_mode=True)
+            if not cfg.out_paper.exists() or cfg.out_paper.read_text() != ptext:
+                stale.append(rel(cfg.out_paper))
+        if stale:
+            print(f"out of date: {', '.join(stale)}; run scripts/appendix.py", file=sys.stderr)
             return 1
-        print("appendix content.tex up to date")
+        print("appendix up to date")
         return 0
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(text)
-    print(f"wrote {OUT.relative_to(ROOT)} — {len(HEADLINES)} results")
+    cfg.out.parent.mkdir(parents=True, exist_ok=True)
+    cfg.out.write_text(text)
+    print(f"wrote {rel(cfg.out)} — {len(cfg.headlines)} results")
 
     if args.paper:
-        ptext, _ = emit(facts, paper_mode=True)
-        OUT_PAPER.write_text(ptext)
-        print(f"wrote {OUT_PAPER.relative_to(ROOT)} — paper-ready fragment")
+        ptext, _ = emit(cfg, facts, paper_mode=True)
+        cfg.out_paper.parent.mkdir(parents=True, exist_ok=True)
+        cfg.out_paper.write_text(ptext)
+        print(f"wrote {rel(cfg.out_paper)} — paper-ready fragment")
     if args.graph:
-        g = write_graph(facts)
-        print(f"wrote {g.relative_to(ROOT)} — the verified dependency graph")
+        g = write_graph(cfg, facts)
+        print(f"wrote {rel(g)} — the verified dependency graph")
     return 0
 
 

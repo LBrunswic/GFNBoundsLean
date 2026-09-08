@@ -1,0 +1,90 @@
+# Named theorems that no chapter of the generated appendix reaches.
+#
+# `appendix.py --lint` warns on each of these and fails on any that is NOT listed here, so this
+# file is a countdown rather than a suppression: a new orphan is loud, and shrinking this list
+# is what "the appendix accounts for the development" means.
+#
+# A name belongs here when the theorem is genuinely internal -- a step the library names for its
+# own convenience rather than a result the paper should state. A name should LEAVE here by being
+# cited in an exposition sketch, or by its chapter gaining a headline that reaches it.
+#
+# Baseline taken 2026-09-08 at the M2 generalization: 76 entries, of which Decay (21) and Stat
+# (18) are the two clusters worth reviewing first -- both are load-bearing for Appendix H's
+# sharp asymptotic, so several are probably results the appendix ought to name.
+GFNBounds.Doubling.cramer_kernel_integral
+GFNBounds.Doubling.cramer_lt_one_of_root_gt_one
+GFNBounds.Doubling.cramer_root_pos_iff
+GFNBounds.Doubling.cramer_root_unique
+GFNBounds.Doubling.Decay.A_gap
+GFNBounds.Doubling.Decay.A_one_eq
+GFNBounds.Doubling.Decay.A_one_neg
+GFNBounds.Doubling.Decay.A_zero_pos
+GFNBounds.Doubling.Decay.constant_eq
+GFNBounds.Doubling.Decay.decay_block_of_cutBal
+GFNBounds.Doubling.Decay.decay_two_sided_explicit
+GFNBounds.Doubling.Decay.escape_filter
+GFNBounds.Doubling.Decay.escape_of_level
+GFNBounds.Doubling.Decay.Gamma_lt_one
+GFNBounds.Doubling.Decay.Gamma_pos
+GFNBounds.Doubling.Decay.omeg_ge
+GFNBounds.Doubling.Decay.prodW_two_sided_paper
+GFNBounds.Doubling.Decay.sharp_explicit
+GFNBounds.Doubling.Decay.sojourn_block
+GFNBounds.Doubling.Decay.surv_le_pow
+GFNBounds.Doubling.Decay.tail_ratio_le
+GFNBounds.Doubling.Decay.tendsto_tail_ratio_atTop
+GFNBounds.Doubling.Decay.tendsto_tail_ratio_sharp
+GFNBounds.Doubling.Decay.tendsto_tailSeq_zero
+GFNBounds.Doubling.Decay.uu_bounded_explicit
+GFNBounds.Doubling.drift_const_iff
+GFNBounds.Doubling.drift_family
+GFNBounds.Doubling.eq_mean_of_var_zero
+GFNBounds.Doubling.excursion_le
+GFNBounds.Doubling.exists_height_drift_neg
+GFNBounds.Doubling.exists_logHeight_drift_nonpos
+GFNBounds.Doubling.exists_stat_of_family_one
+GFNBounds.Doubling.exists_Wpow_drift_neg
+GFNBounds.Doubling.exists_Wpow_one_drift_nonpos
+GFNBounds.Doubling.exponent_is_cramer_root
+GFNBounds.Doubling.geometric_sum
+GFNBounds.Doubling.height_pstar_sub
+GFNBounds.Doubling.hitExp_iSup_eq
+GFNBounds.Doubling.hitExp_iSup_eq_linSuper
+GFNBounds.Doubling.hitExp_iSup_fixed
+GFNBounds.Doubling.hitExp_iSup_le
+GFNBounds.Doubling.LadderStep.le_succ_add_one
+GFNBounds.Doubling.ladHarmonic_eq_zero
+GFNBounds.Doubling.logHeight_drift_nonpos
+GFNBounds.Doubling.not_growthCond_geometric
+GFNBounds.Doubling.phi_pos
+GFNBounds.Doubling.pstar_bounded_onChain
+GFNBounds.Doubling.resolvent_inverse
+GFNBounds.Doubling.resolvent_norm_le
+GFNBounds.Doubling.Stat.dens_const
+GFNBounds.Doubling.Stat.dens_fixed_const
+GFNBounds.Doubling.Stat.dens_gap_zero
+GFNBounds.Doubling.Stat.eLpNorm_dens_le
+GFNBounds.Doubling.Stat.eLpNormEssSup_pstar_le
+GFNBounds.Doubling.Stat.eLpNorm_pstar_le
+GFNBounds.Doubling.Stat.eLpNorm_pstar_le_of_memLp
+GFNBounds.Doubling.Stat.eLpNorm_two_pstar_le
+GFNBounds.Doubling.Stat.fixed_const
+GFNBounds.Doubling.Stat.jensen_gap_zero
+GFNBounds.Doubling.Stat.ker_eq_const
+GFNBounds.Doubling.Stat.mass_dens_le
+GFNBounds.Doubling.Stat.mass_pstar_le
+GFNBounds.Doubling.Stat.mass_two_pstar_le
+GFNBounds.Doubling.Stat.rayleigh_two_le'
+GFNBounds.Doubling.Stat.rayleigh_two_le
+GFNBounds.Doubling.Stat.tsum_lam_dens
+GFNBounds.Doubling.Stat.tsum_lam_pstar_sq
+GFNBounds.Doubling.summable_of_cutBalanceSeq
+GFNBounds.Doubling.tendsto_ladT_iterate_id
+GFNBounds.Doubling.tendsto_windowPower
+GFNBounds.Doubling.tendsto_windowV
+GFNBounds.Doubling.Wdrift_core
+GFNBounds.Doubling.Wdrift_family
+GFNBounds.Doubling.Wpow_drift_expansion
+GFNBounds.Doubling.Wpow_drift_neg_at_one
+GFNBounds.Doubling.Wpow_one_drift
+lint: clean — 15 results in 1 chapter(s), statements current, every sketch supported by the proof it describes

@@ -1,4 +1,5 @@
 import GFNBounds.Core.Flow
+import GFNBounds.Core.Kernel
 import GFNBounds.Core.Mixing
 import GFNBounds.Core.StableBound
 import GFNBounds.Core.Universality
@@ -68,4 +69,6 @@ import GFNBounds.Silva.Explicit
 import GFNBounds.Silva.NoUniform
 import GFNBounds.Balance.MassIdentity
 import GFNBounds.Graph.Universality
+import GFNBounds.Core.StrongUniversality
+import GFNBounds.Core.ILBound
 import GFNBounds.Audit

@@ -31,14 +31,20 @@ own boundedness requirement on the parameterization, plus summable mixing.
 | `bind_absolutelyContinuous_bind` | `μ ≪ ν → μ π⋆ ≪ ν π⋆`, for any kernel |
 | `bind_withDensity_absolutelyContinuous` | `(f ν) π⋆ ≪ ν`, **from invariance alone** — this is the main text's "invariance makes the density action well defined" |
 | `bindDensity` | `T f := d((f ν) π⋆)/dν` for `f : 𝒮 → [0,∞]`, the density action on non-negative densities |
+| `withDensity_bindDensity` | `(T f) ν = (f ν) π⋆`: `T f` really is a density for the push |
 | `lintegral_bindDensity` | `∫ T f dν = ∫ f dν`: stochasticity, not invariance |
 | `bindDensity_one` | `T 𝟏 = 𝟏` a.e.: invariance |
-| `bindDensity_add`, `bindDensity_smul` | `T` is a.e. additive and positively homogeneous |
+| `bindDensity_add`, `bindDensity_add₃`, `bindDensity_smul` | `T` is a.e. additive and positively homogeneous |
 | `densityAction` | `P⋆ f := (T f⁺).toReal − (T f⁻).toReal`, the density action on signed densities |
 | `integral_densityAction` | **`hint`**, in the paper's own terms: `∫ P⋆ f dν = ∫ f dν` for integrable `f` |
 | `densityAction_one` | **`hone`**: `P⋆ 𝟏 = 𝟏` a.e. |
-| `densityActionCLM` | `P⋆` as a `ContinuousLinearMap` on `L^p(ν)`, under `IsBoundedDensityAction` |
+| `densityAction_add`, `densityAction_neg`, `densityAction_smul` | `P⋆` is a.e. `ℝ`-linear on integrable densities |
+| `IsBoundedDensityAction` | the paper's boundedness requirement on the parameterization, with an explicit constant |
+| `densityActionLM`, `densityActionCLM`, `norm_densityActionCLM_le` | `P⋆` as a `ContinuousLinearMap` on `L^p(ν)`, of operator norm `≤ C` |
+| `densityActionCLM_constOne`, `integral_densityActionCLM` | `hone` and `hint` on the `L^p` quotient — exactly what `Core.Flow` consumes |
 | `weaklyUniversal_of_kernel` | the payoff: weak `L^p`-universality from `π⋆` Markov, `ν π⋆ = ν`, `‖π⋆‖_{L^p} ≤ C`, summable mixing, `p ≠ ∞` |
+| `weaklyUniversalAt_of_kernel` | the same at one admissible pair of equal total mass |
+| `bind_id`, `densityAction_id`, `isBoundedDensityAction_id` | the identity kernel: the boundedness hypothesis is satisfiable, so the payoff is not vacuous |
 
 ## The one thing absolute continuity needs, and it is not new
 
@@ -65,9 +71,16 @@ above do not guarantee that `‖π⋆‖_{L^p(ν_B)}` is finite" (`proofs.tex:36
 and is not provable: it is false for some Markov kernels.
 
 **The `p = 1` case is not carried.** The main text says boundedness is "automatic for `p = 1`",
-and `lintegral_bindDensity` is most of that proof — `‖P⋆ f‖_1 ≤ ‖f‖_1` follows from
-`T f⁺ + T f⁻` dominating `T |f|`. It is not assembled: nothing downstream uses it, `p = 1`
-being covered by `IsBoundedDensityAction κ ν 1 1` at the cost of stating it.
+and `lintegral_bindDensity` is most of that proof — `|P⋆ f| ≤ (T f⁺).toReal + (T f⁻).toReal`
+pointwise, and integrating gives `‖P⋆ f‖_{L¹} ≤ ∫ f⁺ + ∫ f⁻ = ‖f‖_{L¹}`, i.e.
+`IsBoundedDensityAction κ ν 1 1`. That instance is **not** assembled here; at `p = 1` the
+hypothesis is therefore still assumed even though it is a theorem.
+
+**`IsBoundedDensityAction` is shown satisfiable, and nothing stronger.** `isBoundedDensityAction_id`
+exhibits the identity kernel, which fixes every `ν` and acts as the identity on densities. It is
+not ergodic and has no summable mixing, so it witnesses non-vacuity of the boundedness hypothesis
+alone, not of the whole hypothesis bundle of `weaklyUniversal_of_kernel`. No kernel satisfying
+all of them at once is exhibited.
 
 **Ergodicity is not used, and `Π` is the mean projection.** As in `Core.Flow`: `meanProj` is the
 mean projection by construction, `eq_meanProj_of_invariant` there shows the summability
@@ -84,7 +97,7 @@ Polish hypothesis is not consumed by the proof.
 
 | paper hypothesis | here |
 |---|---|
-| `(𝒮, ν_B)` a measured Polish space, `ν_B` finite | ⚠ weakened: any `MeasurableSpace α` with `[IsFiniteMeasure ν]` |
+| `(𝒮, ν_B)` a measured Polish space, `ν_B` finite | ⚠ weakened: any `MeasurableSpace α`. The kernel layer needs only `[SigmaFinite ν]`; `[IsFiniteMeasure ν]` enters with the `L^p` layer, where it is what puts `L^p(ν) ⊆ L¹(ν)` and what `Core.Flow` requires |
 | `π⋆` a Markov kernel on `𝒮` | ✓ `κ : Kernel α α` with `[IsMarkovKernel κ]` — **the primitive**, no longer an operator |
 | `ν_B π⋆ = ν_B` | ✓ `hinv : ν.bind ⇑κ = ν`, a hypothesis on the kernel |
 | `P⋆ f = d((f ν_B) π⋆)/dν_B` well defined on `L¹(ν_B)` | ✓ **constructed** as `densityAction`, its absolute continuity **proved** from `hinv` |
@@ -153,8 +166,8 @@ theorem isFiniteMeasure_bind_withDensity (κ : Kernel α α) [IsMarkovKernel κ]
 /-! ## The density action on non-negative densities -/
 
 /-- **The density action `T f := d((f ν) π⋆)/dν`** of the main text (`universality.tex:26–27`),
-on non-negative densities. It is well defined — that is, `ν.withDensity (T f) = (f ν) π⋆` —
-whenever `ν` is `π⋆`-invariant and `f` has finite integral; that is `withDensity_bindDensity`. -/
+on non-negative densities. It is well defined — that is, `(T f) ν = (f ν) π⋆` — as soon as `ν`
+is `π⋆`-invariant; that is `withDensity_bindDensity`. -/
 noncomputable def bindDensity (κ : Kernel α α) (ν : Measure α) (f : α → ℝ≥0∞) : α → ℝ≥0∞ :=
   ((ν.withDensity f).bind ⇑κ).rnDeriv ν
 
@@ -171,8 +184,9 @@ theorem measurable_bindDensity (κ : Kernel α α) (ν : Measure α) (f : α →
   Measure.measurable_rnDeriv _ _
 
 /-- **`T f` is a genuine density for `(f ν) π⋆`.** This is the well-definedness assertion of
-`universality.tex:26–27`, and it consumes invariance (through absolute continuity) and finite
-mass (through the Lebesgue decomposition). -/
+`universality.tex:26–27`. Invariance is what it consumes, through absolute continuity; no
+finiteness of `∫ f dν` is needed, the Lebesgue decomposition being available because the push of
+a finite kernel is s-finite and `ν` is σ-finite. -/
 theorem withDensity_bindDensity (κ : Kernel α α) [IsMarkovKernel κ] {ν : Measure α}
     [SigmaFinite ν] (hinv : ν.bind ⇑κ = ν) (f : α → ℝ≥0∞) :
     ν.withDensity (bindDensity κ ν f) = (ν.withDensity f).bind ⇑κ :=
@@ -598,5 +612,50 @@ theorem weaklyUniversalAt_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν 
     (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) :
     WeaklyUniversalAt (densityActionCLM κ ν p hinv hb) (f_term - f_init) :=
   weaklyUniversal_of_kernel κ ν p hinv hb hsum hp _ (meanProj_sub_eq_zero hmass)
+
+/-! ## The hypotheses are not vacuous -/
+
+/-- Every measure is invariant under the identity kernel. -/
+theorem bind_id (ν : Measure α) : ν.bind ⇑(Kernel.id : Kernel α α) = ν := by
+  have h : ⇑(Kernel.id : Kernel α α) = Measure.dirac := funext Kernel.id_apply
+  rw [h]
+  exact Measure.bind_dirac
+
+/-- The identity kernel has the identity density action on non-negative densities. -/
+theorem bindDensity_id (ν : Measure α) [SigmaFinite ν] {f : α → ℝ≥0∞} (hf : AEMeasurable f ν) :
+    bindDensity (Kernel.id : Kernel α α) ν f =ᵐ[ν] f := by
+  have h : ⇑(Kernel.id : Kernel α α) = Measure.dirac := funext Kernel.id_apply
+  rw [bindDensity, h, Measure.bind_dirac]
+  exact Measure.rnDeriv_withDensity₀ ν hf
+
+/-- The identity kernel has the identity density action. -/
+theorem densityAction_id (ν : Measure α) [SigmaFinite ν] {f : α → ℝ} (hf : AEMeasurable f ν) :
+    densityAction (Kernel.id : Kernel α α) ν f =ᵐ[ν] f := by
+  have h1 := bindDensity_id ν (f := fun y => ENNReal.ofReal (f y))
+    (ENNReal.measurable_ofReal.comp_aemeasurable hf)
+  have h2 := bindDensity_id ν (f := fun y => ENNReal.ofReal (-f y))
+    (ENNReal.measurable_ofReal.comp_aemeasurable hf.neg)
+  filter_upwards [h1, h2] with x hx1 hx2
+  simp only [densityAction]
+  rw [hx1, hx2]
+  rcases le_total 0 (f x) with h | h
+  · rw [ENNReal.toReal_ofReal h, ENNReal.ofReal_of_nonpos (by linarith), ENNReal.toReal_zero]
+    ring
+  · rw [ENNReal.ofReal_of_nonpos h, ENNReal.toReal_zero,
+      ENNReal.toReal_ofReal (by linarith : (0 : ℝ) ≤ -f x)]
+    ring
+
+/-- **`IsBoundedDensityAction` is satisfiable**, so `weaklyUniversal_of_kernel` is not vacuous:
+the identity kernel is Markov, every measure is invariant under it (`bind_id`), and its density
+action is the identity, of operator norm `1`. It is of course not ergodic and has no summable
+mixing; the point of this witness is only that the boundedness hypothesis excludes nothing by
+itself. -/
+theorem isBoundedDensityAction_id (ν : Measure α) [SigmaFinite ν] (p : ℝ≥0∞) :
+    IsBoundedDensityAction (Kernel.id : Kernel α α) ν p 1 where
+  nonneg := zero_le_one
+  memLp _ hf := hf.ae_eq (densityAction_id ν hf.aestronglyMeasurable.aemeasurable).symm
+  eLpNorm_le _ hf := by
+    rw [eLpNorm_congr_ae (densityAction_id ν hf.aestronglyMeasurable.aemeasurable)]
+    simp
 
 end GFNBounds.Core

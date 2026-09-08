@@ -18,7 +18,10 @@ HEAD is therefore itself the evidence that everything before it passed at that c
 gate they care about existed yet.
 
 Written by `make audit`. Read by the paper repository's `certificate-fresh` gate, which fails
-unless `commit` equals the submodule's pinned HEAD and `dirty` is false.
+unless `dirty` is false and the pinned commit's sources match the certified ones -- see
+`sources_unchanged_since`: a file that records its own commit cannot, since committing it changes
+the hash, so freshness is a diff over everything except this file rather than an equality of
+commit ids.
 """
 
 from __future__ import annotations
@@ -145,11 +148,31 @@ def build() -> dict:
     }
 
 
+def sources_unchanged_since(commit: str) -> bool:
+    """True when nothing but the certificate itself differs between `commit` and the worktree.
+
+    A file that records its own commit cannot: committing it changes the hash it would have to
+    record. So the certificate names the commit whose *sources* it describes, and freshness is
+    the question of whether those sources have moved since -- which is a diff, excluding the one
+    path that is allowed to differ.
+    """
+    self_path = str(OUT.relative_to(ROOT))
+    proc = subprocess.run(
+        ["git", "-C", str(ROOT), "diff", "--quiet", commit, "--", ".", f":(exclude){self_path}"],
+        capture_output=True,
+        text=True,
+    )
+    return proc.returncode == 0
+
+
 def verify(cert: dict) -> list[str]:
     """The checks that make a stale or mismatched certificate loud rather than quiet."""
     problems = []
-    if cert["commit"] != git("rev-parse", "HEAD"):
-        problems.append("certificate commit is not HEAD")
+    if cert["commit"] != git("rev-parse", "HEAD") and not sources_unchanged_since(cert["commit"]):
+        problems.append(
+            f"sources have changed since the certified commit {cert['commit_short']}; "
+            "re-run `make check`"
+        )
     if not cert["facts"]["present"]:
         problems.append("docs/lean-facts.json is absent: run `make facts` first")
     elif cert["facts"]["sha256"] != sha256_of(FACTS):

@@ -175,6 +175,8 @@ def link_names_in_type(type_str, names, mod_of):
     return pat.sub(repl, body)
 
 
+INSTANCE = re.compile(r"(^|\.)inst[A-Z0-9_]")
+
 DOC_CODE = re.compile(r"`([^`]+)`")
 # Non-greedy and *permitting* a star inside: these docstrings are mathematics, so a bold lead
 # like `**p_*(c) packaged.**` carries a multiplication star and `[^*]+` silently refuses it.
@@ -263,11 +265,17 @@ def declaration_html(name, d, ctx):
             ("Proof also uses", chip_list(sorted(work), mod_of)),
             ("Used by (statement)", chip_list(by_type.get(name, []), mod_of)),
             ("Used by (proof)", chip_list(by_value.get(name, []), mod_of))]
-    ext = externals.get(name) or []
+    # Instances are real dependencies and useless to a reader: `instOfNatNat` beside
+    # `Finset.Icc` buries the one name that says what the statement is about. Filtered here,
+    # at display time, so `docs/lean-externals.json` stays complete.
+    ext = [n for n in (externals.get(name) or []) if not INSTANCE.search(n)]
+    hidden = len(externals.get(name) or []) - len(ext)
     if ext:
-        rows.append(("Mathlib and core", "".join(
-            '<a class="ext" href="%s/find/#doc/%s" rel="noreferrer">%s</a>'
-            % (MATHLIB_DOCS, esc(n), esc(n)) for n in ext[:60])))
+        links = "".join('<a class="ext" href="%s/find/#doc/%s" rel="noreferrer">%s</a>'
+                        % (MATHLIB_DOCS, esc(n), esc(n)) for n in ext[:60])
+        if hidden:
+            links += '<span class="none">and %d instances</span>' % hidden
+        rows.append(("Mathlib and core", links))
     parts.append('<dl class="edges">%s</dl>' % "".join(
         "<dt>%s</dt><dd>%s</dd>" % (k, v) for k, v in rows))
 

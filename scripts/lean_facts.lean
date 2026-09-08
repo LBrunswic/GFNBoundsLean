@@ -55,6 +55,18 @@ def projUses (e : Expr) : Array String :=
 def externCount (e : Expr) : Nat :=
   (e.getUsedConstants.filter fun n => !isProject n).size
 
+/-- The Mathlib and core constants an expression mentions, sorted and deduplicated.
+
+Written to `docs/lean-externals.json`, never into `lean-facts.json`: that file is committed and
+is the input to six `scripts/appendix.py --lint` gates, and the proof-term externals alone run
+to ~94,000 occurrences. This is applied to the *statement* only, which is what a reader of a
+statement can use. -/
+def externUses (e : Expr) : Array String :=
+  let names := e.getUsedConstants.filter fun n => !isProject n && !isNoise n
+  let strs := names.map (·.toString)
+  (strs.qsort (· < ·)).foldl (init := #[]) fun acc s =>
+    if acc.back? == some s then acc else acc.push s
+
 /-- The proof term, or the body of a definition.
 
 `ConstantInfo.value?` withholds theorem values at this Lean version — it answers `none` for a
@@ -74,6 +86,7 @@ open LeanFacts in
   let env ← getEnv
   let std : List Name := [``propext, ``Classical.choice, ``Quot.sound]
   let mut entries : Array (String × Json) := #[]
+  let mut externs : Array (String × Json) := #[]
   let mut skipped := 0
   for idx in [0:env.header.moduleNames.size] do
     let modName := env.header.moduleNames[idx]!
@@ -108,8 +121,14 @@ open LeanFacts in
         ("uses_external", Json.num extCount),
         ("axioms", Json.arr ((axs.map (·.toString)).map Json.str)),
         ("nonstandard_axioms", Json.arr ((extra.map (·.toString)).map Json.str))])
+      externs := externs.push (n.toString,
+        Json.arr ((externUses ci.type).map Json.str))
   let out := Json.mkObj [
     ("declarations", Json.mkObj entries.toList)]
   IO.FS.writeFile "docs/lean-facts.json" (out.pretty ++ "\n")
+  -- A separate, git-ignored file on purpose: lean-facts.json stays byte-identical, so
+  -- nothing that lints against it can be disturbed by this.
+  IO.FS.writeFile "docs/lean-externals.json"
+    ((Json.mkObj [("declarations", Json.mkObj externs.toList)]).pretty ++ "\n")
   IO.println s!"lean_facts: {entries.size} declarations written to docs/lean-facts.json \
     ({skipped} internal names skipped)"

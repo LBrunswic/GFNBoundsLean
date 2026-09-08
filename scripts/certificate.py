@@ -113,7 +113,15 @@ def summarize_facts() -> dict:
 
 
 def build() -> dict:
-    dirty_files = [ln for ln in git("status", "--porcelain").splitlines() if ln.strip()]
+    # The certificate describes the state of the *sources*. Its own file is an output, so it is
+    # excluded from the dirtiness it reports: otherwise writing it makes the tree dirty, and it
+    # can never truthfully record a clean one.
+    self_path = str(OUT.relative_to(ROOT))
+    dirty_files = [
+        ln
+        for ln in git("status", "--porcelain").splitlines()
+        if ln.strip() and ln[3:].strip() != self_path
+    ]
     sorries = json.loads(SORRY.read_text()) if SORRY.exists() else []
 
     return {

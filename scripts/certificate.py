@@ -65,6 +65,18 @@ def git(*args: str) -> str:
     ).stdout.strip()
 
 
+def source_commit() -> str:
+    """The last commit that touched anything other than the certificate itself.
+
+    Recording HEAD makes the certificate a moving target: committing it advances HEAD, so the
+    value it holds is stale the instant it is stored, and every push regenerates it forever.
+    Recording the last *source* commit is a fixed point -- committing the certificate does not
+    change it -- so the file settles and a clean tree stays clean.
+    """
+    self_path = str(OUT.relative_to(ROOT))
+    return git("log", "-1", "--format=%H", "--", ".", f":(exclude){self_path}")
+
+
 def sha256_of(path: Path) -> str | None:
     if not path.exists():
         return None
@@ -130,8 +142,9 @@ def build() -> dict:
     return {
         "schema": 1,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "commit": git("rev-parse", "HEAD"),
-        "commit_short": git("rev-parse", "--short", "HEAD"),
+        "commit": source_commit(),
+        "commit_short": source_commit()[:7],
+        "head": git("rev-parse", "HEAD"),
         "branch": git("rev-parse", "--abbrev-ref", "HEAD"),
         "dirty": bool(dirty_files),
         "dirty_files": [ln[3:] for ln in dirty_files],
@@ -168,7 +181,7 @@ def sources_unchanged_since(commit: str) -> bool:
 def verify(cert: dict) -> list[str]:
     """The checks that make a stale or mismatched certificate loud rather than quiet."""
     problems = []
-    if cert["commit"] != git("rev-parse", "HEAD") and not sources_unchanged_since(cert["commit"]):
+    if cert["commit"] != source_commit() or not sources_unchanged_since(cert["commit"]):
         problems.append(
             f"sources have changed since the certified commit {cert['commit_short']}; "
             "re-run `make check`"

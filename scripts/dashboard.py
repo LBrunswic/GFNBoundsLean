@@ -364,14 +364,15 @@ APPENDIX_TITLE = {
 
 LINKS = [
     ("blueprint/index.html", "The blueprint",
-     "leanblueprint\u2019s own site: every result stated, sketched, and linked to the Lean "
-     "declaration that certifies it."),
-    ("blueprint/dep_graph_document.html", "Dependency graph",
-     "The blueprint\u2019s colour-coded graph \u2014 what is proved, what is only stated, "
-     "and what each result rests on."),
-    ("lean-graph.svg", "Verified dependency graph",
-     "Drawn from the compiled proof terms, not from the prose: what each proof actually "
-     "invokes, via <code>Expr.getUsedConstants</code>."),
+     "leanblueprint\u2019s own site: every result stated in English and sketched, with a "
+     "\u2713 where the Lean proof is complete and the declaration named beside it. The "
+     "declaration names are not yet links \u2014 there is no doc-gen4 site to point them at."),
+    # No card for blueprint/dep_graph_document.html: `web.tex` omits `\\dep_graph` on purpose
+    # (the fifteen `main_*` results are siblings, and content.tex carries no `\\uses`), so
+    # plasTeX emits that page with zero nodes and zero edges. The graph below is the real one.
+    ("lean-graph.svg", "Dependency graph",
+     "Drawn from the compiled proof terms rather than from the prose: what each proof actually "
+     "invokes, via <code>Expr.getUsedConstants</code>. 44 nodes; a picture, not a navigable map."),
     ("coverage.html", "Coverage",
      "All chartered statements with status, bucket and the Lean files that carry them. "
      "The table behind the bars above."),
@@ -382,7 +383,9 @@ LINKS = [
      "One line per file, the layer order, and the loose ends \u2014 what to read before "
      "touching anything."),
     ("repo-index.html", "Declaration index",
-     "Every declaration in the library with its statement. Large; use the browser\u2019s find."),
+     "<b>The statement inspector.</b> Every declaration with its full pretty-printed Lean type "
+     "\u2014 binders, hypotheses and conclusion as the compiler sees them. Large; use the "
+     "browser\u2019s find."),
     ("readme.html", "README",
      "What the project is, where it stands, and the three obstructions it is blocked on."),
     ("print.pdf", "The blueprint, as a paper",

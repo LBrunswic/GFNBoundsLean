@@ -30,7 +30,6 @@ import hashlib
 import json
 import subprocess
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -141,7 +140,10 @@ def build() -> dict:
 
     return {
         "schema": 1,
-        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        # The source commit's own date, not the wall clock: a timestamp that moves on every run
+        # makes the file differ from itself and the tree never settles. This is also the more
+        # honest value -- it dates the sources being certified, not the moment of certifying.
+        "source_date": git("log", "-1", "--format=%cI", source_commit()),
         "commit": source_commit(),
         "commit_short": source_commit()[:7],
         "head": git("rev-parse", "HEAD"),

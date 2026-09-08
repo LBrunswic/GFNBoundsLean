@@ -146,7 +146,6 @@ def build() -> dict:
         "source_date": git("log", "-1", "--format=%cI", source_commit()),
         "commit": source_commit(),
         "commit_short": source_commit()[:7],
-        "head": git("rev-parse", "HEAD"),
         "branch": git("rev-parse", "--abbrev-ref", "HEAD"),
         "dirty": bool(dirty_files),
         "dirty_files": [ln[3:] for ln in dirty_files],

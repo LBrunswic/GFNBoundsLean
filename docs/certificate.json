@@ -3,10 +3,12 @@
   "source_date": "2026-09-08T13:16:39+01:00",
   "commit": "e2e9cee071ef1b8f385e8331e803d4bb8f1fcfd1",
   "commit_short": "e2e9cee",
-  "head": "e2e9cee071ef1b8f385e8331e803d4bb8f1fcfd1",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "ocs/certificate.json",
+    "scripts/certificate.py"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",

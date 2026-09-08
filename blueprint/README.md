@@ -32,7 +32,8 @@ Needs a current `lake build`, `pip install leanblueprint`, graphviz, and a TeX L
 ## The three stages
 
 **1. Extract.** `scripts/lean_facts.lean`, run through `lake env lean`, walks the compiled
-environment and writes `docs/lean-facts.json`: for each of 1109 declarations its kind, module,
+environment and writes `docs/lean-facts.json`: for each declaration of the library (2041 at the
+time of writing) its kind, module,
 line, pretty-printed type, docstring, axioms, and the project constants its **proof term**
 invokes, from `Expr.getUsedConstants`.
 

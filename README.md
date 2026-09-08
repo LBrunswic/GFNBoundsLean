@@ -197,8 +197,12 @@ those stay with the master. They draw on two generated references and one accumu
 
 - [`docs/REPO-MAP.md`](docs/REPO-MAP.md) — orientation: loose ends, layer order, the
   general-purpose shelf, one line per file. Small enough to read whole.
-- [`docs/REPO-INDEX.md`](docs/REPO-INDEX.md) — every declaration with its statement, plus the name
-  index. Grepped, not read.
+- [`docs/REPO-INDEX.md`](docs/REPO-INDEX.md) — every declaration as it is *written*, parsed from
+  the sources, plus the name index. Grepped, not read.
+- **`make browser`** — the statement browser, `scripts/lean_browser.py`, built from the compiled
+  environment rather than the source text: the *elaborated* type, the docstring, the axioms, and
+  both directions of the dependency edges. Where it and `REPO-INDEX.md` disagree, it is right.
+  Served beside the blueprint by `make deploy`, and what the blueprint's Lean links point at.
 - [`kb/`](kb/README.md) — the knowledge base: patterns, pitfalls, obstructions and house rules
   learned while proving here. Each session reads it before starting and adds to it when it learns
   something that would have saved it time. `python3 scripts/kb.py search <terms>`.

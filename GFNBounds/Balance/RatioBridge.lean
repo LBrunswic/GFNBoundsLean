@@ -64,7 +64,7 @@ the density deviation to the ratio.
 * **This is one step of `theo:training_speed_full` and the assembly is another file's.** The
   theorem has a global phase (`MassAscent.global_lojasiewicz_flow'`), an entry time
   (`MassAscent.entry_time`), a rescaling homogeneity (`MassAscent.flow_rescale`), a local
-  exponential phase (`theo:local_convergence_full`, bucket `D`, whose Step 4 is unwritten) and the
+  exponential phase (`theo:local_convergence_full`, now `closed`; its Step 4 is `sup_global`) and the
   crossover time `T₀` of `proofs.tex:929`. **None of those is here.** What is here is the
   conversion between the two coordinates the two phases are written in. `theo:training_speed_full`
   must not be recorded as closed, or as partial in any sense wider than this, on the strength of
@@ -94,8 +94,7 @@ the density deviation to the ratio.
 * **No flow, no time.** Every statement is about a single density `u`. The two facts the paper
   gets from the flow — the invariant sphere and the nondecreasing mass — are hypotheses
   `hu0` and `hmass`, each with a named inhabitant in `MassAscent.lean`.
-* **`sorry`-free.** Nothing below is open. The file is in the scaffold because graduation is the
-  master session's decision.
+* **`sorry`-free.** Nothing below is open. Graduated into the strict library on 2026-09-12.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

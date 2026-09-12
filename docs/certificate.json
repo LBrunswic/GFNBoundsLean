@@ -4,8 +4,33 @@
   "commit": "7ad3c3b4e6fe87169264b198fc2ec11fb208ad2b",
   "commit_short": "7ad3c3b",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "CLAUDE.md",
+    "GFNBounds.lean",
+    "GFNBounds/Balance/Discrete.lean",
+    "GFNBounds/Balance/Expansion.lean",
+    "GFNBounds/Balance/Flow.lean",
+    "GFNBounds/Balance/GradientFormulas.lean",
+    "GFNBounds/Balance/L2Toolkit.lean",
+    "GFNBounds/Balance/Lift.lean",
+    "GFNBounds/Balance/LocalConvergence.lean",
+    "GFNBounds/Balance/LocalEnergy.lean",
+    "GFNBounds/Balance/MassAscent.lean",
+    "GFNBounds/Balance/RatioBridge.lean",
+    "GFNBounds/Balance/WeightedL2.lean",
+    "GFNBounds/Graph/CycleDivergence.lean",
+    "GFNBounds/Silva/Basic.lean",
+    "GFNBounds/Silva/Explicit.lean",
+    "GFNBounds/Silva/NoUniform.lean",
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json",
+    "paper-map.json",
+    "GFNBounds/Balance/TrainingSpeed.lean"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -38,15 +63,15 @@
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 2427,
+    "declarations": 2456,
     "by_namespace": {
       "GFNBounds.Doubling": 1109,
-      "GFNBounds.Balance": 566,
-      "GFNBounds.Graph": 443,
+      "GFNBounds.Balance": 593,
+      "GFNBounds.Graph": 445,
       "GFNBounds.Core": 258,
       "GFNBounds.Silva": 51
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "ebcdfb82225b470b86afd55c7a9b11f6cfa3c5dce1dadd5778ff5d5beb055b3d"
+    "sha256": "ba19df31333cd80f604d0ab45f5c95ca5ee0c4c1e82c3be011407acecba13c4c"
   }
 }

@@ -58,7 +58,7 @@ and the bound is monotone in `w`, so the two are the same content. Note that `w_
 `p_{E,T}` to have full support, exactly as `rem:silva_hypotheses`(1) says.
 
 **The vocabulary is shared.** `tv`, `chiSq`, `unif`, `logRatio`, `residual`, `MprimeLe`,
-`wSupport`, `wMin` and the identities about them alone are in `GFNBoundsScaffold.Silva.Basic`,
+`wSupport`, `wMin` and the identities about them alone are in `GFNBounds.Silva.Basic`,
 shared with the sibling file for `prop:silva_explicit`. The residual was called `energy` here
 before that merge, with its target argument last; it is `residual pET π pB pF` now — the same
 function of the same four arguments, in the order they appear in the paper's display at
@@ -110,7 +110,7 @@ open Finset Filter Topology
 
 `tv`, `chiSq`, `unif`, `logRatio`, `residual` and `MprimeLe` — with `chiSq_self`, and with
 `wSupport`, `wMin`, `wMin_le`, `wMin_pos` for the paper's `w_min` — are in
-`GFNBoundsScaffold.Silva.Basic`, shared with the sibling file for `prop:silva_explicit`. -/
+`GFNBounds.Silva.Basic`, shared with the sibling file for `prop:silva_explicit`. -/
 
 /-! ## Item (i): a per-graph model-free bound always exists -/
 

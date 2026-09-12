@@ -87,7 +87,8 @@ and is not done here.
 
 * **Finite state space**, as everywhere in `GFNBounds.Balance`: `∫·dλ` is `∑ x, lam x * ·`, a
   measure is carried by a density, and `⟪·∣·⟫_λ`, `‖·‖_λ`, `Π` are `Graph.ipL2`, `Graph.nrmL2`,
-  `Graph.meanL2`. `paper-map.json` records `theo:local_convergence_full` as bucket `D`; nothing
+  `Graph.meanL2`. `paper-map.json` recorded `theo:local_convergence_full` as bucket `D` when this file was written;
+  it is `closed`/`B` now, this file and its sibling being why. Nothing
   here moves it.
 * **The coercivity `‖f^⊥‖ ≤ B̂‖Af‖` is a hypothesis, not `Core.Mixing`.** The paper reaches it
   from summable `L²`-mixing through `lem:sigma_mixing`, which is closed in
@@ -139,8 +140,7 @@ and is not done here.
   `hasDerivAt_mean`, `hasDerivAt_perp_sq`, `perp_decay_on`, `energy_integral_on`,
   `energy_integral_Ioi`, `abs_deriv_mean_le`, `mean_drift_on`, `mean_cauchy_on`,
   `mean_cauchy_on_sharp` and `twoState_energy_check` returns
-  `[propext, Classical.choice, Quot.sound]`. This file is in the scaffold because graduation is
-  the master session's decision, not because anything in it is open.
+  `[propext, Classical.choice, Quot.sound]`. Graduated into the strict library on 2026-09-12.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

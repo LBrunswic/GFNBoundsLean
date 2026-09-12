@@ -63,8 +63,8 @@ the `Prod`/curried bridge for `𝒮²` — and each is isolated in its own decla
 ## SCOPE (disclosed)
 
 * **⚠ Finite state space**, inherited from `theo:first_variation_full` and not weakened here.
-  Both corollaries are corollaries *of a finite-space theorem*, so `paper-map.json`'s bucket `D`
-  for the general statements stands: nothing below builds a Radon–Nikodym calculus.
+  Both corollaries are corollaries *of a finite-space theorem*, so the deferral of the *general*
+  measured-space statements stands: nothing below builds a Radon–Nikodym calculus.
 * **⚠ A directional derivative, not a Fréchet derivative**, inherited verbatim from
   `FirstVariation.lean`'s SCOPE. What is proved is
   `HasDerivAt (fun t => 𝓛(μ + tδ)) ⟨Φ ∣ δ⟩ 0` for every direction `δ`.

@@ -168,8 +168,7 @@ conditional on an unstated identity.
   conjuncts at once needs `dim E ≥ 2` with a non-trivial orthogonal projection, and is not done.
 * **`sorry`-free.** `#print axioms` on `hasDerivAt_loss_flow`, `stable_frozen_decay`,
   `inner_ge_of_mixing`, `lojasiewicz_integrated`, `global_lojasiewicz_flow` and both numerical
-  checks returns `[propext, Classical.choice, Quot.sound]`. This file is in the scaffold because
-  graduation is the master session's decision, not because anything in it is open.
+  checks returns `[propext, Classical.choice, Quot.sound]`. Graduated into the strict library on 2026-09-12.
 
 ## Hypothesis checklist — `theo:first_variation_full`, along a trajectory
 

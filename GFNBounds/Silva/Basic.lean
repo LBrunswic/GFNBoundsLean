@@ -6,7 +6,7 @@ import Mathlib
 The finite-sum quantities that both propositions of the Silva comparison
 (`silva_comparison.tex`) are stated in, and the identities that are about those quantities
 alone. This module certifies no paper label. It exists so that
-`GFNBoundsScaffold.Silva.Explicit` and `GFNBoundsScaffold.Silva.NoUniform` — which were written
+`GFNBounds.Silva.Explicit` and `GFNBounds.Silva.NoUniform` — which were written
 independently, each defining this vocabulary locally in the same namespace — can be imported
 together.
 

@@ -14,7 +14,8 @@ machine-reads. **This label has no `paper-map.json` row and none can be added he
 invariant *(c)* does not fire on it and citing it is safe — `GFNBounds/Graph/CycleExample.lean:24`
 already does. Widening the charter is the author's decision, not this file's; the paper-side
 `FORMALIZATION-LEDGER.md` is where `theo:no_bound_divergence` should record that it is
-formalized, in the scaffold, under this module.)
+formalized, in the strict library, under this module. The exposure that follows from having
+no map row -- no `block_sha256`, hence no stale-digest detection -- is recorded in `CLAUDE.md`.)
 
 > (`theo:no_bound_divergence`) Let `𝓛(F)` be a divergence-based FM-loss on a directed graph
 > `𝒢`, depending on a target `target` and on a training distribution `ν_train`; the supremum

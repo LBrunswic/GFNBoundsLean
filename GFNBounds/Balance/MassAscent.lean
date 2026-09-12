@@ -47,7 +47,7 @@ The second half of the file serves `theo:training_speed_full`, which this file d
 certify: the crossover time `T₀ = 𝓛(μ₀)/c(δ₀)²` of `proofs.tex:928` is `entry_time` evaluated at
 the paper's `δ₀`, and the homogeneity that turns the entry point's rescaling into a time change
 is `lossGrad_smul` and `flow_rescale`. Assembling those into the theorem needs
-`theo:local_convergence_full`, which is bucket `D` and unformalized.
+`theo:local_convergence_full`, which is `closed` since 2026-09-12.
 
 ## What is proved
 
@@ -104,7 +104,7 @@ is `lossGrad_smul` and `flow_rescale`. Assembling those into the theorem needs
   `𝓛(μ₀)/c(δ)²` all ratios are within `δ`", which reads as a statement about every later time;
   the proof gives exactly one time in `[0, T₀]` at which it holds, because the argument is a
   contradiction against the loss budget and says nothing about what happens afterwards. Staying
-  inside the band is `theo:local_convergence_full`'s job and is bucket `D`. The `∃ t₁ ∈ [0,T₀]`
+  inside the band is `theo:local_convergence_full`'s job, and it is `closed`. The `∃ t₁ ∈ [0,T₀]`
   form is what the argument proves and what `theo:training_speed_full` consumes as the crossover.
   What the budget really bounds is the **total time spent off the band**, `T₀` being the loss
   divided by the burn rate `c(δ)²`; the flow may in principle leave the band and return, and only
@@ -120,8 +120,7 @@ is `lossGrad_smul` and `flow_rescale`. Assembling those into the theorem needs
   `Flow.lean` quantifies over **all** `t`, negative ones included, where antitonicity gives the
   opposite inequality; that is why this file re-derives the statement rather than applying
   `global_lojasiewicz_flow`.
-* **`sorry`-free.** Nothing below is open. The file is in the scaffold because graduation is the
-  master session's decision.
+* **`sorry`-free.** Nothing below is open. Graduated into the strict library on 2026-09-12.
 
 ## Hypothesis checklist — `prop:no_distant_equilibrium`*(2)*, the Lyapunov half
 

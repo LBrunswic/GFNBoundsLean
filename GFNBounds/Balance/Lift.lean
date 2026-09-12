@@ -114,7 +114,7 @@ identification of a measure with its `λ₂`-density is carried by hand, `f ↦ 
   the same layer `lift_mixing_opNorm_le` declines to build. `inner_funActEdge` is the one place
   an adjoint is actually exhibited, and it is exhibited on `𝒮²`, not on `𝒮`.
 * **`cor:db_gradient` (`proofs.tex:537–548`) is not attempted.** It is a specialization of
-  `theo:first_variation_full`, bucket `D` and unformalized; the same boundary
+  `theo:first_variation_full`, unformalized when this file was written and `B` now; the same boundary
   `GFNBounds/Balance/MassIdentity.lean` records.
 * **`λ > 0` is used only where it is needed, and where it is not needed it is not assumed.** The
   invariance, duality, detailed-balance and mixing results ask nothing of `λ` beyond

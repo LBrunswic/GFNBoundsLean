@@ -76,7 +76,7 @@ with `M` alone the proof of `logLipschitz` breaks at exactly the point where `b 
   and could not be without the graph.
 * **The vocabulary is shared.** `tv`, `chiSq`, `unif`, `residual` and the identities about
   them alone (`chiSq_nonneg`, `sum_unif`, `sum_sq_div_eq_one_add_chiSq`) live in
-  `GFNBoundsScaffold.Silva.Basic`, shared with the sibling file for `prop:silva_no_uniform`;
+  `GFNBounds.Silva.Basic`, shared with the sibling file for `prop:silva_no_uniform`;
   this file defines only what its own three steps need. Total variation was called `TV` here
   before that merge and is `tv` now — the same function, and the statements below are otherwise
   unchanged.
@@ -108,7 +108,7 @@ namespace GFNBounds.Silva
 
 The vocabulary — `tv`, `chiSq`, `unif`, `residual` — and Step 1's identity
 `sum_sq_div_eq_one_add_chiSq` (`∑ q²/p = 1 + χ²(q‖p)`, where the normalizations are consumed)
-are in `GFNBoundsScaffold.Silva.Basic`, shared with the sibling file for
+are in `GFNBounds.Silva.Basic`, shared with the sibling file for
 `prop:silva_no_uniform`. What is left here is Steps 2 and 3 and the proposition itself. -/
 
 /-! ## Step 2: Jensen over backward trajectories -/

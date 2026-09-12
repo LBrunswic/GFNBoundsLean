@@ -24,6 +24,17 @@ and cross-checks against this map (`formalization_ledger.py check`). Adding `uni
 here would widen the charter past what the author asked for, so the split is deliberate: the map
 is the appendices, the ledger is the paper.
 
+**The sharpest instance, recorded 2026-09-12.** `theo:no_bound_divergence` — Theorem 5 — is
+**closed** in `GFNBounds/Graph/CycleDivergence.lean`, and it is the one closed certificate in
+this repository with *no* coupling to the paper text at all. Its `\label` is in
+`cv_divergence.tex`, which is not in `SOURCES`, so it has no `paper-map.json` row, hence no
+`block_sha256`, hence **no stale-digest detection**: if the author reworded the theorem,
+`make check` would stay green and the certificate would silently stop matching. The file
+discloses this itself, so nothing is laundered, and the ledger tracks the label on the paper
+side. But the exposure is real and it is not the same as `def:universality`'s, which at least
+has a digest through its `_full` twin. Closing it means adding `cv_divergence.tex` to `SOURCES`
+and `--init`-ing the rows — **a charter decision, and the author's**, not a maintenance task.
+
 ## Orientation, in reading order
 
 | | |

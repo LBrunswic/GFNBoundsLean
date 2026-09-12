@@ -134,8 +134,7 @@ printed factor is the one the energy method does *not* deliver.
   `mean_tendsto`, `local_convergence_full`, `nrmL2_lossGrad_le`, `Lgd_le`, `gamma_rho_le`,
   `gd_energy_step`, `gd_contract_step`, `gd_drift_step`, `local_convergence_gd`,
   `tendsto_atTop_of_deriv_dominated` and `twoState_local_convergence_check` returns
-  `[propext, Classical.choice, Quot.sound]`. This file is in the scaffold because graduation is
-  the master session's decision, not because anything in it is open.
+  `[propext, Classical.choice, Quot.sound]`. Graduated into the strict library on 2026-09-12.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

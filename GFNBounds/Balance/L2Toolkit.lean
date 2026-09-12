@@ -48,8 +48,8 @@ setting the recall is read in — `theo:db_stable_frozen_full`'s, `proofs.tex:59
 
 * **One line of one proof.** The theorem `theo:local_convergence_full` is **not** proved here, and
   nothing below should be read as progress on its statement. Its five steps need the first
-  variation (`theo:first_variation_full`, bucket `D`), the linearization
-  (`theo:gd_diffusion_full`, bucket `D`) and an ODE layer, none of which this library has. What is
+  variation (`theo:first_variation_full`), the linearization (`theo:gd_diffusion_full`) and an ODE
+  layer. All three exist now, on a finite state space; when this file was written none did. What is
   certified is that the four facts the proof *recalls* are true of `A = P − I` on a finite state
   space: `A` kills the mean, `P` and `P†` are `L²(λ)`-contractions, and `A`, `A†` have norm at
   most `2`.

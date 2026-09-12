@@ -76,7 +76,9 @@ discrete sentence and is carried here explicitly, as `hHsa`.
 
 * **The linearization is a hypothesis, not a derivation**, exactly as in
   `GFNBounds/Balance/Flow.lean`. `H := g''(1)A^†M_wA` comes from `theo:gd_diffusion_full`, which
-  is bucket `D` and is not formalized; so `H` is abstract, `ϱ` is any constant satisfying
+  was bucket `D` and unformalized when this file was written -- it is `B` and formalized now, in
+  `GFNBounds/Balance/Expansion.lean`, though its *flow* sentence is still deliberately not stated,
+  which is the real reason `H` stays abstract here; so `H` is abstract, `ϱ` is any constant satisfying
   `hcoer`, and `Λ` is any constant satisfying `hup`. Identifying them with
   `g''(1)w_min/B̂²` and `4g''(1)‖w‖_{L^∞}` is a separate job and is **not** done here. The
   bridge from `lem:sigma_mixing` to `hcoer` already exists and is reused, not reproved:
@@ -100,9 +102,9 @@ discrete sentence and is carried here explicitly, as `hHsa`.
   not silently taken.
 * **`scalar_discrete_check` runs at `Π = 0`**, where the conserved-component conjunct says
   nothing — the same partiality `Flow.lean` discloses for `scalar_decay_check`. Exercising both
-  conjuncts at once needs `dim E ≥ 2` with a non-trivial projection, and is not done.
-* **`sorry`-free.** This file is in the scaffold because graduation is the master session's
-  decision, not because anything in it is open.
+  conjuncts at once needs `dim E ≥ 2` with a non-trivial projection, and
+  `GFNBounds/Balance/WeightedL2.lean`'s `twoState_contraction_check` does it, at `Πh_k = 1`.
+* **`sorry`-free.** Graduated into the strict library on 2026-09-12.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

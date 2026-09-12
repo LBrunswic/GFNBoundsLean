@@ -101,7 +101,9 @@ dimension.
   scalar. `Π` is self-adjoint without it.
 * **The descent recursion, and the flow, are still hypothesised.** `H` is no longer abstract,
   but `hstep` and `hflow` assert that a *given* sequence or curve obeys the linearized
-  dynamics. Producing them from `𝓛_{g,ν}` is `theo:gd_diffusion_full`, bucket `D`. So one of
+  dynamics. Producing them from `𝓛_{g,ν}` is `theo:gd_diffusion_full`'s **flow sentence**, which
+  `GFNBounds/Balance/Expansion.lean` deliberately does not state -- the rest of that label is
+  formalized and `B`. So one of
   the two disclosures `Discrete.lean` and `Flow.lean` carry — "`H` is abstract" — is closed
   here, and the other — "the recursion is hypothesised, not produced" — is not.
 * **The nonlinear upgrade is untouched.** `theo:local_convergence_full` needs Steps 2–5 and the
@@ -121,9 +123,7 @@ dimension.
   all the argument needs and is strictly weaker than what the paper's sentence asserts.
 * **`sorry`-free and axiom-clean.** `#print axioms` on `stable_frozen_discrete_finite`,
   `stable_frozen_discrete_mixing`, `stable_frozen_decay_finite`, `mixing_coercivity_finite` and
-  `twoState_contraction_check` returns `[propext, Classical.choice, Quot.sound]`. This file is
-  in the scaffold because graduation is the master session's decision, not because anything in
-  it is open.
+  `twoState_contraction_check` returns `[propext, Classical.choice, Quot.sound]`. Graduated into the strict library on 2026-09-12.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

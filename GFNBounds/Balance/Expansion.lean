@@ -73,7 +73,7 @@ machine-read; a label mentioned only in prose is not a claim to certify it.)
 | paper hypothesis | here |
 |---|---|
 | the setting of `theo:db_stable_frozen_full`, hence of `theo:gd_diffusion_full` | ⚠ as in the table above |
-| `g` is `C³` on `[1−a,1+a]`, `a ∈ (0,1)`, `M₃ := sup∣g'''∣` | ⚠ **weakened to the consequence used**: `htaylor : ∀ y, |y−1| ≤ a → |g'(y) − g''(1)(y−1)| ≤ (M₃/2)(y−1)²`, with `0 ≤ a` in place of `a ∈ (0,1)` and `0 ≤ M₃`. Taylor–Lagrange gives `htaylor` from `C³`; nothing below needs `g'''` to exist. This is a *weaker hypothesis*, hence a *stronger theorem*, and it is why `⚠ weakened` and not `⚠ strengthened`. It is not vacuous: `GFNBoundsScaffold.Balance.LogSqTaylor.logSqDeriv_taylor` is exactly `htaylor` for the paper's practical generator `g = (log x)²`, at `g''(1) = 2`, `M₃ = 80`, `a = 1/2` |
+| `g` is `C³` on `[1−a,1+a]`, `a ∈ (0,1)`, `M₃ := sup∣g'''∣` | ⚠ **weakened to the consequence used**: `htaylor : ∀ y, |y−1| ≤ a → |g'(y) − g''(1)(y−1)| ≤ (M₃/2)(y−1)²`, with `0 ≤ a` in place of `a ∈ (0,1)` and `0 ≤ M₃`. Taylor–Lagrange gives `htaylor` from `C³`; nothing below needs `g'''` to exist. This is a *weaker hypothesis*, hence a *stronger theorem*, and it is why `⚠ weakened` and not `⚠ strengthened`. It is not vacuous: `GFNBounds.Balance.logSqDeriv_taylor` is exactly `htaylor` for the paper's practical generator `g = (log x)²`, at `g''(1) = 2`, `M₃ = 80`, `a = 1/2` |
 | `‖·‖_{L^∞(λ)} ≤ C_∞‖·‖_{L²(λ)}` | ✗ not needed by Step 1 — it is Step 4's. `L2Toolkit.abs_le_nrmL2_div_sqrt` carries it |
 | `‖h‖_{L^∞} ≤ ε ≤ min(a,1)/4` | ✓ `hh`, `heps` |
 | `w ≥ w_min > 0` | ✗ not needed by Step 1; carried only by `linHess_coercive`, which is Step 2's |
@@ -89,7 +89,8 @@ machine-read; a label mentioned only in prose is not a claim to certify it.)
 
 * **Finite state space.** `∫ · dλ` is `∑ x, lam x * ·`, a measure is carried by a density, and
   `⟪·∣·⟫_λ`, `‖·‖_λ`, `Π` are `Graph.ipL2`, `Graph.nrmL2`, `Graph.meanL2`. `paper-map.json`
-  records both labels as bucket `D`; nothing here moves them off it.
+  recorded both labels as bucket `D` when this file was written; both are `B` now, and
+  `theo:local_convergence_full` is `closed`.
 * **The `C²` statement of `theo:gd_diffusion_full` is *not* what is proved, and the difference
   is a real tension between two of this library's rules.** Rule 1 ("never state more than the
   paper proves") points at the paper's own hypothesis, `g` merely `C²`, under which `c(ε) → 0`
@@ -115,7 +116,7 @@ machine-read; a label mentioned only in prose is not a claim to certify it.)
 * **The weighted-`L²` bridge to a Mathlib `InnerProductSpace` does not exist in this library,
   and building it is out of scope.** The five facts `linHess_symm`, `linHess_nonneg`,
   `meanL2_linHess`, `linHess_upper` and `linHess_coercive` are the finite-state faces of exactly
-  the hypotheses `GFNBoundsScaffold.Balance.Discrete.stable_frozen_discrete` takes of an
+  the hypotheses `GFNBounds.Balance.stable_frozen_discrete` takes of an
   abstract `H : E →L[ℝ] E` on an inner-product space (`hHsa`, `hPiH`, `hcoer`, `hup`). They
   **cannot be plugged into it**: `(V → ℝ, ⟪·∣·⟫_λ)` is not an `InnerProductSpace ℝ` instance
   here, `linHess` is not a `ContinuousLinearMap`, and `Graph.meanL2` is a scalar rather than a
@@ -680,7 +681,7 @@ theorem linHess_eigen {K : V → V → ℝ} {lam : V → ℝ}
 /-! ### The five facts about `H` that the energy estimate uses
 
 `proofs.tex:605–609` and `proofs.tex:634`. These are the finite-state faces of the hypotheses
-`GFNBoundsScaffold.Balance.Discrete.stable_frozen_discrete` takes of an abstract operator; see
+`GFNBounds.Balance.stable_frozen_discrete` takes of an abstract operator; see
 the module SCOPE for why they cannot be plugged into it. -/
 
 /-- **`⟪a ∣ Hb⟫_λ = g''(1)⟪w·Ab ∣ Aa⟫_λ`** — the one identity the other four read off, and the

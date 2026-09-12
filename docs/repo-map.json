@@ -5542,7 +5542,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {

@@ -81,4 +81,10 @@ import GFNBounds.Graph.CycleExample
 import GFNBounds.Balance.FirstVariation
 import GFNBounds.Balance.GradientFormulas
 import GFNBounds.Balance.Flow
+import GFNBounds.Balance.L2Toolkit
+import GFNBounds.Balance.LogSqTaylor
+import GFNBounds.Balance.Discrete
+import GFNBounds.Balance.MassAscent
+import GFNBounds.Balance.Expansion
+import GFNBounds.Graph.CycleDivergence
 import GFNBounds.Audit

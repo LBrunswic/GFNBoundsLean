@@ -1444,11 +1444,23 @@
         579
       ],
       "block_sha256": "92c94f97016bbf90f719efb18a8dced3b928d24098b95f0b57065c79afe19ee9",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "D",
-      "scope_notes": "Linearization of a gradient flow with an L^2 error term, and its identification with the square of the backward heat flow. Needs the first-variation layer AND an ODE/semigroup layer."
+      "lean_files": [
+        "GFNBounds/Balance/Expansion.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.linHess",
+        "GFNBounds.Balance.gd_diffusion_display",
+        "GFNBounds.Balance.linHess_reversible",
+        "GFNBounds.Balance.linHess_eigen",
+        "GFNBounds.Balance.linHess_symm",
+        "GFNBounds.Balance.meanL2_linHess",
+        "GFNBounds.Balance.linHess_upper",
+        "GFNBounds.Balance.linHess_coercive",
+        "GFNBounds.Balance.twoState_expansion_check"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-12, sorry-free, axiom-swept, graduated -- the first Lean this statement has had. THE EXPANSION IS CLOSED WITH AN EXPLICIT c(eps) = 2 K eps, K = 2 C_4 + C_5 the paper's own constants (gd_diffusion_display, on Expansion.lean's gradient_expansion). IT IS PROVED UNDER A C^3-TYPE TAYLOR BOUND ON g', NOT UNDER THE PAPER'S C^2 HYPOTHESIS, whose c(eps) -> 0 is non-effective and is NOT stated here; neither statement implies the other. That is a disclosed collision between rule 1 (never state more than the paper proves) and rule 3 (constants are explicit formulas), resolved toward the shape theo:local_convergence_full Step 1 actually consumes, which is the only consumer either display has. The weak form is reachable -- replace the Taylor remainder by the modulus of continuity of g' at 1 -- and is left unstated deliberately. THE FLOW SENTENCE IS NOT STATED: linHess is exhibited as an operator and the expansion proved, but 'the linearization of the gradient flow is hdot = -H h' is not made, and no ODE appears. THE 'IN PARTICULAR' CLAUSE is closed as two OPERATOR identities under detailed balance (Core.IsReversalPair lam K K): linHess = g''(1) (I-P)^2 for w = 1, and H phi = g''(1)(1-beta)^2 phi at an eigenmode P phi = beta phi. Reversibility is needed for BOTH halves, not just the first -- confirmed, and the paper states it. 'Each eigenmode DECAYS at rate' is the flow reading and is not made. Finite state space. CONSTANTS, re-derived independently before comparison: C_g, C_5 and K match the paper exactly; C_4's 3 M_3 is reached with 8/3 M_3 and (r-1)^2 <= 4 eps |A h_perp| with 32/9, so the paper's printed values are valid but not sharp, and are used as printed. |1/(1+h)^2 - 1| <= 4 eps is valid and not sharp at eps = 1/4 (true sup 7/9 against 4 eps = 1); it is the STEP the paper routes through, (2 eps + eps^2)/(1-eps)^2 <= 4 eps, that is exactly tight at eps = 1/4, so the constraint eps <= min(a,1)/4 is conservative rather than wrong. Two hypotheses Lean needs explicitly and the paper has implicitly: 0 <= wsup and 0 <= a, underivable on an empty state space. NON-VACUITY, checked by hand in exact rationals BEFORE the Lean and agreeing on the first run: on the two-state chain with g = (x-1)^2, h = (1/5,-1/5), D = (175/432, -175/288), H h_perp = (2/5,-2/5) as linHess_eigen independently predicts at beta = 0, and ||E||^2 = 805093/37324800 against the bound 16/15."
     },
     {
       "label": "lem:sigma_mixing",
@@ -1485,16 +1497,22 @@
       ],
       "block_sha256": "53f1dabc3d18544fcc63e7f2583dfe30a1f0d66d1ba933d7972a891859db1c7e",
       "lean_files": [
-        "GFNBounds/Balance/Flow.lean"
+        "GFNBounds/Balance/Flow.lean",
+        "GFNBounds/Balance/Discrete.lean"
       ],
       "decls": [
         "GFNBounds.Balance.inner_ge_of_mixing",
         "GFNBounds.Balance.stable_frozen_decay",
-        "GFNBounds.Balance.scalar_decay_check"
+        "GFNBounds.Balance.scalar_decay_check",
+        "GFNBounds.Balance.inner_sq_le_of_symm_nonneg",
+        "GFNBounds.Balance.norm_apply_le_of_symm_bounds",
+        "GFNBounds.Balance.H_proj_eq_zero",
+        "GFNBounds.Balance.stable_frozen_discrete",
+        "GFNBounds.Balance.scalar_discrete_check"
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. THE CONTINUOUS DISPLAY IS CLOSED, both conjuncts: Pi h_t is conserved and ||h_t - Pi h_t|| <= e^{-rho t} ||h_0 - Pi h_0||, on any real inner-product space, by Gronwall. `inner_ge_of_mixing` supplies the coercivity from Core.Mixing, giving rho = c/B-hat^2 in the paper's shape. THE LINEARIZATION IS A HYPOTHESIS, NOT A DERIVATION, and is disclosed in four places: H := g''(1) A-dagger M_w A comes from theo:gd_diffusion_full, which is bucket D, so the decay is stated for a curve satisfying hdot = -H h with H carrying exactly three properties -- Pi self-adjoint, Pi H = 0, and the coercivity -- and rho is any constant satisfying it rather than g''(1) w_min / B-hat^2. NOT assumed and not needed: H self-adjoint, H >= 0 as an operator, Pi idempotent, rho > 0. NOT DONE: the DISCRETE half (contraction 1 - eps rho per step, which needs ||Hx||^2 <= ||H|| <x,Hx>, i.e. operator facts the abstract H does not carry) and the lem:lift_mixing transfer to the FM and DB losses. Cross-checked for non-vacuity and for the exponent: on E = R with H = 2.id, Pi = 0, h_t = 5 e^{-2t} a genuine solution, the two sides are EQUAL at t = 1 -- so the exponent is exactly rho, not rho/2 or 2 rho."
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. THE CONTINUOUS DISPLAY IS CLOSED, both conjuncts: Pi h_t is conserved and ||h_t - Pi h_t|| <= e^{-rho t} ||h_0 - Pi h_0||, on any real inner-product space, by Gronwall. `inner_ge_of_mixing` supplies the coercivity from Core.Mixing, giving rho = c/B-hat^2 in the paper's shape. THE LINEARIZATION IS A HYPOTHESIS, NOT A DERIVATION, and is disclosed in four places: H := g''(1) A-dagger M_w A comes from theo:gd_diffusion_full, which is bucket D, so the decay is stated for a curve satisfying hdot = -H h with H carrying exactly three properties -- Pi self-adjoint, Pi H = 0, and the coercivity -- and rho is any constant satisfying it rather than g''(1) w_min / B-hat^2. NOT assumed and not needed: H self-adjoint, H >= 0 as an operator, Pi idempotent, rho > 0. THE DISCRETE DISPLAY IS CLOSED TOO (2026-09-12, GFNBounds/Balance/Discrete.lean, sorry-free, axiom-swept): along h_{k+1} = h_k - eps H h_k the component Pi h_k is conserved and ||h_k - Pi h_k|| <= (1 - eps rho)^k ||h_0 - Pi h_0||. The paper's step condition eps <= (4 g''(1) ||w||_inf)^{-1} enters as the QUADRATIC-FORM bound <x,Hx> <= Lam ||x||^2 with eps Lam <= 1 -- weaker than the paper's operator-norm bound, hence a stronger theorem; ||A|| <= 2 => ||H|| <= 4 g''(1) ||w||_inf is NOT derived, A not being present. IT COSTS TWO HYPOTHESES THE PAPER'S DISCRETE SENTENCE DOES NOT NAME, both true of the paper's objects: H SELF-ADJOINT and Pi IDEMPOTENT. Self-adjointness is load-bearing, not cosmetic -- the route the proof sentence names (the energy method, through ||Hx||^2 <= ||H|| <x,Hx>) delivers only the factor sqrt(1 - eps rho), and the printed 1 - eps rho needs 0 <= I - eps H <= (1 - eps rho) I on the invariant subspace ker Pi, proved here without spectral theory by Cauchy-Schwarz for a symmetric semi-definite form (norm_apply_le_of_symm_bounds). Note also that ||Hx||^2 <= ||H|| <x,Hx> is itself false without self-adjointness (a rotation has <x,Hx> = 0, ||Hx|| = ||x||), and that H >= 0 does not imply symmetry over a REAL space. eps rho <= 1 is carried, not derived. Tightness: on E = R with H = 2.id, Pi = 0, eps = 1/4, rho = 2, h_k = 5 (1/2)^k, the two sides are EQUAL at EVERY k and sqrt(1 - eps rho) = 0.707... is strictly weaker (scalar_discrete_check). STILL NOT DONE: the lem:lift_mixing transfer to the FM and DB losses. Cross-checked for non-vacuity and for the exponent: on E = R with H = 2.id, Pi = 0, h_t = 5 e^{-2t} a genuine solution, the two sides are EQUAL at t = 1 -- so the exponent is exactly rho, not rho/2 or 2 rho. The sentence above beginning 'NOT assumed and not needed' describes `stable_frozen_decay` only; `stable_frozen_discrete` does assume H self-adjoint and Pi idempotent."
     },
     {
       "label": "theo:local_convergence_full",
@@ -1504,11 +1522,33 @@
         657
       ],
       "block_sha256": "3c6f5cd06f8a4784003d7077e5edd201514379a4bcb9977a9b5c9bb1d1e20856",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "D",
-      "scope_notes": "Nonlinear local convergence with explicit constants; needs the whole calculus layer."
+      "lean_files": [
+        "GFNBounds/Balance/Expansion.lean",
+        "GFNBounds/Balance/L2Toolkit.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.C4",
+        "GFNBounds.Balance.Cg",
+        "GFNBounds.Balance.C5",
+        "GFNBounds.Balance.Kexp",
+        "GFNBounds.Balance.ratio_one_add_sub_one",
+        "GFNBounds.Balance.abs_ratio_sub_one_le_four_thirds",
+        "GFNBounds.Balance.abs_ratio_sub_one_le_a",
+        "GFNBounds.Balance.abs_inv_sq_sub_one_le",
+        "GFNBounds.Balance.sq_ratio_sub_one_le",
+        "GFNBounds.Balance.phi_expansion",
+        "GFNBounds.Balance.abs_gd_le_Cg",
+        "GFNBounds.Balance.abs_ratio_sub_one_mul_phi_le",
+        "GFNBounds.Balance.lossGrad_eq_Adj_sub",
+        "GFNBounds.Balance.gradient_expansion",
+        "GFNBounds.Balance.Aop_perpL2",
+        "GFNBounds.Balance.nrmL2_Aop_le_two",
+        "GFNBounds.Balance.nrmL2_Adj_le_two",
+        "GFNBounds.Balance.bootstrap_of_continuous"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-12, sorry-free, axiom-swept, graduated. STEP 1 ONLY (proofs.tex:622-633), plus the proof's opening recall and the abstract form of Step 4's continuation. eq:gradient_expansion is closed with all four constants as the paper's printed formulas (C_4, C_g, C_5, K = Kexp); C_g, C_5 and K match an independent re-derivation exactly, C_4 and the (r-1)^2 bound are valid but not sharp -- see theo:gd_diffusion_full's row. The C^3 hypothesis is weakened to the Taylor bound it is used through, which is a stronger theorem and is flagged. FROM L2Toolkit.lean, the proof's own opening line 'recall Ah = Ah_perp, ||P|| <= 1, ||A|| <= 2, ||A^dagger|| <= 2' (proofs.tex:620): Aop_perpL2, nrmL2_Aop_le_two, nrmL2_Adj_le_two, the first resting on Core.nrmL2_densAct_le / Core.nrmL2_funAct_le, which already existed. Ah = Ah_perp is a lambda-a.e. statement and carries lam y != 0, the density action dividing by lambda -- a formalization artefact, automatic in the paper's ergodic setting. Also closed: bootstrap_of_continuous, Step 4's continuation argument in the abstract (per-state continuity, a start bound, and a bootstrap on [0,t] give the bound for all t >= 0, by the infimum of the failure set) -- which is where the paper's 'by continuity the interval is all of R_+' is made good. FOUND WHILE DOING SO: Step 4 does not state its t = 0 case. It needs ||h_0||_inf <= eps/2 to start, which holds (C_inf eps_0 (2 + C_7) <= eps/2 checks out, consuming eps_0 <= 1 and |m_0| <= ||h_0||, the latter needing lambda to be a probability) but is not written; bootstrap_of_continuous makes it the named hypothesis hstart. NOT DONE: Steps 2, 3 and 5 -- the energy estimate, the mass drift, the conclusion -- and the discrete gradient-descent clause, hence the constants C_6, C_7, eps_0, eps_1, L, gamma_0 and c_infinity. The layers those need now exist (Balance/Flow.lean's IsGradientFlow and flow identity, Expansion.lean's Step 1, this file's bootstrap), which is why the bucket is B rather than D. Finite state space."
     },
     {
       "label": "prop:frozen_unstable_full",
@@ -1629,7 +1669,8 @@
       "lean_files": [
         "GFNBounds/Balance/Flow.lean",
         "GFNBounds/Balance/Lojasiewicz.lean",
-        "GFNBounds/Balance/MassIdentity.lean"
+        "GFNBounds/Balance/MassIdentity.lean",
+        "GFNBounds/Balance/MassAscent.lean"
       ],
       "decls": [
         "GFNBounds.Balance.gradDensity",
@@ -1649,11 +1690,21 @@
         "GFNBounds.Balance.no_distant_equilibrium_three_far",
         "GFNBounds.Balance.farSet",
         "GFNBounds.Balance.ipL2_lossGrad_self",
-        "GFNBounds.Balance.nrmL2_const_of_flow"
+        "GFNBounds.Balance.nrmL2_const_of_flow",
+        "GFNBounds.Balance.hasDerivAt_mass_flow",
+        "GFNBounds.Balance.mass_deriv_pos_off_balance",
+        "GFNBounds.Balance.mass_monotone_flow",
+        "GFNBounds.Balance.mean_le_nrmL2_iff_const",
+        "GFNBounds.Balance.balanced_const",
+        "GFNBounds.Balance.mass_ascent_lyapunov",
+        "GFNBounds.Balance.const_of_balanced_graph",
+        "GFNBounds.Balance.mass_ascent_lyapunov_graph",
+        "GFNBounds.Balance.cDelta",
+        "GFNBounds.Balance.entry_time"
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED: item (1), the mass identity, in all three of its conjuncts -- the mass equals int g'(r)(1-r)(dnu/dmu) dlambda, it is <= 0, and it is 0 iff mu is balanced -- plus `balanced_of_critical`. Proved once and shared between the two labels. Finite state space, disclosed: every downstream use is on a finite graph and the general case would need obstruction 2 merely to say what Q phi is. THE BOUNDARY, and it is the point of the file: `D := Q phi - r phi` is a Lean DEFINITION, never derived. Identifying it with the gradient of L_{g,nu} is theo:first_variation_full's job, which is bucket D and not formalized -- so what is certified is the mass of THAT EXPRESSION, and the words 'every critical point is balanced' are conditional on that identification. 'Critical' is read as D = 0, not as 'the first variation vanishes in every admissible direction'. Three further weakenings in the safe direction: ergodicity is NOT assumed (only lambda-invariance, so uniqueness of the balanced flow is not certified), lambda need not be a probability, and K need not be row-stochastic. One thing came out stronger than the paper: r > 0 is DERIVED from invariance plus positivity rather than hypothesized as 'essentially bounded away from 0 and infinity'. ITEM (3) IS NOW CLOSED TOO -- both the pointwise inequality |g'(x)(1-x)| >= delta^2/2 (each of its four elementary bounds a separate named lemma) and the integrated display, the latter stated over ANY far set and with d nu/d mu >= c_0 abstract, hence more general than the paper's. It needs lambda(S) = 1, which this file carries and MassIdentity does not -- the paper says 'since lambda is a probability measure' at proofs.tex:809, so nothing is wrong, but the hypothesis is genuinely used there and not in item (1). ITEM (2)'s FIRST HALF IS NOW CLOSED as well: `ipL2_lossGrad_self` proves int D u dlambda = 0 as a BARE IDENTITY -- no invariance of lambda, nothing about g -- and `nrmL2_const_of_flow` turns it into the invariant sphere ||u_t|| = ||u_0|| along the gradient flow, which is the paper's 'the gradient flow preserves ||u_t||'. NOT DONE: item (2)'s Lyapunov half (the mass strictly increases, Cauchy-Schwarz on the sphere, LaSalle) and the convergence half of the dichotomy, which need a gradient-flow / LaSalle layer."
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED: item (1), the mass identity, in all three of its conjuncts -- the mass equals int g'(r)(1-r)(dnu/dmu) dlambda, it is <= 0, and it is 0 iff mu is balanced -- plus `balanced_of_critical`. Proved once and shared between the two labels. Finite state space, disclosed: every downstream use is on a finite graph and the general case would need obstruction 2 merely to say what Q phi is. THE BOUNDARY, and it is the point of the file: `D := Q phi - r phi` is a Lean DEFINITION, never derived. Identifying it with the gradient of L_{g,nu} is theo:first_variation_full's job, which is bucket D and not formalized -- so what is certified is the mass of THAT EXPRESSION, and the words 'every critical point is balanced' are conditional on that identification. 'Critical' is read as D = 0, not as 'the first variation vanishes in every admissible direction'. Three further weakenings in the safe direction: ergodicity is NOT assumed (only lambda-invariance, so uniqueness of the balanced flow is not certified), lambda need not be a probability, and K need not be row-stochastic. One thing came out stronger than the paper: r > 0 is DERIVED from invariance plus positivity rather than hypothesized as 'essentially bounded away from 0 and infinity'. ITEM (3) IS NOW CLOSED TOO -- both the pointwise inequality |g'(x)(1-x)| >= delta^2/2 (each of its four elementary bounds a separate named lemma) and the integrated display, the latter stated over ANY far set and with d nu/d mu >= c_0 abstract, hence more general than the paper's. It needs lambda(S) = 1, which this file carries and MassIdentity does not -- the paper says 'since lambda is a probability measure' at proofs.tex:809, so nothing is wrong, but the hypothesis is genuinely used there and not in item (1). ITEM (2)'s FIRST HALF IS NOW CLOSED as well: `ipL2_lossGrad_self` proves int D u dlambda = 0 as a BARE IDENTITY -- no invariance of lambda, nothing about g -- and `nrmL2_const_of_flow` turns it into the invariant sphere ||u_t|| = ||u_0|| along the gradient flow, which is the paper's 'the gradient flow preserves ||u_t||'. NOT DONE: item (2)'s Lyapunov half (the mass strictly increases, Cauchy-Schwarz on the sphere, LaSalle) and the convergence half of the dichotomy, which need a gradient-flow / LaSalle layer. ITEM (2)'s LYAPUNOV HALF IS NOW CLOSED (2026-09-12, GFNBounds/Balance/MassAscent.lean, sorry-free, axiom-swept): the mass int u_t dlambda is differentiable along the flow with derivative -int D dlambda >= 0 (hasDerivAt_mass_flow, mass_monotone_flow), strictly positive off balance (mass_deriv_pos_off_balance), and bounded on the invariant sphere by ||u_0|| with equality exactly at a constant density (mean_le_nrmL2_iff_const -- Cauchy-Schwarz against 1 WITH its equality case, which the library did not have). TWO DISCLOSURES. (a) That equality case needs u >= 0: the paper's 'equality if and only if u is constant' is false as a statement about L^2 (at u = -1 the two sides are -1 and 1), and densities supply the missing hypothesis which the sentence does not name. (b) 'BALANCED => CONSTANT' IS ERGODICITY AND IS FALSE under this layer's `Invariant K lam` alone -- K = Id on two states makes every lambda invariant and EVERY u balanced -- so the paper's 'whose unique maximizer is the balanced flow' is certified only on a marked graph (mass_ascent_lyapunov_graph, through Graph.eq_smul_invProb); the paper itself is fine, since prop:no_distant_equilibrium hypothesises an ergodic (S-hat, lambda, T), and the gap is between that hypothesis and the weaker one MassIdentity.lean carries. ITEM (3)'s ENTRY TIME is closed as well: exists t_1 in [0, L(mu_0)/c(delta)^2] with every ratio within delta, c(delta) = w_min lambda_min^{3/2} delta^2 / (2 ||u_0||) explicit (cDelta, entry_time), which reproduces proofs.tex:813 exactly. Delivered as an EXISTENCE of an entry time rather than the paper's forward-invariant reading 'after time at most L(mu_0)/c(delta)^2 all ratios are within delta': the budget argument bounds the total off-band time, and permanence is theo:local_convergence_full's, which is how the paper's own assembly uses it. STILL NOT DONE: LaSalle, the boundary blow-up / compactness step, and the convergence half of item (3)."
     },
     {
       "label": "rem:cycle_no_stalemate",
@@ -1751,7 +1802,8 @@
       "block_sha256": "3d0a17aaeb98016d8332691a264abb0503e5e1f9d6ee14eb79a192cf195c21f1",
       "lean_files": [
         "GFNBounds/Balance/Flow.lean",
-        "GFNBounds/Balance/Lojasiewicz.lean"
+        "GFNBounds/Balance/Lojasiewicz.lean",
+        "GFNBounds/Balance/MassAscent.lean"
       ],
       "decls": [
         "GFNBounds.Balance.logSqDeriv",
@@ -1763,11 +1815,16 @@
         "GFNBounds.Balance.global_lojasiewicz_sq",
         "GFNBounds.Balance.lojasiewicz_integrated",
         "GFNBounds.Balance.global_lojasiewicz_flow",
-        "GFNBounds.Balance.hasDerivAt_logSq"
+        "GFNBounds.Balance.hasDerivAt_logSq",
+        "GFNBounds.Balance.loss_antitone_flow",
+        "GFNBounds.Balance.lossVal_antitone_flow",
+        "GFNBounds.Balance.lossVal_eq_zero_iff_balanced",
+        "GFNBounds.Balance.lojasiewicz_integrated_nonneg",
+        "GFNBounds.Balance.global_lojasiewicz_flow'"
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "CLOSED 2026-09-08 in BOTH displays, sorry-free, axiom-swept, graduated -- finite state space, disclosed. The static inequality kappa.L <= ||D|| and its squared form came first (Balance/Lojasiewicz.lean); Balance/Flow.lean then closed the flow layer and with it the second display, L(mu_t) <= (L(mu_0)^{-1} + kappa^2 t)^{-1}, with kappa the paper's EXPLICIT formula and not an exists-C. The route: `hasDerivAt_loss_flow` proves -Ldot = ||D||^2 -- provable rather than assumable now that theo:first_variation_full makes D the gradient -- and `lojasiewicz_integrated` integrates the differential inequality. NO EXISTENCE THEOREM IS NEEDED: every claim is 'for any curve satisfying the ODE', which is how the paper's proof reads. A hypothesis was also REMOVED: the sphere constraint ||u_t|| = ||u_0||, assumed in the static file, is a CONCLUSION along the flow (`nrmL2_const_of_flow`, from the bare identity int D u dlambda = 0), so ||u_0|| in kappa is literally ||d mu_0 / d lambda||."
+      "scope_notes": "CLOSED 2026-09-08 in BOTH displays, sorry-free, axiom-swept, graduated -- finite state space, disclosed. The static inequality kappa.L <= ||D|| and its squared form came first (Balance/Lojasiewicz.lean); Balance/Flow.lean then closed the flow layer and with it the second display, L(mu_t) <= (L(mu_0)^{-1} + kappa^2 t)^{-1}, with kappa the paper's EXPLICIT formula and not an exists-C. The route: `hasDerivAt_loss_flow` proves -Ldot = ||D||^2 -- provable rather than assumable now that theo:first_variation_full makes D the gradient -- and `lojasiewicz_integrated` integrates the differential inequality. NO EXISTENCE THEOREM IS NEEDED: every claim is 'for any curve satisfying the ODE', which is how the paper's proof reads. A hypothesis was also REMOVED: the sphere constraint ||u_t|| = ||u_0||, assumed in the static file, is a CONCLUSION along the flow (`nrmL2_const_of_flow`, from the bare identity int D u dlambda = 0), so ||u_0|| in kappa is literally ||d mu_0 / d lambda||. 2026-09-12 (GFNBounds/Balance/MassAscent.lean): the flow form is now usable at the paper's own constant. `global_lojasiewicz_flow'` states it with L_0 literally L(mu_0), discharging both hypotheses `Flow.global_lojasiewicz_flow` carries -- hL0 by antitonicity of the loss along the flow (loss_antitone_flow, lossVal_antitone_flow) and hpos by lojasiewicz_integrated_nonneg, which needs only 0 <= L(0) rather than positivity throughout. LIBRARY DEFECT FOUND, NOT YET REPAIRED: `Flow.global_lojasiewicz_flow`'s hL0 is quantified over ALL of R (`forall t : R, L(mu_t) <= L0`) while its sibling hpos is correctly ranged over 0 <= t; since the loss is antitone the paper's L0 = L(mu_0) gives the REVERSE inequality below 0, so that hypothesis cannot be discharged at its intended instantiation and the statement had to be re-derived rather than applied. The repair is the quantifier range in Flow.lean."
     },
     {
       "label": "theo:training_speed_full",

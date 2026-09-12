@@ -89,10 +89,16 @@
     "GFNBounds.Balance.FirstVariation",
     "GFNBounds.Balance.GradientFormulas",
     "GFNBounds.Balance.Flow",
+    "GFNBounds.Balance.L2Toolkit",
+    "GFNBounds.Balance.LogSqTaylor",
+    "GFNBounds.Balance.Discrete",
+    "GFNBounds.Balance.MassAscent",
+    "GFNBounds.Balance.Expansion",
+    "GFNBounds.Graph.CycleDivergence",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 84,
+   "lines": 90,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -162,6 +168,564 @@
    "decls": [],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/Discrete.lean",
+   "title": "Discrete gradient descent contracts by `1 − εϱ` per step",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.Flow"
+   ],
+   "variables": [
+    "variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]",
+    "variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]"
+   ],
+   "lines": 364,
+   "decls": [
+    {
+     "name": "inner_sq_le_of_symm_nonneg",
+     "full": "GFNBounds.Balance.inner_sq_le_of_symm_nonneg",
+     "kind": "theorem",
+     "line": 128,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inner_sq_le_of_symm_nonneg {T : E →L[ℝ] E} (hsymm : ∀ x y : E, ⟪T x, y⟫ = ⟪x, T y⟫) (hnn : ∀ y : E, 0 ≤ ⟪y, T y⟫) (x y : E) : ⟪x, T y⟫ ^ 2 ≤ ⟪x, T x⟫ * ⟪y, T y⟫",
+     "doc": "**Cauchy–Schwarz for a symmetric positive semi-definite form.** If `T` is symmetric and `⟪y, Ty⟫ ≥ 0` for every `y`, then `⟪·, T·⟫` is a positive semi-definite symmetric bilinear form and obeys `⟪x, Ty⟫² ≤ ⟪x, Tx⟫⟪y, Ty⟫`."
+    },
+    {
+     "name": "norm_apply_le_of_symm_bounds",
+     "full": "GFNBounds.Balance.norm_apply_le_of_symm_bounds",
+     "kind": "theorem",
+     "line": 153,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_apply_le_of_symm_bounds {T : E →L[ℝ] E} {S : Set E} {c : ℝ} (hsymm : ∀ x y : E, ⟪T x, y⟫ = ⟪x, T y⟫) (hnn : ∀ y : E, 0 ≤ ⟪y, T y⟫) (hc : 0 ≤ c) (hinv : ∀ x ∈ S, T x ∈ S) (hub : ∀ y ∈ S, ⟪y, T y⟫ ≤ c * ‖y‖ ^ 2) {x : E} (hx : x ∈ S) : ‖T x‖ ≤ c * ‖x‖",
+     "doc": "**From the form to the norm, without the spectral theorem.** Let `T` be symmetric with `⟪y, Ty⟫ ≥ 0` everywhere, let `S` be a set carried into itself by `T`, and suppose `⟪y, Ty⟫ ≤ c‖y‖²` on `S` with `0 ≤ c`."
+    },
+    {
+     "name": "H_proj_eq_zero",
+     "full": "GFNBounds.Balance.H_proj_eq_zero",
+     "kind": "theorem",
+     "line": 188,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem H_proj_eq_zero {H Pi : E →L[ℝ] E} (hPisa : ∀ x y : E, ⟪Pi x, y⟫ = ⟪x, Pi y⟫) (hHsa : ∀ x y : E, ⟪H x, y⟫ = ⟪x, H y⟫) (hPiH : ∀ x : E, Pi (H x) = 0) (x : E) : H (Pi x) = 0",
+     "doc": "**`ΠH = 0` gives `HΠ = 0`** when both `Π` and `H` are self-adjoint."
+    },
+    {
+     "name": "stable_frozen_discrete",
+     "full": "GFNBounds.Balance.stable_frozen_discrete",
+     "kind": "theorem",
+     "line": 212,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stable_frozen_discrete {H Pi : E →L[ℝ] E} {rho Lam eps : ℝ} {h : ℕ → E} (hPisa : ∀ x y : E, ⟪Pi x, y⟫ = ⟪x, Pi y⟫) (hPiPi : ∀ x : E, Pi (Pi x) = Pi x) (hHsa : ∀ x y : E, ⟪H x, y⟫ = ⟪x, H y⟫) (hPiH : ∀ x : E, Pi (H x) = 0) (hcoer : ∀ x : E, rho * ‖x - Pi x‖ ^ 2 ≤ ⟪x, H x⟫) (hup : ∀ x : E, ⟪x, H x⟫ ≤ Lam * ‖x‖ ^ 2) (heps : 0 ≤ eps) (hepsL : eps * Lam ≤ 1) (hrho : eps * rho ≤ 1) (hstep : ∀ k, h (k + 1) = h k - eps • H (h k)) : (∀ k, Pi (h k) = Pi (h 0)) ∧ ∀ k, ‖h k - Pi (h k)‖ ≤ (1 - eps * rho) ^ k * ‖h 0 - Pi (h 0)‖",
+     "doc": "**`theo:db_stable_frozen_full`, the discrete half** (statement `proofs.tex:592–602`, proof `proofs.tex:604–610`): along the descent recursion `h_{k+1} = h_k − εHh_k`, the component `Πh_k` is conserved and `‖h_k − Πh_k‖ ≤ (1 − εϱ)^k‖h_0 − Πh_0‖` — the paper's \"the contraction factor per step is `1 − εϱ`\"."
+    },
+    {
+     "name": "scalar_discrete_check",
+     "full": "GFNBounds.Balance.scalar_discrete_check",
+     "kind": "theorem",
+     "line": 319,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem scalar_discrete_check : (∀ k : ℕ, ‖(5 : ℝ) * (1 / 2) ^ k‖ ≤ (1 - (1 / 4 : ℝ) * 2) ^ k * ‖(5 : ℝ) * (1 / 2) ^ (0 : ℕ)‖) ∧ (∀ k : ℕ, ‖(5 : ℝ) * (1 / 2) ^ k‖ = (1 - (1 / 4 : ℝ) * 2) ^ k * ‖(5 : ℝ) * (1 / 2) ^ (0 : ℕ)‖) ∧ (1 - (1 / 4 : ℝ) * 2) < Real.sqrt (1 - (1 / 4 : ℝ) * 2)",
+     "doc": "**The discrete contraction, evaluated, attained, and separated from its square root.** On `E = ℝ` with `H = 2·id`, `Π = 0`, `ε = 1/4`, `ϱ = 2`, `Λ = 2` and `h_k = 5·(1/2)^k` — a genuine solution of `h_{k+1} = h_k − εHh_k`, since `h_k − (1/4)(2h_k) = h_k/2` — `stable_frozen_discrete` gives `‖h_k‖ ≤ (1 − εϱ)^k‖h_0‖` with `1 − εϱ = 1/2`, and the two sides are **equal at every `k`**."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/Expansion.lean",
+   "title": "The gradient field at `μ = (1+h)λ`: `D = A†[g''(1) w Ah_⊥] + E` with `‖E‖ ≤ Kε‖Ah_⊥‖`",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.Flow",
+    "GFNBounds.Balance.L2Toolkit"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]"
+   ],
+   "lines": 909,
+   "decls": [
+    {
+     "name": "C4",
+     "full": "GFNBounds.Balance.C4",
+     "kind": "def",
+     "line": 167,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def C4 (wsup g2 M3 : ℝ) : ℝ",
+     "doc": "**`C₄ := ‖w‖_{L^∞}(4g''(1) + 3M₃)`** (`proofs.tex:626`), the constant of the pointwise remainder in the expansion of `φ`."
+    },
+    {
+     "name": "Cg",
+     "full": "GFNBounds.Balance.Cg",
+     "kind": "def",
+     "line": 171,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Cg (g2 a M3 : ℝ) : ℝ",
+     "doc": "**`C_g := g''(1) + aM₃/2`** (`proofs.tex:628`), the Lipschitz constant of `g'` at `1` on the window `[1−a, 1+a]`."
+    },
+    {
+     "name": "C5",
+     "full": "GFNBounds.Balance.C5",
+     "kind": "def",
+     "line": 174,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def C5 (g2 a M3 wsup : ℝ) : ℝ",
+     "doc": "**`C₅ := (16/3)C_g‖w‖_{L^∞}`** (`proofs.tex:628`), the constant of the `(r−1)φ` term."
+    },
+    {
+     "name": "Kexp",
+     "full": "GFNBounds.Balance.Kexp",
+     "kind": "def",
+     "line": 178,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Kexp (g2 a M3 wsup : ℝ) : ℝ",
+     "doc": "**`K := 2C₄ + C₅`** (`proofs.tex:631`), the constant of `eq:gradient_expansion`."
+    },
+    {
+     "name": "linHess",
+     "full": "GFNBounds.Balance.linHess",
+     "kind": "def",
+     "line": 182,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def linHess (K : V → V → ℝ) (lam w : V → ℝ) (g2 : ℝ) (h : V → ℝ) : V → ℝ",
+     "doc": "**The paper's `H = g''(1) A† M_w A`** (`proofs.tex:571`), read on densities: the operator whose `h_⊥`-image is the linear part of the gradient field."
+    },
+    {
+     "name": "linHess_eq",
+     "full": "GFNBounds.Balance.linHess_eq",
+     "kind": "theorem",
+     "line": 186,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_eq (K : V → V → ℝ) (lam w : V → ℝ) (g2 : ℝ) (h : V → ℝ) : linHess K lam w g2 h = fun x => g2 * Adj K (fun y => w y * Aop K lam h y) x",
+     "doc": "The unapplied form of `linHess`; see the `perpL2`/`Aop` twins in `L2Toolkit`."
+    },
+    {
+     "name": "linHess_apply",
+     "full": "GFNBounds.Balance.linHess_apply",
+     "kind": "theorem",
+     "line": 189,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_apply (K : V → V → ℝ) (lam w : V → ℝ) (g2 : ℝ) (h : V → ℝ) (x : V) : linHess K lam w g2 h x = g2 * Adj K (fun y => w y * Aop K lam h y) x",
+     "doc": ""
+    },
+    {
+     "name": "Adj_sub",
+     "full": "GFNBounds.Balance.Adj_sub",
+     "kind": "theorem",
+     "line": 198,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Adj_sub (K : V → V → ℝ) (a b : V → ℝ) (x : V) : Adj K (fun y => a y - b y) x = Adj K a x - Adj K b x",
+     "doc": "`A†(a − b) = A†a − A†b`."
+    },
+    {
+     "name": "Adj_smul",
+     "full": "GFNBounds.Balance.Adj_smul",
+     "kind": "theorem",
+     "line": 204,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Adj_smul (K : V → V → ℝ) (c : ℝ) (a : V → ℝ) (x : V) : Adj K (fun y => c * a y) x = c * Adj K a x",
+     "doc": "`A†(c·a) = c·A†a`."
+    },
+    {
+     "name": "densAct_smul",
+     "full": "GFNBounds.Balance.densAct_smul",
+     "kind": "theorem",
+     "line": 213,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densAct_smul (lam : V → ℝ) (K : V → V → ℝ) (c : ℝ) (u : V → ℝ) (y : V) : Core.densAct lam K (fun z => c * u z) y = c * Core.densAct lam K u y",
+     "doc": "`P(c·u) = c·Pu`, at every state and with no hypothesis."
+    },
+    {
+     "name": "Aop_smul",
+     "full": "GFNBounds.Balance.Aop_smul",
+     "kind": "theorem",
+     "line": 221,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Aop_smul (lam : V → ℝ) (K : V → V → ℝ) (c : ℝ) (u : V → ℝ) (y : V) : Aop K lam (fun z => c * u z) y = c * Aop K lam u y",
+     "doc": "`A(c·u) = c·Au`."
+    },
+    {
+     "name": "meanL2_const_mul",
+     "full": "GFNBounds.Balance.meanL2_const_mul",
+     "kind": "theorem",
+     "line": 227,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanL2_const_mul (lam : V → ℝ) (c : ℝ) (a : V → ℝ) : Graph.meanL2 lam (fun x => c * a x) = c * Graph.meanL2 lam a",
+     "doc": "`Π(c·a) = c·Πa`."
+    },
+    {
+     "name": "ipL2_smul_right",
+     "full": "GFNBounds.Balance.ipL2_smul_right",
+     "kind": "theorem",
+     "line": 233,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_smul_right (lam a b : V → ℝ) (c : ℝ) : Graph.ipL2 lam a (fun x => c * b x) = c * Graph.ipL2 lam a b",
+     "doc": "`⟪a ∣ c·b⟫_λ = c⟪a ∣ b⟫_λ`."
+    },
+    {
+     "name": "ratio_one_add_sub_one",
+     "full": "GFNBounds.Balance.ratio_one_add_sub_one",
+     "kind": "theorem",
+     "line": 245,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_one_add_sub_one {K : V → V → ℝ} {lam h : V → ℝ} (hinv : Core.IsInvariant lam K) {y : V} (hy : lam y ≠ 0) (hu : 1 + h y ≠ 0) : ratio K lam (fun x => 1 + h x) y - 1 = Aop K lam h y / (1 + h y)",
+     "doc": "**`r − 1 = Ah/(1+h)`** (`proofs.tex:578`, restated at `proofs.tex:623`) at the flow `μ = (1+h)λ`."
+    },
+    {
+     "name": "abs_Aop_le_two_sup",
+     "full": "GFNBounds.Balance.abs_Aop_le_two_sup",
+     "kind": "theorem",
+     "line": 264,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_Aop_le_two_sup {K : V → V → ℝ} {lam h : V → ℝ} {eps : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Core.IsInvariant lam K) (hh : ∀ x, |h x| ≤ eps) (y : V) : |Aop K lam h y| ≤ 2 * eps",
+     "doc": "**`|Ah| ≤ 2ε` pointwise** when `|h| ≤ ε`: `Ph(y)` is the average of `h` against the weights `λ(x)K(x,y)/λ(y)`, which sum to `1` in `x` by invariance, so `|Ph| ≤ ε`; the identity costs another `ε`."
+    },
+    {
+     "name": "one_add_ge_of_le",
+     "full": "GFNBounds.Balance.one_add_ge_of_le",
+     "kind": "theorem",
+     "line": 291,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_add_ge_of_le {h : V → ℝ} {eps : ℝ} (hh : ∀ x, |h x| ≤ eps) (heps : eps ≤ 1 / 4) (y : V) : 3 / 4 ≤ 1 + h y",
+     "doc": "**`3/4 ≤ 1 + h(y)`** for `|h| ≤ ε ≤ 1/4` — the denominator bound every estimate of Step 1 divides by."
+    },
+    {
+     "name": "abs_ratio_sub_one_le_four_thirds",
+     "full": "GFNBounds.Balance.abs_ratio_sub_one_le_four_thirds",
+     "kind": "theorem",
+     "line": 297,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_ratio_sub_one_le_four_thirds {K : V → V → ℝ} {lam h : V → ℝ} {eps : ℝ} (hinv : Core.IsInvariant lam K) (hh : ∀ x, |h x| ≤ eps) (heps : eps ≤ 1 / 4) {y : V} (hy : lam y ≠ 0) : |ratio K lam (fun x => 1 + h x) y - 1| ≤ 4 / 3 * |Aop K lam (perpL2 lam h) y|",
+     "doc": "**`|r−1| ≤ (4/3)|Ah^⊥|`** (`proofs.tex:623`): `Ah = Ah^⊥` by invariance, and `1+h ≥ 3/4`."
+    },
+    {
+     "name": "abs_ratio_sub_one_le_two_eps_div",
+     "full": "GFNBounds.Balance.abs_ratio_sub_one_le_two_eps_div",
+     "kind": "theorem",
+     "line": 308,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_ratio_sub_one_le_two_eps_div {K : V → V → ℝ} {lam h : V → ℝ} {eps : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Core.IsInvariant lam K) (hh : ∀ x, |h x| ≤ eps) (heps : eps ≤ 1 / 4) {y : V} (hy : lam y ≠ 0) : |ratio K lam (fun x => 1 + h x) y - 1| ≤ 2 * eps / (1 - eps)",
+     "doc": "**`|r−1| ≤ 2ε/(1−ε)`** (`proofs.tex:623`), the form that compares to `a`."
+    },
+    {
+     "name": "two_eps_div_le_a",
+     "full": "GFNBounds.Balance.two_eps_div_le_a",
+     "kind": "theorem",
+     "line": 324,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem two_eps_div_le_a {eps a : ℝ} (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) : 2 * eps / (1 - eps) ≤ a",
+     "doc": "**`2ε/(1−ε) ≤ a`** for `ε ≤ min(a,1)/4` (`proofs.tex:623`): with `ε ≤ 1/4` the left side is at most `8ε/3`, and `ε ≤ a/4` makes that at most `2a/3`."
+    },
+    {
+     "name": "abs_ratio_sub_one_le_a",
+     "full": "GFNBounds.Balance.abs_ratio_sub_one_le_a",
+     "kind": "theorem",
+     "line": 334,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_ratio_sub_one_le_a {K : V → V → ℝ} {lam h : V → ℝ} {eps a : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Core.IsInvariant lam K) (hh : ∀ x, |h x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) {y : V} (hy : lam y ≠ 0) : |ratio K lam (fun x => 1 + h x) y - 1| ≤ a",
+     "doc": "**`|r−1| ≤ a`** — the two previous bounds chained, which is what puts `r` inside the window `[1−a, 1+a]` on which `htaylor` speaks."
+    },
+    {
+     "name": "abs_inv_sq_sub_one_le",
+     "full": "GFNBounds.Balance.abs_inv_sq_sub_one_le",
+     "kind": "theorem",
+     "line": 348,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_inv_sq_sub_one_le {t eps : ℝ} (ht : |t| ≤ eps) (heps : eps ≤ 1 / 4) : |1 / (1 + t) ^ 2 - 1| ≤ 4 * eps",
+     "doc": "**`|1/(1+t)² − 1| ≤ 4ε`** for `|t| ≤ ε ≤ 1/4` (`proofs.tex:623`)."
+    },
+    {
+     "name": "sq_ratio_sub_one_le",
+     "full": "GFNBounds.Balance.sq_ratio_sub_one_le",
+     "kind": "theorem",
+     "line": 362,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sq_ratio_sub_one_le {K : V → V → ℝ} {lam h : V → ℝ} {eps : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Core.IsInvariant lam K) (hh : ∀ x, |h x| ≤ eps) (heps : eps ≤ 1 / 4) {y : V} (hy : lam y ≠ 0) : (ratio K lam (fun x => 1 + h x) y - 1) ^ 2 ≤ 4 * eps * |Aop K lam (perpL2 lam h) y|",
+     "doc": "**`(r−1)² ≤ 4ε|Ah^⊥|`** (`proofs.tex:623`), from `|r−1| ≤ 8ε/3` and `|r−1| ≤ (4/3)|Ah^⊥|`."
+    },
+    {
+     "name": "phi_expansion",
+     "full": "GFNBounds.Balance.phi_expansion",
+     "kind": "theorem",
+     "line": 396,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem phi_expansion {K : V → V → ℝ} {lam w h : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup eps : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Core.IsInvariant lam K) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (hwsup : ∀ x, |w x| ≤ wsup) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |h x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) {y : V} (hy : lam y ≠ 0) : |gd (ratio K lam (fun x => 1 + h x) y) * (w y / (1 + h y)) - g2 * (w y * Aop K lam (perpL2 lam h) y)| ≤ C4 wsup g2 M3 * eps * |Aop K lam (perpL2 lam h) y|",
+     "doc": "**`φ = g''(1) w Ah^⊥ + e` with `|e| ≤ C₄ε|Ah^⊥|`** (`proofs.tex:625–626`), pointwise."
+    },
+    {
+     "name": "abs_gd_le_Cg",
+     "full": "GFNBounds.Balance.abs_gd_le_Cg",
+     "kind": "theorem",
+     "line": 455,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_gd_le_Cg {gd : ℝ → ℝ} {g2 a M3 : ℝ} (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) {y : ℝ} (hy : |y - 1| ≤ a) : |gd y| ≤ Cg g2 a M3 * |y - 1|",
+     "doc": "**`|g'(y)| ≤ C_g|y−1|` on `[1−a, 1+a]`** (`proofs.tex:628`), with `C_g = g''(1) + aM₃/2`."
+    },
+    {
+     "name": "abs_ratio_sub_one_mul_phi_le",
+     "full": "GFNBounds.Balance.abs_ratio_sub_one_mul_phi_le",
+     "kind": "theorem",
+     "line": 472,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_ratio_sub_one_mul_phi_le {K : V → V → ℝ} {lam w h : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup eps : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Core.IsInvariant lam K) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (hwsup : ∀ x, |w x| ≤ wsup) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |h x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) {y : V} (hy : lam y ≠ 0) : |(ratio K lam (fun x => 1 + h x) y - 1) * (gd (ratio K lam (fun x => 1 + h x) y) * (w y / (1 + h y)))| ≤ C5 g2 a M3 wsup * eps * |Aop K lam (perpL2 lam h) y|",
+     "doc": "**`|(r−1)φ| ≤ C₅ε|Ah^⊥|`** (`proofs.tex:628`), with `C₅ = (16/3)C_g‖w‖_{L^∞}`."
+    },
+    {
+     "name": "lossGrad_eq_Adj_sub",
+     "full": "GFNBounds.Balance.lossGrad_eq_Adj_sub",
+     "kind": "theorem",
+     "line": 519,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lossGrad_eq_Adj_sub {K : V → V → ℝ} {lam w u : V → ℝ} {gd : ℝ → ℝ} (hlam : ∀ x, 0 < lam x) (x : V) : lossGrad K lam (fun z => lam z * w z) gd u x = Adj K (fun y => gd (ratio K lam u y) * (w y / u y)) x - (ratio K lam u x - 1) * (gd (ratio K lam u x) * (w x / u x))",
+     "doc": "**`D = A†φ − (r−1)φ` with `φ = g'(r)·w/u`** — the gradient density of `theo:first_variation_full` rearranged, for `ν = wλ` and `μ = uλ`."
+    },
+    {
+     "name": "gradient_expansion",
+     "full": "GFNBounds.Balance.gradient_expansion",
+     "kind": "theorem",
+     "line": 536,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gradient_expansion {K : V → V → ℝ} {lam w h : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup eps : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |h x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) : Graph.nrmL2 lam (fun x => lossGrad K lam (fun z => lam z * w z) gd (fun z => 1 + h z) x - linHess K lam w g2 (perpL2 lam h) x) ≤ Kexp g2 a M3 wsup * eps * Graph.nrmL2 lam (Aop K lam (perpL2 lam h))",
+     "doc": "**`eq:gradient_expansion`** (`proofs.tex:630–631`): at `μ = (1+h)λ` and `ν = wλ`, `D = A†[g''(1) w Ah^⊥] + E` with `‖E‖_{L²(λ)} ≤ Kε‖Ah^⊥‖_{L²(λ)}`, `K = 2C₄ + C₅`."
+    },
+    {
+     "name": "linHess_perpL2",
+     "full": "GFNBounds.Balance.linHess_perpL2",
+     "kind": "theorem",
+     "line": 590,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_perpL2 {K : V → V → ℝ} {lam w : V → ℝ} (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (g2 : ℝ) (h : V → ℝ) : linHess K lam w g2 (perpL2 lam h) = linHess K lam w g2 h",
+     "doc": "**`Ah = Ah^⊥` lifted to `H`**: `linHess` sees only `Ah`, so it does not distinguish `h` from its mean-zero part."
+    },
+    {
+     "name": "gd_diffusion_display",
+     "full": "GFNBounds.Balance.gd_diffusion_display",
+     "kind": "theorem",
+     "line": 604,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gd_diffusion_display {K : V → V → ℝ} {lam w h : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup eps : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |h x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) : Graph.nrmL2 lam (fun x => lossGrad K lam (fun z => lam z * w z) gd (fun z => 1 + h z) x - linHess K lam w g2 h x) ≤ 2 * Kexp g2 a M3 wsup * eps * Graph.nrmL2 lam h",
+     "doc": "**`eq:linearized_flow`** (`proofs.tex:566–568`) in its own shape: `∇^λ 𝓛_{g,ν} = g''(1)(P† − I)[w(P − I)h]λ + err(h)` with `‖err(h)‖ ≤ c(ε)‖h‖_{L²(λ)}` and **`c(ε) = 2Kε` explicit**."
+    },
+    {
+     "name": "linHess_reversible",
+     "full": "GFNBounds.Balance.linHess_reversible",
+     "kind": "theorem",
+     "line": 646,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_reversible {K : V → V → ℝ} {lam : V → ℝ} (hrev : Core.IsReversalPair lam K K) (hlam : ∀ x, 0 < lam x) (g2 : ℝ) (h : V → ℝ) (x : V) : linHess K lam (fun _ => 1) g2 h x = g2 * Aop K lam (Aop K lam h) x",
+     "doc": "**`H = g''(1)(I − P)²` for `w ≡ 1` and `K` reversible** (`proofs.tex:573`)."
+    },
+    {
+     "name": "linHess_eigen",
+     "full": "GFNBounds.Balance.linHess_eigen",
+     "kind": "theorem",
+     "line": 666,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_eigen {K : V → V → ℝ} {lam : V → ℝ} (hrev : Core.IsReversalPair lam K K) (hlam : ∀ x, 0 < lam x) (g2 beta : ℝ) (phi : V → ℝ) (heig : ∀ y, Core.densAct lam K phi y = beta * phi y) (x : V) : linHess K lam (fun _ => 1) g2 phi x = g2 * (1 - beta) ^ 2 * phi x",
+     "doc": "**Each eigenmode `Pφ = βφ` is an eigenmode of `H`, with eigenvalue `g''(1)(1−β)²`** (`proofs.tex:574`)."
+    },
+    {
+     "name": "ipL2_linHess",
+     "full": "GFNBounds.Balance.ipL2_linHess",
+     "kind": "theorem",
+     "line": 685,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_linHess {K : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam K) (hKnn : ∀ x y, 0 ≤ K x y) (w : V → ℝ) (g2 : ℝ) (a b : V → ℝ) : Graph.ipL2 lam a (linHess K lam w g2 b) = g2 * Graph.ipL2 lam (fun y => w y * Aop K lam b y) (Aop K lam a)",
+     "doc": "**`⟪a ∣ Hb⟫_λ = g''(1)⟪w·Ab ∣ Aa⟫_λ`** — the one identity the other four read off, and the place `lem:adjoint`*(3)* is spent."
+    },
+    {
+     "name": "linHess_symm",
+     "full": "GFNBounds.Balance.linHess_symm",
+     "kind": "theorem",
+     "line": 696,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_symm {K : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam K) (hKnn : ∀ x y, 0 ≤ K x y) (w : V → ℝ) (g2 : ℝ) (a b : V → ℝ) : Graph.ipL2 lam a (linHess K lam w g2 b) = Graph.ipL2 lam (linHess K lam w g2 a) b",
+     "doc": "**`H` is symmetric for `⟪·∣·⟫_λ`** — `Discrete.stable_frozen_discrete`'s `hHsa`."
+    },
+    {
+     "name": "linHess_nonneg",
+     "full": "GFNBounds.Balance.linHess_nonneg",
+     "kind": "theorem",
+     "line": 709,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_nonneg {K : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam K) (hKnn : ∀ x y, 0 ≤ K x y) {w : V → ℝ} {g2 : ℝ} (hw : ∀ x, 0 ≤ w x) (hg2 : 0 ≤ g2) (h : V → ℝ) : 0 ≤ Graph.ipL2 lam h (linHess K lam w g2 h)",
+     "doc": "**`H ⪰ 0`** (`proofs.tex:605`: \"`H := g''(1)A†M_wA ⪰ 0`\"), read as `0 ≤ ⟪h ∣ Hh⟫_λ` — which is all the energy estimate uses."
+    },
+    {
+     "name": "meanL2_linHess",
+     "full": "GFNBounds.Balance.meanL2_linHess",
+     "kind": "theorem",
+     "line": 723,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanL2_linHess {K : V → V → ℝ} {lam : V → ℝ} (hinv : Invariant K lam) (w : V → ℝ) (g2 : ℝ) (h : V → ℝ) : Graph.meanL2 lam (linHess K lam w g2 h) = 0",
+     "doc": "**`ΠH = 0`** (`proofs.tex:605`: \"since `P†` preserves integrals\"), which is what conserves the total-flow normalization — `Discrete.stable_frozen_discrete`'s `hPiH`."
+    },
+    {
+     "name": "linHess_upper",
+     "full": "GFNBounds.Balance.linHess_upper",
+     "kind": "theorem",
+     "line": 731,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_upper {K : V → V → ℝ} {lam : V → ℝ} (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) {w : V → ℝ} {g2 wsup : ℝ} (hw : ∀ x, w x ≤ wsup) (hg2 : 0 ≤ g2) (hwsup0 : 0 ≤ wsup) (h : V → ℝ) : Graph.ipL2 lam h (linHess K lam w g2 h) ≤ 4 * g2 * wsup * Graph.nrmL2 lam h ^ 2",
+     "doc": "**`⟪h ∣ Hh⟫ ≤ 4g''(1)‖w‖_{L^∞}‖h‖²`** — the paper's `‖H‖ ≤ 4g''(1)‖w‖_{L^∞}` (`proofs.tex:609`), read as the quadratic form, which is what `Discrete.stable_frozen_discrete`'s `hup` asks for."
+    },
+    {
+     "name": "linHess_coercive",
+     "full": "GFNBounds.Balance.linHess_coercive",
+     "kind": "theorem",
+     "line": 763,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_coercive {K : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam K) (hKnn : ∀ x y, 0 ≤ K x y) {w : V → ℝ} {g2 wmin : ℝ} (hw : ∀ x, wmin ≤ w x) (hg2 : 0 ≤ g2) (h : V → ℝ) : g2 * wmin * Graph.nrmL2 lam (Aop K lam h) ^ 2 ≤ Graph.ipL2 lam h (linHess K lam w g2 h)",
+     "doc": "**`g''(1)w_min‖Ah‖² ≤ ⟪h ∣ Hh⟫`** (`proofs.tex:606`, `proofs.tex:634`) — the coercivity the energy estimate feeds to `lem:sigma_mixing`, which then replaces `‖Ah‖` by `‖h^⊥‖/B̂`."
+    },
+    {
+     "name": "expH",
+     "full": "GFNBounds.Balance.expH",
+     "kind": "def",
+     "line": 805,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def expH : Fin 2 → ℝ",
+     "doc": "`h = (1/5, −1/5)` on the two-state chain: mean zero, `L^∞` norm `1/5`."
+    },
+    {
+     "name": "expH_abs_le",
+     "full": "GFNBounds.Balance.expH_abs_le",
+     "kind": "theorem",
+     "line": 807,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem expH_abs_le : ∀ x, |expH x| ≤ 1 / 5",
+     "doc": ""
+    },
+    {
+     "name": "twoState_isMarkovOn",
+     "full": "GFNBounds.Balance.twoState_isMarkovOn",
+     "kind": "theorem",
+     "line": 811,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_isMarkovOn : Core.IsMarkovOn twoStateLam twoStateK",
+     "doc": ""
+    },
+    {
+     "name": "twoState_isInvariant",
+     "full": "GFNBounds.Balance.twoState_isInvariant",
+     "kind": "theorem",
+     "line": 814,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_isInvariant : Core.IsInvariant twoStateLam twoStateK",
+     "doc": ""
+    },
+    {
+     "name": "twoState_perpL2_expH",
+     "full": "GFNBounds.Balance.twoState_perpL2_expH",
+     "kind": "theorem",
+     "line": 818,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_perpL2_expH : perpL2 twoStateLam expH = expH",
+     "doc": "`Πh = 0`, so `h^⊥ = h`."
+    },
+    {
+     "name": "twoState_Aop_expH",
+     "full": "GFNBounds.Balance.twoState_Aop_expH",
+     "kind": "theorem",
+     "line": 826,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_Aop_expH : Aop twoStateK twoStateLam expH 0 = -(1 / 5) ∧ Aop twoStateK twoStateLam expH 1 = 1 / 5",
+     "doc": "**`Ah = (−1/5, 1/5)`**, `P` being the `λ`-average on this chain."
+    },
+    {
+     "name": "twoState_expansion_lossGrad",
+     "full": "GFNBounds.Balance.twoState_expansion_lossGrad",
+     "kind": "theorem",
+     "line": 834,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_expansion_lossGrad : lossGrad twoStateK twoStateLam (fun z => twoStateLam z * 1) (fun z => 2 * (z - 1)) (fun z => 1 + expH z) 0 = 175 / 432 ∧ lossGrad twoStateK twoStateLam (fun z => twoStateLam z * 1) (fun z => 2 * (z - 1)) (fun z => 1 + expH z) 1 = -(175 / 288)",
+     "doc": "**`D = (175/432, −175/288)`**, the gradient density evaluated — the number computed by hand in the section preamble, against the paper's `D = P†φ − rφ`."
+    },
+    {
+     "name": "twoState_expansion_linHess",
+     "full": "GFNBounds.Balance.twoState_expansion_linHess",
+     "kind": "theorem",
+     "line": 845,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_expansion_linHess : linHess twoStateK twoStateLam (fun _ => 1) 2 (perpL2 twoStateLam expH) 0 = 2 / 5 ∧ linHess twoStateK twoStateLam (fun _ => 1) 2 (perpL2 twoStateLam expH) 1 = -(2 / 5)",
+     "doc": "**`Hh^⊥ = (2/5, −2/5)`**, the linear part evaluated — `g''(1)(1−β)²h` at `β = 0`."
+    },
+    {
+     "name": "twoState_nrmL2_Aop",
+     "full": "GFNBounds.Balance.twoState_nrmL2_Aop",
+     "kind": "theorem",
+     "line": 856,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_nrmL2_Aop : Graph.nrmL2 twoStateLam (Aop twoStateK twoStateLam (perpL2 twoStateLam expH)) = 1 / 5",
+     "doc": "**`‖Ah^⊥‖_{L²(λ)} = 1/5`** on this instance."
+    },
+    {
+     "name": "twoState_expansion_check",
+     "full": "GFNBounds.Balance.twoState_expansion_check",
+     "kind": "theorem",
+     "line": 872,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_expansion_check : Graph.nrmL2 twoStateLam (fun x => lossGrad twoStateK twoStateLam (fun z => twoStateLam z * 1) (fun z => 2 * (z - 1)) (fun z => 1 + expH z) x - linHess twoStateK twoStateLam (fun _ => 1) 2 (perpL2 twoStateLam expH) x) ^ 2 = 805093 / 37324800 ∧ Graph.nrmL2 twoStateLam (fun x => lossGrad twoStateK twoStateLam (fun z => twoStateLam z * 1) (fun z => 2 * (z - 1)) (fun z => 1 + expH z) x - linHess twoStateK twoStateLam (fun _ => 1) 2 (perpL2 twoStateLam expH) x) ≤ 16 / 15",
+     "doc": "**`gradient_expansion`, evaluated and checked against a hand computation.** Three things at once: the error is the number computed by hand (`‖E‖² = 805093/37324800`), the theorem's own bound holds on this instance and reads `16/15`, and the two are consistent with a factor of about `7.3` to spare."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -1650,6 +2214,415 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Balance/L2Toolkit.lean",
+   "title": "The `L²(λ)` shelf the frozen-policy convergence block stands on: `A = P − I`, its adjoint, and a continuity bootstrap",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Core.Adjoint",
+    "GFNBounds.Balance.MassIdentity"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]"
+   ],
+   "lines": 528,
+   "decls": [
+    {
+     "name": "ipL2_comm",
+     "full": "GFNBounds.Balance.ipL2_comm",
+     "kind": "theorem",
+     "line": 105,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_comm (lam a b : V → ℝ) : Graph.ipL2 lam a b = Graph.ipL2 lam b a",
+     "doc": "`⟪a ∣ b⟫_λ = ⟪b ∣ a⟫_λ`."
+    },
+    {
+     "name": "ipL2_sub_left",
+     "full": "GFNBounds.Balance.ipL2_sub_left",
+     "kind": "theorem",
+     "line": 110,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_sub_left (lam a b c : V → ℝ) : Graph.ipL2 lam (fun x => a x - b x) c = Graph.ipL2 lam a c - Graph.ipL2 lam b c",
+     "doc": "`⟪a − b ∣ c⟫_λ = ⟪a ∣ c⟫_λ − ⟪b ∣ c⟫_λ`."
+    },
+    {
+     "name": "ipL2_sub_right",
+     "full": "GFNBounds.Balance.ipL2_sub_right",
+     "kind": "theorem",
+     "line": 117,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_sub_right (lam a b c : V → ℝ) : Graph.ipL2 lam a (fun x => b x - c x) = Graph.ipL2 lam a b - Graph.ipL2 lam a c",
+     "doc": "`⟪a ∣ b − c⟫_λ = ⟪a ∣ b⟫_λ − ⟪a ∣ c⟫_λ`."
+    },
+    {
+     "name": "meanL2_sub",
+     "full": "GFNBounds.Balance.meanL2_sub",
+     "kind": "theorem",
+     "line": 124,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanL2_sub (lam a b : V → ℝ) : Graph.meanL2 lam (fun x => a x - b x) = Graph.meanL2 lam a - Graph.meanL2 lam b",
+     "doc": "`Π(a − b) = Πa − Πb`."
+    },
+    {
+     "name": "nrmL2_neg",
+     "full": "GFNBounds.Balance.nrmL2_neg",
+     "kind": "theorem",
+     "line": 131,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_neg (lam a : V → ℝ) : Graph.nrmL2 lam (fun x => -a x) = Graph.nrmL2 lam a",
+     "doc": "`‖−a‖_λ = ‖a‖_λ`."
+    },
+    {
+     "name": "nrmL2_smul",
+     "full": "GFNBounds.Balance.nrmL2_smul",
+     "kind": "theorem",
+     "line": 136,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_smul (lam a : V → ℝ) (c : ℝ) : Graph.nrmL2 lam (fun x => c * a x) = |c| * Graph.nrmL2 lam a",
+     "doc": "`‖c·a‖_λ = |c|·‖a‖_λ`."
+    },
+    {
+     "name": "nrmL2_add_le",
+     "full": "GFNBounds.Balance.nrmL2_add_le",
+     "kind": "theorem",
+     "line": 147,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_add_le {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (a b : V → ℝ) : Graph.nrmL2 lam (fun x => a x + b x) ≤ Graph.nrmL2 lam a + Graph.nrmL2 lam b",
+     "doc": "**The triangle inequality for `‖·‖_{L²(λ)}`**, from the Cauchy–Schwarz `Graph.ipL2_le_mul_nrmL2`."
+    },
+    {
+     "name": "nrmL2_sub_le",
+     "full": "GFNBounds.Balance.nrmL2_sub_le",
+     "kind": "theorem",
+     "line": 169,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_sub_le {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (a b : V → ℝ) : Graph.nrmL2 lam (fun x => a x - b x) ≤ Graph.nrmL2 lam a + Graph.nrmL2 lam b",
+     "doc": "`‖a − b‖_λ ≤ ‖a‖_λ + ‖b‖_λ` — the form the two \"norm at most `2`\" bounds consume."
+    },
+    {
+     "name": "nrmL2_le_of_abs_le",
+     "full": "GFNBounds.Balance.nrmL2_le_of_abs_le",
+     "kind": "theorem",
+     "line": 180,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_le_of_abs_le {lam a b : V → ℝ} {c : ℝ} (hnn : ∀ x, 0 ≤ lam x) (hc : 0 ≤ c) (hab : ∀ x, |a x| ≤ c * |b x|) : Graph.nrmL2 lam a ≤ c * Graph.nrmL2 lam b",
+     "doc": "**A pointwise domination transfers to the norm**: `|a| ≤ c|b|` everywhere gives `‖a‖_λ ≤ c‖b‖_λ`."
+    },
+    {
+     "name": "abs_le_nrmL2_div_sqrt",
+     "full": "GFNBounds.Balance.abs_le_nrmL2_div_sqrt",
+     "kind": "theorem",
+     "line": 205,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_le_nrmL2_div_sqrt {lam : V → ℝ} {lamMin : ℝ} (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (a : V → ℝ) (x : V) : Real.sqrt lamMin * |a x| ≤ Graph.nrmL2 lam a",
+     "doc": "**`‖·‖_{L^∞} ≤ ‖·‖_{L²(λ)}/√λ_min`**, the paper's `C_∞ = (min λ)^{−1/2}` (`proofs.tex:613`), with `λ_min` a hypothesis rather than a minimum over a `MarkedGraph`."
+    },
+    {
+     "name": "Aop",
+     "full": "GFNBounds.Balance.Aop",
+     "kind": "def",
+     "line": 222,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Aop (K : V → V → ℝ) (lam h : V → ℝ) : V → ℝ",
+     "doc": "**The paper's `A = P − I`** (`eq:linearized_flow`, `proofs.tex:566`; `proofs.tex:741`), acting on densities: `P` is `Core.densAct`, the density action of the kernel `K` on `𝓜²(λ)`."
+    },
+    {
+     "name": "Adj",
+     "full": "GFNBounds.Balance.Adj",
+     "kind": "def",
+     "line": 227,
+     "attrs": "",
+     "private": false,
+     "statement": "def Adj (K : V → V → ℝ) (φ : V → ℝ) : V → ℝ",
+     "doc": "**The paper's `A† = P† − I`**, acting on functions: `P†` is the function action `(P†φ)(x) = ∑_y K(x,y)φ(y)`, the `L²(λ)`-adjoint of `P` by `lem:adjoint`*(3)*."
+    },
+    {
+     "name": "perpL2",
+     "full": "GFNBounds.Balance.perpL2",
+     "kind": "def",
+     "line": 230,
+     "attrs": "",
+     "private": false,
+     "statement": "def perpL2 (lam h : V → ℝ) : V → ℝ",
+     "doc": "**The paper's `h^⊥ := h − m`** with `m = Πh` a scalar (`proofs.tex:621`)."
+    },
+    {
+     "name": "perpL2_eq",
+     "full": "GFNBounds.Balance.perpL2_eq",
+     "kind": "theorem",
+     "line": 235,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem perpL2_eq (lam h : V → ℝ) : perpL2 lam h = fun x => h x - Graph.meanL2 lam h",
+     "doc": "The unapplied form of `perpL2`."
+    },
+    {
+     "name": "perpL2_apply",
+     "full": "GFNBounds.Balance.perpL2_apply",
+     "kind": "theorem",
+     "line": 237,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem perpL2_apply (lam h : V → ℝ) (x : V) : perpL2 lam h x = h x - Graph.meanL2 lam h",
+     "doc": ""
+    },
+    {
+     "name": "Aop_eq",
+     "full": "GFNBounds.Balance.Aop_eq",
+     "kind": "theorem",
+     "line": 241,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Aop_eq (K : V → V → ℝ) (lam h : V → ℝ) : Aop K lam h = fun y => Core.densAct lam K h y - h y",
+     "doc": "The unapplied form of `Aop`."
+    },
+    {
+     "name": "Aop_apply",
+     "full": "GFNBounds.Balance.Aop_apply",
+     "kind": "theorem",
+     "line": 244,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Aop_apply (K : V → V → ℝ) (lam h : V → ℝ) (y : V) : Aop K lam h y = Core.densAct lam K h y - h y",
+     "doc": ""
+    },
+    {
+     "name": "Adj_eq",
+     "full": "GFNBounds.Balance.Adj_eq",
+     "kind": "theorem",
+     "line": 248,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Adj_eq (K : V → V → ℝ) (φ : V → ℝ) : Adj K φ = fun x => funAct K φ x - φ x",
+     "doc": "The unapplied form of `Adj`."
+    },
+    {
+     "name": "Adj_apply",
+     "full": "GFNBounds.Balance.Adj_apply",
+     "kind": "theorem",
+     "line": 251,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Adj_apply (K : V → V → ℝ) (φ : V → ℝ) (x : V) : Adj K φ x = funAct K φ x - φ x",
+     "doc": ""
+    },
+    {
+     "name": "funAct_sub",
+     "full": "GFNBounds.Balance.funAct_sub",
+     "kind": "theorem",
+     "line": 257,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funAct_sub (K : V → V → ℝ) (a b : V → ℝ) : funAct K (fun y => a y - b y) = fun x => funAct K a x - funAct K b x",
+     "doc": "`P†` is linear: `P†(a − b) = P†a − P†b`."
+    },
+    {
+     "name": "densAct_sub",
+     "full": "GFNBounds.Balance.densAct_sub",
+     "kind": "theorem",
+     "line": 266,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densAct_sub (lam : V → ℝ) (K : V → V → ℝ) (a b : V → ℝ) (y : V) : Core.densAct lam K (fun x => a x - b x) y = Core.densAct lam K a y - Core.densAct lam K b y",
+     "doc": "`P` is linear: `P(a − b) = Pa − Pb`, at every state and with no hypothesis (both sides vanish together where `λ` does)."
+    },
+    {
+     "name": "funAct_const",
+     "full": "GFNBounds.Balance.funAct_const",
+     "kind": "theorem",
+     "line": 274,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funAct_const {K : V → V → ℝ} (hrow : ∀ x, ∑ y, K x y = 1) (c : ℝ) (x : V) : funAct K (fun _ => c) x = c",
+     "doc": "**`P†𝟏 = 𝟏`**: the function action fixes the constants, `K` being row-stochastic."
+    },
+    {
+     "name": "densAct_const",
+     "full": "GFNBounds.Balance.densAct_const",
+     "kind": "theorem",
+     "line": 282,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densAct_const {lam : V → ℝ} {K : V → V → ℝ} (hinv : Core.IsInvariant lam K) (c : ℝ) {y : V} (hy : lam y ≠ 0) : Core.densAct lam K (fun _ => c) y = c",
+     "doc": "**`P𝟏 = 𝟏` `λ`-almost everywhere**: the density action fixes the constants wherever `λ` charges, `λ` being invariant."
+    },
+    {
+     "name": "Aop_const",
+     "full": "GFNBounds.Balance.Aop_const",
+     "kind": "theorem",
+     "line": 288,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Aop_const {lam : V → ℝ} {K : V → V → ℝ} (hinv : Core.IsInvariant lam K) (c : ℝ) {y : V} (hy : lam y ≠ 0) : Aop K lam (fun _ => c) y = 0",
+     "doc": "**`A𝟏 = 0`**, `λ`-almost everywhere."
+    },
+    {
+     "name": "Adj_const",
+     "full": "GFNBounds.Balance.Adj_const",
+     "kind": "theorem",
+     "line": 293,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Adj_const {K : V → V → ℝ} (hrow : ∀ x, ∑ y, K x y = 1) (c : ℝ) (x : V) : Adj K (fun _ => c) x = 0",
+     "doc": "**`A†𝟏 = 0`**."
+    },
+    {
+     "name": "Aop_perpL2",
+     "full": "GFNBounds.Balance.Aop_perpL2",
+     "kind": "theorem",
+     "line": 299,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Aop_perpL2 {lam : V → ℝ} {K : V → V → ℝ} (hinv : Core.IsInvariant lam K) (h : V → ℝ) {y : V} (hy : lam y ≠ 0) : Aop K lam (perpL2 lam h) y = Aop K lam h y",
+     "doc": "**`Ah = Ah_⊥`** — the first of the four facts `proofs.tex:621` recalls."
+    },
+    {
+     "name": "ipL2_Adj_left",
+     "full": "GFNBounds.Balance.ipL2_Adj_left",
+     "kind": "theorem",
+     "line": 313,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_Adj_left {lam : V → ℝ} {K : V → V → ℝ} (hinv : Core.IsInvariant lam K) (hK : ∀ x y, 0 ≤ K x y) (φ h : V → ℝ) : Graph.ipL2 lam (Adj K φ) h = Graph.ipL2 lam φ (Aop K lam h)",
+     "doc": "**`⟪A†φ ∣ h⟫_λ = ⟪φ ∣ Ah⟫_λ`** — `A† = P† − I` is the `L²(λ)`-adjoint of `A = P − I`, `lem:adjoint`*(3)* minus the identity on both sides."
+    },
+    {
+     "name": "meanL2_funAct",
+     "full": "GFNBounds.Balance.meanL2_funAct",
+     "kind": "theorem",
+     "line": 333,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanL2_funAct {lam : V → ℝ} {K : V → V → ℝ} (hinv : Invariant K lam) (φ : V → ℝ) : Graph.meanL2 lam (funAct K φ) = Graph.meanL2 lam φ",
+     "doc": "**`∫ P†φ dλ = ∫ φ dλ`** read on `Π`: this is `Balance.integral_funAct` of `GFNBounds/Balance/MassIdentity.lean`, which the paper writes `⟨φ, P𝟏⟩ = ∫φ dλ` (`proofs.tex:802`)."
+    },
+    {
+     "name": "meanL2_Adj",
+     "full": "GFNBounds.Balance.meanL2_Adj",
+     "kind": "theorem",
+     "line": 338,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanL2_Adj {lam : V → ℝ} {K : V → V → ℝ} (hinv : Invariant K lam) (φ : V → ℝ) : Graph.meanL2 lam (Adj K φ) = 0",
+     "doc": "**`Π A†φ = 0`**: `A†` lands in the mean-zero subspace."
+    },
+    {
+     "name": "invariant_of_isInvariant",
+     "full": "GFNBounds.Balance.invariant_of_isInvariant",
+     "kind": "theorem",
+     "line": 346,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem invariant_of_isInvariant {lam : V → ℝ} {K : V → V → ℝ} (hinv : Core.IsInvariant lam K) : Invariant K lam",
+     "doc": "`Core.IsInvariant` implies the `Balance` spelling of invariance; the two are the same statement, `Core.IsInvariant` merely bundling `λ ≥ 0` with it."
+    },
+    {
+     "name": "nrmL2_funAct_le",
+     "full": "GFNBounds.Balance.nrmL2_funAct_le",
+     "kind": "theorem",
+     "line": 353,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_funAct_le {lam : V → ℝ} {K : V → V → ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (φ : V → ℝ) : Graph.nrmL2 lam (funAct K φ) ≤ Graph.nrmL2 lam φ",
+     "doc": "**`‖P†‖ ≤ 1`** — `Core.nrmL2_funAct_le`, restated for `Balance.funAct`."
+    },
+    {
+     "name": "nrmL2_densAct_le",
+     "full": "GFNBounds.Balance.nrmL2_densAct_le",
+     "kind": "theorem",
+     "line": 359,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_densAct_le {lam : V → ℝ} {K : V → V → ℝ} (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (u : V → ℝ) : Graph.nrmL2 lam (Core.densAct lam K u) ≤ Graph.nrmL2 lam u",
+     "doc": "**`‖P‖ ≤ 1`** — `Core.nrmL2_densAct_le`, re-exported."
+    },
+    {
+     "name": "nrmL2_Aop_le_two",
+     "full": "GFNBounds.Balance.nrmL2_Aop_le_two",
+     "kind": "theorem",
+     "line": 366,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_Aop_le_two {lam : V → ℝ} {K : V → V → ℝ} (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (h : V → ℝ) : Graph.nrmL2 lam (Aop K lam h) ≤ 2 * Graph.nrmL2 lam h",
+     "doc": "**`‖A‖ ≤ 2`** (`proofs.tex:621`, and `proofs.tex:609` where it buys `ε‖H‖ ≤ 1`): the triangle inequality against `‖P‖ ≤ 1`."
+    },
+    {
+     "name": "nrmL2_Adj_le_two",
+     "full": "GFNBounds.Balance.nrmL2_Adj_le_two",
+     "kind": "theorem",
+     "line": 376,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_Adj_le_two {lam : V → ℝ} {K : V → V → ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (φ : V → ℝ) : Graph.nrmL2 lam (Adj K φ) ≤ 2 * Graph.nrmL2 lam φ",
+     "doc": "**`‖A†‖ ≤ 2`** (`proofs.tex:621`)."
+    },
+    {
+     "name": "nrmL2_sq_eq_mean_sq_add_perp",
+     "full": "GFNBounds.Balance.nrmL2_sq_eq_mean_sq_add_perp",
+     "kind": "theorem",
+     "line": 391,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_sq_eq_mean_sq_add_perp {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1) (h : V → ℝ) : Graph.nrmL2 lam h ^ 2 = Graph.meanL2 lam h ^ 2 + Graph.nrmL2 lam (perpL2 lam h) ^ 2",
+     "doc": "**Pythagoras**: `‖h‖² = (Πh)² + ‖h_⊥‖²` when `λ` is a probability."
+    },
+    {
+     "name": "abs_meanL2_le_nrmL2",
+     "full": "GFNBounds.Balance.abs_meanL2_le_nrmL2",
+     "kind": "theorem",
+     "line": 409,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_meanL2_le_nrmL2 {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1) (h : V → ℝ) : |Graph.meanL2 lam h| ≤ Graph.nrmL2 lam h",
+     "doc": "**`|Πh| ≤ ‖h‖`**."
+    },
+    {
+     "name": "nrmL2_perpL2_le",
+     "full": "GFNBounds.Balance.nrmL2_perpL2_le",
+     "kind": "theorem",
+     "line": 419,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_perpL2_le {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1) (h : V → ℝ) : Graph.nrmL2 lam (perpL2 lam h) ≤ Graph.nrmL2 lam h",
+     "doc": "**`‖h_⊥‖ ≤ ‖h‖`**."
+    },
+    {
+     "name": "sqrt_one_sub_le",
+     "full": "GFNBounds.Balance.sqrt_one_sub_le",
+     "kind": "theorem",
+     "line": 438,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sqrt_one_sub_le {x : ℝ} (hx0 : 0 ≤ x) (hx1 : x ≤ 1) : Real.sqrt (1 - x) ≤ 1 - x / 2",
+     "doc": "`√(1 − x) ≤ 1 − x/2` on `[0,1]` — the concavity step behind a \"contracts by `1 − γϱ/4`\" reading of a \"contracts by `1 − γϱ/2`\" bound on the square (`proofs.tex:655–656`)."
+    },
+    {
+     "name": "bootstrap_of_continuous",
+     "full": "GFNBounds.Balance.bootstrap_of_continuous",
+     "kind": "theorem",
+     "line": 458,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bootstrap_of_continuous {h : ℝ → V → ℝ} {eps : ℝ} (heps : 0 < eps) (hcont : ∀ x, Continuous fun t => h t x) (hstart : ∀ x, |h 0 x| ≤ eps / 2) (hboot : ∀ t : ℝ, 0 ≤ t → (∀ s ∈ Set.Icc (0:ℝ) t, ∀ x, |h s x| ≤ eps) → ∀ x, |h t x| ≤ eps / 2) : ∀ t : ℝ, 0 ≤ t → ∀ x, |h t x| ≤ eps / 2",
+     "doc": "**The continuation bootstrap** — the shape of Step 4 of `theo:local_convergence_full` (`proofs.tex:643`: *\"on any interval where `‖h_s‖_{L^∞} ≤ ε` the estimates above give `‖h_t‖_{L^∞} ≤ ε/2`: by continuity the interval is all of `ℝ₊`\"*), stated for a family of continuous scalar functions and with no flow in sight."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Balance/Lift.lean",
    "title": "The edge lift: detailed balance is flow matching one step up",
    "labels": [],
@@ -2300,6 +3273,52 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Balance/LogSqTaylor.lean",
+   "title": "A second-order Taylor bound on `g'` for `g = (log x)²`, near `x = 1`",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.Lojasiewicz"
+   ],
+   "variables": [],
+   "lines": 117,
+   "decls": [
+    {
+     "name": "abs_log_sub_le_two_sq",
+     "full": "GFNBounds.Balance.abs_log_sub_le_two_sq",
+     "kind": "theorem",
+     "line": 69,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_log_sub_le_two_sq {y : ℝ} (hy : |y - 1| ≤ 1 / 2) : |Real.log y - (y - 1)| ≤ 2 * (y - 1) ^ 2",
+     "doc": "**`|log y − (y−1)| ≤ 2(y−1)²` for `|y − 1| ≤ 1/2`.** Both halves are one-sided logarithm bounds the library already has: `log y ≤ y − 1` is `Real.log_le_sub_one_of_pos`, and `(y−1)/y ≤ log y` is `sub_one_le_mul_log` divided by `y`."
+    },
+    {
+     "name": "logSqDeriv_taylor_twelve",
+     "full": "GFNBounds.Balance.logSqDeriv_taylor_twelve",
+     "kind": "theorem",
+     "line": 92,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem logSqDeriv_taylor_twelve {y : ℝ} (hy : |y - 1| ≤ 1 / 2) : |logSqDeriv y - 2 * (y - 1)| ≤ 12 * (y - 1) ^ 2",
+     "doc": "**The sharper form of `logSqDeriv_taylor`, with `12` in place of `40`.** `g'(y) − 2(y−1) = 2(log y − (y−1) − (y−1)²)/y`, because `y(y−1) = (y−1) + (y−1)²`; the numerator is at most `3(y−1)²` in absolute value by `abs_log_sub_le_two_sq`, and `1/y ≤ 2`."
+    },
+    {
+     "name": "logSqDeriv_taylor",
+     "full": "GFNBounds.Balance.logSqDeriv_taylor",
+     "kind": "theorem",
+     "line": 113,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem logSqDeriv_taylor {y : ℝ} (hy : |y - 1| ≤ 1 / 2) : |logSqDeriv y - 2 * (y - 1)| ≤ 40 * (y - 1) ^ 2",
+     "doc": "**`|g'(y) − 2(y−1)| ≤ 40(y−1)²` on `|y − 1| ≤ 1/2`, for `g = (log x)²`** — the second-order bound on `logSqDeriv` at `1`, with `g''(1) = 2` as the linear coefficient."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Balance/Lojasiewicz.lean",
    "title": "Coercivity off balance, and the Łojasiewicz inequality it delivers",
    "labels": [],
@@ -2586,6 +3605,249 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/MassAscent.lean",
+   "title": "The mass is the Lyapunov function: monotone ascent on the sphere, and the entry time",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.Flow",
+    "GFNBounds.Graph.Universality"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}",
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V]"
+   ],
+   "lines": 750,
+   "decls": [
+    {
+     "name": "rnWeight",
+     "full": "GFNBounds.Balance.rnWeight",
+     "kind": "def",
+     "line": 179,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def rnWeight (lam nu u : V → ℝ) : V → ℝ",
+     "doc": "**`dν/dμ = ν/(λu)`**, the Radon–Nikodym weight `Flow.lossGrad` substitutes for `w` — named here because the mass identity of `MassIdentity.lean` is stated in `w`, and the flow's `w` is this function of the flow."
+    },
+    {
+     "name": "lossGrad_eq_lossGradDensity",
+     "full": "GFNBounds.Balance.lossGrad_eq_lossGradDensity",
+     "kind": "theorem",
+     "line": 181,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lossGrad_eq_lossGradDensity (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : V → ℝ) : lossGrad K lam nu gd u = lossGradDensity K lam u (rnWeight lam nu u) gd",
+     "doc": ""
+    },
+    {
+     "name": "rnWeight_pos",
+     "full": "GFNBounds.Balance.rnWeight_pos",
+     "kind": "theorem",
+     "line": 186,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rnWeight_pos {lam nu u : V → ℝ} (hlam : ∀ x, 0 < lam x) (hnu : ∀ x, 0 < nu x) (hu : ∀ x, 0 < u x) (x : V) : 0 < rnWeight lam nu u x",
+     "doc": "`dν/dμ > 0` wherever `ν`, `λ` and `u` are."
+    },
+    {
+     "name": "hasDerivAt_mass_flow",
+     "full": "GFNBounds.Balance.hasDerivAt_mass_flow",
+     "kind": "theorem",
+     "line": 195,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_mass_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) : HasDerivAt (fun s : ℝ => Graph.meanL2 lam (u s)) (-(gradMass K lam (u t) (rnWeight lam nu (u t)) gd)) t",
+     "doc": "**`d/dt μ_t(𝒮̂) = −∫ D dλ`** (`proofs.tex:807`): along the gradient flow the total mass moves at minus the mass of the gradient."
+    },
+    {
+     "name": "mass_deriv_pos_off_balance",
+     "full": "GFNBounds.Balance.mass_deriv_pos_off_balance",
+     "kind": "theorem",
+     "line": 214,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_deriv_pos_off_balance {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hbal : ¬ Balanced K lam u) : 0 < -(gradMass K lam u (rnWeight lam nu u) gd)",
+     "doc": "**The mass strictly increases off balance** (`proofs.tex:791`, `:807`): its velocity `−∫ D dλ` is positive wherever `μ_t` is not balanced."
+    },
+    {
+     "name": "mass_monotone_flow",
+     "full": "GFNBounds.Balance.mass_monotone_flow",
+     "kind": "theorem",
+     "line": 229,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_monotone_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ t x, 0 < u t x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow K lam nu gd u) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0)",
+     "doc": "**The monotone ascent** (`proofs.tex:791`: \"training is a monotone ascent of the mass\"): along the gradient flow `t ↦ μ_t(𝒮̂)` is monotone on `[0,∞)`."
+    },
+    {
+     "name": "ipL2_sub_mean",
+     "full": "GFNBounds.Balance.ipL2_sub_mean",
+     "kind": "theorem",
+     "line": 245,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_sub_mean {lam : V → ℝ} (htot : ∑ x, lam x = 1) (v : V → ℝ) : ∑ x, lam x * (v x - Graph.meanL2 lam v) ^ 2 = Graph.ipL2 lam v v - Graph.meanL2 lam v ^ 2",
+     "doc": "**`∫(v − Πv)² dλ = ‖v‖²_{L²(λ)} − (Πv)²`**, the variance decomposition, on a probability `λ`."
+    },
+    {
+     "name": "mean_le_nrmL2_iff_const",
+     "full": "GFNBounds.Balance.mean_le_nrmL2_iff_const",
+     "kind": "theorem",
+     "line": 261,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mean_le_nrmL2_iff_const {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {v : V → ℝ} (hv : ∀ x, 0 ≤ v x) : Graph.meanL2 lam v ≤ Graph.nrmL2 lam v ∧ (Graph.meanL2 lam v = Graph.nrmL2 lam v ↔ ∀ x, v x = Graph.meanL2 lam v)",
+     "doc": "**`∫ u dλ ≤ ‖u‖_{L²(λ)}`, with equality if and only if `u` is constant** (`proofs.tex:807`) — Cauchy–Schwarz against `𝟏` on the probability `λ`, and its equality case."
+    },
+    {
+     "name": "balanced_const",
+     "full": "GFNBounds.Balance.balanced_const",
+     "kind": "theorem",
+     "line": 297,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem balanced_const {K : V → V → ℝ} {lam : V → ℝ} (hinv : Invariant K lam) (c : ℝ) : Balanced K lam (fun _ => c)",
+     "doc": "**A constant density is balanced**, on any kernel with an invariant `λ`: `μ = cλ` and `λK = λ` give `μK = μ`."
+    },
+    {
+     "name": "mass_ascent_lyapunov",
+     "full": "GFNBounds.Balance.mass_ascent_lyapunov",
+     "kind": "theorem",
+     "line": 312,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_ascent_lyapunov {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ t x, 0 < u t x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow K lam nu gd u) : (∀ t : ℝ, Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0)) ∧ MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0) ∧ (∀ t : ℝ, Graph.meanL2 lam (u t) ≤ Graph.nrmL2 lam (u 0)) ∧ (∀ t : ℝ, Graph.meanL2 lam (u t) = Graph.nrmL2 lam (u 0) → (∀ x, u t x = Graph.meanL2 lam (u t)) ∧ Balanced K lam (u t))",
+     "doc": "**`prop:no_distant_equilibrium`*(2)*, the Lyapunov half, for an abstract kernel.** Along the gradient flow: the sphere `‖u_t‖_{L²(λ)} = ‖u₀‖` is preserved, the mass ascends, it is bounded by `‖u₀‖`, and the bound is attained exactly at a constant density — which is balanced."
+    },
+    {
+     "name": "const_of_balanced_graph",
+     "full": "GFNBounds.Balance.const_of_balanced_graph",
+     "kind": "theorem",
+     "line": 353,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem const_of_balanced_graph (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam u : V → ℝ} (h : B.IsInvProb lam) (hu : ∀ x, 0 < u x) (hbal : Balanced B.phat lam u) (x : V) : u x = Graph.meanL2 lam u",
+     "doc": "**Balanced ⇒ constant, and this is ergodicity** (`proofs.tex:807`)."
+    },
+    {
+     "name": "mass_ascent_lyapunov_graph",
+     "full": "GFNBounds.Balance.mass_ascent_lyapunov_graph",
+     "kind": "theorem",
+     "line": 379,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_ascent_lyapunov_graph (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (h : B.IsInvProb lam) (hu : ∀ t x, 0 < u t x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow B.phat lam nu gd u) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0) ∧ ∀ t : ℝ, Graph.meanL2 lam (u t) ≤ Graph.nrmL2 lam (u 0) ∧ (Graph.meanL2 lam (u t) = Graph.nrmL2 lam (u 0) ↔ Balanced B.phat lam (u t))",
+     "doc": "**`prop:no_distant_equilibrium`*(2)*, the Lyapunov half, in full** — on the backward chain of a finite path-connected marked graph, where the paper's ergodicity hypothesis is available."
+    },
+    {
+     "name": "loss_antitone_flow",
+     "full": "GFNBounds.Balance.loss_antitone_flow",
+     "kind": "theorem",
+     "line": 415,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem loss_antitone_flow {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ t x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hflow : IsGradientFlow K lam nu gd u) : AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) (Set.Ici 0)",
+     "doc": "**`𝓛` decreases along the gradient flow** (`proofs.tex:811`), from the flow identity `−𝓛̇ = ‖D‖² ≥ 0`."
+    },
+    {
+     "name": "lossVal_antitone_flow",
+     "full": "GFNBounds.Balance.lossVal_antitone_flow",
+     "kind": "theorem",
+     "line": 426,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lossVal_antitone_flow {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ t x, 0 < u t x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) (Set.Ici 0)",
+     "doc": "The same for `g = (log x)²` in `Lojasiewicz.lean`'s variables, where `ν = wλ`."
+    },
+    {
+     "name": "lossVal_eq_zero_iff_balanced",
+     "full": "GFNBounds.Balance.lossVal_eq_zero_iff_balanced",
+     "kind": "theorem",
+     "line": 439,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lossVal_eq_zero_iff_balanced {K : V → V → ℝ} {lam u wf : V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < wf x) : lossVal lam wf logSq (ratio K lam u) = 0 ↔ Balanced K lam u",
+     "doc": "**`𝓛_{g,ν}(μ) = 0` if and only if `μ` is balanced**, for `g = (log x)²` and a positive weight: `(log r)² = 0` state by state is `r ≡ 1`, which is `ratio_eq_one_iff_balanced`."
+    },
+    {
+     "name": "lojasiewicz_integrated_nonneg",
+     "full": "GFNBounds.Balance.lojasiewicz_integrated_nonneg",
+     "kind": "theorem",
+     "line": 477,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lojasiewicz_integrated_nonneg {L L' : ℝ → ℝ} {kappa : ℝ} (hderiv : ∀ t : ℝ, HasDerivAt L (L' t) t) (hL0 : 0 ≤ L 0) (hineq : ∀ t : ℝ, 0 ≤ t → kappa ^ 2 * L t ^ 2 ≤ -L' t) : ∀ t : ℝ, 0 ≤ t → L t ≤ ((L 0)⁻¹ + kappa ^ 2 * t)⁻¹",
+     "doc": "**`lojasiewicz_integrated` without its positivity hypothesis** (`proofs.tex:884`)."
+    },
+    {
+     "name": "global_lojasiewicz_flow'",
+     "full": "GFNBounds.Balance.global_lojasiewicz_flow'",
+     "kind": "theorem",
+     "line": 538,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem global_lojasiewicz_flow' {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin wsup : ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ t x, 0 < u t x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hu0 : 0 < Graph.nrmL2 lam (u 0)) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → lossVal lam wf logSq (ratio K lam (u t)) ≤ ((lossVal lam wf logSq (ratio K lam (u 0)))⁻¹ + (wmin * Real.sqrt lamMin / (Graph.nrmL2 lam (u 0) * wsup * max 1 (Real.sqrt (lossVal lam wf logSq (ratio K lam (u 0)) / (wmin * lamMin))))) ^ 2 * t)⁻¹",
+     "doc": "**`cor:global_lojasiewicz`, both displays, with `L₀ = 𝓛(μ₀)` and no positivity hypothesis** (statement `proofs.tex:875–886`, proof `proofs.tex:887–898`)."
+    },
+    {
+     "name": "ratio_smul",
+     "full": "GFNBounds.Balance.ratio_smul",
+     "kind": "theorem",
+     "line": 584,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_smul {K : V → V → ℝ} {lam u : V → ℝ} {c : ℝ} (hc : c ≠ 0) : ratio K lam (fun x => c * u x) = ratio K lam u",
+     "doc": "**`r(cμ) = r(μ)`**: the ratio is scale-invariant, for any `c ≠ 0` — the first words of the proof of item *(2)* (`proofs.tex:807`)."
+    },
+    {
+     "name": "lossGrad_smul",
+     "full": "GFNBounds.Balance.lossGrad_smul",
+     "kind": "theorem",
+     "line": 598,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lossGrad_smul {K : V → V → ℝ} {lam nu u : V → ℝ} {gd : ℝ → ℝ} {c : ℝ} (hc : c ≠ 0) : lossGrad K lam nu gd (fun x => c * u x) = fun x => c⁻¹ * lossGrad K lam nu gd u x",
+     "doc": "**`D(cμ) = c^{-1} D(μ)`**, the homogeneity of the gradient field (`proofs.tex:813`)."
+    },
+    {
+     "name": "flow_rescale",
+     "full": "GFNBounds.Balance.flow_rescale",
+     "kind": "theorem",
+     "line": 621,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flow_rescale {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd u) {c : ℝ} (hc : 0 < c) (t₁ : ℝ) : IsGradientFlow K lam nu gd (fun s x => c⁻¹ * u (t₁ + c ^ 2 * s) x)",
+     "doc": "**The rescaled flow is a flow, run at speed `c²`** (`proofs.tex:813`): if `t ↦ μ_t` solves `μ̇ = −∇𝓛`, so does `s ↦ μ_{t₁ + c²s}/c`."
+    },
+    {
+     "name": "cDelta",
+     "full": "GFNBounds.Balance.cDelta",
+     "kind": "def",
+     "line": 648,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def cDelta (wmin lamMin u0nrm δ : ℝ) : ℝ",
+     "doc": "**`c(δ) = w_min λ_min^{3/2} δ²/(2‖u₀‖)`** (`proofs.tex:813`), the off-band lower bound on `‖D‖` — an explicit formula, not an `∃ C`."
+    },
+    {
+     "name": "entry_time",
+     "full": "GFNBounds.Balance.entry_time",
+     "kind": "theorem",
+     "line": 665,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem entry_time {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin δ : ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ t x, 0 < u t x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : 0 < Graph.nrmL2 lam (u 0)) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) (hδ0 : 0 < δ) (hδ1 : δ ≤ 1/2) : ∃ t₁ ∈ Set.Icc (0:ℝ) (lossVal lam wf logSq (ratio K lam (u 0)) / cDelta wmin lamMin (Graph.nrmL2 lam (u 0)) δ ^ 2), ∀ x, |ratio K lam (u t₁) x - 1| < δ",
+     "doc": "**The entry time** (`proofs.tex:813`: \"after time at most `𝓛(μ₀)/c(δ)²` all ratios are within `δ` of `1`\"): along the gradient flow of `𝓛_{g,ν}` with `g = (log x)²` and `ν = wλ`, `w ≥ w_min`, there is a time `t₁ ≤ 𝓛(μ₀)/c(δ)²` at which every ratio satisfies `|r(x) − 1| < δ`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -16680,6 +17942,1029 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Graph/CycleDivergence.lean",
+   "title": "No bound on the sampling error can hold for a divergence-based FM loss: the cyclic counter-example",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Graph.FrozenUnstable",
+    "GFNBounds.Balance.Freezing",
+    "GFNBounds.Core.StableBound"
+   ],
+   "variables": [
+    "variable {M : ℕ}",
+    "variable {V : Type*}",
+    "variable [DecidableEq V]",
+    "variable [Fintype V]"
+   ],
+   "lines": 896,
+   "decls": [
+    {
+     "name": "cycV",
+     "full": "GFNBounds.Graph.CycleDivergence.cycV",
+     "kind": "abbrev",
+     "line": 193,
+     "attrs": "",
+     "private": false,
+     "statement": "abbrev cycV (M : ℕ)",
+     "doc": "The vertices of the cyclic graph `C_N`, `N = M + 2`: `none` is `s₀`, `some none` is `s_f`, and `some (some i)` is the internal state `x_{i+1}`."
+    },
+    {
+     "name": "srcC",
+     "full": "GFNBounds.Graph.CycleDivergence.srcC",
+     "kind": "def",
+     "line": 196,
+     "attrs": "",
+     "private": false,
+     "statement": "def srcC (M : ℕ) : cycV M",
+     "doc": "The source `s₀`."
+    },
+    {
+     "name": "snkC",
+     "full": "GFNBounds.Graph.CycleDivergence.snkC",
+     "kind": "def",
+     "line": 199,
+     "attrs": "",
+     "private": false,
+     "statement": "def snkC (M : ℕ) : cycV M",
+     "doc": "The sink `s_f`."
+    },
+    {
+     "name": "xC",
+     "full": "GFNBounds.Graph.CycleDivergence.xC",
+     "kind": "def",
+     "line": 202,
+     "attrs": "",
+     "private": false,
+     "statement": "def xC (M : ℕ) (i : Fin (M + 2)) : cycV M",
+     "doc": "The internal state `x_{i+1}`; `xC M 0` is the paper's `x₁` and `xC M 1` its `x₂`."
+    },
+    {
+     "name": "xC_inj",
+     "full": "GFNBounds.Graph.CycleDivergence.xC_inj",
+     "kind": "theorem",
+     "line": 206,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem xC_inj {i j : Fin (M + 2)} : xC M i = xC M j ↔ i = j",
+     "doc": ""
+    },
+    {
+     "name": "xC_injective",
+     "full": "GFNBounds.Graph.CycleDivergence.xC_injective",
+     "kind": "theorem",
+     "line": 209,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem xC_injective (M : ℕ) : Function.Injective (xC M)",
+     "doc": ""
+    },
+    {
+     "name": "xC_ne_srcC",
+     "full": "GFNBounds.Graph.CycleDivergence.xC_ne_srcC",
+     "kind": "theorem",
+     "line": 211,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem xC_ne_srcC (i : Fin (M + 2)) : xC M i ≠ srcC M",
+     "doc": ""
+    },
+    {
+     "name": "xC_ne_snkC",
+     "full": "GFNBounds.Graph.CycleDivergence.xC_ne_snkC",
+     "kind": "theorem",
+     "line": 213,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem xC_ne_snkC (i : Fin (M + 2)) : xC M i ≠ snkC M",
+     "doc": ""
+    },
+    {
+     "name": "srcC_ne_xC",
+     "full": "GFNBounds.Graph.CycleDivergence.srcC_ne_xC",
+     "kind": "theorem",
+     "line": 215,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem srcC_ne_xC (i : Fin (M + 2)) : srcC M ≠ xC M i",
+     "doc": ""
+    },
+    {
+     "name": "snkC_ne_xC",
+     "full": "GFNBounds.Graph.CycleDivergence.snkC_ne_xC",
+     "kind": "theorem",
+     "line": 217,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem snkC_ne_xC (i : Fin (M + 2)) : snkC M ≠ xC M i",
+     "doc": ""
+    },
+    {
+     "name": "srcC_ne_snkC",
+     "full": "GFNBounds.Graph.CycleDivergence.srcC_ne_snkC",
+     "kind": "theorem",
+     "line": 219,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem srcC_ne_snkC : srcC M ≠ snkC M",
+     "doc": ""
+    },
+    {
+     "name": "snkC_ne_srcC",
+     "full": "GFNBounds.Graph.CycleDivergence.snkC_ne_srcC",
+     "kind": "theorem",
+     "line": 221,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem snkC_ne_srcC : snkC M ≠ srcC M",
+     "doc": ""
+    },
+    {
+     "name": "cycV_cases",
+     "full": "GFNBounds.Graph.CycleDivergence.cycV_cases",
+     "kind": "theorem",
+     "line": 224,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycV_cases {p : cycV M → Prop} (hs : p (srcC M)) (ht : p (snkC M)) (hx : ∀ i, p (xC M i)) : ∀ v, p v",
+     "doc": "Case analysis on a vertex, in the paper's names."
+    },
+    {
+     "name": "sum_cycV",
+     "full": "GFNBounds.Graph.CycleDivergence.sum_cycV",
+     "kind": "theorem",
+     "line": 232,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_cycV (f : cycV M → ℝ) : ∑ v, f v = f (srcC M) + (f (snkC M) + ∑ i, f (xC M i))",
+     "doc": "Every sum over the vertices splits into the two marks and the `N` internal states."
+    },
+    {
+     "name": "cycEdge",
+     "full": "GFNBounds.Graph.CycleDivergence.cycEdge",
+     "kind": "def",
+     "line": 242,
+     "attrs": "",
+     "private": false,
+     "statement": "def cycEdge (M : ℕ) (u v : cycV M) : Prop",
+     "doc": "**`theo:no_bound_divergence`, the graph `𝒞_N`** (`proofs.tex:387`): the initial edge `s₀ → x₁`, a terminal edge `xᵢ → s_f` for every `i`, and the cycle edges `xᵢ → x_{i+1 mod N}`."
+    },
+    {
+     "name": "cycGraph",
+     "full": "GFNBounds.Graph.CycleDivergence.cycGraph",
+     "kind": "def",
+     "line": 248,
+     "attrs": "",
+     "private": false,
+     "statement": "def cycGraph (M : ℕ) : MarkedGraph (cycV M)",
+     "doc": "**`theo:no_bound_divergence`, the marked graph `𝒞_N`**: `s₀` receives no edge (the three edge families all end at an internal state or at `s_f`) and `s_f` emits none."
+    },
+    {
+     "name": "cycGraph_src",
+     "full": "GFNBounds.Graph.CycleDivergence.cycGraph_src",
+     "kind": "theorem",
+     "line": 260,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem cycGraph_src : (cycGraph M).src = srcC M",
+     "doc": ""
+    },
+    {
+     "name": "cycGraph_snk",
+     "full": "GFNBounds.Graph.CycleDivergence.cycGraph_snk",
+     "kind": "theorem",
+     "line": 262,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem cycGraph_snk : (cycGraph M).snk = snkC M",
+     "doc": ""
+    },
+    {
+     "name": "cycGraph_edge_iff",
+     "full": "GFNBounds.Graph.CycleDivergence.cycGraph_edge_iff",
+     "kind": "theorem",
+     "line": 264,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycGraph_edge_iff {u v : cycV M} : (cycGraph M).Edge u v ↔ cycEdge M u v",
+     "doc": ""
+    },
+    {
+     "name": "internal_eq",
+     "full": "GFNBounds.Graph.CycleDivergence.internal_eq",
+     "kind": "theorem",
+     "line": 267,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem internal_eq (M : ℕ) : (cycGraph M).internal = Finset.univ.map ⟨xC M, xC_injective M⟩",
+     "doc": "The internal state space `𝒮 = 𝒱 ∖ {s₀, s_f}` is exactly the `N` states `x₁,…,x_N`."
+    },
+    {
+     "name": "sum_internal",
+     "full": "GFNBounds.Graph.CycleDivergence.sum_internal",
+     "kind": "theorem",
+     "line": 281,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_internal (f : cycV M → ℝ) : ∑ x ∈ (cycGraph M).internal, f x = ∑ i, f (xC M i)",
+     "doc": "A sum over `𝒮` is a sum over the `N` internal indices."
+    },
+    {
+     "name": "mem_internal_iff",
+     "full": "GFNBounds.Graph.CycleDivergence.mem_internal_iff",
+     "kind": "theorem",
+     "line": 287,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mem_internal_iff {v : cycV M} : v ∈ (cycGraph M).internal ↔ ∃ i, v = xC M i",
+     "doc": "Membership in `𝒮`, in the paper's names."
+    },
+    {
+     "name": "card_internal",
+     "full": "GFNBounds.Graph.CycleDivergence.card_internal",
+     "kind": "theorem",
+     "line": 293,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem card_internal (M : ℕ) : (cycGraph M).internal.card = M + 2",
+     "doc": "**`#𝒞_N = N`**: the graph has exactly `N = M + 2` internal states, which is what the supremum of `theo:no_bound_divergence` ranges over."
+    },
+    {
+     "name": "unitEdge",
+     "full": "GFNBounds.Graph.CycleDivergence.unitEdge",
+     "kind": "def",
+     "line": 302,
+     "attrs": "",
+     "private": false,
+     "statement": "def unitEdge [DecidableEq V] (a b : V) : V → V → ℝ",
+     "doc": "The edgeflow carrying mass `1` on the single transition `a → b` and nothing elsewhere."
+    },
+    {
+     "name": "unitEdge_nonneg",
+     "full": "GFNBounds.Graph.CycleDivergence.unitEdge_nonneg",
+     "kind": "theorem",
+     "line": 306,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unitEdge_nonneg (a b u v : V) : 0 ≤ unitEdge a b u v",
+     "doc": ""
+    },
+    {
+     "name": "unitEdge_eq_zero_of_ne",
+     "full": "GFNBounds.Graph.CycleDivergence.unitEdge_eq_zero_of_ne",
+     "kind": "theorem",
+     "line": 309,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unitEdge_eq_zero_of_ne {a b u v : V} (h : ¬ (u = a ∧ v = b)) : unitEdge a b u v = 0",
+     "doc": ""
+    },
+    {
+     "name": "unitEdge_of_ne_zero",
+     "full": "GFNBounds.Graph.CycleDivergence.unitEdge_of_ne_zero",
+     "kind": "theorem",
+     "line": 312,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unitEdge_of_ne_zero {a b u v : V} (h : unitEdge a b u v ≠ 0) : u = a ∧ v = b",
+     "doc": ""
+    },
+    {
+     "name": "edgeInflow_unitEdge",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeInflow_unitEdge",
+     "kind": "theorem",
+     "line": 318,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_unitEdge (a b v : V) : edgeInflow (unitEdge a b) v = if v = b then 1 else 0",
+     "doc": ""
+    },
+    {
+     "name": "edgeOutflow_unitEdge",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeOutflow_unitEdge",
+     "kind": "theorem",
+     "line": 322,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeOutflow_unitEdge (a b u : V) : edgeOutflow (unitEdge a b) u = if u = a then 1 else 0",
+     "doc": ""
+    },
+    {
+     "name": "edgeInflow_add",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeInflow_add",
+     "kind": "theorem",
+     "line": 327,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_add (F G : V → V → ℝ) (v : V) : edgeInflow (F + G) v = edgeInflow F v + edgeInflow G v",
+     "doc": ""
+    },
+    {
+     "name": "edgeOutflow_add",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeOutflow_add",
+     "kind": "theorem",
+     "line": 332,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeOutflow_add (F G : V → V → ℝ) (u : V) : edgeOutflow (F + G) u = edgeOutflow F u + edgeOutflow G u",
+     "doc": ""
+    },
+    {
+     "name": "unitEdge_eq_zero_of_ne_left",
+     "full": "GFNBounds.Graph.CycleDivergence.unitEdge_eq_zero_of_ne_left",
+     "kind": "theorem",
+     "line": 337,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unitEdge_eq_zero_of_ne_left {a b u : V} (h : u ≠ a) (v : V) : unitEdge a b u v = 0",
+     "doc": ""
+    },
+    {
+     "name": "unitEdge_eq_zero_of_ne_right",
+     "full": "GFNBounds.Graph.CycleDivergence.unitEdge_eq_zero_of_ne_right",
+     "kind": "theorem",
+     "line": 341,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unitEdge_eq_zero_of_ne_right {a b v : V} (h : v ≠ b) (u : V) : unitEdge a b u v = 0",
+     "doc": ""
+    },
+    {
+     "name": "unitEdge_left",
+     "full": "GFNBounds.Graph.CycleDivergence.unitEdge_left",
+     "kind": "theorem",
+     "line": 345,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unitEdge_left (a b v : V) : unitEdge a b a v = if v = b then 1 else 0",
+     "doc": ""
+    },
+    {
+     "name": "unitEdge_right",
+     "full": "GFNBounds.Graph.CycleDivergence.unitEdge_right",
+     "kind": "theorem",
+     "line": 349,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unitEdge_right (a b u : V) : unitEdge a b u b = if u = a then 1 else 0",
+     "doc": ""
+    },
+    {
+     "name": "Fhat",
+     "full": "GFNBounds.Graph.CycleDivergence.Fhat",
+     "kind": "def",
+     "line": 356,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Fhat (M : ℕ) : cycV M → cycV M → ℝ",
+     "doc": "**`theo:no_bound_divergence`, the flow `F̂`** (`proofs.tex:388`): the unit-mass flow routed `s₀ → x₁ → x₂ → s_f`."
+    },
+    {
+     "name": "Fhat_apply",
+     "full": "GFNBounds.Graph.CycleDivergence.Fhat_apply",
+     "kind": "theorem",
+     "line": 359,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fhat_apply (u v : cycV M) : Fhat M u v = unitEdge (srcC M) (xC M 0) u v + unitEdge (xC M 0) (xC M 1) u v + unitEdge (xC M 1) (snkC M) u v",
+     "doc": ""
+    },
+    {
+     "name": "gammaC",
+     "full": "GFNBounds.Graph.CycleDivergence.gammaC",
+     "kind": "def",
+     "line": 365,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def gammaC (M : ℕ) : cycV M → cycV M → ℝ",
+     "doc": "**`theo:no_bound_divergence`, the unit circulation `γ`** (`proofs.tex:388`): `γ = 1` on each cycle edge `xᵢ → x_{i+1}`, `0` elsewhere."
+    },
+    {
+     "name": "gammaC_apply",
+     "full": "GFNBounds.Graph.CycleDivergence.gammaC_apply",
+     "kind": "theorem",
+     "line": 368,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gammaC_apply (u v : cycV M) : gammaC M u v = ∑ i, unitEdge (xC M i) (xC M (i + 1)) u v",
+     "doc": ""
+    },
+    {
+     "name": "Fhat_nonneg",
+     "full": "GFNBounds.Graph.CycleDivergence.Fhat_nonneg",
+     "kind": "theorem",
+     "line": 372,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fhat_nonneg (u v : cycV M) : 0 ≤ Fhat M u v",
+     "doc": ""
+    },
+    {
+     "name": "gammaC_nonneg",
+     "full": "GFNBounds.Graph.CycleDivergence.gammaC_nonneg",
+     "kind": "theorem",
+     "line": 379,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gammaC_nonneg (u v : cycV M) : 0 ≤ gammaC M u v",
+     "doc": ""
+    },
+    {
+     "name": "gammaC_srcC",
+     "full": "GFNBounds.Graph.CycleDivergence.gammaC_srcC",
+     "kind": "theorem",
+     "line": 383,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gammaC_srcC (u : cycV M) : gammaC M u (srcC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "gammaC_snkC",
+     "full": "GFNBounds.Graph.CycleDivergence.gammaC_snkC",
+     "kind": "theorem",
+     "line": 387,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gammaC_snkC (u : cycV M) : gammaC M u (snkC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "Fhat_srcC",
+     "full": "GFNBounds.Graph.CycleDivergence.Fhat_srcC",
+     "kind": "theorem",
+     "line": 391,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fhat_srcC (u : cycV M) : Fhat M u (srcC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "Fhat_snkC",
+     "full": "GFNBounds.Graph.CycleDivergence.Fhat_snkC",
+     "kind": "theorem",
+     "line": 396,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fhat_snkC (u : cycV M) : Fhat M u (snkC M) = if u = xC M 1 then 1 else 0",
+     "doc": ""
+    },
+    {
+     "name": "edgeInflow_Fhat",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeInflow_Fhat",
+     "kind": "theorem",
+     "line": 402,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_Fhat (v : cycV M) : edgeInflow (Fhat M) v = (if v = xC M 0 then 1 else 0) + (if v = xC M 1 then 1 else 0) + (if v = snkC M then 1 else 0)",
+     "doc": ""
+    },
+    {
+     "name": "edgeOutflow_Fhat",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeOutflow_Fhat",
+     "kind": "theorem",
+     "line": 407,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeOutflow_Fhat (u : cycV M) : edgeOutflow (Fhat M) u = (if u = srcC M then 1 else 0) + (if u = xC M 0 then 1 else 0) + (if u = xC M 1 then 1 else 0)",
+     "doc": ""
+    },
+    {
+     "name": "edgeInflow_gammaC",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeInflow_gammaC",
+     "kind": "theorem",
+     "line": 412,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_gammaC (v : cycV M) : edgeInflow (gammaC M) v = ∑ i, (if v = xC M (i + 1) then (1 : ℝ) else 0)",
+     "doc": ""
+    },
+    {
+     "name": "edgeOutflow_gammaC",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeOutflow_gammaC",
+     "kind": "theorem",
+     "line": 418,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeOutflow_gammaC (u : cycV M) : edgeOutflow (gammaC M) u = ∑ i, (if u = xC M i then (1 : ℝ) else 0)",
+     "doc": ""
+    },
+    {
+     "name": "edgeInflow_gammaC_x",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeInflow_gammaC_x",
+     "kind": "theorem",
+     "line": 424,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_gammaC_x (j : Fin (M + 2)) : edgeInflow (gammaC M) (xC M j) = 1",
+     "doc": ""
+    },
+    {
+     "name": "edgeOutflow_gammaC_x",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeOutflow_gammaC_x",
+     "kind": "theorem",
+     "line": 434,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeOutflow_gammaC_x (i : Fin (M + 2)) : edgeOutflow (gammaC M) (xC M i) = 1",
+     "doc": ""
+    },
+    {
+     "name": "edgeInflow_gammaC_srcC",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeInflow_gammaC_srcC",
+     "kind": "theorem",
+     "line": 438,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_gammaC_srcC : edgeInflow (gammaC M) (srcC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "edgeInflow_gammaC_snkC",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeInflow_gammaC_snkC",
+     "kind": "theorem",
+     "line": 441,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_gammaC_snkC : edgeInflow (gammaC M) (snkC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "edgeOutflow_gammaC_srcC",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeOutflow_gammaC_srcC",
+     "kind": "theorem",
+     "line": 444,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeOutflow_gammaC_srcC : edgeOutflow (gammaC M) (srcC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "edgeOutflow_gammaC_snkC",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeOutflow_gammaC_snkC",
+     "kind": "theorem",
+     "line": 447,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeOutflow_gammaC_snkC : edgeOutflow (gammaC M) (snkC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "isCirculation_gammaC",
+     "full": "GFNBounds.Graph.CycleDivergence.isCirculation_gammaC",
+     "kind": "theorem",
+     "line": 452,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isCirculation_gammaC (M : ℕ) : IsCirculation (gammaC M)",
+     "doc": "**`γ` is a `0`-flow** (`proofs.tex:388`): every internal state gains `1` and loses `1`, and the cycle touches neither mark."
+    },
+    {
+     "name": "gammaMC",
+     "full": "GFNBounds.Graph.CycleDivergence.gammaMC",
+     "kind": "def",
+     "line": 461,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def gammaMC (M : ℕ) : MarkedCirculation (cycGraph M)",
+     "doc": "**`γ` as the `MarkedCirculation` of `GFNBounds.Graph`** — the hypothesis bundle `prop:frozen_unstable_full` consumes of its own `1_γ`, here discharged rather than assumed."
+    },
+    {
+     "name": "Fk",
+     "full": "GFNBounds.Graph.CycleDivergence.Fk",
+     "kind": "def",
+     "line": 476,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Fk (M : ℕ) (k : ℝ) : cycV M → cycV M → ℝ",
+     "doc": "**`theo:no_bound_divergence`, the family `F_k := F̂ + kγ`** (`proofs.tex:388`)."
+    },
+    {
+     "name": "edgeInflow_Fk",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeInflow_Fk",
+     "kind": "theorem",
+     "line": 479,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_Fk (k : ℝ) (v : cycV M) : edgeInflow (Fk M k) v = edgeInflow (Fhat M) v + k * edgeInflow (gammaC M) v",
+     "doc": ""
+    },
+    {
+     "name": "edgeOutflow_Fk",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeOutflow_Fk",
+     "kind": "theorem",
+     "line": 483,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeOutflow_Fk (k : ℝ) (u : cycV M) : edgeOutflow (Fk M k) u = edgeOutflow (Fhat M) u + k * edgeOutflow (gammaC M) u",
+     "doc": ""
+    },
+    {
+     "name": "Fk_nonneg",
+     "full": "GFNBounds.Graph.CycleDivergence.Fk_nonneg",
+     "kind": "theorem",
+     "line": 487,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fk_nonneg {k : ℝ} (hk : 0 ≤ k) (u v : cycV M) : 0 ≤ Fk M k u v",
+     "doc": ""
+    },
+    {
+     "name": "Fk_srcC",
+     "full": "GFNBounds.Graph.CycleDivergence.Fk_srcC",
+     "kind": "theorem",
+     "line": 490,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fk_srcC (k : ℝ) (u : cycV M) : Fk M k u (srcC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "Fk_snkC",
+     "full": "GFNBounds.Graph.CycleDivergence.Fk_snkC",
+     "kind": "theorem",
+     "line": 493,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fk_snkC (k : ℝ) (u : cycV M) : Fk M k u (snkC M) = if u = xC M 1 then 1 else 0",
+     "doc": ""
+    },
+    {
+     "name": "Fk_supp",
+     "full": "GFNBounds.Graph.CycleDivergence.Fk_supp",
+     "kind": "theorem",
+     "line": 498,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fk_supp {k : ℝ} {u v : cycV M} (h : Fk M k u v ≠ 0) : (cycGraph M).Edge u v",
+     "doc": "Every transition `F_k` charges is an edge of `𝒞_N`: `F̂` rides on the initial edge, one cycle edge and one terminal edge, and `γ` on the cycle."
+    },
+    {
+     "name": "Fk_flowMatching",
+     "full": "GFNBounds.Graph.CycleDivergence.Fk_flowMatching",
+     "kind": "theorem",
+     "line": 522,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fk_flowMatching (k : ℝ) : ∀ x ∈ (cycGraph M).internal, edgeInflow (Fk M k) x = edgeOutflow (Fk M k) x",
+     "doc": "**`F_k` is flow-matching for every `k`** (`proofs.tex:388`): the circulation adds `k` to the inflow and `k` to the outflow of every internal state, so the constraint `equ:FM_const` at `𝒮` — which on a marked graph is conservation at the internal states — is untouched."
+    },
+    {
+     "name": "zero_ne_one_fin",
+     "full": "GFNBounds.Graph.CycleDivergence.zero_ne_one_fin",
+     "kind": "theorem",
+     "line": 532,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem zero_ne_one_fin (M : ℕ) : (0 : Fin (M + 2)) ≠ 1",
+     "doc": ""
+    },
+    {
+     "name": "sum_fin_ite_zero",
+     "full": "GFNBounds.Graph.CycleDivergence.sum_fin_ite_zero",
+     "kind": "theorem",
+     "line": 534,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_fin_ite_zero (A B : ℝ) : ∑ i : Fin (M + 2), (if i = 0 then A else B) = A + ((M : ℝ) + 1) * B",
+     "doc": ""
+    },
+    {
+     "name": "sum_fin_ite_two",
+     "full": "GFNBounds.Graph.CycleDivergence.sum_fin_ite_two",
+     "kind": "theorem",
+     "line": 544,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_fin_ite_two (A B C : ℝ) : ∑ i : Fin (M + 2), (if i = 0 then A else if i = 1 then B else C) = A + B + (M : ℝ) * C",
+     "doc": ""
+    },
+    {
+     "name": "targetC",
+     "full": "GFNBounds.Graph.CycleDivergence.targetC",
+     "kind": "def",
+     "line": 568,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def targetC (M : ℕ) (delta : ℝ) : cycV M → ℝ",
+     "doc": "**`theo:no_bound_divergence`, the target** (`proofs.tex:387`): `target(x₁) = 1 − δ` and `target(xᵢ) = δ/(N−1)` for `i ≥ 2`, with `N − 1 = M + 1`."
+    },
+    {
+     "name": "targetC_srcC",
+     "full": "GFNBounds.Graph.CycleDivergence.targetC_srcC",
+     "kind": "theorem",
+     "line": 573,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem targetC_srcC (delta : ℝ) : targetC M delta (srcC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "targetC_snkC",
+     "full": "GFNBounds.Graph.CycleDivergence.targetC_snkC",
+     "kind": "theorem",
+     "line": 575,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem targetC_snkC (delta : ℝ) : targetC M delta (snkC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "targetC_x",
+     "full": "GFNBounds.Graph.CycleDivergence.targetC_x",
+     "kind": "theorem",
+     "line": 577,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem targetC_x (delta : ℝ) (i : Fin (M + 2)) : targetC M delta (xC M i) = if i = 0 then 1 - delta else delta / ((M : ℝ) + 1)",
+     "doc": ""
+    },
+    {
+     "name": "sum_targetC",
+     "full": "GFNBounds.Graph.CycleDivergence.sum_targetC",
+     "kind": "theorem",
+     "line": 581,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_targetC (delta : ℝ) : ∑ v, targetC M delta v = 1",
+     "doc": "**The target is a probability measure on `𝒮`**: `(1 − δ) + (N − 1)·δ/(N − 1) = 1`."
+    },
+    {
+     "name": "fmRatio",
+     "full": "GFNBounds.Graph.CycleDivergence.fmRatio",
+     "kind": "def",
+     "line": 596,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def fmRatio (G : MarkedGraph V) (target : V → ℝ) (F : V → V → ℝ) (x : V) : ℝ",
+     "doc": "**`theo:no_bound_divergence`, the ratio of the two sides of `equ:FM_const`** (`proofs.tex:393`): `ρ(x) = (F_init + f_←)(x)/(target + f_→)(x)`, with the **target** in the denominator in place of the flow's own terminal flow."
+    },
+    {
+     "name": "fmLossTarget",
+     "full": "GFNBounds.Graph.CycleDivergence.fmLossTarget",
+     "kind": "def",
+     "line": 602,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def fmLossTarget (G : MarkedGraph V) (g : ℝ → ℝ) (nu target : V → ℝ) (F : V → V → ℝ) : ℝ",
+     "doc": "**`theo:no_bound_divergence`, a divergence-based FM loss** (`proofs.tex:393`): `𝓛(F) = ∫ g(ρ) dν_train`, the integral over the internal states of a generator `g` of the ratio of the two sides of the flow-matching constraint."
+    },
+    {
+     "name": "aC",
+     "full": "GFNBounds.Graph.CycleDivergence.aC",
+     "kind": "def",
+     "line": 609,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def aC (M : ℕ) (i : Fin (M + 2)) : ℝ",
+     "doc": "**The numerators `aᵢ` of `proofs.tex:395`**: `a₁ = a₂ = 1`, `aᵢ = 0` for `i ≥ 3`."
+    },
+    {
+     "name": "bC",
+     "full": "GFNBounds.Graph.CycleDivergence.bC",
+     "kind": "def",
+     "line": 612,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def bC (M : ℕ) (delta : ℝ) (i : Fin (M + 2)) : ℝ",
+     "doc": "**The denominators `bᵢ` of `proofs.tex:395`**: `b₁ = 2 − δ`, `bᵢ = δ/(N−1)` for `i ≥ 2`."
+    },
+    {
+     "name": "sum_internal_row",
+     "full": "GFNBounds.Graph.CycleDivergence.sum_internal_row",
+     "kind": "theorem",
+     "line": 615,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_internal_row (F : cycV M → cycV M → ℝ) (u : cycV M) : ∑ v ∈ (cycGraph M).internal, F u v = edgeOutflow F u - F u (srcC M) - F u (snkC M)",
+     "doc": ""
+    },
+    {
+     "name": "indicator_add",
+     "full": "GFNBounds.Graph.CycleDivergence.indicator_add",
+     "kind": "theorem",
+     "line": 623,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem indicator_add (j : Fin (M + 2)) : (if j = 0 then (1 : ℝ) else 0) + (if j = 1 then (1 : ℝ) else 0) = aC M j",
+     "doc": "`aᵢ` is the sum of the two indicators `F̂` contributes to the inflow at `xᵢ`."
+    },
+    {
+     "name": "edgeInflow_Fk_x",
+     "full": "GFNBounds.Graph.CycleDivergence.edgeInflow_Fk_x",
+     "kind": "theorem",
+     "line": 631,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeInflow_Fk_x (k : ℝ) (j : Fin (M + 2)) : edgeInflow (Fk M k) (xC M j) = aC M j + k",
+     "doc": "**The numerator of `ρ_k` at an internal state**: `(F_init + f^k_←)(xᵢ) = aᵢ + k`."
+    },
+    {
+     "name": "foutC_Fk_x",
+     "full": "GFNBounds.Graph.CycleDivergence.foutC_Fk_x",
+     "kind": "theorem",
+     "line": 639,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem foutC_Fk_x (k : ℝ) (j : Fin (M + 2)) : ∑ v ∈ (cycGraph M).internal, Fk M k (xC M j) v = (if j = 0 then 1 else 0) + k",
+     "doc": "**The outflow half of the denominator**: `f^k_→(xᵢ) = 1_{i=1} + k`, the circulation adding `k` at every internal state."
+    },
+    {
+     "name": "fmRatio_Fk",
+     "full": "GFNBounds.Graph.CycleDivergence.fmRatio_Fk",
+     "kind": "theorem",
+     "line": 650,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fmRatio_Fk (k delta : ℝ) (j : Fin (M + 2)) : fmRatio (cycGraph M) (targetC M delta) (Fk M k) (xC M j) = (aC M j + k) / (bC M delta j + k)",
+     "doc": "**`theo:no_bound_divergence`, the closed form of the ratio** (`proofs.tex:395`): `ρ_k(xᵢ) = (aᵢ + k)/(bᵢ + k)`, with `a₁ = a₂ = 1`, `aᵢ = 0` for `i ≥ 3`, `b₁ = 2 − δ` and `bᵢ = δ/(N−1)` for `i ≥ 2`."
+    },
+    {
+     "name": "tendsto_affine_ratio",
+     "full": "GFNBounds.Graph.CycleDivergence.tendsto_affine_ratio",
+     "kind": "theorem",
+     "line": 662,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tendsto_affine_ratio (a b : ℝ) : Filter.Tendsto (fun k : ℝ => (a + k) / (b + k)) Filter.atTop (nhds 1)",
+     "doc": "**`ρ_k → 1`** (`proofs.tex:395`): a quotient of two affine functions of `k` with the same slope tends to `1`, whatever the intercepts — this is the scale invariance along `0`-flows."
+    },
+    {
+     "name": "fmRatio_Fk_tendsto_one",
+     "full": "GFNBounds.Graph.CycleDivergence.fmRatio_Fk_tendsto_one",
+     "kind": "theorem",
+     "line": 679,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fmRatio_Fk_tendsto_one (delta : ℝ) (j : Fin (M + 2)) : Filter.Tendsto (fun k : ℝ => fmRatio (cycGraph M) (targetC M delta) (Fk M k) (xC M j)) Filter.atTop (nhds 1)",
+     "doc": ""
+    },
+    {
+     "name": "fmLossTarget_Fk_tendsto_zero",
+     "full": "GFNBounds.Graph.CycleDivergence.fmLossTarget_Fk_tendsto_zero",
+     "kind": "theorem",
+     "line": 688,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fmLossTarget_Fk_tendsto_zero (g : ℝ → ℝ) (hg1 : g 1 = 0) (hgc : ContinuousAt g 1) (nu : cycV M → ℝ) (delta : ℝ) : Filter.Tendsto (fun k : ℝ => fmLossTarget (cycGraph M) g nu (targetC M delta) (Fk M k)) Filter.atTop (nhds 0)",
+     "doc": "**`𝓛(F_k) → 0`** (`proofs.tex:396`): a finite sum of terms `ν(x) g(ρ_k(x))`, each tending to `ν(x) g(1) = 0` by continuity of `g` at `1`."
+    },
+    {
+     "name": "exists_Fk_loss_le",
+     "full": "GFNBounds.Graph.CycleDivergence.exists_Fk_loss_le",
+     "kind": "theorem",
+     "line": 703,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_Fk_loss_le (g : ℝ → ℝ) (hg1 : g 1 = 0) (hgc : ContinuousAt g 1) (nu : cycV M → ℝ) (delta : ℝ) {eps : ℝ} (heps : 0 < eps) : ∃ k : ℝ, 0 ≤ k ∧ fmLossTarget (cycGraph M) g nu (targetC M delta) (Fk M k) ≤ eps",
+     "doc": "**`𝓛(F_k) ≤ ε` for `k` large** (`proofs.tex:396`)."
+    },
+    {
+     "name": "termLaw",
+     "full": "GFNBounds.Graph.CycleDivergence.termLaw",
+     "kind": "def",
+     "line": 717,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def termLaw (G : MarkedGraph V) (F : V → V → ℝ) : V → ℝ",
+     "doc": "The **normalized terminal flow** of an edgeflow, `F(·→s_f)/F(𝒮→s_f)`."
+    },
+    {
+     "name": "tvFin",
+     "full": "GFNBounds.Graph.CycleDivergence.tvFin",
+     "kind": "def",
+     "line": 722,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def tvFin (p q : V → ℝ) : ℝ",
+     "doc": "The `½`-convention total variation of `app:notation` between two densities on a finite state space, `TV(p‖q) = ½ ∑ |p − q|`."
+    },
+    {
+     "name": "sum_termFlow_Fk",
+     "full": "GFNBounds.Graph.CycleDivergence.sum_termFlow_Fk",
+     "kind": "theorem",
+     "line": 724,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_termFlow_Fk (k : ℝ) : ∑ y, Fk M k y (snkC M) = 1",
+     "doc": ""
+    },
+    {
+     "name": "termLaw_Fk",
+     "full": "GFNBounds.Graph.CycleDivergence.termLaw_Fk",
+     "kind": "theorem",
+     "line": 730,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem termLaw_Fk (k : ℝ) (x : cycV M) : termLaw (cycGraph M) (Fk M k) x = if x = xC M 1 then 1 else 0",
+     "doc": "**`theo:no_bound_divergence`, the terminal law is `δ_{x₂}` for every `k`** (`proofs.tex:388`): the circulation charges no terminal edge, so `F_k` and `F̂` have the same terminal flow `μ = δ_{x₂}`, of mass `1`."
+    },
+    {
+     "name": "tvFin_termLaw_Fk",
+     "full": "GFNBounds.Graph.CycleDivergence.tvFin_termLaw_Fk",
+     "kind": "theorem",
+     "line": 737,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tvFin_termLaw_Fk (k : ℝ) {delta : ℝ} (h0 : 0 ≤ delta) (h1 : delta ≤ 1) : tvFin (termLaw (cycGraph M) (Fk M k)) (targetC M delta) = 1 - delta / ((M : ℝ) + 1)",
+     "doc": "**`theo:no_bound_divergence`, the total variation is `1 − δ/(N−1)`** (`proofs.tex:390`): `TV(δ_{x₂} ‖ target) = 1 − target(x₂)`."
+    },
+    {
+     "name": "no_bound_divergence",
+     "full": "GFNBounds.Graph.CycleDivergence.no_bound_divergence",
+     "kind": "theorem",
+     "line": 783,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_bound_divergence (M : ℕ) (g : ℝ → ℝ) (hg1 : g 1 = 0) (hgc : ContinuousAt g 1) (nu : cycV M → ℝ) {delta eps : ℝ} (hd0 : 0 < delta) (hd1 : delta < 1) (heps : 0 < eps) : ∃ F : cycV M → cycV M → ℝ, (∀ u v, 0 ≤ F u v) ∧ (∀ u v, F u v ≠ 0 → (cycGraph M).Edge u v) ∧ (∀ x ∈ (cycGraph M).internal, edgeInflow F x = edgeOutflow F x) ∧ fmLossTarget (cycGraph M) g nu (targetC M delta) F ≤ eps ∧ tvFin (termLaw (cycGraph M) F) (targetC M delta) = 1 - delta / ((M : ℝ) + 1)",
+     "doc": "**`theo:no_bound_divergence`** — `cv_divergence.tex:7–19`, proof `proofs.tex:385–400` — on the cyclic graph `𝒞_N`, `N = M + 2`."
+    },
+    {
+     "name": "no_bound_divergence_sup",
+     "full": "GFNBounds.Graph.CycleDivergence.no_bound_divergence_sup",
+     "kind": "theorem",
+     "line": 798,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_bound_divergence_sup (M : ℕ) (g : ℝ → ℝ) (hg1 : g 1 = 0) (hgc : ContinuousAt g 1) (nu : cycV M → ℝ) {eps : ℝ} (heps : 0 < eps) {eta : ℝ} (heta : eta < 1) : ∃ (delta : ℝ) (F : cycV M → cycV M → ℝ), 0 < delta ∧ delta < 1 ∧ (∀ u v, 0 ≤ F u v) ∧ (∀ u v, F u v ≠ 0 → (cycGraph M).Edge u v) ∧ (∀ x ∈ (cycGraph M).internal, edgeInflow F x = edgeOutflow F x) ∧ fmLossTarget (cycGraph M) g nu (targetC M delta) F ≤ eps ∧ eta < tvFin (termLaw (cycGraph M) F) (targetC M delta)",
+     "doc": "**`theo:no_bound_divergence`, the `= 1` reading**: the supremum is not attained but is `1`, because `δ` is free."
+    },
+    {
+     "name": "exists_cycle_of_size",
+     "full": "GFNBounds.Graph.CycleDivergence.exists_cycle_of_size",
+     "kind": "theorem",
+     "line": 821,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_cycle_of_size (N : ℕ) (hN : 2 ≤ N) : ∃ M : ℕ, (cycGraph M).internal.card = N",
+     "doc": "**The supremum ranges over graphs of size `N`**: for every `N ≥ 2` the family above contains a graph with exactly `N` internal states, which is what `#𝒢 = N` asks."
+    },
+    {
+     "name": "ratio_eq_fmRatio",
+     "full": "GFNBounds.Graph.CycleDivergence.ratio_eq_fmRatio",
+     "kind": "theorem",
+     "line": 830,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_eq_fmRatio (G : MarkedGraph V) (target : V → ℝ) (F : V → V → ℝ) (hF : ∀ x, target x + (∑ v ∈ G.internal, F x v) = 0 → ∀ y, F x y = 0) (y : V) : Balance.ratio (fun x y => F x y / (target x + ∑ v ∈ G.internal, F x v)) (fun x => target x + ∑ v ∈ G.internal, F x v) 1 y = fmRatio G target F y",
+     "doc": "**The ratio `ρ` is `GFNBounds.Balance`'s `r = d(μT)/dμ`** at `λ := target + f_→`, `u := 1` and the kernel `T(x→y) := F(x→y)/λ(x)` normalising each row of the flow."
+    },
+    {
+     "name": "fmLossTarget_eq_loss",
+     "full": "GFNBounds.Graph.CycleDivergence.fmLossTarget_eq_loss",
+     "kind": "theorem",
+     "line": 844,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fmLossTarget_eq_loss (G : MarkedGraph V) (g : ℝ → ℝ) (nu target : V → ℝ) (F : V → V → ℝ) (hF : ∀ x, target x + (∑ v ∈ G.internal, F x v) = 0 → ∀ y, F x y = 0) : fmLossTarget G g nu target F = Balance.loss (fun x y => F x y / (target x + ∑ v ∈ G.internal, F x v)) (fun x => target x + ∑ v ∈ G.internal, F x v) (fun x => if x ∈ G.internal then nu x else 0) 1 g",
+     "doc": "**`fmLossTarget` is `GFNBounds.Balance.loss`**, not a new notion: the divergence FM loss of `theo:no_bound_divergence` is the library's `𝓛_{g,ν}(μ) = ∑_x ν(x) g(r(x))` at the kernel and reference measure above, with `ν` extended by `0` off the internal states."
+    },
+    {
+     "name": "Fk_snk_row",
+     "full": "GFNBounds.Graph.CycleDivergence.Fk_snk_row",
+     "kind": "theorem",
+     "line": 858,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fk_snk_row (k : ℝ) (y : cycV M) : Fk M k (snkC M) y = 0",
+     "doc": "`s_f` emits nothing under `F_k` — it emits nothing in `𝒞_N`."
+    },
+    {
+     "name": "foutC_Fk_srcC",
+     "full": "GFNBounds.Graph.CycleDivergence.foutC_Fk_srcC",
+     "kind": "theorem",
+     "line": 863,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem foutC_Fk_srcC (k : ℝ) : ∑ v ∈ (cycGraph M).internal, Fk M k (srcC M) v = 1",
+     "doc": "`F_k` sends unit mass out of `s₀`, along the initial edge: `F_init(𝒮) = 1`."
+    },
+    {
+     "name": "Fk_lam_ne_zero",
+     "full": "GFNBounds.Graph.CycleDivergence.Fk_lam_ne_zero",
+     "kind": "theorem",
+     "line": 868,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Fk_lam_ne_zero {k delta : ℝ} (hk : 0 ≤ k) (hd0 : 0 < delta) (hd1 : delta < 1) : ∀ x, targetC M delta x + (∑ v ∈ (cycGraph M).internal, Fk M k x v) = 0 → ∀ y, Fk M k x y = 0",
+     "doc": ""
+    },
+    {
+     "name": "tvFin_eq_tvD_count",
+     "full": "GFNBounds.Graph.CycleDivergence.tvFin_eq_tvD_count",
+     "kind": "theorem",
+     "line": 891,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tvFin_eq_tvD_count [MeasurableSpace V] [MeasurableSingletonClass V] (p q : V → ℝ) : tvFin p q = Core.tvD MeasureTheory.Measure.count p q",
+     "doc": "**`tvFin` is `GFNBounds.Core.tvD` against the counting measure** — the `½`-convention TV of `app:notation` read on a finite state space, so the value `1 − δ/(N−1)` above is the paper's `TV(s_τ ‖ target)` and not a separate notion."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {

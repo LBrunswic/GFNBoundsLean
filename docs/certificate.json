@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "source_date": "2026-09-08T13:35:50+01:00",
-  "commit": "760416cd206dc6ca84a362639876db8df7c1d8db",
-  "commit_short": "760416c",
+  "source_date": "2026-09-12T02:16:45+01:00",
+  "commit": "8cc925f45ea83a62564c055f97e5fac08ecc2a42",
+  "commit_short": "8cc925f",
   "branch": "main",
   "dirty": false,
   "dirty_files": [],
@@ -38,15 +38,15 @@
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 2041,
+    "declarations": 2259,
     "by_namespace": {
       "GFNBounds.Doubling": 1109,
-      "GFNBounds.Graph": 341,
-      "GFNBounds.Balance": 282,
+      "GFNBounds.Graph": 443,
+      "GFNBounds.Balance": 398,
       "GFNBounds.Core": 258,
       "GFNBounds.Silva": 51
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "eb1476326f56f0a60e56edd941d9d4205b4e3a59d8a8f8537e061e958dabecb0"
+    "sha256": "71d0590e94f710bac1f9fca5e063d9d319032f0f14ed4595310658f114e525b4"
   }
 }

@@ -1,20 +1,13 @@
 {
   "schema": 1,
-  "source_date": "2026-09-12T20:21:21+01:00",
-  "commit": "8b5a441a9fa5d6a05b7cc71beb16ce26abb5b06a",
-  "commit_short": "8b5a441",
+  "source_date": "2026-09-12T21:16:44+01:00",
+  "commit": "32da0173c59d0f4402542e6d583ec20f668d8232",
+  "commit_short": "32da017",
   "branch": "main",
   "dirty": true,
   "dirty_files": [
-    "GFNBounds.lean",
-    "docs/COVERAGE.md",
-    "docs/REPO-INDEX.md",
     "docs/REPO-MAP.md",
-    "docs/lean-facts.json",
-    "docs/repo-map.json",
-    "paper-map.json",
-    "GFNBounds/Balance/LocalConvergence.lean",
-    "GFNBounds/Balance/RatioBridge.lean"
+    "docs/repo-map.json"
   ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {

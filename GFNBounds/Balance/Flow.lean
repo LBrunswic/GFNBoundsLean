@@ -203,7 +203,7 @@ conditional on an unstated identity.
 | `−𝓛̇ = ‖∇𝓛‖²` | ✓ `hasDerivAt_loss_flow`. **This is the identity the corollary was conditional on** |
 | `−d𝓛/dt ≥ κ²𝓛²` | ✓ the first goal inside `global_lojasiewicz_flow`, from `global_lojasiewicz_sq` |
 | `𝓛(μ_t) ≤ (𝓛(μ₀)^{−1} + κ²t)^{−1}` | ✓ the conclusion, for `t ≥ 0` |
-| `𝓛` decreases along the flow (used to build `M` from `𝓛(μ₀)`) | ⚠ **hypothesis** `hL0 : ∀ t, 𝓛(μ_t) ≤ L₀`. See SCOPE |
+| `𝓛` decreases along the flow (used to build `M` from `𝓛(μ₀)`) | ⚠ **hypothesis** `hL0 : ∀ t ≥ 0, 𝓛(μ_t) ≤ L₀`, discharged by `MassAscent.loss_antitone_flow`. Ranged over the half-line on 2026-09-12: it read `∀ t : ℝ` and was then undischargeable at the paper's own `L₀ = 𝓛(μ₀)` — kb `0022`. See SCOPE |
 | the invariant sphere `‖u_t‖ = ‖u₀‖` | ✓ **derived**, `nrmL2_const_of_flow`; no longer a hypothesis |
 | `𝓛 > 0` along the flow | ⚠ **hypothesis** `hpos`, not in the paper. See SCOPE |
 
@@ -568,7 +568,7 @@ theorem global_lojasiewicz_flow
     (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin)
     (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup)
     (hu0 : 0 < Graph.nrmL2 lam (u 0))
-    (hL0 : ∀ t : ℝ, lossVal lam wf logSq (ratio K lam (u t)) ≤ L0)
+    (hL0 : ∀ t : ℝ, 0 ≤ t → lossVal lam wf logSq (ratio K lam (u t)) ≤ L0)
     (hpos : ∀ t : ℝ, 0 ≤ t → 0 < lossVal lam wf logSq (ratio K lam (u t)))
     (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) :
     ∀ t : ℝ, 0 ≤ t →
@@ -587,10 +587,10 @@ theorem global_lojasiewicz_flow
       (g := logSq) (gd := logSqDeriv) hinv hK hlam hu (fun _ hy => hasDerivAt_logSq hy) hflow s
     rw [lossGrad_of_weight hlam] at h
     simpa only [loss_eq_lossVal] using h
-  · intro s _
+  · intro s hs
     rw [neg_neg]
     exact global_lojasiewicz_sq hinv hK hlam htot (hu s) hlmin hlmin0 hwmin hw hwsup
-      (nrmL2_const_of_flow hlam hu hflow s) hu0 (hL0 s)
+      (nrmL2_const_of_flow hlam hu hflow s) hu0 (hL0 s hs)
 
 end Lojasiewicz
 

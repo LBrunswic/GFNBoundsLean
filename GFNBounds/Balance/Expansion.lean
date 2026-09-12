@@ -123,7 +123,10 @@ machine-read; a label mentioned only in prose is not a claim to certify it.)
   `λ`, and `Aop`, `Adj`, `linHess`, `perpL2` as bundled maps — would let `Discrete.lean` and
   `Flow.lean`'s `stable_frozen_decay` consume `theo:gd_diffusion_full` directly, and would
   close the "the linearization is a hypothesis, not a derivation" disclosure those two files
-  carry. It is named here as the missing piece and is not attempted.
+  carry. **Built on 2026-09-12 in `GFNBounds/Balance/WeightedL2.lean`**, by an isometry
+  `a ↦ √λ·a` into `EuclideanSpace ℝ V` rather than a new instance, and the five facts below are
+  now actually consumed: `theo:db_stable_frozen_full` holds at this `H`, in both halves. The
+  paragraph above records what the gap was; it is closed.
 * **`w` is not assumed positive, or even non-negative, by the expansion.** The paper's `ν = wλ`
   is a measure, so its `w` is `≥ 0`; the expansion never uses the sign, so only
   `|w| ≤ wsup` is carried. `linHess_nonneg`, `linHess_upper` and `linHess_coercive` do take the
@@ -146,8 +149,8 @@ machine-read; a label mentioned only in prose is not a claim to certify it.)
 * **`sorry`-free and axiom-clean.** Nothing below is open; `#print axioms` on
   `gradient_expansion`, `gd_diffusion_display`, `phi_expansion`, `lossGrad_eq_Adj_sub`,
   `ratio_one_add_sub_one`, `linHess_reversible`, `linHess_eigen`, the five `linHess_*` facts
-  and the three numerical checks returns `[propext, Classical.choice, Quot.sound]`. This file is
-  in the scaffold because graduation is the master session's decision.
+  and the three numerical checks returns `[propext, Classical.choice, Quot.sound]`. Graduated
+  into the strict library on 2026-09-12.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

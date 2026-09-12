@@ -81,8 +81,11 @@ discrete sentence and is carried here explicitly, as `hHsa`.
   `g''(1)w_min/B̂²` and `4g''(1)‖w‖_{L^∞}` is a separate job and is **not** done here. The
   bridge from `lem:sigma_mixing` to `hcoer` already exists and is reused, not reproved:
   `GFNBounds.Balance.inner_ge_of_mixing`.
-* **`H` abstract, so the finite-state instantiation is another file's job.** Nothing here is a
-  statement about a Markov kernel, a backward policy or a state space.
+* **`H` abstract here — but the finite-state instantiation now exists.** Nothing in *this* file
+  is a statement about a Markov kernel, a backward policy or a state space.
+  `GFNBounds/Balance/WeightedL2.lean` (2026-09-12) supplies the weighted-`L²` bridge and derives
+  `stable_frozen_discrete_finite`, which is this theorem at the paper's own
+  `H = g''(1)A^†M_wA`, with `ϱ = g''(1)w_min/B̂²` and the step condition written out.
 * **The `lem:lift_mixing` transfer to the FM and DB losses is not stated**, here or in
   `Flow.lean`. The sentence "the statement covers the FM loss with `B̂ = B` and the DB loss with
   `B̂ ≤ 1 + B`" remains unformalized, as does the nonlinear upgrade

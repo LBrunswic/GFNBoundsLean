@@ -113,10 +113,13 @@ conditional on an unstated identity.
   projection `f ↦ (∫f dλ)𝟏` onto the invariant functions — is. It is used once, to turn
   `⟨h_⊥, Hh⟩` into the paper's `⟨h, Hh⟩`; self-adjointness of `H` is *not* assumed and is not
   needed. Idempotence of `Π` is not assumed either.
-* **The discrete half of `theo:db_stable_frozen_full` is absent.** "For discrete gradient descent
-  with step `ε ≤ (4g''(1)‖w‖_{L^∞})^{−1}`, the contraction factor per step is `1 − εϱ`" is not
-  stated: it needs `‖Hx‖² ≤ ‖H‖⟨x, Hx⟩`, hence self-adjointness and positivity of `H` as
-  operator facts, which the abstract `H` above does not carry. Neither is the transfer to the FM
+* **The discrete half of `theo:db_stable_frozen_full` is not in *this* file.** "For discrete
+  gradient descent with step `ε ≤ (4g''(1)‖w‖_{L^∞})^{−1}`, the contraction factor per step is
+  `1 − εϱ`" is `GFNBounds/Balance/Discrete.lean` (2026-09-12), which carries the two hypotheses
+  the abstract `H` above does not — `H` **self-adjoint** and `Π` idempotent — and shows that the
+  route this sentence's proof names, the energy method through `‖Hx‖² ≤ ‖H‖⟨x, Hx⟩`, delivers
+  only `√(1 − εϱ)`; the printed factor needs symmetry. `WeightedL2.lean` then instantiates it at
+  the paper's own `H`. Neither is the transfer to the FM
   and DB losses through `lem:lift_mixing`, nor the nonlinear upgrade
   `theo:local_convergence_full`.
 * **`inner_ge_of_mixing` is stated with `(1 − P)`, the paper's `A` with `A = P − I`.** The two

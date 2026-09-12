@@ -76,8 +76,8 @@ The **bucket** says how far the rest is, and every non-`A` row carries its obstr
 | A | `lem:lift_mixing` | 550–561 | 🟡 partial | B | `Balance/Lift.lean` | — |
 | A | `theo:gd_diffusion_full` | 563–579 | 🟡 partial | B | `Balance/Expansion.lean` | — |
 | A | `lem:sigma_mixing` | 581–590 | ✅ closed | A | `Core/Mixing.lean` | — |
-| A | `theo:db_stable_frozen_full` | 592–610 | 🟡 partial | B | `Balance/Flow.lean`<br>`Balance/Discrete.lean` | — |
-| A | `theo:local_convergence_full` | 612–657 | 🟡 partial | B | `Balance/Expansion.lean`<br>`Balance/L2Toolkit.lean` | — |
+| A | `theo:db_stable_frozen_full` | 592–610 | 🟡 partial | B | `Balance/Flow.lean`<br>`Balance/Discrete.lean`<br>`Balance/WeightedL2.lean` | — |
+| A | `theo:local_convergence_full` | 612–657 | 🟡 partial | B | `Balance/Expansion.lean`<br>`Balance/L2Toolkit.lean`<br>`Balance/LocalEnergy.lean` | — |
 | A | `prop:frozen_unstable_full` | 659–683 | 🟡 partial | B | `Graph/FrozenUnstable.lean` | — |
 | A | `prop:tb_gradient` | 685–725 | ⬜ open | D | — | — |
 | A | `prop:tb_hessian` | 727–751 | ⬜ open | D | — | — |

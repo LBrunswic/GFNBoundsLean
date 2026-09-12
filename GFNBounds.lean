@@ -87,4 +87,6 @@ import GFNBounds.Balance.Discrete
 import GFNBounds.Balance.MassAscent
 import GFNBounds.Balance.Expansion
 import GFNBounds.Graph.CycleDivergence
+import GFNBounds.Balance.LocalEnergy
+import GFNBounds.Balance.WeightedL2
 import GFNBounds.Audit

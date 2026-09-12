@@ -89,4 +89,6 @@ import GFNBounds.Balance.Expansion
 import GFNBounds.Graph.CycleDivergence
 import GFNBounds.Balance.LocalEnergy
 import GFNBounds.Balance.WeightedL2
+import GFNBounds.Balance.LocalConvergence
+import GFNBounds.Balance.RatioBridge
 import GFNBounds.Audit

@@ -55,16 +55,16 @@ is `lossGrad_smul` and `flow_rescale`. Assembling those into the theorem needs
 |---|---|
 | `rnWeight` | `dν/dμ = ν/(λu)`, the weight `Flow.lossGrad` substitutes, named so the mass can be spoken of |
 | `hasDerivAt_mass_flow` | `d/dt μ_t(𝒮̂) = −∫ D dλ` — the flow differentiates the mass state by state |
-| `mass_monotone_flow` | **the monotone ascent**: `t ↦ μ_t(𝒮̂)` is monotone on `[0,∞)` |
+| `mass_monotoneOn`, `mass_monotone_flow` | **the monotone ascent**: `t ↦ μ_t(𝒮̂)` is monotone on any convex set of times where the trajectory is positive, hence on `[0,∞)`. `hasDerivAt_mass_flow` and `no_distant_equilibrium_one` ask positivity at **one** time, so the general form is available inside `BoundaryBlowup`'s continuation |
 | `mass_deriv_pos_off_balance` | **strictly** increases off balance, which is the word the paper uses |
 | `ipL2_sub_mean`, `mean_le_nrmL2_iff_const` | **the maximizer**: `∫u dλ ≤ ‖u‖_{L²(λ)}`, with equality iff `u` is constant — Cauchy–Schwarz against `𝟏` and its equality case |
 | `balanced_const` | a constant density is balanced, on any kernel with an invariant `λ` |
 | `const_of_balanced_graph` | its converse, **and it is ergodicity**: available on a path-connected marked graph through `Graph.eq_smul_invProb`, and false for an abstract `K`. See SCOPE |
-| `mass_ascent_lyapunov` | item *(2)*'s sentences read together, for an abstract `K`: the sphere is preserved, the mass ascends, it is bounded by `‖u₀‖`, and the bound is attained only at a constant density, which is balanced |
+| `mass_ascent_lyapunov` | item *(2)*'s sentences read together, for an abstract `K`, at every `t ≥ 0`: the sphere is preserved, the mass ascends, it is bounded by `‖u₀‖`, and the bound is attained only at a constant density, which is balanced |
 | `mass_ascent_lyapunov_graph` | the same on a marked graph, where the bound is attained **exactly** at the balanced flows — the paper's "whose unique maximizer is the balanced flow", with the word *unique* earned |
-| `loss_antitone_flow`, `lossVal_antitone_flow` | `𝓛` decreases along the flow — the fact `Flow.lean` carries as the hypothesis `hL0` |
+| `loss_antitoneOn`, `loss_antitone_flow`, `lossVal_antitoneOn`, `lossVal_antitone_flow` | `𝓛` decreases along the flow — the fact `Flow.lean` carries as the hypothesis `hL0` — on any convex set of times where the trajectory is positive, hence on `[0,∞)`. `Flow.hasDerivAt_loss_flow_at` asks positivity at **one** time, which is what breaks the circularity in `BoundaryBlowup`'s continuation |
 | `lossVal_eq_zero_iff_balanced` | `𝓛 = 0 ↔` balanced, for `g = (log x)²` and positive weights |
-| `lojasiewicz_integrated_nonneg` | `lojasiewicz_integrated` with its positivity hypothesis removed |
+| `lojasiewicz_integrated_nonneg` | `lojasiewicz_integrated` with its positivity hypothesis removed; like it, every hypothesis ranges over `[0,∞)` |
 | `global_lojasiewicz_flow'` | **`cor:global_lojasiewicz`** with `hL0` and `hpos` both discharged: `L₀` is literally `𝓛(μ₀)`, as in the paper |
 | `ratio_smul`, `lossGrad_smul` | scale invariance of `r` and the homogeneity `D(cμ) = c^{-1}D(μ)` |
 | `flow_rescale` | the rescaling `μ ↦ μ/c` is a time change by `c²` (`proofs.tex:813`) |
@@ -114,12 +114,18 @@ is `lossGrad_smul` and `flow_rescale`. Assembling those into the theorem needs
   bold-backtick form: `flow_rescale`, `lossGrad_smul` and `entry_time` are three of its
   ingredients, and the theorem itself needs `theo:local_convergence_full`.
 * **`global_lojasiewicz_flow'` drops two hypotheses and adds none.** `Flow.global_lojasiewicz_flow`
-  carries `hL0 : ∀ t, 𝓛(μ_t) ≤ L₀` and `hpos : ∀ t ≥ 0, 0 < 𝓛(μ_t)`. The first is discharged by
-  `lossVal_antitone_flow` with `L₀ := 𝓛(μ₀)` — which is what the paper writes — and the second by
-  `lojasiewicz_integrated_nonneg`, which needs only `0 ≤ 𝓛(μ₀)`. Note that `hL0` as stated in
-  `Flow.lean` quantifies over **all** `t`, negative ones included, where antitonicity gives the
-  opposite inequality; that is why this file re-derives the statement rather than applying
-  `global_lojasiewicz_flow`.
+  carries `hL0 : ∀ t ≥ 0, 𝓛(μ_t) ≤ L₀` and `hpos : ∀ t ≥ 0, 0 < 𝓛(μ_t)`. The first is discharged
+  by `lossVal_antitone_flow` with `L₀ := 𝓛(μ₀)` — which is what the paper writes — and the second
+  by `lojasiewicz_integrated_nonneg`, which needs only `0 ≤ 𝓛(μ₀)`. It re-derives the statement
+  rather than applying `global_lojasiewicz_flow`, because the route through
+  `lojasiewicz_integrated_nonneg` is a different integration and not a specialization.
+* **Every trajectory hypothesis of this file is ranged over `[0,∞)`.** `hu` reads
+  `∀ t, 0 ≤ t → ∀ x, 0 < u t x` and `lojasiewicz_integrated_nonneg`'s `hderiv` reads
+  `∀ t, 0 ≤ t → HasDerivAt L (L' t) t`; both read `∀ t` until 2026-09-13, which is kb `0022` and
+  made them undischargeable from `BoundaryBlowup.flow_pos_graph`. Two conclusions moved with the
+  hypothesis: `mass_ascent_lyapunov`'s three `∀ t` conjuncts and `mass_ascent_lyapunov_graph`'s
+  one are now guarded by `0 ≤ t`, since positivity below `0` is exactly what is no longer
+  assumed. Neither theorem is used anywhere in this library, at a negative time or otherwise.
 * **`sorry`-free.** Nothing below is open. Graduated into the strict library on 2026-09-12.
 
 ## Hypothesis checklist — `prop:no_distant_equilibrium`*(2)*, the Lyapunov half
@@ -133,7 +139,7 @@ is `lossGrad_smul` and `flow_rescale`. Assembling those into the theorem needs
 | `λ` a probability | ✓ `htot : ∑ x, lam x = 1`, spent in Cauchy–Schwarz against `𝟏` |
 | `ν = wλ` fixed | ✓ `nu` a fixed function; `rnWeight lam nu u` is `dν/dμ` |
 | `dν/dμ > 0` `μ`-a.e. | ✓ derived from `hnu : ∀ x, 0 < nu x`, `hlam`, `hu` |
-| `μ ∼ λ`, `u = dμ/dλ` | ✓ `hu : ∀ t x, 0 < u t x` |
+| `μ ∼ λ`, `u = dμ/dλ` | ✓ `hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x`, **discharged** from `0 < u₀` by `BoundaryBlowup.flow_pos_graph` |
 | the gradient flow `μ̇ = −∇𝓛` | ✓ `IsGradientFlow`, hypothesised of a curve |
 | the loss is scale-invariant, `‖u_t‖` preserved | ✓ **imported**, `Flow.nrmL2_const_of_flow` — not reproved |
 | `d/dt μ_t(𝒮̂) = −∫ D dλ` | ✓ `hasDerivAt_mass_flow` |
@@ -220,22 +226,41 @@ theorem mass_deriv_pos_off_balance {K : V → V → ℝ} {lam nu : V → ℝ} {g
   have hne : gradMass K lam u (rnWeight lam nu u) gd ≠ 0 := fun h => hbal (hiff.mp h)
   exact neg_pos.mpr (lt_of_le_of_ne hle hne)
 
+/-- **The mass ascends, on any convex set of times where the trajectory is positive**
+(`proofs.tex:791`).
+
+`hasDerivAt_mass_flow` and `no_distant_equilibrium_one` each ask positivity **at one time only**,
+so the ascent is available on the bootstrap window `[0,t]` of a continuation and not merely on a
+trajectory already known to be positive: that is what
+`BoundaryBlowup.flow_pos_of_pos` consumes, and it is why this and not
+`mass_monotone_flow` is the primitive. -/
+theorem mass_monotoneOn {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
+    {D : Set ℝ} (hD : Convex ℝ D)
+    (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
+    (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd)
+    (hflow : IsGradientFlow K lam nu gd u) :
+    MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) D := by
+  have hderiv : ∀ s : ℝ, HasDerivAt (fun z : ℝ => Graph.meanL2 lam (u z))
+      (-(gradMass K lam (u s) (rnWeight lam nu (u s)) gd)) s := hasDerivAt_mass_flow hflow
+  refine monotoneOn_of_deriv_nonneg hD
+    (fun s _ => ((hderiv s).continuousAt).continuousWithinAt)
+    (fun s _ => ((hderiv s).differentiableAt).differentiableWithinAt) fun s hs => ?_
+  rw [(hderiv s).deriv]
+  obtain ⟨-, hle, -⟩ := no_distant_equilibrium_one hinv hK hlam
+    (hupos s (interior_subset hs)) (rnWeight_pos hlam hnu (hupos s (interior_subset hs))) hg
+  simpa using neg_nonneg.mpr hle
+
 /-- **The monotone ascent** (`proofs.tex:791`: "training is a monotone ascent of the mass"): along
 the gradient flow `t ↦ μ_t(𝒮̂)` is monotone on `[0,∞)`.
 
-The derivative is `−∫ D dλ ≥ 0` at *every* time by `no_distant_equilibrium_one`, so the ascent is
-in fact global; it is stated on `[0,∞)` because that is where the paper's trajectory lives. -/
+`mass_monotoneOn` at `D = [0,∞)`, which is where the paper's trajectory lives and where
+`BoundaryBlowup.flow_pos_graph` discharges `hu` — kb `0022`. -/
 theorem mass_monotone_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
-    (hu : ∀ t x, 0 < u t x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd)
+    (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd)
     (hflow : IsGradientFlow K lam nu gd u) :
-    MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0) := by
-  refine (monotone_of_hasDerivAt_nonneg
-    (f' := fun t => -(gradMass K lam (u t) (rnWeight lam nu (u t)) gd))
-    (fun t => hasDerivAt_mass_flow hflow t) fun t => ?_).monotoneOn _
-  obtain ⟨-, hle, -⟩ := no_distant_equilibrium_one hinv hK hlam (hu t)
-    (rnWeight_pos hlam hnu (hu t)) hg
-  simpa using neg_nonneg.mpr hle
+    MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0) :=
+  mass_monotoneOn (convex_Ici 0) hinv hK hlam (fun s hs => hu s hs) hnu hg hflow
 
 /-! ### The maximizer on the sphere: Cauchy–Schwarz against `𝟏`, with its equality case -/
 
@@ -310,20 +335,21 @@ The missing word is *only*: that a **balanced** density is constant is ergodicit
 general invariant `K`, and is `mass_ascent_lyapunov_graph` below. See the module SCOPE. -/
 theorem mass_ascent_lyapunov {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
-    (htot : ∑ x, lam x = 1) (hu : ∀ t x, 0 < u t x) (hnu : ∀ x, 0 < nu x)
+    (htot : ∑ x, lam x = 1) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hnu : ∀ x, 0 < nu x)
     (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow K lam nu gd u) :
-    (∀ t : ℝ, Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0))
+    (∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0))
       ∧ MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0)
-      ∧ (∀ t : ℝ, Graph.meanL2 lam (u t) ≤ Graph.nrmL2 lam (u 0))
-      ∧ (∀ t : ℝ, Graph.meanL2 lam (u t) = Graph.nrmL2 lam (u 0)
+      ∧ (∀ t : ℝ, 0 ≤ t → Graph.meanL2 lam (u t) ≤ Graph.nrmL2 lam (u 0))
+      ∧ (∀ t : ℝ, 0 ≤ t → Graph.meanL2 lam (u t) = Graph.nrmL2 lam (u 0)
           → (∀ x, u t x = Graph.meanL2 lam (u t)) ∧ Balanced K lam (u t)) := by
-  have hsph : ∀ t : ℝ, Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0) :=
-    fun t => nrmL2_const_of_flow hlam hu hflow t
-  refine ⟨hsph, mass_monotone_flow hinv hK hlam hu hnu hg hflow, fun t => ?_, fun t ht => ?_⟩
-  · rw [← hsph t]
-    exact (mean_le_nrmL2_iff_const hlam htot (fun x => (hu t x).le)).1
-  · have hconst := (mean_le_nrmL2_iff_const hlam htot (fun x => (hu t x).le)).2.mp
-      (by rw [ht, hsph t])
+  have hsph : ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0) :=
+    fun t ht => nrmL2_const_of_flow hlam hu hflow t ht
+  refine ⟨hsph, mass_monotone_flow hinv hK hlam hu hnu hg hflow, fun t ht => ?_,
+    fun t ht heq => ?_⟩
+  · rw [← hsph t ht]
+    exact (mean_le_nrmL2_iff_const hlam htot (fun x => (hu t ht x).le)).1
+  · have hconst := (mean_le_nrmL2_iff_const hlam htot (fun x => (hu t ht x).le)).2.mp
+      (by rw [heq, hsph t ht])
     refine ⟨hconst, ?_⟩
     have hfun : u t = fun _ => Graph.meanL2 lam (u t) := funext hconst
     rw [hfun]
@@ -377,25 +403,25 @@ balanced flows: this is the sentence "training is a monotone ascent of the mass 
 supplying the ascent. -/
 theorem mass_ascent_lyapunov_graph (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges)
     {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
-    (h : B.IsInvProb lam) (hu : ∀ t x, 0 < u t x) (hnu : ∀ x, 0 < nu x)
+    (h : B.IsInvProb lam) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hnu : ∀ x, 0 < nu x)
     (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow B.phat lam nu gd u) :
     MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0)
-      ∧ ∀ t : ℝ, Graph.meanL2 lam (u t) ≤ Graph.nrmL2 lam (u 0)
+      ∧ ∀ t : ℝ, 0 ≤ t → Graph.meanL2 lam (u t) ≤ Graph.nrmL2 lam (u 0)
           ∧ (Graph.meanL2 lam (u t) = Graph.nrmL2 lam (u 0) ↔ Balanced B.phat lam (u t)) := by
   have hlam : ∀ z, 0 < lam z := h.pos hpc hbpos
   have hinv : Invariant B.phat lam := invariant_of_isInvProb h
-  have hsph : ∀ t : ℝ, Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0) :=
-    fun t => nrmL2_const_of_flow hlam hu hflow t
-  refine ⟨mass_monotone_flow hinv B.phat_nonneg hlam hu hnu hg hflow, fun t => ?_⟩
-  obtain ⟨hle, hiff⟩ := mean_le_nrmL2_iff_const hlam h.total (fun x => (hu t x).le)
-  refine ⟨by rw [← hsph t]; exact hle, ?_, ?_⟩
+  have hsph : ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0) :=
+    fun t ht => nrmL2_const_of_flow hlam hu hflow t ht
+  refine ⟨mass_monotone_flow hinv B.phat_nonneg hlam hu hnu hg hflow, fun t ht => ?_⟩
+  obtain ⟨hle, hiff⟩ := mean_le_nrmL2_iff_const hlam h.total (fun x => (hu t ht x).le)
+  refine ⟨by rw [← hsph t ht]; exact hle, ?_, ?_⟩
   · intro heq
-    have hfun : u t = fun _ => Graph.meanL2 lam (u t) := funext (hiff.mp (by rw [heq, hsph t]))
+    have hfun : u t = fun _ => Graph.meanL2 lam (u t) := funext (hiff.mp (by rw [heq, hsph t ht]))
     rw [hfun]
     exact balanced_const hinv _
   · intro hbal
-    rw [← hsph t]
-    exact hiff.mpr fun x => const_of_balanced_graph hpc hbpos h (hu t) hbal x
+    rw [← hsph t ht]
+    exact hiff.mpr fun x => const_of_balanced_graph hpc hbpos h (hu t ht) hbal x
 
 end MarkedGraphAscent
 
@@ -409,27 +435,57 @@ section LossDecay
 
 variable {V : Type*} [Fintype V]
 
-/-- **`𝓛` decreases along the gradient flow** (`proofs.tex:811`), from the flow identity
-`−𝓛̇ = ‖D‖² ≥ 0`. -/
+/-- **`𝓛` decreases along the flow, on any convex set of times where the trajectory is positive**
+(`proofs.tex:811`), from the flow identity `−𝓛̇ = ‖D‖² ≥ 0`.
+
+`Flow.hasDerivAt_loss_flow_at` asks positivity **at one time only**, so the descent is available
+on the bootstrap window `[0,t]` of a continuation: that is what
+`BoundaryBlowup.flow_pos_of_pos` consumes. -/
+theorem loss_antitoneOn {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ}
+    {D : Set ℝ} (hD : Convex ℝ D)
+    (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
+    (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y)
+    (hflow : IsGradientFlow K lam nu gd u) :
+    AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) D := by
+  have hderiv : ∀ s ∈ D, HasDerivAt (fun z : ℝ => loss K lam nu (u z) g)
+      (-(Graph.nrmL2 lam (lossGrad K lam nu gd (u s)) ^ 2)) s :=
+    fun s hs => hasDerivAt_loss_flow_at hinv hK hlam (hupos s hs) hg (hflow s)
+  refine antitoneOn_of_deriv_nonpos hD
+    (fun s hs => ((hderiv s hs).continuousAt).continuousWithinAt)
+    (fun s hs => ((hderiv s (interior_subset hs)).differentiableAt).differentiableWithinAt)
+    fun s hs => ?_
+  rw [(hderiv s (interior_subset hs)).deriv]
+  simpa using neg_nonpos.mpr (sq_nonneg (Graph.nrmL2 lam (lossGrad K lam nu gd (u s))))
+
+/-- **`𝓛` decreases along the gradient flow** (`proofs.tex:811`): `loss_antitoneOn` at
+`D = [0,∞)`. -/
 theorem loss_antitone_flow {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ}
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
-    (hu : ∀ t x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y)
+    (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y)
     (hflow : IsGradientFlow K lam nu gd u) :
-    AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) (Set.Ici 0) := by
-  refine (antitone_of_hasDerivAt_nonpos
-    (f' := fun t => -(Graph.nrmL2 lam (lossGrad K lam nu gd (u t)) ^ 2))
-    (fun t => hasDerivAt_loss_flow hinv hK hlam hu hg hflow t) fun t => ?_).antitoneOn _
-  simpa using neg_nonpos.mpr (sq_nonneg (Graph.nrmL2 lam (lossGrad K lam nu gd (u t))))
+    AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) (Set.Ici 0) :=
+  loss_antitoneOn (convex_Ici 0) hinv hK hlam (fun s hs => hu s hs) hg hflow
 
-/-- The same for `g = (log x)²` in `Lojasiewicz.lean`'s variables, where `ν = wλ`. -/
-theorem lossVal_antitone_flow {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ}
+/-- **`𝓛` decreases along the flow, for `g = (log x)²`, on any convex set of times where the
+trajectory is positive** (`proofs.tex:811`, `:813`) — `loss_antitoneOn` in `Lojasiewicz.lean`'s
+variables, where `ν = wλ`. This is the form `BoundaryBlowup.flow_pos_of_pos` consumes. -/
+theorem lossVal_antitoneOn {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ}
+    {D : Set ℝ} (hD : Convex ℝ D)
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
-    (hu : ∀ t x, 0 < u t x)
+    (hupos : ∀ s ∈ D, ∀ x, 0 < u s x)
     (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) :
-    AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) (Set.Ici 0) := by
-  have h := loss_antitone_flow (g := logSq) (gd := logSqDeriv) hinv hK hlam hu
+    AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) D := by
+  have h := loss_antitoneOn (g := logSq) (gd := logSqDeriv) hD hinv hK hlam hupos
     (fun _ hy => hasDerivAt_logSq hy) hflow
   simpa only [loss_eq_lossVal] using h
+
+/-- The same on `[0,∞)`: `lossVal_antitoneOn` at `D = [0,∞)`. -/
+theorem lossVal_antitone_flow {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ}
+    (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
+    (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x)
+    (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) :
+    AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) (Set.Ici 0) :=
+  lossVal_antitoneOn (convex_Ici 0) hinv hK hlam (fun s hs => hu s hs) hflow
 
 /-- **`𝓛_{g,ν}(μ) = 0` if and only if `μ` is balanced**, for `g = (log x)²` and a positive weight:
 `(log r)² = 0` state by state is `r ≡ 1`, which is `ratio_eq_one_iff_balanced`.
@@ -474,14 +530,14 @@ reaching it. Only `0 ≤ L 0` is needed. The route: `−L' ≥ κ²L² ≥ 0` ma
 so if `L t > 0` then `L > 0` on all of `[0,t]` and the monotonicity of `1/L − κ²s` runs there;
 and if `L t ≤ 0` the bound is trivial, the right-hand side being non-negative. -/
 theorem lojasiewicz_integrated_nonneg {L L' : ℝ → ℝ} {kappa : ℝ}
-    (hderiv : ∀ t : ℝ, HasDerivAt L (L' t) t)
+    (hderiv : ∀ t : ℝ, 0 ≤ t → HasDerivAt L (L' t) t)
     (hL0 : 0 ≤ L 0)
     (hineq : ∀ t : ℝ, 0 ≤ t → kappa ^ 2 * L t ^ 2 ≤ -L' t) :
     ∀ t : ℝ, 0 ≤ t → L t ≤ ((L 0)⁻¹ + kappa ^ 2 * t)⁻¹ := by
   have hanti : AntitoneOn L (Set.Ici 0) := by
     refine antitoneOn_of_hasDerivWithinAt_nonpos (convex_Ici 0) (f' := L')
-      (fun s _ => (hderiv s).continuousAt.continuousWithinAt)
-      (fun s _ => (hderiv s).hasDerivWithinAt) fun s hs => ?_
+      (fun s hs => (hderiv s hs).continuousAt.continuousWithinAt)
+      (fun s hs => (hderiv s (interior_subset hs)).hasDerivWithinAt) fun s hs => ?_
     rw [interior_Ici] at hs
     have h := hineq s (le_of_lt hs)
     nlinarith [mul_nonneg (sq_nonneg kappa) (sq_nonneg (L s))]
@@ -497,7 +553,7 @@ theorem lojasiewicz_integrated_nonneg {L L' : ℝ → ℝ} {kappa : ℝ}
         HasDerivAt (fun z : ℝ => (L z)⁻¹ - kappa ^ 2 * z) (-L' s / L s ^ 2 - kappa ^ 2) s := by
       intro s hs
       have h1 : HasDerivAt (fun z : ℝ => (L z)⁻¹) (-L' s / L s ^ 2) s :=
-        (hderiv s).inv (hpos s hs).ne'
+        (hderiv s hs.1).inv (hpos s hs).ne'
       have h2 : HasDerivAt (fun z : ℝ => kappa ^ 2 * z) (kappa ^ 2) s := by
         simpa using (hasDerivAt_id' s).const_mul (kappa ^ 2)
       exact h1.sub h2
@@ -537,7 +593,7 @@ theorem lojasiewicz_integrated_nonneg {L L' : ℝ → ℝ} {kappa : ℝ}
 theorem global_lojasiewicz_flow'
     {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin wsup : ℝ} {u : ℝ → V → ℝ}
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
-    (htot : ∑ x, lam x = 1) (hu : ∀ t x, 0 < u t x)
+    (htot : ∑ x, lam x = 1) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x)
     (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin)
     (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup)
     (hu0 : 0 < Graph.nrmL2 lam (u 0))
@@ -554,15 +610,15 @@ theorem global_lojasiewicz_flow'
     (L := fun s => lossVal lam wf logSq (ratio K lam (u s)))
     (L' := fun s => -(Graph.nrmL2 lam
       (lossGradDensity K lam (u s) (fun x => wf x / u s x) logSqDeriv) ^ 2))
-    (fun s => ?_) (lossVal_nonneg (fun x => (hlam x).le) fun x => le_trans hwmin.le (hw x))
+    (fun s hs => ?_) (lossVal_nonneg (fun x => (hlam x).le) fun x => le_trans hwmin.le (hw x))
     fun s hs => ?_
   · have h := hasDerivAt_loss_flow (K := K) (lam := lam) (nu := fun x => lam x * wf x)
-      (g := logSq) (gd := logSqDeriv) hinv hK hlam hu (fun _ hy => hasDerivAt_logSq hy) hflow s
+      (g := logSq) (gd := logSqDeriv) hinv hK hlam hu (fun _ hy => hasDerivAt_logSq hy) hflow s hs
     rw [lossGrad_of_weight hlam] at h
     simpa only [loss_eq_lossVal] using h
   · rw [neg_neg]
-    exact global_lojasiewicz_sq hinv hK hlam htot (hu s) hlmin hlmin0 hwmin hw hwsup
-      (nrmL2_const_of_flow hlam hu hflow s) hu0
+    exact global_lojasiewicz_sq hinv hK hlam htot (hu s hs) hlmin hlmin0 hwmin hw hwsup
+      (nrmL2_const_of_flow hlam hu hflow s hs) hu0
       (hanti (Set.mem_Ici.mpr le_rfl) (Set.mem_Ici.mpr hs) hs)
 
 end LossDecay
@@ -663,7 +719,7 @@ vanishes, so `μ_{T₀}` is balanced and *every* ratio there is `1`: a contradic
 `theo:local_convergence_full`, and is not here. See the module SCOPE. -/
 theorem entry_time {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin δ : ℝ} {u : ℝ → V → ℝ}
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
-    (htot : ∑ x, lam x = 1) (hu : ∀ t x, 0 < u t x)
+    (htot : ∑ x, lam x = 1) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x)
     (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin)
     (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x)
     (hu0 : 0 < Graph.nrmL2 lam (u 0))
@@ -692,8 +748,8 @@ theorem entry_time {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin δ : 
     have hfar : lamMin ≤ ∑ x ∈ farSet (ratio K lam (u s)) δ, lam x :=
       le_trans (hlmin x0)
         (Finset.single_le_sum (f := lam) (fun i _ => (hlam i).le) (mem_farSet.mpr hx0))
-    have h3 := no_distant_equilibrium_three (u0 := u 0) hinv hK hlam htot (hu s) hlmin hlmin0
-      hwmin hw (nrmL2_const_of_flow hlam hu hflow s) hu0 hδ0 hδ1
+    have h3 := no_distant_equilibrium_three (u0 := u 0) hinv hK hlam htot (hu s hs.1) hlmin hlmin0
+      hwmin hw (nrmL2_const_of_flow hlam hu hflow s hs.1) hu0 hδ0 hδ1
     refine le_trans ?_ h3
     have hcoef : 0 ≤ wmin * Real.sqrt lamMin / Graph.nrmL2 lam (u 0) * (δ ^ 2 / 2) :=
       mul_nonneg (div_nonneg (mul_nonneg hwmin.le hsqrt.le) hu0.le) (by positivity)
@@ -702,13 +758,13 @@ theorem entry_time {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin δ : 
       field_simp
     rw [hstep]
     exact mul_le_mul_of_nonneg_left hfar hcoef
-  have hderiv : ∀ s : ℝ, HasDerivAt
+  have hderiv : ∀ s : ℝ, 0 ≤ s → HasDerivAt
       (fun z : ℝ => lossVal lam wf logSq (ratio K lam (u z)) + c ^ 2 * z)
       (-(Graph.nrmL2 lam (lossGradDensity K lam (u s) (fun x => wf x / u s x) logSqDeriv) ^ 2)
         + c ^ 2) s := by
-    intro s
+    intro s hs
     have h := hasDerivAt_loss_flow (K := K) (lam := lam) (nu := fun x => lam x * wf x)
-      (g := logSq) (gd := logSqDeriv) hinv hK hlam hu (fun _ hy => hasDerivAt_logSq hy) hflow s
+      (g := logSq) (gd := logSqDeriv) hinv hK hlam hu (fun _ hy => hasDerivAt_logSq hy) hflow s hs
     rw [lossGrad_of_weight hlam] at h
     have h2 : HasDerivAt (fun z : ℝ => c ^ 2 * z) (c ^ 2) s := by
       simpa using (hasDerivAt_id' s).const_mul (c ^ 2)
@@ -722,8 +778,8 @@ theorem entry_time {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin δ : 
     refine antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc 0 T)
       (f' := fun s => -(Graph.nrmL2 lam
         (lossGradDensity K lam (u s) (fun x => wf x / u s x) logSqDeriv) ^ 2) + c ^ 2)
-      (fun s _ => (hderiv s).continuousAt.continuousWithinAt)
-      (fun s _ => (hderiv s).hasDerivWithinAt) fun s hs => ?_
+      (fun s hs => (hderiv s hs.1).continuousAt.continuousWithinAt)
+      (fun s hs => (hderiv s (interior_subset hs).1).hasDerivWithinAt) fun s hs => ?_
     rw [interior_Icc] at hs
     have hD := hDlow s (Set.mem_Icc.mpr ⟨hs.1.le, hs.2.le⟩)
     nlinarith [mul_self_le_mul_self hcpos.le hD]
@@ -737,10 +793,10 @@ theorem entry_time {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin δ : 
     rw [hc2] at hFle
     linarith
   have hbal : Balanced K lam (u T) :=
-    (lossVal_eq_zero_iff_balanced hinv hK hlam (hu T) hwpos).mp
+    (lossVal_eq_zero_iff_balanced hinv hK hlam (hu T hTnn) hwpos).mp
       (le_antisymm hLT (lossVal_nonneg (fun x => (hlam x).le) fun x => (hwpos x).le))
   obtain ⟨x1, hx1⟩ := hcon T (Set.right_mem_Icc.mpr hTnn)
-  rw [(ratio_eq_one_iff_balanced (fun y => mul_pos (hlam y) (hu T y))).mpr hbal x1] at hx1
+  rw [(ratio_eq_one_iff_balanced (fun y => mul_pos (hlam y) (hu T hTnn y))).mpr hbal x1] at hx1
   simp only [sub_self, abs_zero] at hx1
   linarith
 

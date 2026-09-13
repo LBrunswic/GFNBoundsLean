@@ -1,4 +1,4 @@
-import GFNBounds.Balance.TrainingSpeed
+import GFNBounds.Balance.LocalConvergence
 
 /-!
 # The boundary blow-up: the loss explodes where the density vanishes, so the flow stays positive
@@ -14,15 +14,17 @@ one sentence of the proof (`:813`) that keeps the trajectory off the boundary of
 > is contained in `{d/dt mass = 0}`, which by *(1)* and *(2)* is the single balanced point of the
 > sphere: the flow converges to it.
 
-**Twelve declarations of the Appendix-A convergence block carry `hu : ∀ t x, 0 < u t x` as a
-hypothesis** — `Flow.hasDerivAt_loss_flow`, `Flow.nrmL2_const_of_flow`,
+**Twelve declarations of the Appendix-A convergence block carry positivity of the trajectory as
+a hypothesis** — `Flow.hasDerivAt_loss_flow`, `Flow.nrmL2_const_of_flow`,
 `Flow.global_lojasiewicz_flow`; `MassAscent.mass_monotone_flow`, `.mass_ascent_lyapunov`,
 `.mass_ascent_lyapunov_graph`, `.loss_antitone_flow`, `.lossVal_antitone_flow`,
 `.global_lojasiewicz_flow'`, `.entry_time`; `TrainingSpeed.entry_and_rescale`,
 `.training_speed_full` — each disclosing that it is the stand-in for this sentence. This file
 proves it, in the quantitative form the sentence actually supports: a **static, explicit** lower
 bound `u_min > 0` on the density at every state, valid at every flow whose loss is at most `L₀`
-and whose mass is at least `m₀`, and then a continuation in `t` along the flow.
+and whose mass is at least `m₀`, and then a continuation in `t` along the flow. Since 2026-09-13
+those twelve read `hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x`, which is what `flow_pos_graph` proves, and
+`TrainingSpeed.training_speed_full_of_pos` is the theorem with the hypothesis gone.
 
 The blow-up is proved as a *quantitative* fact, in the paper's own order:
 
@@ -57,8 +59,7 @@ would exceed `L₀`. Strong connectedness then reaches every state from the maxi
 | **`loss_lower_of_small`** | **the paper's "`g(r)ν → ∞`"**: `λ_min w_min (log(…))² ≤ 𝓛` |
 | `edge_drop_of_loss_le` | the one-edge drop `c·u(y) ≤ u(z)`, the contrapositive of the two above |
 | **`pos_of_loss_le`** | **the theorem**: `𝓛 ≤ L₀` and `∫u dλ ≥ m₀` force `u ≥ u_min` at every state |
-| `continuous_flow`, `lossVal_antitoneOn`, `mass_monotoneOn`, `nrmL2_const_on_Ici` | `𝓛` antitone, the mass monotone and the sphere invariant **on any convex set of times where the trajectory is positive** — the repaired range of `MassAscent.lossVal_antitone_flow`, `MassAscent.mass_monotone_flow` and `Flow.nrmL2_const_of_flow`, whose `hu` is quantified over all of `ℝ` (kb 0022) and which therefore cannot be used inside a continuation. **These three are what break the circularity** |
-| `eq_of_hasDerivAt_zero_on` | vanishing derivative on a convex set gives a constant; general-purpose |
+| `continuous_flow` | a gradient flow is continuous in time, state by state — what `L2Toolkit.bootstrap_of_continuous` consumes |
 | **`flow_pos_of_pos`**, `flow_pos`, **`flow_pos_graph`** | **the continuation**: `u_min ≤ u_t(x)` for every `t ≥ 0` and every `x`, hence `0 < u_t(x)`; and the same on the loop closure of a finite path-connected marked graph, which is the shape `theo:training_speed_full` consumes. `L2Toolkit.bootstrap_of_continuous` is the tool, `LocalConvergence.sup_global` the precedent |
 | `mass_tendsto` | the mass converges — the half of the LaSalle sentence that does not need an `ω`-limit |
 | `twoState_*`, **`twoState_boundary_blowup_check`** | the constants **evaluated** on the two-state chain at `u = (3/2, 1/2)`: `λ_min = p_min = 1/2`, `L₀ = 1/2`, `M = 1`, `u_min = e^{−1}/4 ≈ 0.0920`, against `min u = 1/2` |
@@ -73,7 +74,7 @@ would exceed `L₀`. Strong connectedness then reaches every state from the maxi
 | `w ≥ w_min > 0` | ✓ `hwmin : 0 < wmin`, `hw : ∀ x, wmin ≤ wf x`; `ν = wλ` |
 | "**strong connectedness** provides an edge from a non-vanishing state into the vanishing region" | ⚠ **carried as `CrossingFloor K pmin`, with an explicit edge floor `p_min` the paper does not name.** Strong connectedness alone gives a crossing edge with `K(y,z) > 0`; a *quantitative* bound needs a floor on that entry. `crossingFloor_phat` discharges the connectedness half from `breach_all`, and `exists_edgeFloor` shows the floor half is always available; `p_min` is a parameter, as `λ_min`, `w_min` and `‖w‖_∞` are throughout this layer |
 | `p_min ≤ 1` | ⚠ **added**: true of any transition probability, and needed only to make `c ≤ 1` so that the level sets nest. `K` is not assumed row-stochastic here, so it cannot be derived |
-| "while `‖u‖ = ‖u₀‖`" — the invariant sphere | ⚠ **replaced by the mass**, `m₀ ≤ ∫u dλ`. Both are scale information and the argument cannot do without one of them — the loss is scale-invariant, so *no* absolute lower bound on `u` follows from a bound on it — and the mass is the one the flow supplies monotonically. The sphere is proved too (`nrmL2_const_on_Ici`) and is what bounds the mass from above in `mass_tendsto` |
+| "while `‖u‖ = ‖u₀‖`" — the invariant sphere | ⚠ **replaced by the mass**, `m₀ ≤ ∫u dλ`. Both are scale information and the argument cannot do without one of them — the loss is scale-invariant, so *no* absolute lower bound on `u` follows from a bound on it — and the mass is the one the flow supplies monotonically. The sphere is proved too (`Flow.nrmL2_const_on_Ici`) and is what bounds the mass from above in `mass_tendsto` |
 | "`u(x) → 0` … the trajectory stays in a compact subset of the open sphere" | ⚠ **replaced by the explicit bound `u ≥ u_min`**, which is stronger and is what the downstream `hu` needs. No compactness, no `ω`-limit and no LaSalle principle is formed; see SCOPE |
 | the gradient flow `μ̇ = −∇^λ𝓛_{g,ν}(μ)` | ⚠ `IsGradientFlow K lam (λw) logSqDeriv u`, hypothesised of a given curve; no existence theorem, as everywhere in `GFNBounds.Balance` |
 | `μ₀ ∼ λ` | ✓ `hu0 : ∀ x, 0 < u 0 x`, the paper's "from any `μ₀ ∼ λ`" on a finite space |
@@ -81,14 +82,13 @@ would exceed `L₀`. Strong connectedness then reaches every state from the maxi
 
 ## SCOPE (disclosed)
 
-* **`hu` is discharged on `[0,∞)`, and all twelve consumers ask for it on all of `ℝ`.**
-  `flow_pos` concludes `∀ t, 0 ≤ t → ∀ x, 0 < u t x`; every declaration listed above takes
-  `hu : ∀ t x, 0 < u t x`. **The two do not meet**, and this is kb `0022` in its pure form: those
-  hypotheses cannot be discharged at all as stated, because nothing about a flow on `[0,∞)` says
-  anything at negative times. Re-ranging them is mechanical — `lossVal_antitoneOn`,
-  `mass_monotoneOn` and `nrmL2_const_on_Ici` below are the three proofs that have to be redone to
-  do it, and they are done here — but it is an edit to the strict library and is the master
-  session's. Until then this file's output is not yet plugged in anywhere.
+* **`hu` is discharged on `[0,∞)`, and the twelve consumers now ask for it there.**
+  `flow_pos` concludes `∀ t, 0 ≤ t → ∀ x, 0 < u t x`; until 2026-09-13 every declaration listed
+  above took `hu : ∀ t x, 0 < u t x` and **the two did not meet** — kb `0022` in its pure form,
+  since nothing about a flow on `[0,∞)` says anything at negative times. The twelve were
+  re-ranged on 2026-09-13, the three proofs that had to be redone to do it moved up into
+  `Flow.lean` and `MassAscent.lean` where they belong, and
+  `TrainingSpeed.training_speed_full_of_pos` is the discharge.
 * **What the rewiring costs.** Dropping `hu` is not free: `flow_pos` replaces it with
   `hu0 : ∀ x, 0 < u 0 x` — the paper's own "from *every* initialization `μ₀ ∼ λ`" — **plus** the
   edge floor `p_min` with `0 < p_min ≤ 1` and `CrossingFloor K p_min`. On the marked-graph
@@ -96,11 +96,11 @@ would exceed `L₀`. Strong connectedness then reaches every state from the maxi
   the connectedness half being `breach_all`; `exists_edgeFloor` says such a `p_min` always
   exists, at the cost of making the statement existential in it.
 * **The trajectory's positivity is a continuation, and the continuation is genuine.** The
-  circularity named in the brief — `lossVal_antitone_flow` itself needs `hu` — is broken by
-  `Flow.hasDerivAt_loss_flow_at`, which asks positivity **at one time only**. `lossVal_antitoneOn`
-  and `mass_monotoneOn` are built from it on an arbitrary convex set of times, so the bootstrap
-  window `[0,t]` supplies exactly what they consume. Nothing here is assumed at a time later than
-  the one being proved.
+  circularity — `lossVal_antitone_flow` itself needs `hu` — is broken by
+  `Flow.hasDerivAt_loss_flow_at`, which asks positivity **at one time only**.
+  `MassAscent.lossVal_antitoneOn` and `MassAscent.mass_monotoneOn` are built from it on an
+  arbitrary convex set of times, so the bootstrap window `[0,t]` supplies exactly what they
+  consume. Nothing here is assumed at a time later than the one being proved.
 * **What blows up in Lean is the loss, not the ratio at `u = 0`.** `ratio K lam u z` divides by
   `λ(z)u(z)`; at `u(z) = 0` Lean's division returns `0`, so `logSq` of it is `0` and the loss is
   *finite* on the boundary of the cone. The paper's `𝓛 = +∞` there is therefore **not** stated,
@@ -122,14 +122,12 @@ would exceed `L₀`. Strong connectedness then reaches every state from the maxi
   `TrainingSpeed.lean`'s SCOPE says; this file closes only the compactness half, and the paper's
   own assembly needs no more than that (`theo:training_speed_full` consumes item *(3)* through
   `hu` and nothing else).
-* **Scaffold, `sorry`-free, axiom-clean.** Nothing below carries a `sorry`; `#print axioms` on
+* **`sorry`-free and axiom-clean.** Nothing below carries a `sorry`; `#print axioms` on
   `ratio_blowup_of_small`, `loss_lower_of_small`, `edge_drop_of_loss_le`, `pos_of_loss_le`,
-  `crossingFloor_phat`, `exists_edgeFloor`, `lossVal_antitoneOn`, `mass_monotoneOn`,
-  `nrmL2_const_on_Ici`, `flow_pos_of_pos`, `flow_pos`, `flow_pos_graph`, `mass_tendsto` and
-  `twoState_boundary_blowup_check` returns `[propext, Classical.choice, Quot.sound]`. The file
-  sits in `GFNBoundsScaffold` because graduation is a file move and the master session's
-  decision, and because the rewiring it enables is an edit to `GFNBounds/` that has not been
-  made.
+  `crossingFloor_phat`, `exists_edgeFloor`, `continuous_flow`,
+  `flow_pos_of_pos`, `flow_pos`, `flow_pos_graph`, `mass_tendsto` and
+  `twoState_boundary_blowup_check` returns `[propext, Classical.choice, Quot.sound]`. Graduated
+  into the strict library on 2026-09-13, together with the rewiring it enables.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/
@@ -455,62 +453,25 @@ theorem pos_of_loss_le {K : V → V → ℝ} {lam u wf : V → ℝ} {lamMin pmin
     _ ≤ u x := hkey
 
 
-/-! ### The localised flow lemmas
+/-! ### Continuity in time, and where the localised flow lemmas live
 
-`MassAscent.lossVal_antitone_flow` and `MassAscent.mass_monotone_flow` both carry
-`hu : ∀ t x, 0 < u t x`, quantified over **all** of `ℝ` — kb `0022`. Inside a continuation that
-hypothesis is exactly what is being proved, so neither can be used. Both are re-proved here on an
-arbitrary convex set `D` of times, from the pointwise-in-time derivative identities
+Inside a continuation, positivity of the trajectory is exactly what is being proved, so a lemma
+carrying it on all of `[0,∞)` cannot be used. `MassAscent.lossVal_antitoneOn`,
+`MassAscent.mass_monotoneOn` and `Flow.nrmL2_const_on_Ici` are the forms that can be: they hold
+on an arbitrary convex set `D` of times, from the pointwise-in-time derivative identities
 `Flow.hasDerivAt_loss_flow_at` and `MassAscent.hasDerivAt_mass_flow`, **which ask positivity at
-one time only**. That is what breaks the circularity. -/
+one time only**. That is what breaks the circularity. The three were written here and moved up
+beside the theorems they generalise on 2026-09-13; what stays is the continuity
+`L2Toolkit.bootstrap_of_continuous` consumes. -/
 
 section Localised
 
-variable {K : V → V → ℝ} {lam nu wf : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
+variable {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
 
 /-- A gradient flow is continuous in time, state by state. -/
 theorem continuous_flow (hflow : IsGradientFlow K lam nu gd u) (x : V) :
     Continuous fun t : ℝ => u t x :=
   continuous_iff_continuousAt.mpr fun t => (hflow t x).continuousAt
-
-/-- **`𝓛` decreases along the flow, on any convex set of times where the trajectory is positive**
-(`proofs.tex:811`, `:813`). `MassAscent.lossVal_antitone_flow` with its range repaired. -/
-theorem lossVal_antitoneOn {D : Set ℝ} (hD : Convex ℝ D)
-    (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
-    (hupos : ∀ s ∈ D, ∀ x, 0 < u s x)
-    (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) :
-    AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) D := by
-  have hderiv : ∀ s ∈ D, HasDerivAt (fun z : ℝ => lossVal lam wf logSq (ratio K lam (u z)))
-      (-(Graph.nrmL2 lam (lossGrad K lam (fun x => lam x * wf x) logSqDeriv (u s)) ^ 2)) s := by
-    intro s hs
-    have h := hasDerivAt_loss_flow_at (K := K) (lam := lam) (nu := fun x => lam x * wf x)
-      (g := logSq) (gd := logSqDeriv) hinv hK hlam (hupos s hs)
-      (fun _ hy => hasDerivAt_logSq hy) (hflow s)
-    simpa only [loss_eq_lossVal] using h
-  refine antitoneOn_of_deriv_nonpos hD
-    (fun s hs => ((hderiv s hs).continuousAt).continuousWithinAt)
-    (fun s hs => ((hderiv s (interior_subset hs)).differentiableAt).differentiableWithinAt)
-    fun s hs => ?_
-  rw [(hderiv s (interior_subset hs)).deriv]
-  simpa using neg_nonpos.mpr (sq_nonneg (Graph.nrmL2 lam
-    (lossGrad K lam (fun x => lam x * wf x) logSqDeriv (u s))))
-
-/-- **The mass ascends, on any convex set of times where the trajectory is positive**
-(`proofs.tex:791`). `MassAscent.mass_monotone_flow` with its range repaired. -/
-theorem mass_monotoneOn {D : Set ℝ} (hD : Convex ℝ D)
-    (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
-    (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd)
-    (hflow : IsGradientFlow K lam nu gd u) :
-    MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) D := by
-  have hderiv : ∀ s : ℝ, HasDerivAt (fun z : ℝ => Graph.meanL2 lam (u z))
-      (-(gradMass K lam (u s) (rnWeight lam nu (u s)) gd)) s := hasDerivAt_mass_flow hflow
-  refine monotoneOn_of_deriv_nonneg hD
-    (fun s _ => ((hderiv s).continuousAt).continuousWithinAt)
-    (fun s _ => ((hderiv s).differentiableAt).differentiableWithinAt) fun s hs => ?_
-  rw [(hderiv s).deriv]
-  obtain ⟨-, hle, -⟩ := no_distant_equilibrium_one hinv hK hlam
-    (hupos s (interior_subset hs)) (rnWeight_pos hlam hnu (hupos s (interior_subset hs))) hg
-  simpa using neg_nonneg.mpr hle
 
 end Localised
 
@@ -614,8 +575,8 @@ variable [DecidableEq V] {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}
 setting of `theo:training_speed_full` and of `prop:no_distant_equilibrium` itself. The invariant
 probability is `theo:universality_graphs`*(1)*'s, and "strong connectedness" is `breach_all`.
 
-This is precisely the hypothesis `TrainingSpeed.training_speed_full` carries; see the module
-SCOPE for why it is not yet plugged in — that theorem asks for it at every **real** time. -/
+This is precisely the hypothesis `TrainingSpeed.training_speed_full` carries, and
+`TrainingSpeed.training_speed_full_of_pos` is that theorem with this in place of it. -/
 theorem flow_pos_graph {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ}
     (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (hl : B.IsInvProb lam)
     (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin)
@@ -640,50 +601,6 @@ proved — see the module SCOPE. -/
 section LaSalle
 
 variable {K : V → V → ℝ} {lam nu wf : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
-
-omit [Fintype V] in
-/-- A function with vanishing derivative on a convex set is constant on it. -/
-theorem eq_of_hasDerivAt_zero_on {f : ℝ → ℝ} {D : Set ℝ} (hD : Convex ℝ D)
-    (hf : ∀ s ∈ D, HasDerivAt f 0 s) {a b : ℝ} (ha : a ∈ D) (hb : b ∈ D) (hab : a ≤ b) :
-    f b = f a := by
-  have hmono : MonotoneOn f D :=
-    monotoneOn_of_deriv_nonneg hD (fun s hs => ((hf s hs).continuousAt).continuousWithinAt)
-      (fun s hs => ((hf s (interior_subset hs)).differentiableAt).differentiableWithinAt)
-      fun s hs => by simp [(hf s (interior_subset hs)).deriv]
-  have hanti : AntitoneOn f D :=
-    antitoneOn_of_deriv_nonpos hD (fun s hs => ((hf s hs).continuousAt).continuousWithinAt)
-      (fun s hs => ((hf s (interior_subset hs)).differentiableAt).differentiableWithinAt)
-      fun s hs => by simp [(hf s (interior_subset hs)).deriv]
-  exact le_antisymm (hanti ha hb hab) (hmono ha hb hab)
-
-/-- **The invariant sphere on `[0,∞)`** (`proofs.tex:791`). `Flow.nrmL2_const_of_flow` with its
-range repaired, exactly as `lossVal_antitoneOn` and `mass_monotoneOn` above. -/
-theorem nrmL2_const_on_Ici (hlam : ∀ x, 0 < lam x)
-    (hupos : ∀ s : ℝ, 0 ≤ s → ∀ x, 0 < u s x)
-    (hflow : IsGradientFlow K lam nu gd u) {t : ℝ} (ht : 0 ≤ t) :
-    Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0) := by
-  have hN : ∀ s ∈ Set.Ici (0:ℝ),
-      HasDerivAt (fun z : ℝ => ∑ x, lam x * (u z x * u z x)) 0 s := by
-    intro s hs
-    have hsum : HasDerivAt (fun z : ℝ => ∑ x, lam x * (u z x * u z x))
-        (∑ x, lam x * (-lossGrad K lam nu gd (u s) x * u s x
-          + u s x * -lossGrad K lam nu gd (u s) x)) s :=
-      HasDerivAt.fun_sum fun x _ =>
-        HasDerivAt.const_mul (lam x) ((hflow s x).fun_mul (hflow s x))
-    have hrw : ∀ x : V, lam x * (-lossGrad K lam nu gd (u s) x * u s x
-        + u s x * -lossGrad K lam nu gd (u s) x)
-        = -2 * (lam x * (lossGrad K lam nu gd (u s) x * u s x)) := fun x => by ring
-    have hzero : (∑ x, lam x * (-lossGrad K lam nu gd (u s) x * u s x
-        + u s x * -lossGrad K lam nu gd (u s) x)) = 0 := by
-      rw [Finset.sum_congr rfl fun x (_ : x ∈ (univ : Finset V)) => hrw x, ← Finset.mul_sum]
-      have h := ipL2_lossGrad_self (K := K) (lam := lam) (u := u s) nu gd hlam (hupos s hs)
-      simp only [Graph.ipL2] at h
-      rw [h, mul_zero]
-    rwa [hzero] at hsum
-  have hconst := eq_of_hasDerivAt_zero_on (convex_Ici 0) hN (Set.mem_Ici.mpr le_rfl)
-    (Set.mem_Ici.mpr ht) ht
-  simp only [Graph.nrmL2, Graph.ipL2]
-  rw [hconst]
 
 /-- **The mass converges** — the half of the LaSalle sentence that needs no `ω`-limit: along the
 flow from a positive initial density the mass is monotone on `[0,∞)` (`mass_monotoneOn`, using

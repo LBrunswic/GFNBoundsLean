@@ -1,4 +1,4 @@
-import GFNBounds.Balance.LocalConvergence
+import GFNBounds.Balance.BoundaryBlowup
 import GFNBounds.Balance.RatioBridge
 import GFNBounds.Balance.LogSqTaylor
 import GFNBounds.Graph.Morozov
@@ -55,8 +55,11 @@ Everything the theorem consumes was closed elsewhere: `theo:universality_graphs`
 (`GFNBounds/Balance/MassAscent.lean`), the invariant sphere and the monotone mass ascent
 (`GFNBounds/Balance/Flow.lean`, `MassAscent.lean`), the entry time and the homogeneity
 (`MassAscent.lean`), the ratio-to-density conversion (`GFNBounds/Balance/RatioBridge.lean`), the
-local exponential phase (`GFNBounds/Balance/LocalConvergence.lean`) and the `(log x)²` Taylor
-bound (`GFNBounds/Balance/LogSqTaylor.lean`). **This file is the assembly**, and the work in it
+local exponential phase (`GFNBounds/Balance/LocalConvergence.lean`), the `(log x)²` Taylor
+bound (`GFNBounds/Balance/LogSqTaylor.lean`) and — since 2026-09-13 — the positivity of the
+trajectory itself (`GFNBounds/Balance/BoundaryBlowup.lean`, `flow_pos_graph`), which
+`training_speed_full_of_pos` spends to remove the theorem's last hypothesis about the
+trajectory. **This file is the assembly**, and the work in it
 is making the hypotheses honest: three of them the paper never states, and all three are
 discharged here rather than added.
 
@@ -75,7 +78,9 @@ discharged here rather than added.
 | **`delta0Sq_le_half`** | **`δ₀ ≤ 1/2`**, the side condition `MassAscent.entry_time` imposes on its `δ` and `proofs.tex:927` does not check |
 | **`logSqDeriv_taylor_half`** | the `C³` side condition, as the Taylor bound Theorem 10 consumes: `a = 1/2`, `g''(1) = 2`, **`M₃ = 24`** — `LogSqTaylor.logSqDeriv_taylor_twelve`, sharper than the `M₃ = 80` the paper's own third-derivative reading gives |
 | **`entry_and_rescale`** | `proofs.tex:927–930` in one statement: a crossover `t₁ ≤ T₀` with every ratio within `δ₀`, `m₀ ≤ m₁ ≤ ‖u₀‖`, the rescaled curve again a gradient flow, and its deviation starting inside the `ε₀`-ball |
-| **`training_speed_full`** | **the theorem** — the visit-ratio identity, the global Łojasiewicz decay at the printed `κ` and `M`, and the local exponential phase at rate `ϱ_σ/(2m₁²)` in the *original* time variable, with the limit a constant density and hence balanced |
+| **`training_speed_full`** | **the theorem** — the visit-ratio identity, the global Łojasiewicz decay at the printed `κ` and `M`, and the local exponential phase at rate `ϱ_σ/(2m₁²)` in the *original* time variable, with the limit a constant density and hence balanced. Conditional on positivity of the trajectory on `[0,∞)` |
+| **`training_speed_full_of_pos`** | **the same conclusion, unconditional on the trajectory**: `hu0 : ∀ x, 0 < u 0 x` — the paper's own "from *every* initialization `μ₀ ∼ λ`" — plus the edge floor `BoundaryBlowup.flow_pos_graph` needs |
+| **`training_speed_full_of_init`** | **the same conclusion on the paper's own hypotheses, and no others**: the edge floor is discharged too, by `exists_edgeFloor`, which is never vacuous on a finite state space. Nothing about the trajectory, no mixing constant, no spectral gap, no aperiodicity — only path-connectedness, a positive backward policy, `λ` invariant, `ν = wλ` with `w ≥ w_min > 0`, `μ₀ ∼ λ`, and the flow itself |
 | `cycle_minOver_lam`, **`cycle_training_speed_check`**, **`cycle_training_speed_check_half`** | the constants **evaluated** on `rem:cycle_no_stalemate`'s five-vertex cycle: `λ_min = (1−p)/(5−2p)` and `ϱ_σ = 2(1−p)³/((5−2p)(4−p)²)`; at `p = 1/2`, `λ_min = 1/8`, `σ_* = 7`, `N_min = 1`, `B̂_σ = 14√2`, `ϱ_σ = 1/196`, and `T₀ = 3.147…×10¹⁶` at `𝓛(μ₀) = ‖u₀‖ = m₀ = w_min = 1` and `ε₀ = 1/100` |
 
 ## Hypothesis checklist — `theo:training_speed_full`
@@ -88,7 +93,7 @@ discharged here rather than added.
 | `g = (log x)²` | ✓ `logSq`, `logSqDeriv`. ⚠ `logSqDeriv` is the *definition* `2 log x/x`, not a derivative — inherited from `GFNBounds/Balance/Lojasiewicz.lean` |
 | `ν = wλ` with `w ≥ w_min > 0` | ✓ `nu = fun x => lam x * wf x`, `hwmin : 0 < wmin`, `hw : ∀ x, wmin ≤ wf x` |
 | the `‖w‖_{L^∞}` that `κ` and `C₆` name | ⚠ **a parameter** `wsup` with `hwsup : ∀ x, wf x ≤ wsup`, not a supremum; the theorem names it without hypothesising it |
-| "from **every** initialization `μ₀ ∼ λ`" | ⚠ **strengthened to the whole trajectory**: `hu : ∀ t x, 0 < u t x`. This is the disclosed stand-in for the compactness step — see SCOPE, first bullet |
+| "from **every** initialization `μ₀ ∼ λ`" | ✓ `training_speed_full_of_pos` takes `hu0 : ∀ x, 0 < u 0 x` and nothing about the trajectory, `BoundaryBlowup.flow_pos_graph` — item *(3)*'s compactness sentence, proved — supplying the rest. and `training_speed_full_of_init` discharges the edge floor as well (`exists_edgeFloor`), leaving **no hypothesis the paper does not have**. `training_speed_full` keeps the conditional form, with `hu` now ranged over `[0,∞)`, and is what `MorozovConsume` cites. See SCOPE, first bullet |
 | the gradient flow `μ̇_t = −∇^λ𝓛_{g,ν}(μ_t)` | ⚠ `hflow : IsGradientFlow B.phat lam (λw) logSqDeriv u`, hypothesised of a given curve; no existence theorem, as everywhere in `GFNBounds.Balance` |
 | `eq:occupation`: `λ(x) = N(x)/(2+σ̄)`, hence `λ_min = N_min/(2+σ̄)` | ✓ conjuncts *(i)* and *(ii)* of the theorem below |
 | "converges to the balanced flow of its sphere" | ⚠ **read as the displayed estimate plus the limit's balance**: `‖u_t/m₁ − c_∞‖_{L²(λ)} → 0` geometrically, and `Balanced B.phat lam (fun _ => c_∞)`. No statement about `μ_t` as a measure is made, and the sphere is not named in the conclusion |
@@ -105,22 +110,28 @@ discharged here rather than added.
 
 ## SCOPE (disclosed)
 
-* **The compactness/LaSalle layer is missing, and is carried as `hu : ∀ t x, 0 < u t x`.**
-  `prop:no_distant_equilibrium`*(3)* gets the trajectory's positivity from the boundary blow-up
-  of `𝓛` — "if `u(x) → 0` at some state while `‖u‖ = ‖u₀‖`, strong connectedness provides an
-  edge from a non-vanishing state into the vanishing region, whose ratio explodes" — and only
-  then invokes LaSalle's principle. **Neither the blow-up nor LaSalle is formalized anywhere in
-  this library**, and neither is claimed here. What is claimed instead is the *quantitative*
-  route, which needs only the positivity: the entry time (`MassAscent.entry_time`) and
-  `theo:local_convergence_full`. So `hu` is a hypothesis where the paper has a conclusion, it is
-  exactly how the paper's own assembly consumes item *(3)*, and **the convergence half of
-  `prop:no_distant_equilibrium`*(3)* is not proved, not used and not laundered**: the
+* **Half of the compactness/LaSalle layer is now proved, and it is the half this theorem
+  needs.** `prop:no_distant_equilibrium`*(3)* gets the trajectory's positivity from the boundary
+  blow-up of `𝓛` — "if `u(x) → 0` at some state while `‖u‖ = ‖u₀‖`, strong connectedness provides
+  an edge from a non-vanishing state into the vanishing region, whose ratio explodes" — and only
+  then invokes LaSalle's principle. **The blow-up is formalized**, in
+  `GFNBounds/Balance/BoundaryBlowup.lean`, in the quantitative form `u_t ≥ u_min > 0` on
+  `[0,∞)`; `flow_pos_graph` is that statement on the loop closure of a finite path-connected
+  marked graph, and `training_speed_full_of_pos` is this theorem with `hu` discharged by it, from
+  `hu0 : ∀ x, 0 < u 0 x` alone. **LaSalle is not**: Mathlib v4.31.0 has no `ω`-limit set, and
+  `BoundaryBlowup.mass_tendsto` delivers only that the mass converges. That costs nothing here,
+  because what is claimed is the *quantitative* route, which needs only the positivity: the entry
+  time (`MassAscent.entry_time`) and `theo:local_convergence_full`. **The convergence half of
+  `prop:no_distant_equilibrium`*(3)* is still not proved, not used and not laundered**: the
   convergence in conjunct *(iii)* below is Theorem `theo:local_convergence_full`'s, with its own
   proof and its own constants.
-* **`hu` ranges over all of `ℝ`, not over `[0,∞)`.** That is the shape
-  `MassAscent.entry_time`, `mass_monotone_flow` and `global_lojasiewicz_flow'` already carry, and
-  the shape a curve defined on the line has; kb 0022 concerns a *bound* hypothesis nothing could
-  discharge below `0`, and positivity of a trajectory is not of that kind.
+* **What discharging `hu` costs.** `flow_pos_graph` replaces it with `hu0` **plus** an edge floor
+  `0 < p_min ≤ 1` with `p_min ≤ π̂_←(y→z)` on every edge carrying mass — a constant the paper does
+  not name, and which `BoundaryBlowup.exists_edgeFloor` shows always exists on a finite state
+  space. `training_speed_full` is therefore kept in its conditional form beside
+  `training_speed_full_of_pos`, and is what `MorozovConsume` and the map's row still cite; its
+  `hu` is ranged over `[0,∞)`, which is where `flow_pos_graph` proves it (kb `0022`, resolved
+  2026-09-13).
 * **The crossover is an existence, not a permanence.** `∃ t₁ ∈ [0,T₀]` is what the loss-budget
   argument delivers; the flow could in principle leave the band and return, and only the local
   theorem forbids it — which it then does, for every `t ≥ t₁`.
@@ -139,7 +150,7 @@ discharged here rather than added.
   paper's and not the wider basin `LocalEnergy.mean_cauchy_on_sharp` would allow). This file
   changes neither, and states the theorem on the paper's `ε₀`.
 * **`sorry`-free and axiom-clean.** `#print axioms` on `training_speed_full`,
-  `entry_and_rescale`, `T0_eq`, `one_le_BhatSigma`, `hcoer_of_graph`, `minOver_lam_eq`,
+  `training_speed_full_of_pos`, `entry_and_rescale`, `T0_eq`, `one_le_BhatSigma`, `hcoer_of_graph`, `minOver_lam_eq`,
   `delta0Sq_le_half`, `eps0Sq_le_half`, `flow_translate`, `flow_unit_mass`,
   `logSqDeriv_taylor_half`, `rhoL_eq_rhoSigma`, `rhoSigma_eq_visits`,
   `cycle_training_speed_check` and `cycle_training_speed_check_half` returns
@@ -372,7 +383,7 @@ theorem entry_and_rescale {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}
     {lam uH wf : V → ℝ} {wmin eps0 : ℝ} {u : ℝ → V → ℝ}
     (hpc : G.PathConnected) (hpos : B.PositiveOnEdges)
     (hl : B.IsInvProb lam) (hhit : B.IsHitExp uH)
-    (hu : ∀ t x, 0 < u t x) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x)
+    (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x)
     (heps0 : 0 < eps0) (heps1 : eps0 ≤ 1/2)
     (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) :
     ∃ t₁ ∈ Set.Icc (0:ℝ)
@@ -398,9 +409,9 @@ theorem entry_and_rescale {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}
   have hlmin0 : 0 < Graph.minOver G lam := Graph.minOver_pos hp
   have hnu : ∀ x, 0 < lam x * wf x := fun x => mul_pos (hp x) (lt_of_lt_of_le hwmin (hw x))
   have hm0 : 0 < Graph.meanL2 lam (u 0) :=
-    Finset.sum_pos (fun i _ => mul_pos (hp i) (hu 0 i)) ⟨G.src, Finset.mem_univ _⟩
+    Finset.sum_pos (fun i _ => mul_pos (hp i) (hu 0 le_rfl i)) ⟨G.src, Finset.mem_univ _⟩
   have hmU : Graph.meanL2 lam (u 0) ≤ Graph.nrmL2 lam (u 0) :=
-    (mean_le_nrmL2_iff_const hp htot (fun x => (hu 0 x).le)).1
+    (mean_le_nrmL2_iff_const hp htot (fun x => (hu 0 le_rfl x).le)).1
   have hU0 : 0 < Graph.nrmL2 lam (u 0) := lt_of_lt_of_le hm0 hmU
   have hB1 : 1 ≤ BhatSigma G uH lam := one_le_BhatSigma hpc hpos hl hhit
   have hB : 0 < BhatSigma G uH lam := lt_of_lt_of_le zero_lt_one hB1
@@ -415,16 +426,16 @@ theorem entry_and_rescale {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}
     mass_monotone_flow hinv hKnn hp hu hnu logSqDeriv_strictlyUnimodal hflow
       (Set.mem_Ici.mpr le_rfl) (Set.mem_Ici.mpr ht₁0) ht₁0
   have hsphere : Graph.nrmL2 lam (u t₁) = Graph.nrmL2 lam (u 0) :=
-    nrmL2_const_of_flow hp hu hflow t₁
+    nrmL2_const_of_flow hp hu hflow t₁ ht₁0
   have hm1pos : 0 < Graph.meanL2 lam (u t₁) := lt_of_lt_of_le hm0 hmono
   have hm1U : Graph.meanL2 lam (u t₁) ≤ Graph.nrmL2 lam (u 0) := by
     rw [← hsphere]
-    exact (mean_le_nrmL2_iff_const hp htot (fun x => (hu t₁ x).le)).1
+    exact (mean_le_nrmL2_iff_const hp htot (fun x => (hu t₁ ht₁0 x).le)).1
   obtain ⟨hmean0, hrad⟩ :=
     exists_delta_for_radius (K := B.phat) (lam := lam) (u := u t₁)
       (Bhat := BhatSigma G uH lam) (m0 := Graph.meanL2 lam (u 0))
       (U0 := Graph.nrmL2 lam (u 0)) (eps0 := eps0)
-      hnn htot (fun x => (hu t₁ x).ne') hB hU0 (hcoer_of_graph hpc hpos hl hhit)
+      hnn htot (fun x => (hu t₁ ht₁0 x).ne') hB hU0 (hcoer_of_graph hpc hpos hl hhit)
       heps0 hm0 hmono hsphere (fun x => (hratio x).le)
   exact ⟨t₁, ht₁mem, hratio, hmono, hm1U, hm1pos,
     flow_unit_mass hflow hm1pos t₁, hmean0, hrad⟩
@@ -449,7 +460,7 @@ theorem training_speed_full {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy 
     (hpc : G.PathConnected) (hpos : B.PositiveOnEdges)
     (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH)
     (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup)
-    (hu : ∀ t x, 0 < u t x)
+    (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x)
     (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) :
     (∀ x, lam x = Graph.visits G gr x / (2 + B.sigmaBar uH))
       ∧ Graph.minOver G lam
@@ -489,9 +500,9 @@ theorem training_speed_full {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy 
   have hwabs : ∀ x, |wf x| ≤ wsup := fun x => by
     rw [abs_of_pos (hwfpos x)]; exact hwsup x
   have hm0 : 0 < Graph.meanL2 lam (u 0) :=
-    Finset.sum_pos (fun i _ => mul_pos (hp i) (hu 0 i)) ⟨G.src, Finset.mem_univ _⟩
+    Finset.sum_pos (fun i _ => mul_pos (hp i) (hu 0 le_rfl i)) ⟨G.src, Finset.mem_univ _⟩
   have hmU : Graph.meanL2 lam (u 0) ≤ Graph.nrmL2 lam (u 0) :=
-    (mean_le_nrmL2_iff_const hp htot (fun x => (hu 0 x).le)).1
+    (mean_le_nrmL2_iff_const hp htot (fun x => (hu 0 le_rfl x).le)).1
   have hU0 : 0 < Graph.nrmL2 lam (u 0) := lt_of_lt_of_le hm0 hmU
   have hB1 : 1 ≤ BhatSigma G uH lam := one_le_BhatSigma hpc hpos hl hhit
   have hB : 0 < BhatSigma G uH lam := lt_of_lt_of_le zero_lt_one hB1
@@ -546,6 +557,56 @@ theorem training_speed_full {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy 
   rw [hfun, hexp, hdev0] at h
   exact h
 
+/-- **`theo:training_speed_full` from a positive initialization alone** — the paper's own
+"from *every* initialization `μ₀ ∼ λ`" (`proofs.tex:906`), with no hypothesis on the trajectory
+at any later time.
+
+`training_speed_full`'s `hu` is discharged by `BoundaryBlowup.flow_pos_graph`, i.e. by
+`prop:no_distant_equilibrium`*(3)*'s compactness sentence, at the cost of the edge floor that
+sentence's quantitative form needs: `0 < p_min ≤ 1` with `p_min ≤ π̂_←(y→z)` on every edge
+carrying mass. `BoundaryBlowup.exists_edgeFloor` says such a `p_min` always exists on a finite
+state space, so the hypothesis costs a constant and not a case. -/
+theorem training_speed_full_of_pos {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}
+    {lam gr uH wf : V → ℝ} {wmin wsup pmin : ℝ} {u : ℝ → V → ℝ}
+    (hpc : G.PathConnected) (hpos : B.PositiveOnEdges)
+    (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH)
+    (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup)
+    (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1)
+    (hpmin : ∀ y z : V, 0 < B.phat y z → pmin ≤ B.phat y z)
+    (hu0 : ∀ x, 0 < u 0 x)
+    (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) :
+    (∀ x, lam x = Graph.visits G gr x / (2 + B.sigmaBar uH))
+      ∧ Graph.minOver G lam
+          = Graph.minOver G (Graph.visits G gr) / (2 + B.sigmaBar uH)
+      ∧ (∀ t : ℝ, 0 ≤ t →
+          lossVal lam wf logSq (ratio B.phat lam (u t))
+            ≤ ((lossVal lam wf logSq (ratio B.phat lam (u 0)))⁻¹
+                + (wmin * Real.sqrt (Graph.minOver G lam)
+                    / (Graph.nrmL2 lam (u 0) * wsup
+                        * max 1 (Real.sqrt (lossVal lam wf logSq (ratio B.phat lam (u 0))
+                            / (wmin * Graph.minOver G lam))))) ^ 2 * t)⁻¹)
+      ∧ ∃ t₁ ∈ Set.Icc (0:ℝ)
+          (T0 (lossVal lam wf logSq (ratio B.phat lam (u 0)))
+            (cDelta wmin (Graph.minOver G lam) (Graph.nrmL2 lam (u 0))
+              (delta0 (eps0Sq wmin wsup (BhatSigma G uH lam) (Graph.minOver G lam))
+                (Graph.meanL2 lam (u 0)) (BhatSigma G uH lam) (Graph.nrmL2 lam (u 0))))),
+          Graph.meanL2 lam (u 0) ≤ Graph.meanL2 lam (u t₁)
+            ∧ Graph.meanL2 lam (u t₁) ≤ Graph.nrmL2 lam (u 0)
+            ∧ Graph.nrmL2 lam (fun x => u t₁ x / Graph.meanL2 lam (u t₁) - 1)
+                ≤ eps0Sq wmin wsup (BhatSigma G uH lam) (Graph.minOver G lam)
+            ∧ ∃ cinf : ℝ, Balanced B.phat lam (fun _ => cinf) ∧ ∀ t : ℝ, t₁ ≤ t →
+                Graph.nrmL2 lam (fun x => u t x / Graph.meanL2 lam (u t₁) - cinf)
+                  ≤ 2 * Real.exp (-(rhoSigma 2 wmin (Graph.minOver G lam)
+                          (Graph.sigmaStar G uH) * (t - t₁)
+                        / (2 * Graph.meanL2 lam (u t₁) ^ 2)))
+                    * Graph.nrmL2 lam
+                        (perpL2 lam (fun x => u t₁ x / Graph.meanL2 lam (u t₁) - 1)) :=
+  training_speed_full hpc hpos hl hg hhit hwmin hw hwsup
+    (flow_pos_graph (lamMin := Graph.minOver G lam) hpc hpos hl
+      (fun x => Graph.minOver_le lam x)
+      (Graph.minOver_pos fun x => hl.pos hpc hpos x) hpmin0 hpmin1 hpmin hwmin hw hu0 hflow)
+    hflow
+
 /-! ### The five-vertex cycle: the constants evaluated
 
 `GFNBounds/Graph/CycleExample.lean`'s `rem:cycle_no_stalemate` graph, which already pins
@@ -553,6 +614,9 @@ theorem training_speed_full {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy 
 `(1/8, 1/4, 1/4, 1/4, 1/8)`, so `λ_min = 1/8`; `σ_* = (4−p)/(1−p) = 7`; `2 + σ̄ = 8` and
 `N_min = 1`, so `λ_min = N_min/(2+σ̄)` checks; `B̂_σ = 7/√(1/8) = 14√2 ≈ 19.8`; and
 `ϱ_σ = 2·1·(1/8)/49 = 1/196` at `w_min = 1`. -/
+
+
+
 
 section CycleCheck
 
@@ -632,5 +696,64 @@ theorem cycle_training_speed_check_half :
     norm_num
 
 end CycleCheck
+
+/-! ### The theorem on the paper's own hypotheses
+
+`training_speed_full_of_pos` still asks for an edge floor `p_min`, which the paper never names.
+On a finite state space one always exists (`BoundaryBlowup.exists_edgeFloor`), so it is
+discharged rather than assumed. -/
+
+section Unconditional
+
+variable {V : Type*} [Fintype V] [DecidableEq V]
+
+/-- **`theo:training_speed_full` with no hypothesis the paper does not have.** What remains is
+the paper's own setting: a finite path-connected marked graph, a backward policy positive on its
+edges, `λ` its invariant probability, `ν = wλ` with `w ≥ w_min > 0`, and an initialization
+`μ₀ ∼ λ` — the theorem's own *"from **every** initialization `μ₀ ∼ λ`"*.
+
+The trajectory hypothesis that stood here until 2026-09-13 is discharged by
+`flow_pos_graph`, the compactness half of `prop:no_distant_equilibrium`*(3)*; the edge floor by
+`exists_edgeFloor`. What is **not** discharged, and is disclosed in SCOPE: that the gradient flow
+exists. Every statement in this layer is conditional on a given curve, as the paper's own proofs
+are. -/
+theorem training_speed_full_of_init {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}
+    {lam gr uH wf : V → ℝ} {wmin wsup : ℝ} {u : ℝ → V → ℝ}
+    (hpc : G.PathConnected) (hpos : B.PositiveOnEdges)
+    (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH)
+    (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup)
+    (hu0 : ∀ x, 0 < u 0 x)
+    (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) :
+    (∀ x, lam x = Graph.visits G gr x / (2 + B.sigmaBar uH))
+      ∧ Graph.minOver G lam
+          = Graph.minOver G (Graph.visits G gr) / (2 + B.sigmaBar uH)
+      ∧ (∀ t : ℝ, 0 ≤ t →
+          lossVal lam wf logSq (ratio B.phat lam (u t))
+            ≤ ((lossVal lam wf logSq (ratio B.phat lam (u 0)))⁻¹
+                + (wmin * Real.sqrt (Graph.minOver G lam)
+                    / (Graph.nrmL2 lam (u 0) * wsup
+                        * max 1 (Real.sqrt (lossVal lam wf logSq (ratio B.phat lam (u 0))
+                            / (wmin * Graph.minOver G lam))))) ^ 2 * t)⁻¹)
+      ∧ ∃ t₁ ∈ Set.Icc (0:ℝ)
+          (T0 (lossVal lam wf logSq (ratio B.phat lam (u 0)))
+            (cDelta wmin (Graph.minOver G lam) (Graph.nrmL2 lam (u 0))
+              (delta0 (eps0Sq wmin wsup (BhatSigma G uH lam) (Graph.minOver G lam))
+                (Graph.meanL2 lam (u 0)) (BhatSigma G uH lam) (Graph.nrmL2 lam (u 0))))),
+          Graph.meanL2 lam (u 0) ≤ Graph.meanL2 lam (u t₁)
+            ∧ Graph.meanL2 lam (u t₁) ≤ Graph.nrmL2 lam (u 0)
+            ∧ Graph.nrmL2 lam (fun x => u t₁ x / Graph.meanL2 lam (u t₁) - 1)
+                ≤ eps0Sq wmin wsup (BhatSigma G uH lam) (Graph.minOver G lam)
+            ∧ ∃ cinf : ℝ, Balanced B.phat lam (fun _ => cinf) ∧ ∀ t : ℝ, t₁ ≤ t →
+                Graph.nrmL2 lam (fun x => u t x / Graph.meanL2 lam (u t₁) - cinf)
+                  ≤ 2 * Real.exp (-(rhoSigma 2 wmin (Graph.minOver G lam)
+                          (Graph.sigmaStar G uH) * (t - t₁)
+                        / (2 * Graph.meanL2 lam (u t₁) ^ 2)))
+                    * Graph.nrmL2 lam
+                        (perpL2 lam (fun x => u t₁ x / Graph.meanL2 lam (u t₁) - 1)) := by
+  obtain ⟨pmin, hpmin0, hpmin1, hpmin⟩ := exists_edgeFloor B.phat
+  exact training_speed_full_of_pos hpc hpos hl hg hhit hwmin hw hwsup
+    hpmin0 hpmin1 hpmin hu0 hflow
+
+end Unconditional
 
 end GFNBounds.Balance

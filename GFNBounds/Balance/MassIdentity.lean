@@ -76,9 +76,13 @@ input is `λ`-invariance. See SCOPE.
   initialization) nor its item *(2)* (`prop:nonlinear_freezing`). Item *(2)* — scale invariance,
   `d/dt‖u_t‖ = 0`, monotone ascent of the mass, Cauchy–Schwarz on the sphere — and item *(3)* —
   the coercivity bound, LaSalle's invariance principle, the entry time into the local
-  neighbourhood — are statements about the *trajectory* of an ODE on `𝓜²(λ)`. They need a
-  gradient-flow layer (existence, uniqueness, `ω`-limit sets, LaSalle) that this library does not
-  have, and no part of them is attempted. The map records both labels as **partial**.
+  neighbourhood — are statements about the *trajectory* of an ODE on `𝓜²(λ)`, and none of them is
+  attempted **here**. They are elsewhere: `GFNBounds/Balance/Flow.lean` (the flow identity, the
+  invariant sphere), `MassAscent.lean` (the ascent, the maximizer, the entry time) and
+  `BoundaryBlowup.lean` (the compactness step, hence positivity of the trajectory from positivity
+  at time zero), all conditional on a curve satisfying the ODE — no existence theorem is claimed
+  anywhere. What is still missing is `ω`-limit sets and LaSalle, which Mathlib v4.31.0 does not
+  have; the map records both labels as **partial**.
 * **Finite state space.** The paper states the proposition for an ergodic `(𝒮̂, λ, T)`; this file
   proves it on a `Fintype`, with `∫ · dλ` read as `∑ x, λ x * ·` and `a.e.` as `∀ x`. See the
   checklist for what that costs. Every downstream use in the paper —

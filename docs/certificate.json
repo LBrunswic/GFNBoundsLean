@@ -4,8 +4,18 @@
   "commit": "1939fa0b81846a7dac985722feda03064b0cf1e3",
   "commit_short": "1939fa0",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "GFNBounds/Balance/BoundaryBlowup.lean",
+    "GFNBounds/Balance/Flow.lean",
+    "GFNBounds/Balance/MassAscent.lean",
+    "GFNBounds/Balance/MassIdentity.lean",
+    "GFNBounds/Balance/TrainingSpeed.lean",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -38,15 +48,15 @@
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 2546,
+    "declarations": 2549,
     "by_namespace": {
       "GFNBounds.Doubling": 1109,
-      "GFNBounds.Balance": 629,
+      "GFNBounds.Balance": 632,
       "GFNBounds.Graph": 475,
       "GFNBounds.Core": 282,
       "GFNBounds.Silva": 51
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "1174a0a89380308756debb644fe6d4b290d47b0245f67be9d7d77d0af0b1e9ab"
+    "sha256": "8c7d732b061e1f7fb667cd05e9c7960da3993b92e508074c1db4ac2fcdccf8ba"
   }
 }

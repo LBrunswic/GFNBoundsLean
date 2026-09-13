@@ -78,13 +78,14 @@ conditional on an unstated identity.
 | `hasDerivAt_ratio_comp` | `δr = v − ru` along an arbitrary curve, by the quotient rule |
 | `hasDerivAt_loss_comp` | `δ𝓛_{g,ν} = ∫ g'(r)[d(δT)/dμ − r dδ/dμ] dν` along an arbitrary curve — `proofs.tex:469–470` |
 | `hasDerivAt_loss_comp_ipL2` | `d/dt 𝓛_{g,ν}(μ_t) = ⟨D(μ_t) ∣ μ̇_t⟩_λ`: `theo:first_variation_full`'s display read along a trajectory. The adjoint step is `FirstVariation.firstVariation_adjoint`, reused and not reproved |
-| `hasDerivAt_loss_flow_at`, `hasDerivAt_loss_flow` | **the flow identity** `−𝓛̇ = ‖D‖²_{L²(λ)}` — `proofs.tex:813`, `proofs.tex:897`. This is the statement the three disclosures name |
+| `hasDerivAt_loss_flow_at`, `hasDerivAt_loss_flow` | **the flow identity** `−𝓛̇ = ‖D‖²_{L²(λ)}` — `proofs.tex:813`, `proofs.tex:897`. This is the statement the three disclosures name. `_at` asks positivity at **one** time; `hasDerivAt_loss_flow` asks it on `[0,∞)`, where `BoundaryBlowup.flow_pos_graph` supplies it |
 | `hasDerivAt_loss_flow_line` | the same along the Euler line `u − sD(u)`, which needs no existence theorem: the gradient-descent direction dissipates at rate `‖D‖²` |
 | `ipL2_lossGrad_self` | `∫ Du dλ = 0`, the orthogonality of `prop:no_distant_equilibrium`*(2)* — an identity, needing neither invariance of `λ` nor anything of `g` |
-| `nrmL2_const_of_flow` | **the invariant sphere**: the gradient flow preserves `‖u_t‖_{L²(λ)}`. `Lojasiewicz.lean` carries this as a hypothesis and discloses that it is item *(2)*'s; here it is a conclusion |
+| `nrmL2_const_on_Ici`, `nrmL2_const_of_flow` | **the invariant sphere**: the gradient flow preserves `‖u_t‖_{L²(λ)}` on `[0,∞)`. `Lojasiewicz.lean` carries this as a hypothesis and discloses that it is item *(2)*'s; here it is a conclusion. The two differ only in whether `t` is explicit; `ipL2_lossGrad_self` asks positivity at **one** time, which is what lets the sphere be used inside `BoundaryBlowup`'s continuation |
+| `eq_of_hasDerivAt_zero_on` | vanishing derivative on a convex set gives a constant; general-purpose, and the half-line replacement for `is_const_of_deriv_eq_zero` |
 | `hasDerivAt_logSq` | `g = (log x)²` has `g' = 2 log x / x` on `ℝ_+^*` — `Lojasiewicz.lean` declares `logSq` and `logSqDeriv` independently and never ties them; the flow ODE needs the tie |
 | `lossGrad_of_weight`, `loss_eq_lossVal` | the two changes of variable that let `Lojasiewicz.lean`'s `ν = wλ` statements meet `Freezing.lean`'s `loss` |
-| `lojasiewicz_integrated` | `−L' ≥ κ²L² ⇒ L(t) ≤ (L(0)^{−1} + κ²t)^{−1}`: `cor:global_lojasiewicz`'s **second** display, integrated by monotonicity of `1/L − κ²t` |
+| `lojasiewicz_integrated` | `−L' ≥ κ²L² ⇒ L(t) ≤ (L(0)^{−1} + κ²t)^{−1}`: `cor:global_lojasiewicz`'s **second** display, integrated by monotonicity of `1/L − κ²t`. Every hypothesis is on `[0,∞)` |
 | `global_lojasiewicz_flow` | **`cor:global_lojasiewicz`**, both displays, along the gradient flow, with `κ` an explicit formula |
 | `inner_ge_of_mixing` | `⟨h, Hh⟩ ≥ (c/B̂²)‖h − Πh‖²` from `⟨h, Hh⟩ ≥ c‖(I−P)h‖²` and `lem:sigma_mixing` — the display `proofs.tex:606–608`, with `c = g''(1)w_min` |
 | `stable_frozen_decay` | **`theo:db_stable_frozen_full`**, continuous half: `Πh_t` conserved, and `‖h_t − Πh_t‖ ≤ e^{−ϱt}‖h_0 − Πh_0‖` |
@@ -144,8 +145,9 @@ conditional on an unstated identity.
   assembled, and the LaSalle argument of item *(3)*'s convergence half is untouched.
 * **`lojasiewicz_integrated` is a statement about real functions**, with no flow in it: it
   integrates `−L' ≥ κ²L²` on `[0,∞)` by the monotonicity of `1/L − κ²t`. It is stated for any
-  `L` positive on `[0,∞)` and differentiable on `ℝ`, which is more than the corollary needs and
-  is the shape the corollary consumes.
+  `L` positive and differentiable on `[0,∞)` — every one of its three hypotheses ranges over the
+  half-line its conclusion does, so a caller that only has the flow on `[0,∞)` can discharge them
+  all (kb `0022`).
 * **The chain rule along a curve is proved directly, not by upgrading the directional
   derivative.** `FirstVariation.lean`'s theorem is `HasDerivAt (fun t => 𝓛(μ + tδ)) ⟪Φ∣δ⟩ 0` —
   a derivative along a *line*, which does not compose with an arbitrary curve. Rather than prove
@@ -166,8 +168,18 @@ conditional on an unstated identity.
   flow identity, and `scalar_decay_check` evaluates the decay — but the latter runs at `Π = 0`,
   where the conserved-component conjunct of `stable_frozen_decay` says nothing. Exercising both
   conjuncts at once needs `dim E ≥ 2` with a non-trivial orthogonal projection, and is not done.
-* **`sorry`-free.** `#print axioms` on `hasDerivAt_loss_flow`, `stable_frozen_decay`,
-  `inner_ge_of_mixing`, `lojasiewicz_integrated`, `global_lojasiewicz_flow` and both numerical
+* **The trajectory's positivity is ranged over `[0,∞)`, and is no longer a standing
+  hypothesis of the convergence block.** `hasDerivAt_loss_flow`, `nrmL2_const_of_flow` and
+  `global_lojasiewicz_flow` take `hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x`, which is what
+  `BoundaryBlowup.flow_pos_graph` proves from `0 < u₀`; they read `∀ t x` until 2026-09-13 and
+  were undischargeable in that form (kb `0022`). The price is paid in two conclusions:
+  `hasDerivAt_loss_flow` and `nrmL2_const_of_flow` now take `ht : 0 ≤ t` as well, because
+  nothing about a flow on `[0,∞)` says anything at a negative time. Neither is used at a negative
+  time anywhere in this library, and `hasDerivAt_loss_flow_at` — which asks positivity at the one
+  time it differentiates at — is unchanged and available at any real `t`.
+* **`sorry`-free.** `#print axioms` on `hasDerivAt_loss_flow`, `nrmL2_const_on_Ici`,
+  `stable_frozen_decay`, `inner_ge_of_mixing`, `lojasiewicz_integrated`,
+  `global_lojasiewicz_flow` and both numerical
   checks returns `[propext, Classical.choice, Quot.sound]`. Graduated into the strict library on 2026-09-12.
 
 ## Hypothesis checklist — `theo:first_variation_full`, along a trajectory
@@ -355,15 +367,18 @@ theorem hasDerivAt_loss_flow_at {K : V → V → ℝ} {lam nu : V → ℝ} {g gd
   rwa [hval] at h
 
 /-- **The flow identity `−𝓛̇ = ‖D‖²_{L²(λ)}` along a gradient flow** (`proofs.tex:813`, `:897`):
-the loss decreases at exactly the squared norm of its gradient, at every time. -/
+the loss decreases at exactly the squared norm of its gradient, at every time of `[0,∞)`.
+
+`hu` is ranged over the half-line the trajectory lives on, which is where
+`BoundaryBlowup.flow_pos_graph` discharges it — kb `0022`. -/
 theorem hasDerivAt_loss_flow {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ}
     {u : ℝ → V → ℝ}
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
-    (hu : ∀ t x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y)
-    (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) :
+    (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y)
+    (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) (ht : 0 ≤ t) :
     HasDerivAt (fun s : ℝ => loss K lam nu (u s) g)
       (-(Graph.nrmL2 lam (lossGrad K lam nu gd (u t)) ^ 2)) t :=
-  hasDerivAt_loss_flow_at hinv hK hlam (hu t) hg (hflow t)
+  hasDerivAt_loss_flow_at hinv hK hlam (hu t ht) hg (hflow t)
 
 /-- **The flow identity along the Euler line `u − sD(u)`**: the gradient-descent *direction*
 dissipates the loss at rate `‖D‖²_{L²(λ)}`, with no flow to exist.
@@ -430,19 +445,37 @@ theorem ipL2_lossGrad_self {K : V → V → ℝ} {lam u : V → ℝ} (nu : V →
   rw [Finset.sum_congr rfl fun x (_ : x ∈ (univ : Finset V)) => hsplit x,
     Finset.sum_sub_distrib, hQ, hR, sub_self]
 
-/-- **`prop:no_distant_equilibrium`*(2)*, the invariant sphere**: the gradient flow preserves
-`‖u_t‖_{L²(λ)}` (`proofs.tex:791`, "the loss is scale-invariant, so the gradient flow preserves
-`‖u_t‖_{L²(λ)}`").
+omit [Fintype V] in
+/-- A function with vanishing derivative on a convex set is constant on it. -/
+theorem eq_of_hasDerivAt_zero_on {f : ℝ → ℝ} {D : Set ℝ} (hD : Convex ℝ D)
+    (hf : ∀ s ∈ D, HasDerivAt f 0 s) {a b : ℝ} (ha : a ∈ D) (hb : b ∈ D) (hab : a ≤ b) :
+    f b = f a := by
+  have hmono : MonotoneOn f D :=
+    monotoneOn_of_deriv_nonneg hD (fun s hs => ((hf s hs).continuousAt).continuousWithinAt)
+      (fun s hs => ((hf s (interior_subset hs)).differentiableAt).differentiableWithinAt)
+      fun s hs => by simp [(hf s (interior_subset hs)).deriv]
+  have hanti : AntitoneOn f D :=
+    antitoneOn_of_deriv_nonpos hD (fun s hs => ((hf s hs).continuousAt).continuousWithinAt)
+      (fun s hs => ((hf s (interior_subset hs)).differentiableAt).differentiableWithinAt)
+      fun s hs => by simp [(hf s (interior_subset hs)).deriv]
+  exact le_antisymm (hanti ha hb hab) (hmono ha hb hab)
 
-`d/dt‖u_t‖² = −2∫Du dλ = 0` by `ipL2_lossGrad_self`. `GFNBounds/Balance/Lojasiewicz.lean`
-discloses the sphere as "a hypothesis, not a conclusion", item *(2)* being unformalized; here it
-is a conclusion, of the flow. -/
-theorem nrmL2_const_of_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
-    (hlam : ∀ x, 0 < lam x) (hu : ∀ t x, 0 < u t x)
-    (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) :
+/-- **`prop:no_distant_equilibrium`*(2)*, the invariant sphere, on `[0,∞)`**: the gradient flow
+preserves `‖u_t‖_{L²(λ)}` (`proofs.tex:791`, "the loss is scale-invariant, so the gradient flow
+preserves `‖u_t‖_{L²(λ)}`").
+
+`d/dt‖u_t‖² = −2∫Du dλ = 0` by `ipL2_lossGrad_self`, **which asks positivity at one time only**:
+that is what lets the sphere be used inside the continuation of
+`BoundaryBlowup.flow_pos_of_pos`. `GFNBounds/Balance/Lojasiewicz.lean` discloses the sphere as
+"a hypothesis, not a conclusion", item *(2)* being unformalized; here it is a conclusion, of the
+flow. -/
+theorem nrmL2_const_on_Ici {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
+    (hlam : ∀ x, 0 < lam x) (hupos : ∀ s : ℝ, 0 ≤ s → ∀ x, 0 < u s x)
+    (hflow : IsGradientFlow K lam nu gd u) {t : ℝ} (ht : 0 ≤ t) :
     Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0) := by
-  have hN : ∀ s : ℝ, HasDerivAt (fun z : ℝ => ∑ x, lam x * (u z x * u z x)) 0 s := by
-    intro s
+  have hN : ∀ s ∈ Set.Ici (0:ℝ),
+      HasDerivAt (fun z : ℝ => ∑ x, lam x * (u z x * u z x)) 0 s := by
+    intro s hs
     have hsum : HasDerivAt (fun z : ℝ => ∑ x, lam x * (u z x * u z x))
         (∑ x, lam x * (-lossGrad K lam nu gd (u s) x * u s x
           + u s x * -lossGrad K lam nu gd (u s) x)) s :=
@@ -453,14 +486,23 @@ theorem nrmL2_const_of_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ
     have hzero : (∑ x, lam x * (-lossGrad K lam nu gd (u s) x * u s x
         + u s x * -lossGrad K lam nu gd (u s) x)) = 0 := by
       rw [Finset.sum_congr rfl fun x (_ : x ∈ (univ : Finset V)) => hrw x, ← Finset.mul_sum]
-      have h := ipL2_lossGrad_self (K := K) (lam := lam) (u := u s) nu gd hlam (hu s)
+      have h := ipL2_lossGrad_self (K := K) (lam := lam) (u := u s) nu gd hlam (hupos s hs)
       simp only [Graph.ipL2] at h
       rw [h, mul_zero]
     rwa [hzero] at hsum
-  have hconst : (∑ x, lam x * (u t x * u t x)) = ∑ x, lam x * (u 0 x * u 0 x) :=
-    is_const_of_deriv_eq_zero (fun s => (hN s).differentiableAt) (fun s => (hN s).deriv) t 0
+  have hconst := eq_of_hasDerivAt_zero_on (convex_Ici 0) hN (Set.mem_Ici.mpr le_rfl)
+    (Set.mem_Ici.mpr ht) ht
   simp only [Graph.nrmL2, Graph.ipL2]
   rw [hconst]
+
+/-- **`prop:no_distant_equilibrium`*(2)*, the invariant sphere**, in the applied form the
+convergence block cites: `‖u_t‖_{L²(λ)} = ‖u₀‖_{L²(λ)}` at every `t ≥ 0`. `nrmL2_const_on_Ici`
+with `t` explicit. -/
+theorem nrmL2_const_of_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
+    (hlam : ∀ x, 0 < lam x) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x)
+    (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) (ht : 0 ≤ t) :
+    Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0) :=
+  nrmL2_const_on_Ici hlam hu hflow ht
 
 end FlowIdentity
 
@@ -511,7 +553,7 @@ A statement about real functions, with no flow in it: `1/L − κ²t` has non-ne
 `(0,∞)`, hence is monotone, which is the inequality. Positivity of `L` on `[0,∞)` is what the
 route through `1/L` costs; see the module SCOPE. -/
 theorem lojasiewicz_integrated {L L' : ℝ → ℝ} {kappa : ℝ}
-    (hderiv : ∀ t : ℝ, HasDerivAt L (L' t) t)
+    (hderiv : ∀ t : ℝ, 0 ≤ t → HasDerivAt L (L' t) t)
     (hpos : ∀ t : ℝ, 0 ≤ t → 0 < L t)
     (hineq : ∀ t : ℝ, 0 ≤ t → kappa ^ 2 * L t ^ 2 ≤ -L' t) :
     ∀ t : ℝ, 0 ≤ t → L t ≤ ((L 0)⁻¹ + kappa ^ 2 * t)⁻¹ := by
@@ -519,7 +561,7 @@ theorem lojasiewicz_integrated {L L' : ℝ → ℝ} {kappa : ℝ}
       HasDerivAt (fun z : ℝ => (L z)⁻¹ - kappa ^ 2 * z) (-L' s / L s ^ 2 - kappa ^ 2) s := by
     intro s hs
     have h1 : HasDerivAt (fun z : ℝ => (L z)⁻¹) (-L' s / L s ^ 2) s :=
-      (hderiv s).inv (hpos s hs).ne'
+      (hderiv s hs).inv (hpos s hs).ne'
     have h2 : HasDerivAt (fun z : ℝ => kappa ^ 2 * z) (kappa ^ 2) s := by
       simpa using (hasDerivAt_id' s).const_mul (kappa ^ 2)
     exact h1.sub h2
@@ -566,7 +608,7 @@ bound `𝓛(μ_t) ≤ L₀`, and `𝓛 > 0`; see the module SCOPE. -/
 theorem global_lojasiewicz_flow
     {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin wsup L0 : ℝ} {u : ℝ → V → ℝ}
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
-    (htot : ∑ x, lam x = 1) (hu : ∀ t x, 0 < u t x)
+    (htot : ∑ x, lam x = 1) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x)
     (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin)
     (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup)
     (hu0 : 0 < Graph.nrmL2 lam (u 0))
@@ -584,15 +626,15 @@ theorem global_lojasiewicz_flow
     (L' := fun s => -(Graph.nrmL2 lam
       (lossGradDensity K lam (u s) (fun x => wf x / u s x) logSqDeriv) ^ 2))
     ?_ hpos ?_
-  · intro s
+  · intro s hs
     have h := hasDerivAt_loss_flow (K := K) (lam := lam) (nu := fun x => lam x * wf x)
-      (g := logSq) (gd := logSqDeriv) hinv hK hlam hu (fun _ hy => hasDerivAt_logSq hy) hflow s
+      (g := logSq) (gd := logSqDeriv) hinv hK hlam hu (fun _ hy => hasDerivAt_logSq hy) hflow s hs
     rw [lossGrad_of_weight hlam] at h
     simpa only [loss_eq_lossVal] using h
   · intro s hs
     rw [neg_neg]
-    exact global_lojasiewicz_sq hinv hK hlam htot (hu s) hlmin hlmin0 hwmin hw hwsup
-      (nrmL2_const_of_flow hlam hu hflow s) hu0 (hL0 s hs)
+    exact global_lojasiewicz_sq hinv hK hlam htot (hu s hs) hlmin hlmin0 hwmin hw hwsup
+      (nrmL2_const_of_flow hlam hu hflow s hs) hu0 (hL0 s hs)
 
 end Lojasiewicz
 

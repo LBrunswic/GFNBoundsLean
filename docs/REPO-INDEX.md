@@ -1541,7 +1541,7 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 *strict library; 737 lines; 32 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:no_distant_equilibrium` (bucket B)
+Certifies: 🟡 `prop:no_distant_equilibrium` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}`, `variable {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}`, `variable [DecidableEq V] {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}`, `variable {K : V → V → ℝ} {lam nu wf : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}`
@@ -1589,7 +1589,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Gra
 *strict library; 369 lines; 5 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:db_stable_frozen_full` (bucket B)
+Certifies: 🟡 `theo:db_stable_frozen_full` (bucket D)
 
 
 In scope: `variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]`, `variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]`
@@ -1610,7 +1610,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 *strict library; 913 lines; 47 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:gd_diffusion_full` (bucket B), ✅ `theo:local_convergence_full` (bucket B)
+Certifies: 🟡 `theo:gd_diffusion_full` (bucket D), 🟡 `theo:local_convergence_full` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -1673,7 +1673,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 589 lines; 19 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:first_variation_full` (bucket B)
+Certifies: 🟡 `theo:first_variation_full` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}`
@@ -1708,7 +1708,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Mar
 *strict library; 842 lines; 23 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:first_variation_full` (bucket B), 🟡 `theo:db_stable_frozen_full` (bucket B), 🟡 `prop:no_distant_equilibrium` (bucket B), ✅ `cor:global_lojasiewicz` (bucket A)
+Certifies: 🟡 `theo:first_variation_full` (bucket D), 🟡 `theo:db_stable_frozen_full` (bucket D), 🟡 `prop:no_distant_equilibrium` (bucket D), ✅ `cor:global_lojasiewicz` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]`
@@ -1747,7 +1747,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`
 *strict library; 797 lines; 77 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:nonlinear_freezing` (bucket B)
+Certifies: 🟡 `prop:nonlinear_freezing` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable (F : FreezingBands)`, `variable (F : FreezingBands)`, `variable {V : Type*} [Fintype V]`
@@ -1840,7 +1840,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable (F : FreezingBands)`, `v
 *strict library; 650 lines; 23 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `cor:gradient_formulas` (bucket B), 🟡 `cor:db_gradient` (bucket B)
+Certifies: 🟡 `cor:gradient_formulas` (bucket D), 🟡 `cor:db_gradient` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`
@@ -1879,7 +1879,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`
 *strict library; 528 lines; 39 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket B)
+Certifies: 🟡 `theo:local_convergence_full` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -1934,7 +1934,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 824 lines; 63 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `def:edge_lift` (bucket B), 🟡 `lem:lift_wellposed` (bucket B), 🟡 `prop:db_lift` (bucket B), 🟡 `lem:lift_mixing` (bucket B)
+Certifies: 🟡 `def:edge_lift` (bucket D), 🟡 `lem:lift_wellposed` (bucket D), 🟡 `prop:db_lift` (bucket D), 🟡 `lem:lift_mixing` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : MarkedGraph V} {B : BackwardPolicy G}`
@@ -2013,7 +2013,7 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : Mar
 *strict library; 1243 lines; 54 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket B)
+Certifies: 🟡 `theo:local_convergence_full` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2083,7 +2083,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 1111 lines; 36 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket B)
+Certifies: 🟡 `theo:local_convergence_full` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2148,7 +2148,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 704 lines; 27 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:no_distant_equilibrium` (bucket B), ✅ `cor:global_lojasiewicz` (bucket A)
+Certifies: 🟡 `prop:no_distant_equilibrium` (bucket D), ✅ `cor:global_lojasiewicz` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2191,7 +2191,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 805 lines; 25 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:no_distant_equilibrium` (bucket B), ✅ `cor:global_lojasiewicz` (bucket A)
+Certifies: 🟡 `prop:no_distant_equilibrium` (bucket D), ✅ `cor:global_lojasiewicz` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}`, `variable {V : Type*} [Fintype V]`, `variables, where `ν = wλ`. This is the form `BoundaryBlowup.flow_pos_of_pos` consumes. -/`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`
@@ -2232,7 +2232,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] 
 *strict library; 442 lines; 25 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:no_distant_equilibrium` (bucket B), 🟡 `theo:global_dichotomy_full` (bucket B)
+Certifies: 🟡 `prop:no_distant_equilibrium` (bucket D), 🟡 `theo:global_dichotomy_full` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}`
@@ -2273,7 +2273,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Mar
 *strict library; 375 lines; 17 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:training_speed_full` (bucket A)
+Certifies: 🟡 `theo:training_speed_full` (bucket B)
 
 
 In scope: `variable, `∀ x, |r(x) − 1| < δ`. Step 4 of `theo:local_convergence_full` wants a radius in the`, `variable {V : Type*} [Fintype V]`
@@ -2306,7 +2306,7 @@ In scope: `variable, `∀ x, |r(x) − 1| < δ`. Step 4 of `theo:local_convergen
 *strict library; 759 lines; 29 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:training_speed_full` (bucket A)
+Certifies: 🟡 `theo:training_speed_full` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`
@@ -2351,7 +2351,7 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Typ
 *strict library; 788 lines; 62 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:db_stable_frozen_full` (bucket B)
+Certifies: 🟡 `theo:db_stable_frozen_full` (bucket D)
 
 
 In scope: `variable {V : Type*}`, `variable [Fintype V]`
@@ -2429,7 +2429,7 @@ In scope: `variable {V : Type*}`, `variable [Fintype V]`
 *strict library; 611 lines; 46 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:adjoint` (bucket B)
+Certifies: 🟡 `lem:adjoint` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] [DecidableEq V] {G : Graph.MarkedGraph V}`
@@ -2836,7 +2836,7 @@ In scope: `variable {α : Type*} [MeasurableSpace α] {ν : Measure α} [IsFinit
 *strict library; 478 lines; 30 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_operator` (bucket B)
+Certifies: 🟡 `lem:doubling_operator` (bucket D)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`, `variable (L : Stat S cap)`
@@ -2882,7 +2882,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 *strict library; 303 lines; 29 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_operator` (bucket B)
+Certifies: 🟡 `lem:doubling_operator` (bucket D)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`
@@ -2927,7 +2927,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 *strict library; 317 lines; 20 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_operator` (bucket B)
+Certifies: 🟡 `lem:doubling_operator` (bucket D)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`
@@ -3221,7 +3221,7 @@ In scope: `variable (D : Decay)`
 *strict library; 285 lines; 13 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:doubling_doeblin` (bucket A), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), 🟡 `lem:doubling_weight` (bucket C)
+Certifies: ✅ `lem:doubling_doeblin` (bucket A), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), 🟡 `lem:doubling_weight` (bucket B)
 
 
 In scope: `variable (D : Decay)`, `variable {a : ℕ}`
@@ -3342,7 +3342,7 @@ Certifies: ✅ `lem:doubling_excursion` (bucket A)
 *strict library; 127 lines; 12 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_expansion` (bucket C), 🟡 `rem:doubling_parity` (bucket C)
+Certifies: 🟡 `lem:doubling_expansion` (bucket B), 🟡 `rem:doubling_parity` (bucket B)
 
 
 In scope: `variable (D : Decay)`
@@ -3636,7 +3636,7 @@ In scope: `variable {S : Setting}`
 *strict library; 272 lines; 9 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_operator` (bucket B)
+Certifies: 🟡 `lem:doubling_operator` (bucket D)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`, `variable (L : Stat S cap)`
@@ -3661,7 +3661,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 *strict library; 543 lines; 42 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_operator` (bucket B), ✅ `lem:doubling_fixed_points` (bucket A), ✅ `prop:doubling_unsolvable` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket D), ✅ `lem:doubling_fixed_points` (bucket A), ✅ `prop:doubling_unsolvable` (bucket A)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`, `variable (L : Stat S cap)`
@@ -3816,7 +3816,7 @@ In scope: `variable {S : Setting}`
 *strict library; 182 lines; 11 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_operator` (bucket B)
+Certifies: 🟡 `lem:doubling_operator` (bucket D)
 
 
 In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]`, `variable {P Pi U : E →L[ℝ] E}`
@@ -3843,7 +3843,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]`, `va
 *strict library; 173 lines; 6 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_operator` (bucket B)
+Certifies: 🟡 `lem:doubling_operator` (bucket D)
 
 
 In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi : E →L[ℝ] E}`, `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]`, `variable {P Pi : E →L[ℝ] E}`
@@ -3865,7 +3865,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi
 *strict library; 198 lines; 8 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_operator` (bucket B), ✅ `lem:doubling_truncation_irreducible` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket D), ✅ `lem:doubling_truncation_irreducible` (bucket A)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap)`, `variable {K : ℕ} (L : Stat S (some K))`
@@ -4204,7 +4204,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`
 *strict library; 114 lines; 7 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_operator` (bucket B), ✅ `lem:doubling_truncation_irreducible` (bucket A)
+Certifies: 🟡 `lem:doubling_operator` (bucket D), ✅ `lem:doubling_truncation_irreducible` (bucket A)
 
 
 In scope: `variable {S : Setting} {cap : Option ℕ} (L : Stat S cap)`
@@ -4730,7 +4730,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 *strict library; 300 lines; 12 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `lem:doubling_weight` (bucket C), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), 🟡 `lem:doubling_descent` (bucket B), ✅ `lem:doubling_escape` (bucket A)
+Certifies: 🟡 `lem:doubling_weight` (bucket B), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), 🟡 `lem:doubling_descent` (bucket B), ✅ `lem:doubling_escape` (bucket A)
 
 
 In scope: `variable (D : Decay)`
@@ -4758,7 +4758,7 @@ In scope: `variable (D : Decay)`
 *strict library; 117 lines; 5 declarations.*
 
 
-Certifies: 🟡 `lem:doubling_expansion` (bucket C)
+Certifies: 🟡 `lem:doubling_expansion` (bucket B)
 
 
 | ln | kind | name | statement |

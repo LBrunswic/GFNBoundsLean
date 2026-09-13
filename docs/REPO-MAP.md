@@ -213,25 +213,25 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | file | what it is | certifies | decls |
 |---|---|---|---|
 | `GFNBounds/Audit.lean` | Axiom audit | — | 0 |
-| `GFNBounds/Balance/BoundaryBlowup.lean` | The boundary blow-up: the loss explodes where the density vanishes, so the flow stays positive **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` B | 32 |
-| `GFNBounds/Balance/Discrete.lean` | Discrete gradient descent contracts by `1 − εϱ` per step **[SCOPE]** | 🟡 `theo:db_stable_frozen_full` B | 5 |
-| `GFNBounds/Balance/Expansion.lean` | The gradient field at `μ = (1+h)λ`: `D = A†[g''(1) w Ah_⊥] + E` with `‖E‖ ≤ Kε‖Ah_⊥‖` **[SCOPE]** | 🟡 `theo:gd_diffusion_full` B, ✅ `theo:local_convergence_full` B | 47 |
-| `GFNBounds/Balance/FirstVariation.lean` | The first variation of the balance loss: `D = Qφ − rφ` is a derivative, not a definition **[SCOPE]** | 🟡 `theo:first_variation_full` B | 19 |
-| `GFNBounds/Balance/Flow.lean` | The gradient flow: the identity `−𝓛̇ = ‖D‖²`, and the decay Grönwall turns the coercivity into **[SCOPE]** | 🟡 `theo:first_variation_full` B, 🟡 `theo:db_stable_frozen_full` B, 🟡 `prop:no_distant_equilibrium` B, ✅ `cor:global_lojasiewicz` A | 23 |
-| `GFNBounds/Balance/Freezing.lean` | Nonlinear freezing: an admissible generator whose gradient vanishes on an open set of flows **[SCOPE]** | 🟡 `prop:nonlinear_freezing` B | 77 |
-| `GFNBounds/Balance/GradientFormulas.lean` | The two corollaries of the first variation: the FM gradient and the DB gradient **[SCOPE]** | 🟡 `cor:gradient_formulas` B, 🟡 `cor:db_gradient` B | 23 |
-| `GFNBounds/Balance/L2Toolkit.lean` | The `L²(λ)` shelf the frozen-policy convergence block stands on: `A = P − I`, its adjoint, and a continuity bootstrap **[SCOPE]** | ✅ `theo:local_convergence_full` B | 39 |
-| `GFNBounds/Balance/Lift.lean` | The edge lift: detailed balance is flow matching one step up **[SCOPE]** | 🟡 `def:edge_lift` B, 🟡 `lem:lift_wellposed` B, 🟡 `prop:db_lift` B, 🟡 `lem:lift_mixing` B | 63 |
-| `GFNBounds/Balance/LocalConvergence.lean` | Steps 4 and 5 of the local convergence theorem, and its gradient-descent clause **[SCOPE]** | ✅ `theo:local_convergence_full` B | 54 |
-| `GFNBounds/Balance/LocalEnergy.lean` | Steps 2 and 3 of the local convergence theorem: the energy estimate, and the drift of the mass **[SCOPE]** | ✅ `theo:local_convergence_full` B | 36 |
+| `GFNBounds/Balance/BoundaryBlowup.lean` | The boundary blow-up: the loss explodes where the density vanishes, so the flow stays positive **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D | 32 |
+| `GFNBounds/Balance/Discrete.lean` | Discrete gradient descent contracts by `1 − εϱ` per step **[SCOPE]** | 🟡 `theo:db_stable_frozen_full` D | 5 |
+| `GFNBounds/Balance/Expansion.lean` | The gradient field at `μ = (1+h)λ`: `D = A†[g''(1) w Ah_⊥] + E` with `‖E‖ ≤ Kε‖Ah_⊥‖` **[SCOPE]** | 🟡 `theo:gd_diffusion_full` D, 🟡 `theo:local_convergence_full` B | 47 |
+| `GFNBounds/Balance/FirstVariation.lean` | The first variation of the balance loss: `D = Qφ − rφ` is a derivative, not a definition **[SCOPE]** | 🟡 `theo:first_variation_full` D | 19 |
+| `GFNBounds/Balance/Flow.lean` | The gradient flow: the identity `−𝓛̇ = ‖D‖²`, and the decay Grönwall turns the coercivity into **[SCOPE]** | 🟡 `theo:first_variation_full` D, 🟡 `theo:db_stable_frozen_full` D, 🟡 `prop:no_distant_equilibrium` D, ✅ `cor:global_lojasiewicz` A | 23 |
+| `GFNBounds/Balance/Freezing.lean` | Nonlinear freezing: an admissible generator whose gradient vanishes on an open set of flows **[SCOPE]** | 🟡 `prop:nonlinear_freezing` D | 77 |
+| `GFNBounds/Balance/GradientFormulas.lean` | The two corollaries of the first variation: the FM gradient and the DB gradient **[SCOPE]** | 🟡 `cor:gradient_formulas` D, 🟡 `cor:db_gradient` D | 23 |
+| `GFNBounds/Balance/L2Toolkit.lean` | The `L²(λ)` shelf the frozen-policy convergence block stands on: `A = P − I`, its adjoint, and a continuity bootstrap **[SCOPE]** | 🟡 `theo:local_convergence_full` B | 39 |
+| `GFNBounds/Balance/Lift.lean` | The edge lift: detailed balance is flow matching one step up **[SCOPE]** | 🟡 `def:edge_lift` D, 🟡 `lem:lift_wellposed` D, 🟡 `prop:db_lift` D, 🟡 `lem:lift_mixing` D | 63 |
+| `GFNBounds/Balance/LocalConvergence.lean` | Steps 4 and 5 of the local convergence theorem, and its gradient-descent clause **[SCOPE]** | 🟡 `theo:local_convergence_full` B | 54 |
+| `GFNBounds/Balance/LocalEnergy.lean` | Steps 2 and 3 of the local convergence theorem: the energy estimate, and the drift of the mass **[SCOPE]** | 🟡 `theo:local_convergence_full` B | 36 |
 | `GFNBounds/Balance/LogSqTaylor.lean` | A second-order Taylor bound on `g'` for `g = (log x)²`, near `x = 1` **[SCOPE]** | — | 3 |
-| `GFNBounds/Balance/Lojasiewicz.lean` | Coercivity off balance, and the Łojasiewicz inequality it delivers **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` B, ✅ `cor:global_lojasiewicz` A | 27 |
-| `GFNBounds/Balance/MassAscent.lean` | The mass is the Lyapunov function: monotone ascent on the sphere, and the entry time **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` B, ✅ `cor:global_lojasiewicz` A | 25 |
-| `GFNBounds/Balance/MassIdentity.lean` | The mass identity: a strictly unimodal generator admits no distant equilibrium **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` B, 🟡 `theo:global_dichotomy_full` B | 25 |
-| `GFNBounds/Balance/RatioBridge.lean` | From the ratio variable to the density variable: the local-phase rescaling step **[SCOPE]** | ✅ `theo:training_speed_full` A | 17 |
-| `GFNBounds/Balance/TrainingSpeed.lean` | The training-speed theorem, assembled: two phases, and every constant in `σ_*`, `σ̄`, `N_min` **[SCOPE]** | ✅ `theo:training_speed_full` A | 29 |
-| `GFNBounds/Balance/WeightedL2.lean` | Weighted `L²(λ)` as an inner-product space, and the contraction at `H = g''(1)A^†M_wA` **[SCOPE]** | 🟡 `theo:db_stable_frozen_full` B | 62 |
-| `GFNBounds/Core/Adjoint.lean` | The `λ`-reversal of a Markov kernel, and the `L²(λ)`-adjointness it carries **[SCOPE]** | 🟡 `lem:adjoint` B | 46 |
+| `GFNBounds/Balance/Lojasiewicz.lean` | Coercivity off balance, and the Łojasiewicz inequality it delivers **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D, ✅ `cor:global_lojasiewicz` A | 27 |
+| `GFNBounds/Balance/MassAscent.lean` | The mass is the Lyapunov function: monotone ascent on the sphere, and the entry time **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D, ✅ `cor:global_lojasiewicz` A | 25 |
+| `GFNBounds/Balance/MassIdentity.lean` | The mass identity: a strictly unimodal generator admits no distant equilibrium **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D, 🟡 `theo:global_dichotomy_full` D | 25 |
+| `GFNBounds/Balance/RatioBridge.lean` | From the ratio variable to the density variable: the local-phase rescaling step **[SCOPE]** | 🟡 `theo:training_speed_full` B | 17 |
+| `GFNBounds/Balance/TrainingSpeed.lean` | The training-speed theorem, assembled: two phases, and every constant in `σ_*`, `σ̄`, `N_min` **[SCOPE]** | 🟡 `theo:training_speed_full` B | 29 |
+| `GFNBounds/Balance/WeightedL2.lean` | Weighted `L²(λ)` as an inner-product space, and the contraction at `H = g''(1)A^†M_wA` **[SCOPE]** | 🟡 `theo:db_stable_frozen_full` D | 62 |
+| `GFNBounds/Core/Adjoint.lean` | The `λ`-reversal of a Markov kernel, and the `L²(λ)`-adjointness it carries **[SCOPE]** | 🟡 `lem:adjoint` D | 46 |
 | `GFNBounds/Core/Flow.lean` | The mean projection, and the two identities `Core.Mixing` assumes **[SCOPE]** | 🟡 `theo:universality_L2_full` B | 18 |
 | `GFNBounds/Core/ILBound.lean` | The KL-weak-FM loss has the target's self-entropy as its floor, and controls the sampling error **[SCOPE]** | 🟡 `theo:IL_CV_bound` B | 25 |
 | `GFNBounds/Core/Kernel.lean` | The density action of a Markov kernel, and the two conditions `Core.Flow` assumes **[SCOPE]** | 🟡 `theo:universality_L2_full` B | 45 |
@@ -241,9 +241,9 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `GFNBounds/Core/StrongUniversality.lean` | Strong universality at `p = +∞`, and the transfer of the realized outflow to every `L^r` **[SCOPE]** | 🟡 `theo:universality_L2_full` B | 20 |
 | `GFNBounds/Core/Universality.lean` | Universality: the lifted outflow, its defect, and the quantitative bound **[SCOPE]** | 🟡 `theo:universality_L2_full` B | 21 |
 | `GFNBounds/Core/UniversalityLp.lean` | The truncation vanishes on `L^p(ν)` for `p < ∞`, and weak universality follows **[SCOPE]** | 🟡 `theo:universality_L2_full` B | 6 |
-| `Adjoint.lean` | The density action `P`, and `P⋆ = P*` **[SCOPE]** | 🟡 `lem:doubling_operator` B | 30 |
-| `AdjointL2.lean` | `P⋆ = P*` on `L²(λ)`, and `‖P⋆ⁿ − Π‖ = β̂ₙ` **[SCOPE]** | 🟡 `lem:doubling_operator` B | 29 |
-| `Balance.lean` | The measure action, its duality with `P⋆`, and the pointwise balance equations **[SCOPE]** | 🟡 `lem:doubling_operator` B | 20 |
+| `Adjoint.lean` | The density action `P`, and `P⋆ = P*` **[SCOPE]** | 🟡 `lem:doubling_operator` D | 30 |
+| `AdjointL2.lean` | `P⋆ = P*` on `L²(λ)`, and `‖P⋆ⁿ − Π‖ = β̂ₙ` **[SCOPE]** | 🟡 `lem:doubling_operator` D | 29 |
+| `Balance.lean` | The measure action, its duality with `P⋆`, and the pointwise balance equations **[SCOPE]** | 🟡 `lem:doubling_operator` D | 20 |
 | `Constant.lean` | The solutions of the cut balance form a `d`-dimensional space **[SCOPE]** | ✅ `prop:doubling_constant` A | 9 |
 | `ConstantFunctional.lean` | The constant of the sharp asymptotic is a non-negative linear functional of the boundary data **[SCOPE]** | ✅ `prop:doubling_constant` A, ✅ `def:doubling_setting` A, ✅ `def:doubling_decay_notation` A, ✅ `theo:doubling_sharp` A | 18 |
 | `Coupling.lean` | `lem:doubling_coupling`: two descents from one block reach the base block with nearly the same law **[SCOPE]** | ✅ `lem:doubling_coupling` A, ✅ `def:doubling_setting` A, ✅ `def:doubling_decay_notation` A, ✅ `lem:doubling_doeblin` A | 4 |
@@ -252,11 +252,11 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `DecayNotation.lean` | Notation for the decay estimates, and the averaging form of the cut balance **[SCOPE]** | ✅ `def:doubling_decay_notation` A, ✅ `lem:doubling_averaging` A, ✅ `lem:doubling_cramer_root` A | 33 |
 | `Descent.lean` | The descent chain, as a recursion **[SCOPE]** | 🟡 `lem:doubling_descent` B, ✅ `theo:doubling_decay` A | 12 |
 | `DescentLaw.lean` | The exit law of a descent, as a recursion, and its strong Markov property **[SCOPE]** | ✅ `lem:doubling_doeblin` A, ✅ `lem:doubling_coupling` A | 18 |
-| `Doeblin.lean` | `lem:doubling_doeblin`: the exit from a block charges a fixed fraction of one reference law **[SCOPE]** | ✅ `lem:doubling_doeblin` A, ✅ `def:doubling_setting` A, ✅ `def:doubling_decay_notation` A, 🟡 `lem:doubling_weight` C | 13 |
+| `Doeblin.lean` | `lem:doubling_doeblin`: the exit from a block charges a fixed fraction of one reference law **[SCOPE]** | ✅ `lem:doubling_doeblin` A, ✅ `def:doubling_setting` A, ✅ `def:doubling_decay_notation` A, 🟡 `lem:doubling_weight` B | 13 |
 | `Drift.lean` | The drift of the backward chain, and when it is constant **[SCOPE]** | ✅ `prop:doubling_drift` A | 10 |
 | `Escape.lean` | `lem:doubling_escape`, Step 1: the descent halves at a uniform rate **[SCOPE]** | ✅ `lem:doubling_escape` A, ✅ `def:doubling_setting` A, ✅ `def:doubling_decay_notation` A, 🟡 `lem:doubling_descent` B | 34 |
 | `Excursion.lean` | The excursion maximum is bounded by the hitting time **[SCOPE]** | ✅ `lem:doubling_excursion` A | 3 |
-| `Expansion.lean` | The coefficients of the expansion of `R_α` **[SCOPE]** | 🟡 `lem:doubling_expansion` C, 🟡 `rem:doubling_parity` C | 12 |
+| `Expansion.lean` | The coefficients of the expansion of `R_α` **[SCOPE]** | 🟡 `lem:doubling_expansion` B, 🟡 `rem:doubling_parity` B | 12 |
 | `Exponent.lean` | The decay exponent is a Cramér root **[SCOPE]** | ✅ `prop:doubling_exponent` A | 9 |
 | `Family.lean` | An explicit divergent family: the `√m` rate **[SCOPE]** | ✅ `cor:doubling_family` A, ✅ `def:doubling_setting` A | 3 |
 | `FixedPoints.lean` | The fixed points of the function action are the constants **[SCOPE]** | ✅ `lem:doubling_fixed_points` A | 5 |
@@ -265,13 +265,13 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `Irreducible.lean` | Irreducibility, and why an invariant probability is positive **[SCOPE]** | ✅ `lem:doubling_irreducible` A, ✅ `lem:doubling_truncation_irreducible` A | 28 |
 | `Kac.lean` | Kac's formula on the doubling graph, from invariance alone **[SCOPE]** | 🟡 `cor:doubling_truncation` B | 17 |
 | `Length.lean` | The closed-form backward length **[SCOPE]** | ✅ `prop:doubling_length` A, ✅ `def:doubling_setting` A, ✅ `lem:doubling_supersolution` A | 47 |
-| `LpContraction.lean` | `P⋆` is a contraction of `L^p(λ)` at every `p ∈ [1,∞]` **[SCOPE]** | 🟡 `lem:doubling_operator` B | 9 |
-| `LpLayer.lean` | The `L^p(λ)` layer: the measure, the a.e. bridge, and the norm identification **[SCOPE]** | 🟡 `lem:doubling_operator` B, ✅ `lem:doubling_fixed_points` A, ✅ `prop:doubling_unsolvable` A | 42 |
+| `LpContraction.lean` | `P⋆` is a contraction of `L^p(λ)` at every `p ∈ [1,∞]` **[SCOPE]** | 🟡 `lem:doubling_operator` D | 9 |
+| `LpLayer.lean` | The `L^p(λ)` layer: the measure, the a.e. bridge, and the norm identification **[SCOPE]** | 🟡 `lem:doubling_operator` D, ✅ `lem:doubling_fixed_points` A, ✅ `prop:doubling_unsolvable` A | 42 |
 | `Lyapunov.lean` | The Lyapunov drifts of the phase diagram **[SCOPE]** | 🟡 `prop:doubling_phase` C, 🟡 `theo:doubling_main` C, ✅ `def:doubling_setting` A | 45 |
 | `Main.lean` | The doubling graph in one statement **[SCOPE]** | 🟡 `theo:doubling_main` C | 20 |
-| `Operator.lean` | The diffusion operator: the resolvent identities **[SCOPE]** | 🟡 `lem:doubling_operator` B | 11 |
-| `OperatorFinite.lean` | The diffusion operator on a finite chain: invertibility and the resolvent identities **[SCOPE]** | 🟡 `lem:doubling_operator` B | 6 |
-| `OperatorL2.lean` | The diffusion operator of the truncation, and `B̂_K < +∞` **[SCOPE]** | 🟡 `lem:doubling_operator` B, ✅ `lem:doubling_truncation_irreducible` A | 8 |
+| `Operator.lean` | The diffusion operator: the resolvent identities **[SCOPE]** | 🟡 `lem:doubling_operator` D | 11 |
+| `OperatorFinite.lean` | The diffusion operator on a finite chain: invertibility and the resolvent identities **[SCOPE]** | 🟡 `lem:doubling_operator` D | 6 |
+| `OperatorL2.lean` | The diffusion operator of the truncation, and `B̂_K < +∞` **[SCOPE]** | 🟡 `lem:doubling_operator` D, ✅ `lem:doubling_truncation_irreducible` A | 8 |
 | `PerCutIdentity.lean` | The exact per-cut identity **[SCOPE]** | ✅ `lem:doubling_percut` A | 21 |
 | `PerCutNorms.lean` | The `L^p(λ)` mass of the per-cut defect **[SCOPE]** | ✅ `lem:doubling_percut` A | 30 |
 | `PhaseEmpty.lean` | The loop closure carries no invariant probability when the doubling flux is supercritical **[SCOPE]** | 🟡 `prop:doubling_phase` C, 🟡 `theo:doubling_main` C, ✅ `def:doubling_setting` A | 8 |
@@ -282,7 +282,7 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `Ramp.lean` | The clipped ramp: the exponent `p = ∞` **[SCOPE]** | ✅ `lem:doubling_ramp` A | 24 |
 | `Range.lean` | The family `ε_{c,s}` and its standing range **[SCOPE]** | ✅ `lem:doubling_range` A, ✅ `def:doubling_setting` A | 10 |
 | `Ratios.lean` | The one-step ratio inequalities **[SCOPE]** | ✅ `prop:doubling_cut` A, ✅ `theo:doubling_unbounded` A | 8 |
-| `RayleighBridge.lean` | From the `L²(λ)` Rayleigh inequality to the mass layer **[SCOPE]** | 🟡 `lem:doubling_operator` B, ✅ `lem:doubling_truncation_irreducible` A | 7 |
+| `RayleighBridge.lean` | From the `L²(λ)` Rayleigh inequality to the mass layer **[SCOPE]** | 🟡 `lem:doubling_operator` D, ✅ `lem:doubling_truncation_irreducible` A | 7 |
 | `Setting.lean` | The doubling graph: state space, backward policy, and invariant sequences **[SCOPE]** | ✅ `def:doubling_setting` A | 38 |
 | `Sharp.lean` | `theo:doubling_sharp`: the rescaled profile converges, and its limit is determined **[SCOPE]** | ✅ `theo:doubling_sharp` A, ✅ `theo:doubling_decay` A | 6 |
 | `SharpFull.lean` | `theo:doubling_sharp`, unconditional **[SCOPE]** | ✅ `theo:doubling_sharp` A, ✅ `theo:doubling_decay` A | 5 |
@@ -298,8 +298,8 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `Unbounded.lean` | The diffusion operator is unbounded **[SCOPE]** | ✅ `theo:doubling_unbounded` A | 16 |
 | `UnboundedL2.lean` | The diffusion operator is unbounded: the `p = 2` clauses **[SCOPE]** | ✅ `theo:doubling_unbounded` A, 🟡 `theo:doubling_main` C, ✅ `def:doubling_setting` A | 3 |
 | `Unsolvable.lean` | An `L²` pair with no exact `L²` outflow **[SCOPE]** | ✅ `prop:doubling_unsolvable` A, ✅ `def:doubling_setting` A | 37 |
-| `Weight.lean` | `lem:doubling_weight`: the weight of a descent deviates from `1` by `O(1/ℓ)` in mean **[SCOPE]** | 🟡 `lem:doubling_weight` C, ✅ `def:doubling_setting` A, ✅ `def:doubling_decay_notation` A, 🟡 `lem:doubling_descent` B, ✅ `lem:doubling_escape` A | 12 |
-| `WindowSum.lean` | Sums of a power over a window, by telescoping | 🟡 `lem:doubling_expansion` C | 5 |
+| `Weight.lean` | `lem:doubling_weight`: the weight of a descent deviates from `1` by `O(1/ℓ)` in mean **[SCOPE]** | 🟡 `lem:doubling_weight` B, ✅ `def:doubling_setting` A, ✅ `def:doubling_decay_notation` A, 🟡 `lem:doubling_descent` B, ✅ `lem:doubling_escape` A | 12 |
+| `WindowSum.lean` | Sums of a power over a window, by telescoping | 🟡 `lem:doubling_expansion` B | 5 |
 | `GFNBounds/Graph/CycleDivergence.lean` | No bound on the sampling error can hold for a divergence-based FM loss: the cyclic counter-example **[SCOPE]** | — | 100 |
 | `GFNBounds/Graph/CycleExample.lean` | A five-vertex cycle: the frozen policy and the inflation force never deadlock **[SCOPE]** | 🟡 `rem:cycle_no_stalemate` B | 47 |
 | `GFNBounds/Graph/FrozenUnstable.lean` | Freezing the backward policy does not restore stability, and the loop closure is what makes the frozen family nonempty **[SCOPE]** | 🟡 `prop:frozen_unstable_full` B, ✅ `rem:loop_closure_necessary` A | 48 |

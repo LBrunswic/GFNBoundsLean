@@ -1,7 +1,7 @@
 {
   "paper": {
     "path": "/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex",
-    "git_commit": "4afc201",
+    "git_commit": "da20153",
     "appendix": "H"
   },
   "statements": [
@@ -132,7 +132,7 @@
         "GFNBounds.Doubling.resolvent_norm_le"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "",
       "source": "app_doubling.tex"
     },
@@ -140,9 +140,9 @@
       "label": "rem:doubling_two_constants",
       "tex_span": [
         264,
-        273
+        274
       ],
-      "block_sha256": "7833729214fcf1015662194ec223b18ea1f7ee13c83487c27367749335483856",
+      "block_sha256": "759a4e3dabee0662239ca5d7f9fb11dbc2ea226481cad185ec76eba5be0901bc",
       "lean_files": [
         "GFNBounds/Doubling/Operator.lean"
       ],
@@ -150,15 +150,15 @@
         "GFNBounds.Doubling.resolvent_norm_le"
       ],
       "status": "partial",
-      "bucket": "C",
+      "bucket": "B",
       "scope_notes": "",
       "source": "app_doubling.tex"
     },
     {
       "label": "theo:doubling_main",
       "tex_span": [
-        275,
-        321
+        276,
+        322
       ],
       "block_sha256": "6a4100a9cfe7694bdc8860560006d1c32a89a018a7038176b3dcd0ad74d24932",
       "lean_files": [
@@ -193,8 +193,8 @@
     {
       "label": "prop:doubling_drift",
       "tex_span": [
-        379,
-        396
+        380,
+        397
       ],
       "block_sha256": "c23b159fd6f1fc850d8d27d7d32cf2d990479b7e3c4e809ef8a81e77b2b2c3db",
       "lean_files": [
@@ -216,8 +216,8 @@
     {
       "label": "lem:doubling_excursion",
       "tex_span": [
-        398,
-        424
+        399,
+        425
       ],
       "block_sha256": "9570e638aa93814c3489e62c3ae0c19591351f27f9b125d53f5e63ba44db480f",
       "lean_files": [
@@ -236,8 +236,8 @@
     {
       "label": "lem:doubling_supersolution",
       "tex_span": [
-        426,
-        474
+        427,
+        475
       ],
       "block_sha256": "15693da44017d599e0cd614faa1692066aa2ce06cafb20091ea77a1d84f3242d",
       "lean_files": [
@@ -262,8 +262,8 @@
     {
       "label": "prop:doubling_length",
       "tex_span": [
-        476,
-        501
+        477,
+        502
       ],
       "block_sha256": "4e5598d107ea6001572f719058e7988d2c8b57ae1c2c10acb38ed78df5eb094c",
       "lean_files": [
@@ -283,8 +283,8 @@
     {
       "label": "prop:doubling_phase",
       "tex_span": [
-        510,
-        624
+        513,
+        627
       ],
       "block_sha256": "d20ea2008fad2d91330953d131eef09b2fb15d78ae0f88f633beb3c00c9778b9",
       "lean_files": [
@@ -313,8 +313,8 @@
     {
       "label": "prop:doubling_cut",
       "tex_span": [
-        641,
-        691
+        644,
+        694
       ],
       "block_sha256": "d42d15faf5bbff44af72c33c5c5c06092d1bddd7ee8465c0b1eb067fa0b9f83b",
       "lean_files": [
@@ -338,8 +338,8 @@
     {
       "label": "prop:doubling_exponent",
       "tex_span": [
-        693,
-        709
+        696,
+        712
       ],
       "block_sha256": "53131fac082cd803f7acf42c2088ae524b784c3de05da60cb45fb2402371c798",
       "lean_files": [
@@ -362,8 +362,8 @@
     {
       "label": "lem:doubling_cramer_root",
       "tex_span": [
-        711,
-        767
+        714,
+        770
       ],
       "block_sha256": "ecaf1400fe574a01aa0be24783596a6d4804022a92b8c57a10a5a15830ae7722",
       "lean_files": [
@@ -390,8 +390,8 @@
     {
       "label": "def:doubling_decay_notation",
       "tex_span": [
-        789,
-        812
+        792,
+        815
       ],
       "block_sha256": "11697b348e8ba6d7c26cf26447813a19bb52c608ce171b1a81f59eb00d42d706",
       "lean_files": [
@@ -421,8 +421,8 @@
     {
       "label": "lem:doubling_averaging",
       "tex_span": [
-        814,
-        846
+        817,
+        849
       ],
       "block_sha256": "54fa6cfaedef950de7a8ab2dfd545e762f1df91052642d40331b5d5118edd6c0",
       "lean_files": [
@@ -443,8 +443,8 @@
     {
       "label": "lem:doubling_expansion",
       "tex_span": [
-        848,
-        953
+        851,
+        956
       ],
       "block_sha256": "7387301b3345f4927b0ec473806a2b03b944781b8c50b5150fff84df435e7b41",
       "lean_files": [
@@ -461,15 +461,15 @@
         "GFNBounds.Doubling.Decay.A_one_neg"
       ],
       "status": "partial",
-      "bucket": "C",
+      "bucket": "B",
       "scope_notes": "",
       "source": "app_doubling.tex"
     },
     {
       "label": "rem:doubling_parity",
       "tex_span": [
-        955,
-        963
+        958,
+        966
       ],
       "block_sha256": "694ca48026328014f96cdea8304a3eb17f4e12eeb787262f3acafc4fa0de24eb",
       "lean_files": [
@@ -479,15 +479,15 @@
         "GFNBounds.Doubling.Decay.A_gap"
       ],
       "status": "partial",
-      "bucket": "C",
+      "bucket": "B",
       "scope_notes": "",
       "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_descent",
       "tex_span": [
-        965,
-        1024
+        968,
+        1027
       ],
       "block_sha256": "b13b9257c03792666b0a66c5b4072c66a63da9ebba4361254b80417108f24cc5",
       "lean_files": [
@@ -519,8 +519,8 @@
     {
       "label": "lem:doubling_escape",
       "tex_span": [
-        1026,
-        1108
+        1029,
+        1111
       ],
       "block_sha256": "d942f1c9c0ff9d186cc8dcc67c050d4dbbc979464c42b09bb189a2eee4b870e2",
       "lean_files": [
@@ -544,8 +544,8 @@
     {
       "label": "lem:doubling_product",
       "tex_span": [
-        1110,
-        1153
+        1113,
+        1156
       ],
       "block_sha256": "8c21fc14f1a4b7dd660acf9e21ba4af90d9ffdc393e7ab98968e0bcc36697da1",
       "lean_files": [
@@ -563,8 +563,8 @@
     {
       "label": "theo:doubling_decay",
       "tex_span": [
-        1155,
-        1228
+        1158,
+        1231
       ],
       "block_sha256": "b2f8f408d14f0bf8f740933cd30d762e9c9f1be377dbfba8453ec988f6409b39",
       "lean_files": [
@@ -588,8 +588,8 @@
     {
       "label": "cor:doubling_tail",
       "tex_span": [
-        1230,
-        1268
+        1233,
+        1271
       ],
       "block_sha256": "3f22eac7acad3f7c8c24e7fbe04263e777531a2b0c522ec51e2d4de34114176c",
       "lean_files": [
@@ -617,22 +617,22 @@
     {
       "label": "rem:doubling_renewal",
       "tex_span": [
-        1270,
-        1302
+        1273,
+        1305
       ],
       "block_sha256": "005d968b985374eeb8f516de1cdda079a6744b751ae3b3f8ed9f4491ea698152",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "B",
       "scope_notes": "",
       "source": "app_doubling.tex"
     },
     {
       "label": "theo:doubling_sharp",
       "tex_span": [
-        1323,
-        1341
+        1326,
+        1344
       ],
       "block_sha256": "e970b14109bf07b6cdb41777c52ed50b8a672b0fce549b0d7fc093d070e7fa8c",
       "lean_files": [
@@ -660,8 +660,8 @@
     {
       "label": "lem:doubling_weight",
       "tex_span": [
-        1343,
-        1383
+        1346,
+        1386
       ],
       "block_sha256": "aa34bc0d4f7a368232ed6eca51d3eee5f0b1caf0c6cb450358ffc1d99d6874f8",
       "lean_files": [
@@ -673,15 +673,15 @@
         "GFNBounds.Doubling.Decay.ell3"
       ],
       "status": "partial",
-      "bucket": "C",
+      "bucket": "B",
       "scope_notes": "",
       "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_doeblin",
       "tex_span": [
-        1385,
-        1473
+        1388,
+        1476
       ],
       "block_sha256": "e37ea2a509ebeb7edc42216cede3b812313a7bf5cddd4d5cdc0536f240e8b2a5",
       "lean_files": [
@@ -702,8 +702,8 @@
     {
       "label": "lem:doubling_coupling",
       "tex_span": [
-        1475,
-        1533
+        1478,
+        1536
       ],
       "block_sha256": "9ca82978f2c96c1a789f1fb6437a796e7d5e9a87c2890aa629b7239a305036cc",
       "lean_files": [
@@ -724,22 +724,22 @@
     {
       "label": "rem:doubling_no_logperiodic",
       "tex_span": [
-        1659,
-        1670
+        1662,
+        1673
       ],
       "block_sha256": "86f13ca4ccce536b6bd5f5b1a90837fdd00a91dbe6653bb1219452e204be983a",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "T",
       "scope_notes": "",
       "source": "app_doubling.tex"
     },
     {
       "label": "cor:doubling_tail_sharp",
       "tex_span": [
-        1672,
-        1700
+        1675,
+        1703
       ],
       "block_sha256": "236a28750c6741a711ced497138379ec61aba3073263df3179201b87d11cf7d7",
       "lean_files": [
@@ -758,8 +758,8 @@
     {
       "label": "prop:doubling_constant",
       "tex_span": [
-        1702,
-        1763
+        1705,
+        1766
       ],
       "block_sha256": "e44c10fd20bb3d5be033de229a2f1e75d133e4587d10ecf927a424aa746a5f3e",
       "lean_files": [
@@ -799,22 +799,22 @@
     {
       "label": "rem:doubling_second_order",
       "tex_span": [
-        1769,
-        1785
+        1772,
+        1788
       ],
       "block_sha256": "27bc7100a1cc4e23b36f72f4724f62af4ad59905b123cd9d80c47466c991a4f2",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "T",
       "scope_notes": "",
       "source": "app_doubling.tex"
     },
     {
       "label": "lem:doubling_truncation_irreducible",
       "tex_span": [
-        1805,
-        1846
+        1808,
+        1849
       ],
       "block_sha256": "f911ccce02e4422c6d2b18825ba3947b78d6b34108ac2b204a88b83ca22bf057",
       "lean_files": [
@@ -836,8 +836,8 @@
     {
       "label": "lem:doubling_percut",
       "tex_span": [
-        1848,
-        1943
+        1851,
+        1946
       ],
       "block_sha256": "208f08108c076df9f3caa4a1b81abf35830d4fd440e7ddd67c534c79b6061e8a",
       "lean_files": [
@@ -869,8 +869,8 @@
     {
       "label": "theo:doubling_unbounded",
       "tex_span": [
-        1945,
-        2019
+        1948,
+        2022
       ],
       "block_sha256": "71138ced76f59f0dbc8d165fa581f9cc49205fcaf66e57dc03bf60508cde4e7a",
       "lean_files": [
@@ -901,8 +901,8 @@
     {
       "label": "lem:doubling_ramp",
       "tex_span": [
-        2021,
-        2085
+        2024,
+        2088
       ],
       "block_sha256": "35c51432f174c0299adcd1d44fb241bc28b3866efc8ee0f15e7a54e9c5e64f35",
       "lean_files": [
@@ -930,8 +930,8 @@
     {
       "label": "cor:doubling_family",
       "tex_span": [
-        2087,
-        2124
+        2090,
+        2127
       ],
       "block_sha256": "909585b04232eb8e85ca370c7e0fbc7d99b15b687946ff7b7d7c8df76bae0512",
       "lean_files": [
@@ -952,8 +952,8 @@
     {
       "label": "prop:doubling_unsolvable",
       "tex_span": [
-        2126,
-        2181
+        2129,
+        2184
       ],
       "block_sha256": "a195679a74255fa14e2c571e4c8a2d931dafc5a63a9e7878e45d9e56aba029da",
       "lean_files": [
@@ -972,8 +972,8 @@
     {
       "label": "rem:doubling_geometric",
       "tex_span": [
-        2183,
-        2189
+        2186,
+        2192
       ],
       "block_sha256": "3eeaf9fef370efff9eadab9bb1d2e0221e93760f614e9761538983f362073913",
       "lean_files": [
@@ -991,8 +991,8 @@
     {
       "label": "cor:doubling_truncation",
       "tex_span": [
-        2199,
-        2336
+        2202,
+        2339
       ],
       "block_sha256": "87367845bf1d850602b5758516f6650d2b4047ce3f00b6e0c443c42aaf67841b",
       "lean_files": [
@@ -1222,7 +1222,7 @@
         "GFNBounds.Core.graph_reversal_eq"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- FINITE state space, disclosed. All three items on a general kernel over a Fintype with a general NON-NEGATIVE invariant lambda (not tied to a marked graph), so Balance/Lift and the DB block get a reversal layer to build on: (1) existence, Markov-ness a.e. and the characterizing identity lam x * R x y = lam y * A y x, with lambda-a.e. uniqueness; (2) lambda is invariant for the reversal, the flip identity -- the relation is SYMMETRIC, which is the whole content -- and the a.e. involution; (3) mutual adjointness on L^2(lambda), each density action is the other's function action, the contraction, and the operator norm EXACTLY 1 as an `IsLeast` with attainment at lambda. Two things came out better than the paper's phrasing, both stated as such: EXISTENCE IS UNCONDITIONAL -- the identity holds even where lambda(x) = 0, because invariance forces lambda(y)A(y->x) = 0 there, so only Markov-ness of that row degrades (`IsMarkovOn` vs `IsMarkov`); and the INVOLUTION NEEDS ONLY lambda(x) != 0, not lambda(y) != 0, since lambda(x) != 0 = lambda(y) forces A(x->y) = 0. No lambda > 0 is assumed anywhere; 'lambda-a.e.' is `lam x != 0`. `Graph.reversal`, `pdens` and `qact` are all `rfl`-equal to the general definitions, so every theorem applies to the graph objects verbatim. NOT DONE: the general Polish case. Items (1)-(2) are reachable at this Mathlib pin (`Measure.condKernel`, `eq_condKernel_of_measure_eq_compProd`, `Measure.compProd`, `Measure.fst_map_swap`); item (3) is obstruction 2 in full, and ONE PIECE IS GENUINELY MISSING FROM MATHLIB: a kernel-Jensen `(int u d kappa_x)^2 <= int u^2 d kappa_x`, which would have to be built from `inner_mul_le_norm_mul_norm` on L^2(kappa x)."
     },
     {
@@ -1261,7 +1261,7 @@
         "GFNBounds.Balance.twoState_nrmL2_lossGrad_sq"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- FINITE state space, and it is the KEYSTONE: three strict-library files (Balance/MassIdentity, Balance/Lojasiewicz, Balance/Freezing) had each disclosed this as a missing dependency and treated D = Q phi - r phi as a DEFINITION. It is now a THEOREM. `hasDerivAt_loss_ipL2`: for every direction d, the directional derivative of L at mu is <lossGradDensity ... | d>_{L^2(lambda)}; and `lossGradDensity_unique`: no other function represents those derivatives. So the three disclosures collapse, and each file now carries a dated amendment pointing here. The general preconditioner nu_G = varpi.lambda is covered (`hasDerivAt_loss_ipL2_precond`), so it is NOT a restriction. The paper's own second-order expansion is transcribed verbatim (`ratio_expansion`, `remainder_abs_le`). CROSS-CHECKED NUMERICALLY, not merely proved: `twoState_hasDerivAt_loss` evaluates the theorem on prop:nonlinear_freezing(2)'s two-state chain with g = (x-1)^2 and gets 9/16, computed by hand two ways -- off the perturbed ratios and off the gradient side -- before the Lean was run. A transposed kernel or a flipped sign would have shown there. TWO RESIDUES: the state space is finite, so the general measured-space statement stays bucket D; and criticality is DIRECTIONAL rather than Frechet -- which makes `balanced_of_hasDerivAt_zero` stronger than a Frechet version, since the hypothesis is weaker. The paper's uniform-remainder route, which would give Frechet, is stated as a standalone inequality and disclosed as not carried in that form. TRAJECTORY FORM ADDED (Balance/Flow.lean): `hasDerivAt_loss_comp_ipL2` differentiates the loss along an arbitrary curve, and `hasDerivAt_loss_flow` specializes to the gradient flow. The ODE is stated COMPONENTWISE on a Fintype, so no Frechet layer, no HasFDerivAt on V -> R and no CLM construction was needed -- which is what unblocked six statements previously recorded as needing 'a gradient-flow / LaSalle layer'."
     },
     {
@@ -1271,7 +1271,7 @@
         485,
         502
       ],
-      "block_sha256": "ee9fbdd0200fba0f43d1dbb4eabdde5adf60877b18c9b43513b1ab500f641129",
+      "block_sha256": "1e92e294343f0bd68ec03190912a4d06da59d9eae0bb4e5eb2290c230519fdf1",
       "lean_files": [
         "GFNBounds/Balance/GradientFormulas.lean"
       ],
@@ -1288,7 +1288,7 @@
         "GFNBounds.Balance.twoState_hasDerivAt_fmLoss_abs"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- a corollary of theo:first_variation_full, exactly as the paper presents it, on a FINITE state space. BOTH DISPLAYS CLOSED for g = (x-1)^2, and the |x-1| case closed OFF the balanced flow. The enabling step was re-cutting the differentiability hypothesis: FirstVariation asks `forall y > 0, HasDerivAt g (gd y) y`, which |x-1| cannot satisfy, but the proof only ever uses it at the finitely many ratio values -- `hasDerivAt_loss_atStates` is the same proof with the pointwise hypothesis. Numerically cross-checked three ways (Lean, by hand off the paper's display, and a Python numerical derivative written from proofs.tex rather than from the Lean definitions): 5/16 for the squared case, 3/8 for the absolute-value case."
     },
     {
@@ -1318,7 +1318,7 @@
         "GFNBounds.Balance.lift_mixing_opNorm_le"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: the kernel K_2 and the edge measure lambda_2. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
     },
     {
@@ -1328,7 +1328,7 @@
         512,
         522
       ],
-      "block_sha256": "52aacdd8a1978718fa1553e35394c366dba68f36d1e0802e003f8024f7c8b5c6",
+      "block_sha256": "0ed1030a2ee320adb11f8dafeac547ac8076157cdbc8da0b349d1c328b9e2de5",
       "lean_files": [
         "GFNBounds/Balance/Lift.lean"
       ],
@@ -1348,7 +1348,7 @@
         "GFNBounds.Balance.lift_mixing_opNorm_le"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: invariance, the L^2(lambda_2) contraction, and the duality. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
     },
     {
@@ -1378,7 +1378,7 @@
         "GFNBounds.Balance.lift_mixing_opNorm_le"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: the ratio identity, the loss identity for every g and nu, and the 'in particular' iff. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
     },
     {
@@ -1403,7 +1403,7 @@
         "GFNBounds.Balance.twoStateEdge_hasDerivAt_dbLoss"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- a corollary of theo:first_variation_full, exactly as the paper presents it, on a FINITE state space. theo:first_variation_full instantiated at T = K_2, lambda = lambda_2, with `isReversalPair_edgeKernelProd` proving that the paper's K_2^{lambda_2} IS lem:lift_wellposed's forward edge kernel -- straight from Lift.edgeKernel_dual, so the duality is USED and not assumed. `ratio_edgeKernelProd_db` identifies r-hat with the DB edge ratio via prop:db_lift, which is what makes the differentiated loss the DB loss. Balance/Lift.lean's curried S^2 was bridged to FirstVariation's single Fintype by instantiating at V x V: three uncurrying defs and six short lemmas, ~40 lines and no mathematics, with Fintype.sum_prod_type used exactly twice. The agent's recommendation, recorded: do NOT restate Lift.lean in Prod shape -- it moves the same 40 lines across the boundary and loses the readable lambda_2(s,s') = pi_back(s'->s) lambda(s'). ONE SUBSTANTIVE GAP, disclosed rather than papered over: the theorem needs lambda_2 > 0 at EVERY pair, i.e. pi_back positive on all of S x S, so as stated it does not cover a sparse marked graph. The paper's own mu ~ lambda_2 confines the edge flow to supp lambda_2, so the correct general statement instantiates on the EDGE SET as a subtype of V x V -- arithmetic on Finset.sum_subtype, not new mathematics. Cross-checked numerically at -17/32, computed through `hasDerivAt_dbLoss_ipL2` itself, which also certifies non-vacuity."
     },
     {
@@ -1433,7 +1433,7 @@
         "GFNBounds.Balance.lift_mixing_opNorm_le"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: the transfer beta-hat_{n+1} <= beta_n. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
     },
     {
@@ -1443,7 +1443,7 @@
         563,
         579
       ],
-      "block_sha256": "92c94f97016bbf90f719efb18a8dced3b928d24098b95f0b57065c79afe19ee9",
+      "block_sha256": "854acd3fbe36ac2831e4544d0625a13d76084e4ccbe36cbf597b7f1611beb5c9",
       "lean_files": [
         "GFNBounds/Balance/Expansion.lean"
       ],
@@ -1459,7 +1459,7 @@
         "GFNBounds.Balance.twoState_expansion_check"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-12, sorry-free, axiom-swept, graduated -- the first Lean this statement has had. THE EXPANSION IS CLOSED WITH AN EXPLICIT c(eps) = 2 K eps, K = 2 C_4 + C_5 the paper's own constants (gd_diffusion_display, on Expansion.lean's gradient_expansion). IT IS PROVED UNDER A C^3-TYPE TAYLOR BOUND ON g', NOT UNDER THE PAPER'S C^2 HYPOTHESIS, whose c(eps) -> 0 is non-effective and is NOT stated here; neither statement implies the other. That is a disclosed collision between rule 1 (never state more than the paper proves) and rule 3 (constants are explicit formulas), resolved toward the shape theo:local_convergence_full Step 1 actually consumes, which is the only consumer either display has. The weak form is reachable -- replace the Taylor remainder by the modulus of continuity of g' at 1 -- and is left unstated deliberately. THE FLOW SENTENCE IS NOT STATED: linHess is exhibited as an operator and the expansion proved, but 'the linearization of the gradient flow is hdot = -H h' is not made, and no ODE appears. THE 'IN PARTICULAR' CLAUSE is closed as two OPERATOR identities under detailed balance (Core.IsReversalPair lam K K): linHess = g''(1) (I-P)^2 for w = 1, and H phi = g''(1)(1-beta)^2 phi at an eigenmode P phi = beta phi. Reversibility is needed for BOTH halves, not just the first -- confirmed, and the paper states it. 'Each eigenmode DECAYS at rate' is the flow reading and is not made. Finite state space. CONSTANTS, re-derived independently before comparison: C_g, C_5 and K match the paper exactly; C_4's 3 M_3 is reached with 8/3 M_3 and (r-1)^2 <= 4 eps |A h_perp| with 32/9, so the paper's printed values are valid but not sharp, and are used as printed. |1/(1+h)^2 - 1| <= 4 eps is valid and not sharp at eps = 1/4 (true sup 7/9 against 4 eps = 1); it is the STEP the paper routes through, (2 eps + eps^2)/(1-eps)^2 <= 4 eps, that is exactly tight at eps = 1/4, so the constraint eps <= min(a,1)/4 is conservative rather than wrong. Two hypotheses Lean needs explicitly and the paper has implicitly: 0 <= wsup and 0 <= a, underivable on an empty state space. NON-VACUITY, checked by hand in exact rationals BEFORE the Lean and agreeing on the first run: on the two-state chain with g = (x-1)^2, h = (1/5,-1/5), D = (175/432, -175/288), H h_perp = (2/5,-2/5) as linHess_eigen independently predicts at beta = 0, and ||E||^2 = 805093/37324800 against the bound 16/15. 2026-09-12, downstream: the five linHess facts are no longer only 'the finite-state faces' of Discrete.lean's hypotheses -- GFNBounds/Balance/WeightedL2.lean supplies the bridge and actually discharges them, so theo:db_stable_frozen_full now holds at this H rather than at an abstract operator. The SCOPE bullet in Expansion.lean saying the bridge 'is named here as the missing piece and is not attempted' is superseded."
     },
     {
@@ -1505,7 +1505,7 @@
         592,
         610
       ],
-      "block_sha256": "53f1dabc3d18544fcc63e7f2583dfe30a1f0d66d1ba933d7972a891859db1c7e",
+      "block_sha256": "3f3bca147cb4df3b8ed6f826bfad6b7c0828e3e8c441d493b4853cc747a02e93",
       "lean_files": [
         "GFNBounds/Balance/Flow.lean",
         "GFNBounds/Balance/Discrete.lean",
@@ -1533,7 +1533,7 @@
         "GFNBounds.Balance.twoState_contraction_check"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. THE CONTINUOUS DISPLAY IS CLOSED, both conjuncts: Pi h_t is conserved and ||h_t - Pi h_t|| <= e^{-rho t} ||h_0 - Pi h_0||, on any real inner-product space, by Gronwall. `inner_ge_of_mixing` supplies the coercivity from Core.Mixing, giving rho = c/B-hat^2 in the paper's shape. THE LINEARIZATION IS A HYPOTHESIS, NOT A DERIVATION, and is disclosed in four places: H := g''(1) A-dagger M_w A comes from theo:gd_diffusion_full, which is bucket D, so the decay is stated for a curve satisfying hdot = -H h with H carrying exactly three properties -- Pi self-adjoint, Pi H = 0, and the coercivity -- and rho is any constant satisfying it rather than g''(1) w_min / B-hat^2. NOT assumed and not needed: H self-adjoint, H >= 0 as an operator, Pi idempotent, rho > 0. THE DISCRETE DISPLAY IS CLOSED TOO (2026-09-12, GFNBounds/Balance/Discrete.lean, sorry-free, axiom-swept): along h_{k+1} = h_k - eps H h_k the component Pi h_k is conserved and ||h_k - Pi h_k|| <= (1 - eps rho)^k ||h_0 - Pi h_0||. The paper's step condition eps <= (4 g''(1) ||w||_inf)^{-1} enters as the QUADRATIC-FORM bound <x,Hx> <= Lam ||x||^2 with eps Lam <= 1 -- weaker than the paper's operator-norm bound, hence a stronger theorem; ||A|| <= 2 => ||H|| <= 4 g''(1) ||w||_inf is NOT derived, A not being present. IT COSTS TWO HYPOTHESES THE PAPER'S DISCRETE SENTENCE DOES NOT NAME, both true of the paper's objects: H SELF-ADJOINT and Pi IDEMPOTENT. Self-adjointness is load-bearing, not cosmetic -- the route the proof sentence names (the energy method, through ||Hx||^2 <= ||H|| <x,Hx>) delivers only the factor sqrt(1 - eps rho), and the printed 1 - eps rho needs 0 <= I - eps H <= (1 - eps rho) I on the invariant subspace ker Pi, proved here without spectral theory by Cauchy-Schwarz for a symmetric semi-definite form (norm_apply_le_of_symm_bounds). Note also that ||Hx||^2 <= ||H|| <x,Hx> is itself false without self-adjointness (a rotation has <x,Hx> = 0, ||Hx|| = ||x||), and that H >= 0 does not imply symmetry over a REAL space. eps rho <= 1 is carried, not derived. Tightness: on E = R with H = 2.id, Pi = 0, eps = 1/4, rho = 2, h_k = 5 (1/2)^k, the two sides are EQUAL at EVERY k and sqrt(1 - eps rho) = 0.707... is strictly weaker (scalar_discrete_check). STILL NOT DONE: the lem:lift_mixing transfer to the FM and DB losses. Cross-checked for non-vacuity and for the exponent: on E = R with H = 2.id, Pi = 0, h_t = 5 e^{-2t} a genuine solution, the two sides are EQUAL at t = 1 -- so the exponent is exactly rho, not rho/2 or 2 rho. The sentence above beginning 'NOT assumed and not needed' describes `stable_frozen_decay` only; `stable_frozen_discrete` does assume H self-adjoint and Pi idempotent. THE WEIGHTED-L^2 BRIDGE IS BUILT (2026-09-12, GFNBounds/Balance/WeightedL2.lean, sorry-free, axiom-swept), and BOTH HALVES ARE NOW INSTANTIATED AT THE PAPER'S OWN H = g''(1) A-dagger M_w A on a finite state space: stable_frozen_discrete_finite and stable_frozen_decay_finite state the contraction and the decay with rho = g''(1) w_min / B-hat^2 and the step condition eps * 4 g''(1) ||w||_inf <= 1 written out, in the finite vocabulary (Graph.nrmL2, perpL2, linHess), with no abstract operator anywhere in the statement. stable_frozen_discrete_mixing goes further and takes B-hat to be literally Core.Mixing.B, the paper's sum of ||P^n - Pi||, deriving the coercivity from lem:sigma_mixing rather than assuming it. THE ROUTE: no instance on V -> R at all -- that would clash with Mathlib's sup-norm and the weight is a term parameter so it could not be global. Instead an isometry a |-> sqrt(lambda) a into EuclideanSpace, with inner_wtL2 and norm_wtL2 as the two bridge identities, and the operators conjugated through it and bundled by LinearMap.toContinuousLinearMap. Of stable_frozen_discrete's ten hypotheses, four come from Expansion (linHess_symm, meanL2_linHess, linHess_upper, linHess_coercive) and two are proved here (Pi self-adjoint, which is free; Pi idempotent, which is the only place sum lambda = 1 is spent). map_add for funAct, Adj, densAct, Aop, meanL2 and linHess had to be added -- the layer carried sub and smul but never add. NON-VACUITY: the two-state chain, where A f = -f_perp exactly so B-hat = 1 is PROVED rather than assumed, rho = 2, eps = 1/8 at the step condition's equality, contraction 3/4 attained with EQUALITY at every k -- and with Pi h_k = 1 nonzero, so both conjuncts are exercised, which the Pi = 0 checks in Flow.lean and Discrete.lean do not do. CONSEQUENTLY the disclosure 'H is abstract, the finite-state instantiation is another file's job' is CLOSED. What remains: the descent recursion and the flow are still hypothesised rather than derived from theo:gd_diffusion_full; Core.Mixing at (densOp, meanOp) is never exhibited, so stable_frozen_discrete_mixing is only as non-vacuous as that bundle is inhabitable; operator norms are never computed, only quadratic forms; and the general L^p layer with its adjoint (obstruction 2) is untouched -- this is its finite-dimensional face at p = 2."
     },
     {
@@ -1541,9 +1541,9 @@
       "source": "proofs.tex",
       "tex_span": [
         612,
-        657
+        678
       ],
-      "block_sha256": "3c6f5cd06f8a4784003d7077e5edd201514379a4bcb9977a9b5c9bb1d1e20856",
+      "block_sha256": "902c4dea27061b1b085cc402cfe161abec89aab0b2e2e894cf1be70f31270594",
       "lean_files": [
         "GFNBounds/Balance/Expansion.lean",
         "GFNBounds/Balance/L2Toolkit.lean",
@@ -1596,16 +1596,16 @@
         "GFNBounds.Balance.local_convergence_gd",
         "GFNBounds.Balance.twoState_local_convergence_check"
       ],
-      "status": "closed",
+      "status": "partial",
       "bucket": "B",
-      "scope_notes": "CLOSED 2026-09-12 -- Steps 1 to 5 and the discrete clause; read this field as a dated log, the paragraphs below being appended in the order the work landed. [Step 1, as first written] PARTIAL 2026-09-12, sorry-free, axiom-swept, graduated. STEP 1 ONLY (proofs.tex:622-633), plus the proof's opening recall and the abstract form of Step 4's continuation. eq:gradient_expansion is closed with all four constants as the paper's printed formulas (C_4, C_g, C_5, K = Kexp); C_g, C_5 and K match an independent re-derivation exactly, C_4 and the (r-1)^2 bound are valid but not sharp -- see theo:gd_diffusion_full's row. The C^3 hypothesis is weakened to the Taylor bound it is used through, which is a stronger theorem and is flagged. FROM L2Toolkit.lean, the proof's own opening line 'recall Ah = Ah_perp, ||P|| <= 1, ||A|| <= 2, ||A^dagger|| <= 2' (proofs.tex:620): Aop_perpL2, nrmL2_Aop_le_two, nrmL2_Adj_le_two, the first resting on Core.nrmL2_densAct_le / Core.nrmL2_funAct_le, which already existed. Ah = Ah_perp is a lambda-a.e. statement and carries lam y != 0, the density action dividing by lambda -- a formalization artefact, automatic in the paper's ergodic setting. Also closed: bootstrap_of_continuous, Step 4's continuation argument in the abstract (per-state continuity, a start bound, and a bootstrap on [0,t] give the bound for all t >= 0, by the infimum of the failure set) -- which is where the paper's 'by continuity the interval is all of R_+' is made good. FOUND WHILE DOING SO: Step 4 does not state its t = 0 case. It needs ||h_0||_inf <= eps/2 to start, which holds (C_inf eps_0 (2 + C_7) <= eps/2 checks out, consuming eps_0 <= 1 and |m_0| <= ||h_0||, the latter needing lambda to be a probability) but is not written; bootstrap_of_continuous makes it the named hypothesis hstart. NOT DONE: Steps 2, 3 and 5 -- the energy estimate, the mass drift, the conclusion -- and the discrete gradient-descent clause, hence the constants C_6, C_7, eps_0, eps_1, L, gamma_0 and c_infinity. The layers those need now exist (Balance/Flow.lean's IsGradientFlow and flow identity, Expansion.lean's Step 1, this file's bootstrap), which is why the bucket is B rather than D. Finite state space. STEPS 2 AND 3 NOW CLOSED TOO (2026-09-12, GFNBounds/Balance/LocalEnergy.lean, sorry-free, axiom-swept): the energy estimate with its decay e^{-rho t/2} on a window, the integrated energy bound, the mass drift and its Cauchy criterion, all with the paper's printed constants (eps1, C6, C7, rhoL). eps1 = g''(1) w_min / (2 K B-hat) is verified to be EXACTLY the half-absorption threshold -- the expansion error costs K eps B-hat against a coercivity g''(1) w_min, so it eats at most half iff eps <= eps1, with equality at eps1. TWO THINGS THE PAPER DOES NOT NAME. (a) The identity d/dt (1/2)||h_perp||^2 = -<h_perp, D> is an equality only because lambda is a PROBABILITY: it needs Pi h_perp = 0, hence sum lambda = 1, which the paper's standing convention supplies and the statement does not. (b) Because this library weakens the paper's C^3 hypothesis to the bare Taylor bound (see theo:gd_diffusion_full's row), g' is NOT known continuous, so neither d/dt||h_perp||^2 nor mdot is known integrable and the FTC is unavailable. Every integration here is therefore a MONOTONICITY argument on a primitive, and the only function ever integrated is s -> ||A h_perp(s)||^2, whose continuity is independent of g. Not a defect in the paper -- a real cost of the weaker hypothesis, paid rather than quietly restored. SHARPER CONSTANT AVAILABLE AND PROVED: the paper's |m_inf - m_t| <= (4 C6 / rho) e^{-rho t} ||h_0_perp||^2 is valid but not sharp; restarting the Step 2 energy estimate at time t gives C7 e^{-rho t} ||h_0_perp||^2, and 4 C6 / rho = 4 B-hat^2 C7. Both are stated (mean_cauchy_on, mean_cauchy_on_sharp). This matters downstream: Step 4's eps_0 has rho/(4 C6) as an entry, so the sharp form WIDENS THE BASIN OF ATTRACTION by 4 B-hat^2 at no cost. C6 itself can be (64/27) Cg wsup against the printed 4. Step spans: Step 2 is proofs.tex:634-639 and Step 3 is :641. STILL NOT DONE: Steps 4 and 5 and the discrete clause. STEPS 4 AND 5 AND THE DISCRETE CLAUSE CLOSE THE THEOREM (2026-09-12, GFNBounds/Balance/LocalConvergence.lean, sorry-free, axiom-swept). All five remaining constants are the paper's printed formulas (Cinf, epsW, eps0, Lgd, gamma0). THE DISCRETE CLAUSE WAS THE LOOSE SEAM AND IT IS NOT WHAT THE PAPER SAYS IT IS. 'The drift and continuation arguments are identical' is false: in discrete time a step of size gamma ||D|| can jump the barrier the flow must cross continuously, so bootstrap_of_continuous is unusable and the window is carried as an INDUCTION over k with three conjuncts (the window, ||h_perp_k|| <= ||h_perp_0||, and a TELESCOPED drift). Worse, the natural invariant ||h_k||_inf <= eps/2 is NOT INDUCTIVE: the discrete energy inequality keeps g''(1) w_min / 2 where the flow's keeps g''(1) w_min, the quadratic term gamma^2 ||D||^2 eating the other half, so the telescoped drift constant is 2 C7 and not C7 and the closed form lands on eps rather than eps/2. The repair is to weaken the invariant to eps, which is all the contraction step consumes; THE PAPER'S eps_0 STILL SUFFICES UNCHANGED, since 2 + 2 C7 <= 2 (2 + C7). The square-root step itself is correct, needing gamma rho / 2 <= 1/16, an inequality the paper never states, proved from L >= 2 g''(1) ||w||_inf >= 2 g''(1) w_min and B-hat >= 1. TWO FURTHER GAPS. The statement's C >= 1 is never assigned by the proof, which produces C7 -- confirmed, and the Lean carries C7, which is stronger where C7 < 1; the repair is C := max(1, C7). And 1 <= B-hat is ADDED here: true of the paper's sum since beta-hat_0 = 1, but nowhere stated, and hcoer alone forces only B-hat >= 1/2. Also unnamed by the paper and supplied here: eps_0 <= 1, |Pi h_0| <= ||h_0||, ||h_0_perp|| <= ||h_0||, C_inf >= 1 (free), w_min <= ||w||_inf, and 0 <= gamma. a < 1 is never used -- min(a,1) absorbs it. L <= 3 g''(1) ||w||_inf is valid but not sharp and unused; Lgd_le proves 5/2, and the two-state instance ATTAINS it at 5 against the paper's 6. The theorem is stated on the paper's eps_0, deliberately not on the sharper basin mean_cauchy_on_sharp would allow -- widening it changes the statement and that is the author's call. NON-VACUITY: on the two-state chain every constant is pinned by its own theorem (Kexp = 80/3, eps1 = 3/80 -- the MIXING constraint binds, not the C^3 one -- C6 = 8, C7 = 4, rho = 2, C_inf = sqrt 2, eps_0 = sqrt 2 / 640 > 0, L = 5, gamma_0 = 1/25), and the vector LocalEnergy checked Step 2 at lies INSIDE the window and OUTSIDE the basin, by the factor 2 C_inf (2 + C7) = 12 sqrt 2. BUCKET IS B, NOT A, AND STATUS CLOSED: every clause of the theorem is proved with no sorry beneath it, and what keeps it off A is the single added hypothesis 1 <= B-hat. CORRECTED 2026-09-12 after an independent audit -- an earlier version of this note said the library has no beta-hat and that the paper does not state beta-hat_0 = 1. BOTH WERE FALSE. The paper states it, in the hypothesis of lem:sigma_mixing itself (proofs.tex:582, 'summable L^2-mixing, beta-hat_0 = 1'), so against the paper's own B-hat the hypothesis is discharged by a printed hypothesis; and the library does carry the coefficients, Core.Mixing.beta and Core.Mixing.B (Core/Mixing.lean:120,124). What is genuinely not done is narrower and is stated correctly in WeightedL2.lean: the library never COMPUTES beta-hat_0 = ||1 - Pi|| = 1, which is one operator-norm computation on layers that already exist. The open instance a consumer meets is B-hat_sigma = sigma_star / sqrt(lambda_min) >= 1, i.e. sigma_star >= sqrt(lambda_min); theo:training_speed_full is that consumer. Also noted by the audit: 1 <= B-hat is a convenience rather than a necessity -- rho > 0 needs only 0 < B-hat, and gamma rho / 2 <= 1/16 traces to 1/(16 B-hat^2), so B-hat >= 1/4 suffices and hcoer alone already forces B-hat >= 1/2. The precedent for closed-with-B is theo:universality_graphs."
+      "scope_notes": "CLOSED 2026-09-12 -- Steps 1 to 5 and the discrete clause; read this field as a dated log, the paragraphs below being appended in the order the work landed. [Step 1, as first written] PARTIAL 2026-09-12, sorry-free, axiom-swept, graduated. STEP 1 ONLY (proofs.tex:622-633), plus the proof's opening recall and the abstract form of Step 4's continuation. eq:gradient_expansion is closed with all four constants as the paper's printed formulas (C_4, C_g, C_5, K = Kexp); C_g, C_5 and K match an independent re-derivation exactly, C_4 and the (r-1)^2 bound are valid but not sharp -- see theo:gd_diffusion_full's row. The C^3 hypothesis is weakened to the Taylor bound it is used through, which is a stronger theorem and is flagged. FROM L2Toolkit.lean, the proof's own opening line 'recall Ah = Ah_perp, ||P|| <= 1, ||A|| <= 2, ||A^dagger|| <= 2' (proofs.tex:620): Aop_perpL2, nrmL2_Aop_le_two, nrmL2_Adj_le_two, the first resting on Core.nrmL2_densAct_le / Core.nrmL2_funAct_le, which already existed. Ah = Ah_perp is a lambda-a.e. statement and carries lam y != 0, the density action dividing by lambda -- a formalization artefact, automatic in the paper's ergodic setting. Also closed: bootstrap_of_continuous, Step 4's continuation argument in the abstract (per-state continuity, a start bound, and a bootstrap on [0,t] give the bound for all t >= 0, by the infimum of the failure set) -- which is where the paper's 'by continuity the interval is all of R_+' is made good. FOUND WHILE DOING SO: Step 4 does not state its t = 0 case. It needs ||h_0||_inf <= eps/2 to start, which holds (C_inf eps_0 (2 + C_7) <= eps/2 checks out, consuming eps_0 <= 1 and |m_0| <= ||h_0||, the latter needing lambda to be a probability) but is not written; bootstrap_of_continuous makes it the named hypothesis hstart. NOT DONE: Steps 2, 3 and 5 -- the energy estimate, the mass drift, the conclusion -- and the discrete gradient-descent clause, hence the constants C_6, C_7, eps_0, eps_1, L, gamma_0 and c_infinity. The layers those need now exist (Balance/Flow.lean's IsGradientFlow and flow identity, Expansion.lean's Step 1, this file's bootstrap), which is why the bucket is B rather than D. Finite state space. STEPS 2 AND 3 NOW CLOSED TOO (2026-09-12, GFNBounds/Balance/LocalEnergy.lean, sorry-free, axiom-swept): the energy estimate with its decay e^{-rho t/2} on a window, the integrated energy bound, the mass drift and its Cauchy criterion, all with the paper's printed constants (eps1, C6, C7, rhoL). eps1 = g''(1) w_min / (2 K B-hat) is verified to be EXACTLY the half-absorption threshold -- the expansion error costs K eps B-hat against a coercivity g''(1) w_min, so it eats at most half iff eps <= eps1, with equality at eps1. TWO THINGS THE PAPER DOES NOT NAME. (a) The identity d/dt (1/2)||h_perp||^2 = -<h_perp, D> is an equality only because lambda is a PROBABILITY: it needs Pi h_perp = 0, hence sum lambda = 1, which the paper's standing convention supplies and the statement does not. (b) Because this library weakens the paper's C^3 hypothesis to the bare Taylor bound (see theo:gd_diffusion_full's row), g' is NOT known continuous, so neither d/dt||h_perp||^2 nor mdot is known integrable and the FTC is unavailable. Every integration here is therefore a MONOTONICITY argument on a primitive, and the only function ever integrated is s -> ||A h_perp(s)||^2, whose continuity is independent of g. Not a defect in the paper -- a real cost of the weaker hypothesis, paid rather than quietly restored. SHARPER CONSTANT AVAILABLE AND PROVED: the paper's |m_inf - m_t| <= (4 C6 / rho) e^{-rho t} ||h_0_perp||^2 is valid but not sharp; restarting the Step 2 energy estimate at time t gives C7 e^{-rho t} ||h_0_perp||^2, and 4 C6 / rho = 4 B-hat^2 C7. Both are stated (mean_cauchy_on, mean_cauchy_on_sharp). This matters downstream: Step 4's eps_0 has rho/(4 C6) as an entry, so the sharp form WIDENS THE BASIN OF ATTRACTION by 4 B-hat^2 at no cost. C6 itself can be (64/27) Cg wsup against the printed 4. Step spans: Step 2 is proofs.tex:634-639 and Step 3 is :641. STILL NOT DONE: Steps 4 and 5 and the discrete clause. STEPS 4 AND 5 AND THE DISCRETE CLAUSE CLOSE THE THEOREM (2026-09-12, GFNBounds/Balance/LocalConvergence.lean, sorry-free, axiom-swept). All five remaining constants are the paper's printed formulas (Cinf, epsW, eps0, Lgd, gamma0). THE DISCRETE CLAUSE WAS THE LOOSE SEAM AND IT IS NOT WHAT THE PAPER SAYS IT IS. 'The drift and continuation arguments are identical' is false: in discrete time a step of size gamma ||D|| can jump the barrier the flow must cross continuously, so bootstrap_of_continuous is unusable and the window is carried as an INDUCTION over k with three conjuncts (the window, ||h_perp_k|| <= ||h_perp_0||, and a TELESCOPED drift). Worse, the natural invariant ||h_k||_inf <= eps/2 is NOT INDUCTIVE: the discrete energy inequality keeps g''(1) w_min / 2 where the flow's keeps g''(1) w_min, the quadratic term gamma^2 ||D||^2 eating the other half, so the telescoped drift constant is 2 C7 and not C7 and the closed form lands on eps rather than eps/2. The repair is to weaken the invariant to eps, which is all the contraction step consumes; THE PAPER'S eps_0 STILL SUFFICES UNCHANGED, since 2 + 2 C7 <= 2 (2 + C7). The square-root step itself is correct, needing gamma rho / 2 <= 1/16, an inequality the paper never states, proved from L >= 2 g''(1) ||w||_inf >= 2 g''(1) w_min and B-hat >= 1. TWO FURTHER GAPS. The statement's C >= 1 is never assigned by the proof, which produces C7 -- confirmed, and the Lean carries C7, which is stronger where C7 < 1; the repair is C := max(1, C7). And 1 <= B-hat is ADDED here: true of the paper's sum since beta-hat_0 = 1, but nowhere stated, and hcoer alone forces only B-hat >= 1/2. Also unnamed by the paper and supplied here: eps_0 <= 1, |Pi h_0| <= ||h_0||, ||h_0_perp|| <= ||h_0||, C_inf >= 1 (free), w_min <= ||w||_inf, and 0 <= gamma. a < 1 is never used -- min(a,1) absorbs it. L <= 3 g''(1) ||w||_inf is valid but not sharp and unused; Lgd_le proves 5/2, and the two-state instance ATTAINS it at 5 against the paper's 6. The theorem is stated on the paper's eps_0, deliberately not on the sharper basin mean_cauchy_on_sharp would allow -- widening it changes the statement and that is the author's call. NON-VACUITY: on the two-state chain every constant is pinned by its own theorem (Kexp = 80/3, eps1 = 3/80 -- the MIXING constraint binds, not the C^3 one -- C6 = 8, C7 = 4, rho = 2, C_inf = sqrt 2, eps_0 = sqrt 2 / 640 > 0, L = 5, gamma_0 = 1/25), and the vector LocalEnergy checked Step 2 at lies INSIDE the window and OUTSIDE the basin, by the factor 2 C_inf (2 + C7) = 12 sqrt 2. BUCKET IS B, NOT A, AND STATUS CLOSED: every clause of the theorem is proved with no sorry beneath it, and what keeps it off A is the single added hypothesis 1 <= B-hat. CORRECTED 2026-09-12 after an independent audit -- an earlier version of this note said the library has no beta-hat and that the paper does not state beta-hat_0 = 1. BOTH WERE FALSE. The paper states it, in the hypothesis of lem:sigma_mixing itself (proofs.tex:582, 'summable L^2-mixing, beta-hat_0 = 1'), so against the paper's own B-hat the hypothesis is discharged by a printed hypothesis; and the library does carry the coefficients, Core.Mixing.beta and Core.Mixing.B (Core/Mixing.lean:120,124). What is genuinely not done is narrower and is stated correctly in WeightedL2.lean: the library never COMPUTES beta-hat_0 = ||1 - Pi|| = 1, which is one operator-norm computation on layers that already exist. The open instance a consumer meets is B-hat_sigma = sigma_star / sqrt(lambda_min) >= 1, i.e. sigma_star >= sqrt(lambda_min); theo:training_speed_full is that consumer. Also noted by the audit: 1 <= B-hat is a convenience rather than a necessity -- rho > 0 needs only 0 < B-hat, and gamma rho / 2 <= 1/16 traces to 1/(16 B-hat^2), so B-hat >= 1/4 suffices and hcoer alone already forces B-hat >= 1/2. The precedent for closed-with-B is theo:universality_graphs.\n\n2026-09-13, paper repairs verified by proof-checker: the printed statement now claims more than this Lean certifies. New statement clauses lack exported lemmas: eps_0 <= a/(16 C_inf) (needs a < 1), positivity of 1 + h_k along descent, gamma_0 > 0, and C := max(1, C_7) >= 1. The contraction is local_convergence_gd. Status closed -> partial."
     },
     {
       "label": "prop:frozen_unstable_full",
       "source": "proofs.tex",
       "tex_span": [
-        659,
-        683
+        680,
+        704
       ],
       "block_sha256": "d9c473ffd177ca69e4ac8e9ed13aff141e21fc1faaebdb4ffe66bb10aee6cf29",
       "lean_files": [
@@ -1629,8 +1629,8 @@
       "label": "prop:tb_gradient",
       "source": "proofs.tex",
       "tex_span": [
-        685,
-        725
+        706,
+        746
       ],
       "block_sha256": "9f8d865ec9aa13f6c07a5f51a474c8395ce904d011f87dab145c244d5c8ea753",
       "lean_files": [],
@@ -1643,8 +1643,8 @@
       "label": "prop:tb_hessian",
       "source": "proofs.tex",
       "tex_span": [
-        727,
-        751
+        748,
+        772
       ],
       "block_sha256": "2d51b0fb8d56f81c1c253130ec94b3b3f69d549a443756bd7967a16c222eb882",
       "lean_files": [],
@@ -1657,10 +1657,10 @@
       "label": "rem:tb_vs_db",
       "source": "proofs.tex",
       "tex_span": [
-        753,
-        755
+        774,
+        776
       ],
-      "block_sha256": "434a46fa7568d3344c8c9a86f5a8292a0e61a686eba6c9805bdf042a425471e3",
+      "block_sha256": "ba335142146d9faeebbf12dacc5ac5862076f1940fc46d7360266977dfd14e3b",
       "lean_files": [],
       "decls": [],
       "status": "open",
@@ -1671,10 +1671,10 @@
       "label": "prop:nonlinear_freezing",
       "source": "proofs.tex",
       "tex_span": [
-        759,
-        781
+        780,
+        802
       ],
-      "block_sha256": "fcd9f5afd2c81f73686e730ba285c509aff7d7055c707b4d04df5aa94b894a88",
+      "block_sha256": "ca7ffae1a9272256fab07c7358dfa5bb623cec4a455b75063642ec7cc28ad5b0",
       "lean_files": [
         "GFNBounds/Balance/Freezing.lean"
       ],
@@ -1691,31 +1691,31 @@
         "GFNBounds.Balance.twoState_freezing"
       ],
       "status": "partial",
-      "bucket": "B",
-      "scope_notes": "APPLIED TO THE DRAFT 2026-09-08. PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 775 lines, 77 declarations. ITEMS (1) AND (2) CLOSED, with FULL C^infinity and nothing weakened. The generator is CONSTRUCTED, which is the content: `flatFactor p q t := expNegInvGlue (p-t) + expNegInvGlue (t-q)` is C^infinity, lies in [0,2] and vanishes EXACTLY on [p,q]; ContDiffBump was rejected because it pins the value only on the inner ball and outside the outer one, so no sharp zero set can be read off it. All four admissibility clauses are proved -- g(1)=0, g>0 off 1 (for every real x != 1, not just x>0), g''(1)=2, and |g(x)| <= C(1+|x|^2) with C = 8/scale an EXPLICIT FORMULA -- plus g' == 0 on the bands. Item (2)'s two-state instance is fully computed: r = (3/4, 3/2), the frozen set is nonempty and open, D == 0, and every descent step is fixed for every nu and every step size. NOT DONE: item (3) and the closing 'no bound in terms of g''(1), the mixing coefficients and w alone can hold', which quantifies over bounds and presupposes item (3); and item (2)'s beta-hat_n = 0, B-hat = 1, rho = 2 w_min, which need Core.Mixing.beta instantiated at an L^2(lambda) operator -- instead the sentence the paper's own proof opens with is proved, P = Pi and P-dagger = Pi. THE PAPER-SIDE DEFECT THIS FILE RECORDED IS NOW REPAIRED at proofs.tex:760, verified by an independent proof-checker pass: the hypothesis is satisfiable (witness at 60 digits), all three items still follow verbatim, and neither instantiation broke. One correction to the earlier record: strengthening the CONCLUSION to `g' == 0` on the closures is NOT a free improvement and must not be taken -- item (1) claims the set of such `mu` is OPEN, and the set whose ratio is valued in the CLOSED bands is not open (a `mu` with `r == sup U^-` perturbs out of it), so the open-band conclusion is necessary rather than merely modest."
+      "bucket": "D",
+      "scope_notes": "APPLIED TO THE DRAFT 2026-09-08. PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 775 lines, 77 declarations. ITEMS (1) AND (2) CLOSED, with FULL C^infinity and nothing weakened. The generator is CONSTRUCTED, which is the content: `flatFactor p q t := expNegInvGlue (p-t) + expNegInvGlue (t-q)` is C^infinity, lies in [0,2] and vanishes EXACTLY on [p,q]; ContDiffBump was rejected because it pins the value only on the inner ball and outside the outer one, so no sharp zero set can be read off it. All four admissibility clauses are proved -- g(1)=0, g>0 off 1 (for every real x != 1, not just x>0), g''(1)=2, and |g(x)| <= C(1+|x|^2) with C = 8/scale an EXPLICIT FORMULA -- plus g' == 0 on the bands. Item (2)'s two-state instance is fully computed: r = (3/4, 3/2), the frozen set is nonempty and open, D == 0, and every descent step is fixed for every nu and every step size. NOT DONE: item (3) and the closing 'no bound in terms of g''(1), the mixing coefficients and w alone can hold', which quantifies over bounds and presupposes item (3); and item (2)'s beta-hat_n = 0, B-hat = 1, rho = 2 w_min, which need Core.Mixing.beta instantiated at an L^2(lambda) operator -- instead the sentence the paper's own proof opens with is proved, P = Pi and P-dagger = Pi. THE PAPER-SIDE DEFECT THIS FILE RECORDED IS NOW REPAIRED at proofs.tex:760, verified by an independent proof-checker pass: the hypothesis is satisfiable (witness at 60 digits), all three items still follow verbatim, and neither instantiation broke. One correction to the earlier record: strengthening the CONCLUSION to `g' == 0` on the closures is NOT a free improvement and must not be taken -- item (1) claims the set of such `mu` is OPEN, and the set whose ratio is valued in the CLOSED bands is not open (a `mu` with `r == sup U^-` perturbs out of it), so the open-band conclusion is necessary rather than merely modest.\n\n2026-09-13, paper repairs verified by proof-checker: the printed statement now claims more than this Lean certifies. Item (1) widened to every C^1 generator vanishing on the bands; criticality and openness hold in that generality here, local constancy and positivity (eventually_loss_eq, loss_pos) only for FreezingBands.g."
     },
     {
       "label": "rem:freezing",
       "source": "proofs.tex",
       "tex_span": [
-        783,
-        785
+        804,
+        806
       ],
-      "block_sha256": "64a0f9950cb9c6b08c05dc00735787ea8232a6917a312a4c264e176f11da4a32",
+      "block_sha256": "b49338ced6afb1855039e5232a444c5b04e3e219fbaf8f062fcb0265a0e7cdc5",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "B",
       "scope_notes": "A remark."
     },
     {
       "label": "prop:no_distant_equilibrium",
       "source": "proofs.tex",
       "tex_span": [
-        787,
-        814
+        808,
+        835
       ],
-      "block_sha256": "6ad31ba30230308d8334d9814efe439e973f546096fab58c45882f734f339a64",
+      "block_sha256": "5869ec2237b8152694bb57a2a1d089b3727e047a83e4e61e05d92f0eab6cacac",
       "lean_files": [
         "GFNBounds/Balance/Flow.lean",
         "GFNBounds/Balance/Lojasiewicz.lean",
@@ -1772,17 +1772,17 @@
         "GFNBounds.Balance.twoState_boundary_blowup_check"
       ],
       "status": "partial",
-      "bucket": "B",
-      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED: item (1), the mass identity, in all three of its conjuncts -- the mass equals int g'(r)(1-r)(dnu/dmu) dlambda, it is <= 0, and it is 0 iff mu is balanced -- plus `balanced_of_critical`. Proved once and shared between the two labels. Finite state space, disclosed: every downstream use is on a finite graph and the general case would need obstruction 2 merely to say what Q phi is. THE BOUNDARY, and it is the point of the file: `D := Q phi - r phi` is a Lean DEFINITION, never derived. Identifying it with the gradient of L_{g,nu} is theo:first_variation_full's job, which is bucket D and not formalized -- so what is certified is the mass of THAT EXPRESSION, and the words 'every critical point is balanced' are conditional on that identification. 'Critical' is read as D = 0, not as 'the first variation vanishes in every admissible direction'. Three further weakenings in the safe direction: ergodicity is NOT assumed (only lambda-invariance, so uniqueness of the balanced flow is not certified), lambda need not be a probability, and K need not be row-stochastic. One thing came out stronger than the paper: r > 0 is DERIVED from invariance plus positivity rather than hypothesized as 'essentially bounded away from 0 and infinity'. ITEM (3) IS NOW CLOSED TOO -- both the pointwise inequality |g'(x)(1-x)| >= delta^2/2 (each of its four elementary bounds a separate named lemma) and the integrated display, the latter stated over ANY far set and with d nu/d mu >= c_0 abstract, hence more general than the paper's. It needs lambda(S) = 1, which this file carries and MassIdentity does not -- the paper says 'since lambda is a probability measure' at proofs.tex:809, so nothing is wrong, but the hypothesis is genuinely used there and not in item (1). ITEM (2)'s FIRST HALF IS NOW CLOSED as well: `ipL2_lossGrad_self` proves int D u dlambda = 0 as a BARE IDENTITY -- no invariance of lambda, nothing about g -- and `nrmL2_const_of_flow` turns it into the invariant sphere ||u_t|| = ||u_0|| along the gradient flow, which is the paper's 'the gradient flow preserves ||u_t||'. NOT DONE: item (2)'s Lyapunov half (the mass strictly increases, Cauchy-Schwarz on the sphere, LaSalle) and the convergence half of the dichotomy, which need a gradient-flow / LaSalle layer. ITEM (2)'s LYAPUNOV HALF IS NOW CLOSED (2026-09-12, GFNBounds/Balance/MassAscent.lean, sorry-free, axiom-swept): the mass int u_t dlambda is differentiable along the flow with derivative -int D dlambda >= 0 (hasDerivAt_mass_flow, mass_monotone_flow), strictly positive off balance (mass_deriv_pos_off_balance), and bounded on the invariant sphere by ||u_0|| with equality exactly at a constant density (mean_le_nrmL2_iff_const -- Cauchy-Schwarz against 1 WITH its equality case, which the library did not have). TWO DISCLOSURES. (a) That equality case needs u >= 0: the paper's 'equality if and only if u is constant' is false as a statement about L^2 (at u = -1 the two sides are -1 and 1), and densities supply the missing hypothesis which the sentence does not name. (b) 'BALANCED => CONSTANT' IS ERGODICITY AND IS FALSE under this layer's `Invariant K lam` alone -- K = Id on two states makes every lambda invariant and EVERY u balanced -- so the paper's 'whose unique maximizer is the balanced flow' is certified only on a marked graph (mass_ascent_lyapunov_graph, through Graph.eq_smul_invProb); the paper itself is fine, since prop:no_distant_equilibrium hypothesises an ergodic (S-hat, lambda, T), and the gap is between that hypothesis and the weaker one MassIdentity.lean carries. ITEM (3)'s ENTRY TIME is closed as well: exists t_1 in [0, L(mu_0)/c(delta)^2] with every ratio within delta, c(delta) = w_min lambda_min^{3/2} delta^2 / (2 ||u_0||) explicit (cDelta, entry_time), which reproduces proofs.tex:813 exactly. Delivered as an EXISTENCE of an entry time rather than the paper's forward-invariant reading 'after time at most L(mu_0)/c(delta)^2 all ratios are within delta': the budget argument bounds the total off-band time, and permanence is theo:local_convergence_full's, which is how the paper's own assembly uses it. STILL NOT DONE: LaSalle, the boundary blow-up / compactness step, and the convergence half of item (3). ITEM (3)'S COMPACTNESS HALF IS NOW CLOSED (2026-09-13, GFNBounds/Balance/BoundaryBlowup.lean, sorry-free, axiom-swept): from positivity at time zero alone the gradient-flow trajectory stays strictly positive at every state for all t >= 0 (flow_pos_graph), with an EXPLICIT floor uMin = m_0 (lambda_min p_min e^{-M})^{|V|-1}, M = max(1, sqrt(L_0/(w_min lambda_min))). That is the hypothesis hu that twelve declarations across Flow, MassAscent and TrainingSpeed currently assume. THE CIRCULARITY WAS BREAKABLE: lossVal_antitone_flow needs hu at every time, but its engine Flow.hasDerivAt_loss_flow_at needs it at ONE time, so antitonicity, mass monotonicity and the invariant sphere were re-proved on an arbitrary convex set of times (lossVal_antitoneOn, mass_monotoneOn, nrmL2_const_on_Ici) and L2Toolkit.bootstrap_of_continuous closes the continuation. TWO FINDINGS. (a) The paper's sentence is a LIMIT argument and yields no floor; made effective it costs c^{|V|-1}, EXPONENTIAL in the state space, and it needs a per-edge floor p_min the proposition never names (CrossingFloor; exists_edgeFloor shows one always exists on a Fintype, and crossingFloor_phat discharges the connectedness half from breach_all). Nothing currently printed degrades -- T_0, the entry time and rho_sigma do not depend on u_min -- but any future QUANTITATIVE use of 'compact subset of the open sphere' inherits the exponential. (b) A formalization boundary, with a witness: ratio divides by lambda(z) u(z), so at u(z) = 0 Lean's junk value makes g(r) = 0 and the loss is FINITE on the boundary of the cone -- the paper's 'g(r) nu -> +infinity there' is not stated. On the two-state chain at u = (1,0) the loss is 0.2402 <= 1/4 while u(1) = 0 and u_min = 0.046. So pos_of_loss_le hypothesises u > 0 and concludes u >= u_min; it is a quantitative floor, not a proof that the boundary is unreachable. The scale anchor is the MASS m_0 <= int u dlambda rather than the paper's sphere, the loss being scale-invariant; the sphere is proved too (nrmL2_const_on_Ici). LASALLE IS STILL NOT PROVED: mass_tendsto gives that the mass converges (monotone on [0,inf), bounded by ||u_0||), and that the limit is the balanced point is NOT claimed -- even the conditional form needs continuity of u |-> int D dlambda in the state, and Mathlib v4.31.0 has no omega-limit machinery."
+      "bucket": "D",
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED: item (1), the mass identity, in all three of its conjuncts -- the mass equals int g'(r)(1-r)(dnu/dmu) dlambda, it is <= 0, and it is 0 iff mu is balanced -- plus `balanced_of_critical`. Proved once and shared between the two labels. Finite state space, disclosed: every downstream use is on a finite graph and the general case would need obstruction 2 merely to say what Q phi is. THE BOUNDARY, and it is the point of the file: `D := Q phi - r phi` is a Lean DEFINITION, never derived. Identifying it with the gradient of L_{g,nu} is theo:first_variation_full's job, which is bucket D and not formalized -- so what is certified is the mass of THAT EXPRESSION, and the words 'every critical point is balanced' are conditional on that identification. 'Critical' is read as D = 0, not as 'the first variation vanishes in every admissible direction'. Three further weakenings in the safe direction: ergodicity is NOT assumed (only lambda-invariance, so uniqueness of the balanced flow is not certified), lambda need not be a probability, and K need not be row-stochastic. One thing came out stronger than the paper: r > 0 is DERIVED from invariance plus positivity rather than hypothesized as 'essentially bounded away from 0 and infinity'. ITEM (3) IS NOW CLOSED TOO -- both the pointwise inequality |g'(x)(1-x)| >= delta^2/2 (each of its four elementary bounds a separate named lemma) and the integrated display, the latter stated over ANY far set and with d nu/d mu >= c_0 abstract, hence more general than the paper's. It needs lambda(S) = 1, which this file carries and MassIdentity does not -- the paper says 'since lambda is a probability measure' at proofs.tex:809, so nothing is wrong, but the hypothesis is genuinely used there and not in item (1). ITEM (2)'s FIRST HALF IS NOW CLOSED as well: `ipL2_lossGrad_self` proves int D u dlambda = 0 as a BARE IDENTITY -- no invariance of lambda, nothing about g -- and `nrmL2_const_of_flow` turns it into the invariant sphere ||u_t|| = ||u_0|| along the gradient flow, which is the paper's 'the gradient flow preserves ||u_t||'. NOT DONE: item (2)'s Lyapunov half (the mass strictly increases, Cauchy-Schwarz on the sphere, LaSalle) and the convergence half of the dichotomy, which need a gradient-flow / LaSalle layer. ITEM (2)'s LYAPUNOV HALF IS NOW CLOSED (2026-09-12, GFNBounds/Balance/MassAscent.lean, sorry-free, axiom-swept): the mass int u_t dlambda is differentiable along the flow with derivative -int D dlambda >= 0 (hasDerivAt_mass_flow, mass_monotone_flow), strictly positive off balance (mass_deriv_pos_off_balance), and bounded on the invariant sphere by ||u_0|| with equality exactly at a constant density (mean_le_nrmL2_iff_const -- Cauchy-Schwarz against 1 WITH its equality case, which the library did not have). TWO DISCLOSURES. (a) That equality case needs u >= 0: the paper's 'equality if and only if u is constant' is false as a statement about L^2 (at u = -1 the two sides are -1 and 1), and densities supply the missing hypothesis which the sentence does not name. (b) 'BALANCED => CONSTANT' IS ERGODICITY AND IS FALSE under this layer's `Invariant K lam` alone -- K = Id on two states makes every lambda invariant and EVERY u balanced -- so the paper's 'whose unique maximizer is the balanced flow' is certified only on a marked graph (mass_ascent_lyapunov_graph, through Graph.eq_smul_invProb); the paper itself is fine, since prop:no_distant_equilibrium hypothesises an ergodic (S-hat, lambda, T), and the gap is between that hypothesis and the weaker one MassIdentity.lean carries. ITEM (3)'s ENTRY TIME is closed as well: exists t_1 in [0, L(mu_0)/c(delta)^2] with every ratio within delta, c(delta) = w_min lambda_min^{3/2} delta^2 / (2 ||u_0||) explicit (cDelta, entry_time), which reproduces proofs.tex:813 exactly. Delivered as an EXISTENCE of an entry time rather than the paper's forward-invariant reading 'after time at most L(mu_0)/c(delta)^2 all ratios are within delta': the budget argument bounds the total off-band time, and permanence is theo:local_convergence_full's, which is how the paper's own assembly uses it. STILL NOT DONE: LaSalle, the boundary blow-up / compactness step, and the convergence half of item (3). ITEM (3)'S COMPACTNESS HALF IS NOW CLOSED (2026-09-13, GFNBounds/Balance/BoundaryBlowup.lean, sorry-free, axiom-swept): from positivity at time zero alone the gradient-flow trajectory stays strictly positive at every state for all t >= 0 (flow_pos_graph), with an EXPLICIT floor uMin = m_0 (lambda_min p_min e^{-M})^{|V|-1}, M = max(1, sqrt(L_0/(w_min lambda_min))). That is the hypothesis hu that twelve declarations across Flow, MassAscent and TrainingSpeed currently assume. THE CIRCULARITY WAS BREAKABLE: lossVal_antitone_flow needs hu at every time, but its engine Flow.hasDerivAt_loss_flow_at needs it at ONE time, so antitonicity, mass monotonicity and the invariant sphere were re-proved on an arbitrary convex set of times (lossVal_antitoneOn, mass_monotoneOn, nrmL2_const_on_Ici) and L2Toolkit.bootstrap_of_continuous closes the continuation. TWO FINDINGS. (a) The paper's sentence is a LIMIT argument and yields no floor; made effective it costs c^{|V|-1}, EXPONENTIAL in the state space, and it needs a per-edge floor p_min the proposition never names (CrossingFloor; exists_edgeFloor shows one always exists on a Fintype, and crossingFloor_phat discharges the connectedness half from breach_all). Nothing currently printed degrades -- T_0, the entry time and rho_sigma do not depend on u_min -- but any future QUANTITATIVE use of 'compact subset of the open sphere' inherits the exponential. (b) A formalization boundary, with a witness: ratio divides by lambda(z) u(z), so at u(z) = 0 Lean's junk value makes g(r) = 0 and the loss is FINITE on the boundary of the cone -- the paper's 'g(r) nu -> +infinity there' is not stated. On the two-state chain at u = (1,0) the loss is 0.2402 <= 1/4 while u(1) = 0 and u_min = 0.046. So pos_of_loss_le hypothesises u > 0 and concludes u >= u_min; it is a quantitative floor, not a proof that the boundary is unreachable. The scale anchor is the MASS m_0 <= int u dlambda rather than the paper's sphere, the loss being scale-invariant; the sphere is proved too (nrmL2_const_on_Ici). LASALLE IS STILL NOT PROVED: mass_tendsto gives that the mass converges (monotone on [0,inf), bounded by ||u_0||), and that the limit is the balanced point is NOT claimed -- even the conditional form needs continuity of u |-> int D dlambda in the state, and Mathlib v4.31.0 has no omega-limit machinery.\n\n2026-09-13, paper repairs verified by proof-checker: the printed statement now claims more than this Lean certifies. Item (3) now includes g = (x-1)^2; no_distant_equilibrium_three covers logSqDeriv only. The (x-1)^2 instance needs coercivity 2(x-1)^2 >= 2 delta^2 and the r -> +inf blow-up."
     },
     {
       "label": "rem:cycle_no_stalemate",
       "source": "proofs.tex",
       "tex_span": [
-        816,
-        818
+        837,
+        839
       ],
-      "block_sha256": "bb08d96fdae6c1dc428a90cad8aadf9268ee9c78c76422a9887ac90ad0e66ddb",
+      "block_sha256": "4533602922789ce7c1f8e0e9423eeb63da4a7dfc57376097072335d4cb6c9230",
       "lean_files": [
         "GFNBounds/Graph/CycleExample.lean"
       ],
@@ -1803,16 +1803,16 @@
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 44 declarations on V = Fin 5. All four claims formalized; THREE OF THEM DID NOT COME OUT AS PRINTED, see the paper findings. Claim 1's number was corrected in the draft on 2026-09-08; claims 3 and 4 stand uncorrected. Claim 2 is exactly right, with q = 1/(5-2p), and its uniqueness goes through theo:universality_graphs(1). Claim 3's r(x_1) = r(x_2) = r(s_f) = 1 hold EXACTLY at every M, not just in the limit, and r(x_3) = p + (1-p)/M -> p. Claim 4 is certified as `no_stalemate`: at the over-inflated configuration the total mass of the gradient density is STRICTLY negative for every training measure of positive density -- by the remark's own route, prop:no_distant_equilibrium(1) plus the observation that r(x_3) < 1 so the configuration is not balanced. `decide` carried the three MarkedGraph side conditions and nothing else; PathConnected is not decidable (ReflTransGen) and was built by hand off the single walk. NOT CERTIFIED, and classified as interpretation rather than claim: the closing 'B-hat blows up and every rate degenerates ... interpolates smoothly toward the instability regime' -- B-hat is an operator norm (obstruction 2), and only its checkable half `sigmaBar_unbounded` is proved. The dynamical continuations (the source refilling at logarithmic speed, the M/log M transient, the handover to theo:local_convergence) are not stated: there is no ODE layer and they do not follow from the computation."
+      "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 44 declarations on V = Fin 5. All four claims formalized; THREE OF THEM DID NOT COME OUT AS PRINTED, see the paper findings. Claim 1's number was corrected in the draft on 2026-09-08; claims 3 and 4 stand uncorrected. Claim 2 is exactly right, with q = 1/(5-2p), and its uniqueness goes through theo:universality_graphs(1). Claim 3's r(x_1) = r(x_2) = r(s_f) = 1 hold EXACTLY at every M, not just in the limit, and r(x_3) = p + (1-p)/M -> p. Claim 4 is certified as `no_stalemate`: at the over-inflated configuration the total mass of the gradient density is STRICTLY negative for every training measure of positive density -- by the remark's own route, prop:no_distant_equilibrium(1) plus the observation that r(x_3) < 1 so the configuration is not balanced. `decide` carried the three MarkedGraph side conditions and nothing else; PathConnected is not decidable (ReflTransGen) and was built by hand off the single walk. NOT CERTIFIED, and classified as interpretation rather than claim: the closing 'B-hat blows up and every rate degenerates ... interpolates smoothly toward the instability regime' -- B-hat is an operator norm (obstruction 2), and only its checkable half `sigmaBar_unbounded` is proved. The dynamical continuations (the source refilling at logarithmic speed, the M/log M transient, the handover to theo:local_convergence) are not stated: there is no ODE layer and they do not follow from the computation.\n\n2026-09-13, paper repairs verified by proof-checker: the printed statement now claims more than this Lean certifies. New clause B-hat_sigma -> inf has no lemma (one line from bSigma_eq). The claim that the coercivity constant stays bounded was REMOVED from the paper as underived."
     },
     {
       "label": "theo:global_dichotomy_full",
       "source": "proofs.tex",
       "tex_span": [
-        820,
-        830
+        841,
+        851
       ],
-      "block_sha256": "54bd6b8feeabf5a71799e043f08e64179e0d468a40b148296afe6249ff0197cc",
+      "block_sha256": "049542fae4e761531d75cb3be509fa17eb764279e91360b9b1e87b73e05760d2",
       "lean_files": [
         "GFNBounds/Balance/MassIdentity.lean"
       ],
@@ -1831,17 +1831,17 @@
         "GFNBounds.Balance.strictlyUnimodal_logSqDeriv"
       ],
       "status": "partial",
-      "bucket": "B",
+      "bucket": "D",
       "scope_notes": "PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED: item (1)'s first horn, in all three of its conjuncts -- the mass equals int g'(r)(1-r)(dnu/dmu) dlambda, it is <= 0, and it is 0 iff mu is balanced -- plus `balanced_of_critical`. Proved once and shared between the two labels. Finite state space, disclosed: every downstream use is on a finite graph and the general case would need obstruction 2 merely to say what Q phi is. THE BOUNDARY, and it is the point of the file: `D := Q phi - r phi` is a Lean DEFINITION, never derived. Identifying it with the gradient of L_{g,nu} is theo:first_variation_full's job, which is bucket D and not formalized -- so what is certified is the mass of THAT EXPRESSION, and the words 'every critical point is balanced' are conditional on that identification. 'Critical' is read as D = 0, not as 'the first variation vanishes in every admissible direction'. Three further weakenings in the safe direction: ergodicity is NOT assumed (only lambda-invariance, so uniqueness of the balanced flow is not certified), lambda need not be a probability, and K need not be row-stochastic. One thing came out stronger than the paper: r > 0 is DERIVED from invariance plus positivity rather than hypothesized as 'essentially bounded away from 0 and infinity'. NOT DONE: items (2)-(3) of the proposition and the convergence half of the dichotomy, which need a gradient-flow / LaSalle layer."
     },
     {
       "label": "prop:morozov_rate",
       "source": "proofs.tex",
       "tex_span": [
-        834,
-        873
+        855,
+        894
       ],
-      "block_sha256": "60716b3fcfaee28b3bfc676de87d31a3bdbe5ba0e1e7811fbd8dd2a6c664d2bc",
+      "block_sha256": "293ebaa9879fd69246bf4f430a5785112d5d8801367fd71a2adbb0db61a7027c",
       "lean_files": [
         "GFNBounds/Graph/Morozov.lean",
         "GFNBounds/Graph/MorozovConsume.lean"
@@ -1877,8 +1877,8 @@
       "label": "cor:global_lojasiewicz",
       "source": "proofs.tex",
       "tex_span": [
-        875,
-        898
+        896,
+        919
       ],
       "block_sha256": "3d0a17aaeb98016d8332691a264abb0503e5e1f9d6ee14eb79a192cf195c21f1",
       "lean_files": [
@@ -1911,10 +1911,10 @@
       "label": "theo:training_speed_full",
       "source": "proofs.tex",
       "tex_span": [
-        900,
-        934
+        921,
+        1011
       ],
-      "block_sha256": "4b979bef5ab7baa256b082c874e34ef896f55f6eaa1299d0e67f0fe8e90584f9",
+      "block_sha256": "91ac33a161776b25ebbd25d858d0c6be924f5f898c4fb832a412fc1dec24d0a9",
       "lean_files": [
         "GFNBounds/Balance/RatioBridge.lean",
         "GFNBounds/Balance/TrainingSpeed.lean"
@@ -1964,30 +1964,30 @@
         "GFNBounds.Balance.training_speed_full_of_pos",
         "GFNBounds.Balance.training_speed_full_of_init"
       ],
-      "status": "closed",
-      "bucket": "A",
-      "scope_notes": "PARTIAL 2026-09-12, sorry-free, axiom-swept, graduated -- its first Lean. ONE STEP ONLY: the local-phase rescaling. The sentence is written at proofs.tex:813, inside prop:no_distant_equilibrium(3)'s proof, and QUOTED by this theorem at proofs.tex:927. Proved: (P-I)u = (r-1)u; ||(P-I)u|| <= delta ||u||; ||u - Pi u|| <= B-hat delta ||u||; h := u/m - 1 is mean-zero with ||h|| <= B-hat delta U0 / m0; and delta_0 = eps_0 m_0 / (B-hat U_0) as an explicit formula with delta_0 <= eps_0 and delta_0 <= 1/2 -- the side condition entry_time requires and the paper never states. FINDING: (P-I)u = (r-1)u needs u(y) != 0, NOT lambda(y) != 0 -- the opposite variable from the one a reader would guard. At lambda(y) != 0 with u(y) = 0 it FAILS (witness on the two-state chain: LHS 1/2, RHS 0), while at lambda(y) = 0 Lean's total division makes both sides -u(y) and it holds vacuously. The paper is entitled to the line, since prop:no_distant_equilibrium hypothesises mu ~ lambda hence u > 0, but the hypothesis carrying it is positivity of the DENSITY. TWO HYPOTHESES ADDED: B-hat >= 1 (spent only in delta_0 <= eps_0; hcoer alone forces only B-hat >= 1/2, since ||A f|| <= 2 ||f_perp||) and eps_0 <= 1/2 (spent only in delta_0 <= 1/2; m_0 <= U_0 and B-hat >= 1 give the sharper delta_0 <= eps_0, but nothing in the data bounds eps_0, so the last step needs it -- it is free downstream, theo:local_convergence_full already forcing a radius below 1/4). Invariant K lam is used NOWHERE: the identity is algebraic and the rest is L^2 geometry, so this step is strictly weaker in hypotheses than the paper's setting. NOT DONE, and the bucket stays D: the two phases, the Lojasiewicz rate, the crossover time T_0, the local exponential decay, the m_1 factor, and the LaSalle/compactness step prop:no_distant_equilibrium(3) needs. ASSEMBLED AND CLOSED 2026-09-12 (GFNBounds/Balance/TrainingSpeed.lean, sorry-free, axiom-swept). All three conjuncts: the visit-ratio identity and lambda_min = N_min/(2+sigma-bar); the global Lojasiewicz decay verbatim at the printed kappa and M; and the local exponential phase at rate rho_sigma/(2 m_1^2) in the ORIGINAL time variable, with m_0 <= m_1 <= ||u_0|| and the limit a constant density, hence balanced. T_0 = 4 L(mu_0) ||u_0||^6 sigma_*^4 / (w_min^2 eps_0^4 m_0^4 lambda_min^5) is EXACT, exponent for exponent. THE OPEN CONSUMER OBLIGATION OF theo:local_convergence_full IS DISCHARGED HERE: 1 <= B-hat_sigma is DERIVED, in eight lines, from sigma_* >= 1 (IsHitExp read at s_f, needing only s_0 != s_f, which MarkedGraph already carries) and lambda_min <= 1. Also discharged, none of them stated in the paper: eps_0 <= 1/2 (in fact <= 1/16); delta_0 <= 1/2, the side condition entry_time imposes and proofs.tex:927 does not check; and Theorem 10's C^3 hypothesis for g = (log x)^2, at a = 1/2, g''(1) = 2, M_3 = 24 -- the sharper of the two available constants. hcoer is DERIVED from prop:morozov_rate(2) rather than hypothesised, so the paper's closing sentence 'No mixing, spectral-gap or aperiodicity hypothesis is used' is LITERALLY TRUE of the Lean signature: it carries PathConnected, PositiveOnEdges, IsInvProb, IsGreen, IsHitExp, the weight bounds, hu and hflow, and nothing else. ONE DISCLOSED HYPOTHESIS, and it is why the bucket is B rather than A: hu : forall t x, 0 < u t x, the stand-in for prop:no_distant_equilibrium(3)'s compactness/boundary-blow-up step, which remains unformalized. FINDING: the theorem's conclusion never uses that item's LaSalle half. The convergence it states is theo:local_convergence's, quantitative and with a rate; the only thing the assembly consumes from item (3) is positivity of the trajectory at every time (mu_t ~ lambda, not merely mu_0 ~ lambda). The omega-limit sentence is not load-bearing for Theorem 6 -- the boundary blow-up alone is -- which is a real simplification available to the author. Two further readings, both harmless and both flagged: 'after an explicit time T_0 the flow enters the neighbourhood' reads as permanence while the loss budget yields an entry time t_1 <= T_0 (permanence is then supplied by Theorem 10, so the assembly is fine); and 'converges to the balanced flow of its sphere' is delivered as the displayed estimate plus Balanced at the constant limit, with no measure-level statement. NON-VACUITY on CycleExample's five-vertex cycle: general p in (0,1) gives lambda_min = (1-p)/(5-2p) with the visit-ratio identity checked and rho_sigma > 0; at p = 1/2, lambda_min = 1/8, sigma_* = 7, N_min = 1, B-hat_sigma = 14 sqrt 2, rho_sigma = 1/196, and T_0 = 3.147e16 -- finite and positive, and an honest picture of how loose the crossover bound is. THE DISCLOSED HYPOTHESIS IS GONE (2026-09-13), AND THE BUCKET MOVES B -> A. training_speed_full_of_pos discharges hu from positivity at time zero via BoundaryBlowup.flow_pos_graph -- item (3)'s compactness half, proved that day -- and training_speed_full_of_init discharges the edge floor too via exists_edgeFloor, which is never vacuous on a finite state space. The resulting signature carries ONLY hypotheses the paper has: path-connectedness, a backward policy positive on its edges, lambda its invariant probability, IsGreen and IsHitExp (Morozov's disclosed linear-system reading of N and sigma), 0 < w_min <= w <= w_sup, mu_0 ~ lambda -- the theorem's own 'from EVERY initialization' -- and the gradient flow itself, which this layer hypothesises rather than constructs everywhere, exactly as the paper's own proofs do. No trajectory hypothesis, no mixing constant, no spectral gap, no aperiodicity. Getting there needed twelve declarations across Flow, MassAscent and TrainingSpeed re-ranged from all of R to [0, infinity) -- kb 0022 in its pure form, since the proved positivity holds on the half-line and the assumed one was quantified over R. ONE HONEST COST, reported rather than absorbed: four of the twelve had to guard their CONCLUSION with 0 <= t as well (Flow.hasDerivAt_loss_flow, Flow.nrmL2_const_of_flow, MassAscent.mass_ascent_lyapunov and its graph form), so those four are incomparable to their former selves rather than strictly stronger. Nothing is lost: positivity below 0 is precisely what is no longer assumed, no call site uses them at a negative time, and the pointwise Flow.hasDerivAt_loss_flow_at -- which asks positivity at the single time it differentiates at -- is untouched and still fires at every real t. training_speed_full is kept in its conditional form and is what MorozovConsume cites."
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "PARTIAL 2026-09-12, sorry-free, axiom-swept, graduated -- its first Lean. ONE STEP ONLY: the local-phase rescaling. The sentence is written at proofs.tex:813, inside prop:no_distant_equilibrium(3)'s proof, and QUOTED by this theorem at proofs.tex:927. Proved: (P-I)u = (r-1)u; ||(P-I)u|| <= delta ||u||; ||u - Pi u|| <= B-hat delta ||u||; h := u/m - 1 is mean-zero with ||h|| <= B-hat delta U0 / m0; and delta_0 = eps_0 m_0 / (B-hat U_0) as an explicit formula with delta_0 <= eps_0 and delta_0 <= 1/2 -- the side condition entry_time requires and the paper never states. FINDING: (P-I)u = (r-1)u needs u(y) != 0, NOT lambda(y) != 0 -- the opposite variable from the one a reader would guard. At lambda(y) != 0 with u(y) = 0 it FAILS (witness on the two-state chain: LHS 1/2, RHS 0), while at lambda(y) = 0 Lean's total division makes both sides -u(y) and it holds vacuously. The paper is entitled to the line, since prop:no_distant_equilibrium hypothesises mu ~ lambda hence u > 0, but the hypothesis carrying it is positivity of the DENSITY. TWO HYPOTHESES ADDED: B-hat >= 1 (spent only in delta_0 <= eps_0; hcoer alone forces only B-hat >= 1/2, since ||A f|| <= 2 ||f_perp||) and eps_0 <= 1/2 (spent only in delta_0 <= 1/2; m_0 <= U_0 and B-hat >= 1 give the sharper delta_0 <= eps_0, but nothing in the data bounds eps_0, so the last step needs it -- it is free downstream, theo:local_convergence_full already forcing a radius below 1/4). Invariant K lam is used NOWHERE: the identity is algebraic and the rest is L^2 geometry, so this step is strictly weaker in hypotheses than the paper's setting. NOT DONE, and the bucket stays D: the two phases, the Lojasiewicz rate, the crossover time T_0, the local exponential decay, the m_1 factor, and the LaSalle/compactness step prop:no_distant_equilibrium(3) needs. ASSEMBLED AND CLOSED 2026-09-12 (GFNBounds/Balance/TrainingSpeed.lean, sorry-free, axiom-swept). All three conjuncts: the visit-ratio identity and lambda_min = N_min/(2+sigma-bar); the global Lojasiewicz decay verbatim at the printed kappa and M; and the local exponential phase at rate rho_sigma/(2 m_1^2) in the ORIGINAL time variable, with m_0 <= m_1 <= ||u_0|| and the limit a constant density, hence balanced. T_0 = 4 L(mu_0) ||u_0||^6 sigma_*^4 / (w_min^2 eps_0^4 m_0^4 lambda_min^5) is EXACT, exponent for exponent. THE OPEN CONSUMER OBLIGATION OF theo:local_convergence_full IS DISCHARGED HERE: 1 <= B-hat_sigma is DERIVED, in eight lines, from sigma_* >= 1 (IsHitExp read at s_f, needing only s_0 != s_f, which MarkedGraph already carries) and lambda_min <= 1. Also discharged, none of them stated in the paper: eps_0 <= 1/2 (in fact <= 1/16); delta_0 <= 1/2, the side condition entry_time imposes and proofs.tex:927 does not check; and Theorem 10's C^3 hypothesis for g = (log x)^2, at a = 1/2, g''(1) = 2, M_3 = 24 -- the sharper of the two available constants. hcoer is DERIVED from prop:morozov_rate(2) rather than hypothesised, so the paper's closing sentence 'No mixing, spectral-gap or aperiodicity hypothesis is used' is LITERALLY TRUE of the Lean signature: it carries PathConnected, PositiveOnEdges, IsInvProb, IsGreen, IsHitExp, the weight bounds, hu and hflow, and nothing else. ONE DISCLOSED HYPOTHESIS, and it is why the bucket is B rather than A: hu : forall t x, 0 < u t x, the stand-in for prop:no_distant_equilibrium(3)'s compactness/boundary-blow-up step, which remains unformalized. FINDING: the theorem's conclusion never uses that item's LaSalle half. The convergence it states is theo:local_convergence's, quantitative and with a rate; the only thing the assembly consumes from item (3) is positivity of the trajectory at every time (mu_t ~ lambda, not merely mu_0 ~ lambda). The omega-limit sentence is not load-bearing for Theorem 6 -- the boundary blow-up alone is -- which is a real simplification available to the author. Two further readings, both harmless and both flagged: 'after an explicit time T_0 the flow enters the neighbourhood' reads as permanence while the loss budget yields an entry time t_1 <= T_0 (permanence is then supplied by Theorem 10, so the assembly is fine); and 'converges to the balanced flow of its sphere' is delivered as the displayed estimate plus Balanced at the constant limit, with no measure-level statement. NON-VACUITY on CycleExample's five-vertex cycle: general p in (0,1) gives lambda_min = (1-p)/(5-2p) with the visit-ratio identity checked and rho_sigma > 0; at p = 1/2, lambda_min = 1/8, sigma_* = 7, N_min = 1, B-hat_sigma = 14 sqrt 2, rho_sigma = 1/196, and T_0 = 3.147e16 -- finite and positive, and an honest picture of how loose the crossover bound is. THE DISCLOSED HYPOTHESIS IS GONE (2026-09-13), AND THE BUCKET MOVES B -> A. training_speed_full_of_pos discharges hu from positivity at time zero via BoundaryBlowup.flow_pos_graph -- item (3)'s compactness half, proved that day -- and training_speed_full_of_init discharges the edge floor too via exists_edgeFloor, which is never vacuous on a finite state space. The resulting signature carries ONLY hypotheses the paper has: path-connectedness, a backward policy positive on its edges, lambda its invariant probability, IsGreen and IsHitExp (Morozov's disclosed linear-system reading of N and sigma), 0 < w_min <= w <= w_sup, mu_0 ~ lambda -- the theorem's own 'from EVERY initialization' -- and the gradient flow itself, which this layer hypothesises rather than constructs everywhere, exactly as the paper's own proofs do. No trajectory hypothesis, no mixing constant, no spectral gap, no aperiodicity. Getting there needed twelve declarations across Flow, MassAscent and TrainingSpeed re-ranged from all of R to [0, infinity) -- kb 0022 in its pure form, since the proved positivity holds on the half-line and the assumed one was quantified over R. ONE HONEST COST, reported rather than absorbed: four of the twelve had to guard their CONCLUSION with 0 <= t as well (Flow.hasDerivAt_loss_flow, Flow.nrmL2_const_of_flow, MassAscent.mass_ascent_lyapunov and its graph form), so those four are incomparable to their former selves rather than strictly stronger. Nothing is lost: positivity below 0 is precisely what is no longer assumed, no call site uses them at a negative time, and the pointwise Flow.hasDerivAt_loss_flow_at -- which asks positivity at the single time it differentiates at -- is untouched and still fires at every real t. training_speed_full is kept in its conditional form and is what MorozovConsume cites.\n\n2026-09-13, paper repairs verified by proof-checker: the printed statement now claims more than this Lean certifies. Item 3, the discrete global phase (register W2), has no Lean: positivity floor, the new descent lemma, discrete Lojasiewicz, entry at k_0(gamma), the limit, the necessity sentence, and the p_min / #V exception. Items 1-2 remain certified. Status closed -> partial, bucket A -> B."
     },
     {
       "label": "rem:visit_ratio",
       "source": "proofs.tex",
       "tex_span": [
-        936,
-        942
+        1013,
+        1019
       ],
-      "block_sha256": "ba7202303372d121bdac04323a2ddb2f894b40807854bb2deb12cd45b976a3ba",
+      "block_sha256": "68799535eee02f50931f241295dd411bbcd226125b4423a59e521fee3091b0be",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "B",
       "scope_notes": "A remark that interprets; nothing to certify."
     },
     {
       "label": "def:path_connected",
       "source": "proofs.tex",
       "tex_span": [
-        951,
-        953
+        1028,
+        1030
       ],
       "block_sha256": "4fac8be58e53dcd323cad3ed0d231a1d23308e5f8ec2047f7c863f37e21a8282",
       "lean_files": [
@@ -2006,8 +2006,8 @@
       "label": "def:loop_closure",
       "source": "proofs.tex",
       "tex_span": [
-        955,
-        957
+        1032,
+        1034
       ],
       "block_sha256": "c8f415ab75a0aee9850d3b7a42fd0085c4e3dd384c34c166924c880e65ce6a47",
       "lean_files": [
@@ -2028,8 +2028,8 @@
       "label": "theo:universality_graphs",
       "source": "proofs.tex",
       "tex_span": [
-        966,
-        1012
+        1043,
+        1089
       ],
       "block_sha256": "5692714877ffa727dccef35c6c2c05597f2d0e95494fbbaa9a210cc165faa864",
       "lean_files": [
@@ -2059,10 +2059,10 @@
       "label": "rem:loop_closure_necessary",
       "source": "proofs.tex",
       "tex_span": [
-        1014,
-        1016
+        1091,
+        1093
       ],
-      "block_sha256": "16cdbd0543edce0bcb4888e7e2b79547a3aa605af05f183a99749f5b7b3e02e0",
+      "block_sha256": "48a03946b308630cac1b354930d66cc432f70d78777056fbf3f9dd1d802c0b9d",
       "lean_files": [
         "GFNBounds/Graph/FrozenUnstable.lean"
       ],
@@ -2080,28 +2080,28 @@
       "label": "rem:graphs_vs_L2",
       "source": "proofs.tex",
       "tex_span": [
-        1018,
-        1020
+        1095,
+        1097
       ],
       "block_sha256": "6215ee3ecfe8d3dcd233cdf48af10d39fa203c9d3cd5b060e6c9057b28158028",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "B",
       "scope_notes": "A remark."
     },
     {
       "label": "rem:partial_support",
       "source": "proofs.tex",
       "tex_span": [
-        1022,
-        1024
+        1099,
+        1101
       ],
-      "block_sha256": "b1612e72f363a4d615d21cc306ba3423794669efef2c8cd482f5ae04148b0122",
+      "block_sha256": "298a6f1b0425e66f3ff4b5e4d89c87169b554254e14773074f69722c0b7a4027",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "B",
       "scope_notes": "A remark."
     },
     {
@@ -2140,11 +2140,11 @@
         52,
         62
       ],
-      "block_sha256": "6115308d51a85a07853c11c276fc92d3ea38eece89fc17d8a9a7d636e2440f4d",
+      "block_sha256": "bda633adb7a6a052cb0a8708b2d293225b230b3292bb15a8518d652d13f672b9",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "B",
       "scope_notes": "A remark."
     },
     {
@@ -2154,11 +2154,11 @@
         64,
         70
       ],
-      "block_sha256": "1a330811c5faf002e237947a2399933517ad135b5f9d4b00eb8e415748cef5f1",
+      "block_sha256": "0e9cd86091bc2ff1a90b31521bfab42785717eb0ffc88f2be3c932b041e755c2",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "B",
       "scope_notes": "A remark."
     },
     {
@@ -2168,7 +2168,7 @@
         74,
         96
       ],
-      "block_sha256": "6ba8c97022fd75d28a545fd060cc84af96027c784e16df37f9e5fd3c20ad68b9",
+      "block_sha256": "adf319ed2ec6a09ea765fee235464e9073631e098843c7f12ce4c3538d2ddfa5",
       "lean_files": [
         "GFNBounds/Silva/NoUniform.lean",
         "GFNBounds/Silva/Basic.lean"
@@ -2202,11 +2202,11 @@
         102,
         108
       ],
-      "block_sha256": "12be53177f868e529e401de480b9f703b850ef9e3562a54eeed33ed6f1122c53",
+      "block_sha256": "92b2855301cb27d34b9ecf58aa65bd00bcfaf6007ccdb90cac7ef10cf3d4f6c6",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "B",
       "scope_notes": "A remark."
     },
     {
@@ -2216,11 +2216,11 @@
         110,
         112
       ],
-      "block_sha256": "e66f5444edb260718c77f19257a1becda04595b17e6d99ba528c2591eb5e5543",
+      "block_sha256": "7be6e6cf3ad53c680620d618118f6cf4c0298aab2880fbba84af6d3707cf492e",
       "lean_files": [],
       "decls": [],
       "status": "open",
-      "bucket": "D",
+      "bucket": "B",
       "scope_notes": "A remark."
     }
   ],

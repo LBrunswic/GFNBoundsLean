@@ -306,24 +306,22 @@ theorem meanL2_perpL2 {lam : V → ℝ} (htot : ∑ x, lam x = 1) (f : V → ℝ
 
 /-- **`ḣ_t = −D_t` state by state**: the gradient-flow ODE for `μ_t = (1+h_t)λ`, read on `h`. -/
 theorem hasDerivAt_flowDev {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ}
-    (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) (x : V) :
+    (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) (ht : 0 ≤ t) (x : V) :
     HasDerivAt (fun s : ℝ => h s x) (-lossGrad K lam nu gd (fun z => 1 + h t z) x) t := by
-  have h1 := (hflow t x).sub_const 1
+  have h1 := (hflow t ht x).sub_const 1
   simpa using h1
 
-/-- `s ↦ h_s(x)` is continuous, being differentiable. -/
+/-- `s ↦ h_s(x)` is continuous at every `t ≥ 0`, being differentiable there. -/
 theorem continuous_flowDev {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ}
     (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (x : V) :
-    Continuous fun s : ℝ => h s x := by
-  have hdiff : Differentiable ℝ fun s : ℝ => h s x :=
-    fun s => (hasDerivAt_flowDev hflow s x).differentiableAt
-  exact hdiff.continuous
+    ∀ t : ℝ, 0 ≤ t → ContinuousAt (fun s : ℝ => h s x) t :=
+  fun t ht => (hasDerivAt_flowDev hflow t ht x).continuousAt
 
 /-- **`ṁ = −∫D dλ`** (`proofs.tex:641`) at `m_t = Πh_t`: `MassAscent.hasDerivAt_mass_flow`
 differentiates `∫u_t dλ`, and `Πh_t = ∫u_t dλ − 1` because `λ` is a probability. -/
 theorem hasDerivAt_mean {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ}
     (htot : ∑ x, lam x = 1)
-    (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) :
+    (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) (ht : 0 ≤ t) :
     HasDerivAt (fun s : ℝ => Graph.meanL2 lam (h s))
       (-Graph.meanL2 lam (lossGrad K lam nu gd fun z => 1 + h t z)) t := by
   have hshift : ∀ s : ℝ, Graph.meanL2 lam (h s)
@@ -334,7 +332,7 @@ theorem hasDerivAt_mean {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ →
     rw [Finset.sum_congr rfl fun x (_ : x ∈ (univ : Finset V)) => hexp x,
       Finset.sum_add_distrib, htot]
     ring
-  have hm := (hasDerivAt_mass_flow hflow t).sub_const 1
+  have hm := (hasDerivAt_mass_flow hflow t ht).sub_const 1
   simp only [hshift]
   exact hm
 
@@ -345,7 +343,7 @@ Assembled on the explicit sum `∑_x λ(x)h^⊥_t(x)²`: `(V → ℝ, ⟪·∣·
 too, and its contribution vanishes because `Πh^⊥ = 0`. -/
 theorem hasDerivAt_perp_sq {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ}
     (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1)
-    (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) :
+    (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) (ht : 0 ≤ t) :
     HasDerivAt (fun s : ℝ => Graph.nrmL2 lam (perpL2 lam (h s)) ^ 2)
       (-(2 * Graph.ipL2 lam (perpL2 lam (h t))
           (lossGrad K lam nu gd fun z => 1 + h t z))) t := by
@@ -354,7 +352,7 @@ theorem hasDerivAt_perp_sq {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ 
   have hdp : ∀ x : V, HasDerivAt (fun s : ℝ => perpL2 lam (h s) x) (-D x - -md) t := by
     intro x
     simp only [perpL2_apply]
-    exact (hasDerivAt_flowDev hflow t x).sub (hasDerivAt_mean htot hflow t)
+    exact (hasDerivAt_flowDev hflow t ht x).sub (hasDerivAt_mean htot hflow t ht)
   have hsq : (fun s : ℝ => Graph.nrmL2 lam (perpL2 lam (h s)) ^ 2)
       = fun s : ℝ => ∑ x, lam x * (perpL2 lam (h s) x * perpL2 lam (h s) x) := by
     funext s
@@ -382,32 +380,37 @@ theorem hasDerivAt_perp_sq {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ 
 
 /-! ### Continuity of the energy density `s ↦ ‖Ah^⊥_s‖²`
 
-The integrals of Steps 2 and 3 are integrals of this one function. It is continuous for a reason
-that has nothing to do with `g`: `A` and `Π` are finite linear combinations of the coordinates,
-and each coordinate is differentiable in time. `g'` is never assumed continuous anywhere in this
+The integrals of Steps 2 and 3 are integrals of this one function. It is continuous at every
+`t ≥ 0` — the flow is only asked to exist there — for a reason that has nothing to do with `g`: `A`
+and `Π` are finite linear combinations of the coordinates, and each coordinate is differentiable
+in time. `g'` is never assumed continuous anywhere in this
 file, which is why no argument below integrates `Ḋ` or `ṁ` directly. -/
 
 theorem continuous_perp_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ}
     (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (x : V) :
-    Continuous fun s : ℝ => perpL2 lam (h s) x := by
+    ∀ t : ℝ, 0 ≤ t → ContinuousAt (fun s : ℝ => perpL2 lam (h s) x) t := by
+  intro t ht
   simp only [perpL2_apply, Graph.meanL2]
-  exact (continuous_flowDev hflow x).sub
-    (continuous_finsetSum _ fun y _ => continuous_const.mul (continuous_flowDev hflow y))
+  exact (continuous_flowDev hflow x t ht).sub
+    (tendsto_finsetSum _ fun y _ => continuousAt_const.mul (continuous_flowDev hflow y t ht))
 
 theorem continuous_Aop_perp_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ}
     (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (y : V) :
-    Continuous fun s : ℝ => Aop K lam (perpL2 lam (h s)) y := by
+    ∀ t : ℝ, 0 ≤ t → ContinuousAt (fun s : ℝ => Aop K lam (perpL2 lam (h s)) y) t := by
+  intro t ht
   simp only [Aop_apply, Core.densAct_apply]
-  exact ((continuous_finsetSum _ fun x _ =>
-      continuous_const.mul (continuous_perp_flow hflow x)).div_const _).sub
-    (continuous_perp_flow hflow y)
+  exact ((tendsto_finsetSum _ fun x _ =>
+      continuousAt_const.mul (continuous_perp_flow hflow x t ht)).div_const _).sub
+    (continuous_perp_flow hflow y t ht)
 
-/-- **`s ↦ ‖Ah^⊥_s‖²` is continuous**, hence interval-integrable — the only integrability fact
-Steps 2 and 3 need. -/
+/-- **`s ↦ ‖Ah^⊥_s‖²` is continuous at every `t ≥ 0`**, hence interval-integrable on `ℝ₊` — the
+only integrability fact Steps 2 and 3 need. -/
 theorem continuous_energy_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ}
     (hnn : ∀ x, 0 ≤ lam x)
     (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) :
-    Continuous fun s : ℝ => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2 := by
+    ∀ t : ℝ, 0 ≤ t →
+      ContinuousAt (fun s : ℝ => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2) t := by
+  intro t ht
   have hrw : (fun s : ℝ => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2)
       = fun s : ℝ => ∑ x, lam x * (Aop K lam (perpL2 lam (h s)) x
           * Aop K lam (perpL2 lam (h s)) x) := by
@@ -415,8 +418,8 @@ theorem continuous_energy_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : 
     rw [Graph.sq_nrmL2 hnn]
     rfl
   rw [hrw]
-  exact continuous_finsetSum _ fun x _ => continuous_const.mul
-    ((continuous_Aop_perp_flow hflow x).mul (continuous_Aop_perp_flow hflow x))
+  exact tendsto_finsetSum _ fun x _ => continuousAt_const.mul
+    ((continuous_Aop_perp_flow hflow x t ht).mul (continuous_Aop_perp_flow hflow x t ht))
 
 /-! ### Step 2, integrated: the exponential decay of `‖h^⊥_t‖` -/
 
@@ -446,8 +449,8 @@ theorem perp_decay_on {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → �
   set F : ℝ → ℝ := fun s => Graph.nrmL2 lam (perpL2 lam (h s)) ^ 2 with hF
   set Dv : ℝ → ℝ := fun s => -(2 * Graph.ipL2 lam (perpL2 lam (h s))
       (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + h s z)) with hDv
-  have hFd : ∀ s : ℝ, HasDerivAt F (Dv s) s :=
-    fun s => hasDerivAt_perp_sq (fun x => (hlam x).le) htot hflow s
+  have hFd : ∀ s : ℝ, 0 ≤ s → HasDerivAt F (Dv s) s :=
+    fun s hs => hasDerivAt_perp_sq (fun x => (hlam x).le) htot hflow s hs
   have hFbound : ∀ s ∈ Set.Ico (0:ℝ) T, Dv s ≤ -rhoL g2 wmin Bhat * F s + 0 := by
     intro s hs
     have hlow := energy_lower_perp hK hinv hlam hg2 hM3 ha0 hwsup0 hwsup hwmin0 hwmin hB0 hcoer
@@ -455,11 +458,11 @@ theorem perp_decay_on {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → �
     simp only [hDv, hF, add_zero]
     linarith
   have hcont : ContinuousOn F (Set.Icc 0 T) :=
-    fun s _ => ((hFd s).continuousAt).continuousWithinAt
+    fun s hs => ((hFd s hs.1).continuousAt).continuousWithinAt
   have hslope : ∀ s ∈ Set.Ico (0:ℝ) T, ∀ r : ℝ, Dv s < r →
       ∃ᶠ z in nhdsWithin s (Set.Ioi s), (z - s)⁻¹ * (F z - F s) < r := by
-    intro s _ r hr
-    have := (hFd s).hasDerivWithinAt.liminf_right_slope_le hr
+    intro s hs r hr
+    have := (hFd s hs.1).hasDerivWithinAt.liminf_right_slope_le hr
     simpa [slope, vsub_eq_sub] using this
   have hgron := le_gronwallBound_of_liminf_deriv_right_le (f := F) (f' := Dv) (δ := F 0)
     (K := -rhoL g2 wmin Bhat) (ε := 0) hcont hslope le_rfl hFbound t ⟨ht0, htT⟩
@@ -506,38 +509,51 @@ theorem energy_integral_Icc {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ 
       ≤ Graph.nrmL2 lam (perpL2 lam (h t₀)) ^ 2 := by
   have hnn : ∀ x, 0 ≤ lam x := fun x => (hlam x).le
   set N : ℝ → ℝ := fun s => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2 with hN
-  have hNc : Continuous N := continuous_energy_flow hnn hflow
-  have hNnn : ∀ s : ℝ, 0 ≤ N s := fun s => sq_nonneg _
-  set J : ℝ → ℝ := fun τ => ∫ s in t₀..τ, N s with hJ
-  have hJd : ∀ τ : ℝ, HasDerivAt J (N τ) τ := fun τ =>
+  have hNc0 : ∀ s : ℝ, 0 ≤ s → ContinuousAt N s := continuous_energy_flow hnn hflow
+  -- `N` is known continuous on `ℝ₊` only; `s ↦ N(max s 0)` is continuous and agrees there
+  set Nm : ℝ → ℝ := fun s => N (max s 0) with hNm
+  have hNc : Continuous Nm := continuous_iff_continuousAt.2 fun s =>
+    ContinuousAt.comp (f := fun r : ℝ => max r 0) (x := s) (hNc0 _ (le_max_right s 0))
+      (continuous_id.max continuous_const).continuousAt
+  have hNmN : ∀ s : ℝ, 0 ≤ s → Nm s = N s := fun s hs => by simp only [hNm, max_eq_left hs]
+  set J : ℝ → ℝ := fun τ => ∫ s in t₀..τ, Nm s with hJ
+  have hJd : ∀ τ : ℝ, HasDerivAt J (Nm τ) τ := fun τ =>
     intervalIntegral.integral_hasDerivAt_right (hNc.intervalIntegrable _ _)
       (hNc.stronglyMeasurableAtFilter _ _) hNc.continuousAt
   set F : ℝ → ℝ := fun s => Graph.nrmL2 lam (perpL2 lam (h s)) ^ 2 with hF
   set Dv : ℝ → ℝ := fun s => -(2 * Graph.ipL2 lam (perpL2 lam (h s))
       (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + h s z)) with hDv
-  have hFd : ∀ s : ℝ, HasDerivAt F (Dv s) s :=
-    fun s => hasDerivAt_perp_sq hnn htot hflow s
+  have hFd : ∀ s : ℝ, 0 ≤ s → HasDerivAt F (Dv s) s :=
+    fun s hs => hasDerivAt_perp_sq hnn htot hflow s hs
   set Phi : ℝ → ℝ := fun τ => F τ + g2 * wmin * J τ with hPhi
-  have hPhid : ∀ τ : ℝ, HasDerivAt Phi (Dv τ + g2 * wmin * N τ) τ :=
-    fun τ => (hFd τ).add ((hJd τ).const_mul (g2 * wmin))
-  have hPhi' : ∀ τ ∈ Set.Icc t₀ t₁, Dv τ + g2 * wmin * N τ ≤ 0 := by
+  have hPhid : ∀ τ : ℝ, 0 ≤ τ → HasDerivAt Phi (Dv τ + g2 * wmin * Nm τ) τ :=
+    fun τ hτ => (hFd τ hτ).add ((hJd τ).const_mul (g2 * wmin))
+  have hPhi' : ∀ τ ∈ Set.Icc t₀ t₁, Dv τ + g2 * wmin * Nm τ ≤ 0 := by
     intro τ hτ
     have hlow := energy_lower hK hinv hlam hg2 hM3 ha0 hwsup0 hwsup hwmin0 hwmin hB0 hcoer
       htaylor (hwin τ ⟨le_trans h0 hτ.1, le_trans hτ.2 h1T⟩) heps0 heps heps1
+    rw [hNmN τ (le_trans h0 hτ.1)]
     simp only [hDv, hN]
     linarith
   have hanti : AntitoneOn Phi (Set.Icc t₀ t₁) :=
     antitoneOn_of_deriv_nonpos (convex_Icc _ _)
-      (fun τ _ => ((hPhid τ).continuousAt).continuousWithinAt)
-      (fun τ _ => ((hPhid τ).differentiableAt).differentiableWithinAt)
+      (fun τ hτ => ((hPhid τ (le_trans h0 hτ.1)).continuousAt).continuousWithinAt)
       (fun τ hτ => by
-        rw [(hPhid τ).deriv]
         rw [interior_Icc] at hτ
+        exact ((hPhid τ (le_trans h0 hτ.1.le)).differentiableAt).differentiableWithinAt)
+      (fun τ hτ => by
+        rw [interior_Icc] at hτ
+        rw [(hPhid τ (le_trans h0 hτ.1.le)).deriv]
         exact hPhi' τ (Set.Ioo_subset_Icc_self hτ))
   have hstep := hanti (Set.left_mem_Icc.2 h01) (Set.right_mem_Icc.2 h01) h01
   have hJ0 : J t₀ = 0 := intervalIntegral.integral_same
+  have hJ1 : J t₁ = ∫ s in t₀..t₁, N s := by
+    refine intervalIntegral.integral_congr fun s hs => ?_
+    rw [Set.uIcc_of_le h01] at hs
+    exact hNmN s (le_trans h0 hs.1)
   have hFnn : 0 ≤ F t₁ := sq_nonneg _
   simp only [hPhi, hJ0, mul_zero, add_zero] at hstep
+  rw [hJ1] at hstep
   linarith
 
 /-- **`g''(1)w_min ∫_0^T‖Ah_s^⊥‖²ds ≤ ‖h_0^⊥‖²`** (`proofs.tex:639`), the display as printed. -/
@@ -583,10 +599,16 @@ theorem energy_integral_Ioi {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ 
       ≤ Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 := by
   have hnn : ∀ x, 0 ≤ lam x := fun x => (hlam x).le
   set N : ℝ → ℝ := fun s => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2 with hN
-  have hNc : Continuous N := continuous_energy_flow hnn hflow
-  have hNnn : ∀ s : ℝ, 0 ≤ N s := fun s => sq_nonneg _
-  set J : ℝ → ℝ := fun τ => ∫ s in (0:ℝ)..τ, N s with hJ
-  have hJd : ∀ τ : ℝ, HasDerivAt J (N τ) τ := fun τ =>
+  have hNc0 : ∀ s : ℝ, 0 ≤ s → ContinuousAt N s := continuous_energy_flow hnn hflow
+  -- `N` is known continuous on `ℝ₊` only; `s ↦ N(max s 0)` is continuous and agrees there
+  set Nm : ℝ → ℝ := fun s => N (max s 0) with hNm
+  have hNc : Continuous Nm := continuous_iff_continuousAt.2 fun s =>
+    ContinuousAt.comp (f := fun r : ℝ => max r 0) (x := s) (hNc0 _ (le_max_right s 0))
+      (continuous_id.max continuous_const).continuousAt
+  have hNmN : ∀ s : ℝ, 0 ≤ s → Nm s = N s := fun s hs => by simp only [hNm, max_eq_left hs]
+  have hNnn : ∀ s : ℝ, 0 ≤ Nm s := fun s => sq_nonneg _
+  set J : ℝ → ℝ := fun τ => ∫ s in (0:ℝ)..τ, Nm s with hJ
+  have hJd : ∀ τ : ℝ, HasDerivAt J (Nm τ) τ := fun τ =>
     intervalIntegral.integral_hasDerivAt_right (hNc.intervalIntegrable _ _)
       (hNc.stronglyMeasurableAtFilter _ _) hNc.continuousAt
   have hJmono : Monotone J :=
@@ -597,6 +619,11 @@ theorem energy_integral_Ioi {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ 
   have hbound : ∀ τ : ℝ, 0 ≤ τ → g2 * wmin * J τ
       ≤ Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 := by
     intro τ hτ
+    have hJτ : J τ = ∫ s in (0:ℝ)..τ, N s := by
+      refine intervalIntegral.integral_congr fun s hs => ?_
+      rw [Set.uIcc_of_le hτ] at hs
+      exact hNmN s hs.1
+    rw [hJτ]
     exact energy_integral_on (T := τ) hK hinv hlam htot hg2 hM3 ha0 hwsup0 hwsup hwmin0 hwmin
       hB0 hcoer htaylor heps0 heps heps1 hflow (fun s hs => hwin s hs.1) hτ
   have hbdd : BddAbove (Set.range J) := by
@@ -612,8 +639,10 @@ theorem energy_integral_Ioi {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ 
       linarith
   have hlim := tendsto_atTop_ciSup hJmono hbdd
   have hint : (∫ x in Set.Ioi (0:ℝ), N x) = (⨆ i, J i) - J 0 :=
-    MeasureTheory.integral_Ioi_of_hasDerivAt_of_nonneg
-      ((hJd 0).continuousAt).continuousWithinAt (fun x _ => hJd x) (fun x _ => hNnn x) hlim
+    MeasureTheory.integral_Ioi_of_hasDerivAt_of_nonneg (g' := N)
+      ((hJd 0).continuousAt).continuousWithinAt
+      (fun x hx => (hJd x).congr_deriv (hNmN x (Set.mem_Ioi.mp hx).le))
+      (fun x _ => sq_nonneg _) hlim
   have hlim' : Filter.Tendsto (fun τ => g2 * wmin * J τ) Filter.atTop
       (nhds (g2 * wmin * ⨆ i, J i)) := hlim.const_mul _
   have hle : g2 * wmin * (⨆ i, J i) ≤ Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 :=
@@ -760,47 +789,64 @@ theorem abs_mean_sub_le_energy_integral {K : V → V → ℝ} {lam w : V → ℝ
   have hnn : ∀ x, 0 ≤ lam x := fun x => (hlam x).le
   set c6 : ℝ := C6 (Cg g2 a M3) wsup with hc6
   set N : ℝ → ℝ := fun s => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2 with hN
-  have hNc : Continuous N := continuous_energy_flow hnn hflow
-  set J : ℝ → ℝ := fun τ => ∫ s in t₀..τ, N s with hJ
-  have hJd : ∀ τ : ℝ, HasDerivAt J (N τ) τ := fun τ =>
+  have hNc0 : ∀ s : ℝ, 0 ≤ s → ContinuousAt N s := continuous_energy_flow hnn hflow
+  -- `N` is known continuous on `ℝ₊` only; `s ↦ N(max s 0)` is continuous and agrees there
+  set Nm : ℝ → ℝ := fun s => N (max s 0) with hNm
+  have hNc : Continuous Nm := continuous_iff_continuousAt.2 fun s =>
+    ContinuousAt.comp (f := fun r : ℝ => max r 0) (x := s) (hNc0 _ (le_max_right s 0))
+      (continuous_id.max continuous_const).continuousAt
+  have hNmN : ∀ s : ℝ, 0 ≤ s → Nm s = N s := fun s hs => by simp only [hNm, max_eq_left hs]
+  set J : ℝ → ℝ := fun τ => ∫ s in t₀..τ, Nm s with hJ
+  have hJd : ∀ τ : ℝ, HasDerivAt J (Nm τ) τ := fun τ =>
     intervalIntegral.integral_hasDerivAt_right (hNc.intervalIntegrable _ _)
       (hNc.stronglyMeasurableAtFilter _ _) hNc.continuousAt
   set Th : ℝ → ℝ := fun τ => Graph.meanL2 lam (h τ) with hTh
   set Dm : ℝ → ℝ := fun τ =>
     Graph.meanL2 lam (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + h τ z) with hDm
-  have hThd : ∀ τ : ℝ, HasDerivAt Th (-Dm τ) τ := fun τ => hasDerivAt_mean htot hflow τ
-  have hbnd : ∀ τ ∈ Set.Icc t₀ t₁, |Dm τ| ≤ c6 * N τ := by
+  have hThd : ∀ τ : ℝ, 0 ≤ τ → HasDerivAt Th (-Dm τ) τ :=
+    fun τ hτ => hasDerivAt_mean htot hflow τ hτ
+  have hbnd : ∀ τ ∈ Set.Icc t₀ t₁, |Dm τ| ≤ c6 * Nm τ := by
     intro τ hτ
+    rw [hNmN τ (le_trans h0 hτ.1)]
     exact abs_deriv_mean_le hKnn hinv hlam hg2 hM3 ha0 hwsup0 hwsup htaylor
       (hwin τ ⟨le_trans h0 hτ.1, le_trans hτ.2 h1T⟩) heps0 heps
-  have hd1 : ∀ τ : ℝ, HasDerivAt (fun z : ℝ => c6 * J z - Th z) (c6 * N τ - -Dm τ) τ :=
-    fun τ => ((hJd τ).const_mul c6).sub (hThd τ)
-  have hd2 : ∀ τ : ℝ, HasDerivAt (fun z : ℝ => c6 * J z + Th z) (c6 * N τ + -Dm τ) τ :=
-    fun τ => ((hJd τ).const_mul c6).add (hThd τ)
+  have hd1 : ∀ τ : ℝ, 0 ≤ τ →
+      HasDerivAt (fun z : ℝ => c6 * J z - Th z) (c6 * Nm τ - -Dm τ) τ :=
+    fun τ hτ => ((hJd τ).const_mul c6).sub (hThd τ hτ)
+  have hd2 : ∀ τ : ℝ, 0 ≤ τ →
+      HasDerivAt (fun z : ℝ => c6 * J z + Th z) (c6 * Nm τ + -Dm τ) τ :=
+    fun τ hτ => ((hJd τ).const_mul c6).add (hThd τ hτ)
   have hmono1 : MonotoneOn (fun τ => c6 * J τ - Th τ) (Set.Icc t₀ t₁) := by
     refine monotoneOn_of_deriv_nonneg (convex_Icc _ _)
-      (fun τ _ => (((hd1 τ)).continuousAt).continuousWithinAt)
-      (fun τ _ => (((hd1 τ)).differentiableAt).differentiableWithinAt)
-      (fun τ hτ => ?_)
-    rw [(hd1 τ).deriv]
+      (fun τ hτ => (((hd1 τ (le_trans h0 hτ.1))).continuousAt).continuousWithinAt)
+      (fun τ hτ => ?_) (fun τ hτ => ?_)
+    · rw [interior_Icc] at hτ
+      exact (((hd1 τ (le_trans h0 hτ.1.le))).differentiableAt).differentiableWithinAt
     rw [interior_Icc] at hτ
+    rw [(hd1 τ (le_trans h0 hτ.1.le)).deriv]
     have hb := hbnd τ (Set.Ioo_subset_Icc_self hτ)
     have h2 := (abs_le.mp hb).1
     linarith
   have hmono2 : MonotoneOn (fun τ => c6 * J τ + Th τ) (Set.Icc t₀ t₁) := by
     refine monotoneOn_of_deriv_nonneg (convex_Icc _ _)
-      (fun τ _ => (((hd2 τ)).continuousAt).continuousWithinAt)
-      (fun τ _ => (((hd2 τ)).differentiableAt).differentiableWithinAt)
-      (fun τ hτ => ?_)
-    rw [(hd2 τ).deriv]
+      (fun τ hτ => (((hd2 τ (le_trans h0 hτ.1))).continuousAt).continuousWithinAt)
+      (fun τ hτ => ?_) (fun τ hτ => ?_)
+    · rw [interior_Icc] at hτ
+      exact (((hd2 τ (le_trans h0 hτ.1.le))).differentiableAt).differentiableWithinAt
     rw [interior_Icc] at hτ
+    rw [(hd2 τ (le_trans h0 hτ.1.le)).deriv]
     have hb := hbnd τ (Set.Ioo_subset_Icc_self hτ)
     have h2 := (abs_le.mp hb).2
     linarith
   have e1 := hmono1 (Set.left_mem_Icc.2 h01) (Set.right_mem_Icc.2 h01) h01
   have e2 := hmono2 (Set.left_mem_Icc.2 h01) (Set.right_mem_Icc.2 h01) h01
   have hJ0 : J t₀ = 0 := intervalIntegral.integral_same
+  have hJ1 : J t₁ = ∫ s in t₀..t₁, N s := by
+    refine intervalIntegral.integral_congr fun s hs => ?_
+    rw [Set.uIcc_of_le h01] at hs
+    exact hNmN s (le_trans h0 hs.1)
   simp only [hJ0, mul_zero, zero_sub, zero_add] at e1 e2
+  rw [hJ1] at e1 e2
   rw [abs_le]
   constructor <;> linarith
 
@@ -927,8 +973,13 @@ theorem mean_cauchy_on {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → �
       ≤ 4 * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2
           * Real.exp (-(rhoL g2 wmin Bhat * s)) / rhoL g2 wmin Bhat := by
     have hMk : Core.IsMarkov K := hK.toIsMarkov hlam
-    have hNc : Continuous fun r : ℝ => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h r))) ^ 2 :=
+    have hNc0 : ∀ r : ℝ, 0 ≤ r →
+        ContinuousAt (fun r : ℝ => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h r))) ^ 2) r :=
       continuous_energy_flow (fun x => (hlam x).le) hflow
+    have hNc : ContinuousOn (fun r : ℝ => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h r))) ^ 2)
+        (Set.uIcc s t) := fun r hr => by
+      rw [Set.uIcc_of_le hst] at hr
+      exact (hNc0 r (le_trans hs0 hr.1)).continuousWithinAt
     have hEc : Continuous fun r : ℝ => Real.exp (-(rhoL g2 wmin Bhat * r)) := by fun_prop
     have hgc : Continuous fun r : ℝ =>
         4 * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2
@@ -956,7 +1007,7 @@ theorem mean_cauchy_on {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → �
     have hmono : (∫ r in s..t, Graph.nrmL2 lam (Aop K lam (perpL2 lam (h r))) ^ 2)
         ≤ ∫ r in s..t, 4 * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2
             * Real.exp (-(rhoL g2 wmin Bhat * r)) :=
-      intervalIntegral.integral_mono_on hst (hNc.intervalIntegrable _ _)
+      intervalIntegral.integral_mono_on hst hNc.intervalIntegrable
         (hgc.intervalIntegrable _ _) hNle
     have hEint : (∫ r in s..t, Real.exp (-(rhoL g2 wmin Bhat * r)))
         = (Real.exp (-(rhoL g2 wmin Bhat * s)) - Real.exp (-(rhoL g2 wmin Bhat * t)))

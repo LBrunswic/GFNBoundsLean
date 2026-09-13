@@ -3,11 +3,11 @@ import GFNBounds.Graph.Setting
 /-!
 # The mass identity: a strictly unimodal generator admits no distant equilibrium
 
-**`prop:no_distant_equilibrium`** **item *(1)*** — statement `proofs.tex:789–790` (inside the
-statement `proofs.tex:787–798`), proof `proofs.tex:801–805` (inside `proofs.tex:800–814`).
+**`prop:no_distant_equilibrium`** **item *(1)*** — statement `proofs.tex:810–811` (inside the
+statement `proofs.tex:808–819`), proof `proofs.tex:822–826` (inside `proofs.tex:821–835`).
 **`theo:global_dichotomy_full`** **item *(1)***, its mass-identity half — statement
-`proofs.tex:820–826` (its standing hypotheses at `:821`, item *(1)* at `:823`), proof
-`proofs.tex:828–830`, which reads "item *1*
+`proofs.tex:841–847` (its standing hypotheses at `:842`, item *(1)* at `:844`), proof
+`proofs.tex:849–851`, which reads "item *1*
 is Proposition `prop:no_distant_equilibrium`, items *(1)* and *(3)*". (The bold-backtick form of
 each label is what `scripts/trace_check.py` and the paper-side ledger machine-read; a label
 mentioned only in prose is not a claim to certify it.)
@@ -171,14 +171,14 @@ theorem integral_funAct {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K
 /-! ### The gradient density, taken as a definition -/
 
 /-- **`D = Qφ − rφ`**, the gradient density of `prop:no_distant_equilibrium`'s proof
-(`proofs.tex:801`).
+(`proofs.tex:822`).
 
 **This is a definition, not a derivation.** That `D` represents `∇^λ 𝓛_{g,ν}(μ)` is
 `theo:first_variation_full` (`proofs.tex:447–483`), which is not formalized; see the module
 SCOPE. Everything below is a theorem about this expression. -/
 def gradDensity (K : V → V → ℝ) (r φ : V → ℝ) : V → ℝ := fun x => funAct K φ x - r x * φ x
 
-/-- **`∫ D dλ = ∫ φ(1 − r) dλ`** (`proofs.tex:803`), from `integral_funAct`. -/
+/-- **`∫ D dλ = ∫ φ(1 − r) dλ`** (`proofs.tex:824`), from `integral_funAct`. -/
 theorem integral_gradDensity {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K lam) (r φ : V → ℝ) :
     ∑ x, lam x * gradDensity K r φ x = ∑ x, lam x * (φ x * (1 - r x)) := by
   have hexp : ∀ x : V, lam x * gradDensity K r φ x
@@ -188,7 +188,7 @@ theorem integral_gradDensity {K : V → V → ℝ} {lam : V → ℝ} (h : Invari
     integral_funAct h φ, ← Finset.sum_sub_distrib]
   exact Finset.sum_congr rfl fun x _ => by ring
 
-/-- **`∫ D dλ = ∫ g'(r)(1 − r)(dν/dμ) dλ`** (`proofs.tex:803`), the mass identity itself, at
+/-- **`∫ D dλ = ∫ g'(r)(1 − r)(dν/dμ) dλ`** (`proofs.tex:824`), the mass identity itself, at
 `φ = g'(r)·(dν/dμ)`. No property of `gd` is used. -/
 theorem integral_gradDensity_potential {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K lam)
     (gd : ℝ → ℝ) (r w : V → ℝ) :
@@ -199,13 +199,13 @@ theorem integral_gradDensity_potential {K : V → V → ℝ} {lam : V → ℝ} (
 
 /-! ### Strict unimodality, pointwise -/
 
-/-- **Strict unimodality** (`proofs.tex:788`): `sign g'(x) = sign(x − 1)` for `x ≠ 1`, on the
+/-- **Strict unimodality** (`proofs.tex:809`): `sign g'(x) = sign(x − 1)` for `x ≠ 1`, on the
 domain `ℝ_+^*` of the generator. "Same sign, and non-zero" is `0 < g'(x)(x − 1)`.
 
 Only the derivative is carried; `g` itself never appears. See the module SCOPE. -/
 def StrictlyUnimodal (gd : ℝ → ℝ) : Prop := ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < gd x * (x - 1)
 
-/-- **`g'(r)(1 − r) < 0` wherever `r ≠ 1`** (`proofs.tex:805`), weighted by `λ > 0` and
+/-- **`g'(r)(1 − r) < 0` wherever `r ≠ 1`** (`proofs.tex:826`), weighted by `λ > 0` and
 `dν/dμ > 0`. -/
 theorem term_neg {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ}
     (hl : 0 < l) (hr : 0 < rx) (hw : 0 < wx) (hne : rx ≠ 1) :
@@ -215,7 +215,7 @@ theorem term_neg {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ}
   rw [hrw, neg_lt_zero]
   exact mul_pos (mul_pos hl hw) hpos
 
-/-- The integrand of the mass identity is nonpositive (`proofs.tex:805`). -/
+/-- The integrand of the mass identity is nonpositive (`proofs.tex:826`). -/
 theorem term_nonpos {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ}
     (hl : 0 ≤ l) (hr : 0 < rx) (hw : 0 < wx) :
     l * (gd rx * (1 - rx) * wx) ≤ 0 := by
@@ -225,7 +225,7 @@ theorem term_nonpos {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ
     · exact (term_neg hg hlt hr hw h).le
     · rw [← heq]; simp
 
-/-- It vanishes exactly at `r = 1` (`proofs.tex:805`), where `λ > 0` and `dν/dμ > 0` are what
+/-- It vanishes exactly at `r = 1` (`proofs.tex:826`), where `λ > 0` and `dν/dμ > 0` are what
 turns "vanishes" into "`r = 1`". -/
 theorem term_eq_zero_iff {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ}
     (hl : 0 < l) (hr : 0 < rx) (hw : 0 < wx) :
@@ -242,10 +242,10 @@ theorem term_eq_zero_iff {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx 
 which is `d(μT)/dλ · λ` for `μ = uλ`. -/
 def pushMass (K : V → V → ℝ) (lam u : V → ℝ) : V → ℝ := fun y => ∑ x, lam x * u x * K x y
 
-/-- **`μ` is balanced**: `μT = μ` (`proofs.tex:805`). -/
+/-- **`μ` is balanced**: `μT = μ` (`proofs.tex:826`). -/
 def Balanced (K : V → V → ℝ) (lam u : V → ℝ) : Prop := ∀ y, pushMass K lam u y = lam y * u y
 
-/-- **`r = d(μT)/dμ`** (`proofs.tex:448`, restated at `proofs.tex:821`) for `μ = uλ`. -/
+/-- **`r = d(μT)/dμ`** (`proofs.tex:448`, restated at `proofs.tex:842`) for `μ = uλ`. -/
 noncomputable def ratio (K : V → V → ℝ) (lam u : V → ℝ) : V → ℝ :=
   fun y => pushMass K lam u y / (lam y * u y)
 
@@ -275,7 +275,7 @@ theorem ratio_pos {K : V → V → ℝ} {lam u : V → ℝ} (hinv : Invariant K 
     exact mul_pos (hu x0) hx0
   exact div_pos hnum (mul_pos (hlam y) (hu y))
 
-/-- **`r ≡ 1` if and only if `μT = μ`** (`proofs.tex:805`: "`r = 1` […] `μ`-a.e., i.e.
+/-- **`r ≡ 1` if and only if `μT = μ`** (`proofs.tex:826`: "`r = 1` […] `μ`-a.e., i.e.
 `μT = μ`"). -/
 theorem ratio_eq_one_iff_balanced {K : V → V → ℝ} {lam u : V → ℝ}
     (hpos : ∀ y, 0 < lam y * u y) :
@@ -301,8 +301,8 @@ noncomputable def lossGradDensity (K : V → V → ℝ) (lam u w : V → ℝ) (g
 noncomputable def gradMass (K : V → V → ℝ) (lam u w : V → ℝ) (gd : ℝ → ℝ) : ℝ :=
   ∑ x, lam x * lossGradDensity K lam u w gd x
 
-/-- **`prop:no_distant_equilibrium`*(1)*, the mass identity** (statement `proofs.tex:789–790`,
-proof `proofs.tex:801–805`).
+/-- **`prop:no_distant_equilibrium`*(1)*, the mass identity** (statement `proofs.tex:810–811`,
+proof `proofs.tex:822–826`).
 
 The three conjuncts are the paper's three assertions, in its order: the total mass of
 `∇^λ 𝓛_{g,ν}(μ)` *is* `∫ g'(r)(1 − r)(dν/dμ) dλ`; it is `≤ 0`; and it vanishes if and only if
@@ -340,8 +340,8 @@ theorem no_distant_equilibrium_one {K : V → V → ℝ} {lam u w : V → ℝ} {
       rw [h x]
       ring
 
-/-- **"Every critical point of `𝓛_{g,ν}` is therefore balanced"** (`proofs.tex:790`, proof
-`proofs.tex:805`: "at a critical point `D = 0`, so the mass vanishes and `μ` is balanced").
+/-- **"Every critical point of `𝓛_{g,ν}` is therefore balanced"** (`proofs.tex:811`, proof
+`proofs.tex:826`: "at a critical point `D = 0`, so the mass vanishes and `μ` is balanced").
 
 *Critical* is read as `D = 0` pointwise, `D` being `lossGradDensity`. That this is criticality of
 `𝓛_{g,ν}` is `theo:first_variation_full`'s identification and is **not** established here; see the
@@ -356,8 +356,8 @@ theorem balanced_of_critical {K : V → V → ℝ} {lam u w : V → ℝ} {gd : �
   simp only [gradMass]
   exact Finset.sum_eq_zero fun x _ => by rw [hD x, mul_zero]
 
-/-- **`theo:global_dichotomy_full`*(1)*, the mass-identity half** (statement `proofs.tex:820–826`,
-item *(1)* at `:823`; proof `proofs.tex:828–830`).
+/-- **`theo:global_dichotomy_full`*(1)*, the mass-identity half** (statement `proofs.tex:841–847`,
+item *(1)* at `:844`; proof `proofs.tex:849–851`).
 
 Word for word the first horn of the dichotomy: for a strictly unimodal generator the total mass of
 `∇^λ 𝓛_{g,ν}` equals `∫ g'(r)(1 − r)(dν/dμ) dλ ≤ 0`, with equality only at balance, *for every
@@ -380,14 +380,14 @@ theorem global_dichotomy_full_one {K : V → V → ℝ} {lam u w : V → ℝ} {g
 
 /-! ### The hypothesis is inhabited: the paper's two generators -/
 
-/-- `g = (x − 1)²`, so `g'(x) = 2(x − 1)`, is strictly unimodal (`proofs.tex:788`). -/
+/-- `g = (x − 1)²`, so `g'(x) = 2(x − 1)`, is strictly unimodal (`proofs.tex:809`). -/
 theorem strictlyUnimodal_sqDeriv : StrictlyUnimodal fun x : ℝ => 2 * (x - 1) := by
   intro x _ hne
   have hne' : x - 1 ≠ 0 := sub_ne_zero.mpr hne
   have hsq : 0 < (x - 1) * (x - 1) := mul_self_pos.mpr hne'
   nlinarith
 
-/-- `g = (log x)²`, so `g'(x) = 2 log x / x`, is strictly unimodal (`proofs.tex:788`) — the
+/-- `g = (log x)²`, so `g'(x) = 2 log x / x`, is strictly unimodal (`proofs.tex:809`) — the
 paper's practical generator. -/
 theorem strictlyUnimodal_logSqDeriv :
     StrictlyUnimodal fun x : ℝ => 2 * Real.log x / x := by

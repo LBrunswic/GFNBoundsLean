@@ -113,10 +113,12 @@ detail, and `docs/COVERAGE.md`'s bucket column is the standing record.
    second-order window sum `lem:doubling_expansion` needs; `R0Bound.lean`'s first-order telescoping
    stands as it is.
 
-**A known defect, not an obstruction (2026-09-13):** `Balance/Flow.lean`'s `IsGradientFlow` asks
-the ODE at every real `t` and has no solution from a non-balanced start, so every theorem that
-hypothesises it is vacuous off balanced starts. The repair (`0 ≤ t`) is the author's decision; do
-not build on the predicate until it is made. `kb/entries/0025` has the detail.
+**A defect found and repaired (2026-09-13):** `Balance/Flow.lean`'s `IsGradientFlow` asked the ODE
+at every real `t` and had no solution from a non-balanced start, so every theorem hypothesising it
+was vacuous there. It now asks `0 ≤ t` (author's approval); 17 auxiliary signatures gained a
+`0 ≤ t` or lost their negative times, no paper-level statement changed. **Existence of a forward
+solution is still not proved** — a theorem about solutions of a predicate is only as good as the
+predicate's inhabitation. `kb/entries/0025` has the detail.
 
 ## The team
 

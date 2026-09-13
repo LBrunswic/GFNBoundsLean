@@ -115,10 +115,11 @@
     "GFNBounds.Doubling.TruncationBhat",
     "GFNBounds.Doubling.MainPackaging",
     "GFNBounds.Graph.FrozenUnstableDB",
+    "GFNBounds.Balance.GlobalConvergence",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 110,
+   "lines": 111,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -193,10 +194,11 @@
     "GFNBounds.Graph.CycleBlowup",
     "GFNBounds.Doubling.TruncationBhat",
     "GFNBounds.Doubling.MainPackaging",
-    "GFNBounds.Graph.FrozenUnstableDB"
+    "GFNBounds.Graph.FrozenUnstableDB",
+    "GFNBounds.Balance.GlobalConvergence"
    ],
    "variables": [],
-   "lines": 596,
+   "lines": 602,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -217,7 +219,7 @@
     "variable [DecidableEq V] {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}",
     "variable {K : V → V → ℝ} {lam nu wf : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}"
    ],
-   "lines": 737,
+   "lines": 748,
    "decls": [
     {
      "name": "ratioCap",
@@ -227,7 +229,7 @@
      "attrs": "",
      "private": false,
      "statement": "noncomputable def ratioCap (lamMin wmin L0 : ℝ) : ℝ",
-     "doc": "**`M := max(1, √(L₀/(w_min λ_min)))`** (`proofs.tex:892`), the exponent of `Lojasiewicz.ratio_le_exp`."
+     "doc": "**`M := max(1, √(L₀/(w_min λ_min)))`** (`proofs.tex:913`), the exponent of `Lojasiewicz.ratio_le_exp`."
     },
     {
      "name": "one_le_ratioCap",
@@ -257,7 +259,7 @@
      "attrs": "",
      "private": false,
      "statement": "noncomputable def edgeDrop (lamMin pmin wmin L0 : ℝ) : ℝ",
-     "doc": "**`c := λ_min p_min e^{−M}`**, the worst per-edge drop of the density (`proofs.tex:813`, \"strong connectedness provides an edge from a non-vanishing state into the vanishing region, whose ratio explodes\")."
+     "doc": "**`c := λ_min p_min e^{−M}`**, the worst per-edge drop of the density (`proofs.tex:834`, \"strong connectedness provides an edge from a non-vanishing state into the vanishing region, whose ratio explodes\")."
     },
     {
      "name": "uMin",
@@ -357,7 +359,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem ratio_blowup_of_small {K : V → V → ℝ} {lam u : V → ℝ} (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (y z : V) : lam y * u y * K y z / (lam z * u z) ≤ ratio K lam u z",
-     "doc": "**`r(z) ≥ λ(y)u(y)K(y,z)/(λ(z)u(z))`** (`proofs.tex:813`, \"whose ratio explodes\"): one edge into `z` already forces the ratio there, and the bound is `∝ 1/u(z)`."
+     "doc": "**`r(z) ≥ λ(y)u(y)K(y,z)/(λ(z)u(z))`** (`proofs.tex:834`, \"whose ratio explodes\"): one edge into `z` already forces the ratio there, and the bound is `∝ 1/u(z)`."
     },
     {
      "name": "logSq_le_logSq_of_one_le",
@@ -377,7 +379,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem loss_lower_of_small {K : V → V → ℝ} {lam u wf : V → ℝ} {lamMin wmin : ℝ} (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {y z : V} (hone : 1 ≤ lam y * u y * K y z / (lam z * u z)) : lamMin * wmin * Real.log (lam y * u y * K y z / (lam z * u z)) ^ 2 ≤ lossVal lam wf logSq (ratio K lam u)",
-     "doc": "**`λ_min w_min (log(λ(y)u(y)K(y,z)/(λ(z)u(z))))² ≤ 𝓛`** (`proofs.tex:813`, \"`g(r)ν → ∞`\"): the loss blows up as `u(z) → 0`, at the logarithmic rate `g = (log x)²` gives it."
+     "doc": "**`λ_min w_min (log(λ(y)u(y)K(y,z)/(λ(z)u(z))))² ≤ 𝓛`** (`proofs.tex:834`, \"`g(r)ν → ∞`\"): the loss blows up as `u(z) → 0`, at the logarithmic rate `g = (log x)²` gives it."
     },
     {
      "name": "edge_drop_of_loss_le",
@@ -406,8 +408,8 @@
      "line": 472,
      "attrs": "",
      "private": false,
-     "statement": "theorem continuous_flow (hflow : IsGradientFlow K lam nu gd u) (x : V) : Continuous fun t : ℝ => u t x",
-     "doc": "A gradient flow is continuous in time, state by state."
+     "statement": "theorem continuous_flow (hflow : IsGradientFlow K lam nu gd u) (x : V) : ∀ t : ℝ, 0 ≤ t → ContinuousAt (fun t : ℝ => u t x) t",
+     "doc": "A gradient flow is continuous in time at every `t ≥ 0`, state by state."
     },
     {
      "name": "flow_pos_of_pos",
@@ -417,13 +419,13 @@
      "attrs": "",
      "private": false,
      "statement": "theorem flow_pos_of_pos {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → ∀ x, uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (u 0))) (Graph.meanL2 lam (u 0)) ≤ u t x",
-     "doc": "**`prop:no_distant_equilibrium`*(3)*'s compactness half, along the flow** (`proofs.tex:813`): from a positive initial density the trajectory stays at density at least `u_min`, at every state and every `t ≥ 0`, with `L₀ = 𝓛(μ₀)` and `m₀ = μ₀(𝒮̂)` — the paper's own budgets."
+     "doc": "**`prop:no_distant_equilibrium`*(3)*'s compactness half, along the flow** (`proofs.tex:834`): from a positive initial density the trajectory stays at density at least `u_min`, at every state and every `t ≥ 0`, with `L₀ = 𝓛(μ₀)` and `m₀ = μ₀(𝒮̂)` — the paper's own budgets."
     },
     {
      "name": "flow_pos",
      "full": "GFNBounds.Balance.flow_pos",
      "kind": "theorem",
-     "line": 552,
+     "line": 563,
      "attrs": "",
      "private": false,
      "statement": "theorem flow_pos {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x",
@@ -433,7 +435,7 @@
      "name": "flow_pos_graph",
      "full": "GFNBounds.Balance.flow_pos_graph",
      "kind": "theorem",
-     "line": 580,
+     "line": 591,
      "attrs": "",
      "private": false,
      "statement": "theorem flow_pos_graph {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ} (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hpmin : ∀ y z : V, 0 < B.phat y z → pmin ≤ B.phat y z) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x",
@@ -443,7 +445,7 @@
      "name": "mass_tendsto",
      "full": "GFNBounds.Balance.mass_tendsto",
      "kind": "theorem",
-     "line": 612,
+     "line": 623,
      "attrs": "",
      "private": false,
      "statement": "theorem mass_tendsto {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∃ minf : ℝ, Filter.Tendsto (fun t : ℝ => Graph.meanL2 lam (u t)) Filter.atTop (nhds minf)",
@@ -453,7 +455,7 @@
      "name": "blowupU",
      "full": "GFNBounds.Balance.blowupU",
      "kind": "def",
-     "line": 654,
+     "line": 665,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def blowupU : Fin 2 → ℝ",
@@ -463,7 +465,7 @@
      "name": "blowupU_pos",
      "full": "GFNBounds.Balance.blowupU_pos",
      "kind": "theorem",
-     "line": 656,
+     "line": 667,
      "attrs": "",
      "private": false,
      "statement": "theorem blowupU_pos : ∀ x, 0 < blowupU x",
@@ -473,7 +475,7 @@
      "name": "twoState_crossingFloor",
      "full": "GFNBounds.Balance.twoState_crossingFloor",
      "kind": "theorem",
-     "line": 660,
+     "line": 671,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_crossingFloor : CrossingFloor twoStateK (1 / 2 : ℝ)",
@@ -483,7 +485,7 @@
      "name": "twoState_blowup_ratio",
      "full": "GFNBounds.Balance.twoState_blowup_ratio",
      "kind": "theorem",
-     "line": 670,
+     "line": 681,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_blowup_ratio : ratio twoStateK twoStateLam blowupU 0 = 2 / 3 ∧ ratio twoStateK twoStateLam blowupU 1 = 2",
@@ -493,7 +495,7 @@
      "name": "twoState_blowup_mean",
      "full": "GFNBounds.Balance.twoState_blowup_mean",
      "kind": "theorem",
-     "line": 678,
+     "line": 689,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_blowup_mean : Graph.meanL2 twoStateLam blowupU = 1",
@@ -503,7 +505,7 @@
      "name": "twoState_blowup_loss_le",
      "full": "GFNBounds.Balance.twoState_blowup_loss_le",
      "kind": "theorem",
-     "line": 684,
+     "line": 695,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_blowup_loss_le : lossVal twoStateLam (fun _ => (1 : ℝ)) logSq (ratio twoStateK twoStateLam blowupU) ≤ 1 / 2",
@@ -513,7 +515,7 @@
      "name": "twoState_ratioCap",
      "full": "GFNBounds.Balance.twoState_ratioCap",
      "kind": "theorem",
-     "line": 709,
+     "line": 720,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_ratioCap : ratioCap (1 / 2 : ℝ) 1 (1 / 2) = 1",
@@ -523,7 +525,7 @@
      "name": "twoState_uMin",
      "full": "GFNBounds.Balance.twoState_uMin",
      "kind": "theorem",
-     "line": 714,
+     "line": 725,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_uMin : uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 = Real.exp (-1) / 4",
@@ -533,7 +535,7 @@
      "name": "twoState_boundary_blowup_check",
      "full": "GFNBounds.Balance.twoState_boundary_blowup_check",
      "kind": "theorem",
-     "line": 721,
+     "line": 732,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_boundary_blowup_check : uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 = Real.exp (-1) / 4 ∧ 0 < Real.exp (-1) / 4 ∧ Real.exp (-1) / 4 ≤ 1 / 2 ∧ ∀ x, uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 ≤ blowupU x",
@@ -1349,7 +1351,7 @@
      "attrs": "",
      "private": false,
      "statement": "def IsGradientFlow (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : ℝ → V → ℝ) : Prop",
-     "doc": "**`μ̇_t = −∇^λ 𝓛_{g,ν}(μ_t)`** (`proofs.tex:569`, `:613`, `:880`), the gradient flow, written on a finite state space as what it is there: an **ODE in `ℝ^V`**, one scalar equation per state."
+     "doc": "**`μ̇_t = −∇^λ 𝓛_{g,ν}(μ_t)`** (`proofs.tex:569`, `:613`, `:901`), the gradient flow, written on a finite state space as what it is there: an **ODE in `ℝ^V`**, one scalar equation per state."
     },
     {
      "name": "isGradientFlow_iff",
@@ -1358,7 +1360,7 @@
      "line": 284,
      "attrs": "",
      "private": false,
-     "statement": "theorem isGradientFlow_iff (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : ℝ → V → ℝ) : IsGradientFlow K lam nu gd u ↔ ∀ t : ℝ, HasDerivAt u (fun x => -lossGrad K lam nu gd (u t) x) t",
+     "statement": "theorem isGradientFlow_iff (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : ℝ → V → ℝ) : IsGradientFlow K lam nu gd u ↔ ∀ t : ℝ, 0 ≤ t → HasDerivAt u (fun x => -lossGrad K lam nu gd (u t) x) t",
      "doc": "**The componentwise ODE is the vector-valued one**: `IsGradientFlow` says exactly that the curve `u : ℝ → (V → ℝ)` has derivative `−D(u t)` in `V → ℝ`."
     },
     {
@@ -1399,7 +1401,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem hasDerivAt_loss_flow_at {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} {t : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hflow : ∀ x, HasDerivAt (fun s : ℝ => u s x) (-lossGrad K lam nu gd (u t) x) t) : HasDerivAt (fun s : ℝ => loss K lam nu (u s) g) (-(Graph.nrmL2 lam (lossGrad K lam nu gd (u t)) ^ 2)) t",
-     "doc": "**The flow identity `−𝓛̇ = ‖D‖²_{L²(λ)}`** (`proofs.tex:813`: \"`d𝓛/dt = −‖D‖²`\"; `proofs.tex:897`: \"conclude with `−𝓛' = ‖∇𝓛‖²`\"), hypothesised at a single time `t`."
+     "doc": "**The flow identity `−𝓛̇ = ‖D‖²_{L²(λ)}`** (`proofs.tex:834`: \"`d𝓛/dt = −‖D‖²`\"; `proofs.tex:918`: \"conclude with `−𝓛' = ‖∇𝓛‖²`\"), hypothesised at a single time `t`."
     },
     {
      "name": "hasDerivAt_loss_flow",
@@ -1409,7 +1411,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem hasDerivAt_loss_flow {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) (ht : 0 ≤ t) : HasDerivAt (fun s : ℝ => loss K lam nu (u s) g) (-(Graph.nrmL2 lam (lossGrad K lam nu gd (u t)) ^ 2)) t",
-     "doc": "**The flow identity `−𝓛̇ = ‖D‖²_{L²(λ)}` along a gradient flow** (`proofs.tex:813`, `:897`): the loss decreases at exactly the squared norm of its gradient, at every time of `[0,∞)`."
+     "doc": "**The flow identity `−𝓛̇ = ‖D‖²_{L²(λ)}` along a gradient flow** (`proofs.tex:834`, `:918`): the loss decreases at exactly the squared norm of its gradient, at every time of `[0,∞)`."
     },
     {
      "name": "hasDerivAt_loss_flow_line",
@@ -1429,7 +1431,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem ipL2_lossGrad_self {K : V → V → ℝ} {lam u : V → ℝ} (nu : V → ℝ) (gd : ℝ → ℝ) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) : Graph.ipL2 lam (lossGrad K lam nu gd u) u = 0",
-     "doc": "**`prop:no_distant_equilibrium`*(2)*, the orthogonality**: `∫ D u dλ = 0` (`proofs.tex:791`, \"the gradient is orthogonal to the radial direction\")."
+     "doc": "**`prop:no_distant_equilibrium`*(2)*, the orthogonality**: `∫ D u dλ = 0` (`proofs.tex:812`, \"the gradient is orthogonal to the radial direction\")."
     },
     {
      "name": "eq_of_hasDerivAt_zero_on",
@@ -1449,7 +1451,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem nrmL2_const_on_Ici {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hlam : ∀ x, 0 < lam x) (hupos : ∀ s : ℝ, 0 ≤ s → ∀ x, 0 < u s x) (hflow : IsGradientFlow K lam nu gd u) {t : ℝ} (ht : 0 ≤ t) : Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0)",
-     "doc": "**`prop:no_distant_equilibrium`*(2)*, the invariant sphere, on `[0,∞)`**: the gradient flow preserves `‖u_t‖_{L²(λ)}` (`proofs.tex:791`, \"the loss is scale-invariant, so the gradient flow preserves `‖u_t‖_{L²(λ)}`\")."
+     "doc": "**`prop:no_distant_equilibrium`*(2)*, the invariant sphere, on `[0,∞)`**: the gradient flow preserves `‖u_t‖_{L²(λ)}` (`proofs.tex:812`, \"the loss is scale-invariant, so the gradient flow preserves `‖u_t‖_{L²(λ)}`\")."
     },
     {
      "name": "nrmL2_const_of_flow",
@@ -1469,7 +1471,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem hasDerivAt_logSq {y : ℝ} (hy : 0 < y) : HasDerivAt logSq (logSqDeriv y) y",
-     "doc": "**`g = (log x)²` has `g'(x) = 2 log x / x` on `ℝ_+^*`** (`proofs.tex:809`)."
+     "doc": "**`g = (log x)²` has `g'(x) = 2 log x / x` on `ℝ_+^*`** (`proofs.tex:830`)."
     },
     {
      "name": "lossGrad_of_weight",
@@ -1499,7 +1501,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem lojasiewicz_integrated {L L' : ℝ → ℝ} {kappa : ℝ} (hderiv : ∀ t : ℝ, 0 ≤ t → HasDerivAt L (L' t) t) (hpos : ∀ t : ℝ, 0 ≤ t → 0 < L t) (hineq : ∀ t : ℝ, 0 ≤ t → kappa ^ 2 * L t ^ 2 ≤ -L' t) : ∀ t : ℝ, 0 ≤ t → L t ≤ ((L 0)⁻¹ + kappa ^ 2 * t)⁻¹",
-     "doc": "**`cor:global_lojasiewicz`'s second display** (`proofs.tex:884`): from `−L' ≥ κ²L²` on `[0,∞)`, `L(t) ≤ (L(0)^{−1} + κ²t)^{−1}`."
+     "doc": "**`cor:global_lojasiewicz`'s second display** (`proofs.tex:905`): from `−L' ≥ κ²L²` on `[0,∞)`, `L(t) ≤ (L(0)^{−1} + κ²t)^{−1}`."
     },
     {
      "name": "global_lojasiewicz_flow",
@@ -1509,7 +1511,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem global_lojasiewicz_flow {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin wsup L0 : ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hu0 : 0 < Graph.nrmL2 lam (u 0)) (hL0 : ∀ t : ℝ, 0 ≤ t → lossVal lam wf logSq (ratio K lam (u t)) ≤ L0) (hpos : ∀ t : ℝ, 0 ≤ t → 0 < lossVal lam wf logSq (ratio K lam (u t))) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → lossVal lam wf logSq (ratio K lam (u t)) ≤ ((lossVal lam wf logSq (ratio K lam (u 0)))⁻¹ + (wmin * Real.sqrt lamMin / (Graph.nrmL2 lam (u 0) * wsup * max 1 (Real.sqrt (L0 / (wmin * lamMin))))) ^ 2 * t)⁻¹",
-     "doc": "**`cor:global_lojasiewicz`**, both displays, along the gradient flow (statement `proofs.tex:875–886`, proof `proofs.tex:887–898`): with `M := max(1, √(L₀/(w_min λ_min)))` and `κ := w_min λ_min^{1/2}/(‖u₀‖ ‖w‖_{L^∞} M)`, `−d𝓛/dt ≥ κ²𝓛²` and hence `𝓛(μ_t) ≤ (𝓛(μ₀)^{−1} + κ²t)^{−1}`."
+     "doc": "**`cor:global_lojasiewicz`**, both displays, along the gradient flow (statement `proofs.tex:896–907`, proof `proofs.tex:908–919`): with `M := max(1, √(L₀/(w_min λ_min)))` and `κ := w_min λ_min^{1/2}/(‖u₀‖ ‖w‖_{L^∞} M)`, `−d𝓛/dt ≥ κ²𝓛²` and hence `𝓛(μ_t) ≤ (𝓛(μ₀)^{−1} + κ²t)^{−1}`."
     },
     {
      "name": "twoState_nrmL2_lossGrad_sq",
@@ -2466,6 +2468,54 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Balance/GlobalConvergence.lean",
+   "title": "From every positive initialization, the `(log x)²` gradient flow converges to the balanced flow of its sphere",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.TrainingSpeed"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]"
+   ],
+   "lines": 253,
+   "decls": [
+    {
+     "name": "continuous_nrmL2",
+     "full": "GFNBounds.Balance.continuous_nrmL2",
+     "kind": "theorem",
+     "line": 113,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem continuous_nrmL2 (lam : V → ℝ) : Continuous fun a : V → ℝ => Graph.nrmL2 lam a",
+     "doc": "`a ↦ ‖a‖_{L²(λ)}` is continuous on `V → ℝ`."
+    },
+    {
+     "name": "no_distant_equilibrium_three_converges",
+     "full": "GFNBounds.Balance.no_distant_equilibrium_three_converges",
+     "kind": "theorem",
+     "line": 127,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_distant_equilibrium_three_converges {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam wf : V → ℝ} {wmin : ℝ} {u : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam (u 0)) ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam (u 0)) ∧ Graph.nrmL2 lam (fun _ => Graph.nrmL2 lam (u 0)) = Graph.nrmL2 lam (u 0) ∧ ∀ v : V → ℝ, (∀ x, 0 < v x) → Balanced B.phat lam v → Graph.nrmL2 lam v = Graph.nrmL2 lam (u 0) → v = fun _ => Graph.nrmL2 lam (u 0)",
+     "doc": "**`prop:no_distant_equilibrium`*(3)*, the convergence clause, for `g = (log x)²`**: on the loop closure of a finite path-connected marked graph, the gradient flow from any `μ₀ ∼ λ` converges to the balanced flow of its sphere."
+    },
+    {
+     "name": "global_dichotomy_full_one_converges",
+     "full": "GFNBounds.Balance.global_dichotomy_full_one_converges",
+     "kind": "theorem",
+     "line": 234,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem global_dichotomy_full_one_converges {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam wf : V → ℝ} {wmin : ℝ} {u : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : 0 < Graph.nrmL2 lam (u 0) ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam (u 0)) ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam (u 0))",
+     "doc": "**`theo:global_dichotomy_full`*(1)*, the convergence clause, for `g = (log x)²`**: on the loop closure of a finite path-connected marked graph, with `ν = wλ` and `w ≥ w_min > 0`, the gradient flow converges to a balanced flow from every initialization `μ₀ ∼ λ` — explicitly, to the constant density `‖u₀‖_{L²(λ)} > 0`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Balance/GradientFormulas.lean",
    "title": "The two corollaries of the first variation: the FM gradient and the DB gradient",
    "labels": [],
@@ -3307,7 +3357,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem edgeKernel_dual {pb pf : V → V → ℝ} {lam : V → ℝ} (hpf : ∀ u v, lam u * pf u v = lam v * pb v u) (s s' z w : V) : edgeMeasure pb lam s s' * edgeKernel pb s s' z w = edgeMeasure pb lam z w * dualEdgeKernel pf z w s s'",
-     "doc": "**`lem:lift_wellposed`, the duality identity** `λ₂ ⊗ K₂* = K₂ ⊗ λ₂` (`proofs.tex:521`), read pointwise on a finite space: λ₂(s,s') · K₂((s,s') → (z,w)) = λ₂(z,w) · K₂*((z,w) → (s,s'))."
+     "doc": "**`lem:lift_wellposed`, the duality identity** `λ₂ ⊗ K₂ = K₂* ⊗ λ₂` (`proofs.tex:521`), read pointwise on a finite space: λ₂(s,s') · K₂((s,s') → (z,w)) = λ₂(z,w) · K₂*((z,w) → (s,s'))."
     },
     {
      "name": "funActEdge",
@@ -3785,7 +3835,7 @@
    "variables": [
     "variable {V : Type*} [Fintype V]"
    ],
-   "lines": 1243,
+   "lines": 1268,
    "decls": [
     {
      "name": "Cinf",
@@ -4101,7 +4151,7 @@
      "name": "tendsto_atTop_of_monotoneOn_Ici",
      "full": "GFNBounds.Balance.tendsto_atTop_of_monotoneOn_Ici",
      "kind": "theorem",
-     "line": 477,
+     "line": 489,
      "attrs": "",
      "private": false,
      "statement": "theorem tendsto_atTop_of_monotoneOn_Ici {f : ℝ → ℝ} {C : ℝ} (hmono : MonotoneOn f (Set.Ici (0:ℝ))) (hbd : ∀ τ : ℝ, 0 ≤ τ → f τ ≤ C) : ∃ l : ℝ, Filter.Tendsto f Filter.atTop (nhds l)",
@@ -4111,17 +4161,17 @@
      "name": "tendsto_atTop_of_deriv_dominated",
      "full": "GFNBounds.Balance.tendsto_atTop_of_deriv_dominated",
      "kind": "theorem",
-     "line": 493,
+     "line": 505,
      "attrs": "",
      "private": false,
-     "statement": "theorem tendsto_atTop_of_deriv_dominated {A B b beta : ℝ → ℝ} {CA CB : ℝ} (hA : ∀ τ : ℝ, HasDerivAt A (b τ) τ) (hB : ∀ τ : ℝ, HasDerivAt B (beta τ) τ) (hdom : ∀ τ : ℝ, 0 ≤ τ → |beta τ| ≤ b τ) (hAbd : ∀ τ : ℝ, 0 ≤ τ → A τ ≤ CA) (hBbd : ∀ τ : ℝ, 0 ≤ τ → |B τ| ≤ CB) : ∃ l : ℝ, Filter.Tendsto B Filter.atTop (nhds l)",
+     "statement": "theorem tendsto_atTop_of_deriv_dominated {A B b beta : ℝ → ℝ} {CA CB : ℝ} (hA : ∀ τ : ℝ, 0 ≤ τ → HasDerivAt A (b τ) τ) (hB : ∀ τ : ℝ, 0 ≤ τ → HasDerivAt B (beta τ) τ) (hdom : ∀ τ : ℝ, 0 ≤ τ → |beta τ| ≤ b τ) (hAbd : ∀ τ : ℝ, 0 ≤ τ → A τ ≤ CA) (hBbd : ∀ τ : ℝ, 0 ≤ τ → |B τ| ≤ CB) : ∃ l : ℝ, Filter.Tendsto B Filter.atTop (nhds l)",
      "doc": "**The shape of Step 3's convergence argument, with the flow removed.** `A` grows, `B` drifts no faster than `A` grows, both are bounded on `[0,∞)`: then `B` converges at `+∞`, because `A ± B` are monotone and bounded and `B = ((A+B) − (A−B))/2`."
     },
     {
      "name": "mean_tendsto",
      "full": "GFNBounds.Balance.mean_tendsto",
      "kind": "theorem",
-     "line": 536,
+     "line": 550,
      "attrs": "",
      "private": false,
      "statement": "theorem mean_tendsto {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin Bhat eps : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) (hgw : 0 < g2 * wmin) (hrho : 0 < rhoL g2 wmin Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hwin : ∀ s : ℝ, 0 ≤ s → ∀ x, |h s x| ≤ eps) : ∃ minf : ℝ, Filter.Tendsto (fun t => Graph.meanL2 lam (h t)) Filter.atTop (nhds minf) ∧ |minf - Graph.meanL2 lam (h 0)| ≤ C7 (C6 (Cg g2 a M3) wsup) g2 wmin * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → |minf - Graph.meanL2 lam (h t)| ≤ 4 * C6 (Cg g2 a M3) wsup / rhoL g2 wmin Bhat * Real.exp (-(rhoL g2 wmin Bhat * t)) * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2",
@@ -4131,7 +4181,7 @@
      "name": "local_convergence_full",
      "full": "GFNBounds.Balance.local_convergence_full",
      "kind": "theorem",
-     "line": 624,
+     "line": 649,
      "attrs": "",
      "private": false,
      "statement": "theorem local_convergence_full {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin Bhat lamMin : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hnorm0 : Graph.nrmL2 lam (h 0) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin Bhat) (C6 (Cg g2 a M3) wsup)) : ∃ cinf : ℝ, |cinf - 1 - Graph.meanL2 lam (h 0)| ≤ C7 (C6 (Cg g2 a M3) wsup) g2 wmin * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL g2 wmin Bhat * t / 2)) * Graph.nrmL2 lam (perpL2 lam (h 0))",
@@ -4141,7 +4191,7 @@
      "name": "nrmL2_lossGrad_le",
      "full": "GFNBounds.Balance.nrmL2_lossGrad_le",
      "kind": "theorem",
-     "line": 740,
+     "line": 765,
      "attrs": "",
      "private": false,
      "statement": "theorem nrmL2_lossGrad_le {K : V → V → ℝ} {lam w u : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup eps : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |u x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) : Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + u z) ≤ Lgd g2 wsup (Kexp g2 a M3 wsup) eps * Graph.nrmL2 lam (Aop K lam (perpL2 lam u))",
@@ -4151,7 +4201,7 @@
      "name": "Lgd_le",
      "full": "GFNBounds.Balance.Lgd_le",
      "kind": "theorem",
-     "line": 787,
+     "line": 812,
      "attrs": "",
      "private": false,
      "statement": "theorem Lgd_le {g2 a M3 wsup wmin Bhat eps : ℝ} (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmw : wmin ≤ wsup) (hB1 : 1 ≤ Bhat) (heps0 : 0 ≤ eps) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) : Lgd g2 wsup (Kexp g2 a M3 wsup) eps ≤ 5 / 2 * (g2 * wsup)",
@@ -4161,7 +4211,7 @@
      "name": "gamma_mul_Lsq_le",
      "full": "GFNBounds.Balance.gamma_mul_Lsq_le",
      "kind": "theorem",
-     "line": 803,
+     "line": 828,
      "attrs": "",
      "private": false,
      "statement": "theorem gamma_mul_Lsq_le {g2 wmin L gam : ℝ} (hL : 0 < L) (hgam : gam ≤ gamma0 g2 wmin L) : gam * L ^ 2 ≤ g2 * wmin / 2",
@@ -4171,7 +4221,7 @@
      "name": "gd_energy_step",
      "full": "GFNBounds.Balance.gd_energy_step",
      "kind": "theorem",
-     "line": 815,
+     "line": 840,
      "attrs": "",
      "private": false,
      "statement": "theorem gd_energy_step {K : V → V → ℝ} {lam w u v : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup wmin Bhat eps gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |u x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hgam0 : 0 ≤ gam) (hgamL : gam * Lgd g2 wsup (Kexp g2 a M3 wsup) eps ^ 2 ≤ g2 * wmin / 2) (hv : v = fun x => u x - gam * (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + u z) x) : Graph.nrmL2 lam (perpL2 lam v) ^ 2 + gam * (g2 * wmin / 2) * Graph.nrmL2 lam (Aop K lam (perpL2 lam u)) ^ 2 ≤ Graph.nrmL2 lam (perpL2 lam u) ^ 2",
@@ -4181,7 +4231,7 @@
      "name": "gamma_rho_le",
      "full": "GFNBounds.Balance.gamma_rho_le",
      "kind": "theorem",
-     "line": 870,
+     "line": 895,
      "attrs": "",
      "private": false,
      "statement": "theorem gamma_rho_le {g2 a M3 wsup wmin Bhat eps gam : ℝ} (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwmin0 : 0 < wmin) (hwmw : wmin ≤ wsup) (hB1 : 1 ≤ Bhat) (heps0 : 0 ≤ eps) (hgam0 : 0 ≤ gam) (hgamL : gam * Lgd g2 wsup (Kexp g2 a M3 wsup) eps ^ 2 ≤ g2 * wmin / 2) : gam * rhoL g2 wmin Bhat / 2 ≤ 1 / 16",
@@ -4191,7 +4241,7 @@
      "name": "gd_contract_step",
      "full": "GFNBounds.Balance.gd_contract_step",
      "kind": "theorem",
-     "line": 899,
+     "line": 924,
      "attrs": "",
      "private": false,
      "statement": "theorem gd_contract_step {K : V → V → ℝ} {lam w u v : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup wmin Bhat eps gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |u x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hgam0 : 0 ≤ gam) (hgamL : gam * Lgd g2 wsup (Kexp g2 a M3 wsup) eps ^ 2 ≤ g2 * wmin / 2) (hv : v = fun x => u x - gam * (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + u z) x) : Graph.nrmL2 lam (perpL2 lam v) ≤ (1 - gam * rhoL g2 wmin Bhat / 4) * Graph.nrmL2 lam (perpL2 lam u)",
@@ -4201,7 +4251,7 @@
      "name": "gd_drift_step",
      "full": "GFNBounds.Balance.gd_drift_step",
      "kind": "theorem",
-     "line": 964,
+     "line": 989,
      "attrs": "",
      "private": false,
      "statement": "theorem gd_drift_step {K : V → V → ℝ} {lam w u v : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup wmin Bhat eps gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) (hgw : 0 < g2 * wmin) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |u x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hgam0 : 0 ≤ gam) (hgamL : gam * Lgd g2 wsup (Kexp g2 a M3 wsup) eps ^ 2 ≤ g2 * wmin / 2) (hv : v = fun x => u x - gam * (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + u z) x) : |Graph.meanL2 lam v - Graph.meanL2 lam u| ≤ 2 * C7 (C6 (Cg g2 a M3) wsup) g2 wmin * (Graph.nrmL2 lam (perpL2 lam u) ^ 2 - Graph.nrmL2 lam (perpL2 lam v) ^ 2)",
@@ -4211,7 +4261,7 @@
      "name": "local_convergence_gd",
      "full": "GFNBounds.Balance.local_convergence_gd",
      "kind": "theorem",
-     "line": 1029,
+     "line": 1054,
      "attrs": "",
      "private": false,
      "statement": "theorem local_convergence_gd {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {hk : ℕ → V → ℝ} {g2 a M3 wsup wmin Bhat lamMin gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hstep : ∀ k : ℕ, hk (k + 1) = fun x => hk k x - gam * lossGrad K lam (fun z => lam z * w z) gd (fun z => 1 + hk k z) x) (hgam0 : 0 ≤ gam) (hgam : gam ≤ gamma0 g2 wmin (Lgd g2 wsup (Kexp g2 a M3 wsup) (epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat))) (hnorm0 : Graph.nrmL2 lam (hk 0) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin Bhat) (C6 (Cg g2 a M3) wsup)) : ∀ k : ℕ, Graph.nrmL2 lam (perpL2 lam (hk (k + 1))) ≤ (1 - gam * rhoL g2 wmin Bhat / 4) * Graph.nrmL2 lam (perpL2 lam (hk k))",
@@ -4221,7 +4271,7 @@
      "name": "twoState_Kexp",
      "full": "GFNBounds.Balance.twoState_Kexp",
      "kind": "theorem",
-     "line": 1165,
+     "line": 1190,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_Kexp : Kexp 2 (4 / 5) 0 1 = 80 / 3",
@@ -4231,7 +4281,7 @@
      "name": "twoState_C6",
      "full": "GFNBounds.Balance.twoState_C6",
      "kind": "theorem",
-     "line": 1168,
+     "line": 1193,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_C6 : C6 (Cg 2 (4 / 5) 0) 1 = 8",
@@ -4241,7 +4291,7 @@
      "name": "twoState_C7",
      "full": "GFNBounds.Balance.twoState_C7",
      "kind": "theorem",
-     "line": 1170,
+     "line": 1195,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_C7 : C7 (C6 (Cg 2 (4 / 5) 0) 1) 2 1 = 4",
@@ -4251,7 +4301,7 @@
      "name": "twoState_rhoL",
      "full": "GFNBounds.Balance.twoState_rhoL",
      "kind": "theorem",
-     "line": 1172,
+     "line": 1197,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_rhoL : rhoL 2 1 1 = 2",
@@ -4261,7 +4311,7 @@
      "name": "twoState_epsW",
      "full": "GFNBounds.Balance.twoState_epsW",
      "kind": "theorem",
-     "line": 1176,
+     "line": 1201,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_epsW : epsW (4 / 5) 2 1 (Kexp 2 (4 / 5) 0 1) 1 = 3 / 80",
@@ -4271,7 +4321,7 @@
      "name": "twoState_Cinf",
      "full": "GFNBounds.Balance.twoState_Cinf",
      "kind": "theorem",
-     "line": 1181,
+     "line": 1206,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_Cinf : Cinf (1 / 2 : ℝ) = Real.sqrt 2",
@@ -4281,7 +4331,7 @@
      "name": "sqrt_two_le_two",
      "full": "GFNBounds.Balance.sqrt_two_le_two",
      "kind": "theorem",
-     "line": 1190,
+     "line": 1215,
      "attrs": "",
      "private": false,
      "statement": "theorem sqrt_two_le_two : Real.sqrt 2 ≤ 2",
@@ -4291,7 +4341,7 @@
      "name": "twoState_eps0",
      "full": "GFNBounds.Balance.twoState_eps0",
      "kind": "theorem",
-     "line": 1195,
+     "line": 1220,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_eps0 : eps0 (3 / 80) (Real.sqrt 2) 4 2 8 = Real.sqrt 2 / 640",
@@ -4301,7 +4351,7 @@
      "name": "twoState_Lgd",
      "full": "GFNBounds.Balance.twoState_Lgd",
      "kind": "theorem",
-     "line": 1206,
+     "line": 1231,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_Lgd : Lgd 2 1 (Kexp 2 (4 / 5) 0 1) (3 / 80) = 5",
@@ -4311,7 +4361,7 @@
      "name": "twoState_gamma0",
      "full": "GFNBounds.Balance.twoState_gamma0",
      "kind": "theorem",
-     "line": 1210,
+     "line": 1235,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_gamma0 : gamma0 2 1 5 = 1 / 25",
@@ -4321,7 +4371,7 @@
      "name": "twoState_local_convergence_check",
      "full": "GFNBounds.Balance.twoState_local_convergence_check",
      "kind": "theorem",
-     "line": 1219,
+     "line": 1244,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_local_convergence_check : Kexp 2 (4 / 5) 0 1 = 80 / 3 ∧ epsW (4 / 5) 2 1 (Kexp 2 (4 / 5) 0 1) 1 = 3 / 80 ∧ Cinf (1 / 2 : ℝ) = Real.sqrt 2 ∧ C6 (Cg 2 (4 / 5) 0) 1 = 8 ∧ C7 (C6 (Cg 2 (4 / 5) 0) 1) 2 1 = 4 ∧ rhoL 2 1 1 = 2 ∧ eps0 (3 / 80) (Real.sqrt 2) 4 2 8 = Real.sqrt 2 / 640 ∧ Lgd 2 1 (Kexp 2 (4 / 5) 0 1) (3 / 80) = 5 ∧ Lgd 2 1 (Kexp 2 (4 / 5) 0 1) (3 / 80) = 5 / 2 * (2 * 1) ∧ gamma0 2 1 5 = 1 / 25 ∧ gamma0 2 1 5 * rhoL 2 1 1 / 2 ≤ 1 / 16 ∧ (0 : ℝ) < eps0 (3 / 80) (Real.sqrt 2) 4 2 8 ∧ eps0 (3 / 80) (Real.sqrt 2) 4 2 8 < 1 / 40",
@@ -4593,7 +4643,7 @@
    "variables": [
     "variable {V : Type*} [Fintype V]"
    ],
-   "lines": 1111,
+   "lines": 1162,
    "decls": [
     {
      "name": "eps1",
@@ -4702,7 +4752,7 @@
      "line": 308,
      "attrs": "",
      "private": false,
-     "statement": "theorem hasDerivAt_flowDev {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) (x : V) : HasDerivAt (fun s : ℝ => h s x) (-lossGrad K lam nu gd (fun z => 1 + h t z) x) t",
+     "statement": "theorem hasDerivAt_flowDev {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) (ht : 0 ≤ t) (x : V) : HasDerivAt (fun s : ℝ => h s x) (-lossGrad K lam nu gd (fun z => 1 + h t z) x) t",
      "doc": "**`ḣ_t = −D_t` state by state**: the gradient-flow ODE for `μ_t = (1+h_t)λ`, read on `h`."
     },
     {
@@ -4712,37 +4762,37 @@
      "line": 315,
      "attrs": "",
      "private": false,
-     "statement": "theorem continuous_flowDev {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (x : V) : Continuous fun s : ℝ => h s x",
-     "doc": "`s ↦ h_s(x)` is continuous, being differentiable."
+     "statement": "theorem continuous_flowDev {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (x : V) : ∀ t : ℝ, 0 ≤ t → ContinuousAt (fun s : ℝ => h s x) t",
+     "doc": "`s ↦ h_s(x)` is continuous at every `t ≥ 0`, being differentiable there."
     },
     {
      "name": "hasDerivAt_mean",
      "full": "GFNBounds.Balance.hasDerivAt_mean",
      "kind": "theorem",
-     "line": 324,
+     "line": 322,
      "attrs": "",
      "private": false,
-     "statement": "theorem hasDerivAt_mean {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (htot : ∑ x, lam x = 1) (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) : HasDerivAt (fun s : ℝ => Graph.meanL2 lam (h s)) (-Graph.meanL2 lam (lossGrad K lam nu gd fun z => 1 + h t z)) t",
+     "statement": "theorem hasDerivAt_mean {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (htot : ∑ x, lam x = 1) (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) (ht : 0 ≤ t) : HasDerivAt (fun s : ℝ => Graph.meanL2 lam (h s)) (-Graph.meanL2 lam (lossGrad K lam nu gd fun z => 1 + h t z)) t",
      "doc": "**`ṁ = −∫D dλ`** (`proofs.tex:641`) at `m_t = Πh_t`: `MassAscent.hasDerivAt_mass_flow` differentiates `∫u_t dλ`, and `Πh_t = ∫u_t dλ − 1` because `λ` is a probability."
     },
     {
      "name": "hasDerivAt_perp_sq",
      "full": "GFNBounds.Balance.hasDerivAt_perp_sq",
      "kind": "theorem",
-     "line": 346,
+     "line": 344,
      "attrs": "",
      "private": false,
-     "statement": "theorem hasDerivAt_perp_sq {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1) (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) : HasDerivAt (fun s : ℝ => Graph.nrmL2 lam (perpL2 lam (h s)) ^ 2) (-(2 * Graph.ipL2 lam (perpL2 lam (h t)) (lossGrad K lam nu gd fun z => 1 + h t z))) t",
+     "statement": "theorem hasDerivAt_perp_sq {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1) (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (t : ℝ) (ht : 0 ≤ t) : HasDerivAt (fun s : ℝ => Graph.nrmL2 lam (perpL2 lam (h s)) ^ 2) (-(2 * Graph.ipL2 lam (perpL2 lam (h t)) (lossGrad K lam nu gd fun z => 1 + h t z))) t",
      "doc": "**`d/dt‖h^⊥_t‖² = −2⟨h^⊥_t, D_t⟩`** (`proofs.tex:636`), the quantity Grönwall is applied to."
     },
     {
      "name": "continuous_perp_flow",
      "full": "GFNBounds.Balance.continuous_perp_flow",
      "kind": "theorem",
-     "line": 390,
+     "line": 389,
      "attrs": "",
      "private": false,
-     "statement": "theorem continuous_perp_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (x : V) : Continuous fun s : ℝ => perpL2 lam (h s) x",
+     "statement": "theorem continuous_perp_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (x : V) : ∀ t : ℝ, 0 ≤ t → ContinuousAt (fun s : ℝ => perpL2 lam (h s) x) t",
      "doc": ""
     },
     {
@@ -4752,24 +4802,24 @@
      "line": 397,
      "attrs": "",
      "private": false,
-     "statement": "theorem continuous_Aop_perp_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (y : V) : Continuous fun s : ℝ => Aop K lam (perpL2 lam (h s)) y",
+     "statement": "theorem continuous_Aop_perp_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) (y : V) : ∀ t : ℝ, 0 ≤ t → ContinuousAt (fun s : ℝ => Aop K lam (perpL2 lam (h s)) y) t",
      "doc": ""
     },
     {
      "name": "continuous_energy_flow",
      "full": "GFNBounds.Balance.continuous_energy_flow",
      "kind": "theorem",
-     "line": 407,
+     "line": 408,
      "attrs": "",
      "private": false,
-     "statement": "theorem continuous_energy_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) : Continuous fun s : ℝ => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2",
-     "doc": "**`s ↦ ‖Ah^⊥_s‖²` is continuous**, hence interval-integrable — the only integrability fact Steps 2 and 3 need."
+     "statement": "theorem continuous_energy_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (hflow : IsGradientFlow K lam nu gd fun s x => 1 + h s x) : ∀ t : ℝ, 0 ≤ t → ContinuousAt (fun s : ℝ => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2) t",
+     "doc": "**`s ↦ ‖Ah^⊥_s‖²` is continuous at every `t ≥ 0`**, hence interval-integrable on `ℝ₊` — the only integrability fact Steps 2 and 3 need."
     },
     {
      "name": "perp_decay_on",
      "full": "GFNBounds.Balance.perp_decay_on",
      "kind": "theorem",
-     "line": 429,
+     "line": 432,
      "attrs": "",
      "private": false,
      "statement": "theorem perp_decay_on {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin Bhat eps T : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hwin : ∀ s ∈ Set.Icc (0:ℝ) T, ∀ x, |h s x| ≤ eps) : ∀ t ∈ Set.Icc (0:ℝ) T, Graph.nrmL2 lam (perpL2 lam (h t)) ≤ Real.exp (-(rhoL g2 wmin Bhat * t / 2)) * Graph.nrmL2 lam (perpL2 lam (h 0))",
@@ -4779,7 +4829,7 @@
      "name": "energy_integral_Icc",
      "full": "GFNBounds.Balance.energy_integral_Icc",
      "kind": "theorem",
-     "line": 491,
+     "line": 494,
      "attrs": "",
      "private": false,
      "statement": "theorem energy_integral_Icc {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin Bhat eps T t₀ t₁ : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hwin : ∀ s ∈ Set.Icc (0:ℝ) T, ∀ x, |h s x| ≤ eps) (h0 : 0 ≤ t₀) (h01 : t₀ ≤ t₁) (h1T : t₁ ≤ T) : g2 * wmin * (∫ s in t₀..t₁, Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2) ≤ Graph.nrmL2 lam (perpL2 lam (h t₀)) ^ 2",
@@ -4789,7 +4839,7 @@
      "name": "energy_integral_on",
      "full": "GFNBounds.Balance.energy_integral_on",
      "kind": "theorem",
-     "line": 544,
+     "line": 560,
      "attrs": "",
      "private": false,
      "statement": "theorem energy_integral_on {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin Bhat eps T : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hwin : ∀ s ∈ Set.Icc (0:ℝ) T, ∀ x, |h s x| ≤ eps) (hT : 0 ≤ T) : g2 * wmin * (∫ s in (0:ℝ)..T, Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2) ≤ Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2",
@@ -4799,7 +4849,7 @@
      "name": "energy_integral_Ioi",
      "full": "GFNBounds.Balance.energy_integral_Ioi",
      "kind": "theorem",
-     "line": 569,
+     "line": 585,
      "attrs": "",
      "private": false,
      "statement": "theorem energy_integral_Ioi {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin Bhat eps : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) (hgw : 0 < g2 * wmin) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hwin : ∀ s : ℝ, 0 ≤ s → ∀ x, |h s x| ≤ eps) : g2 * wmin * (∫ s in Set.Ioi (0:ℝ), Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2) ≤ Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2",
@@ -4809,7 +4859,7 @@
      "name": "abs_ratio_sub_one_mul_phi_sq_le",
      "full": "GFNBounds.Balance.abs_ratio_sub_one_mul_phi_sq_le",
      "kind": "theorem",
-     "line": 636,
+     "line": 665,
      "attrs": "",
      "private": false,
      "statement": "theorem abs_ratio_sub_one_mul_phi_sq_le {K : V → V → ℝ} {lam w h : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup eps : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Core.IsInvariant lam K) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (hwsup : ∀ x, |w x| ≤ wsup) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |h x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) {y : V} (hy : lam y ≠ 0) : |(ratio K lam (fun x => 1 + h x) y - 1) * (gd (ratio K lam (fun x => 1 + h x) y) * (w y / (1 + h y)))| ≤ 64 / 27 * (Cg g2 a M3 * wsup) * Aop K lam (perpL2 lam h) y ^ 2",
@@ -4819,7 +4869,7 @@
      "name": "abs_ratio_sub_one_mul_phi_sq_le_C6",
      "full": "GFNBounds.Balance.abs_ratio_sub_one_mul_phi_sq_le_C6",
      "kind": "theorem",
-     "line": 680,
+     "line": 709,
      "attrs": "",
      "private": false,
      "statement": "theorem abs_ratio_sub_one_mul_phi_sq_le_C6 {K : V → V → ℝ} {lam w h : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup eps : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Core.IsInvariant lam K) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |h x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) {y : V} (hy : lam y ≠ 0) : |(ratio K lam (fun x => 1 + h x) y - 1) * (gd (ratio K lam (fun x => 1 + h x) y) * (w y / (1 + h y)))| ≤ C6 (Cg g2 a M3) wsup * Aop K lam (perpL2 lam h) y ^ 2",
@@ -4829,7 +4879,7 @@
      "name": "abs_deriv_mean_le",
      "full": "GFNBounds.Balance.abs_deriv_mean_le",
      "kind": "theorem",
-     "line": 702,
+     "line": 731,
      "attrs": "",
      "private": false,
      "statement": "theorem abs_deriv_mean_le {K : V → V → ℝ} {lam w h : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup eps : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : ∀ x, |h x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) : |Graph.meanL2 lam (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + h z)| ≤ C6 (Cg g2 a M3) wsup * Graph.nrmL2 lam (Aop K lam (perpL2 lam h)) ^ 2",
@@ -4839,7 +4889,7 @@
      "name": "abs_mean_sub_le_energy_integral",
      "full": "GFNBounds.Balance.abs_mean_sub_le_energy_integral",
      "kind": "theorem",
-     "line": 747,
+     "line": 776,
      "attrs": "",
      "private": false,
      "statement": "theorem abs_mean_sub_le_energy_integral {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup eps T t₀ t₁ : ℝ} (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (hKnn : ∀ x y, 0 ≤ K x y) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hwin : ∀ s ∈ Set.Icc (0:ℝ) T, ∀ x, |h s x| ≤ eps) (h0 : 0 ≤ t₀) (h01 : t₀ ≤ t₁) (h1T : t₁ ≤ T) : |Graph.meanL2 lam (h t₁) - Graph.meanL2 lam (h t₀)| ≤ C6 (Cg g2 a M3) wsup * ∫ s in t₀..t₁, Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2",
@@ -4849,7 +4899,7 @@
      "name": "mean_drift_on",
      "full": "GFNBounds.Balance.mean_drift_on",
      "kind": "theorem",
-     "line": 808,
+     "line": 854,
      "attrs": "",
      "private": false,
      "statement": "theorem mean_drift_on {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin Bhat eps T t : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) (hgw : 0 < g2 * wmin) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hwin : ∀ s ∈ Set.Icc (0:ℝ) T, ∀ x, |h s x| ≤ eps) (ht : t ∈ Set.Icc (0:ℝ) T) : |Graph.meanL2 lam (h t) - Graph.meanL2 lam (h 0)| ≤ C7 (C6 (Cg g2 a M3) wsup) g2 wmin * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2",
@@ -4859,7 +4909,7 @@
      "name": "mean_cauchy_on_sharp",
      "full": "GFNBounds.Balance.mean_cauchy_on_sharp",
      "kind": "theorem",
-     "line": 847,
+     "line": 893,
      "attrs": "",
      "private": false,
      "statement": "theorem mean_cauchy_on_sharp {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin Bhat eps T s t : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) (hgw : 0 < g2 * wmin) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hwin : ∀ r ∈ Set.Icc (0:ℝ) T, ∀ x, |h r x| ≤ eps) (hs0 : 0 ≤ s) (hst : s ≤ t) (htT : t ≤ T) : |Graph.meanL2 lam (h t) - Graph.meanL2 lam (h s)| ≤ C7 (C6 (Cg g2 a M3) wsup) g2 wmin * Real.exp (-(rhoL g2 wmin Bhat * s)) * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2",
@@ -4869,7 +4919,7 @@
      "name": "mean_cauchy_on",
      "full": "GFNBounds.Balance.mean_cauchy_on",
      "kind": "theorem",
-     "line": 901,
+     "line": 947,
      "attrs": "",
      "private": false,
      "statement": "theorem mean_cauchy_on {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin Bhat eps T s t : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup0 : 0 ≤ wsup) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) (hrho : 0 < rhoL g2 wmin Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) (heps1 : eps ≤ eps1 g2 wmin (Kexp g2 a M3 wsup) Bhat) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hwin : ∀ r ∈ Set.Icc (0:ℝ) T, ∀ x, |h r x| ≤ eps) (hs0 : 0 ≤ s) (hst : s ≤ t) (htT : t ≤ T) : |Graph.meanL2 lam (h t) - Graph.meanL2 lam (h s)| ≤ 4 * C6 (Cg g2 a M3) wsup / rhoL g2 wmin Bhat * Real.exp (-(rhoL g2 wmin Bhat * s)) * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2",
@@ -4879,7 +4929,7 @@
      "name": "energyH",
      "full": "GFNBounds.Balance.energyH",
      "kind": "def",
-     "line": 1035,
+     "line": 1086,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def energyH : Fin 2 → ℝ",
@@ -4889,7 +4939,7 @@
      "name": "energyH_abs_le",
      "full": "GFNBounds.Balance.energyH_abs_le",
      "kind": "theorem",
-     "line": 1037,
+     "line": 1088,
      "attrs": "",
      "private": false,
      "statement": "theorem energyH_abs_le : ∀ x, |energyH x| ≤ 1 / 40",
@@ -4899,7 +4949,7 @@
      "name": "twoState_perpL2_energyH",
      "full": "GFNBounds.Balance.twoState_perpL2_energyH",
      "kind": "theorem",
-     "line": 1042,
+     "line": 1093,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_perpL2_energyH : perpL2 twoStateLam energyH = energyH",
@@ -4909,7 +4959,7 @@
      "name": "twoState_Aop_eq_neg_perp",
      "full": "GFNBounds.Balance.twoState_Aop_eq_neg_perp",
      "kind": "theorem",
-     "line": 1051,
+     "line": 1102,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_Aop_eq_neg_perp (f : Fin 2 → ℝ) : Aop twoStateK twoStateLam f = fun y => -(perpL2 twoStateLam f y)",
@@ -4919,7 +4969,7 @@
      "name": "twoState_coercivity",
      "full": "GFNBounds.Balance.twoState_coercivity",
      "kind": "theorem",
-     "line": 1061,
+     "line": 1112,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_coercivity (f : Fin 2 → ℝ) : Graph.nrmL2 twoStateLam (perpL2 twoStateLam f) ≤ 1 * Graph.nrmL2 twoStateLam (Aop twoStateK twoStateLam f)",
@@ -4929,7 +4979,7 @@
      "name": "twoState_energy_lhs",
      "full": "GFNBounds.Balance.twoState_energy_lhs",
      "kind": "theorem",
-     "line": 1067,
+     "line": 1118,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_energy_lhs : (2 : ℝ) * 1 / 2 * Graph.nrmL2 twoStateLam (Aop twoStateK twoStateLam (perpL2 twoStateLam energyH)) ^ 2 = 1 / 1600",
@@ -4939,7 +4989,7 @@
      "name": "twoState_energy_rhs",
      "full": "GFNBounds.Balance.twoState_energy_rhs",
      "kind": "theorem",
-     "line": 1076,
+     "line": 1127,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_energy_rhs : Graph.ipL2 twoStateLam (perpL2 twoStateLam energyH) (lossGrad twoStateK twoStateLam (fun z => twoStateLam z * 1) (fun z => 2 * (z - 1)) fun z => 1 + energyH z) = 5129600 / 4088324799",
@@ -4949,7 +4999,7 @@
      "name": "twoState_energy_check",
      "full": "GFNBounds.Balance.twoState_energy_check",
      "kind": "theorem",
-     "line": 1092,
+     "line": 1143,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_energy_check : ((2 : ℝ) * 1 / 2 * Graph.nrmL2 twoStateLam (Aop twoStateK twoStateLam (perpL2 twoStateLam energyH)) ^ 2 = 1 / 1600) ∧ (Graph.ipL2 twoStateLam (perpL2 twoStateLam energyH) (lossGrad twoStateK twoStateLam (fun z => twoStateLam z * 1) (fun z => 2 * (z - 1)) fun z => 1 + energyH z) = 5129600 / 4088324799) ∧ (1 : ℝ) / 1600 ≤ 5129600 / 4088324799",
@@ -5312,7 +5362,7 @@
     "variable {V : Type*} [Fintype V]",
     "variable {V : Type*} [Fintype V]"
    ],
-   "lines": 805,
+   "lines": 807,
    "decls": [
     {
      "name": "rnWeight",
@@ -5351,7 +5401,7 @@
      "line": 200,
      "attrs": "",
      "private": false,
-     "statement": "theorem hasDerivAt_mass_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) : HasDerivAt (fun s : ℝ => Graph.meanL2 lam (u s)) (-(gradMass K lam (u t) (rnWeight lam nu (u t)) gd)) t",
+     "statement": "theorem hasDerivAt_mass_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) (ht : 0 ≤ t) : HasDerivAt (fun s : ℝ => Graph.meanL2 lam (u s)) (-(gradMass K lam (u t) (rnWeight lam nu (u t)) gd)) t",
      "doc": "**`d/dt μ_t(𝒮̂) = −∫ D dλ`** (`proofs.tex:807`): along the gradient flow the total mass moves at minus the mass of the gradient."
     },
     {
@@ -5371,14 +5421,14 @@
      "line": 237,
      "attrs": "",
      "private": false,
-     "statement": "theorem mass_monotoneOn {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow K lam nu gd u) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) D",
+     "statement": "theorem mass_monotoneOn {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hD0 : ∀ s ∈ D, 0 ≤ s) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow K lam nu gd u) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) D",
      "doc": "**The mass ascends, on any convex set of times where the trajectory is positive** (`proofs.tex:791`)."
     },
     {
      "name": "mass_monotone_flow",
      "full": "GFNBounds.Balance.mass_monotone_flow",
      "kind": "theorem",
-     "line": 258,
+     "line": 260,
      "attrs": "",
      "private": false,
      "statement": "theorem mass_monotone_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow K lam nu gd u) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0)",
@@ -5388,7 +5438,7 @@
      "name": "ipL2_sub_mean",
      "full": "GFNBounds.Balance.ipL2_sub_mean",
      "kind": "theorem",
-     "line": 269,
+     "line": 271,
      "attrs": "",
      "private": false,
      "statement": "theorem ipL2_sub_mean {lam : V → ℝ} (htot : ∑ x, lam x = 1) (v : V → ℝ) : ∑ x, lam x * (v x - Graph.meanL2 lam v) ^ 2 = Graph.ipL2 lam v v - Graph.meanL2 lam v ^ 2",
@@ -5398,7 +5448,7 @@
      "name": "mean_le_nrmL2_iff_const",
      "full": "GFNBounds.Balance.mean_le_nrmL2_iff_const",
      "kind": "theorem",
-     "line": 285,
+     "line": 287,
      "attrs": "",
      "private": false,
      "statement": "theorem mean_le_nrmL2_iff_const {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {v : V → ℝ} (hv : ∀ x, 0 ≤ v x) : Graph.meanL2 lam v ≤ Graph.nrmL2 lam v ∧ (Graph.meanL2 lam v = Graph.nrmL2 lam v ↔ ∀ x, v x = Graph.meanL2 lam v)",
@@ -5408,7 +5458,7 @@
      "name": "balanced_const",
      "full": "GFNBounds.Balance.balanced_const",
      "kind": "theorem",
-     "line": 321,
+     "line": 323,
      "attrs": "",
      "private": false,
      "statement": "theorem balanced_const {K : V → V → ℝ} {lam : V → ℝ} (hinv : Invariant K lam) (c : ℝ) : Balanced K lam (fun _ => c)",
@@ -5418,7 +5468,7 @@
      "name": "mass_ascent_lyapunov",
      "full": "GFNBounds.Balance.mass_ascent_lyapunov",
      "kind": "theorem",
-     "line": 336,
+     "line": 338,
      "attrs": "",
      "private": false,
      "statement": "theorem mass_ascent_lyapunov {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow K lam nu gd u) : (∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0)) ∧ MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0) ∧ (∀ t : ℝ, 0 ≤ t → Graph.meanL2 lam (u t) ≤ Graph.nrmL2 lam (u 0)) ∧ (∀ t : ℝ, 0 ≤ t → Graph.meanL2 lam (u t) = Graph.nrmL2 lam (u 0) → (∀ x, u t x = Graph.meanL2 lam (u t)) ∧ Balanced K lam (u t))",
@@ -5428,7 +5478,7 @@
      "name": "const_of_balanced_graph",
      "full": "GFNBounds.Balance.const_of_balanced_graph",
      "kind": "theorem",
-     "line": 378,
+     "line": 380,
      "attrs": "",
      "private": false,
      "statement": "theorem const_of_balanced_graph (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam u : V → ℝ} (h : B.IsInvProb lam) (hu : ∀ x, 0 < u x) (hbal : Balanced B.phat lam u) (x : V) : u x = Graph.meanL2 lam u",
@@ -5438,7 +5488,7 @@
      "name": "mass_ascent_lyapunov_graph",
      "full": "GFNBounds.Balance.mass_ascent_lyapunov_graph",
      "kind": "theorem",
-     "line": 404,
+     "line": 406,
      "attrs": "",
      "private": false,
      "statement": "theorem mass_ascent_lyapunov_graph (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (h : B.IsInvProb lam) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow B.phat lam nu gd u) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0) ∧ ∀ t : ℝ, 0 ≤ t → Graph.meanL2 lam (u t) ≤ Graph.nrmL2 lam (u 0) ∧ (Graph.meanL2 lam (u t) = Graph.nrmL2 lam (u 0) ↔ Balanced B.phat lam (u t))",
@@ -5448,17 +5498,17 @@
      "name": "loss_antitoneOn",
      "full": "GFNBounds.Balance.loss_antitoneOn",
      "kind": "theorem",
-     "line": 444,
+     "line": 446,
      "attrs": "",
      "private": false,
-     "statement": "theorem loss_antitoneOn {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hflow : IsGradientFlow K lam nu gd u) : AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) D",
+     "statement": "theorem loss_antitoneOn {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hD0 : ∀ s ∈ D, 0 ≤ s) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hflow : IsGradientFlow K lam nu gd u) : AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) D",
      "doc": "**`𝓛` decreases along the flow, on any convex set of times where the trajectory is positive** (`proofs.tex:811`), from the flow identity `−𝓛̇ = ‖D‖² ≥ 0`."
     },
     {
      "name": "loss_antitone_flow",
      "full": "GFNBounds.Balance.loss_antitone_flow",
      "kind": "theorem",
-     "line": 462,
+     "line": 464,
      "attrs": "",
      "private": false,
      "statement": "theorem loss_antitone_flow {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hflow : IsGradientFlow K lam nu gd u) : AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) (Set.Ici 0)",
@@ -5468,17 +5518,17 @@
      "name": "lossVal_antitoneOn",
      "full": "GFNBounds.Balance.lossVal_antitoneOn",
      "kind": "theorem",
-     "line": 472,
+     "line": 474,
      "attrs": "",
      "private": false,
-     "statement": "theorem lossVal_antitoneOn {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) D",
+     "statement": "theorem lossVal_antitoneOn {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hD0 : ∀ s ∈ D, 0 ≤ s) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) D",
      "doc": "**`𝓛` decreases along the flow, for `g = (log x)²`, on any convex set of times where the trajectory is positive** (`proofs.tex:811`, `:813`) — `loss_antitoneOn` in `Lojasiewicz.lean`'s variables, where `ν = wλ`."
     },
     {
      "name": "lossVal_antitone_flow",
      "full": "GFNBounds.Balance.lossVal_antitone_flow",
      "kind": "theorem",
-     "line": 483,
+     "line": 485,
      "attrs": "",
      "private": false,
      "statement": "theorem lossVal_antitone_flow {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) (Set.Ici 0)",
@@ -5488,7 +5538,7 @@
      "name": "lossVal_eq_zero_iff_balanced",
      "full": "GFNBounds.Balance.lossVal_eq_zero_iff_balanced",
      "kind": "theorem",
-     "line": 494,
+     "line": 496,
      "attrs": "",
      "private": false,
      "statement": "theorem lossVal_eq_zero_iff_balanced {K : V → V → ℝ} {lam u wf : V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < wf x) : lossVal lam wf logSq (ratio K lam u) = 0 ↔ Balanced K lam u",
@@ -5498,7 +5548,7 @@
      "name": "lojasiewicz_integrated_nonneg",
      "full": "GFNBounds.Balance.lojasiewicz_integrated_nonneg",
      "kind": "theorem",
-     "line": 532,
+     "line": 534,
      "attrs": "",
      "private": false,
      "statement": "theorem lojasiewicz_integrated_nonneg {L L' : ℝ → ℝ} {kappa : ℝ} (hderiv : ∀ t : ℝ, 0 ≤ t → HasDerivAt L (L' t) t) (hL0 : 0 ≤ L 0) (hineq : ∀ t : ℝ, 0 ≤ t → kappa ^ 2 * L t ^ 2 ≤ -L' t) : ∀ t : ℝ, 0 ≤ t → L t ≤ ((L 0)⁻¹ + kappa ^ 2 * t)⁻¹",
@@ -5508,7 +5558,7 @@
      "name": "global_lojasiewicz_flow'",
      "full": "GFNBounds.Balance.global_lojasiewicz_flow'",
      "kind": "theorem",
-     "line": 593,
+     "line": 595,
      "attrs": "",
      "private": false,
      "statement": "theorem global_lojasiewicz_flow' {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin wsup : ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hu0 : 0 < Graph.nrmL2 lam (u 0)) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → lossVal lam wf logSq (ratio K lam (u t)) ≤ ((lossVal lam wf logSq (ratio K lam (u 0)))⁻¹ + (wmin * Real.sqrt lamMin / (Graph.nrmL2 lam (u 0) * wsup * max 1 (Real.sqrt (lossVal lam wf logSq (ratio K lam (u 0)) / (wmin * lamMin))))) ^ 2 * t)⁻¹",
@@ -5518,7 +5568,7 @@
      "name": "ratio_smul",
      "full": "GFNBounds.Balance.ratio_smul",
      "kind": "theorem",
-     "line": 639,
+     "line": 641,
      "attrs": "",
      "private": false,
      "statement": "theorem ratio_smul {K : V → V → ℝ} {lam u : V → ℝ} {c : ℝ} (hc : c ≠ 0) : ratio K lam (fun x => c * u x) = ratio K lam u",
@@ -5528,7 +5578,7 @@
      "name": "lossGrad_smul",
      "full": "GFNBounds.Balance.lossGrad_smul",
      "kind": "theorem",
-     "line": 653,
+     "line": 655,
      "attrs": "",
      "private": false,
      "statement": "theorem lossGrad_smul {K : V → V → ℝ} {lam nu u : V → ℝ} {gd : ℝ → ℝ} {c : ℝ} (hc : c ≠ 0) : lossGrad K lam nu gd (fun x => c * u x) = fun x => c⁻¹ * lossGrad K lam nu gd u x",
@@ -5538,17 +5588,17 @@
      "name": "flow_rescale",
      "full": "GFNBounds.Balance.flow_rescale",
      "kind": "theorem",
-     "line": 676,
+     "line": 678,
      "attrs": "",
      "private": false,
-     "statement": "theorem flow_rescale {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd u) {c : ℝ} (hc : 0 < c) (t₁ : ℝ) : IsGradientFlow K lam nu gd (fun s x => c⁻¹ * u (t₁ + c ^ 2 * s) x)",
+     "statement": "theorem flow_rescale {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd u) {c : ℝ} (hc : 0 < c) {t₁ : ℝ} (ht₁ : 0 ≤ t₁) : IsGradientFlow K lam nu gd (fun s x => c⁻¹ * u (t₁ + c ^ 2 * s) x)",
      "doc": "**The rescaled flow is a flow, run at speed `c²`** (`proofs.tex:813`): if `t ↦ μ_t` solves `μ̇ = −∇𝓛`, so does `s ↦ μ_{t₁ + c²s}/c`."
     },
     {
      "name": "cDelta",
      "full": "GFNBounds.Balance.cDelta",
      "kind": "def",
-     "line": 703,
+     "line": 705,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def cDelta (wmin lamMin u0nrm δ : ℝ) : ℝ",
@@ -5558,7 +5608,7 @@
      "name": "entry_time",
      "full": "GFNBounds.Balance.entry_time",
      "kind": "theorem",
-     "line": 720,
+     "line": 722,
      "attrs": "",
      "private": false,
      "statement": "theorem entry_time {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin δ : ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : 0 < Graph.nrmL2 lam (u 0)) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) (hδ0 : 0 < δ) (hδ1 : δ ≤ 1/2) : ∃ t₁ ∈ Set.Icc (0:ℝ) (lossVal lam wf logSq (ratio K lam (u 0)) / cDelta wmin lamMin (Graph.nrmL2 lam (u 0)) δ ^ 2), ∀ x, |ratio K lam (u t₁) x - 1| < δ",
@@ -5621,7 +5671,7 @@
      "attrs": "",
      "private": false,
      "statement": "def gradDensity (K : V → V → ℝ) (r φ : V → ℝ) : V → ℝ",
-     "doc": "**`D = Qφ − rφ`**, the gradient density of `prop:no_distant_equilibrium`'s proof (`proofs.tex:801`)."
+     "doc": "**`D = Qφ − rφ`**, the gradient density of `prop:no_distant_equilibrium`'s proof (`proofs.tex:822`)."
     },
     {
      "name": "integral_gradDensity",
@@ -5631,7 +5681,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem integral_gradDensity {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K lam) (r φ : V → ℝ) : ∑ x, lam x * gradDensity K r φ x = ∑ x, lam x * (φ x * (1 - r x))",
-     "doc": "**`∫ D dλ = ∫ φ(1 − r) dλ`** (`proofs.tex:803`), from `integral_funAct`."
+     "doc": "**`∫ D dλ = ∫ φ(1 − r) dλ`** (`proofs.tex:824`), from `integral_funAct`."
     },
     {
      "name": "integral_gradDensity_potential",
@@ -5641,7 +5691,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem integral_gradDensity_potential {K : V → V → ℝ} {lam : V → ℝ} (h : Invariant K lam) (gd : ℝ → ℝ) (r w : V → ℝ) : ∑ x, lam x * gradDensity K r (fun y => gd (r y) * w y) x = ∑ x, lam x * (gd (r x) * (1 - r x) * w x)",
-     "doc": "**`∫ D dλ = ∫ g'(r)(1 − r)(dν/dμ) dλ`** (`proofs.tex:803`), the mass identity itself, at `φ = g'(r)·(dν/dμ)`."
+     "doc": "**`∫ D dλ = ∫ g'(r)(1 − r)(dν/dμ) dλ`** (`proofs.tex:824`), the mass identity itself, at `φ = g'(r)·(dν/dμ)`."
     },
     {
      "name": "StrictlyUnimodal",
@@ -5651,7 +5701,7 @@
      "attrs": "",
      "private": false,
      "statement": "def StrictlyUnimodal (gd : ℝ → ℝ) : Prop",
-     "doc": "**Strict unimodality** (`proofs.tex:788`): `sign g'(x) = sign(x − 1)` for `x ≠ 1`, on the domain `ℝ_+^*` of the generator."
+     "doc": "**Strict unimodality** (`proofs.tex:809`): `sign g'(x) = sign(x − 1)` for `x ≠ 1`, on the domain `ℝ_+^*` of the generator."
     },
     {
      "name": "term_neg",
@@ -5661,7 +5711,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem term_neg {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ} (hl : 0 < l) (hr : 0 < rx) (hw : 0 < wx) (hne : rx ≠ 1) : l * (gd rx * (1 - rx) * wx) < 0",
-     "doc": "**`g'(r)(1 − r) < 0` wherever `r ≠ 1`** (`proofs.tex:805`), weighted by `λ > 0` and `dν/dμ > 0`."
+     "doc": "**`g'(r)(1 − r) < 0` wherever `r ≠ 1`** (`proofs.tex:826`), weighted by `λ > 0` and `dν/dμ > 0`."
     },
     {
      "name": "term_nonpos",
@@ -5671,7 +5721,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem term_nonpos {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ} (hl : 0 ≤ l) (hr : 0 < rx) (hw : 0 < wx) : l * (gd rx * (1 - rx) * wx) ≤ 0",
-     "doc": "The integrand of the mass identity is nonpositive (`proofs.tex:805`)."
+     "doc": "The integrand of the mass identity is nonpositive (`proofs.tex:826`)."
     },
     {
      "name": "term_eq_zero_iff",
@@ -5681,7 +5731,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem term_eq_zero_iff {gd : ℝ → ℝ} (hg : StrictlyUnimodal gd) {l rx wx : ℝ} (hl : 0 < l) (hr : 0 < rx) (hw : 0 < wx) : l * (gd rx * (1 - rx) * wx) = 0 ↔ rx = 1",
-     "doc": "It vanishes exactly at `r = 1` (`proofs.tex:805`), where `λ > 0` and `dν/dμ > 0` are what turns \"vanishes\" into \"`r = 1`\"."
+     "doc": "It vanishes exactly at `r = 1` (`proofs.tex:826`), where `λ > 0` and `dν/dμ > 0` are what turns \"vanishes\" into \"`r = 1`\"."
     },
     {
      "name": "pushMass",
@@ -5701,7 +5751,7 @@
      "attrs": "",
      "private": false,
      "statement": "def Balanced (K : V → V → ℝ) (lam u : V → ℝ) : Prop",
-     "doc": "**`μ` is balanced**: `μT = μ` (`proofs.tex:805`)."
+     "doc": "**`μ` is balanced**: `μT = μ` (`proofs.tex:826`)."
     },
     {
      "name": "ratio",
@@ -5711,7 +5761,7 @@
      "attrs": "",
      "private": false,
      "statement": "noncomputable def ratio (K : V → V → ℝ) (lam u : V → ℝ) : V → ℝ",
-     "doc": "**`r = d(μT)/dμ`** (`proofs.tex:448`, restated at `proofs.tex:821`) for `μ = uλ`."
+     "doc": "**`r = d(μT)/dμ`** (`proofs.tex:448`, restated at `proofs.tex:842`) for `μ = uλ`."
     },
     {
      "name": "ratio_pos",
@@ -5731,7 +5781,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem ratio_eq_one_iff_balanced {K : V → V → ℝ} {lam u : V → ℝ} (hpos : ∀ y, 0 < lam y * u y) : (∀ y, ratio K lam u y = 1) ↔ Balanced K lam u",
-     "doc": "**`r ≡ 1` if and only if `μT = μ`** (`proofs.tex:805`: \"`r = 1` […] `μ`-a.e., i.e."
+     "doc": "**`r ≡ 1` if and only if `μT = μ`** (`proofs.tex:826`: \"`r = 1` […] `μ`-a.e., i.e."
     },
     {
      "name": "lossGradDensity",
@@ -5761,7 +5811,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem no_distant_equilibrium_one {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) : gradMass K lam u w gd = ∑ x, lam x * (gd (ratio K lam u x) * (1 - ratio K lam u x) * w x) ∧ gradMass K lam u w gd ≤ 0 ∧ (gradMass K lam u w gd = 0 ↔ Balanced K lam u)",
-     "doc": "**`prop:no_distant_equilibrium`*(1)*, the mass identity** (statement `proofs.tex:789–790`, proof `proofs.tex:801–805`)."
+     "doc": "**`prop:no_distant_equilibrium`*(1)*, the mass identity** (statement `proofs.tex:810–811`, proof `proofs.tex:822–826`)."
     },
     {
      "name": "balanced_of_critical",
@@ -5771,7 +5821,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem balanced_of_critical {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) (hD : ∀ x, lossGradDensity K lam u w gd x = 0) : Balanced K lam u",
-     "doc": "**\"Every critical point of `𝓛_{g,ν}` is therefore balanced\"** (`proofs.tex:790`, proof `proofs.tex:805`: \"at a critical point `D = 0`, so the mass vanishes and `μ` is balanced\")."
+     "doc": "**\"Every critical point of `𝓛_{g,ν}` is therefore balanced\"** (`proofs.tex:811`, proof `proofs.tex:826`: \"at a critical point `D = 0`, so the mass vanishes and `μ` is balanced\")."
     },
     {
      "name": "global_dichotomy_full_one",
@@ -5781,7 +5831,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem global_dichotomy_full_one {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hw : ∀ x, 0 < w x) (hg : StrictlyUnimodal gd) : gradMass K lam u w gd = ∑ x, lam x * (gd (ratio K lam u x) * (1 - ratio K lam u x) * w x) ∧ gradMass K lam u w gd ≤ 0 ∧ (gradMass K lam u w gd = 0 ↔ Balanced K lam u)",
-     "doc": "**`theo:global_dichotomy_full`*(1)*, the mass-identity half** (statement `proofs.tex:820–826`, item *(1)* at `:823`; proof `proofs.tex:828–830`)."
+     "doc": "**`theo:global_dichotomy_full`*(1)*, the mass-identity half** (statement `proofs.tex:841–847`, item *(1)* at `:844`; proof `proofs.tex:849–851`)."
     },
     {
      "name": "strictlyUnimodal_sqDeriv",
@@ -5791,7 +5841,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem strictlyUnimodal_sqDeriv : StrictlyUnimodal fun x : ℝ => 2 * (x - 1)",
-     "doc": "`g = (x − 1)²`, so `g'(x) = 2(x − 1)`, is strictly unimodal (`proofs.tex:788`)."
+     "doc": "`g = (x − 1)²`, so `g'(x) = 2(x − 1)`, is strictly unimodal (`proofs.tex:809`)."
     },
     {
      "name": "strictlyUnimodal_logSqDeriv",
@@ -5801,7 +5851,7 @@
      "attrs": "",
      "private": false,
      "statement": "theorem strictlyUnimodal_logSqDeriv : StrictlyUnimodal fun x : ℝ => 2 * Real.log x / x",
-     "doc": "`g = (log x)²`, so `g'(x) = 2 log x / x`, is strictly unimodal (`proofs.tex:788`) — the paper's practical generator."
+     "doc": "`g = (log x)²`, so `g'(x) = 2 log x / x`, is strictly unimodal (`proofs.tex:809`) — the paper's practical generator."
     },
     {
      "name": "invariant_of_isInvProb",
@@ -6272,7 +6322,7 @@
      "line": 303,
      "attrs": "",
      "private": false,
-     "statement": "theorem flow_translate {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd u) (t₁ : ℝ) : IsGradientFlow K lam nu gd (fun s x => u (t₁ + s) x)",
+     "statement": "theorem flow_translate {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd u) (t₁ : ℝ) (ht₁ : 0 ≤ t₁) : IsGradientFlow K lam nu gd (fun s x => u (t₁ + s) x)",
      "doc": "**Time translation**: `s ↦ u_{t₁+s}` is again a gradient flow."
     },
     {
@@ -6282,7 +6332,7 @@
      "line": 311,
      "attrs": "",
      "private": false,
-     "statement": "theorem flow_unit_mass {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd u) {m : ℝ} (hm : 0 < m) (t₁ : ℝ) : IsGradientFlow K lam nu gd (fun s x => u (t₁ + m ^ 2 * s) x / m)",
+     "statement": "theorem flow_unit_mass {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hflow : IsGradientFlow K lam nu gd u) {m : ℝ} (hm : 0 < m) (t₁ : ℝ) (ht₁ : 0 ≤ t₁) : IsGradientFlow K lam nu gd (fun s x => u (t₁ + m ^ 2 * s) x / m)",
      "doc": "**The rescaling to unit mass** (`proofs.tex:813`, `:930`): dividing the state by `m` and dilating time by `m²` again solves the ODE. `MassAscent.flow_rescale` at `c = m`."
     },
     {

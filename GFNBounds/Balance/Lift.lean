@@ -332,7 +332,7 @@ theorem pushEdge_edgeMeasure {pb : V → V → ℝ} {lam : V → ℝ} (hinv : In
 def dualEdgeKernel (pf : V → V → ℝ) (_s s' z w : V) : ℝ := if z = s' then pf s' w else 0
 
 omit [Fintype V] in
-/-- **`lem:lift_wellposed`, the duality identity** `λ₂ ⊗ K₂* = K₂ ⊗ λ₂` (`proofs.tex:521`), read
+/-- **`lem:lift_wellposed`, the duality identity** `λ₂ ⊗ K₂ = K₂* ⊗ λ₂` (`proofs.tex:521`), read
 pointwise on a finite space:
 
     λ₂(s,s') · K₂((s,s') → (z,w)) = λ₂(z,w) · K₂*((z,w) → (s,s')).

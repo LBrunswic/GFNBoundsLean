@@ -107,4 +107,5 @@ import GFNBounds.Graph.CycleBlowup
 import GFNBounds.Doubling.TruncationBhat
 import GFNBounds.Doubling.MainPackaging
 import GFNBounds.Graph.FrozenUnstableDB
+import GFNBounds.Balance.GlobalConvergence
 import GFNBounds.Audit

@@ -3,9 +3,9 @@ import GFNBounds.Balance.LocalConvergence
 /-!
 # The boundary blow-up: the loss explodes where the density vanishes, so the flow stays positive
 
-**`prop:no_distant_equilibrium`** — `proofs.tex:787–814`; statement `:787–798`, item *(3)* at
-`:792–796`, proof `:800–814`. What is formalized here is **item *(3)*'s compactness half**, the
-one sentence of the proof (`:813`) that keeps the trajectory off the boundary of the cone:
+**`prop:no_distant_equilibrium`** — `proofs.tex:808–835`; statement `:808–819`, item *(3)* at
+`:813–817`, proof `:821–835`. What is formalized here is **item *(3)*'s compactness half**, the
+one sentence of the proof (`:834`) that keeps the trajectory off the boundary of the cone:
 
 > Convergence: `𝓛` decreases along the flow, and it blows up at the boundary of the cone --- if
 > `u(x) → 0` at some state while `‖u‖ = ‖u₀‖`, strong connectedness provides an edge from a
@@ -59,7 +59,7 @@ would exceed `L₀`. Strong connectedness then reaches every state from the maxi
 | **`loss_lower_of_small`** | **the paper's "`g(r)ν → ∞`"**: `λ_min w_min (log(…))² ≤ 𝓛` |
 | `edge_drop_of_loss_le` | the one-edge drop `c·u(y) ≤ u(z)`, the contrapositive of the two above |
 | **`pos_of_loss_le`** | **the theorem**: `𝓛 ≤ L₀` and `∫u dλ ≥ m₀` force `u ≥ u_min` at every state |
-| `continuous_flow` | a gradient flow is continuous in time, state by state — what `L2Toolkit.bootstrap_of_continuous` consumes |
+| `continuous_flow` | a gradient flow is continuous at every time `t ≥ 0`, state by state — what `L2Toolkit.bootstrap_of_continuous` consumes, through the curve `s ↦ u(max s 0)` |
 | **`flow_pos_of_pos`**, `flow_pos`, **`flow_pos_graph`** | **the continuation**: `u_min ≤ u_t(x)` for every `t ≥ 0` and every `x`, hence `0 < u_t(x)`; and the same on the loop closure of a finite path-connected marked graph, which is the shape `theo:training_speed_full` consumes. `L2Toolkit.bootstrap_of_continuous` is the tool, `LocalConvergence.sup_global` the precedent |
 | `mass_tendsto` | the mass converges — the half of the LaSalle sentence that does not need an `ω`-limit |
 | `twoState_*`, **`twoState_boundary_blowup_check`** | the constants **evaluated** on the two-state chain at `u = (3/2, 1/2)`: `λ_min = p_min = 1/2`, `L₀ = 1/2`, `M = 1`, `u_min = e^{−1}/4 ≈ 0.0920`, against `min u = 1/2` |
@@ -68,7 +68,7 @@ would exceed `L₀`. Strong connectedness then reaches every state from the maxi
 
 | paper hypothesis | here |
 |---|---|
-| `g` admissible, differentiable, strictly unimodal | ⚠ **specialised to `g = (log x)²`**, which is what item *(3)* is stated for (`proofs.tex:792`). `logSq`, `logSqDeriv` are `Lojasiewicz.lean`'s, and ⚠ `logSqDeriv` is the *definition* `2 log x/x`, not a derivative — inherited |
+| `g` admissible, differentiable, strictly unimodal | ⚠ **specialised to `g = (log x)²`**, which is what item *(3)* is stated for (`proofs.tex:813`). `logSq`, `logSqDeriv` are `Lojasiewicz.lean`'s, and ⚠ `logSqDeriv` is the *definition* `2 log x/x`, not a derivative — inherited |
 | `(𝒮̂, λ, T)` ergodic | ⚠ **weakened to `Invariant K lam` with `λ > 0` and `∑λ = 1`**, as everywhere in `GFNBounds.Balance`. Ergodicity is not used; what replaces its dynamical content is `CrossingFloor` |
 | a **finite** state space | ✓ `[Fintype V]`, and essentially: `u_min` carries `|V|` in its exponent |
 | `w ≥ w_min > 0` | ✓ `hwmin : 0 < wmin`, `hw : ∀ x, wmin ≤ wf x`; `ν = wλ` |
@@ -140,7 +140,7 @@ variable {V : Type*} [Fintype V]
 
 /-! ### The three constants -/
 
-/-- **`M := max(1, √(L₀/(w_min λ_min)))`** (`proofs.tex:892`), the exponent of
+/-- **`M := max(1, √(L₀/(w_min λ_min)))`** (`proofs.tex:913`), the exponent of
 `Lojasiewicz.ratio_le_exp`. Named, not redefined: every use below is that lemma's own bound. -/
 noncomputable def ratioCap (lamMin wmin L0 : ℝ) : ℝ :=
   max 1 (Real.sqrt (L0 / (wmin * lamMin)))
@@ -150,7 +150,7 @@ theorem one_le_ratioCap (lamMin wmin L0 : ℝ) : 1 ≤ ratioCap lamMin wmin L0 :
 theorem ratioCap_pos (lamMin wmin L0 : ℝ) : 0 < ratioCap lamMin wmin L0 :=
   lt_of_lt_of_le one_pos (one_le_ratioCap _ _ _)
 
-/-- **`c := λ_min p_min e^{−M}`**, the worst per-edge drop of the density (`proofs.tex:813`,
+/-- **`c := λ_min p_min e^{−M}`**, the worst per-edge drop of the density (`proofs.tex:834`,
 "strong connectedness provides an edge from a non-vanishing state into the vanishing region,
 whose ratio explodes"). -/
 noncomputable def edgeDrop (lamMin pmin wmin L0 : ℝ) : ℝ :=
@@ -256,7 +256,7 @@ end Graph
 
 /-! ### Item *(1)*: the ratio explodes at a small state -/
 
-/-- **`r(z) ≥ λ(y)u(y)K(y,z)/(λ(z)u(z))`** (`proofs.tex:813`, "whose ratio explodes"): one edge
+/-- **`r(z) ≥ λ(y)u(y)K(y,z)/(λ(z)u(z))`** (`proofs.tex:834`, "whose ratio explodes"): one edge
 into `z` already forces the ratio there, and the bound is `∝ 1/u(z)`.
 
 `pushMass` is a sum of non-negative terms and `r` is that sum over `λ(z)u(z)`. -/
@@ -278,7 +278,7 @@ theorem logSq_le_logSq_of_one_le {a b : ℝ} (ha : 1 ≤ a) (hab : a ≤ b) : lo
   have hnn : 0 ≤ Real.log a := Real.log_nonneg ha
   simpa only [logSq] using pow_le_pow_left₀ hnn hlog 2
 
-/-- **`λ_min w_min (log(λ(y)u(y)K(y,z)/(λ(z)u(z))))² ≤ 𝓛`** (`proofs.tex:813`, "`g(r)ν → ∞`"):
+/-- **`λ_min w_min (log(λ(y)u(y)K(y,z)/(λ(z)u(z))))² ≤ 𝓛`** (`proofs.tex:834`, "`g(r)ν → ∞`"):
 the loss blows up as `u(z) → 0`, at the logarithmic rate `g = (log x)²` gives it.
 
 `Lojasiewicz.logSq_le_of_loss` read at the single state `z`, together with monotonicity of `g`
@@ -468,10 +468,10 @@ section Localised
 
 variable {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
 
-/-- A gradient flow is continuous in time, state by state. -/
+/-- A gradient flow is continuous in time at every `t ≥ 0`, state by state. -/
 theorem continuous_flow (hflow : IsGradientFlow K lam nu gd u) (x : V) :
-    Continuous fun t : ℝ => u t x :=
-  continuous_iff_continuousAt.mpr fun t => (hflow t x).continuousAt
+    ∀ t : ℝ, 0 ≤ t → ContinuousAt (fun t : ℝ => u t x) t :=
+  fun t ht => (hflow t ht x).continuousAt
 
 end Localised
 
@@ -481,7 +481,7 @@ The static bound reproduces itself at double strength — window `u ≥ u_min/2`
 `u ≥ u_min` — which is exactly the shape `L2Toolkit.bootstrap_of_continuous` propagates from
 `t = 0` to all of `[0,∞)`. `LocalConvergence.sup_global` is the worked precedent. -/
 
-/-- **`prop:no_distant_equilibrium`*(3)*'s compactness half, along the flow** (`proofs.tex:813`):
+/-- **`prop:no_distant_equilibrium`*(3)*'s compactness half, along the flow** (`proofs.tex:834`):
 from a positive initial density the trajectory stays at density at least `u_min`, at every state
 and every `t ≥ 0`, with `L₀ = 𝓛(μ₀)` and `m₀ = μ₀(𝒮̂)` — the paper's own budgets.
 
@@ -517,14 +517,24 @@ theorem flow_pos_of_pos {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → 
     intro t x b hb
     rw [abs_of_nonneg (le_max_left (0:ℝ) (3 * um / 2 - u t x)), max_le_iff]
     exact ⟨fun hh => by linarith [hh.2], fun hh => ⟨hb, by linarith⟩⟩
-  have hkey : ∀ t : ℝ, 0 ≤ t → ∀ x, |max 0 (3 * um / 2 - u t x)| ≤ um / 2 := by
-    refine bootstrap_of_continuous (h := fun t x => max 0 (3 * um / 2 - u t x)) (eps := um)
-      hum0 (fun x => continuous_const.max (continuous_const.sub (continuous_flow hflow x)))
-      (fun x => ?_) fun t ht hwin x => ?_
-    · rw [hiff 0 x (um / 2) (by linarith)]
+  -- `u` is known continuous on `ℝ₊` only; `t ↦ u(max t 0)` is continuous and agrees there
+  have hkey : ∀ t : ℝ, 0 ≤ t → ∀ x, |max 0 (3 * um / 2 - u (max t 0) x)| ≤ um / 2 := by
+    refine bootstrap_of_continuous (h := fun t x => max 0 (3 * um / 2 - u (max t 0) x))
+      (eps := um) hum0
+      (fun x => continuous_const.max (continuous_const.sub
+        (continuous_iff_continuousAt.2 fun s =>
+          ContinuousAt.comp (g := fun r : ℝ => u r x) (f := fun r : ℝ => max r 0) (x := s)
+            (continuous_flow hflow x _ (le_max_right s 0))
+            (continuous_id.max continuous_const).continuousAt)))
+      (fun x => ?_) fun t ht hwin' x => ?_
+    · simp only [max_self]
+      rw [hiff 0 x (um / 2) (by linarith)]
       have := hstatic (u 0) hu0 le_rfl le_rfl x
       linarith
     · -- the window gives positivity on `[0,t]`, hence both budgets there
+      simp only [max_eq_left ht]
+      have hwin : ∀ s ∈ Set.Icc (0:ℝ) t, ∀ y, |max 0 (3 * um / 2 - u s y)| ≤ um :=
+        fun s hs y => by simpa only [max_eq_left hs.1] using hwin' s hs y
       have hupos : ∀ s ∈ Set.Icc (0:ℝ) t, ∀ y, 0 < u s y := by
         intro s hs y
         have := (hiff s y um hum0.le).mp (hwin s hs y)
@@ -532,23 +542,24 @@ theorem flow_pos_of_pos {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → 
       have h0mem : (0:ℝ) ∈ Set.Icc (0:ℝ) t := ⟨le_rfl, ht⟩
       have htmem : t ∈ Set.Icc (0:ℝ) t := ⟨ht, le_rfl⟩
       have hL : lossVal lam wf logSq (ratio K lam (u t)) ≤ L0 :=
-        lossVal_antitoneOn (convex_Icc 0 t) hinv hK hlam hupos hflow h0mem htmem ht
+        lossVal_antitoneOn (convex_Icc 0 t) (fun _ hs => hs.1) hinv hK hlam hupos hflow h0mem htmem ht
       have hm : m0 ≤ Graph.meanL2 lam (u t) :=
-        mass_monotoneOn (convex_Icc 0 t) hinv hK hlam hupos
+        mass_monotoneOn (convex_Icc 0 t) (fun _ hs => hs.1) hinv hK hlam hupos
           (fun y => mul_pos (hlam y) (hwpos y)) logSqDeriv_strictlyUnimodal hflow h0mem htmem ht
       rw [hiff t x (um / 2) (by linarith)]
       have := hstatic (u t) (hupos t htmem) hL hm x
       linarith
   intro t ht x
   have hb := hkey t ht x
+  simp only [max_eq_left ht] at hb
   rw [hiff t x (um / 2) (by linarith)] at hb
   linarith
 
 /-- **The hypothesis ten files carry, discharged on `[0,∞)`**: a gradient flow of `𝓛_{g,ν}` with
 `g = (log x)²` started at a positive density stays positive.
 
-Every consumer in `GFNBounds.Balance` states the hypothesis over **all** of `ℝ`; see the module
-SCOPE, first bullet. -/
+Every consumer in `GFNBounds.Balance` states the hypothesis on `[0,∞)` (`kb/entries/0022`), which is
+where this theorem discharges it; see the module SCOPE, first bullet. -/
 theorem flow_pos {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ}
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
     (htot : ∑ x, lam x = 1)
@@ -622,7 +633,7 @@ theorem mass_tendsto {lamMin pmin wmin : ℝ}
     flow_pos hinv hK hlam htot hlmin hlmin0 hpmin0 hpmin1 hcross hwmin hw hu0 hflow
   have hwpos : ∀ x, 0 < wf x := fun x => lt_of_lt_of_le hwmin (hw x)
   refine tendsto_atTop_of_monotoneOn_Ici
-    (mass_monotoneOn (convex_Ici 0) hinv hK hlam (fun s hs => hupos s hs)
+    (mass_monotoneOn (convex_Ici 0) (fun _ hs => hs) hinv hK hlam (fun s hs => hupos s hs)
       (fun y => mul_pos (hlam y) (hwpos y)) logSqDeriv_strictlyUnimodal hflow)
     (C := Graph.nrmL2 lam (u 0)) fun τ hτ => ?_
   have hcs : Graph.meanL2 lam (u τ) ≤ Graph.nrmL2 lam (u τ) :=

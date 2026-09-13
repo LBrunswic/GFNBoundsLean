@@ -435,9 +435,19 @@ theorem sup_global {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} 
   have hBpos : (0 : ℝ) < Bhat := lt_of_lt_of_le zero_lt_one hB1
   have hepsWpos : 0 < epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat :=
     epsW_pos ha hg2 hwmin0 (Kexp_pos hg2 hM3 ha.le hwsupp) hBpos
-  refine bootstrap_of_continuous hepsWpos (fun x => continuous_flowDev hflow x) ?_ ?_
+  -- `h` is known continuous on `ℝ₊` only; `t ↦ h(max t 0)` is continuous and agrees there
+  suffices hmax : ∀ t : ℝ, 0 ≤ t → ∀ x,
+      |h (max t 0) x| ≤ epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat / 2 by
+    intro t ht x
+    simpa only [max_eq_left ht] using hmax t ht x
+  refine bootstrap_of_continuous (h := fun t x => h (max t 0) x) hepsWpos
+    (fun x => continuous_iff_continuousAt.2 fun s =>
+      ContinuousAt.comp (g := fun r : ℝ => h r x) (f := fun r : ℝ => max r 0) (x := s)
+        (continuous_flowDev hflow x _ (le_max_right s 0))
+        (continuous_id.max continuous_const).continuousAt) ?_ ?_
   · -- the `t = 0` base case, unstated in the paper
     intro x
+    simp only [max_self]
     have hc70 : 0 ≤ C7 (C6 (Cg g2 a M3) wsup) g2 wmin := by
       have hwsup0 : 0 ≤ wsup := hwsupp.le
       have ha0 : 0 ≤ a := ha.le
@@ -460,9 +470,11 @@ theorem sup_global {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} 
     have h2 : Ci * Graph.nrmL2 lam (h 0) ≤ Ci * e0 := mul_le_mul_of_nonneg_left hnorm0 hCi0.le
     have h3 : 0 ≤ Ci * e0 * c7 := by positivity
     linarith
-  · intro t ht hwin
+  · intro t ht hwin x
+    simp only [max_eq_left ht]
     exact sup_bootstrap_step hK hinv hlam htot hlmin0 hlmin hg2 hM3 ha.le hwsup hwmin0 hwmin
-      hB1 hcoer htaylor hflow hnorm0 ht hwin
+      hB1 hcoer htaylor hflow hnorm0 ht
+      (fun s hs y => by simpa only [max_eq_left hs.1] using hwin s hs y) x
 
 /-! ### Step 5, the limit of the mass
 
@@ -491,27 +503,29 @@ theorem tendsto_atTop_of_monotoneOn_Ici {f : ℝ → ℝ} {C : ℝ}
 no faster than `A` grows, both are bounded on `[0,∞)`: then `B` converges at `+∞`, because
 `A ± B` are monotone and bounded and `B = ((A+B) − (A−B))/2`. -/
 theorem tendsto_atTop_of_deriv_dominated {A B b beta : ℝ → ℝ} {CA CB : ℝ}
-    (hA : ∀ τ : ℝ, HasDerivAt A (b τ) τ) (hB : ∀ τ : ℝ, HasDerivAt B (beta τ) τ)
+    (hA : ∀ τ : ℝ, 0 ≤ τ → HasDerivAt A (b τ) τ) (hB : ∀ τ : ℝ, 0 ≤ τ → HasDerivAt B (beta τ) τ)
     (hdom : ∀ τ : ℝ, 0 ≤ τ → |beta τ| ≤ b τ)
     (hAbd : ∀ τ : ℝ, 0 ≤ τ → A τ ≤ CA) (hBbd : ∀ τ : ℝ, 0 ≤ τ → |B τ| ≤ CB) :
     ∃ l : ℝ, Filter.Tendsto B Filter.atTop (nhds l) := by
-  have hd1 : ∀ τ : ℝ, HasDerivAt (fun z => A z - B z) (b τ - beta τ) τ :=
-    fun τ => (hA τ).sub (hB τ)
-  have hd2 : ∀ τ : ℝ, HasDerivAt (fun z => A z + B z) (b τ + beta τ) τ :=
-    fun τ => (hA τ).add (hB τ)
+  have hd1 : ∀ τ : ℝ, 0 ≤ τ → HasDerivAt (fun z => A z - B z) (b τ - beta τ) τ :=
+    fun τ hτ => (hA τ hτ).sub (hB τ hτ)
+  have hd2 : ∀ τ : ℝ, 0 ≤ τ → HasDerivAt (fun z => A z + B z) (b τ + beta τ) τ :=
+    fun τ hτ => (hA τ hτ).add (hB τ hτ)
   have hm1 : MonotoneOn (fun τ => A τ - B τ) (Set.Ici (0:ℝ)) := by
     refine monotoneOn_of_deriv_nonneg (convex_Ici 0)
-      (fun τ _ => ((hd1 τ).continuousAt).continuousWithinAt)
-      (fun τ _ => ((hd1 τ).differentiableAt).differentiableWithinAt) (fun τ hτ => ?_)
-    rw [(hd1 τ).deriv]
+      (fun τ hτ => ((hd1 τ hτ).continuousAt).continuousWithinAt)
+      (fun τ hτ => ((hd1 τ (interior_subset hτ)).differentiableAt).differentiableWithinAt)
+      (fun τ hτ => ?_)
+    rw [(hd1 τ (interior_subset hτ)).deriv]
     rw [interior_Ici] at hτ
     have hb := abs_le.mp (hdom τ (Set.mem_Ioi.mp hτ).le)
     linarith [hb.2]
   have hm2 : MonotoneOn (fun τ => A τ + B τ) (Set.Ici (0:ℝ)) := by
     refine monotoneOn_of_deriv_nonneg (convex_Ici 0)
-      (fun τ _ => ((hd2 τ).continuousAt).continuousWithinAt)
-      (fun τ _ => ((hd2 τ).differentiableAt).differentiableWithinAt) (fun τ hτ => ?_)
-    rw [(hd2 τ).deriv]
+      (fun τ hτ => ((hd2 τ hτ).continuousAt).continuousWithinAt)
+      (fun τ hτ => ((hd2 τ (interior_subset hτ)).differentiableAt).differentiableWithinAt)
+      (fun τ hτ => ?_)
+    rw [(hd2 τ (interior_subset hτ)).deriv]
     rw [interior_Ici] at hτ
     have hb := abs_le.mp (hdom τ (Set.mem_Ioi.mp hτ).le)
     linarith [hb.1]
@@ -555,18 +569,29 @@ theorem mean_tendsto {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ
               * Real.exp (-(rhoL g2 wmin Bhat * t)) * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 := by
   have hnn : ∀ x, 0 ≤ lam x := fun x => (hlam x).le
   have hc60 : 0 ≤ C6 (Cg g2 a M3) wsup := by simp only [C6, Cg]; positivity
-  have hNc : Continuous fun s : ℝ => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2 :=
-    continuous_energy_flow hnn hflow
+  set N : ℝ → ℝ := fun s => Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2 with hN
+  have hNc0 : ∀ s : ℝ, 0 ≤ s → ContinuousAt N s := continuous_energy_flow hnn hflow
+  -- `N` is known continuous on `ℝ₊` only; `s ↦ N(max s 0)` is continuous and agrees there
+  set Nm : ℝ → ℝ := fun s => N (max s 0) with hNm
+  have hNc : Continuous Nm := continuous_iff_continuousAt.2 fun s =>
+    ContinuousAt.comp (f := fun r : ℝ => max r 0) (x := s) (hNc0 _ (le_max_right s 0))
+      (continuous_id.max continuous_const).continuousAt
+  have hNmN : ∀ s : ℝ, 0 ≤ s → Nm s = N s := fun s hs => by simp only [hNm, max_eq_left hs]
+  have hJN : ∀ τ : ℝ, 0 ≤ τ → (∫ s in (0:ℝ)..τ, Nm s) = ∫ s in (0:ℝ)..τ, N s := by
+    intro τ hτ
+    refine intervalIntegral.integral_congr fun s hs => ?_
+    rw [Set.uIcc_of_le hτ] at hs
+    exact hNmN s hs.1
   -- the primitive of the energy, scaled by `C₆`, and the mass
-  have hA : ∀ τ : ℝ, HasDerivAt
-      (fun z : ℝ => C6 (Cg g2 a M3) wsup
-        * ∫ s in (0:ℝ)..z, Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2)
-      (C6 (Cg g2 a M3) wsup * Graph.nrmL2 lam (Aop K lam (perpL2 lam (h τ))) ^ 2) τ :=
-    fun τ => (intervalIntegral.integral_hasDerivAt_right (hNc.intervalIntegrable _ _)
-      (hNc.stronglyMeasurableAtFilter _ _) hNc.continuousAt).const_mul _
-  have hB : ∀ τ : ℝ, HasDerivAt (fun z : ℝ => Graph.meanL2 lam (h z))
+  have hA : ∀ τ : ℝ, 0 ≤ τ → HasDerivAt
+      (fun z : ℝ => C6 (Cg g2 a M3) wsup * ∫ s in (0:ℝ)..z, Nm s)
+      (C6 (Cg g2 a M3) wsup * N τ) τ :=
+    fun τ hτ => ((intervalIntegral.integral_hasDerivAt_right (hNc.intervalIntegrable _ _)
+      (hNc.stronglyMeasurableAtFilter _ _) hNc.continuousAt).const_mul _).congr_deriv
+        (by rw [hNmN τ hτ])
+  have hB : ∀ τ : ℝ, 0 ≤ τ → HasDerivAt (fun z : ℝ => Graph.meanL2 lam (h z))
       (-Graph.meanL2 lam (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + h τ z)) τ :=
-    fun τ => hasDerivAt_mean htot hflow τ
+    fun τ hτ => hasDerivAt_mean htot hflow τ hτ
   have hdom : ∀ τ : ℝ, 0 ≤ τ →
       |(-Graph.meanL2 lam (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + h τ z))|
         ≤ C6 (Cg g2 a M3) wsup * Graph.nrmL2 lam (Aop K lam (perpL2 lam (h τ))) ^ 2 := by
@@ -574,10 +599,10 @@ theorem mean_tendsto {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ
     rw [abs_neg]
     exact abs_deriv_mean_le hK.nonneg hinv hlam hg2 hM3 ha0 hwsup0 hwsup htaylor (hwin τ hτ)
       heps0 heps
-  have hAbd : ∀ τ : ℝ, 0 ≤ τ → C6 (Cg g2 a M3) wsup
-      * (∫ s in (0:ℝ)..τ, Graph.nrmL2 lam (Aop K lam (perpL2 lam (h s))) ^ 2)
+  have hAbd : ∀ τ : ℝ, 0 ≤ τ → C6 (Cg g2 a M3) wsup * (∫ s in (0:ℝ)..τ, Nm s)
       ≤ C6 (Cg g2 a M3) wsup * (Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 / (g2 * wmin)) := by
     intro τ hτ
+    rw [hJN τ hτ]
     refine mul_le_mul_of_nonneg_left ?_ hc60
     rw [le_div_iff₀ hgw]
     have := energy_integral_on (T := τ) hK hinv hlam htot hg2 hM3 ha0 hwsup0 hwsup hwmin0 hwmin

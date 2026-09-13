@@ -62,6 +62,7 @@ import GFNBounds.Graph.CycleBlowup
 import GFNBounds.Doubling.TruncationBhat
 import GFNBounds.Doubling.MainPackaging
 import GFNBounds.Graph.FrozenUnstableDB
+import GFNBounds.Balance.GlobalConvergence
 
 /-!
 # Axiom audit
@@ -594,3 +595,8 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Graph.BackwardPolicy.frozen_unstable_full_db
 #print axioms GFNBounds.Graph.BackwardPolicy.frozen_not_stable_fm
 #print axioms GFNBounds.Graph.BackwardPolicy.frozen_not_stable_db
+
+-- `prop:no_distant_equilibrium`(3) and `theo:global_dichotomy_full`(1), convergence for (log x)^2 — GFNBounds/Balance/GlobalConvergence.lean
+#print axioms GFNBounds.Balance.continuous_nrmL2
+#print axioms GFNBounds.Balance.no_distant_equilibrium_three_converges
+#print axioms GFNBounds.Balance.global_dichotomy_full_one_converges

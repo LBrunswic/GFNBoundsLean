@@ -198,12 +198,12 @@ at minus the mass of the gradient.
 The flow is an ODE in `ℝ^V`, so the mass `∑_x λ(x)u_t(x)` differentiates state by state; the sum
 of the velocities is `−∫ D dλ` by definition of `gradMass`. -/
 theorem hasDerivAt_mass_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
-    (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) :
+    (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) (ht : 0 ≤ t) :
     HasDerivAt (fun s : ℝ => Graph.meanL2 lam (u s))
       (-(gradMass K lam (u t) (rnWeight lam nu (u t)) gd)) t := by
   have hsum : HasDerivAt (fun s : ℝ => ∑ x, lam x * u s x)
       (∑ x, lam x * -lossGrad K lam nu gd (u t) x) t :=
-    HasDerivAt.fun_sum fun x _ => (hflow t x).const_mul (lam x)
+    HasDerivAt.fun_sum fun x _ => (hflow t ht x).const_mul (lam x)
   have hval : (∑ x, lam x * -lossGrad K lam nu gd (u t) x)
       = -(gradMass K lam (u t) (rnWeight lam nu (u t)) gd) := by
     simp only [gradMass, lossGrad_eq_lossGradDensity, ← Finset.sum_neg_distrib]
@@ -235,17 +235,19 @@ trajectory already known to be positive: that is what
 `BoundaryBlowup.flow_pos_of_pos` consumes, and it is why this and not
 `mass_monotone_flow` is the primitive. -/
 theorem mass_monotoneOn {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
-    {D : Set ℝ} (hD : Convex ℝ D)
+    {D : Set ℝ} (hD : Convex ℝ D) (hD0 : ∀ s ∈ D, 0 ≤ s)
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
     (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd)
     (hflow : IsGradientFlow K lam nu gd u) :
     MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) D := by
-  have hderiv : ∀ s : ℝ, HasDerivAt (fun z : ℝ => Graph.meanL2 lam (u z))
-      (-(gradMass K lam (u s) (rnWeight lam nu (u s)) gd)) s := hasDerivAt_mass_flow hflow
+  have hderiv : ∀ s ∈ D, HasDerivAt (fun z : ℝ => Graph.meanL2 lam (u z))
+      (-(gradMass K lam (u s) (rnWeight lam nu (u s)) gd)) s :=
+    fun s hs => hasDerivAt_mass_flow hflow s (hD0 s hs)
   refine monotoneOn_of_deriv_nonneg hD
-    (fun s _ => ((hderiv s).continuousAt).continuousWithinAt)
-    (fun s _ => ((hderiv s).differentiableAt).differentiableWithinAt) fun s hs => ?_
-  rw [(hderiv s).deriv]
+    (fun s hs => ((hderiv s hs).continuousAt).continuousWithinAt)
+    (fun s hs => ((hderiv s (interior_subset hs)).differentiableAt).differentiableWithinAt)
+    fun s hs => ?_
+  rw [(hderiv s (interior_subset hs)).deriv]
   obtain ⟨-, hle, -⟩ := no_distant_equilibrium_one hinv hK hlam
     (hupos s (interior_subset hs)) (rnWeight_pos hlam hnu (hupos s (interior_subset hs))) hg
   simpa using neg_nonneg.mpr hle
@@ -260,7 +262,7 @@ theorem mass_monotone_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ 
     (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd)
     (hflow : IsGradientFlow K lam nu gd u) :
     MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Set.Ici 0) :=
-  mass_monotoneOn (convex_Ici 0) hinv hK hlam (fun s hs => hu s hs) hnu hg hflow
+  mass_monotoneOn (convex_Ici 0) (fun _ hs => hs) hinv hK hlam (fun s hs => hu s hs) hnu hg hflow
 
 /-! ### The maximizer on the sphere: Cauchy–Schwarz against `𝟏`, with its equality case -/
 
@@ -442,14 +444,14 @@ variable {V : Type*} [Fintype V]
 on the bootstrap window `[0,t]` of a continuation: that is what
 `BoundaryBlowup.flow_pos_of_pos` consumes. -/
 theorem loss_antitoneOn {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ}
-    {D : Set ℝ} (hD : Convex ℝ D)
+    {D : Set ℝ} (hD : Convex ℝ D) (hD0 : ∀ s ∈ D, 0 ≤ s)
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
     (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y)
     (hflow : IsGradientFlow K lam nu gd u) :
     AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) D := by
   have hderiv : ∀ s ∈ D, HasDerivAt (fun z : ℝ => loss K lam nu (u z) g)
       (-(Graph.nrmL2 lam (lossGrad K lam nu gd (u s)) ^ 2)) s :=
-    fun s hs => hasDerivAt_loss_flow_at hinv hK hlam (hupos s hs) hg (hflow s)
+    fun s hs => hasDerivAt_loss_flow_at hinv hK hlam (hupos s hs) hg (hflow s (hD0 s hs))
   refine antitoneOn_of_deriv_nonpos hD
     (fun s hs => ((hderiv s hs).continuousAt).continuousWithinAt)
     (fun s hs => ((hderiv s (interior_subset hs)).differentiableAt).differentiableWithinAt)
@@ -464,18 +466,18 @@ theorem loss_antitone_flow {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : �
     (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y)
     (hflow : IsGradientFlow K lam nu gd u) :
     AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) (Set.Ici 0) :=
-  loss_antitoneOn (convex_Ici 0) hinv hK hlam (fun s hs => hu s hs) hg hflow
+  loss_antitoneOn (convex_Ici 0) (fun _ hs => hs) hinv hK hlam (fun s hs => hu s hs) hg hflow
 
 /-- **`𝓛` decreases along the flow, for `g = (log x)²`, on any convex set of times where the
 trajectory is positive** (`proofs.tex:811`, `:813`) — `loss_antitoneOn` in `Lojasiewicz.lean`'s
 variables, where `ν = wλ`. This is the form `BoundaryBlowup.flow_pos_of_pos` consumes. -/
 theorem lossVal_antitoneOn {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ}
-    {D : Set ℝ} (hD : Convex ℝ D)
+    {D : Set ℝ} (hD : Convex ℝ D) (hD0 : ∀ s ∈ D, 0 ≤ s)
     (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x)
     (hupos : ∀ s ∈ D, ∀ x, 0 < u s x)
     (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) :
     AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) D := by
-  have h := loss_antitoneOn (g := logSq) (gd := logSqDeriv) hD hinv hK hlam hupos
+  have h := loss_antitoneOn (g := logSq) (gd := logSqDeriv) hD hD0 hinv hK hlam hupos
     (fun _ hy => hasDerivAt_logSq hy) hflow
   simpa only [loss_eq_lossVal] using h
 
@@ -485,7 +487,7 @@ theorem lossVal_antitone_flow {K : V → V → ℝ} {lam wf : V → ℝ} {u : �
     (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x)
     (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) :
     AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) (Set.Ici 0) :=
-  lossVal_antitoneOn (convex_Ici 0) hinv hK hlam (fun s hs => hu s hs) hflow
+  lossVal_antitoneOn (convex_Ici 0) (fun _ hs => hs) hinv hK hlam (fun s hs => hu s hs) hflow
 
 /-- **`𝓛_{g,ν}(μ) = 0` if and only if `μ` is balanced**, for `g = (log x)²` and a positive weight:
 `(log r)² = 0` state by state is `r ≡ 1`, which is `ratio_eq_one_iff_balanced`.
@@ -674,12 +676,12 @@ change contributes `c²`; dividing by `c` for the state leaves exactly `c`. Resc
 point to unit mass therefore dilates time by `m₁²`, which is the `m₁`-factor of
 `theo:training_speed_full`'s local rate. -/
 theorem flow_rescale {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
-    (hflow : IsGradientFlow K lam nu gd u) {c : ℝ} (hc : 0 < c) (t₁ : ℝ) :
+    (hflow : IsGradientFlow K lam nu gd u) {c : ℝ} (hc : 0 < c) {t₁ : ℝ} (ht₁ : 0 ≤ t₁) :
     IsGradientFlow K lam nu gd (fun s x => c⁻¹ * u (t₁ + c ^ 2 * s) x) := by
-  intro t x
+  intro t ht x
   have hτ : HasDerivAt (fun s : ℝ => t₁ + c ^ 2 * s) (c ^ 2) t := by
     simpa using ((hasDerivAt_id' t).const_mul (c ^ 2)).const_add t₁
-  have hcomp0 := (hflow (t₁ + c ^ 2 * t) x).comp t hτ
+  have hcomp0 := (hflow (t₁ + c ^ 2 * t) (by positivity) x).comp t hτ
   have hcomp : HasDerivAt (fun s : ℝ => u (t₁ + c ^ 2 * s) x)
       (-lossGrad K lam nu gd (u (t₁ + c ^ 2 * t)) x * c ^ 2) t := hcomp0
   have hres := hcomp.const_mul c⁻¹

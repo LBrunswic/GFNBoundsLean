@@ -301,17 +301,17 @@ omit [DecidableEq V] in
 /-- **Time translation**: `s ↦ u_{t₁+s}` is again a gradient flow. `MassAscent.flow_rescale` at
 `c = 1`; Theorem 10's statements start their curve at `0`, and the assembly enters at `t₁`. -/
 theorem flow_translate {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
-    (hflow : IsGradientFlow K lam nu gd u) (t₁ : ℝ) :
+    (hflow : IsGradientFlow K lam nu gd u) (t₁ : ℝ) (ht₁ : 0 ≤ t₁) :
     IsGradientFlow K lam nu gd (fun s x => u (t₁ + s) x) := by
-  simpa using flow_rescale hflow (c := 1) one_pos t₁
+  simpa using flow_rescale hflow (c := 1) one_pos ht₁
 
 omit [DecidableEq V] in
 /-- **The rescaling to unit mass** (`proofs.tex:813`, `:930`): dividing the state by `m` and
 dilating time by `m²` again solves the ODE. `MassAscent.flow_rescale` at `c = m`. -/
 theorem flow_unit_mass {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}
-    (hflow : IsGradientFlow K lam nu gd u) {m : ℝ} (hm : 0 < m) (t₁ : ℝ) :
+    (hflow : IsGradientFlow K lam nu gd u) {m : ℝ} (hm : 0 < m) (t₁ : ℝ) (ht₁ : 0 ≤ t₁) :
     IsGradientFlow K lam nu gd (fun s x => u (t₁ + m ^ 2 * s) x / m) := by
-  simpa [div_eq_inv_mul] using flow_rescale hflow hm t₁
+  simpa [div_eq_inv_mul] using flow_rescale hflow hm ht₁
 
 /-! ### The basin radius at `g = (log x)²` -/
 
@@ -438,7 +438,7 @@ theorem entry_and_rescale {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}
       hnn htot (fun x => (hu t₁ ht₁0 x).ne') hB hU0 (hcoer_of_graph hpc hpos hl hhit)
       heps0 hm0 hmono hsphere (fun x => (hratio x).le)
   exact ⟨t₁, ht₁mem, hratio, hmono, hm1U, hm1pos,
-    flow_unit_mass hflow hm1pos t₁, hmean0, hrad⟩
+    flow_unit_mass hflow hm1pos t₁ ht₁0, hmean0, hrad⟩
 
 /-! ### The `C³` side condition the paper leaves unstated -/
 

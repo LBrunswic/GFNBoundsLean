@@ -11,10 +11,10 @@ import Mathlib.Analysis.InnerProductSpace.Calculus
 **along a trajectory only**, see SCOPE.
 **`theo:db_stable_frozen_full`** — statement `proofs.tex:592–602`, proof `proofs.tex:604–610`;
 **the continuous half only**, with the linearization hypothesised and not derived, see SCOPE.
-**`cor:global_lojasiewicz`** — statement `proofs.tex:875–886`, proof `proofs.tex:887–898`;
+**`cor:global_lojasiewicz`** — statement `proofs.tex:896–907`, proof `proofs.tex:908–919`;
 **both displays**, along the flow.
 **`prop:no_distant_equilibrium`** **item *(2)***, its **first half only** — statement
-`proofs.tex:791`, proof `proofs.tex:807`; see SCOPE.
+`proofs.tex:812`, proof `proofs.tex:828`; see SCOPE.
 (The bold-backtick form of each label is what `scripts/trace_check.py` and the paper-side ledger
 machine-read; a label mentioned only in prose is not a claim to certify it.)
 
@@ -78,7 +78,7 @@ conditional on an unstated identity.
 | `hasDerivAt_ratio_comp` | `δr = v − ru` along an arbitrary curve, by the quotient rule |
 | `hasDerivAt_loss_comp` | `δ𝓛_{g,ν} = ∫ g'(r)[d(δT)/dμ − r dδ/dμ] dν` along an arbitrary curve — `proofs.tex:469–470` |
 | `hasDerivAt_loss_comp_ipL2` | `d/dt 𝓛_{g,ν}(μ_t) = ⟨D(μ_t) ∣ μ̇_t⟩_λ`: `theo:first_variation_full`'s display read along a trajectory. The adjoint step is `FirstVariation.firstVariation_adjoint`, reused and not reproved |
-| `hasDerivAt_loss_flow_at`, `hasDerivAt_loss_flow` | **the flow identity** `−𝓛̇ = ‖D‖²_{L²(λ)}` — `proofs.tex:813`, `proofs.tex:897`. This is the statement the three disclosures name. `_at` asks positivity at **one** time; `hasDerivAt_loss_flow` asks it on `[0,∞)`, where `BoundaryBlowup.flow_pos_graph` supplies it |
+| `hasDerivAt_loss_flow_at`, `hasDerivAt_loss_flow` | **the flow identity** `−𝓛̇ = ‖D‖²_{L²(λ)}` — `proofs.tex:834`, `proofs.tex:918`. This is the statement the three disclosures name. `_at` asks positivity at **one** time; `hasDerivAt_loss_flow` asks it on `[0,∞)`, where `BoundaryBlowup.flow_pos_graph` supplies it |
 | `hasDerivAt_loss_flow_line` | the same along the Euler line `u − sD(u)`, which needs no existence theorem: the gradient-descent direction dissipates at rate `‖D‖²` |
 | `ipL2_lossGrad_self` | `∫ Du dλ = 0`, the orthogonality of `prop:no_distant_equilibrium`*(2)* — an identity, needing neither invariance of `λ` nor anything of `g` |
 | `nrmL2_const_on_Ici`, `nrmL2_const_of_flow` | **the invariant sphere**: the gradient flow preserves `‖u_t‖_{L²(λ)}` on `[0,∞)`. `Lojasiewicz.lean` carries this as a hypothesis and discloses that it is item *(2)*'s; here it is a conclusion. The two differ only in whether `t` is explicit; `ipL2_lossGrad_self` asks positivity at **one** time, which is what lets the sphere be used inside `BoundaryBlowup`'s continuation |
@@ -243,7 +243,7 @@ open scoped RealInnerProductSpace
 
 /-! ### The gradient flow, and the identity `−𝓛̇ = ‖D‖²`
 
-`proofs.tex:813`, `:897`. On a finite state space the flow is an ODE in `ℝ^V`, and the identity
+`proofs.tex:834`, `:918`. On a finite state space the flow is an ODE in `ℝ^V`, and the identity
 is the chain rule of `theo:first_variation_full` evaluated in the direction `μ̇ = −D`. -/
 
 section FlowIdentity
@@ -259,21 +259,21 @@ is `theo:first_variation_full`, proved on a finite state space in
 noncomputable def lossGrad (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : V → ℝ) : V → ℝ :=
   lossGradDensity K lam u (fun z => nu z / (lam z * u z)) gd
 
-/-- **`μ̇_t = −∇^λ 𝓛_{g,ν}(μ_t)`** (`proofs.tex:569`, `:613`, `:880`), the gradient flow, written
+/-- **`μ̇_t = −∇^λ 𝓛_{g,ν}(μ_t)`** (`proofs.tex:569`, `:613`, `:901`), the gradient flow, written
 on a finite state space as what it is there: an **ODE in `ℝ^V`**, one scalar equation per state.
 
 `u t x` is the `λ`-density of `μ_t` at the state `x`. Existence of such a curve is not claimed
 anywhere in this file; every statement below hypothesises one.
 
-**Known defect (2026-09-13), not yet repaired.** The ODE is asked at *every real* `t`, while the
-paper's flow runs forward from `μ_0`. For `g = (log x)²` the backward flow leaves the positive cone
-in finite time, so on the two-vertex marked graph no curve satisfies this predicate from a
-non-balanced start (proved; numerically the same on the five-cycle, generic case unproved). Every
-theorem hypothesising `IsGradientFlow` is therefore, as far as is known, vacuous off balanced
-starts. The proposed repair re-ranges the quantifier to `0 ≤ t`; see `paper-map.json`,
-`cor:global_lojasiewicz`. -/
+**The ODE is asked for `t ≥ 0` only**, the half-line the paper's flow runs on from `μ_0`. Until
+2026-09-13 it was asked at every real `t`, and that predicate had no solution from a non-balanced
+start: for `g = (log x)²` the backward flow leaves the positive cone in finite time (proved on the
+two-vertex marked graph), so every theorem hypothesising it was vacuous there — `kb/entries/0025`.
+At `t = 0` the derivative is still two-sided; any forward solution extends linearly to `t < 0`
+without changing the derivative at `0`, so every forward solution satisfies the predicate.
+Existence of a forward solution is not proved in this library. -/
 def IsGradientFlow (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : ℝ → V → ℝ) : Prop :=
-  ∀ (t : ℝ) (x : V), HasDerivAt (fun s : ℝ => u s x) (-lossGrad K lam nu gd (u t) x) t
+  ∀ t : ℝ, 0 ≤ t → ∀ x : V, HasDerivAt (fun s : ℝ => u s x) (-lossGrad K lam nu gd (u t) x) t
 
 /-- **The componentwise ODE is the vector-valued one**: `IsGradientFlow` says exactly that the
 curve `u : ℝ → (V → ℝ)` has derivative `−D(u t)` in `V → ℝ`.
@@ -283,8 +283,8 @@ it is what makes "on a finite state space a gradient flow is an ODE in `ℝ^V`" 
 than a slogan. -/
 theorem isGradientFlow_iff (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : ℝ → V → ℝ) :
     IsGradientFlow K lam nu gd u
-      ↔ ∀ t : ℝ, HasDerivAt u (fun x => -lossGrad K lam nu gd (u t) x) t :=
-  ⟨fun h t => hasDerivAt_pi.2 (h t), fun h t => hasDerivAt_pi.1 (h t)⟩
+      ↔ ∀ t : ℝ, 0 ≤ t → HasDerivAt u (fun x => -lossGrad K lam nu gd (u t) x) t :=
+  ⟨fun h t ht => hasDerivAt_pi.2 (h t ht), fun h t ht => hasDerivAt_pi.1 (h t ht)⟩
 
 /-- **`δr = v − r·u`** (`proofs.tex:463`, `:470`) **along an arbitrary curve**: if the flow moves
 with velocity `v` at time `t`, the ratio `r = d(μT)/dμ` moves with velocity
@@ -347,8 +347,8 @@ theorem hasDerivAt_loss_comp_ipL2 {K : V → V → ℝ} {lam nu : V → ℝ} {g 
   rw [lossGrad, ← firstVariation_adjoint hinv hK hlam hu v]
   exact hasDerivAt_loss_comp hlam hu (ratio_pos hinv hK hlam hu) hg hd
 
-/-- **The flow identity `−𝓛̇ = ‖D‖²_{L²(λ)}`** (`proofs.tex:813`: "`d𝓛/dt = −‖D‖²`";
-`proofs.tex:897`: "conclude with `−𝓛' = ‖∇𝓛‖²`"), hypothesised at a single time `t`.
+/-- **The flow identity `−𝓛̇ = ‖D‖²_{L²(λ)}`** (`proofs.tex:834`: "`d𝓛/dt = −‖D‖²`";
+`proofs.tex:918`: "conclude with `−𝓛' = ‖∇𝓛‖²`"), hypothesised at a single time `t`.
 
 This is the statement `GFNBounds/Balance/MassIdentity.lean`, `GFNBounds/Balance/Lojasiewicz.lean`
 and the map's `cor:global_lojasiewicz` row all disclose as missing. It is the chain rule
@@ -374,7 +374,7 @@ theorem hasDerivAt_loss_flow_at {K : V → V → ℝ} {lam nu : V → ℝ} {g gd
     exact Finset.sum_congr rfl fun x _ => by ring
   rwa [hval] at h
 
-/-- **The flow identity `−𝓛̇ = ‖D‖²_{L²(λ)}` along a gradient flow** (`proofs.tex:813`, `:897`):
+/-- **The flow identity `−𝓛̇ = ‖D‖²_{L²(λ)}` along a gradient flow** (`proofs.tex:834`, `:918`):
 the loss decreases at exactly the squared norm of its gradient, at every time of `[0,∞)`.
 
 `hu` is ranged over the half-line the trajectory lives on, which is where
@@ -386,7 +386,7 @@ theorem hasDerivAt_loss_flow {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : 
     (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) (ht : 0 ≤ t) :
     HasDerivAt (fun s : ℝ => loss K lam nu (u s) g)
       (-(Graph.nrmL2 lam (lossGrad K lam nu gd (u t)) ^ 2)) t :=
-  hasDerivAt_loss_flow_at hinv hK hlam (hu t ht) hg (hflow t)
+  hasDerivAt_loss_flow_at hinv hK hlam (hu t ht) hg (hflow t ht)
 
 /-- **The flow identity along the Euler line `u − sD(u)`**: the gradient-descent *direction*
 dissipates the loss at rate `‖D‖²_{L²(λ)}`, with no flow to exist.
@@ -417,7 +417,7 @@ theorem hasDerivAt_loss_flow_line {K : V → V → ℝ} {lam nu : V → ℝ} {g 
   rw [hline] at h
   exact h
 
-/-- **`prop:no_distant_equilibrium`*(2)*, the orthogonality**: `∫ D u dλ = 0` (`proofs.tex:791`,
+/-- **`prop:no_distant_equilibrium`*(2)*, the orthogonality**: `∫ D u dλ = 0` (`proofs.tex:812`,
 "the gradient is orthogonal to the radial direction").
 
 An identity, with no hypothesis beyond `λ, u > 0`: both terms of `D = Qφ − rφ` pair against `u`
@@ -469,7 +469,7 @@ theorem eq_of_hasDerivAt_zero_on {f : ℝ → ℝ} {D : Set ℝ} (hD : Convex �
   exact le_antisymm (hanti ha hb hab) (hmono ha hb hab)
 
 /-- **`prop:no_distant_equilibrium`*(2)*, the invariant sphere, on `[0,∞)`**: the gradient flow
-preserves `‖u_t‖_{L²(λ)}` (`proofs.tex:791`, "the loss is scale-invariant, so the gradient flow
+preserves `‖u_t‖_{L²(λ)}` (`proofs.tex:812`, "the loss is scale-invariant, so the gradient flow
 preserves `‖u_t‖_{L²(λ)}`").
 
 `d/dt‖u_t‖² = −2∫Du dλ = 0` by `ipL2_lossGrad_self`, **which asks positivity at one time only**:
@@ -487,7 +487,7 @@ theorem nrmL2_const_on_Ici {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ 
     have hsum : HasDerivAt (fun z : ℝ => ∑ x, lam x * (u z x * u z x))
         (∑ x, lam x * (-lossGrad K lam nu gd (u s) x * u s x
           + u s x * -lossGrad K lam nu gd (u s) x)) s :=
-      HasDerivAt.fun_sum fun x _ => HasDerivAt.const_mul (lam x) ((hflow s x).fun_mul (hflow s x))
+      HasDerivAt.fun_sum fun x _ => HasDerivAt.const_mul (lam x) ((hflow s hs x).fun_mul (hflow s hs x))
     have hrw : ∀ x : V, lam x * (-lossGrad K lam nu gd (u s) x * u s x
         + u s x * -lossGrad K lam nu gd (u s) x)
         = -2 * (lam x * (lossGrad K lam nu gd (u s) x * u s x)) := fun x => by ring
@@ -516,14 +516,14 @@ end FlowIdentity
 
 /-! ### `cor:global_lojasiewicz`, along the flow
 
-`proofs.tex:875–898`. `Lojasiewicz.global_lojasiewicz_sq` supplies `κ²𝓛² ≤ ‖D‖²`; the flow
+`proofs.tex:896–919`. `Lojasiewicz.global_lojasiewicz_sq` supplies `κ²𝓛² ≤ ‖D‖²`; the flow
 identity turns it into `−𝓛̇ ≥ κ²𝓛²`, and one integration into the decay. -/
 
 section Lojasiewicz
 
 variable {V : Type*} [Fintype V]
 
-/-- **`g = (log x)²` has `g'(x) = 2 log x / x` on `ℝ_+^*`** (`proofs.tex:809`).
+/-- **`g = (log x)²` has `g'(x) = 2 log x / x` on `ℝ_+^*`** (`proofs.tex:830`).
 
 `GFNBounds/Balance/Lojasiewicz.lean` declares `logSq` and `logSqDeriv` as two independent
 definitions and discloses that "that `logSqDeriv` is `deriv logSq` is elementary calculus, is not
@@ -554,7 +554,7 @@ theorem loss_eq_lossVal (K : V → V → ℝ) (lam wf u : V → ℝ) (gg : ℝ �
     loss K lam (fun x => lam x * wf x) u gg = lossVal lam wf gg (ratio K lam u) :=
   Finset.sum_congr rfl fun x _ => by ring
 
-/-- **`cor:global_lojasiewicz`'s second display** (`proofs.tex:884`): from `−L' ≥ κ²L²` on
+/-- **`cor:global_lojasiewicz`'s second display** (`proofs.tex:905`): from `−L' ≥ κ²L²` on
 `[0,∞)`, `L(t) ≤ (L(0)^{−1} + κ²t)^{−1}`.
 
 A statement about real functions, with no flow in it: `1/L − κ²t` has non-negative derivative on
@@ -603,7 +603,7 @@ theorem lojasiewicz_integrated {L L' : ℝ → ℝ} {kappa : ℝ}
   rwa [one_div] at hfin
 
 /-- **`cor:global_lojasiewicz`**, both displays, along the gradient flow (statement
-`proofs.tex:875–886`, proof `proofs.tex:887–898`): with
+`proofs.tex:896–907`, proof `proofs.tex:908–919`): with
 `M := max(1, √(L₀/(w_min λ_min)))` and `κ := w_min λ_min^{1/2}/(‖u₀‖ ‖w‖_{L^∞} M)`,
 `−d𝓛/dt ≥ κ²𝓛²` and hence `𝓛(μ_t) ≤ (𝓛(μ₀)^{−1} + κ²t)^{−1}`.
 

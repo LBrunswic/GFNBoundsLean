@@ -14,6 +14,42 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 
 | declaration | file | statement |
 |---|---|---|
+| `ratioCap` | `BoundaryBlowup.lean` | `noncomputable def ratioCap (lamMin wmin L0 : ℝ) : ℝ` |
+| `one_le_ratioCap` | `BoundaryBlowup.lean` | `theorem one_le_ratioCap (lamMin wmin L0 : ℝ) : 1 ≤ ratioCap lamMin wmin L0` |
+| `ratioCap_pos` | `BoundaryBlowup.lean` | `theorem ratioCap_pos (lamMin wmin L0 : ℝ) : 0 < ratioCap lamMin wmin L0` |
+| `edgeDrop` | `BoundaryBlowup.lean` | `noncomputable def edgeDrop (lamMin pmin wmin L0 : ℝ) : ℝ` |
+| `uMin` | `BoundaryBlowup.lean` | `noncomputable def uMin (V : Type*) [Fintype V] (lamMin pmin wmin L0 m0 : ℝ) : ℝ` |
+| `edgeDrop_pos` | `BoundaryBlowup.lean` | `theorem edgeDrop_pos {lamMin pmin wmin L0 : ℝ} (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) : 0 < edgeDrop lamMin pmin wmin L0` |
+| `edgeDrop_le_one` | `BoundaryBlowup.lean` | `theorem edgeDrop_le_one {lamMin pmin wmin L0 : ℝ} (hlmin1 : lamMin ≤ 1) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) : edgeDrop lamMin pmin wmin L0 ≤ 1` |
+| `uMin_pos` | `BoundaryBlowup.lean` | `theorem uMin_pos {lamMin pmin wmin L0 m0 : ℝ} (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hm0 : 0 < m0) : 0 < uMin V lamMin pmin wmin L0 m0` |
+| `CrossingFloor` | `BoundaryBlowup.lean` | `def CrossingFloor (K : V → V → ℝ) (pmin : ℝ) : Prop` |
+| `exists_cross_of_reflTransGen` | `BoundaryBlowup.lean` | `theorem exists_cross_of_reflTransGen {R : V → V → Prop} {A : Finset V} {a b : V} (h : Relation.ReflTransGen R a b) (ha : a ∈ A) : b ∉ A → ∃ y ∈ A, ∃ z, z ∉ A ∧ R y z` |
+| `crossingFloor_of_reach` | `BoundaryBlowup.lean` | `theorem crossingFloor_of_reach {K : V → V → ℝ} {pmin : ℝ} (hreach : ∀ x y : V, Relation.ReflTransGen (fun a b => 0 < K a b) x y) (hpmin : ∀ y z : V, 0 < K y z → pmin ≤ K y z) : CrossingFloor K pmin` |
+| `exists_edgeFloor` | `BoundaryBlowup.lean` | `theorem exists_edgeFloor (K : V → V → ℝ) : ∃ pmin : ℝ, 0 < pmin ∧ pmin ≤ 1 ∧ ∀ y z : V, 0 < K y z → pmin ≤ K y z` |
+| `crossingFloor_phat` | `BoundaryBlowup.lean` | `theorem crossingFloor_phat {pmin : ℝ} (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (hpmin : ∀ y z : V, 0 < B.phat y z → pmin ≤ B.phat y z) : CrossingFloor B.phat pmin` |
+| `ratio_blowup_of_small` | `BoundaryBlowup.lean` | `theorem ratio_blowup_of_small {K : V → V → ℝ} {lam u : V → ℝ} (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (y z : V) : lam y * u y * K y z / (lam z * u z) ≤ ratio K lam u z` |
+| `logSq_le_logSq_of_one_le` | `BoundaryBlowup.lean` | `theorem logSq_le_logSq_of_one_le {a b : ℝ} (ha : 1 ≤ a) (hab : a ≤ b) : logSq a ≤ logSq b` |
+| `loss_lower_of_small` | `BoundaryBlowup.lean` | `theorem loss_lower_of_small {K : V → V → ℝ} {lam u wf : V → ℝ} {lamMin wmin : ℝ} (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {y z : V} (hone : 1 ≤ lam y * u y * K y z / (lam z * u z)) : lamMin * wmin * Real.log (lam y * u y * K y z / (lam z * u z)) ^ 2 ≤ lossVal lam wf logSq (ratio K lam u)` |
+| `edge_drop_of_loss_le` | `BoundaryBlowup.lean` | `theorem edge_drop_of_loss_le {K : V → V → ℝ} {lam u wf : V → ℝ} {lamMin pmin wmin L0 : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL0 : lossVal lam wf logSq (ratio K lam u) ≤ L0) {y z : V} (hyz : pmin ≤ K y z) : edgeDrop lamMin pmin wmin L0 * u y ≤ u z` |
+| `pos_of_loss_le` | `BoundaryBlowup.lean` | `theorem pos_of_loss_le {K : V → V → ℝ} {lam u wf : V → ℝ} {lamMin pmin wmin L0 m0 : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL0 : lossVal lam wf logSq (ratio K lam u) ≤ L0) (hm0 : m0 ≤ Graph.meanL2 lam u) (x : V) : uMin V lamMin pmin wmin L0 m0 ≤ u x` |
+| `continuous_flow` | `BoundaryBlowup.lean` | `theorem continuous_flow (hflow : IsGradientFlow K lam nu gd u) (x : V) : Continuous fun t : ℝ => u t x` |
+| `lossVal_antitoneOn` | `BoundaryBlowup.lean` | `theorem lossVal_antitoneOn {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) D` |
+| `mass_monotoneOn` | `BoundaryBlowup.lean` | `theorem mass_monotoneOn {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow K lam nu gd u) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) D` |
+| `flow_pos_of_pos` | `BoundaryBlowup.lean` | `theorem flow_pos_of_pos {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → ∀ x, uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (u 0))) (Graph.meanL2 lam (u 0)) ≤ u t x` |
+| `flow_pos` | `BoundaryBlowup.lean` | `theorem flow_pos {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x` |
+| `flow_pos_graph` | `BoundaryBlowup.lean` | `theorem flow_pos_graph {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ} (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hpmin : ∀ y z : V, 0 < B.phat y z → pmin ≤ B.phat y z) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x` |
+| `eq_of_hasDerivAt_zero_on` | `BoundaryBlowup.lean` | `theorem eq_of_hasDerivAt_zero_on {f : ℝ → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hf : ∀ s ∈ D, HasDerivAt f 0 s) {a b : ℝ} (ha : a ∈ D) (hb : b ∈ D) (hab : a ≤ b) : f b = f a` |
+| `nrmL2_const_on_Ici` | `BoundaryBlowup.lean` | `theorem nrmL2_const_on_Ici (hlam : ∀ x, 0 < lam x) (hupos : ∀ s : ℝ, 0 ≤ s → ∀ x, 0 < u s x) (hflow : IsGradientFlow K lam nu gd u) {t : ℝ} (ht : 0 ≤ t) : Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0)` |
+| `mass_tendsto` | `BoundaryBlowup.lean` | `theorem mass_tendsto {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∃ minf : ℝ, Filter.Tendsto (fun t : ℝ => Graph.meanL2 lam (u t)) Filter.atTop (nhds minf)` |
+| `blowupU` | `BoundaryBlowup.lean` | `noncomputable def blowupU : Fin 2 → ℝ` |
+| `blowupU_pos` | `BoundaryBlowup.lean` | `theorem blowupU_pos : ∀ x, 0 < blowupU x` |
+| `twoState_crossingFloor` | `BoundaryBlowup.lean` | `theorem twoState_crossingFloor : CrossingFloor twoStateK (1 / 2 : ℝ)` |
+| `twoState_blowup_ratio` | `BoundaryBlowup.lean` | `theorem twoState_blowup_ratio : ratio twoStateK twoStateLam blowupU 0 = 2 / 3 ∧ ratio twoStateK twoStateLam blowupU 1 = 2` |
+| `twoState_blowup_mean` | `BoundaryBlowup.lean` | `theorem twoState_blowup_mean : Graph.meanL2 twoStateLam blowupU = 1` |
+| `twoState_blowup_loss_le` | `BoundaryBlowup.lean` | `theorem twoState_blowup_loss_le : lossVal twoStateLam (fun _ => (1 : ℝ)) logSq (ratio twoStateK twoStateLam blowupU) ≤ 1 / 2` |
+| `twoState_ratioCap` | `BoundaryBlowup.lean` | `theorem twoState_ratioCap : ratioCap (1 / 2 : ℝ) 1 (1 / 2) = 1` |
+| `twoState_uMin` | `BoundaryBlowup.lean` | `theorem twoState_uMin : uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 = Real.exp (-1) / 4` |
+| `twoState_boundary_blowup_check` | `BoundaryBlowup.lean` | `theorem twoState_boundary_blowup_check : uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 = Real.exp (-1) / 4 ∧ 0 < Real.exp (-1) / 4 ∧ Real.exp (-1) / 4 ≤ 1 / 2 ∧ ∀ x, uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 ≤ blowupU x` |
 | `inner_sq_le_of_symm_nonneg` | `Discrete.lean` | `theorem inner_sq_le_of_symm_nonneg {T : E →L[ℝ] E} (hsymm : ∀ x y : E, ⟪T x, y⟫ = ⟪x, T y⟫) (hnn : ∀ y : E, 0 ≤ ⟪y, T y⟫) (x y : E) : ⟪x, T y⟫ ^ 2 ≤ ⟪x, T x⟫ * ⟪y, T y⟫` |
 | `norm_apply_le_of_symm_bounds` | `Discrete.lean` | `theorem norm_apply_le_of_symm_bounds {T : E →L[ℝ] E} {S : Set E} {c : ℝ} (hsymm : ∀ x y : E, ⟪T x, y⟫ = ⟪x, T y⟫) (hnn : ∀ y : E, 0 ≤ ⟪y, T y⟫) (hc : 0 ≤ c) (hinv : ∀ x ∈ S, T x ∈ S) (hub : ∀ y ∈ S, ⟪y, T y⟫ ≤ c * ‖y‖ ^ 2) {x : E} (hx : x ∈ S) : ‖T x‖ ≤ c * ‖x‖` |
 | `H_proj_eq_zero` | `Discrete.lean` | `theorem H_proj_eq_zero {H Pi : E →L[ℝ] E} (hPisa : ∀ x y : E, ⟪Pi x, y⟫ = ⟪x, Pi y⟫) (hHsa : ∀ x y : E, ⟪H x, y⟫ = ⟪x, H y⟫) (hPiH : ∀ x : E, Pi (H x) = 0) (x : E) : H (Pi x) = 0` |
@@ -729,6 +765,30 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `poisson_solved` | `Mixing.lean` | `theorem poisson_solved [CompleteSpace E] (h : Mixing P Pi) {θ : E} (hθ : Pi θ = 0) : (1 - P) (S P Pi θ) = θ` |
 | `coercivity` | `Mixing.lean` | `theorem coercivity [CompleteSpace E] (h : Mixing P Pi) (x : E) : ‖x - Pi x‖ ≤ B P Pi * ‖(1 - P) x‖` |
 | `coercivity_div` | `Mixing.lean` | `theorem coercivity_div [CompleteSpace E] (h : Mixing P Pi) (hB : 0 < B P Pi) (x : E) : ‖x - Pi x‖ / B P Pi ≤ ‖(1 - P) x‖` |
+| `one_le_norm_of_isIdempotentElem` | `MixingBase.lean` | `theorem one_le_norm_of_isIdempotentElem {R : Type*} [NormedRing R] {a : R} (ha : IsIdempotentElem a) (h0 : a ≠ 0) : 1 ≤ ‖a‖` |
+| `beta_zero` | `MixingBase.lean` | `theorem beta_zero (P Pi : E →L[ℝ] E) : beta P Pi 0 = ‖(1 : E →L[ℝ] E) - Pi‖` |
+| `one_sub_ne_zero_iff` | `MixingBase.lean` | `theorem one_sub_ne_zero_iff : (1 : E →L[ℝ] E) - Pi ≠ 0 ↔ ∃ x, Pi x ≠ x` |
+| `one_le_norm_one_sub_proj` | `MixingBase.lean` | `theorem one_le_norm_one_sub_proj (hPi : Pi * Pi = Pi) (hQ : (1 : E →L[ℝ] E) - Pi ≠ 0) : 1 ≤ ‖(1 : E →L[ℝ] E) - Pi‖` |
+| `one_le_beta_zero` | `MixingBase.lean` | `theorem one_le_beta_zero [CompleteSpace E] (h : Mixing P Pi) (hQ : (1 : E →L[ℝ] E) - Pi ≠ 0) : 1 ≤ beta P Pi 0` |
+| `one_le_B` | `MixingBase.lean` | `theorem one_le_B [CompleteSpace E] (h : Mixing P Pi) (hQ : (1 : E →L[ℝ] E) - Pi ≠ 0) : 1 ≤ B P Pi` |
+| `B_pos` | `MixingBase.lean` | `theorem B_pos [CompleteSpace E] (h : Mixing P Pi) (hQ : (1 : E →L[ℝ] E) - Pi ≠ 0) : 0 < B P Pi` |
+| `of_idem` | `MixingBase.lean` | `theorem of_idem {Q : E →L[ℝ] E} (hQ : Q * Q = Q) : Mixing Q Q` |
+| `B_of_idem` | `MixingBase.lean` | `theorem B_of_idem {Q : E →L[ℝ] E} (hQ : Q * Q = Q) : B Q Q = ‖(1 : E →L[ℝ] E) - Q‖` |
+| `orthoPi` | `MixingBase.lean` | `def orthoPi : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)` |
+| `orthoPi_apply` | `MixingBase.lean` | `@[simp] theorem orthoPi_apply (x : ℝ × ℝ) : orthoPi x = (x.1, 0)` |
+| `orthoPi_idem` | `MixingBase.lean` | `theorem orthoPi_idem : orthoPi * orthoPi = orthoPi` |
+| `norm_one_sub_orthoPi` | `MixingBase.lean` | `theorem norm_one_sub_orthoPi : ‖(1 : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) - orthoPi‖ = 1` |
+| `obliquePi` | `MixingBase.lean` | `def obliquePi : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)` |
+| `obliquePi_apply` | `MixingBase.lean` | `@[simp] theorem obliquePi_apply (x : ℝ × ℝ) : obliquePi x = (-x.2, x.2)` |
+| `obliquePi_idem` | `MixingBase.lean` | `theorem obliquePi_idem : obliquePi * obliquePi = obliquePi` |
+| `norm_one_sub_obliquePi` | `MixingBase.lean` | `theorem norm_one_sub_obliquePi : ‖(1 : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) - obliquePi‖ = 2` |
+| `orthoMixing` | `MixingBase.lean` | `theorem orthoMixing : Mixing orthoPi orthoPi` |
+| `one_sub_orthoPi_ne_zero` | `MixingBase.lean` | `theorem one_sub_orthoPi_ne_zero : (1 : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) - orthoPi ≠ 0` |
+| `B_orthoPi` | `MixingBase.lean` | `theorem B_orthoPi : Mixing.B orthoPi orthoPi = 1` |
+| `one_le_B_orthoPi` | `MixingBase.lean` | `theorem one_le_B_orthoPi : (1 : ℝ) ≤ Mixing.B orthoPi orthoPi` |
+| `obliqueMixing` | `MixingBase.lean` | `theorem obliqueMixing : Mixing obliquePi obliquePi` |
+| `B_obliquePi` | `MixingBase.lean` | `theorem B_obliquePi : Mixing.B obliquePi obliquePi = 2` |
+| `not_forall_beta_zero_eq_one` | `MixingBase.lean` | `theorem not_forall_beta_zero_eq_one : ¬ ∀ (E : Type) (_ : NormedAddCommGroup E) (_ : NormedSpace ℝ E) (P Pi : E →L[ℝ] E), Mixing P Pi → (1 : E →L[ℝ] E) - Pi ≠ 0 → Mixing.beta P Pi 0 = 1` |
 | `tvD` | `StableBound.lean` | `noncomputable def tvD (ν : Measure α) (f g : α → ℝ) : ℝ` |
 | `tvD_nonneg` | `StableBound.lean` | `theorem tvD_nonneg (ν : Measure α) (f g : α → ℝ) : 0 ≤ tvD ν f g` |
 | `tvD_comm` | `StableBound.lean` | `theorem tvD_comm (ν : Measure α) (f g : α → ℝ) : tvD ν f g = tvD ν g f` |
@@ -1310,6 +1370,35 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `sigmaStar_eq` | `Morozov.lean` | `theorem sigmaStar_eq (hpc : G.PathConnected) : sigmaStar G L.lvl = L.lvl G.snk` |
 | `sigmaBar_eq` | `Morozov.lean` | `theorem sigmaBar_eq : B.sigmaBar L.lvl = L.lvl G.snk - 1` |
 | `bsigma_le` | `Morozov.lean` | `theorem bsigma_le (hpc : G.PathConnected) {N : V → ℝ} (hN : 0 < minOver G N) : sigmaStar G L.lvl * Real.sqrt ((2 + B.sigmaBar L.lvl) / minOver G N) ≤ (L.lvl G.snk + 1) * Real.sqrt ((2 + L.lvl G.snk) / minOver G N)` |
+| `bhatSigma_eq_visits` | `MorozovConsume.lean` | `theorem bhatSigma_eq_visits {lam gr uH : V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) : Balance.BhatSigma G uH lam = sigmaStar G uH * Real.sqrt ((2 + B.sigmaBar uH) / minOver G (visits G gr))` |
+| `rhoSigma_eq_visits'` | `MorozovConsume.lean` | `theorem rhoSigma_eq_visits' {lam gr uH : V → ℝ} {g2 wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) : Balance.rhoSigma g2 wmin (minOver G lam) (sigmaStar G uH) = g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH))` |
+| `rate_eq_visits` | `MorozovConsume.lean` | `theorem rate_eq_visits {lam gr uH : V → ℝ} {g2 wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) : g2 * wmin / Balance.BhatSigma G uH lam ^ 2 = g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH))` |
+| `hrho_of_step` | `MorozovConsume.lean` | `theorem hrho_of_step {Bhat g2 wmin wsup eps : ℝ} (hB1 : 1 ≤ Bhat) (hg2 : 0 ≤ g2) (hwmin0 : 0 ≤ wmin) (hws : wmin ≤ wsup) (heps : 0 ≤ eps) (hepsL : eps * (4 * g2 * wsup) ≤ 1) : eps * (g2 * wmin / Bhat ^ 2) ≤ 1` |
+| `stable_frozen_discrete_sigma` | `MorozovConsume.lean` | `theorem stable_frozen_discrete_sigma {lam gr uH wf : V → ℝ} {g2 wmin wsup eps : ℝ} {h : ℕ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hg2 : 0 ≤ g2) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (heps : 0 ≤ eps) (hepsL : eps * (4 * g2 * wsup) ≤ 1) (hstep : ∀ k x, h (k + 1) x = h k x - eps * Balance.linHess B.phat lam wf g2 (h k) x) : (∀ k, meanL2 lam (h k) = meanL2 lam (h 0)) ∧ ∀ k, nrmL2 lam (Balance.perpL2 lam (h k)) ≤ (1 - eps * (g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)))) ^ k * nrmL2 lam (Balance.perpL2 lam (h 0))` |
+| `stable_frozen_decay_sigma` | `MorozovConsume.lean` | `theorem stable_frozen_decay_sigma {lam gr uH wf : V → ℝ} {g2 wmin : ℝ} {h : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hg2 : 0 ≤ g2) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ wf x) (hflow : ∀ t : ℝ, HasDerivAt h (fun x => -(Balance.linHess B.phat lam wf g2 (h t) x)) t) : (∀ t : ℝ, meanL2 lam (h t) = meanL2 lam (h 0)) ∧ ∀ t : ℝ, 0 ≤ t → nrmL2 lam (Balance.perpL2 lam (h t)) ≤ Real.exp (-(g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)) * t)) * nrmL2 lam (Balance.perpL2 lam (h 0))` |
+| `local_convergence_sigma` | `MorozovConsume.lean` | `theorem local_convergence_sigma {lam gr uH wf : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, \|wf x\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ wf x) (htaylor : ∀ y : ℝ, \|y - 1\| ≤ a → \|gd y - g2 * (y - 1)\| ≤ M3 / 2 * (y - 1) ^ 2) (hflow : Balance.IsGradientFlow B.phat lam (fun z => lam z * wf z) gd fun s x => 1 + h s x) (hnorm0 : nrmL2 lam (h 0) ≤ Balance.eps0 (Balance.epsW a g2 wmin (Balance.Kexp g2 a M3 wsup) (Balance.BhatSigma G uH lam)) (Balance.Cinf (minOver G lam)) (Balance.C7 (Balance.C6 (Balance.Cg g2 a M3) wsup) g2 wmin) (Balance.rhoL g2 wmin (Balance.BhatSigma G uH lam)) (Balance.C6 (Balance.Cg g2 a M3) wsup)) : ∃ cinf : ℝ, \|cinf - 1 - meanL2 lam (h 0)\| ≤ Balance.C7 (Balance.C6 (Balance.Cg g2 a M3) wsup) g2 wmin * nrmL2 lam (Balance.perpL2 lam (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → nrmL2 lam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)) * t / 2)) * nrmL2 lam (Balance.perpL2 lam (h 0))` |
+| `morozov_rate_three` | `MorozovConsume.lean` | `theorem morozov_rate_three {lam gr uH wf : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup wmin eps : ℝ} {hd : ℕ → V → ℝ} {hc : ℝ → V → ℝ} {h : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, \|wf x\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ wf x) (heps : 0 ≤ eps) (hepsL : eps * (4 * g2 * wsup) ≤ 1) (hstep : ∀ k x, hd (k + 1) x = hd k x - eps * Balance.linHess B.phat lam wf g2 (hd k) x) (hcflow : ∀ t : ℝ, HasDerivAt hc (fun x => -(Balance.linHess B.phat lam wf g2 (hc t) x)) t) (htaylor : ∀ y : ℝ, \|y - 1\| ≤ a → \|gd y - g2 * (y - 1)\| ≤ M3 / 2 * (y - 1) ^ 2) (hflow : Balance.IsGradientFlow B.phat lam (fun z => lam z * wf z) gd fun s x => 1 + h s x) (hnorm0 : nrmL2 lam (h 0) ≤ Balance.eps0 (Balance.epsW a g2 wmin (Balance.Kexp g2 a M3 wsup) (Balance.BhatSigma G uH lam)) (Balance.Cinf (minOver G lam)) (Balance.C7 (Balance.C6 (Balance.Cg g2 a M3) wsup) g2 wmin) (Balance.rhoL g2 wmin (Balance.BhatSigma G uH lam)) (Balance.C6 (Balance.Cg g2 a M3) wsup)) : (Balance.BhatSigma G uH lam = sigmaStar G uH * Real.sqrt ((2 + B.sigmaBar uH) / minOver G (visits G gr))) ∧ 1 ≤ Balance.BhatSigma G uH lam ∧ (∀ f : V → ℝ, nrmL2 lam (Balance.perpL2 lam f) ≤ Balance.BhatSigma G uH lam * nrmL2 lam (Balance.Aop B.phat lam f)) ∧ ((∀ k, meanL2 lam (hd k) = meanL2 lam (hd 0)) ∧ ∀ k, nrmL2 lam (Balance.perpL2 lam (hd k)) ≤ (1 - eps * (g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)))) ^ k` |
+| `bsigma_leveled_le` | `MorozovConsume.lean` | `theorem bsigma_leveled_le {lam gr : V → ℝ} (L : Leveled G) (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) : Balance.BhatSigma G L.lvl lam ≤ (L.lvl G.snk + 1) * Real.sqrt ((2 + L.lvl G.snk) / minOver G (visits G gr))` |
+| `arEdgeB` | `MorozovConsume.lean` | `def arEdgeB : Fin 2 → Fin 2 → Bool` |
+| `ArEdge` | `MorozovConsume.lean` | `def ArEdge (x y : Fin 2) : Prop` |
+| `ar` | `MorozovConsume.lean` | `def ar : MarkedGraph (Fin 2)` |
+| `arPathConnected` | `MorozovConsume.lean` | `theorem arPathConnected : ar.PathConnected` |
+| `arPb` | `MorozovConsume.lean` | `noncomputable def arPb : Fin 2 → Fin 2 → ℝ` |
+| `arPol` | `MorozovConsume.lean` | `noncomputable def arPol : BackwardPolicy ar` |
+| `arPositiveOnEdges` | `MorozovConsume.lean` | `theorem arPositiveOnEdges : arPol.PositiveOnEdges` |
+| `arKern` | `MorozovConsume.lean` | `noncomputable def arKern : Fin 2 → Fin 2 → ℝ` |
+| `arPhat_eq` | `MorozovConsume.lean` | `theorem arPhat_eq : arPol.phat = arKern` |
+| `arLvl` | `MorozovConsume.lean` | `def arLvl : Fin 2 → ℝ` |
+| `arLeveled` | `MorozovConsume.lean` | `def arLeveled : Leveled ar` |
+| `arLam` | `MorozovConsume.lean` | `noncomputable def arLam : Fin 2 → ℝ` |
+| `arIsInvProb` | `MorozovConsume.lean` | `theorem arIsInvProb : arPol.IsInvProb arLam` |
+| `arGreen` | `MorozovConsume.lean` | `def arGreen : Fin 2 → ℝ` |
+| `arIsGreen` | `MorozovConsume.lean` | `theorem arIsGreen : arPol.IsGreen arGreen` |
+| `ar_minOver_lam` | `MorozovConsume.lean` | `theorem ar_minOver_lam : minOver ar arLam = 1 / 2` |
+| `ar_minOver_visits` | `MorozovConsume.lean` | `theorem ar_minOver_visits : minOver ar (visits ar arGreen) = 1` |
+| `ar_leveled_check` | `MorozovConsume.lean` | `theorem ar_leveled_check : sigmaStar ar arLeveled.lvl = 1 ∧ arPol.sigmaBar arLeveled.lvl = 0 ∧ minOver ar (visits ar arGreen) = 1 ∧ Balance.BhatSigma ar arLeveled.lvl arLam = Real.sqrt 2 ∧ Balance.BhatSigma ar arLeveled.lvl arLam ≤ (arLeveled.lvl ar.snk + 1) * Real.sqrt ((2 + arLeveled.lvl ar.snk) / minOver ar (visits ar arGreen))` |
+| `cycle_morozov_consume_check` | `MorozovConsume.lean` | `theorem cycle_morozov_consume_check {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) : Balance.BhatSigma cyc (hitExp p) (lam p) = sigmaStar cyc (hitExp p) * Real.sqrt ((2 + (pol hp0 hp1).sigmaBar (hitExp p)) / minOver cyc (visits cyc (green p))) ∧ Balance.BhatSigma cyc (hitExp p) (lam p) = (4 - p) / (1 - p) * Real.sqrt ((5 - 2 * p) / (1 - p)) ∧ 2 * 1 * minOver cyc (visits cyc (green p)) / (sigmaStar cyc (hitExp p) ^ 2 * (2 + (pol hp0 hp1).sigmaBar (hitExp p))) = 2 * (1 - p) ^ 3 / ((5 - 2 * p) * (4 - p) ^ 2)` |
+| `cycle_morozov_consume_check_half` | `MorozovConsume.lean` | `theorem cycle_morozov_consume_check_half : Balance.BhatSigma cyc (hitExp (1/2)) (lam (1/2)) = 14 * Real.sqrt 2 ∧ (4 - (1/2:ℝ)) / (1 - 1/2) * Real.sqrt ((5 - 2 * (1/2)) / (1 - 1/2)) = 14 * Real.sqrt 2 ∧ 2 * (1 - (1/2:ℝ)) ^ 3 / ((5 - 2 * (1/2)) * (4 - (1/2)) ^ 2) = 1/196 ∧ (1:ℝ) - (1/8) * (1/196) = 1567/1568` |
 | `Reach` | `Setting.lean` | `abbrev Reach : V → V → Prop` |
 | `PathConnected` | `Setting.lean` | `def PathConnected : Prop` |
 | `hatEdge` | `Setting.lean` | `def hatEdge (x y : V) : Prop` |
@@ -1441,6 +1530,58 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 
 ## Every declaration, by file
 
+
+### `GFNBounds/Balance/BoundaryBlowup.lean`
+
+**The boundary blow-up: the loss explodes where the density vanishes, so the flow stays positive**  
+
+*strict library; 820 lines; 36 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `prop:no_distant_equilibrium` (bucket B)
+
+
+In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}`, `variable {K : V → V → ℝ} {lam nu wf : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}`, `variable [DecidableEq V] {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}`, `variable {K : V → V → ℝ} {lam nu wf : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 147 | def | `ratioCap` | `noncomputable def ratioCap (lamMin wmin L0 : ℝ) : ℝ` |
+| 150 | theorem | `one_le_ratioCap` | `theorem one_le_ratioCap (lamMin wmin L0 : ℝ) : 1 ≤ ratioCap lamMin wmin L0` |
+| 152 | theorem | `ratioCap_pos` | `theorem ratioCap_pos (lamMin wmin L0 : ℝ) : 0 < ratioCap lamMin wmin L0` |
+| 158 | def | `edgeDrop` | `noncomputable def edgeDrop (lamMin pmin wmin L0 : ℝ) : ℝ` |
+| 163 | def | `uMin` | `noncomputable def uMin (V : Type*) [Fintype V] (lamMin pmin wmin L0 m0 : ℝ) : ℝ` |
+| 166 | theorem | `edgeDrop_pos` | `theorem edgeDrop_pos {lamMin pmin wmin L0 : ℝ} (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) : 0 < edgeDrop lamMin pmin wmin L0` |
+| 174 | theorem | `edgeDrop_le_one` | `theorem edgeDrop_le_one {lamMin pmin wmin L0 : ℝ} (hlmin1 : lamMin ≤ 1) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) : edgeDrop lamMin pmin wmin L0 ≤ 1` |
+| 185 | theorem | `uMin_pos` | `theorem uMin_pos {lamMin pmin wmin L0 m0 : ℝ} (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hm0 : 0 < m0) : 0 < uMin V lamMin pmin wmin L0 m0` |
+| 197 | def | `CrossingFloor` | `def CrossingFloor (K : V → V → ℝ) (pmin : ℝ) : Prop` |
+| 202 | theorem | `exists_cross_of_reflTransGen` | `theorem exists_cross_of_reflTransGen {R : V → V → Prop} {A : Finset V} {a b : V} (h : Relation.ReflTransGen R a b) (ha : a ∈ A) : b ∉ A → ∃ y ∈ A, ∃ z, z ∉ A ∧ R y z` |
+| 215 | theorem | `crossingFloor_of_reach` | `theorem crossingFloor_of_reach {K : V → V → ℝ} {pmin : ℝ} (hreach : ∀ x y : V, Relation.ReflTransGen (fun a b => 0 < K a b) x y) (hpmin : ∀ y z : V, 0 < K y z → pmin ≤ K y z) : CrossingFloor K pmin` |
+| 230 | theorem | `exists_edgeFloor` | `theorem exists_edgeFloor (K : V → V → ℝ) : ∃ pmin : ℝ, 0 < pmin ∧ pmin ≤ 1 ∧ ∀ y z : V, 0 < K y z → pmin ≤ K y z` |
+| 253 | theorem | `crossingFloor_phat` | `theorem crossingFloor_phat {pmin : ℝ} (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (hpmin : ∀ y z : V, 0 < B.phat y z → pmin ≤ B.phat y z) : CrossingFloor B.phat pmin` |
+| 265 | theorem | `ratio_blowup_of_small` | `theorem ratio_blowup_of_small {K : V → V → ℝ} {lam u : V → ℝ} (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (y z : V) : lam y * u y * K y z / (lam z * u z) ≤ ratio K lam u z` |
+| 277 | theorem | `logSq_le_logSq_of_one_le` | `theorem logSq_le_logSq_of_one_le {a b : ℝ} (ha : 1 ≤ a) (hab : a ≤ b) : logSq a ≤ logSq b` |
+| 289 | theorem | `loss_lower_of_small` | `theorem loss_lower_of_small {K : V → V → ℝ} {lam u wf : V → ℝ} {lamMin wmin : ℝ} (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {y z : V} (hone : 1 ≤ lam y * u y * K y z / (lam z * u z)) : lamMin * wmin * Real.log (lam y * u y * K y z / (lam z * u z)) ^ 2 ≤ lossVal lam wf logSq (ratio K lam u)` |
+| 308 | theorem | `edge_drop_of_loss_le` | `theorem edge_drop_of_loss_le {K : V → V → ℝ} {lam u wf : V → ℝ} {lamMin pmin wmin L0 : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL0 : lossVal lam wf logSq (ratio K lam u) ≤ L0) {y z : V} (hyz : pmin ≤ K y z) : edgeDrop lamMin pmin wmin L0 * u y ≤ u z` |
+| 360 | theorem | `pos_of_loss_le` | `theorem pos_of_loss_le {K : V → V → ℝ} {lam u wf : V → ℝ} {lamMin pmin wmin L0 m0 : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL0 : lossVal lam wf logSq (ratio K lam u) ≤ L0) (hm0 : m0 ≤ Graph.meanL2 lam u) (x : V) : uMin V lamMin pmin wmin L0 m0 ≤ u x` |
+| 472 | theorem | `continuous_flow` | `theorem continuous_flow (hflow : IsGradientFlow K lam nu gd u) (x : V) : Continuous fun t : ℝ => u t x` |
+| 478 | theorem | `lossVal_antitoneOn` | `theorem lossVal_antitoneOn {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : AntitoneOn (fun s : ℝ => lossVal lam wf logSq (ratio K lam (u s))) D` |
+| 500 | theorem | `mass_monotoneOn` | `theorem mass_monotoneOn {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow K lam nu gd u) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) D` |
+| 529 | theorem | `flow_pos_of_pos` | `theorem flow_pos_of_pos {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → ∀ x, uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (u 0))) (Graph.meanL2 lam (u 0)) ≤ u t x` |
+| 591 | theorem | `flow_pos` | `theorem flow_pos {K : V → V → ℝ} {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x` |
+| 619 | theorem | `flow_pos_graph` | `theorem flow_pos_graph {lam wf : V → ℝ} {u : ℝ → V → ℝ} {lamMin pmin wmin : ℝ} (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hpmin : ∀ y z : V, 0 < B.phat y z → pmin ≤ B.phat y z) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x` |
+| 646 | theorem | `eq_of_hasDerivAt_zero_on` | `theorem eq_of_hasDerivAt_zero_on {f : ℝ → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hf : ∀ s ∈ D, HasDerivAt f 0 s) {a b : ℝ} (ha : a ∈ D) (hb : b ∈ D) (hab : a ≤ b) : f b = f a` |
+| 661 | theorem | `nrmL2_const_on_Ici` | `theorem nrmL2_const_on_Ici (hlam : ∀ x, 0 < lam x) (hupos : ∀ s : ℝ, 0 ≤ s → ∀ x, 0 < u s x) (hflow : IsGradientFlow K lam nu gd u) {t : ℝ} (ht : 0 ≤ t) : Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0)` |
+| 695 | theorem | `mass_tendsto` | `theorem mass_tendsto {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∃ minf : ℝ, Filter.Tendsto (fun t : ℝ => Graph.meanL2 lam (u t)) Filter.atTop (nhds minf)` |
+| 737 | def | `blowupU` | `noncomputable def blowupU : Fin 2 → ℝ` |
+| 739 | theorem | `blowupU_pos` | `theorem blowupU_pos : ∀ x, 0 < blowupU x` |
+| 743 | theorem | `twoState_crossingFloor` | `theorem twoState_crossingFloor : CrossingFloor twoStateK (1 / 2 : ℝ)` |
+| 753 | theorem | `twoState_blowup_ratio` | `theorem twoState_blowup_ratio : ratio twoStateK twoStateLam blowupU 0 = 2 / 3 ∧ ratio twoStateK twoStateLam blowupU 1 = 2` |
+| 761 | theorem | `twoState_blowup_mean` | `theorem twoState_blowup_mean : Graph.meanL2 twoStateLam blowupU = 1` |
+| 767 | theorem | `twoState_blowup_loss_le` | `theorem twoState_blowup_loss_le : lossVal twoStateLam (fun _ => (1 : ℝ)) logSq (ratio twoStateK twoStateLam blowupU) ≤ 1 / 2` |
+| 792 | theorem | `twoState_ratioCap` | `theorem twoState_ratioCap : ratioCap (1 / 2 : ℝ) 1 (1 / 2) = 1` |
+| 797 | theorem | `twoState_uMin` | `theorem twoState_uMin : uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 = Real.exp (-1) / 4` |
+| 804 | theorem | `twoState_boundary_blowup_check` | `theorem twoState_boundary_blowup_check : uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 = Real.exp (-1) / 4 ∧ 0 < Real.exp (-1) / 4 ∧ Real.exp (-1) / 4 ≤ 1 / 2 ∧ ∀ x, uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 ≤ blowupU x` |
 
 ### `GFNBounds/Balance/Discrete.lean`
 
@@ -2508,6 +2649,46 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi
 | 203 | theorem | `poisson_solved` | `theorem poisson_solved [CompleteSpace E] (h : Mixing P Pi) {θ : E} (hθ : Pi θ = 0) : (1 - P) (S P Pi θ) = θ` |
 | 213 | theorem | `coercivity` | `theorem coercivity [CompleteSpace E] (h : Mixing P Pi) (x : E) : ‖x - Pi x‖ ≤ B P Pi * ‖(1 - P) x‖` |
 | 221 | theorem | `coercivity_div` | `theorem coercivity_div [CompleteSpace E] (h : Mixing P Pi) (hB : 0 < B P Pi) (x : E) : ‖x - Pi x‖ / B P Pi ≤ ‖(1 - P) x‖` |
+
+### `GFNBounds/Core/MixingBase.lean`
+
+**The base coefficient of the mixing sum: `β̂₀ = ‖I − Π‖ ≥ 1`, hence `B̂ ≥ 1`**  
+
+*strict library; 326 lines; 24 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `lem:sigma_mixing` (bucket A)
+
+
+In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi : E →L[ℝ] E}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 118 | theorem | `one_le_norm_of_isIdempotentElem` | `theorem one_le_norm_of_isIdempotentElem {R : Type*} [NormedRing R] {a : R} (ha : IsIdempotentElem a) (h0 : a ≠ 0) : 1 ≤ ‖a‖` |
+| 133 | theorem | `beta_zero` | `theorem beta_zero (P Pi : E →L[ℝ] E) : beta P Pi 0 = ‖(1 : E →L[ℝ] E) - Pi‖` |
+| 138 | theorem | `one_sub_ne_zero_iff` | `theorem one_sub_ne_zero_iff : (1 : E →L[ℝ] E) - Pi ≠ 0 ↔ ∃ x, Pi x ≠ x` |
+| 157 | theorem | `one_le_norm_one_sub_proj` | `theorem one_le_norm_one_sub_proj (hPi : Pi * Pi = Pi) (hQ : (1 : E →L[ℝ] E) - Pi ≠ 0) : 1 ≤ ‖(1 : E →L[ℝ] E) - Pi‖` |
+| 163 | theorem | `one_le_beta_zero` | `theorem one_le_beta_zero [CompleteSpace E] (h : Mixing P Pi) (hQ : (1 : E →L[ℝ] E) - Pi ≠ 0) : 1 ≤ beta P Pi 0` |
+| 172 | theorem | `one_le_B` | `theorem one_le_B [CompleteSpace E] (h : Mixing P Pi) (hQ : (1 : E →L[ℝ] E) - Pi ≠ 0) : 1 ≤ B P Pi` |
+| 178 | theorem | `B_pos` | `theorem B_pos [CompleteSpace E] (h : Mixing P Pi) (hQ : (1 : E →L[ℝ] E) - Pi ≠ 0) : 0 < B P Pi` |
+| 188 | theorem | `of_idem` | `theorem of_idem {Q : E →L[ℝ] E} (hQ : Q * Q = Q) : Mixing Q Q` |
+| 199 | theorem | `B_of_idem` | `theorem B_of_idem {Q : E →L[ℝ] E} (hQ : Q * Q = Q) : B Q Q = ‖(1 : E →L[ℝ] E) - Q‖` |
+| 223 | def | `orthoPi` | `def orthoPi : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)` |
+| 225 | theorem @[simp] | `orthoPi_apply` | `@[simp] theorem orthoPi_apply (x : ℝ × ℝ) : orthoPi x = (x.1, 0)` |
+| 227 | theorem | `orthoPi_idem` | `theorem orthoPi_idem : orthoPi * orthoPi = orthoPi` |
+| 230 | theorem | `norm_one_sub_orthoPi` | `theorem norm_one_sub_orthoPi : ‖(1 : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) - orthoPi‖ = 1` |
+| 245 | def | `obliquePi` | `def obliquePi : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)` |
+| 248 | theorem @[simp] | `obliquePi_apply` | `@[simp] theorem obliquePi_apply (x : ℝ × ℝ) : obliquePi x = (-x.2, x.2)` |
+| 251 | theorem | `obliquePi_idem` | `theorem obliquePi_idem : obliquePi * obliquePi = obliquePi` |
+| 256 | theorem | `norm_one_sub_obliquePi` | `theorem norm_one_sub_obliquePi : ‖(1 : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) - obliquePi‖ = 2` |
+| 282 | theorem | `orthoMixing` | `theorem orthoMixing : Mixing orthoPi orthoPi` |
+| 285 | theorem | `one_sub_orthoPi_ne_zero` | `theorem one_sub_orthoPi_ne_zero : (1 : (ℝ × ℝ) →L[ℝ] (ℝ × ℝ)) - orthoPi ≠ 0` |
+| 293 | theorem | `B_orthoPi` | `theorem B_orthoPi : Mixing.B orthoPi orthoPi = 1` |
+| 297 | theorem | `one_le_B_orthoPi` | `theorem one_le_B_orthoPi : (1 : ℝ) ≤ Mixing.B orthoPi orthoPi` |
+| 301 | theorem | `obliqueMixing` | `theorem obliqueMixing : Mixing obliquePi obliquePi` |
+| 306 | theorem | `B_obliquePi` | `theorem B_obliquePi : Mixing.B obliquePi obliquePi = 2` |
+| 311 | theorem | `not_forall_beta_zero_eq_one` | `theorem not_forall_beta_zero_eq_one : ¬ ∀ (E : Type) (_ : NormedAddCommGroup E) (_ : NormedSpace ℝ E) (P Pi : E →L[ℝ] E), Mixing P Pi → (1 : E →L[ℝ] E) - Pi ≠ 0 → Mixing.beta P Pi 0 = 1` |
 
 ### `GFNBounds/Core/StableBound.lean`
 
@@ -4919,6 +5100,52 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable {G : MarkedGraph V}`, `v
 | 1133 | theorem | `sigmaBar_eq` | `theorem sigmaBar_eq : B.sigmaBar L.lvl = L.lvl G.snk - 1` |
 | 1145 | theorem | `bsigma_le` | `theorem bsigma_le (hpc : G.PathConnected) {N : V → ℝ} (hN : 0 < minOver G N) : sigmaStar G L.lvl * Real.sqrt ((2 + B.sigmaBar L.lvl) / minOver G N) ≤ (L.lvl G.snk + 1) * Real.sqrt ((2 + L.lvl G.snk) / minOver G N)` |
 
+### `GFNBounds/Graph/MorozovConsume.lean`
+
+**The three downstream theorems, re-read at `B̂_σ`: item *(3)* as a certificate of its own**  
+
+*strict library; 576 lines; 30 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `prop:morozov_rate` (bucket B)
+
+
+In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : MarkedGraph V} {B : BackwardPolicy G}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 128 | theorem | `bhatSigma_eq_visits` | `theorem bhatSigma_eq_visits {lam gr uH : V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) : Balance.BhatSigma G uH lam = sigmaStar G uH * Real.sqrt ((2 + B.sigmaBar uH) / minOver G (visits G gr))` |
+| 139 | theorem | `rhoSigma_eq_visits'` | `theorem rhoSigma_eq_visits' {lam gr uH : V → ℝ} {g2 wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) : Balance.rhoSigma g2 wmin (minOver G lam) (sigmaStar G uH) = g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH))` |
+| 150 | theorem | `rate_eq_visits` | `theorem rate_eq_visits {lam gr uH : V → ℝ} {g2 wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) : g2 * wmin / Balance.BhatSigma G uH lam ^ 2 = g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH))` |
+| 168 | theorem | `hrho_of_step` | `theorem hrho_of_step {Bhat g2 wmin wsup eps : ℝ} (hB1 : 1 ≤ Bhat) (hg2 : 0 ≤ g2) (hwmin0 : 0 ≤ wmin) (hws : wmin ≤ wsup) (heps : 0 ≤ eps) (hepsL : eps * (4 * g2 * wsup) ≤ 1) : eps * (g2 * wmin / Bhat ^ 2) ≤ 1` |
+| 189 | theorem | `stable_frozen_discrete_sigma` | `theorem stable_frozen_discrete_sigma {lam gr uH wf : V → ℝ} {g2 wmin wsup eps : ℝ} {h : ℕ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hg2 : 0 ≤ g2) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (heps : 0 ≤ eps) (hepsL : eps * (4 * g2 * wsup) ≤ 1) (hstep : ∀ k x, h (k + 1) x = h k x - eps * Balance.linHess B.phat lam wf g2 (h k) x) : (∀ k, meanL2 lam (h k) = meanL2 lam (h 0)) ∧ ∀ k, nrmL2 lam (Balance.perpL2 lam (h k)) ≤ (1 - eps * (g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)))) ^ k * nrmL2 lam (Balance.perpL2 lam (h 0))` |
+| 215 | theorem | `stable_frozen_decay_sigma` | `theorem stable_frozen_decay_sigma {lam gr uH wf : V → ℝ} {g2 wmin : ℝ} {h : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hg2 : 0 ≤ g2) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ wf x) (hflow : ∀ t : ℝ, HasDerivAt h (fun x => -(Balance.linHess B.phat lam wf g2 (h t) x)) t) : (∀ t : ℝ, meanL2 lam (h t) = meanL2 lam (h 0)) ∧ ∀ t : ℝ, 0 ≤ t → nrmL2 lam (Balance.perpL2 lam (h t)) ≤ Real.exp (-(g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)) * t)) * nrmL2 lam (Balance.perpL2 lam (h 0))` |
+| 244 | theorem | `local_convergence_sigma` | `theorem local_convergence_sigma {lam gr uH wf : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, \|wf x\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ wf x) (htaylor : ∀ y : ℝ, \|y - 1\| ≤ a → \|gd y - g2 * (y - 1)\| ≤ M3 / 2 * (y - 1) ^ 2) (hflow : Balance.IsGradientFlow B.phat lam (fun z => lam z * wf z) gd fun s x => 1 + h s x) (hnorm0 : nrmL2 lam (h 0) ≤ Balance.eps0 (Balance.epsW a g2 wmin (Balance.Kexp g2 a M3 wsup) (Balance.BhatSigma G uH lam)) (Balance.Cinf (minOver G lam)) (Balance.C7 (Balance.C6 (Balance.Cg g2 a M3) wsup) g2 wmin) (Balance.rhoL g2 wmin (Balance.BhatSigma G uH lam)) (Balance.C6 (Balance.Cg g2 a M3) wsup)) : ∃ cinf : ℝ, \|cinf - 1 - meanL2 lam (h 0)\| ≤ Balance.C7 (Balance.C6 (Balance.Cg g2 a M3) wsup) g2 wmin * nrmL2 lam (Balance.perpL2 lam (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → nrmL2 lam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)) * t / 2)) * nrmL2 lam (Balance.perpL2 lam (h 0))` |
+| 296 | theorem | `morozov_rate_three` | `theorem morozov_rate_three {lam gr uH wf : V → ℝ} {gd : ℝ → ℝ} {g2 a M3 wsup wmin eps : ℝ} {hd : ℕ → V → ℝ} {hc : ℝ → V → ℝ} {h : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, \|wf x\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ wf x) (heps : 0 ≤ eps) (hepsL : eps * (4 * g2 * wsup) ≤ 1) (hstep : ∀ k x, hd (k + 1) x = hd k x - eps * Balance.linHess B.phat lam wf g2 (hd k) x) (hcflow : ∀ t : ℝ, HasDerivAt hc (fun x => -(Balance.linHess B.phat lam wf g2 (hc t) x)) t) (htaylor : ∀ y : ℝ, \|y - 1\| ≤ a → \|gd y - g2 * (y - 1)\| ≤ M3 / 2 * (y - 1) ^ 2) (hflow : Balance.IsGradientFlow B.phat lam (fun z => lam z * wf z) gd fun s x => 1 + h s x) (hnorm0 : nrmL2 lam (h 0) ≤ Balance.eps0 (Balance.epsW a g2 wmin (Balance.Kexp g2 a M3 wsup) (Balance.BhatSigma G uH lam)) (Balance.Cinf (minOver G lam)) (Balance.C7 (Balance.C6 (Balance.Cg g2 a M3) wsup) g2 wmin) (Balance.rhoL g2 wmin (Balance.BhatSigma G uH lam)) (Balance.C6 (Balance.Cg g2 a M3) wsup)) : (Balance.BhatSigma G uH lam = sigmaStar G uH * Real.sqrt ((2 + B.sigmaBar uH) / minOver G (visits G gr))) ∧ 1 ≤ Balance.BhatSigma G uH lam ∧ (∀ f : V → ℝ, nrmL2 lam (Balance.perpL2 lam f) ≤ Balance.BhatSigma G uH lam * nrmL2 lam (Balance.Aop B.phat lam f)) ∧ ((∀ k, meanL2 lam (hd k) = meanL2 lam (hd 0)) ∧ ∀ k, nrmL2 lam (Balance.perpL2 lam (hd k)) ≤ (1 - eps * (g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)))) ^ k` |
+| 360 | theorem | `bsigma_leveled_le` | `theorem bsigma_leveled_le {lam gr : V → ℝ} (L : Leveled G) (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) : Balance.BhatSigma G L.lvl lam ≤ (L.lvl G.snk + 1) * Real.sqrt ((2 + L.lvl G.snk) / minOver G (visits G gr))` |
+| 389 | def | `arEdgeB` | `def arEdgeB : Fin 2 → Fin 2 → Bool` |
+| 394 | def | `ArEdge` | `def ArEdge (x y : Fin 2) : Prop` |
+| 396 | instance | `_` | `instance : DecidableRel ArEdge` |
+| 399 | def | `ar` | `def ar : MarkedGraph (Fin 2)` |
+| 408 | theorem | `arPathConnected` | `theorem arPathConnected : ar.PathConnected` |
+| 416 | def | `arPb` | `noncomputable def arPb : Fin 2 → Fin 2 → ℝ` |
+| 421 | def | `arPol` | `noncomputable def arPol : BackwardPolicy ar` |
+| 434 | theorem | `arPositiveOnEdges` | `theorem arPositiveOnEdges : arPol.PositiveOnEdges` |
+| 439 | def | `arKern` | `noncomputable def arKern : Fin 2 → Fin 2 → ℝ` |
+| 445 | theorem | `arPhat_eq` | `theorem arPhat_eq : arPol.phat = arKern` |
+| 450 | def | `arLvl` | `def arLvl : Fin 2 → ℝ` |
+| 455 | def | `arLeveled` | `def arLeveled : Leveled ar` |
+| 463 | def | `arLam` | `noncomputable def arLam : Fin 2 → ℝ` |
+| 465 | theorem | `arIsInvProb` | `theorem arIsInvProb : arPol.IsInvProb arLam` |
+| 471 | def | `arGreen` | `def arGreen : Fin 2 → ℝ` |
+| 473 | theorem | `arIsGreen` | `theorem arIsGreen : arPol.IsGreen arGreen` |
+| 480 | theorem | `ar_minOver_lam` | `theorem ar_minOver_lam : minOver ar arLam = 1 / 2` |
+| 483 | theorem | `ar_minOver_visits` | `theorem ar_minOver_visits : minOver ar (visits ar arGreen) = 1` |
+| 492 | theorem | `ar_leveled_check` | `theorem ar_leveled_check : sigmaStar ar arLeveled.lvl = 1 ∧ arPol.sigmaBar arLeveled.lvl = 0 ∧ minOver ar (visits ar arGreen) = 1 ∧ Balance.BhatSigma ar arLeveled.lvl arLam = Real.sqrt 2 ∧ Balance.BhatSigma ar arLeveled.lvl arLam ≤ (arLeveled.lvl ar.snk + 1) * Real.sqrt ((2 + arLeveled.lvl ar.snk) / minOver ar (visits ar arGreen))` |
+| 540 | theorem | `cycle_morozov_consume_check` | `theorem cycle_morozov_consume_check {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) : Balance.BhatSigma cyc (hitExp p) (lam p) = sigmaStar cyc (hitExp p) * Real.sqrt ((2 + (pol hp0 hp1).sigmaBar (hitExp p)) / minOver cyc (visits cyc (green p))) ∧ Balance.BhatSigma cyc (hitExp p) (lam p) = (4 - p) / (1 - p) * Real.sqrt ((5 - 2 * p) / (1 - p)) ∧ 2 * 1 * minOver cyc (visits cyc (green p)) / (sigmaStar cyc (hitExp p) ^ 2 * (2 + (pol hp0 hp1).sigmaBar (hitExp p))) = 2 * (1 - p) ^ 3 / ((5 - 2 * p) * (4 - p) ^ 2)` |
+| 560 | theorem | `cycle_morozov_consume_check_half` | `theorem cycle_morozov_consume_check_half : Balance.BhatSigma cyc (hitExp (1/2)) (lam (1/2)) = 14 * Real.sqrt 2 ∧ (4 - (1/2:ℝ)) / (1 - 1/2) * Real.sqrt ((5 - 2 * (1/2)) / (1 - 1/2)) = 14 * Real.sqrt 2 ∧ 2 * (1 - (1/2:ℝ)) ^ 3 / ((5 - 2 * (1/2)) * (4 - (1/2)) ^ 2) = 1/196 ∧ (1:ℝ) - (1/8) * (1/196) = 1567/1568` |
+
 ### `GFNBounds/Graph/Setting.lean`
 
 **Finite marked graphs, their loop closure, and the invariant measure of the backward chain**  
@@ -5150,10 +5377,15 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `Aop_eq_ratio_sub_one_mul` | `GFNBounds.Balance.RatioBridge` |
 | `Aop_perpL2` | `GFNBounds.Balance.L2Toolkit` |
 | `Aop_smul` | `GFNBounds.Balance.Expansion` |
+| `ArEdge` | `GFNBounds.Graph.MorozovConsume` |
 | `B` | `GFNBounds.Core.Mixing` |
 | `BReach` | `GFNBounds.Graph.Setting` |
 | `BStep` | `GFNBounds.Graph.Setting` |
 | `B_nonneg` | `GFNBounds.Core.Mixing` |
+| `B_obliquePi` | `GFNBounds.Core.MixingBase` |
+| `B_of_idem` | `GFNBounds.Core.MixingBase` |
+| `B_orthoPi` | `GFNBounds.Core.MixingBase` |
+| `B_pos` | `GFNBounds.Core.MixingBase` |
 | `BackwardPolicy` | `GFNBounds.Graph.Setting` |
 | `Balanced` | `GFNBounds.Balance.MassIdentity` |
 | `BhatSigma` | `GFNBounds.Balance.TrainingSpeed` |
@@ -5170,6 +5402,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `Cinf` | `GFNBounds.Balance.LocalConvergence` |
 | `Cinf_pos` | `GFNBounds.Balance.LocalConvergence` |
 | `CompatibleAcrossTop` | `GFNBounds.Core.StrongUniversality` |
+| `CrossingFloor` | `GFNBounds.Balance.BoundaryBlowup` |
 | `CutBal` | `GFNBounds.Doubling.DecayNotation` |
 | `CutBalance` | `GFNBounds.Graph.FrozenUnstable` |
 | `CutBalanceSeq` | `GFNBounds.Doubling.CutBalance` |
@@ -5353,7 +5586,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `Wpow_strictAnti` | `GFNBounds.Doubling.Lyapunov` |
 | `Xi` | `GFNBounds.Doubling.Lyapunov` |
 | `Xi_nonneg` | `GFNBounds.Doubling.Lyapunov` |
-| `_` | `GFNBounds.Graph.CycleExample` |
+| `_` | `GFNBounds.Graph.MorozovConsume` |
 | `aC` | `GFNBounds.Graph.CycleDivergence` |
 | `abs_Aop_le_two_sup` | `GFNBounds.Balance.Expansion` |
 | `abs_b_le_block` | `GFNBounds.Doubling.Product` |
@@ -5402,6 +5635,23 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `alph` | `GFNBounds.Doubling.SharpRate` |
 | `alph_mul_one_sub` | `GFNBounds.Doubling.SharpRate` |
 | `alph_pos` | `GFNBounds.Doubling.SharpRate` |
+| `ar` | `GFNBounds.Graph.MorozovConsume` |
+| `arEdgeB` | `GFNBounds.Graph.MorozovConsume` |
+| `arGreen` | `GFNBounds.Graph.MorozovConsume` |
+| `arIsGreen` | `GFNBounds.Graph.MorozovConsume` |
+| `arIsInvProb` | `GFNBounds.Graph.MorozovConsume` |
+| `arKern` | `GFNBounds.Graph.MorozovConsume` |
+| `arLam` | `GFNBounds.Graph.MorozovConsume` |
+| `arLeveled` | `GFNBounds.Graph.MorozovConsume` |
+| `arLvl` | `GFNBounds.Graph.MorozovConsume` |
+| `arPathConnected` | `GFNBounds.Graph.MorozovConsume` |
+| `arPb` | `GFNBounds.Graph.MorozovConsume` |
+| `arPhat_eq` | `GFNBounds.Graph.MorozovConsume` |
+| `arPol` | `GFNBounds.Graph.MorozovConsume` |
+| `arPositiveOnEdges` | `GFNBounds.Graph.MorozovConsume` |
+| `ar_leveled_check` | `GFNBounds.Graph.MorozovConsume` |
+| `ar_minOver_lam` | `GFNBounds.Graph.MorozovConsume` |
+| `ar_minOver_visits` | `GFNBounds.Graph.MorozovConsume` |
 | `avg_of_cutBal` | `GFNBounds.Doubling.DecayNotation` |
 | `bC` | `GFNBounds.Graph.CycleDivergence` |
 | `bSigma_eq` | `GFNBounds.Graph.CycleExample` |
@@ -5418,6 +5668,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `beta` | `GFNBounds.Core.Mixing` |
 | `betaHat` | `GFNBounds.Doubling.AdjointL2` |
 | `beta_nonneg` | `GFNBounds.Core.Mixing` |
+| `beta_zero` | `GFNBounds.Core.MixingBase` |
+| `bhatSigma_eq_visits` | `GFNBounds.Graph.MorozovConsume` |
 | `bindDensity` | `GFNBounds.Core.Kernel` |
 | `bindDensity_add` | `GFNBounds.Core.Kernel` |
 | `bindDensity_add₃` | `GFNBounds.Core.Kernel` |
@@ -5435,12 +5687,15 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `block` | `GFNBounds.Doubling.DecayNotation` |
 | `block_eq` | `GFNBounds.Doubling.Coupling` |
 | `block_ratio` | `GFNBounds.Doubling.Truncation` |
+| `blowupU` | `GFNBounds.Balance.BoundaryBlowup` |
+| `blowupU_pos` | `GFNBounds.Balance.BoundaryBlowup` |
 | `bootstrap_of_continuous` | `GFNBounds.Balance.L2Toolkit` |
 | `bound` | `GFNBounds.Balance.Freezing` |
 | `bound_pos` | `GFNBounds.Balance.Freezing` |
 | `breach_all` | `GFNBounds.Graph.Setting` |
 | `breach_of_reach` | `GFNBounds.Graph.Setting` |
 | `bsigma_le` | `GFNBounds.Graph.Morozov` |
+| `bsigma_leveled_le` | `GFNBounds.Graph.MorozovConsume` |
 | `bstep_of_edge` | `GFNBounds.Graph.Setting` |
 | `bstep_wrap` | `GFNBounds.Graph.Setting` |
 | `c3` | `GFNBounds.Doubling.Weight` |
@@ -5498,6 +5753,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `continuousAt_ratio` | `GFNBounds.Balance.Freezing` |
 | `continuous_Aop_perp_flow` | `GFNBounds.Balance.LocalEnergy` |
 | `continuous_energy_flow` | `GFNBounds.Balance.LocalEnergy` |
+| `continuous_flow` | `GFNBounds.Balance.BoundaryBlowup` |
 | `continuous_flowDev` | `GFNBounds.Balance.LocalEnergy` |
 | `continuous_g` | `GFNBounds.Balance.Freezing` |
 | `continuous_integrand` | `GFNBounds.Balance.Freezing` |
@@ -5517,6 +5773,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `cramer_root_gt_one` | `GFNBounds.Doubling.Cramer` |
 | `cramer_root_pos_iff` | `GFNBounds.Doubling.Cramer` |
 | `cramer_root_unique` | `GFNBounds.Doubling.Cramer` |
+| `crossingFloor_of_reach` | `GFNBounds.Balance.BoundaryBlowup` |
+| `crossingFloor_phat` | `GFNBounds.Balance.BoundaryBlowup` |
 | `ctau_pos` | `GFNBounds.Doubling.Escape` |
 | `cutBal_of_setting` | `GFNBounds.Doubling.DecayNotation` |
 | `cutBal_unique` | `GFNBounds.Doubling.Sharp` |
@@ -5545,6 +5803,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `cycV` | `GFNBounds.Graph.CycleDivergence` |
 | `cycV_cases` | `GFNBounds.Graph.CycleDivergence` |
 | `cycle_minOver_lam` | `GFNBounds.Balance.TrainingSpeed` |
+| `cycle_morozov_consume_check` | `GFNBounds.Graph.MorozovConsume` |
+| `cycle_morozov_consume_check_half` | `GFNBounds.Graph.MorozovConsume` |
 | `cycle_no_stalemate` | `GFNBounds.Graph.CycleExample` |
 | `cycle_training_speed_check` | `GFNBounds.Balance.TrainingSpeed` |
 | `cycle_training_speed_check_half` | `GFNBounds.Balance.TrainingSpeed` |
@@ -5683,6 +5943,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `edgeDensAct_contraction_graph` | `GFNBounds.Balance.Lift` |
 | `edgeDensAct_contraction_norm` | `GFNBounds.Balance.Lift` |
 | `edgeDeviation` | `GFNBounds.Balance.Lift` |
+| `edgeDrop` | `GFNBounds.Balance.BoundaryBlowup` |
+| `edgeDrop_le_one` | `GFNBounds.Balance.BoundaryBlowup` |
+| `edgeDrop_pos` | `GFNBounds.Balance.BoundaryBlowup` |
 | `edgeFlow` | `GFNBounds.Graph.Universality` |
 | `edgeFlow_eq_zero_of_outflowStar` | `GFNBounds.Graph.Universality` |
 | `edgeFlow_nonneg` | `GFNBounds.Graph.Universality` |
@@ -5728,6 +5991,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `edgeOutflow_gammaC_srcC` | `GFNBounds.Graph.CycleDivergence` |
 | `edgeOutflow_gammaC_x` | `GFNBounds.Graph.CycleDivergence` |
 | `edgeOutflow_unitEdge` | `GFNBounds.Graph.CycleDivergence` |
+| `edge_drop_of_loss_le` | `GFNBounds.Balance.BoundaryBlowup` |
 | `edge_pstar_pos` | `GFNBounds.Doubling.Irreducible` |
 | `ell2` | `GFNBounds.Doubling.Escape` |
 | `ell2_le_m0` | `GFNBounds.Doubling.Product` |
@@ -5782,6 +6046,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `eq_of_breach_of_min` | `GFNBounds.Graph.Morozov` |
 | `eq_of_bstep_of_min` | `GFNBounds.Graph.Morozov` |
 | `eq_of_domination_zero` | `GFNBounds.Core.ILBound` |
+| `eq_of_hasDerivAt_zero_on` | `GFNBounds.Balance.BoundaryBlowup` |
 | `eq_smul_invProb` | `GFNBounds.Graph.Universality` |
 | `eq_smul_lam_of_invariant` | `GFNBounds.Graph.Morozov` |
 | `eq_smul_oneLp_of_fixed` | `GFNBounds.Doubling.Unsolvable` |
@@ -5807,9 +6072,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `exists_apply_ne_zero` | `GFNBounds.Graph.FrozenUnstable` |
 | `exists_bhat` | `GFNBounds.Doubling.OperatorL2` |
 | `exists_centredRamp_ge` | `GFNBounds.Doubling.Ramp` |
+| `exists_cross_of_reflTransGen` | `GFNBounds.Balance.BoundaryBlowup` |
 | `exists_cycle_of_size` | `GFNBounds.Graph.CycleDivergence` |
 | `exists_delta_for_radius` | `GFNBounds.Balance.RatioBridge` |
 | `exists_diffusionOp` | `GFNBounds.Doubling.OperatorL2` |
+| `exists_edgeFloor` | `GFNBounds.Balance.BoundaryBlowup` |
 | `exists_fixed` | `GFNBounds.Graph.Setting` |
 | `exists_hatEdge_into` | `GFNBounds.Graph.Setting` |
 | `exists_height_drift_neg` | `GFNBounds.Doubling.Lyapunov` |
@@ -5885,6 +6152,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `flatFactor_pos` | `GFNBounds.Balance.Freezing` |
 | `floor_lt_self` | `GFNBounds.Doubling.Escape` |
 | `flow_matching` | `GFNBounds.Graph.Universality` |
+| `flow_pos` | `GFNBounds.Balance.BoundaryBlowup` |
+| `flow_pos_graph` | `GFNBounds.Balance.BoundaryBlowup` |
+| `flow_pos_of_pos` | `GFNBounds.Balance.BoundaryBlowup` |
 | `flow_rescale` | `GFNBounds.Balance.MassAscent` |
 | `flow_translate` | `GFNBounds.Balance.TrainingSpeed` |
 | `flow_unit_mass` | `GFNBounds.Balance.TrainingSpeed` |
@@ -6067,6 +6337,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `hitLad_succ` | `GFNBounds.Doubling.Length` |
 | `hitLad_zero` | `GFNBounds.Doubling.Length` |
 | `holderConst` | `GFNBounds.Core.StableBound` |
+| `hrho_of_step` | `GFNBounds.Graph.MorozovConsume` |
 | `il_holder` | `GFNBounds.Core.ILBound` |
 | `il_mass_identity` | `GFNBounds.Core.ILBound` |
 | `il_tv_bound` | `GFNBounds.Core.ILBound` |
@@ -6284,6 +6555,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `lintegral_rpow_enorm_eq_mass` | `GFNBounds.Doubling.LpLayer` |
 | `local_convergence_full` | `GFNBounds.Balance.LocalConvergence` |
 | `local_convergence_gd` | `GFNBounds.Balance.LocalConvergence` |
+| `local_convergence_sigma` | `GFNBounds.Graph.MorozovConsume` |
 | `logHeight` | `GFNBounds.Doubling.Lyapunov` |
 | `logHeight_drift_nonpos` | `GFNBounds.Doubling.Lyapunov` |
 | `logHeight_lad` | `GFNBounds.Doubling.Lyapunov` |
@@ -6301,6 +6573,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `logSqDeriv_taylor` | `GFNBounds.Balance.LogSqTaylor` |
 | `logSqDeriv_taylor_half` | `GFNBounds.Balance.TrainingSpeed` |
 | `logSqDeriv_taylor_twelve` | `GFNBounds.Balance.LogSqTaylor` |
+| `logSq_le_logSq_of_one_le` | `GFNBounds.Balance.BoundaryBlowup` |
 | `logSq_le_of_loss` | `GFNBounds.Balance.Lojasiewicz` |
 | `logSq_nonneg` | `GFNBounds.Balance.Lojasiewicz` |
 | `log_eight_five_ge` | `GFNBounds.Doubling.HarmonicWindow` |
@@ -6327,6 +6600,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `lossGrad_of_weight` | `GFNBounds.Balance.Flow` |
 | `lossGrad_smul` | `GFNBounds.Balance.MassAscent` |
 | `lossVal` | `GFNBounds.Balance.Lojasiewicz` |
+| `lossVal_antitoneOn` | `GFNBounds.Balance.BoundaryBlowup` |
 | `lossVal_antitone_flow` | `GFNBounds.Balance.MassAscent` |
 | `lossVal_eq_zero_iff_balanced` | `GFNBounds.Balance.MassAscent` |
 | `lossVal_nonneg` | `GFNBounds.Balance.Lojasiewicz` |
@@ -6335,6 +6609,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `loss_eq_selfEntropy_of_domination_zero` | `GFNBounds.Core.ILBound` |
 | `loss_ge_selfEntropy` | `GFNBounds.Core.ILBound` |
 | `loss_le_of_domination` | `GFNBounds.Core.ILBound` |
+| `loss_lower_of_small` | `GFNBounds.Balance.BoundaryBlowup` |
 | `loss_pos` | `GFNBounds.Balance.Freezing` |
 | `loss_sub_selfEntropy_ge` | `GFNBounds.Core.ILBound` |
 | `lower` | `GFNBounds.Balance.Freezing` |
@@ -6390,10 +6665,12 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `mass_le_nrmL2` | `GFNBounds.Balance.RatioBridge` |
 | `mass_le_of_leftInverse` | `GFNBounds.Doubling.RayleighBridge` |
 | `mass_le_of_rayleighL2` | `GFNBounds.Doubling.RayleighBridge` |
+| `mass_monotoneOn` | `GFNBounds.Balance.BoundaryBlowup` |
 | `mass_monotone_flow` | `GFNBounds.Balance.MassAscent` |
 | `mass_nonneg` | `GFNBounds.Doubling.LpLayer` |
 | `mass_pstar_le` | `GFNBounds.Doubling.LpContraction` |
 | `mass_ratio_bound` | `GFNBounds.Doubling.Unbounded` |
+| `mass_tendsto` | `GFNBounds.Balance.BoundaryBlowup` |
 | `mass_two_pstar_le` | `GFNBounds.Doubling.LpLayer` |
 | `maxOver` | `GFNBounds.Graph.Morozov` |
 | `maxOver_le` | `GFNBounds.Graph.Morozov` |
@@ -6461,6 +6738,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `mixing_coercivity_finite` | `GFNBounds.Balance.WeightedL2` |
 | `mixing_of_massPreserving` | `GFNBounds.Core.Flow` |
 | `morozov_rate` | `GFNBounds.Graph.Morozov` |
+| `morozov_rate_three` | `GFNBounds.Graph.MorozovConsume` |
 | `mu` | `GFNBounds.Doubling.LpLayer` |
 | `mu_singleton` | `GFNBounds.Doubling.LpLayer` |
 | `mu_singleton_ne_zero_iff` | `GFNBounds.Doubling.LpLayer` |
@@ -6494,6 +6772,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `norm_le_norm_posPart_add_norm_negPart` | `GFNBounds.Core.Universality` |
 | `norm_negPart_le` | `GFNBounds.Core.Universality` |
 | `norm_oneLp` | `GFNBounds.Doubling.Unsolvable` |
+| `norm_one_sub_obliquePi` | `GFNBounds.Core.MixingBase` |
+| `norm_one_sub_orthoPi` | `GFNBounds.Core.MixingBase` |
 | `norm_posPart_le` | `GFNBounds.Core.Universality` |
 | `norm_pstarL2_le` | `GFNBounds.Doubling.LpLayer` |
 | `norm_pstarL2_pow_sub_piL2` | `GFNBounds.Doubling.AdjointL2` |
@@ -6502,6 +6782,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `norm_sq_eq_mass_of_ae` | `GFNBounds.Doubling.RayleighBridge` |
 | `norm_wtL2` | `GFNBounds.Balance.WeightedL2` |
 | `normalization_bound` | `GFNBounds.Core.StableBound` |
+| `not_forall_beta_zero_eq_one` | `GFNBounds.Core.MixingBase` |
 | `not_growthCond_geometric` | `GFNBounds.Doubling.Unbounded` |
 | `not_inTail_of_lt` | `GFNBounds.Doubling.PerCutIdentity` |
 | `not_invariant_perturbedFlow` | `GFNBounds.Graph.FrozenUnstable` |
@@ -6516,6 +6797,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `nrmL2_congr` | `GFNBounds.Core.Adjoint` |
 | `nrmL2_const` | `GFNBounds.Balance.LocalConvergence` |
 | `nrmL2_const_of_flow` | `GFNBounds.Balance.Flow` |
+| `nrmL2_const_on_Ici` | `GFNBounds.Balance.BoundaryBlowup` |
 | `nrmL2_densAct_le` | `GFNBounds.Core.Adjoint` |
 | `nrmL2_funAct_le` | `GFNBounds.Core.Adjoint` |
 | `nrmL2_le_of_abs_le` | `GFNBounds.Balance.L2Toolkit` |
@@ -6532,7 +6814,12 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `nu` | `GFNBounds.Doubling.ConstantFunctional` |
 | `nu_eq_zero` | `GFNBounds.Doubling.ConstantFunctional` |
 | `nu_nonneg` | `GFNBounds.Doubling.ConstantFunctional` |
+| `obliqueMixing` | `GFNBounds.Core.MixingBase` |
+| `obliquePi` | `GFNBounds.Core.MixingBase` |
+| `obliquePi_apply` | `GFNBounds.Core.MixingBase` |
+| `obliquePi_idem` | `GFNBounds.Core.MixingBase` |
 | `ofReal_add_aux` | `GFNBounds.Core.Kernel` |
+| `of_idem` | `GFNBounds.Core.MixingBase` |
 | `omeg` | `GFNBounds.Doubling.Doeblin` |
 | `omeg_ge` | `GFNBounds.Doubling.Doeblin` |
 | `omeg_le_case_one` | `GFNBounds.Doubling.Doeblin` |
@@ -6551,13 +6838,19 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `one_add_b_nonneg` | `GFNBounds.Doubling.Product` |
 | `one_add_ge_of_le` | `GFNBounds.Balance.Expansion` |
 | `one_add_mul_le_one_sub_rpow_neg` | `GFNBounds.Doubling.Lyapunov` |
+| `one_le_B` | `GFNBounds.Core.MixingBase` |
+| `one_le_B_orthoPi` | `GFNBounds.Core.MixingBase` |
 | `one_le_BhatSigma` | `GFNBounds.Balance.TrainingSpeed` |
 | `one_le_Cinf` | `GFNBounds.Balance.LocalConvergence` |
+| `one_le_beta_zero` | `GFNBounds.Core.MixingBase` |
 | `one_le_ell3` | `GFNBounds.Doubling.Weight` |
 | `one_le_foot` | `GFNBounds.Doubling.R0Bound` |
+| `one_le_norm_of_isIdempotentElem` | `GFNBounds.Core.MixingBase` |
+| `one_le_norm_one_sub_proj` | `GFNBounds.Core.MixingBase` |
 | `one_le_of_mem_window'` | `GFNBounds.Doubling.DecayNotation` |
 | `one_le_of_thr` | `GFNBounds.Doubling.Escape` |
 | `one_le_prodW` | `GFNBounds.Doubling.Weight` |
+| `one_le_ratioCap` | `GFNBounds.Balance.BoundaryBlowup` |
 | `one_le_sigmaStar` | `GFNBounds.Balance.TrainingSpeed` |
 | `one_le_sojMean` | `GFNBounds.Doubling.Product` |
 | `one_le_toReal` | `GFNBounds.Doubling.LpContraction` |
@@ -6572,11 +6865,17 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `one_sub_eps_le_pstar_dirac_pred` | `GFNBounds.Doubling.Ratios` |
 | `one_sub_eps_pos` | `GFNBounds.Doubling.Setting` |
 | `one_sub_mul_partialSum` | `GFNBounds.Doubling.Operator` |
+| `one_sub_ne_zero_iff` | `GFNBounds.Core.MixingBase` |
 | `one_sub_omeg_lt_one` | `GFNBounds.Doubling.SharpRate` |
 | `one_sub_omeg_pos` | `GFNBounds.Doubling.SharpRate` |
+| `one_sub_orthoPi_ne_zero` | `GFNBounds.Core.MixingBase` |
 | `one_sub_rpow_neg_le` | `GFNBounds.Doubling.Lyapunov` |
 | `opNorm` | `GFNBounds.Balance.Lift` |
 | `opNorm₂` | `GFNBounds.Balance.Lift` |
+| `orthoMixing` | `GFNBounds.Core.MixingBase` |
+| `orthoPi` | `GFNBounds.Core.MixingBase` |
+| `orthoPi_apply` | `GFNBounds.Core.MixingBase` |
+| `orthoPi_idem` | `GFNBounds.Core.MixingBase` |
 | `orthogonal_defectRange` | `GFNBounds.Doubling.Unsolvable` |
 | `outflowStar` | `GFNBounds.Graph.Universality` |
 | `outflowStar_eq_sum` | `GFNBounds.Graph.Universality` |
@@ -6651,6 +6950,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `pol` | `GFNBounds.Graph.CycleExample` |
 | `posPart_mass` | `GFNBounds.Core.StableBound` |
 | `pos_of_irreducible` | `GFNBounds.Doubling.Irreducible` |
+| `pos_of_loss_le` | `GFNBounds.Balance.BoundaryBlowup` |
 | `positiveOnEdges` | `GFNBounds.Graph.CycleExample` |
 | `pow_mul_pi` | `GFNBounds.Doubling.Operator` |
 | `powerTail` | `GFNBounds.Doubling.Tail` |
@@ -6753,8 +7053,12 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `ramp_defect_sink` | `GFNBounds.Doubling.Ramp` |
 | `ramp_defect_src` | `GFNBounds.Doubling.Ramp` |
 | `ramp_defect_straddle` | `GFNBounds.Doubling.Ramp` |
+| `rate_eq_visits` | `GFNBounds.Graph.MorozovConsume` |
 | `rate_of_large` | `GFNBounds.Doubling.SharpRate` |
 | `ratio` | `GFNBounds.Balance.MassIdentity` |
+| `ratioCap` | `GFNBounds.Balance.BoundaryBlowup` |
+| `ratioCap_pos` | `GFNBounds.Balance.BoundaryBlowup` |
+| `ratio_blowup_of_small` | `GFNBounds.Balance.BoundaryBlowup` |
 | `ratio_counting_ones` | `GFNBounds.Graph.CycleExample` |
 | `ratio_counting_src` | `GFNBounds.Graph.CycleExample` |
 | `ratio_counting_x3` | `GFNBounds.Graph.CycleExample` |
@@ -6817,6 +7121,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `rhoL_pos` | `GFNBounds.Balance.LocalConvergence` |
 | `rhoSigma` | `GFNBounds.Balance.TrainingSpeed` |
 | `rhoSigma_eq_visits` | `GFNBounds.Balance.TrainingSpeed` |
+| `rhoSigma_eq_visits'` | `GFNBounds.Graph.MorozovConsume` |
 | `rnWeight` | `GFNBounds.Balance.MassAscent` |
 | `rnWeight_pos` | `GFNBounds.Balance.MassAscent` |
 | `rowOnChain_none` | `GFNBounds.Doubling.LpLayer` |
@@ -6902,9 +7207,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `stable_bound` | `GFNBounds.Core.StableBound` |
 | `stable_frozen_decay` | `GFNBounds.Balance.Flow` |
 | `stable_frozen_decay_finite` | `GFNBounds.Balance.WeightedL2` |
+| `stable_frozen_decay_sigma` | `GFNBounds.Graph.MorozovConsume` |
 | `stable_frozen_discrete` | `GFNBounds.Balance.Discrete` |
 | `stable_frozen_discrete_finite` | `GFNBounds.Balance.WeightedL2` |
 | `stable_frozen_discrete_mixing` | `GFNBounds.Balance.WeightedL2` |
+| `stable_frozen_discrete_sigma` | `GFNBounds.Graph.MorozovConsume` |
 | `starK_one` | `GFNBounds.Silva.NoUniform` |
 | `starK_pos` | `GFNBounds.Silva.NoUniform` |
 | `starPET` | `GFNBounds.Silva.NoUniform` |
@@ -7155,8 +7462,13 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `twoState_Kexp` | `GFNBounds.Balance.LocalConvergence` |
 | `twoState_Lgd` | `GFNBounds.Balance.LocalConvergence` |
 | `twoState_bands_deviate` | `GFNBounds.Balance.Freezing` |
+| `twoState_blowup_loss_le` | `GFNBounds.Balance.BoundaryBlowup` |
+| `twoState_blowup_mean` | `GFNBounds.Balance.BoundaryBlowup` |
+| `twoState_blowup_ratio` | `GFNBounds.Balance.BoundaryBlowup` |
+| `twoState_boundary_blowup_check` | `GFNBounds.Balance.BoundaryBlowup` |
 | `twoState_coercivity` | `GFNBounds.Balance.LocalEnergy` |
 | `twoState_contraction_check` | `GFNBounds.Balance.WeightedL2` |
+| `twoState_crossingFloor` | `GFNBounds.Balance.BoundaryBlowup` |
 | `twoState_densityAction_eq_mean` | `GFNBounds.Balance.Freezing` |
 | `twoState_energy_check` | `GFNBounds.Balance.LocalEnergy` |
 | `twoState_energy_lhs` | `GFNBounds.Balance.LocalEnergy` |
@@ -7188,11 +7500,13 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `twoState_perpL2_expH` | `GFNBounds.Balance.Expansion` |
 | `twoState_perp_seq` | `GFNBounds.Balance.WeightedL2` |
 | `twoState_ratioBridge_check` | `GFNBounds.Balance.RatioBridge` |
+| `twoState_ratioCap` | `GFNBounds.Balance.BoundaryBlowup` |
 | `twoState_ratio_close` | `GFNBounds.Balance.RatioBridge` |
 | `twoState_ratio_one` | `GFNBounds.Balance.Freezing` |
 | `twoState_ratio_zero` | `GFNBounds.Balance.Freezing` |
 | `twoState_rhoL` | `GFNBounds.Balance.LocalConvergence` |
 | `twoState_step` | `GFNBounds.Balance.WeightedL2` |
+| `twoState_uMin` | `GFNBounds.Balance.BoundaryBlowup` |
 | `two_add_sigmaBar_eq` | `GFNBounds.Graph.CycleExample` |
 | `two_add_sigmaBar_pos` | `GFNBounds.Graph.Morozov` |
 | `two_eps_div_le_a` | `GFNBounds.Balance.Expansion` |
@@ -7205,6 +7519,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `two_step` | `GFNBounds.Doubling.Sojourn` |
 | `uInfl` | `GFNBounds.Graph.CycleExample` |
 | `uInfl_pos` | `GFNBounds.Graph.CycleExample` |
+| `uMin` | `GFNBounds.Balance.BoundaryBlowup` |
+| `uMin_pos` | `GFNBounds.Balance.BoundaryBlowup` |
 | `uavg_of_avg` | `GFNBounds.Doubling.DecayNotation` |
 | `uavg_of_cutBal` | `GFNBounds.Doubling.DecayNotation` |
 | `unif` | `GFNBounds.Silva.Basic` |

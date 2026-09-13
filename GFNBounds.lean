@@ -92,4 +92,7 @@ import GFNBounds.Balance.WeightedL2
 import GFNBounds.Balance.LocalConvergence
 import GFNBounds.Balance.RatioBridge
 import GFNBounds.Balance.TrainingSpeed
+import GFNBounds.Core.MixingBase
+import GFNBounds.Balance.BoundaryBlowup
+import GFNBounds.Graph.MorozovConsume
 import GFNBounds.Audit

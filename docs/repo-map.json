@@ -2462,7 +2462,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -4467,7 +4467,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -4577,7 +4577,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -6104,7 +6104,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -7227,7 +7227,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -9899,7 +9899,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -12580,7 +12580,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -16478,7 +16478,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -16795,7 +16795,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -21104,7 +21104,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -22338,7 +22338,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -24650,7 +24650,7 @@
     }
    ],
    "library": "strict",
-   "tracked": false,
+   "tracked": true,
    "root_reachable": true
   },
   {
@@ -27259,64 +27259,6 @@
    "library": "scaffold",
    "tracked": true,
    "root_reachable": true
-  },
-  {
-   "file": "scaffold/GFNBoundsScaffold/Balance/GlobalConvergence.lean",
-   "title": "From every positive initialization, the `(log x)²` gradient flow converges to the balanced flow of its sphere",
-   "labels": [],
-   "scope_disclosed": true,
-   "imports": [
-    "GFNBounds.Balance.TrainingSpeed"
-   ],
-   "variables": [
-    "variable {V : Type*} [Fintype V] [DecidableEq V]"
-   ],
-   "lines": 257,
-   "decls": [
-    {
-     "name": "nrmL2_const_of_total",
-     "full": "GFNBounds.Balance.nrmL2_const_of_total",
-     "kind": "theorem",
-     "line": 110,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem nrmL2_const_of_total {lam : V → ℝ} (htot : ∑ x, lam x = 1) (c : ℝ) : Graph.nrmL2 lam (fun _ => c) = |c|",
-     "doc": "`‖c‖_{L²(λ)} = |c|` for a constant density, on a probability `λ`."
-    },
-    {
-     "name": "continuous_nrmL2",
-     "full": "GFNBounds.Balance.continuous_nrmL2",
-     "kind": "theorem",
-     "line": 117,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem continuous_nrmL2 (lam : V → ℝ) : Continuous fun a : V → ℝ => Graph.nrmL2 lam a",
-     "doc": "`a ↦ ‖a‖_{L²(λ)}` is continuous on `V → ℝ`."
-    },
-    {
-     "name": "no_distant_equilibrium_three_converges",
-     "full": "GFNBounds.Balance.no_distant_equilibrium_three_converges",
-     "kind": "theorem",
-     "line": 131,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem no_distant_equilibrium_three_converges {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam wf : V → ℝ} {wmin : ℝ} {u : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam (u 0)) ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam (u 0)) ∧ Graph.nrmL2 lam (fun _ => Graph.nrmL2 lam (u 0)) = Graph.nrmL2 lam (u 0) ∧ ∀ v : V → ℝ, (∀ x, 0 < v x) → Balanced B.phat lam v → Graph.nrmL2 lam v = Graph.nrmL2 lam (u 0) → v = fun _ => Graph.nrmL2 lam (u 0)",
-     "doc": "**`prop:no_distant_equilibrium`*(3)*, the convergence clause, for `g = (log x)²`**: on the loop closure of a finite path-connected marked graph, the gradient flow from any `μ₀ ∼ λ` converges to the balanced flow of its sphere."
-    },
-    {
-     "name": "global_dichotomy_full_one_converges",
-     "full": "GFNBounds.Balance.global_dichotomy_full_one_converges",
-     "kind": "theorem",
-     "line": 238,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem global_dichotomy_full_one_converges {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam wf : V → ℝ} {wmin : ℝ} {u : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : 0 < Graph.nrmL2 lam (u 0) ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam (u 0)) ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam (u 0))",
-     "doc": "**`theo:global_dichotomy_full`*(1)*, the convergence clause, for `g = (log x)²`**: on the loop closure of a finite path-connected marked graph, with `ν = wλ` and `w ≥ w_min > 0`, the gradient flow converges to a balanced flow from every initialization `μ₀ ∼ λ` — explicitly, to the constant density `‖u₀‖_{L²(λ)} > 0`."
-    }
-   ],
-   "library": "scaffold",
-   "tracked": false,
-   "root_reachable": false
   }
  ]
 }

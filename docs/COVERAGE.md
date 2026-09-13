@@ -89,7 +89,7 @@ The **bucket** says how far the rest is, and every non-`A` row carries its obstr
 | A | `theo:global_dichotomy_full` | 820–830 | 🟡 partial | B | `Balance/MassIdentity.lean` | — |
 | A | `prop:morozov_rate` | 834–873 | 🟡 partial | B | `Graph/Morozov.lean`<br>`Graph/MorozovConsume.lean` | — |
 | A | `cor:global_lojasiewicz` | 875–898 | ✅ closed | A | `Balance/Flow.lean`<br>`Balance/Lojasiewicz.lean`<br>`Balance/MassAscent.lean` | — |
-| A | `theo:training_speed_full` | 900–934 | ✅ closed | B | `Balance/RatioBridge.lean`<br>`Balance/TrainingSpeed.lean` | — |
+| A | `theo:training_speed_full` | 900–934 | ✅ closed | A | `Balance/RatioBridge.lean`<br>`Balance/TrainingSpeed.lean` | — |
 | A | `rem:visit_ratio` | 936–942 | ⬜ open | D | — | — |
 | A | `def:path_connected` | 951–953 | ✅ closed | A | `Graph/Setting.lean` | — |
 | A | `def:loop_closure` | 955–957 | ✅ closed | A | `Graph/Setting.lean` | — |

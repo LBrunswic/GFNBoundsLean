@@ -1,20 +1,14 @@
 {
   "schema": 1,
-  "source_date": "2026-09-13T09:27:42+01:00",
-  "commit": "1939fa0b81846a7dac985722feda03064b0cf1e3",
-  "commit_short": "1939fa0",
+  "source_date": "2026-09-13T10:10:49+01:00",
+  "commit": "a12db87c1bcc66b00ef1f57e735742db8796ae05",
+  "commit_short": "a12db87",
   "branch": "main",
   "dirty": true,
   "dirty_files": [
-    "GFNBounds/Balance/BoundaryBlowup.lean",
-    "GFNBounds/Balance/Flow.lean",
-    "GFNBounds/Balance/MassAscent.lean",
-    "GFNBounds/Balance/MassIdentity.lean",
-    "GFNBounds/Balance/TrainingSpeed.lean",
+    "docs/COVERAGE.md",
     "docs/REPO-INDEX.md",
-    "docs/REPO-MAP.md",
-    "docs/lean-facts.json",
-    "docs/repo-map.json"
+    "docs/REPO-MAP.md"
   ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {

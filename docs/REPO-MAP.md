@@ -228,8 +228,8 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `GFNBounds/Balance/Lojasiewicz.lean` | Coercivity off balance, and the Łojasiewicz inequality it delivers **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` B, ✅ `cor:global_lojasiewicz` A | 27 |
 | `GFNBounds/Balance/MassAscent.lean` | The mass is the Lyapunov function: monotone ascent on the sphere, and the entry time **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` B, ✅ `cor:global_lojasiewicz` A | 25 |
 | `GFNBounds/Balance/MassIdentity.lean` | The mass identity: a strictly unimodal generator admits no distant equilibrium **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` B, 🟡 `theo:global_dichotomy_full` B | 25 |
-| `GFNBounds/Balance/RatioBridge.lean` | From the ratio variable to the density variable: the local-phase rescaling step **[SCOPE]** | ✅ `theo:training_speed_full` B | 17 |
-| `GFNBounds/Balance/TrainingSpeed.lean` | The training-speed theorem, assembled: two phases, and every constant in `σ_*`, `σ̄`, `N_min` **[SCOPE]** | ✅ `theo:training_speed_full` B | 29 |
+| `GFNBounds/Balance/RatioBridge.lean` | From the ratio variable to the density variable: the local-phase rescaling step **[SCOPE]** | ✅ `theo:training_speed_full` A | 17 |
+| `GFNBounds/Balance/TrainingSpeed.lean` | The training-speed theorem, assembled: two phases, and every constant in `σ_*`, `σ̄`, `N_min` **[SCOPE]** | ✅ `theo:training_speed_full` A | 29 |
 | `GFNBounds/Balance/WeightedL2.lean` | Weighted `L²(λ)` as an inner-product space, and the contraction at `H = g''(1)A^†M_wA` **[SCOPE]** | 🟡 `theo:db_stable_frozen_full` B | 62 |
 | `GFNBounds/Core/Adjoint.lean` | The `λ`-reversal of a Markov kernel, and the `L²(λ)`-adjointness it carries **[SCOPE]** | 🟡 `lem:adjoint` B | 46 |
 | `GFNBounds/Core/Flow.lean` | The mean projection, and the two identities `Core.Mixing` assumes **[SCOPE]** | 🟡 `theo:universality_L2_full` B | 18 |

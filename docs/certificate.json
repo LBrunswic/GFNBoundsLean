@@ -1,21 +1,13 @@
 {
   "schema": 1,
-  "source_date": "2026-09-12T21:57:07+01:00",
-  "commit": "0414096cdcc9729ed464fa548b500cb5cd94c123",
-  "commit_short": "0414096",
+  "source_date": "2026-09-13T09:25:37+01:00",
+  "commit": "7b05fef417a7064ce936e999ebe08d6b93518ec0",
+  "commit_short": "7b05fef",
   "branch": "main",
   "dirty": true,
   "dirty_files": [
-    "GFNBounds.lean",
-    "docs/COVERAGE.md",
-    "docs/REPO-INDEX.md",
     "docs/REPO-MAP.md",
-    "docs/lean-facts.json",
-    "docs/repo-map.json",
-    "paper-map.json",
-    "GFNBounds/Balance/BoundaryBlowup.lean",
-    "GFNBounds/Core/MixingBase.lean",
-    "GFNBounds/Graph/MorozovConsume.lean"
+    "docs/repo-map.json"
   ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {

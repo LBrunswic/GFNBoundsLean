@@ -4,30 +4,35 @@ import GFNBounds.Balance.MassIdentity
 /-!
 # A five-vertex cycle: the frozen policy and the inflation force never deadlock
 
-**`rem:cycle_no_stalemate`** — `proofs.tex:816–818`.
+**`rem:cycle_no_stalemate`** — `proofs.tex:837–839`.
 
 > Take the marked graph with vertices `{s₀,x₁,x₂,x₃,s_f}`, edges `s₀ → x₁`, the cycle
 > `x₁ → x₂ → x₃ → x₁`, and `x₃ → s_f`, loop-closed as in Definition `def:loop_closure`; freeze
-> the backward policy `π_←(x₁ → x₃) = p`, `π_←(x₁ → s₀) = 1 − p`, all other rows being
-> deterministic. The expected backward-trajectory length is `3/(1−p) < ∞`: the condition of
+> the backward policy `π_←(x₁ → x₃) = p`, `π_←(x₁ → s₀) = 1 − p` with `p ∈ (0,1)`, all other
+> rows being deterministic — at `p = 1` the edge `s₀ → x₁` carries no backward probability, at
+> `p = 0` the edge `x₃ → x₁` carries none, and in either case the loop-closed chain no longer
+> mixes and `B̂ = +∞`. The expected backward-trajectory length is `3/(1−p) < ∞`: the condition of
 > Morozov et al. holds and the circulation cannot explode. The invariant measure gives equal mass
-> `q` to the three cycle states and `(1−p)q` to `s₀` and `s_f`. Over-inflate the cycle: `u = M` on
-> `{x₁,x₂,x₃}` and `u = 1` elsewhere, `M` large. Then, as `M → ∞`, the ratios tend to
-> `r(x₁), r(x₂), r(s_f) → 1`, `r(x₃) → p` and `r(s₀) ∼ M(1−p)`: the frozen-policy constraint
-> appears as the persistent leak-ratio `p` at the junction `x₃`, and the inflation force
-> concentrates at the starved source, with magnitude `|g'(r)r| = 2 log r(s₀) ∼ 2 log M` for
+> `q` to the three cycle states and `(1−p)q` to `s₀` and `s_f`. Over-inflate the cycle:
+> `u := dμ/dλ` equals `M` on `{x₁,x₂,x₃}` and `1` elsewhere, `M` large. The ratios are then
+> `r(x₁) = r(x₂) = r(s_f) = 1`, `r(x₃) = p + (1−p)/M` and `r(s₀) = M`: the frozen-policy
+> constraint appears as the persistent leak-ratio `p` at the junction `x₃`, and the inflation
+> force concentrates at the starved source, with magnitude `|g'(r)r| = 2 log r(s₀) = 2 log M` for
 > `g = (log x)²` — *growing*, not vanishing, with the imbalance. The candidate stalemate between
-> the two forces therefore never forms (consistently with the mass identity); the source refills
-> at logarithmic speed, giving a transient of order `M/log M`, after which the exponential phase
-> of Theorem `theo:local_convergence` takes over. As `p → 1` the cycle closes, the backward-length
-> bound `3/(1−p)` and `B̂` blow up, and every rate degenerates: the construction interpolates
-> smoothly toward the instability regime of Theorem `theo:no_bound_divergence`.
+> the two forces therefore never forms (consistently with the mass identity); the source
+> nevertheless refills at a speed set by the scale of the flow — at fixed `ν` the gradient field
+> is homogeneous of degree `−1`, so a trajectory started at norm `Θ(M)` runs `Θ(M²)` times slower
+> than the normalized one — giving a transient of order `M²`, after which the exponential phase of
+> Theorem `theo:local_convergence` takes over. As `p → 1` the cycle closes, the backward-length
+> bound `3/(1−p)`, `B̂` and `B̂_σ` blow up, and every rate the theorems certify degenerates. The
+> construction interpolates smoothly toward the instability regime of Theorem
+> `theo:no_bound_divergence`.
 
 The vertices are `Fin 5`, in the paper's order: `0 = s₀`, `1 = x₁`, `2 = x₂`, `3 = x₃`, `4 = s_f`.
 Everything below is a closed form in `p` and `M`; the limits `M → ∞` are corollaries of the closed
 forms, which is the stronger statement.
 
-## One correction to the remark, and one reading of an `∼`
+## Two corrections to the remark, both since applied to the draft
 
 **The paper printed the wrong value here, and it has since been corrected** (2026-09-08; the
 quotation above is the corrected text). What follows records what the discrepancy was and how it
@@ -44,11 +49,12 @@ remark states — which is correct, `invProb_paper` — forces `2 + σ̄ = (5−
 `σ̄ = 3/(1−p)` (`lam_src_eq_inv_two_add_sigmaBar`). **Nothing the remark concludes changes**: both
 numbers are finite for `p < 1`, both blow up as `p → 1`, and neither enters claims 2–4.
 
-**`r(s₀) ∼ M(1−p)` is the counting-measure reading.** `prop:no_distant_equilibrium` sets
+**`r(s₀) = M`, not `∼ M(1−p)`** — the remark printed `r(s₀) ∼ M(1−p)` and `r(x₃) → p` until
+2026-09-13, and now prints the exact values certified here. `prop:no_distant_equilibrium` sets
 `u := dμ/dλ` against the invariant probability `λ`, and on that reading `r(s₀) = M` *exactly*
 (`ratio_src`) — the factor `(1−p)` cancels, because `λ(s₀)` already carries it. Reading `u`
 instead as the density against the counting measure gives `r(s₀) = M(1−p)` exactly
-(`ratio_counting_src`), which is the remark's number. Both readings are certified here, both give
+(`ratio_counting_src`), which was the remark's number. Both readings are certified here, both give
 `r(s₀) → ∞` linearly in `M`, and the four other ratios agree to their stated limits under both.
 
 ## SCOPE (disclosed)
@@ -63,12 +69,13 @@ instead as the density against the counting measure gives `r(s₀) = M(1−p)` e
   at the inflated configuration (`no_stalemate`), so the two forces do not cancel. `B̂_σ` is
   exhibited in closed form (`bSigma_eq`) as the finite constant `prop:morozov_rate`*(2)*
   attaches to this graph.
-* **The transient `M/log M`, the handover to `theo:local_convergence`, the blow-up of `B̂` as
-  `p → 1`, and the interpolation toward `theo:no_bound_divergence` are not stated.** They are the
-  remark's interpretation of the computation, not consequences of it: the first two need the
-  gradient *flow* (no ODE layer exists here), and `B̂` is an operator norm — `CLAUDE.md`'s
-  obstruction 2. What is certified of the `p → 1` clause is that `σ̄` is unbounded on `(0,1)`
-  (`sigmaBar_unbounded`).
+* **The transient of order `M²`, the handover to `theo:local_convergence`, `B̂ = +∞` at
+  `p ∈ {0,1}` and its blow-up as `p → 1`, and the interpolation toward `theo:no_bound_divergence`
+  are not stated.** The first two are statements about the gradient *flow*, not made here (and the
+  library's flow predicate currently has a defect, see `Balance/Flow.lean`); `B̂` is the operator
+  norm of `Pⁿ − Π` on `L²(λ)`, which `Balance/WeightedL2Norm.lean` now provides but which is not
+  computed on this graph. What is certified of the `p → 1` clause is that `σ̄` is unbounded on
+  `(0,1)` (`sigmaBar_unbounded`) and, in `Graph/CycleBlowup.lean`, that `B̂_σ → ∞`.
 * **`g` never appears; only `g' = 2 log x / x`.** As in `GFNBounds/Balance/MassIdentity.lean`,
   the generator enters only through its derivative, and `lossGradDensity` is a definition rather
   than a derived gradient (`theo:first_variation_full` is not formalized).
@@ -94,11 +101,12 @@ instead as the density against the counting measure gives `r(s₀) = M(1−p)` e
 | … `< ∞`, so Morozov's condition holds | `isHitExp` (the system is solved), `bSigma_eq` (the constant of `prop:morozov_rate`*(2)*) |
 | `λ` gives `q` to `x₁,x₂,x₃` and `(1−p)q` to `s₀,s_f` | ✓ `invProb_paper`, with `q = 1/(5−2p)`; unique by `invProb_eq` |
 | `r(x₁), r(x₂), r(s_f) → 1` | ✓ **exactly** `1` at every `M` — `ratio_x1`, `ratio_x2`, `ratio_snk` |
-| `r(x₃) → p` | ✓ `ratio_x3 : = p + (1−p)/M`, limit `ratio_x3_tendsto` |
-| `r(s₀) ∼ M(1−p)` | ⚠ `= M` on the paper's `u = dμ/dλ` reading (`ratio_src`); `= M(1−p)` against the counting measure (`ratio_counting_src`) |
-| the force at the source is `2 log r(s₀) ∼ 2 log M`, growing | ✓ `inflation_force`, `inflation_force_tendsto` |
+| `r(x₃) = p + (1−p)/M` | ✓ `ratio_x3`, limit `p` by `ratio_x3_tendsto` |
+| `r(s₀) = M` | ✓ `ratio_src`; the value printed until 2026-09-13, `M(1−p)`, is the counting reading (`ratio_counting_src`) |
+| the force at the source is `2 log r(s₀) = 2 log M`, growing | ✓ `inflation_force`, `inflation_force_tendsto` |
 | the candidate stalemate never forms | ✓ `no_stalemate` — the gradient mass is *strictly* negative |
-| the transient `M/log M`, the handover, `B̂ → ∞` | not stated — see SCOPE |
+| `B̂ = +∞` at `p ∈ {0,1}`; the transient `M²`, the handover, `B̂ → ∞` | not stated — see SCOPE |
+| `B̂_σ → ∞` as `p → 1` | ✓ in `Graph/CycleBlowup.lean`, `bhatSigma_cycle_tendsto` |
 | all four claims at once | `cycle_no_stalemate` |
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
@@ -526,8 +534,9 @@ theorem ratio_x3 {p M : ℝ} (hp0 : 0 < p) (hp1 : p < 1) (hM : 0 < M) :
   ring
 
 /-- **`rem:cycle_no_stalemate`, claim 3 at `s₀`**: on the paper's own convention `u = dμ/dλ`
-(`prop:no_distant_equilibrium`), `r(s₀) = M` *exactly*. The remark's `M(1−p)` is the counting
-reading — see `ratio_counting_src` — the factor `(1−p)` being already carried by `λ(s₀)`. -/
+(`prop:no_distant_equilibrium`), `r(s₀) = M` *exactly*, as the remark prints since 2026-09-13.
+The value it printed before, `M(1−p)`, is the counting reading — see `ratio_counting_src` — the
+factor `(1−p)` being already carried by `λ(s₀)`. -/
 theorem ratio_src {p M : ℝ} (hp0 : 0 < p) (hp1 : p < 1) (hM : 0 < M) :
     Balance.ratio (pol hp0 hp1).phat (lam p) (uInfl M) 0 = M := by
   have hd : (5 : ℝ) - 2 * p ≠ 0 := ne_of_gt (by linarith)
@@ -539,14 +548,14 @@ theorem ratio_src {p M : ℝ} (hp0 : 0 < p) (hp1 : p < 1) (hM : 0 < M) :
 /-! #### The same five ratios read against the counting measure
 
 Replacing `λ` by the counting measure — i.e. taking `u` itself as the measure `μ` — leaves
-`r(x₁), r(x₂), r(s_f)` at `1` and moves the two `p`-dependent values to exactly the remark's:
-`r(s₀) = M(1−p)` and `r(x₃) = p + 1/M`. -/
+`r(x₁), r(x₂), r(s_f)` at `1` and moves the two `p`-dependent values to `r(s₀) = M(1−p)` and
+`r(x₃) = p + 1/M` — the first being the value the remark printed until 2026-09-13. -/
 
 private theorem den_one_ne {M : ℝ} (hM : 0 < M) (y : Fin 5) :
     (1 : ℝ) * uInfl M y ≠ 0 := by
   rw [one_mul]; exact ne_of_gt (uInfl_pos hM y)
 
-/-- **`r(s₀) = M(1−p)`, the remark's own value**, obtained by reading `u` as the density against
+/-- **`r(s₀) = M(1−p)`, the remark's value until 2026-09-13**, obtained by reading `u` as the density against
 the counting measure rather than against `λ`. -/
 theorem ratio_counting_src {p M : ℝ} (hp0 : 0 < p) (hp1 : p < 1) (hM : 0 < M) :
     Balance.ratio (pol hp0 hp1).phat (fun _ => 1) (uInfl M) 0 = M * (1 - p) := by
@@ -612,7 +621,7 @@ theorem ratio_src_tendsto {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) :
 
 The remark's closing move has two halves. The computable half is the *magnitude* of the force at
 the starved source, `|g'(r)r| = 2 log r(s₀)`, and that it grows with `M`. The half that is a
-reading rather than a claim — the transient `M/log M`, the handover to `theo:local_convergence`
+reading rather than a claim — the transient of order `M²`, the handover to `theo:local_convergence`
 — is not stated; see the module SCOPE. What *is* stated in place of "the candidate stalemate never
 forms" is the mass identity's own verdict at this configuration: `no_stalemate`. -/
 
@@ -662,17 +671,18 @@ theorem no_stalemate {p M : ℝ} (hp0 : 0 < p) (hp1 : p < 1) (hM : 1 < M)
 
 /-! ### The remark in one statement -/
 
-/-- **`rem:cycle_no_stalemate`** (`proofs.tex:816–818`), its four claims at once, on the graph
+/-- **`rem:cycle_no_stalemate`** (`proofs.tex:837–839`), its four claims at once, on the graph
 `cyc` with the frozen policy `pol` and the over-inflated density `uInfl M`.
 
-Two departures from the printed text, both disclosed in the module docstring and neither touching
-what the remark concludes. Claim 1 is stated with the **corrected** backward-trajectory length
+Two former departures from the printed text, both since corrected in the draft (2026-09-08 and
+2026-09-13) and neither touching what the remark concludes. Claim 1 is stated with the backward-trajectory length
 `σ̄ = 3/(1−p)` — the formerly printed `(1+2p)/(1−p)` is `E(σ ∣ X₀ = x₁)`, `hitExp_x1` — and claim 3's
-`r(s₀)` is stated on the paper's own convention `u = dμ/dλ`, where it is exactly `M`; the printed
-`M(1−p)` is the counting reading, `ratio_counting_src`. Claim 4 is stated as what the mass
-identity delivers: the two forces do not cancel, the gradient mass being *strictly* negative.
-The remark's dynamical readings — the `M/log M` transient, the handover to
-`theo:local_convergence`, `B̂ → ∞` as `p → 1` — are not stated; see the module SCOPE. -/
+`r(s₀)` is stated on the paper's own convention `u = dμ/dλ`, where it is exactly `M`, as the remark
+prints since 2026-09-13; the former `M(1−p)` is the counting reading, `ratio_counting_src`. Claim
+4 is stated as what the mass identity delivers: the two forces do not cancel, the gradient mass
+being *strictly* negative. The remark's dynamical readings — the transient of order `M²`, the
+handover to `theo:local_convergence`, `B̂ → ∞` as `p → 1` — are not stated; see the module
+SCOPE. -/
 theorem cycle_no_stalemate {p M : ℝ} (hp0 : 0 < p) (hp1 : p < 1) (hM : 1 < M)
     {w : Fin 5 → ℝ} (hw : ∀ x, 0 < w x) :
     (pol hp0 hp1).sigmaBar (hitExp p) = 3 / (1 - p)

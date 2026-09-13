@@ -85,13 +85,14 @@ the `Prod`/curried bridge for `𝒮²` — and each is isolated in its own decla
   `hasDerivAt_fmLoss_abs_ipL2` hypothesises `hne : ∀ x, ratio K lam u x ≠ 1` — the flow is
   nowhere balanced — and on that set `g'(r) = ε(r) = sign(r−1)` is a genuine derivative
   (`hasDerivAt_abs_sub_one`), so the corollary's display holds with no reinterpretation. **What
-  this costs is named:** the excluded set is exactly `{r = 1}`, which by
-  `MassIdentity.ratio_eq_one_iff_balanced` is the *balanced* flow — the minimiser, and the only
-  point the surrounding theory cares about. So the `|x−1|` case is proved **away from the
-  solution and nowhere else**, and the honest reading of the paper's "analogous, with `g'(r)`
-  replaced by the sign of `r−1`" at a balanced or partially balanced flow is a *subgradient*
-  statement, which needs a non-smooth first variation this library does not have and which is
-  **not** claimed here. A subdifferential of `𝓛` is never mentioned below; `Real.sign 0 = 0`
+  this costs is named:** the excluded flows are those balanced at *some* state (`r(x) = 1` for
+  one `x`), not merely the balanced flow `r ≡ 1` (`MassIdentity.ratio_eq_one_iff_balanced`),
+  which is one of them. On a finite state space with `λ > 0` this is exactly the paper's
+  hypothesis since the 2026-09-13 repair, "`r` essentially bounded away from `1`"
+  (`proofs.tex:497`), which excludes every flow whose ratio comes arbitrarily close to `1` on a
+  set of positive measure. At a partially balanced flow the paper's "analogous, with `g'(r)`
+  replaced by `sign(r−1)`" would be a *subgradient* statement, which needs a non-smooth first
+  variation this library does not have and which is **not** claimed here. A subdifferential of `𝓛` is never mentioned below; `Real.sign 0 = 0`
   appears only as the value of a function, never as a derivative.
 * **The `Prod`/curried bridge, and what it cost.** `theo:first_variation_full` is stated over a
   single `Fintype V`; `Lift.lean` models `𝒮²` in curried form (`V → V → ℝ` for measures,
@@ -329,9 +330,9 @@ nowhere balanced: `g'(r)` is `ε(r) = sign(r−1)` and the first display holds u
     ∇^λ_{F_←} 𝓛_{g,F_←} = (π_→^λ − r)[ε(r)λ].
 
 The hypothesis `hne` is the price of `|x−1|`'s corner: at a state with `r(x) = 1` the loss is not
-differentiable in the direction that moves that ratio, and no derivative is claimed there. Since
-`{r ≡ 1}` is exactly the balanced flow (`MassIdentity.ratio_eq_one_iff_balanced`), this proves
-the case **away from the solution**; see the module SCOPE. -/
+differentiable in the direction that moves that ratio, and no derivative is claimed there. On a
+finite state space `hne` is the paper's "`r` essentially bounded away from `1`": it excludes every
+flow balanced at some state, the balanced flow `r ≡ 1` among them; see the module SCOPE. -/
 theorem hasDerivAt_fmLoss_abs_ipL2 {K : V → V → ℝ} {lam u : V → ℝ} (hinv : Invariant K lam)
     (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x)
     (hne : ∀ x, ratio K lam u x ≠ 1) (d : V → ℝ) :

@@ -67,8 +67,9 @@ in the `L^∞(ν_B)` order. So "strongly universal" in the paper's full sense is
 
 **The hypotheses are assumed, not derived.** `Mixing P Pi`, `P 1 = 1` and `Pi θ = 0` are
 hypotheses here; the paper derives them from ergodicity of `π*`, `ν_B π* = ν_B` and equal
-masses. That derivation is `Core.Flow` — the kernel-to-operator passage, `CLAUDE.md`'s
-*obstruction 2* — and **does not exist**. Nothing here claims when the hypotheses hold.
+masses. That derivation is done elsewhere, not here: `Core.Flow` derives `Π P = P Π = Π` from
+`P 𝟏 = 𝟏` and mass preservation, `Core.Kernel` builds `P⋆` from a Markov kernel and discharges
+both, and `Core.UniversalityKernelBound` states the bound at the kernel. This file only assumes.
 
 The residuals are `δf_init := D⁻` and `δf_term := D⁺`, which is `theo:universality_L2_full`'s
 own definition ("`δF_term = D⁺`, `δF_init = D⁻`", `proofs.tex:81`), and agrees with the paper's
@@ -81,7 +82,7 @@ recovered here as `norm_defect_le_residuals` and `residuals_le_two_norm_defect`.
 |---|---|
 | `(𝒮, ν_B)` a measured Polish space, `ν_B` finite | ⚠ weakened to a Banach lattice; no measure |
 | `π*` a Markov kernel with finite `L^p` operator norm | ⚠ weakened to a bounded `P` |
-| `π*` ergodic with summable `L^p`-mixing | ⚠ **assumed** as `Mixing P Pi` (`Core.Flow` would derive it) |
+| `π*` ergodic with summable `L^p`-mixing | ⚠ **assumed** as `Mixing P Pi` (derived from summability in `Core.Flow`, at a kernel in `Core.Kernel`) |
 | `ν_B π* = ν_B`, hence `(Id − P⋆) 1 = 0` | ⚠ **assumed** as `P one = one` |
 | `F_init, F_term` probability densities of equal mass | ⚠ weakened to `Pi θ = 0` |
 | `equ:defect_equivalence` | ✓ both halves |

@@ -102,7 +102,9 @@ identification of a measure with its `λ₂`-density is carried by hand, `f ↦ 
   `β̂_{n+1} ≤ β_n` verbatim, **under the hypothesis that `β_n` is itself a bound**, i.e. that the
   infimum is attained. That is true in finite dimension and false for no reason the paper cares
   about, but it is not proved here: proving it needs a Hilbert-space structure on `(V → ℝ)` with
-  the `λ`-weighted inner product, which is exactly the layer this file declines to build.
+  the `λ`-weighted inner product. That layer has since been built — the weighting isometry `wtL2`
+  of `GFNBounds/Balance/WeightedL2.lean` — and discharging the hypothesis through it is planned
+  work (the `lem:lift_mixing` row of `paper-map.json`), not done in this file.
 * **`β` is read on the *function* action, as the paper's own proof reads it — and the step that
   licenses that is not formalized.** `lem:lift_mixing`'s proof opens "*we work with the function
   actions, whose deviation norms coincide with those of the dual density actions*"
@@ -111,11 +113,11 @@ identification of a measure with its `λ₂`-density is carried by hand, `f ↦ 
   `equ:mixing_coefficients` is the operator norm of the *density* action, and the two agree
   because an operator and its `L²(λ)`-adjoint have the same norm. **That identification is
   assumed, not proved here**: it needs the Hilbert-space structure on `(V → ℝ, l2norm lam)`,
-  the same layer `lift_mixing_opNorm_le` declines to build. `inner_funActEdge` is the one place
+  the same layer — available now in `WeightedL2.lean`, not yet used here. `inner_funActEdge` is the one place
   an adjoint is actually exhibited, and it is exhibited on `𝒮²`, not on `𝒮`.
-* **`cor:db_gradient` (`proofs.tex:537–548`) is not attempted.** It is a specialization of
-  `theo:first_variation_full`, unformalized when this file was written and `B` now; the same boundary
-  `GFNBounds/Balance/MassIdentity.lean` records.
+* **`cor:db_gradient` (`proofs.tex:537–548`) is not attempted in this file.** It is a
+  specialization of `theo:first_variation_full` and is formalized, on a finite state space, in
+  `GFNBounds/Balance/GradientFormulas.lean`.
 * **`λ > 0` is used only where it is needed, and where it is not needed it is not assumed.** The
   invariance, duality, detailed-balance and mixing results ask nothing of `λ` beyond
   `λ ≥ 0`, `λ π_← = λ` and — for `Π₂` — `∑ λ = 1`. The *density* form of `eq:muK2_density`
@@ -130,7 +132,7 @@ identification of a measure with its `λ₂`-density is carried by hand, `f ↦ 
   applied. The paper's parenthesis about the orientation of the ratio and the symmetry of `g` is
   a remark about a *different* loss and is not formalized.
 
-## A discrepancy in the paper's proof of the contraction, recorded not repaired
+## A discrepancy in the paper's proof of the contraction, recorded here and since repaired in the draft
 
 `proofs.tex:521` argues the contraction as: "*since under `λ₂` the conditional law of `s` given
 `s'` is `π_←(s' → ·)`, the map `dμ/dλ₂ ↦ d(m₁μ)/dλ` is a conditional expectation*". Both halves
@@ -147,8 +149,9 @@ conditional `π_→^λ` — the very object the same lemma introduces one senten
 expectations are `L²` contractions, and the step "both marginals of `λ₂` equal `λ`", which the
 paper does state, is what closes either route. The formalization takes the forward route
 (`l2sq_condFwd_le`), so `edgeDensAct_contraction` carries `π_→^λ` as a hypothesis where the
-paper's sentence would suggest `π_←`. Nothing in the draft is edited from here; this is a note
-for the author.
+paper's sentence would suggest `π_←`. **The draft was repaired on 2026-09-13**: `proofs.tex:521`
+now reads "under `λ₂` the conditional law of `s'` given `s` is `π_→^λ(s → ·)`", the forward
+route taken here. The paragraph is kept as the record of what formalizing found.
 
 The *function*-action Jensen of `lem:lift_mixing` (`proofs.tex:555`) is the other conditional and
 is exactly as the paper writes it: `g_f(x) = ∫ f(z,x) π_←(x → dz)`, averaged against the backward

@@ -67,8 +67,11 @@ says that `P⋆` maps `L^p(ν)` into `L^p(ν)` with `‖P⋆ f‖_p ≤ C ‖f�
 `theo:universality_L2_full`'s hypothesis "`π⋆` a Markov kernel on `𝒮` with finite
 `L^p(ν_B) → L^p(ν_B)` operator norm", which the main text is explicit is *not* a theorem: "a
 genuine requirement on the parameterization" (`universality.tex:6–9, 27–29`), "the definitions
-above do not guarantee that `‖π⋆‖_{L^p(ν_B)}` is finite" (`proofs.tex:36`). It is not proved here
-and is not provable: it is false for some Markov kernels.
+above do not guarantee that `‖π⋆‖_{L^p(ν_B)}` is finite" (`proofs.tex:36`). It is not proved
+here. Without invariance it is false for some Markov kernels; **under the invariance `ν π⋆ = ν`
+that every consumer also carries, it holds with `C = 1`** (Jensen for the conditional law), so the
+hypothesis is redundant there — a finding about the paper, recorded in `paper-map.json`
+(`theo:universality_L2_full`), not yet a theorem of this library.
 
 **The `p = 1` case is not carried.** The main text says boundedness is "automatic for `p = 1`",
 and `lintegral_bindDensity` is most of that proof — `|P⋆ f| ≤ (T f⁺).toReal + (T f⁻).toReal`

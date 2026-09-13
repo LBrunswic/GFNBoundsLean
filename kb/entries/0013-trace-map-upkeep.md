@@ -15,7 +15,8 @@ declaration that `paper-map.json` lists.
 ## Do
 
 Edit the statement's entry: add the file to `lean_files`, the declaration's **fully qualified**
-name to `decls`, update `status` (`open` / `partial` / `closed`), `bucket` (`A`–`D`), and above
+name to `decls`, update `status` (`open` / `partial` / `closed`), `bucket` (`A`–`D`, or `T` for a terminal
+remark, whose `scope_notes` must carry the paper-side ledger's `terminal_reason`), and above
 all `scope_notes` — for a `partial`, say *which items* are proved and which obstruction stops the
 rest. Add the `#print axioms` line to `GFNBounds/Audit.lean` under a comment naming the label.
 Then `python3 scripts/trace_check.py`.

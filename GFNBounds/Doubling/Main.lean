@@ -44,14 +44,18 @@ what the appendix uses them for and all it can mean for `Stat`; and the clause
 `E(σ | X₀ = j) = +∞` at `1 ≤ c < 2` of `prop:doubling_phase`(3). Row (d), `c = 1/ln 2`, is stated
 only as "no invariant probability", which is exactly the paper's claim there.
 
-**Not stated, for other reasons:** the state count `K + 2` of the truncation (`St` is infinite,
-the chain is `OnChain (some K)`); the dependence clauses "`c₇` depends only on `c, d,
-λ_1..λ_{2m₀}`" and "`c₆` on `c, d, λ_1..λ_{2m₀}`" are not carried by the existential statements
-here — they are carried, as formulas in `c`, `d` and the initial block of the profile, by
+**Not stated in this file, for other reasons:** the state count `K + 2` of the truncation (`St`
+is infinite, the chain is `OnChain (some K)`) — stated in `MainPackaging.lean` as
+`card_chainFinset`; the dependence clauses "`c₇` depends only on `c, d, λ_1..λ_{2m₀}`" and "`c₆`
+on `c, d, λ_1..λ_{2m₀}`" are not carried by the existential statements here — `MainPackaging.lean`
+certifies the `c₇` clause as the congruence `Decay.c7Of_congr`, and they are carried, as formulas
+in `c`, `d` and the initial block of the profile, by
 `Decay.decay_two_sided_explicit` (`Product.lean`) and `Decay.sharp_explicit` (`SharpFull.lean`),
 of which the `∃` forms used in this file are the paper-shaped readings; and in
 `main_truncation_sqrtK` the constant `c₈` depends on `c`, `d`, `j̄` and on the `Setting`'s bound
-`ε_max` (for the family `ε_max = c/2`, so this is `c, d, j̄` as the paper says).
+`ε_max`. `TruncationBhat.main_truncation` removes that dependence — `ε_max` is routed to `c/2`
+through `Setting.withEpsMax`, and the existentials sit before the setting — so the paper's
+"depending only on `c`, `d` and `j̄`" is certified there, and this theorem is the weaker form.
 
 **Conventions.** Everything at finite `p` is in the ℝ mass layer (`Stat.mass p f =
 ‖f‖_{L^p(λ)}^p`); `p = ∞` is stated over bounded `f` against the supremum over states; the `L²`
@@ -311,7 +315,8 @@ theorem main_truncation_bhat {K : ℕ} (hK : Even K) (hdK : S.d ≤ K) :
     exact ⟨Sop, h1, h2, h3, h4⟩⟩
 
 /-- **`theo:doubling_main`(5), the proved `√K`, squared.** At `s = 1`, `0 < c < 1`, there are
-`c₈ > 0` and `K₀` — depending on `c`, `d`, `j̄` and the `Setting`'s `ε_max` — such that for every
+`c₈ > 0` and `K₀` — depending on `c`, `d`, `j̄` and the `Setting`'s `ε_max` (the paper-shaped form,
+free of `ε_max`, is `TruncationBhat.main_truncation`) — such that for every
 `K ≥ K₀`, every invariant probability `λ^K` of the truncation and every bounded `S` on `L²(λ^K)`
 with `S(Id − P⋆) = Id − Π`, `c₈ K ≤ ‖S‖²`; read at the `S` of `main_truncation_bhat` this is
 `B̂_K ≥ √c₈ · √K` (`cor:doubling_truncation`(3)). -/

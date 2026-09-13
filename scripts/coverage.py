@@ -49,7 +49,9 @@ with open(os.path.join(ROOT, "docs", "COVERAGE.md"), "w", encoding="utf-8") as f
              "| `B` | what remains is routine on the layers already built |\n"
              "| `C` | **hard** — attempted and blocked on a named obstruction |\n"
              "| `D` | deferred — needs a layer this library has not built, or is flagged "
-             "unproved in the paper itself |\n\n")
+             "unproved in the paper itself |\n"
+             "| `T` | terminal — an informal remark with nothing certifiable in it, out of the "
+             "closure target; `scope_notes` gives the reason |\n\n")
     fh.write("| app | paper label | tex lines | status | bucket | Lean | open sorries |\n")
     fh.write("|---|---|---|---|---|---|---|\n")
     fh.write("\n".join(rows) + "\n")

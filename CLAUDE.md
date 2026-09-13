@@ -19,7 +19,7 @@ the three appendix files, so `trace_check`'s invariant (c) polices exactly the l
 them. A handful of labels the library certifies live in the **body** instead — `def:universality`
 (`universality.tex:10`) is the one that matters, since `theo:universality_L2_full` is the theorem
 *about* it. Those are **not** in `paper-map.json` and (c) does not fire on them. They are tracked
-on the paper side, by `FORMALIZATION-LEDGER.md`, which covers all 129 statements of the document
+on the paper side, by `FORMALIZATION-LEDGER.md`, which covers all 130 statements of the document
 and cross-checks against this map (`formalization_ledger.py check`). Adding `universality.tex`
 here would widen the charter past what the author asked for, so the split is deliberate: the map
 is the appendices, the ledger is the paper.
@@ -50,7 +50,7 @@ The paper is at `/home/maxbrain/Dropbox/GFN Bounds/`; the three files in scope a
 `proofs.tex`, `silva_comparison.tex` and `app_doubling.tex`. **Nothing here edits them.** If
 formalizing forces a change to the draft, that change goes through `/writer`.
 
-The whole-paper ledger — all 129 statements with natural-language status, Lean status and the
+The whole-paper ledger — all 130 statements with natural-language status, Lean status and the
 dependency DAG — is on the paper side at `FORMALIZATION-LEDGER.md` (generator
 `formalization_ledger.py`, machine twin `formalization-ledger.json`). It reads `paper-map.json`
 and never writes it. Use it to pick the next target: `python3 formalization_ledger.py ready`
@@ -101,12 +101,22 @@ Before accepting any task, check whether it sits behind one of these. If it does
 rather than spending a session rediscovering it. `kb/entries/0006-three-obstructions.md` has the
 detail, and `docs/COVERAGE.md`'s bucket column is the standing record.
 
-1. **A chain.** Mathlib v4.31.0 has no discrete-time Markov chain theory at all. *But check
-   whether the statement really needs one* — `Kac.lean` and the whole decay block did not.
-2. **The `L^p` layer with its adjoint.** The analysis is done; the functional analysis around it is
-   not. An uncommitted spike sits at `GFNBounds/Doubling/LpLayer.lean`.
-3. **Euler–Maclaurin — routed around.** `R0Bound.lean` gets `|R₀(m) − 1| ≤ 16cτ/m` by telescoping.
-   Do not re-open it casually.
+1. **A chain — narrowed.** The pin has `Kernel.traj` (Ionescu–Tulcea), hitting times and bounded
+   optional stopping, but no recurrence/transience classification, Foster criterion or strong
+   Markov property. Of the rows once behind it only `prop:doubling_phase` (and the recurrence
+   labels of `theo:doubling_main`(1)) still is. *Check whether the statement really needs a chain*
+   — `Kac.lean`, the decay block and `DescentStatement.lean`'s pathwise reading did not.
+2. **The general measure layer** — the density action on `L^p(λ)` for an arbitrary kernel with its
+   `λ`-reversal and adjoint, a Radon–Nikodym calculus on `𝓜⁺`, disintegration. The doubling
+   instances are done (`LpLayer.lean`, committed); what remains is the generality Appendix A states.
+3. **Euler–Maclaurin — no longer a wall.** The pin has `trapezoidal_error_le`, which gives the
+   second-order window sum `lem:doubling_expansion` needs; `R0Bound.lean`'s first-order telescoping
+   stands as it is.
+
+**A known defect, not an obstruction (2026-09-13):** `Balance/Flow.lean`'s `IsGradientFlow` asks
+the ODE at every real `t` and has no solution from a non-balanced start, so every theorem that
+hypothesises it is vacuous off balanced starts. The repair (`0 ≤ t`) is the author's decision; do
+not build on the predicate until it is made. `kb/entries/0025` has the detail.
 
 ## The team
 

@@ -106,16 +106,18 @@ dimension.
   formalized and `B`. So one of
   the two disclosures `Discrete.lean` and `Flow.lean` carry — "`H` is abstract" — is closed
   here, and the other — "the recursion is hypothesised, not produced" — is not.
-* **The nonlinear upgrade is untouched.** `theo:local_convergence_full` needs Steps 2–5 and the
-  bootstrap; only Step 1's expansion exists, in `Expansion.lean`.
+* **The nonlinear upgrade is not in this file.** `theo:local_convergence_full` is formalized in
+  `LocalConvergence.lean`, `LocalEnergy.lean`, `LocalConvergenceClauses.lean` and
+  `LocalConvergenceMixing.lean`.
 * **`lem:lift_mixing`, hence the FM and DB losses, is not stated.**
-* **`Core.Mixing (densOp lam K) (meanOp lam)` is never exhibited.** `stable_frozen_discrete_mixing`
-  is only as non-vacuous as that bundle is inhabitable, and no instance of it is built. On the
-  two-state chain of `twoState_contraction_check` the density action *is* the mean projection,
-  so `β̂_0 = ‖I − Π‖` and `β̂_n = 0` for `n ≥ 1`, giving `B̂ = 1`; proving `‖I − Π‖ = 1` is an
-  operator-norm computation that is not done, so the numerical check goes through
-  `stable_frozen_discrete_finite` with the coercivity proved directly (`twoState_mixing`,
-  `B̂ = 1` exactly) rather than through the mixing corollary.
+* **`Core.Mixing (densOp lam K) (meanOp lam)` is exhibited elsewhere, not here.**
+  `stable_frozen_discrete_mixing` is only as non-vacuous as that bundle is inhabitable. The
+  instance and the operator-norm computation are in `WeightedL2Norm.lean` (2026-09-13):
+  `norm_one_sub_meanOp` proves `‖I − Π‖ = 1` on at least two states, and on the two-state chain
+  `twoState_B_densOp` gives `B̂ = 1`; `LocalConvergenceMixing.mixing_densOp_iff_summable` shows
+  the bundle is exactly summability of `‖Pⁿ − Π‖`. The numerical check in this file still goes
+  through `stable_frozen_discrete_finite` with the coercivity proved directly (`twoState_mixing`),
+  written before those existed.
 * **`ϱ > 0` and `Λ ≥ 0` are not hypothesised**, following `Discrete.lean`. For `ϱ ≤ 0` the
   conclusion is a growth bound; the paper's `ϱ` is positive on its own hypotheses.
 * **The operator norms `‖A‖ ≤ 2` and `‖H‖ ≤ 4g''(1)‖w‖_{L^∞}` are not proved as operator

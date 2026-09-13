@@ -15,7 +15,9 @@ import GFNBounds.Graph.Setting
 >
 > `σ̄` being the expected backward-trajectory length of Morozov et al., and let `N(x)` be the
 > expected number of visits to `x` of one backward trajectory drawn from the target row
-> `π̂_←(s_f → ·)`, with the convention `N(s₀) = N(s_f) = 1`. Then:
+> `π̂_←(s_f → ·)`, counted from `s_f` and stopped on reaching `s₀` — which it cannot leave, and
+> which is the only state from which the backward chain enters `s_f`, the wrap being the only
+> edge out of `s_f` in `Ĝ` — so that `N(s₀) = N(s_f) = 1`. Then:
 > *(1)* `λ(x) = N(x)/(2 + σ̄)` for every `x ∈ 𝒱`; in particular `λ(s₀) = λ(s_f) = 1/(2+σ̄)`;
 > *(2)* for every `h ∈ L²(λ)`, `‖h − Πh‖_{L²(λ)} ≤ B̂_σ ‖(I−P)h‖_{L²(λ)}`, with
 > `B̂_σ := σ_* √((2+σ̄)/min_x N(x))`;
@@ -111,7 +113,7 @@ pointwise adjointness identity `⟪Pa, b⟫ = ⟪a, Qb⟫` is used, never an ope
 | `P` the density action of the backward chain | ✓ carried (`pdens`), `(Pa)(y) = (∑_x λ(x)π̂(x→y)a(x))/λ(y)`, the function action of the `λ`-reversal (`proofs.tex:407`) |
 | `Q` the function action, the `L²(λ)`-adjoint of `P` | ✓ carried (`qact`); adjointness is `ipL2_pdens_qact`, proved, not assumed |
 | `σ(x)` the hitting time of `s₀` | ⚠ **characterized**, not constructed — see SCOPE |
-| `N(x)` the expected visit count, `N(s₀) = N(s_f) = 1` | ⚠ **characterized** — `visits`; the two conventions are *proved* (`visits_src`, `visits_snk`), not imposed |
+| `N(x)` the expected visit count, `N(s₀) = N(s_f) = 1` | ⚠ **characterized** — `visits`; the two values are *proved* (`visits_src`, `visits_snk`), as the paper now derives them from the stopping rule rather than imposing a convention |
 | `h ∈ L²(λ)` | ✓ every `h : V → ℝ`, the space being finite |
 | aperiodicity | ✓ not assumed, as the paper insists |
 | `s₀ ≠ s_f` | ✓ carried (`MarkedGraph.src_ne_snk`); item *(1)* uses it, unlike `theo:universality_graphs`*(1)* |
@@ -257,9 +259,10 @@ theorem sqrt_minOver_mul_abs_le_nrmL2 {lam : V → ℝ} (hnn : ∀ x, 0 ≤ lam 
 
 variable [DecidableEq V]
 
-/-- **`N`**, the paper's visit counts (`proofs.tex:840`): the occupation measure `g` of the
+/-- **`N`**, the paper's visit counts (`proofs.tex:861`): the occupation measure `g` of the
 backward chain killed at `s₀` — see `BackwardPolicy.IsGreen` — plus the one visit each to `s₀`
-and `s_f` that the convention `N(s₀) = N(s_f) = 1` records.
+and `s_f` that the paper's count "from `s_f`, stopped on reaching `s₀`" includes, whence
+`N(s₀) = N(s_f) = 1`.
 
 It reads only the graph, the policy entering through `g`. -/
 def visits (G : MarkedGraph V) (g : V → ℝ) : V → ℝ :=
@@ -516,11 +519,12 @@ theorem phat_src_src : B.phat G.src G.src = 0 := B.phat_src_of_ne G.src_ne_snk
 
 /-! ### `N`: the visit counts, characterized
 
-`proofs.tex:840` — "`N(x)` the expected number of visits to `x` of one backward trajectory drawn
-from the target row `π̂_←(s_f→·)`, with the convention `N(s₀) = N(s_f) = 1`". The trajectory is
+`proofs.tex:861` — "`N(x)` the expected number of visits to `x` of one backward trajectory drawn
+from the target row `π̂_←(s_f→·)`, counted from `s_f` and stopped on reaching `s₀` … so that
+`N(s₀) = N(s_f) = 1`". The trajectory is
 the chain killed at `s₀`, so its occupation measure `g` solves the renewal equation
 `g = π̂_←(s_f→·) + g P̂` off `s₀`, with `g(s₀) = 0`; and `N = g + 1_{s₀} + 1_{s_f}` adds the two
-states of the excursion the paper counts by convention. -/
+states of the excursion the paper's count includes. -/
 
 variable (B)
 
@@ -704,7 +708,7 @@ theorem exists_isGreen (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam :
 
 /-! ### Item (1) -/
 
-/-- **`prop:morozov_rate`*(1)*, `N(s₀) = 1`** — the paper's convention, here a consequence of
+/-- **`prop:morozov_rate`*(1)*, `N(s₀) = 1`** — a consequence of the paper's stopping rule, here of
 `g(s₀) = 0`. -/
 theorem IsGreen.visits_src {g : V → ℝ} (hg : B.IsGreen g) : visits G g G.src = 1 := by
   simp [visits, hg.1, G.src_ne_snk]

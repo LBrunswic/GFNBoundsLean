@@ -62,11 +62,10 @@ structure of `L^p`.
 That is also why `Pi` is a hypothesis rather than a construction. On `L^p(ν_B)` with `ν_B`
 finite and `π*` ergodic, `Pi f = (∫ f dν_B / ν_B(𝒮)) • 1` is the mean projection onto the
 invariant densities (`proofs.tex:22`), and `Pi P = P Pi = Pi` holds because the density action
-preserves integrals and `ν_B π* = ν_B` fixes the constants (`proofs.tex:589`). **That derivation
-is not in this library.** It is `Core.Flow`, which **does not exist**: the kernel-to-operator
-passage that `CLAUDE.md` names as *obstruction 2*, "the `L^p` layer with its adjoint — the
-analysis is done; the functional analysis around it is not". Until it exists, `Mixing` is a
-hypothesis, and nothing is claimed about when it holds.
+preserves integrals and `ν_B π* = ν_B` fixes the constants (`proofs.tex:589`). That derivation is
+not in this file: `Core.Flow` derives the intertwining identities from `P 𝟏 = 𝟏` and mass
+preservation, and `Core.Kernel` builds `P⋆` from a Markov kernel and discharges both. Here
+`Mixing` is a hypothesis, and nothing is claimed about when it holds.
 
 ## SCOPE (disclosed)
 
@@ -84,7 +83,7 @@ hypothesis is therefore tighter than its statement suggests, in the safe directi
 | `L^2(λ)` (`lem:sigma_mixing`) / `L^p(ν_B)` (Step 1) | ⚠ weakened to any Banach space over `ℝ` |
 | `P` the density action of an ergodic policy | ⚠ weakened to any bounded operator |
 | `Π` the mean projection onto the invariant densities | ⚠ weakened to `Pi * P = Pi`, `P * Pi = Pi` |
-| `Π P = P Π = Π` *derived* from ergodicity and invariance | ⚠ **assumed**; the derivation is `Core.Flow`, which does not exist |
+| `Π P = P Π = Π` *derived* from ergodicity and invariance | ⚠ **assumed** here; derived in `Core.Flow` / `Core.Kernel` |
 | `B̂ = Σ β̂_n < ∞` | ✓ carried (`Mixing.summable`) |
 | `β̂_0 = 1` | not needed; the conclusions use only `B ≥ 0`, and `B̂ ≥ 1` holds in the paper's normalization |
 

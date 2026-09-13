@@ -108,12 +108,10 @@ rather than decorative. It is delivered in full, with an explicit `g`.
 * **The mixing side of item *(2)* is represented by `P = Π`, not by the coefficients.**
   `twoState_funAct_eq_mean` and `twoState_densityAction_eq_mean` prove exactly the sentence the
   paper's proof of *(2)* opens with — "the density action is `Ph = (∫h dλ)𝟏 = Πh`" — from which
-  `β̂ₙ = ‖Pⁿ − Π‖ = 0` for `n ≥ 1` follows in one line. The coefficients `β̂ₙ`, `B̂ = 1` and the
-  rate `ϱ = 2w_min` of `theo:db_stable_frozen` are **not** stated: `GFNBounds.Core.Mixing.beta` is
-  defined for a continuous linear map on a normed space, and instantiating it here would require
-  building the `L²(λ)` operator and computing `‖Id − Π‖ = 1`. That is a detour, and the paper's
-  own use of those numbers in item *(2)* is to say the freezing survives *maximal* mixing, which
-  `P = Π` already says.
+  `β̂ₙ = ‖Pⁿ − Π‖ = 0` for `n ≥ 1` follows in one line. The coefficients and the rate are not
+  stated in this file; they are in `WeightedL2Norm.lean` (2026-09-13), which builds the `L²(λ)`
+  operator and computes `‖Id − Π‖ = 1`: `twoState_mixing_coefficients` (`β̂ₙ = 0` for `n ≥ 1`,
+  `B̂ = β̂₀ = 1`), `twoState_rho_freezing` (`ϱ = 2w_min`) and `rho_densOp_le` (`ϱ` maximal).
 * **The paper's `ν` and `MassIdentity`'s `w`.** The paper fixes a training measure `ν` and writes
   `dν/dμ`; `MassIdentity` carries `w = dν/dμ` as the primitive. Criticality is stated here for
   *every* `w > 0`, which is the paper's "for every training measure `ν`". The loss, where `ν` must
@@ -156,7 +154,7 @@ file** proves on its own.
 | `𝓛_{g,ν}` locally constant on it | ✓ `eventually_loss_eq` |
 | `𝓛_{g,ν}` positive on it | ✓ `loss_pos`, from `g_pos` and `1 ∉ F.bands` |
 | two-state chain `T(i→j) = 1/2`, `λ = (1/2,1/2)` | ✓ `twoStateK`, `twoStateLam` on `Fin 2` |
-| `β̂ₙ = 0`, `B̂ = 1`, `ϱ = 2w_min` maximal | ⚠ **not stated**; represented by `P = Π`. See SCOPE |
+| `β̂ₙ = 0`, `B̂ = 1`, `ϱ = 2w_min` maximal | ✓ in `WeightedL2Norm.lean` (`twoState_mixing_coefficients`, `twoState_rho_freezing`, `rho_densOp_le`); here represented by `P = Π`. See SCOPE |
 | `μ* = (1, 1/2)`, `r = (3/4, 3/2)` | ✓ `twoState_ratio_zero`, `twoState_ratio_one` |
 | every ratio deviates from `1` by `≥ 1/8` | ✓ `twoState_bands_deviate` |
 | gradient descent fixed for every step | ⚠ `freezing_descent_stationary : u − η·D = u`, applied in `twoState_freezing`, on the reading of `D` disclosed above |

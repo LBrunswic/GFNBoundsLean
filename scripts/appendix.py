@@ -182,7 +182,7 @@ STD_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 # Language that belongs in the repository, not in a published appendix.
 DENYLIST = [
     (r"\d{4}-\d\d-\d\d", "a date"),
-    (r"\bbucket [A-D]\b", "a difficulty bucket"),
+    (r"\bbucket [A-DT]\b", "a difficulty bucket"),
     (r"\bsorry\b", "the word sorry"),
     (r"\.lean\b", "a source file name"),
     (r"machine-checked", "the phrase machine-checked"),

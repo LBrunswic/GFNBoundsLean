@@ -14,26 +14,31 @@ spend a session rediscovering it.
 
 ## Do
 
-**1. A chain.** Mathlib v4.31.0 has no discrete-time Markov chain theory at all: no recurrence or
-transience, no Kac formula, no stationary-distribution existence, no Perron–Frobenius, no
-coupling, no Doeblin, no total-variation distance for kernels. Blocked on it:
-`prop:doubling_length` (optional stopping), `prop:doubling_phase` (Foster), `lem:doubling_escape`,
-`lem:doubling_product`, `theo:doubling_sharp` and its three lemmas.
+**1. A chain — narrowed (survey of the pin, 2026-09-13).** Mathlib v4.31.0 has `Kernel.traj`
+(Ionescu–Tulcea), hitting times and bounded optional stopping; it has no recurrence or transience
+classification, no Foster criterion, no strong Markov property, no Perron–Frobenius, no coupling
+or Doeblin theory, no total-variation distance for kernels. Of the rows once listed here,
+`prop:doubling_length`, `lem:doubling_escape`, `lem:doubling_product` and `theo:doubling_sharp`
+are closed without a chain; **only `prop:doubling_phase`** (Foster, transience) and the recurrence
+labels of `theo:doubling_main`(1) are still behind it.
 
-*But check first whether the statement really needs it.* Two precedents where it did not:
+*But check first whether the statement really needs it.* Three precedents where it did not:
 `Kac.lean` derives `λ(s₀)(2 + σ̄) = 1` from invariance alone, and the decay theorems are stated for
 **any positive real sequence satisfying the cut-balance recursion** (`CutBalanceSeq`), with no
-invariance, normalisation or recurrence anywhere.
+invariance, normalisation or recurrence anywhere; and `DescentStatement.lean` states an
+almost-sure clause on a finite horizon for every allowed path (`kb/entries/0032`).
 
-**2. The `L^p` layer with its adjoint.** `lem:doubling_operator`(1)–(2),
-`lem:doubling_fixed_points`' `P` half, `prop:doubling_unsolvable`. The *analysis* is done —
-`eq:doubling_inf` is proved — and what is missing is the functional analysis around it. An
-uncommitted spike exists at `GFNBounds/Doubling/LpLayer.lean`; read it before starting.
+**2. The general measure layer.** On the doubling graph the `L^p` layer is built
+(`GFNBounds/Doubling/LpLayer.lean`, committed) and `lem:doubling_fixed_points`,
+`prop:doubling_unsolvable` are closed. What remains is the generality Appendix A states: the
+density action on `L^p(λ)` for an arbitrary Markov kernel with its `λ`-reversal and adjoint, a
+Radon–Nikodym calculus on `𝓜⁺`, disintegration. Rows blocked on it sit in bucket `D`, among them
+`lem:doubling_operator` (any kernel) and `theo:first_variation_full`.
 
-**3. Euler–Maclaurin — routed around, do not re-open casually.** `R0Bound.lean` gets
-`|R₀(m) − 1| ≤ 16cτ/m` at every `m ≥ 1` by first-order telescoping. The refined expansion is now
-needed only by `rem:doubling_parity` and `rem:doubling_second_order`, neither of which the paper
-proves.
+**3. Euler–Maclaurin — no longer a wall.** The pin has `trapezoidal_error_le`, which gives the
+second-order window sum per unit interval; `lem:doubling_expansion` and `rem:doubling_parity` are
+therefore bucket `B`, not `C`. `R0Bound.lean`'s first-order telescoping
+(`|R₀(m) − 1| ≤ 16cτ/m`) stands. `rem:doubling_second_order` is terminal.
 
 ## Why
 

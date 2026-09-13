@@ -67,8 +67,9 @@ pointwise and in fact eventually exact, since `max (Sθ x - η, 0) = 0` once `η
   theorem statement.** The paper hypothesizes a Markov kernel `π⋆`, ergodic on `(𝒮, ν_B)`, with
   finite `L^p → L^p` operator norm and summable mixing coefficients, and *derives*
   `Π P⋆ = P⋆ Π = Π`, `P⋆ 𝟏 = 𝟏` and `Π θ = 0` from ergodicity, invariance of `ν_B` and
-  `∫θ dν_B = 0`. Those three derivations are `Core.Flow`'s business and are not done anywhere in
-  this library yet; here they are hypotheses. Nothing is claimed about when they hold.
+  `∫θ dν_B = 0`. Those derivations are done in `Core.Flow` and `Core.Kernel` (at a Markov kernel
+  with an invariant finite measure), and `Core.UniversalityKernelBound` composes them; in this
+  file they remain hypotheses.
 * `θ` is an arbitrary element of `L^p(ν)`, not required to be a difference of two probability
   densities. `Π θ = 0` is the only consequence of that the proof uses, and it is assumed
   directly.

@@ -35,8 +35,10 @@ on `P` that are properties of a Markov kernel and of an invariant measure —
 * `hone : P 𝟏 = 𝟏`, the paper's `(Id − P⋆) 𝟏 = 0`, which is `ν_B π⋆ = ν_B`: it is invariance,
   and it is the hypothesis `Core.Universality` already carries under the same name.
 
-What remains missing is the storey below: `P` is a hypothesised bounded operator here, not the
-density action of a kernel. See SCOPE.
+In this file `P` is a hypothesised bounded operator, not the density action of a kernel. The
+storey below is built in `GFNBounds.Core.Kernel`, which constructs `P⋆` from a Markov kernel and an
+invariant finite measure and discharges `hone` and `hint`; `GFNBounds.Core.UniversalityKernelBound`
+states the universality bound there. See SCOPE.
 
 ## What is proved
 
@@ -59,13 +61,14 @@ against `𝟏`: the constant is `‖𝟏‖_{L^{p*}(ν)} = ν(𝒮)^{1/p*}`, and
 
 ## SCOPE (disclosed)
 
-**The kernel-to-operator passage is still missing, and `hone`/`hint` are its consequences, not
-its replacement.** Constructing `P⋆ f := d((f ν) π⋆)/dν` from a Markov kernel `π⋆` — showing the
-image measure is `ν`-dominated, that the Radon–Nikodym derivative is linear in `f`, and that it
-is bounded on `L^p(ν)` — is a further layer, and this file does not attempt it. `P` here is a
-hypothesised bounded operator on `L^p(ν)`, and `hone`, `hint` are hypotheses about it. What the
-file removes from `Core.Mixing`'s debt is the *upper* half: given those two, `Π P = P Π = Π` is
-no longer assumed. This is `CLAUDE.md`'s obstruction 2 and it is not closed.
+**The kernel-to-operator passage is not in this file, and `hone`/`hint` are its consequences,
+not its replacement.** Constructing `P⋆ f := d((f ν) π⋆)/dν` from a Markov kernel `π⋆` — showing
+the image measure is `ν`-dominated, that the Radon–Nikodym derivative is linear in `f`, and that
+it is bounded on `L^p(ν)` — is done in `GFNBounds.Core.Kernel`, which carries `L^p` boundedness
+as the hypothesis `IsBoundedDensityAction` (the paper carries it too). Here `P` is a hypothesised
+bounded operator on `L^p(ν)`, and `hone`, `hint` are hypotheses about it. What this file removes
+from `Core.Mixing`'s debt is the *upper* half: given those two, `Π P = P Π = Π` is no longer
+assumed.
 
 **`Π` is the mean projection by definition, and the paper's `Π` only when `P` is ergodic.** The
 paper's `Π` is the projection onto the invariant densities; it *equals* the mean projection

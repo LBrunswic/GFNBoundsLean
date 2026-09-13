@@ -103,10 +103,22 @@
     "GFNBounds.Core.MixingBase",
     "GFNBounds.Balance.BoundaryBlowup",
     "GFNBounds.Graph.MorozovConsume",
+    "GFNBounds.Balance.WeightedL2Norm",
+    "GFNBounds.Balance.LocalConvergenceClauses",
+    "GFNBounds.Balance.LocalConvergenceMixing",
+    "GFNBounds.Balance.SqGenerator",
+    "GFNBounds.Balance.FreezingGeneral",
+    "GFNBounds.Core.UniversalityKernelBound",
+    "GFNBounds.Doubling.OperatorFiniteSum",
+    "GFNBounds.Doubling.DescentStatement",
+    "GFNBounds.Graph.CycleBlowup",
+    "GFNBounds.Doubling.TruncationBhat",
+    "GFNBounds.Doubling.MainPackaging",
+    "GFNBounds.Graph.FrozenUnstableDB",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 98,
+   "lines": 110,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -169,10 +181,22 @@
     "GFNBounds.Doubling.Ratios",
     "GFNBounds.Doubling.Unbounded",
     "GFNBounds.Doubling.RayleighBridge",
-    "GFNBounds.Doubling.UnboundedL2"
+    "GFNBounds.Doubling.UnboundedL2",
+    "GFNBounds.Balance.WeightedL2Norm",
+    "GFNBounds.Balance.LocalConvergenceClauses",
+    "GFNBounds.Balance.LocalConvergenceMixing",
+    "GFNBounds.Balance.SqGenerator",
+    "GFNBounds.Balance.FreezingGeneral",
+    "GFNBounds.Core.UniversalityKernelBound",
+    "GFNBounds.Doubling.OperatorFiniteSum",
+    "GFNBounds.Doubling.DescentStatement",
+    "GFNBounds.Graph.CycleBlowup",
+    "GFNBounds.Doubling.TruncationBhat",
+    "GFNBounds.Doubling.MainPackaging",
+    "GFNBounds.Graph.FrozenUnstableDB"
    ],
    "variables": [],
-   "lines": 436,
+   "lines": 596,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -1305,7 +1329,7 @@
     "variable {V : Type*} [Fintype V]",
     "variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]"
    ],
-   "lines": 842,
+   "lines": 850,
    "decls": [
     {
      "name": "lossGrad",
@@ -1321,7 +1345,7 @@
      "name": "IsGradientFlow",
      "full": "GFNBounds.Balance.IsGradientFlow",
      "kind": "def",
-     "line": 267,
+     "line": 275,
      "attrs": "",
      "private": false,
      "statement": "def IsGradientFlow (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : ℝ → V → ℝ) : Prop",
@@ -1331,7 +1355,7 @@
      "name": "isGradientFlow_iff",
      "full": "GFNBounds.Balance.isGradientFlow_iff",
      "kind": "theorem",
-     "line": 276,
+     "line": 284,
      "attrs": "",
      "private": false,
      "statement": "theorem isGradientFlow_iff (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : ℝ → V → ℝ) : IsGradientFlow K lam nu gd u ↔ ∀ t : ℝ, HasDerivAt u (fun x => -lossGrad K lam nu gd (u t) x) t",
@@ -1341,7 +1365,7 @@
      "name": "hasDerivAt_ratio_comp",
      "full": "GFNBounds.Balance.hasDerivAt_ratio_comp",
      "kind": "theorem",
-     "line": 287,
+     "line": 295,
      "attrs": "",
      "private": false,
      "statement": "theorem hasDerivAt_ratio_comp {K : V → V → ℝ} {lam : V → ℝ} {u : ℝ → V → ℝ} {v : V → ℝ} {t : ℝ} (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u t x) (hd : ∀ x, HasDerivAt (fun s : ℝ => u s x) (v x) t) (y : V) : HasDerivAt (fun s : ℝ => ratio K lam (u s) y) (dirPush K lam (u t) v y - ratio K lam (u t) y * dirDens (u t) v y) t",
@@ -1351,7 +1375,7 @@
      "name": "hasDerivAt_loss_comp",
      "full": "GFNBounds.Balance.hasDerivAt_loss_comp",
      "kind": "theorem",
-     "line": 314,
+     "line": 322,
      "attrs": "",
      "private": false,
      "statement": "theorem hasDerivAt_loss_comp {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} {v : V → ℝ} {t : ℝ} (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u t x) (hr : ∀ x, 0 < ratio K lam (u t) x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hd : ∀ x, HasDerivAt (fun s : ℝ => u s x) (v x) t) : HasDerivAt (fun s : ℝ => loss K lam nu (u s) g) (∑ x, nu x * (gd (ratio K lam (u t) x) * (dirPush K lam (u t) v x - ratio K lam (u t) x * dirDens (u t) v x))) t",
@@ -1361,7 +1385,7 @@
      "name": "hasDerivAt_loss_comp_ipL2",
      "full": "GFNBounds.Balance.hasDerivAt_loss_comp_ipL2",
      "kind": "theorem",
-     "line": 332,
+     "line": 340,
      "attrs": "",
      "private": false,
      "statement": "theorem hasDerivAt_loss_comp_ipL2 {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} {v : V → ℝ} {t : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hd : ∀ x, HasDerivAt (fun s : ℝ => u s x) (v x) t) : HasDerivAt (fun s : ℝ => loss K lam nu (u s) g) (Graph.ipL2 lam (lossGrad K lam nu gd (u t)) v) t",
@@ -1371,7 +1395,7 @@
      "name": "hasDerivAt_loss_flow_at",
      "full": "GFNBounds.Balance.hasDerivAt_loss_flow_at",
      "kind": "theorem",
-     "line": 352,
+     "line": 360,
      "attrs": "",
      "private": false,
      "statement": "theorem hasDerivAt_loss_flow_at {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} {t : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hflow : ∀ x, HasDerivAt (fun s : ℝ => u s x) (-lossGrad K lam nu gd (u t) x) t) : HasDerivAt (fun s : ℝ => loss K lam nu (u s) g) (-(Graph.nrmL2 lam (lossGrad K lam nu gd (u t)) ^ 2)) t",
@@ -1381,7 +1405,7 @@
      "name": "hasDerivAt_loss_flow",
      "full": "GFNBounds.Balance.hasDerivAt_loss_flow",
      "kind": "theorem",
-     "line": 374,
+     "line": 382,
      "attrs": "",
      "private": false,
      "statement": "theorem hasDerivAt_loss_flow {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) (ht : 0 ≤ t) : HasDerivAt (fun s : ℝ => loss K lam nu (u s) g) (-(Graph.nrmL2 lam (lossGrad K lam nu gd (u t)) ^ 2)) t",
@@ -1391,7 +1415,7 @@
      "name": "hasDerivAt_loss_flow_line",
      "full": "GFNBounds.Balance.hasDerivAt_loss_flow_line",
      "kind": "theorem",
-     "line": 390,
+     "line": 398,
      "attrs": "",
      "private": false,
      "statement": "theorem hasDerivAt_loss_flow_line {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) : HasDerivAt (fun s : ℝ => loss K lam nu (fun x => u x - s * lossGrad K lam nu gd u x) g) (-(Graph.nrmL2 lam (lossGrad K lam nu gd u) ^ 2)) 0",
@@ -1401,7 +1425,7 @@
      "name": "ipL2_lossGrad_self",
      "full": "GFNBounds.Balance.ipL2_lossGrad_self",
      "kind": "theorem",
-     "line": 418,
+     "line": 426,
      "attrs": "",
      "private": false,
      "statement": "theorem ipL2_lossGrad_self {K : V → V → ℝ} {lam u : V → ℝ} (nu : V → ℝ) (gd : ℝ → ℝ) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) : Graph.ipL2 lam (lossGrad K lam nu gd u) u = 0",
@@ -1411,7 +1435,7 @@
      "name": "eq_of_hasDerivAt_zero_on",
      "full": "GFNBounds.Balance.eq_of_hasDerivAt_zero_on",
      "kind": "theorem",
-     "line": 450,
+     "line": 458,
      "attrs": "",
      "private": false,
      "statement": "theorem eq_of_hasDerivAt_zero_on {f : ℝ → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hf : ∀ s ∈ D, HasDerivAt f 0 s) {a b : ℝ} (ha : a ∈ D) (hb : b ∈ D) (hab : a ≤ b) : f b = f a",
@@ -1421,7 +1445,7 @@
      "name": "nrmL2_const_on_Ici",
      "full": "GFNBounds.Balance.nrmL2_const_on_Ici",
      "kind": "theorem",
-     "line": 472,
+     "line": 480,
      "attrs": "",
      "private": false,
      "statement": "theorem nrmL2_const_on_Ici {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hlam : ∀ x, 0 < lam x) (hupos : ∀ s : ℝ, 0 ≤ s → ∀ x, 0 < u s x) (hflow : IsGradientFlow K lam nu gd u) {t : ℝ} (ht : 0 ≤ t) : Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0)",
@@ -1431,7 +1455,7 @@
      "name": "nrmL2_const_of_flow",
      "full": "GFNBounds.Balance.nrmL2_const_of_flow",
      "kind": "theorem",
-     "line": 501,
+     "line": 509,
      "attrs": "",
      "private": false,
      "statement": "theorem nrmL2_const_of_flow {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hlam : ∀ x, 0 < lam x) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hflow : IsGradientFlow K lam nu gd u) (t : ℝ) (ht : 0 ≤ t) : Graph.nrmL2 lam (u t) = Graph.nrmL2 lam (u 0)",
@@ -1441,7 +1465,7 @@
      "name": "hasDerivAt_logSq",
      "full": "GFNBounds.Balance.hasDerivAt_logSq",
      "kind": "theorem",
-     "line": 525,
+     "line": 533,
      "attrs": "",
      "private": false,
      "statement": "theorem hasDerivAt_logSq {y : ℝ} (hy : 0 < y) : HasDerivAt logSq (logSqDeriv y) y",
@@ -1451,7 +1475,7 @@
      "name": "lossGrad_of_weight",
      "full": "GFNBounds.Balance.lossGrad_of_weight",
      "kind": "theorem",
-     "line": 533,
+     "line": 541,
      "attrs": "",
      "private": false,
      "statement": "theorem lossGrad_of_weight {K : V → V → ℝ} {lam wf u : V → ℝ} {gd : ℝ → ℝ} (hlam : ∀ x, 0 < lam x) : lossGrad K lam (fun x => lam x * wf x) gd u = lossGradDensity K lam u (fun x => wf x / u x) gd",
@@ -1461,7 +1485,7 @@
      "name": "loss_eq_lossVal",
      "full": "GFNBounds.Balance.loss_eq_lossVal",
      "kind": "theorem",
-     "line": 545,
+     "line": 553,
      "attrs": "",
      "private": false,
      "statement": "theorem loss_eq_lossVal (K : V → V → ℝ) (lam wf u : V → ℝ) (gg : ℝ → ℝ) : loss K lam (fun x => lam x * wf x) u gg = lossVal lam wf gg (ratio K lam u)",
@@ -1471,7 +1495,7 @@
      "name": "lojasiewicz_integrated",
      "full": "GFNBounds.Balance.lojasiewicz_integrated",
      "kind": "theorem",
-     "line": 555,
+     "line": 563,
      "attrs": "",
      "private": false,
      "statement": "theorem lojasiewicz_integrated {L L' : ℝ → ℝ} {kappa : ℝ} (hderiv : ∀ t : ℝ, 0 ≤ t → HasDerivAt L (L' t) t) (hpos : ∀ t : ℝ, 0 ≤ t → 0 < L t) (hineq : ∀ t : ℝ, 0 ≤ t → kappa ^ 2 * L t ^ 2 ≤ -L' t) : ∀ t : ℝ, 0 ≤ t → L t ≤ ((L 0)⁻¹ + kappa ^ 2 * t)⁻¹",
@@ -1481,7 +1505,7 @@
      "name": "global_lojasiewicz_flow",
      "full": "GFNBounds.Balance.global_lojasiewicz_flow",
      "kind": "theorem",
-     "line": 608,
+     "line": 616,
      "attrs": "",
      "private": false,
      "statement": "theorem global_lojasiewicz_flow {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin wsup L0 : ℝ} {u : ℝ → V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hu0 : 0 < Graph.nrmL2 lam (u 0)) (hL0 : ∀ t : ℝ, 0 ≤ t → lossVal lam wf logSq (ratio K lam (u t)) ≤ L0) (hpos : ∀ t : ℝ, 0 ≤ t → 0 < lossVal lam wf logSq (ratio K lam (u t))) (hflow : IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u) : ∀ t : ℝ, 0 ≤ t → lossVal lam wf logSq (ratio K lam (u t)) ≤ ((lossVal lam wf logSq (ratio K lam (u 0)))⁻¹ + (wmin * Real.sqrt lamMin / (Graph.nrmL2 lam (u 0) * wsup * max 1 (Real.sqrt (L0 / (wmin * lamMin))))) ^ 2 * t)⁻¹",
@@ -1491,7 +1515,7 @@
      "name": "twoState_nrmL2_lossGrad_sq",
      "full": "GFNBounds.Balance.twoState_nrmL2_lossGrad_sq",
      "kind": "theorem",
-     "line": 657,
+     "line": 665,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_nrmL2_lossGrad_sq : Graph.nrmL2 twoStateLam (lossGrad twoStateK twoStateLam (fun _ => 1) (fun z => 2 * (z - 1)) twoStateU) ^ 2 = 405 / 128",
@@ -1501,7 +1525,7 @@
      "name": "twoState_hasDerivAt_loss_flow",
      "full": "GFNBounds.Balance.twoState_hasDerivAt_loss_flow",
      "kind": "theorem",
-     "line": 672,
+     "line": 680,
      "attrs": "",
      "private": false,
      "statement": "theorem twoState_hasDerivAt_loss_flow : HasDerivAt (fun s : ℝ => loss twoStateK twoStateLam (fun _ => 1) (fun x => twoStateU x - s * lossGrad twoStateK twoStateLam (fun _ => 1) (fun z => 2 * (z - 1)) twoStateU x) fun z => (z - 1) ^ 2) (-(405 / 128)) 0",
@@ -1511,7 +1535,7 @@
      "name": "inner_ge_of_mixing",
      "full": "GFNBounds.Balance.inner_ge_of_mixing",
      "kind": "theorem",
-     "line": 701,
+     "line": 709,
      "attrs": "",
      "private": false,
      "statement": "theorem inner_ge_of_mixing [CompleteSpace E] {P Pi H : E →L[ℝ] E} {c : ℝ} (hmix : Core.Mixing P Pi) (hB : 0 < Core.Mixing.B P Pi) (hc : 0 ≤ c) (hH : ∀ x : E, c * ‖(1 - P) x‖ ^ 2 ≤ ⟪x, H x⟫) (x : E) : c / Core.Mixing.B P Pi ^ 2 * ‖x - Pi x‖ ^ 2 ≤ ⟪x, H x⟫",
@@ -1521,7 +1545,7 @@
      "name": "stable_frozen_decay",
      "full": "GFNBounds.Balance.stable_frozen_decay",
      "kind": "theorem",
-     "line": 725,
+     "line": 733,
      "attrs": "",
      "private": false,
      "statement": "theorem stable_frozen_decay {H Pi : E →L[ℝ] E} {rho : ℝ} {h : ℝ → E} (hPisa : ∀ x y : E, ⟪Pi x, y⟫ = ⟪x, Pi y⟫) (hPiH : ∀ x : E, Pi (H x) = 0) (hcoer : ∀ x : E, rho * ‖x - Pi x‖ ^ 2 ≤ ⟪x, H x⟫) (hflow : ∀ t : ℝ, HasDerivAt h (-H (h t)) t) : (∀ t : ℝ, Pi (h t) = Pi (h 0)) ∧ ∀ t : ℝ, 0 ≤ t → ‖h t - Pi (h t)‖ ≤ Real.exp (-(rho * t)) * ‖h 0 - Pi (h 0)‖",
@@ -1531,7 +1555,7 @@
      "name": "scalar_decay_check",
      "full": "GFNBounds.Balance.scalar_decay_check",
      "kind": "theorem",
-     "line": 813,
+     "line": 821,
      "attrs": "",
      "private": false,
      "statement": "theorem scalar_decay_check : (∀ t : ℝ, 0 ≤ t → ‖5 * Real.exp (-(2 * t))‖ ≤ Real.exp (-(2 * t)) * ‖5 * Real.exp (-(2 * (0 : ℝ)))‖) ∧ ‖5 * Real.exp (-(2 * (1 : ℝ)))‖ = Real.exp (-(2 * (1 : ℝ))) * ‖5 * Real.exp (-(2 * (0 : ℝ)))‖",
@@ -2331,6 +2355,114 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/FreezingGeneral.lean",
+   "title": "Nonlinear freezing for every generator that is flat and positive on the bands",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.FirstVariation"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]"
+   ],
+   "lines": 226,
+   "decls": [
+    {
+     "name": "const_on_band_of_deriv_zero",
+     "full": "GFNBounds.Balance.const_on_band_of_deriv_zero",
+     "kind": "theorem",
+     "line": 96,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem const_on_band_of_deriv_zero {gt gd : ℝ → ℝ} {p q : ℝ} (hd : ∀ x ∈ Set.Ioo p q, HasDerivAt gt (gd x) x) (h0 : ∀ x ∈ Set.Ioo p q, gd x = 0) {x y : ℝ} (hx : x ∈ Set.Ioo p q) (hy : y ∈ Set.Ioo p q) : gt x = gt y",
+     "doc": "**A zero derivative on an open interval makes a function constant there** (`proofs.tex:797`: \"`g̃'` vanishing identically on each band makes `g̃` constant on each of the two intervals\")."
+    },
+    {
+     "name": "FreezingBands.pos_of_mem_bands",
+     "full": "GFNBounds.Balance.FreezingBands.pos_of_mem_bands",
+     "kind": "theorem",
+     "line": 104,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem FreezingBands.pos_of_mem_bands (F : FreezingBands) {z : ℝ} (hz : z ∈ F.bands) : 0 < z",
+     "doc": "**Every point of the bands is positive**: `U⁻ ⊂ (0,1)` because `0 < a`, `U⁺ ⊂ (1,∞)`."
+    },
+    {
+     "name": "eventually_loss_eq_of",
+     "full": "GFNBounds.Balance.eventually_loss_eq_of",
+     "kind": "theorem",
+     "line": 116,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eventually_loss_eq_of (F : FreezingBands) {gt gd : ℝ → ℝ} (hd : ∀ x ∈ F.bands, HasDerivAt gt (gd x) x) (hgd0 : ∀ x ∈ F.bands, gd x = 0) {K : V → V → ℝ} {lam nu : V → ℝ} (hlam : ∀ x, 0 < lam x) {u0 : V → ℝ} (hu0 : u0 ∈ frozen K lam F.bands) : ∀ᶠ u in nhds u0, loss K lam nu u gt = loss K lam nu u0 gt",
+     "doc": "**`𝓛_{g̃,ν}` is locally constant on the frozen set** (`proofs.tex:783`, `:797`), for every `g̃` with zero derivative on the bands: near a band-valued `u`, each ratio stays inside its own band, on which `g̃` is constant."
+    },
+    {
+     "name": "loss_pos_of",
+     "full": "GFNBounds.Balance.loss_pos_of",
+     "kind": "theorem",
+     "line": 140,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem loss_pos_of (F : FreezingBands) [Nonempty V] {gt : ℝ → ℝ} (hpos : ∀ z ∈ F.bands, 0 < gt z) {K : V → V → ℝ} {lam nu u : V → ℝ} (hnu : ∀ x, 0 < nu x) (hband : ∀ x, ratio K lam u x ∈ F.bands) : 0 < loss K lam nu u gt",
+     "doc": "**`𝓛_{g̃,ν}` is positive on the frozen set** (`proofs.tex:783`, `:797`: \"positive, since `g̃ > 0` on the bands\")."
+    },
+    {
+     "name": "loss_pos_of_nonneg",
+     "full": "GFNBounds.Balance.loss_pos_of_nonneg",
+     "kind": "theorem",
+     "line": 149,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem loss_pos_of_nonneg (F : FreezingBands) {gt : ℝ → ℝ} (hpos : ∀ z ∈ F.bands, 0 < gt z) {K : V → V → ℝ} {lam nu u : V → ℝ} (hnu0 : ∀ x, 0 ≤ nu x) (hnu : ∃ x, 0 < nu x) (hband : ∀ x, ratio K lam u x ∈ F.bands) : 0 < loss K lam nu u gt",
+     "doc": "**`𝓛_{g̃,ν}` is positive on the frozen set for every nonzero `ν ≥ 0`** (`proofs.tex:783`, `:797`): the paper's training measure may vanish on states, and one state of positive mass suffices."
+    },
+    {
+     "name": "hasFDerivAt_loss_zero_of",
+     "full": "GFNBounds.Balance.hasFDerivAt_loss_zero_of",
+     "kind": "theorem",
+     "line": 160,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasFDerivAt_loss_zero_of (F : FreezingBands) {gt gd : ℝ → ℝ} (hd : ∀ x ∈ F.bands, HasDerivAt gt (gd x) x) (hgd0 : ∀ x ∈ F.bands, gd x = 0) {K : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) {u : V → ℝ} (hu : u ∈ frozen K lam F.bands) (nu : V → ℝ) : HasFDerivAt (fun u' => loss K lam nu u' gt) (0 : (V → ℝ) →L[ℝ] ℝ) u",
+     "doc": "**A band-valued flow is a Fréchet critical point of `𝓛_{g̃,ν}` for every training measure** (`proofs.tex:783`, proof `:793–797`): the loss is locally constant near `u`, so its Fréchet derivative there is `0`."
+    },
+    {
+     "name": "freezing_item_one_general",
+     "full": "GFNBounds.Balance.freezing_item_one_general",
+     "kind": "theorem",
+     "line": 176,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_item_one_general (F : FreezingBands) [Nonempty V] {gt gd : ℝ → ℝ} (hd : ∀ x ∈ F.bands, HasDerivAt gt (gd x) x) (hgd0 : ∀ x ∈ F.bands, gd x = 0) (hpos : ∀ z ∈ F.bands, 0 < gt z) {K : V → V → ℝ} {lam nu u : V → ℝ} (hlam : ∀ x, 0 < lam x) (hnu : ∀ x, 0 < nu x) (hu : u ∈ frozen K lam F.bands) : (∀ w : V → ℝ, ∀ x, lossGradDensity K lam u w gd x = 0) ∧ (∀ nu' : V → ℝ, HasFDerivAt (fun u' => loss K lam nu' u' gt) (0 : (V → ℝ) →L[ℝ] ℝ) u) ∧ IsOpen (frozen K lam F.bands) ∧ (∀ᶠ u' in nhds u, loss K lam nu u' gt = loss K lam nu u gt) ∧ 0 < loss K lam nu u gt",
+     "doc": "**`prop:nonlinear_freezing`*(1)* in full, for every generator flat and positive on the bands** (`proofs.tex:783`, proof `:793–797`), on a finite state space: a band-valued flow is a critical point of `𝓛_{g̃,ν}` for every training measure; the set of such flows is open; and on it the loss is locally constant and positive."
+    },
+    {
+     "name": "freezing_hasDerivAt_zero_general",
+     "full": "GFNBounds.Balance.freezing_hasDerivAt_zero_general",
+     "kind": "theorem",
+     "line": 197,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_hasDerivAt_zero_general (F : FreezingBands) {gt gd : ℝ → ℝ} (hg : ∀ y : ℝ, 0 < y → HasDerivAt gt (gd y) y) (hgd0 : ∀ z ∈ F.bands, gd z = 0) {K : V → V → ℝ} {lam nu u : V → ℝ} (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hband : ∀ x, ratio K lam u x ∈ F.bands) (d : V → ℝ) : HasDerivAt (fun t : ℝ => loss K lam nu (fun x => u x + t * d x) gt) 0 0",
+     "doc": "**`prop:nonlinear_freezing`*(1)*, criticality in the derivative sense, for every generator flat on the bands** (`proofs.tex:783`, proof `:795–797`): every directional derivative of `t ↦ 𝓛_{g̃,ν}(μ + tδ)` vanishes at `t = 0`."
+    },
+    {
+     "name": "freezing_item_one_of_general",
+     "full": "GFNBounds.Balance.freezing_item_one_of_general",
+     "kind": "theorem",
+     "line": 212,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_item_one_of_general (F : FreezingBands) [Nonempty V] {K : V → V → ℝ} {lam nu u : V → ℝ} (hlam : ∀ x, 0 < lam x) (hnu : ∀ x, 0 < nu x) (hu : u ∈ frozen K lam F.bands) : (∀ w : V → ℝ, ∀ x, lossGradDensity K lam u w (deriv F.g) x = 0) ∧ IsOpen (frozen K lam F.bands) ∧ (∀ᶠ u' in nhds u, loss K lam nu u' F.g = loss K lam nu u F.g) ∧ 0 < loss K lam nu u F.g",
+     "doc": "**`Freezing.freezing_item_one` recovered as an instance** — the paper's \"`g` included\": the constructed generator is differentiable with `g' ≡ 0` and `g > 0` on the bands, so `freezing_item_one_general` at `(g̃, g̃') = (F.g, deriv F.g)` is exactly the `g`-specific statement."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -4201,6 +4333,254 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Balance/LocalConvergenceClauses.lean",
+   "title": "The four clauses the local convergence theorem gained on 2026-09-13",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.LocalConvergence"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]"
+   ],
+   "lines": 443,
+   "decls": [
+    {
+     "name": "eps0_le_a_div",
+     "full": "GFNBounds.Balance.eps0_le_a_div",
+     "kind": "theorem",
+     "line": 101,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eps0_le_a_div {a g2 wmin Kex Bhat Ci c7 rho c6 : ℝ} (ha0 : 0 ≤ a) (hCi : 0 < Ci) (hc7 : 0 ≤ c7) : eps0 (epsW a g2 wmin Kex Bhat) Ci c7 rho c6 ≤ a / (16 * Ci)",
+     "doc": "**`ε₀ ≤ a/(16C_∞)`** (`proofs.tex:643`): `ε₀ ≤ ε/(2C_∞(2+C₇)) ≤ (a/4)/(4C_∞)`."
+    },
+    {
+     "name": "eps0_mem_Ioc",
+     "full": "GFNBounds.Balance.eps0_mem_Ioc",
+     "kind": "theorem",
+     "line": 123,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eps0_mem_Ioc {lam w : V → ℝ} {g2 a M3 wsup wmin Bhat lamMin : ℝ} (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) : eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin Bhat) (C6 (Cg g2 a M3) wsup) ∈ Set.Ioc 0 (a / (16 * Cinf lamMin))",
+     "doc": "**`ε₀ ∈ (0, a/(16C_∞)]`** (`proofs.tex:613`, chain at Step 4, `:643`), at the theorem's constants and under its hypotheses."
+    },
+    {
+     "name": "one_le_max_C7",
+     "full": "GFNBounds.Balance.one_le_max_C7",
+     "kind": "theorem",
+     "line": 144,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_le_max_C7 (c6 g2 wmin : ℝ) : 1 ≤ max 1 (C7 c6 g2 wmin)",
+     "doc": "**`C := max(1, C₇) ≥ 1`** (`proofs.tex:645`)."
+    },
+    {
+     "name": "local_convergence_full_C",
+     "full": "GFNBounds.Balance.local_convergence_full_C",
+     "kind": "theorem",
+     "line": 149,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_full_C {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin Bhat lamMin : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hnorm0 : Graph.nrmL2 lam (h 0) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin Bhat) (C6 (Cg g2 a M3) wsup)) : ∃ cinf : ℝ, |cinf - 1 - Graph.meanL2 lam (h 0)| ≤ max 1 (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL g2 wmin Bhat * t / 2)) * Graph.nrmL2 lam (perpL2 lam (h 0))",
+     "doc": "**`theo:local_convergence_full`, the flow clause with the printed `C := max(1, C₇)`** (`proofs.tex:612–618`, Step 5 at `:645`): `local_convergence_full` with `C₇` weakened to `max(1, C₇)` by `le_max_right`."
+    },
+    {
+     "name": "gamma0_pos",
+     "full": "GFNBounds.Balance.gamma0_pos",
+     "kind": "theorem",
+     "line": 175,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gamma0_pos {g2 wmin L : ℝ} (hg2 : 0 < g2) (hwmin0 : 0 < wmin) (hL : 0 < L) : 0 < gamma0 g2 wmin L",
+     "doc": "**`γ₀ > 0`** (`proofs.tex:617`, formula at Step 6, `:652`) as soon as `L > 0`."
+    },
+    {
+     "name": "Lgd_pos",
+     "full": "GFNBounds.Balance.Lgd_pos",
+     "kind": "theorem",
+     "line": 181,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Lgd_pos {g2 wsup Kex eps : ℝ} (hg2 : 0 < g2) (hwsup : 0 < wsup) (hK0 : 0 ≤ Kex) (heps0 : 0 ≤ eps) : 0 < Lgd g2 wsup Kex eps",
+     "doc": "`L = 2g''(1)‖w‖_{L^∞} + Kε > 0`."
+    },
+    {
+     "name": "gamma0_pos_of_weights",
+     "full": "GFNBounds.Balance.gamma0_pos_of_weights",
+     "kind": "theorem",
+     "line": 189,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gamma0_pos_of_weights {lam w : V → ℝ} {g2 a M3 wsup wmin Bhat : ℝ} (htot : ∑ x, lam x = 1) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB0 : 0 ≤ Bhat) : 0 < gamma0 g2 wmin (Lgd g2 wsup (Kexp g2 a M3 wsup) (epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat))",
+     "doc": "**`γ₀ > 0`** at the theorem's constants and under its hypotheses; `‖w‖_{L^∞} > 0` is derived by `wsup_pos`, as `local_convergence_gd` does."
+    },
+    {
+     "name": "local_convergence_gd_window",
+     "full": "GFNBounds.Balance.local_convergence_gd_window",
+     "kind": "theorem",
+     "line": 210,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_gd_window {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {hk : ℕ → V → ℝ} {g2 a M3 wsup wmin Bhat lamMin gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hstep : ∀ k : ℕ, hk (k + 1) = fun x => hk k x - gam * lossGrad K lam (fun z => lam z * w z) gd (fun z => 1 + hk k z) x) (hgam0 : 0 ≤ gam) (hgam : gam ≤ gamma0 g2 wmin (Lgd g2 wsup (Kexp g2 a M3 wsup) (epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat))) (hnorm0 : Graph.nrmL2 lam (hk 0) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin Bhat) (C6 (Cg g2 a M3) wsup)) : ∀ k : ℕ, ∀ x : V, |hk k x| ≤ epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat ∧ 0 < 1 + hk k x",
+     "doc": "**`theo:local_convergence_full`, \"the gradient descent … is well defined\"** (`proofs.tex:617`, the invariant `eq:gd_invariant` of Step 6 at `:669–677`): under the hypotheses of `local_convergence_gd`, every iterate satisfies `‖h_k‖_{L^∞} ≤ ε`, hence `0 < 1 + h_k` — the density `(1 + h_k)λ` is positive along the whole iteration."
+    },
+    {
+     "name": "abs_ratio_sub_one_le_two_a_div_three",
+     "full": "GFNBounds.Balance.abs_ratio_sub_one_le_two_a_div_three",
+     "kind": "theorem",
+     "line": 342,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_ratio_sub_one_le_two_a_div_three {K : V → V → ℝ} {lam h : V → ℝ} {eps a : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Core.IsInvariant lam K) (hh : ∀ x, |h x| ≤ eps) (heps0 : 0 ≤ eps) (heps : eps ≤ min a 1 / 4) {y : V} (hy : lam y ≠ 0) : |ratio K lam (fun x => 1 + h x) y - 1| ≤ 2 * a / 3",
+     "doc": "**`|r − 1| ≤ 2a/3`** (`proofs.tex:662`) at `μ = (1+h)λ` with `|h| ≤ ε ≤ min(a,1)/4`: `2ε/(1−ε) ≤ 2a/3`, as `1 − ε ≥ 3/4` and `ε ≤ a/4`."
+    },
+    {
+     "name": "hasDerivAt_loss_local",
+     "full": "GFNBounds.Balance.hasDerivAt_loss_local",
+     "kind": "theorem",
+     "line": 358,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_loss_local {K : V → V → ℝ} {lam nu u : V → ℝ} {g gd : ℝ → ℝ} (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hg : ∀ x, HasDerivAt g (gd (ratio K lam u x)) (ratio K lam u x)) (d : V → ℝ) : HasDerivAt (fun t : ℝ => loss K lam nu (fun x => u x + t * d x) g) (∑ x, nu x * (gd (ratio K lam u x) * (dirPush K lam u d x - ratio K lam u x * dirDens u d x))) 0",
+     "doc": "**`FirstVariation.hasDerivAt_loss` with `g` differentiable only at the values `r` takes.** The proof is that lemma's, whose `hg` is consumed at `r(x)` and nowhere else; `r > 0` is then not needed either."
+    },
+    {
+     "name": "hasDerivAt_loss_ipL2_local",
+     "full": "GFNBounds.Balance.hasDerivAt_loss_ipL2_local",
+     "kind": "theorem",
+     "line": 378,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_loss_ipL2_local {K : V → V → ℝ} {lam nu u : V → ℝ} {g gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hg : ∀ x, HasDerivAt g (gd (ratio K lam u x)) (ratio K lam u x)) (d : V → ℝ) : HasDerivAt (fun t : ℝ => loss K lam nu (fun x => u x + t * d x) g) (Graph.ipL2 lam (lossGradDensity K lam u (fun z => nu z / (lam z * u z)) gd) d) 0",
+     "doc": "**`theo:first_variation_full` at `ν_G = λ`, with `g` differentiable only at the values `r` takes**: `FirstVariation.hasDerivAt_loss_ipL2` under the local hypothesis."
+    },
+    {
+     "name": "local_convergence_gd_welldefined",
+     "full": "GFNBounds.Balance.local_convergence_gd_welldefined",
+     "kind": "theorem",
+     "line": 398,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_gd_welldefined {K : V → V → ℝ} {lam w : V → ℝ} {g gd : ℝ → ℝ} {hk : ℕ → V → ℝ} {g2 a M3 wsup wmin Bhat lamMin gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (hg : ∀ y : ℝ, |y - 1| < a → HasDerivAt g (gd y) y) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hstep : ∀ k : ℕ, hk (k + 1) = fun x => hk k x - gam * lossGrad K lam (fun z => lam z * w z) gd (fun z => 1 + hk k z) x) (hgam0 : 0 ≤ gam) (hgam : gam ≤ gamma0 g2 wmin (Lgd g2 wsup (Kexp g2 a M3 wsup) (epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat))) (hnorm0 : Graph.nrmL2 lam (hk 0) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) Bhat) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin Bhat) (C6 (Cg g2 a M3) wsup)) : ∀ k : ℕ, (∀ x : V, 0 < 1 + hk k x) ∧ (∀ x : V, |ratio K lam (fun z => 1 + hk k z) x - 1| ≤ 2 * a / 3) ∧ ∀ d : V → ℝ, HasDerivAt (fun t : ℝ => loss K lam (fun z => lam z * w z) (fun x => 1 + hk k x + t * d x) g) (Graph.ipL2 lam (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + hk k z) d) 0",
+     "doc": "**`theo:local_convergence_full`, \"the gradient descent … is well defined\"**, all three parts (`proofs.tex:617`, proof `:662`): under the hypotheses of `local_convergence_gd`, with `0 < a` and `g` differentiable with derivative `gd` on the open window `|y − 1| < a`, every iterate satisfies * `0 < 1 + h_k` — the density of `(1 + h_k)λ` is positive; * `|r_k − 1| ≤ 2a/3`, `r_k` the ratio at `(1 + h_k)λ`; * `D_k = lossGrad(1 + h_k)` **is the gradient of `𝓛_{g,ν}`** at `(1 + h_k)λ`: for every direction `d`, `t ↦ 𝓛_{g,ν}((1 + h_k + t·d)λ)` has derivative `⟨D_k ∣ d⟩_λ` at `t = 0`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/LocalConvergenceMixing.lean",
+   "title": "The local convergence theorem at the paper's mixing sum `B̂`",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.LocalConvergence",
+    "GFNBounds.Balance.WeightedL2Norm",
+    "GFNBounds.Balance.LocalConvergenceClauses"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]"
+   ],
+   "lines": 278,
+   "decls": [
+    {
+     "name": "mixing_densOp_iff_summable",
+     "full": "GFNBounds.Balance.mixing_densOp_iff_summable",
+     "kind": "theorem",
+     "line": 101,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mixing_densOp_iff_summable {K : V → V → ℝ} {lam : V → ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) : Core.Mixing (densOp lam K) (meanOp lam) ↔ Summable fun n : ℕ => ‖densOp lam K ^ n - meanOp lam‖",
+     "doc": "**`Core.Mixing (P, Π)` is exactly summable mixing** at the paper's `(P, Π)`: the two structure fields `ΠP = Π` and `PΠ = Π` are theorems under `hK`, `hinv` and `λ > 0` (`meanOp_mul_densOp`, `densOp_mul_meanOp`), so the only content of `hmx` is `∑_{n≥0}‖Pⁿ − Π‖_{L²(λ)} < ∞`, the paper's hypothesis."
+    },
+    {
+     "name": "meanOp_eq_of_densOp_eq",
+     "full": "GFNBounds.Balance.meanOp_eq_of_densOp_eq",
+     "kind": "theorem",
+     "line": 110,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanOp_eq_of_densOp_eq {K : V → V → ℝ} {lam : V → ℝ} (hmx : Core.Mixing (densOp lam K) (meanOp lam)) {u : EuclideanSpace ℝ V} (hu : densOp lam K u = u) : meanOp lam u = u",
+     "doc": "**Summable mixing implies ergodicity**, at the operator level: a `P`-fixed vector of `L²(λ)` is `Π`-fixed."
+    },
+    {
+     "name": "eq_const_of_densAct_eq",
+     "full": "GFNBounds.Balance.eq_const_of_densAct_eq",
+     "kind": "theorem",
+     "line": 130,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_const_of_densAct_eq {K : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (hmx : Core.Mixing (densOp lam K) (meanOp lam)) {f : V → ℝ} (hf : Core.densAct lam K f = f) : f = fun _ => Graph.meanL2 lam f",
+     "doc": "**Summable mixing implies ergodicity** (the paper's \"`T` ergodic\", `proofs.tex:593`), on functions: a density fixed by the density action `P` is the constant `Πf = ∫f dλ`."
+    },
+    {
+     "name": "local_convergence_full_mixing",
+     "full": "GFNBounds.Balance.local_convergence_full_mixing",
+     "kind": "theorem",
+     "line": 143,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_full_mixing [Nontrivial V] {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin lamMin : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hmx : Core.Mixing (densOp lam K) (meanOp lam)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hnorm0 : Graph.nrmL2 lam (h 0) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) (Core.Mixing.B (densOp lam K) (meanOp lam))) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin (Core.Mixing.B (densOp lam K) (meanOp lam))) (C6 (Cg g2 a M3) wsup)) : ∃ cinf : ℝ, |cinf - 1 - Graph.meanL2 lam (h 0)| ≤ C7 (C6 (Cg g2 a M3) wsup) g2 wmin * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL g2 wmin (Core.Mixing.B (densOp lam K) (meanOp lam)) * t / 2)) * Graph.nrmL2 lam (perpL2 lam (h 0))",
+     "doc": "**`theo:local_convergence_full`, the flow clause, at the paper's `B̂`** (`proofs.tex:612–618`): `local_convergence_full` with `B̂ := ∑_{n≥0}‖Pⁿ − Π‖_{L²(λ)}` the mixing sum, under summable mixing `hmx`."
+    },
+    {
+     "name": "local_convergence_gd_mixing",
+     "full": "GFNBounds.Balance.local_convergence_gd_mixing",
+     "kind": "theorem",
+     "line": 169,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_gd_mixing [Nontrivial V] {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {hk : ℕ → V → ℝ} {g2 a M3 wsup wmin lamMin gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hmx : Core.Mixing (densOp lam K) (meanOp lam)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hstep : ∀ k : ℕ, hk (k + 1) = fun x => hk k x - gam * lossGrad K lam (fun z => lam z * w z) gd (fun z => 1 + hk k z) x) (hgam0 : 0 ≤ gam) (hgam : gam ≤ gamma0 g2 wmin (Lgd g2 wsup (Kexp g2 a M3 wsup) (epsW a g2 wmin (Kexp g2 a M3 wsup) (Core.Mixing.B (densOp lam K) (meanOp lam))))) (hnorm0 : Graph.nrmL2 lam (hk 0) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) (Core.Mixing.B (densOp lam K) (meanOp lam))) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin (Core.Mixing.B (densOp lam K) (meanOp lam))) (C6 (Cg g2 a M3) wsup)) : ∀ k : ℕ, Graph.nrmL2 lam (perpL2 lam (hk (k + 1))) ≤ (1 - gam * rhoL g2 wmin (Core.Mixing.B (densOp lam K) (meanOp lam)) / 4) * Graph.nrmL2 lam (perpL2 lam (hk k))",
+     "doc": "**`theo:local_convergence_full`, the gradient-descent clause, at the paper's `B̂`** (`proofs.tex:617`, Step 6 at `:652–677`): `local_convergence_gd` with `B̂` the mixing sum, under summable mixing `hmx`; `hcoer` and `hB1` are discharged as in `local_convergence_full_mixing`."
+    },
+    {
+     "name": "eps0_mem_Ioc_mixing",
+     "full": "GFNBounds.Balance.eps0_mem_Ioc_mixing",
+     "kind": "theorem",
+     "line": 198,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eps0_mem_Ioc_mixing [Nontrivial V] {K : V → V → ℝ} {lam w : V → ℝ} {g2 a M3 wsup wmin lamMin : ℝ} (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hmx : Core.Mixing (densOp lam K) (meanOp lam)) : eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) (Core.Mixing.B (densOp lam K) (meanOp lam))) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin (Core.Mixing.B (densOp lam K) (meanOp lam))) (C6 (Cg g2 a M3) wsup) ∈ Set.Ioc 0 (a / (16 * Cinf lamMin))",
+     "doc": "**`ε₀ ∈ (0, a/(16C_∞)]`** (`proofs.tex:613`, Step 4 at `:643`) at the paper's `B̂`: `eps0_mem_Ioc` with `hB1` discharged by `one_le_B_densOp`."
+    },
+    {
+     "name": "local_convergence_full_C_mixing",
+     "full": "GFNBounds.Balance.local_convergence_full_C_mixing",
+     "kind": "theorem",
+     "line": 213,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_full_C_mixing [Nontrivial V] {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ} {g2 a M3 wsup wmin lamMin : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hmx : Core.Mixing (densOp lam K) (meanOp lam)) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hnorm0 : Graph.nrmL2 lam (h 0) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) (Core.Mixing.B (densOp lam K) (meanOp lam))) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin (Core.Mixing.B (densOp lam K) (meanOp lam))) (C6 (Cg g2 a M3) wsup)) : ∃ cinf : ℝ, |cinf - 1 - Graph.meanL2 lam (h 0)| ≤ max 1 (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL g2 wmin (Core.Mixing.B (densOp lam K) (meanOp lam)) * t / 2)) * Graph.nrmL2 lam (perpL2 lam (h 0))",
+     "doc": "**`theo:local_convergence_full`, the flow clause with the printed `C := max(1, C₇)`, at the paper's `B̂`** (`proofs.tex:612–618`, Step 5 at `:645`): `local_convergence_full_C` with `hB1` and `hcoer` discharged."
+    },
+    {
+     "name": "gamma0_pos_of_weights_mixing",
+     "full": "GFNBounds.Balance.gamma0_pos_of_weights_mixing",
+     "kind": "theorem",
+     "line": 238,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gamma0_pos_of_weights_mixing {K : V → V → ℝ} {lam w : V → ℝ} {g2 a M3 wsup wmin : ℝ} (htot : ∑ x, lam x = 1) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha0 : 0 ≤ a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) : 0 < gamma0 g2 wmin (Lgd g2 wsup (Kexp g2 a M3 wsup) (epsW a g2 wmin (Kexp g2 a M3 wsup) (Core.Mixing.B (densOp lam K) (meanOp lam))))",
+     "doc": "**`γ₀ > 0`** (`proofs.tex:617`, formula at Step 6, `:652`) at the paper's `B̂`: `gamma0_pos_of_weights`, whose only `B̂` hypothesis is `0 ≤ B̂`."
+    },
+    {
+     "name": "local_convergence_gd_welldefined_mixing",
+     "full": "GFNBounds.Balance.local_convergence_gd_welldefined_mixing",
+     "kind": "theorem",
+     "line": 249,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_gd_welldefined_mixing [Nontrivial V] {K : V → V → ℝ} {lam w : V → ℝ} {g gd : ℝ → ℝ} {hk : ℕ → V → ℝ} {g2 a M3 wsup wmin lamMin gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (hg2 : 0 < g2) (hM3 : 0 ≤ M3) (ha : 0 < a) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hmx : Core.Mixing (densOp lam K) (meanOp lam)) (hg : ∀ y : ℝ, |y - 1| < a → HasDerivAt g (gd y) y) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hstep : ∀ k : ℕ, hk (k + 1) = fun x => hk k x - gam * lossGrad K lam (fun z => lam z * w z) gd (fun z => 1 + hk k z) x) (hgam0 : 0 ≤ gam) (hgam : gam ≤ gamma0 g2 wmin (Lgd g2 wsup (Kexp g2 a M3 wsup) (epsW a g2 wmin (Kexp g2 a M3 wsup) (Core.Mixing.B (densOp lam K) (meanOp lam))))) (hnorm0 : Graph.nrmL2 lam (hk 0) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M3 wsup) (Core.Mixing.B (densOp lam K) (meanOp lam))) (Cinf lamMin) (C7 (C6 (Cg g2 a M3) wsup) g2 wmin) (rhoL g2 wmin (Core.Mixing.B (densOp lam K) (meanOp lam))) (C6 (Cg g2 a M3) wsup)) : ∀ k : ℕ, (∀ x : V, 0 < 1 + hk k x) ∧ (∀ x : V, |ratio K lam (fun z => 1 + hk k z) x - 1| ≤ 2 * a / 3) ∧ ∀ d : V → ℝ, HasDerivAt (fun t : ℝ => loss K lam (fun z => lam z * w z) (fun x => 1 + hk k x + t * d x) g) (Graph.ipL2 lam (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + hk k z) d) 0",
+     "doc": "**`theo:local_convergence_full`, \"the gradient descent … is well defined\", at the paper's `B̂`** (`proofs.tex:617`, proof `:662`): `local_convergence_gd_welldefined` with `hB1` and `hcoer` discharged."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Balance/LocalEnergy.lean",
    "title": "Steps 2 and 3 of the local convergence theorem: the energy estimate, and the drift of the mass",
    "labels": [],
@@ -5650,6 +6030,84 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Balance/SqGenerator.lean",
+   "title": "The generator `(x − 1)²` is coercive off balance, and item *(3)*'s display holds for it",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.Lojasiewicz"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]"
+   ],
+   "lines": 209,
+   "decls": [
+    {
+     "name": "sqDeriv_mul_one_sub_le_sharp",
+     "full": "GFNBounds.Balance.sqDeriv_mul_one_sub_le_sharp",
+     "kind": "theorem",
+     "line": 94,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sqDeriv_mul_one_sub_le_sharp {x δ : ℝ} (hδ : 0 ≤ δ) (h : δ ≤ |x - 1|) : 2 * (x - 1) * (1 - x) ≤ -(2 * δ ^ 2)",
+     "doc": "**`g'(x)(1 − x) ≤ −2δ²` whenever `0 ≤ δ ≤ |x − 1|`**, for `g = (x − 1)²` — the sharp form, the paper's `2(x−1)² ≥ 2δ²` (`proofs.tex:830`)."
+    },
+    {
+     "name": "sqDeriv_mul_one_sub_le",
+     "full": "GFNBounds.Balance.sqDeriv_mul_one_sub_le",
+     "kind": "theorem",
+     "line": 102,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sqDeriv_mul_one_sub_le {x δ : ℝ} (hδ : 0 ≤ δ) (h : δ ≤ |x - 1|) : 2 * (x - 1) * (1 - x) ≤ -(δ ^ 2 / 2)",
+     "doc": "**`g'(x)(1 − x) ≤ −δ²/2` whenever `0 ≤ δ ≤ |x − 1|`**, for `g = (x − 1)²` (`proofs.tex:813`, proof `proofs.tex:830`: `2δ² ≥ δ²/2`)."
+    },
+    {
+     "name": "le_abs_sqDeriv_mul_one_sub",
+     "full": "GFNBounds.Balance.le_abs_sqDeriv_mul_one_sub",
+     "kind": "theorem",
+     "line": 109,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_abs_sqDeriv_mul_one_sub {x δ : ℝ} (hδ : 0 ≤ δ) (h : δ ≤ |x - 1|) : δ ^ 2 / 2 ≤ |2 * (x - 1) * (1 - x)|",
+     "doc": "**`|g'(x)(1 − x)| ≥ δ²/2` whenever `0 ≤ δ ≤ |x − 1|`**, for `g = (x − 1)²` (`proofs.tex:813`) — the proposition's own wording, from the signed form."
+    },
+    {
+     "name": "sqDeriv_mul_one_sub_nonpos",
+     "full": "GFNBounds.Balance.sqDeriv_mul_one_sub_nonpos",
+     "kind": "theorem",
+     "line": 117,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sqDeriv_mul_one_sub_nonpos (x : ℝ) : 2 * (x - 1) * (1 - x) ≤ 0",
+     "doc": "**`g'(x)(1 − x) ≤ 0` for every `x`**, for `g = (x − 1)²` — strict unimodality, unweighted (`proofs.tex:826`)."
+    },
+    {
+     "name": "no_distant_equilibrium_three_far_of",
+     "full": "GFNBounds.Balance.no_distant_equilibrium_three_far_of",
+     "kind": "theorem",
+     "line": 133,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_distant_equilibrium_three_far_of {K : V → V → ℝ} {lam u wnu : V → ℝ} {δ c₀ : ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hc₀ : 0 ≤ c₀) (hwnu : ∀ x, c₀ ≤ wnu x) (hnp : ∀ x : ℝ, 0 < x → gd x * (1 - x) ≤ 0) (hfar : ∀ x : ℝ, 0 < x → δ ≤ |x - 1| → gd x * (1 - x) ≤ -(δ ^ 2 / 2)) (S : Finset V) (hS : ∀ x ∈ S, δ ≤ |ratio K lam u x - 1|) : c₀ * (δ ^ 2 / 2) * (∑ x ∈ S, lam x) ≤ Graph.nrmL2 lam (lossGradDensity K lam u wnu gd)",
+     "doc": "**`prop:no_distant_equilibrium`*(3)*, the display, for any `g'` with the two pointwise facts it consumes** (statement `proofs.tex:813–817`, proof `proofs.tex:830–833`): over any set `S` of far ratios and with `dν/dμ ≥ c₀`, `c₀ (δ²/2) λ(S) ≤ ‖D‖_{L²(λ)}` whenever `g'(x)(1 − x) ≤ 0` on `x > 0` (`hnp`) and `g'(x)(1 − x) ≤ −δ²/2` on `x > 0` with `|x − 1| ≥ δ` (`hfar`)."
+    },
+    {
+     "name": "no_distant_equilibrium_three_sq",
+     "full": "GFNBounds.Balance.no_distant_equilibrium_three_sq",
+     "kind": "theorem",
+     "line": 190,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_distant_equilibrium_three_sq {K : V → V → ℝ} {lam u u0 wf : V → ℝ} {lamMin wmin δ : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hsph : Graph.nrmL2 lam u = Graph.nrmL2 lam u0) (hu0 : 0 < Graph.nrmL2 lam u0) (hδ : 0 ≤ δ) : wmin * Real.sqrt lamMin / Graph.nrmL2 lam u0 * (δ ^ 2 / 2) * (∑ x ∈ farSet (ratio K lam u) δ, lam x) ≤ Graph.nrmL2 lam (lossGradDensity K lam u (fun x => wf x / u x) fun x => 2 * (x - 1))",
+     "doc": "**`prop:no_distant_equilibrium`*(3)*'s display for `g = (x − 1)²`** (statement `proofs.tex:813–817`, proof `proofs.tex:830–833`): `‖∇^λ 𝓛_{g,ν}(μ)‖ ≥ (w_min λ_min^{1/2}/‖u₀‖)(δ²/2) λ(|r−1| ≥ δ)` for `g' = 2(x − 1)`, `ν = wλ` with `w ≥ w_min > 0`, on the sphere `‖u‖ = ‖u₀‖`, for every `δ ≥ 0` (the paper's `δ ∈ (0, ½]` included; see the module SCOPE)."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Balance/TrainingSpeed.lean",
    "title": "The training-speed theorem, assembled: two phases, and every constant in `σ_*`, `σ̄`, `N_min`",
    "labels": [],
@@ -6601,6 +7059,175 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/WeightedL2Norm.lean",
+   "title": "The mean projection is orthogonal on `L²(λ)`, so `β̂₀ = ‖I − Π‖ = 1` exactly",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.WeightedL2",
+    "GFNBounds.Core.MixingBase"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]"
+   ],
+   "lines": 250,
+   "decls": [
+    {
+     "name": "one_sub_meanOp_ne_zero",
+     "full": "GFNBounds.Balance.one_sub_meanOp_ne_zero",
+     "kind": "theorem",
+     "line": 114,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_sub_meanOp_ne_zero [Nontrivial V] {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) : (1 : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V) - meanOp lam ≠ 0",
+     "doc": "**`I − Π ≠ 0`** as soon as there are two states: the weighting of the indicator of `x₀` is not `Π`-invariant, since a constant cannot be `1` at `x₀` and `0` at `x₁ ≠ x₀`."
+    },
+    {
+     "name": "norm_one_sub_meanOp",
+     "full": "GFNBounds.Balance.norm_one_sub_meanOp",
+     "kind": "theorem",
+     "line": 132,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_one_sub_meanOp [Nontrivial V] {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) : ‖(1 : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V) - meanOp lam‖ = 1",
+     "doc": "**`‖I − Π‖ = 1`** on `L²(λ)`, `Π` the mean projection."
+    },
+    {
+     "name": "beta_zero_densOp_meanOp",
+     "full": "GFNBounds.Balance.beta_zero_densOp_meanOp",
+     "kind": "theorem",
+     "line": 150,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem beta_zero_densOp_meanOp [Nontrivial V] {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (K : V → V → ℝ) : Core.Mixing.beta (densOp lam K) (meanOp lam) 0 = 1",
+     "doc": "**`β̂₀ = 1`** — the normalization in `lem:sigma_mixing`'s hypothesis (`proofs.tex:582`), for the paper's `Π` on `L²(λ)`."
+    },
+    {
+     "name": "one_le_B_densOp",
+     "full": "GFNBounds.Balance.one_le_B_densOp",
+     "kind": "theorem",
+     "line": 158,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_le_B_densOp [Nontrivial V] {lam : V → ℝ} {K : V → V → ℝ} (hlam : ∀ x, 0 < lam x) (hmx : Core.Mixing (densOp lam K) (meanOp lam)) : 1 ≤ Core.Mixing.B (densOp lam K) (meanOp lam)",
+     "doc": "**`1 ≤ B̂`** for summable mixing at the paper's `(P, Π)`: the hypothesis `LocalConvergence.lean` and `RatioBridge.lean` carry as `hB1`, once their `B̂` is the mixing sum."
+    },
+    {
+     "name": "rho_densOp_le",
+     "full": "GFNBounds.Balance.rho_densOp_le",
+     "kind": "theorem",
+     "line": 167,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rho_densOp_le [Nontrivial V] {lam : V → ℝ} {K : V → V → ℝ} {g2 wmin : ℝ} (hlam : ∀ x, 0 < lam x) (hmx : Core.Mixing (densOp lam K) (meanOp lam)) (h0 : 0 ≤ g2 * wmin) : g2 * wmin / Core.Mixing.B (densOp lam K) (meanOp lam) ^ 2 ≤ g2 * wmin",
+     "doc": "**`ϱ ≤ g''(1)w_min`** (`proofs.tex:652`, \"since `B̂ ≥ β̂₀ = 1`\"): the rate `ϱ = g''(1)w_min/B̂²` of `theo:db_stable_frozen_full`, with `B̂` the mixing sum at the paper's `(P, Π)`, never exceeds `g''(1)w_min`."
+    },
+    {
+     "name": "twoStateLam_sum",
+     "full": "GFNBounds.Balance.twoStateLam_sum",
+     "kind": "theorem",
+     "line": 177,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoStateLam_sum : ∑ x, twoStateLam x = 1",
+     "doc": ""
+    },
+    {
+     "name": "twoState_densOp_eq_meanOp",
+     "full": "GFNBounds.Balance.twoState_densOp_eq_meanOp",
+     "kind": "theorem",
+     "line": 182,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_densOp_eq_meanOp : densOp twoStateLam twoStateK = meanOp twoStateLam",
+     "doc": "**`P = Π` on the two-state chain** (`proofs.tex:799`), as bounded operators on `L²(λ)`."
+    },
+    {
+     "name": "twoState_meanOp_idem",
+     "full": "GFNBounds.Balance.twoState_meanOp_idem",
+     "kind": "theorem",
+     "line": 191,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_meanOp_idem : meanOp twoStateLam * meanOp twoStateLam = meanOp twoStateLam",
+     "doc": ""
+    },
+    {
+     "name": "twoState_mixing_densOp",
+     "full": "GFNBounds.Balance.twoState_mixing_densOp",
+     "kind": "theorem",
+     "line": 196,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_mixing_densOp : Core.Mixing (densOp twoStateLam twoStateK) (meanOp twoStateLam)",
+     "doc": "**Summable mixing at `(P, Π)`, exhibited**: on the two-state chain `P = Π` is idempotent, so `Pⁿ − Π = 0` for `n ≥ 1` and the sum is finite."
+    },
+    {
+     "name": "twoState_beta_succ",
+     "full": "GFNBounds.Balance.twoState_beta_succ",
+     "kind": "theorem",
+     "line": 202,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_beta_succ (n : ℕ) : Core.Mixing.beta (densOp twoStateLam twoStateK) (meanOp twoStateLam) (n + 1) = 0",
+     "doc": "`β̂ₙ = 0` for `n ≥ 1` on the two-state chain."
+    },
+    {
+     "name": "twoState_beta_zero",
+     "full": "GFNBounds.Balance.twoState_beta_zero",
+     "kind": "theorem",
+     "line": 208,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_beta_zero : Core.Mixing.beta (densOp twoStateLam twoStateK) (meanOp twoStateLam) 0 = 1",
+     "doc": "`β̂₀ = 1` on the two-state chain."
+    },
+    {
+     "name": "twoState_B_densOp",
+     "full": "GFNBounds.Balance.twoState_B_densOp",
+     "kind": "theorem",
+     "line": 213,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_B_densOp : Core.Mixing.B (densOp twoStateLam twoStateK) (meanOp twoStateLam) = 1",
+     "doc": "`B̂ = 1` on the two-state chain."
+    },
+    {
+     "name": "twoState_mixing_coefficients",
+     "full": "GFNBounds.Balance.twoState_mixing_coefficients",
+     "kind": "theorem",
+     "line": 221,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_mixing_coefficients : (∀ n : ℕ, 1 ≤ n → Core.Mixing.beta (densOp twoStateLam twoStateK) (meanOp twoStateLam) n = 0) ∧ Core.Mixing.B (densOp twoStateLam twoStateK) (meanOp twoStateLam) = Core.Mixing.beta (densOp twoStateLam twoStateK) (meanOp twoStateLam) 0 ∧ Core.Mixing.beta (densOp twoStateLam twoStateK) (meanOp twoStateLam) 0 = 1",
+     "doc": "**`prop:nonlinear_freezing`*(2)*, the parenthesis on the mixing coefficients** (`proofs.tex:784`, proof `:799`): on the two-state chain `β̂ₙ = 0` for all `n ≥ 1` and `B̂ = β̂₀ = 1`, with `B̂` the paper's `∑_{n≥0}‖Pⁿ − Π‖` on `L²(λ)`."
+    },
+    {
+     "name": "twoState_rho_eq",
+     "full": "GFNBounds.Balance.twoState_rho_eq",
+     "kind": "theorem",
+     "line": 234,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_rho_eq (g2 wmin : ℝ) : g2 * wmin / Core.Mixing.B (densOp twoStateLam twoStateK) (meanOp twoStateLam) ^ 2 = g2 * wmin",
+     "doc": "**`ϱ = g''(1)w_min`** on the two-state chain (`proofs.tex:799`): the rate `ϱ = g''(1)w_min/B̂²` of `theo:db_stable_frozen_full`, with `B̂` the mixing sum, loses nothing to mixing."
+    },
+    {
+     "name": "twoState_rho_freezing",
+     "full": "GFNBounds.Balance.twoState_rho_freezing",
+     "kind": "theorem",
+     "line": 242,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_rho_freezing (F : FreezingBands) (wmin : ℝ) : deriv (deriv F.g) 1 * wmin / Core.Mixing.B (densOp twoStateLam twoStateK) (meanOp twoStateLam) ^ 2 = 2 * wmin",
+     "doc": "**`ϱ = 2w_min`** — `prop:nonlinear_freezing`*(2)* (`proofs.tex:784`, proof `:799`) at the proposition's own generator: `g''(1) = deriv (deriv F.g) 1 = 2` for every `F : FreezingBands` (`FreezingBands.deriv_deriv_g_one`), and `B̂ = 1` on the two-state chain."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -9187,6 +9814,95 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Core/UniversalityKernelBound.lean",
+   "title": "The quantitative universality bound, read at the density action of a Markov kernel",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Core.StrongUniversality"
+   ],
+   "variables": [
+    "variable {α : Type*} [MeasurableSpace α]",
+    "variable {ν : Measure α} [IsFiniteMeasure ν] {p : ℝ≥0∞} [Fact (1 ≤ p)]"
+   ],
+   "lines": 255,
+   "decls": [
+    {
+     "name": "coeFn_liftedOutflow",
+     "full": "GFNBounds.Core.coeFn_liftedOutflow",
+     "kind": "theorem",
+     "line": 114,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coeFn_liftedOutflow (P Pi : Lp ℝ p ν →L[ℝ] Lp ℝ p ν) (θ : Lp ℝ p ν) (η : ℝ) : ⇑(liftedOutflow P Pi (constOne ν p) θ η) =ᵐ[ν] fun x => max (η - Mixing.S P Pi θ x) 0",
+     "doc": "**`theo:universality_L2_full`'s outflow density, pointwise**: the a.e."
+    },
+    {
+     "name": "truncation_eq_zero_top",
+     "full": "GFNBounds.Core.truncation_eq_zero_top",
+     "kind": "theorem",
+     "line": 134,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem truncation_eq_zero_top (P Pi : Lp ℝ ⊤ ν →L[ℝ] Lp ℝ ⊤ ν) (θ : Lp ℝ ⊤ ν) {η : ℝ} (hη : ‖Mixing.S P Pi θ‖ ≤ η) : truncation P Pi (constOne ν ⊤) θ η = 0",
+     "doc": "**Step 3 of `theo:universality_L2_full` at `p = +∞`** (`proofs.tex:114`): for `η ≥ ‖Sθ‖_{L^∞(ν)}` the truncation `ψ_η = (Sθ − η)⁺` is `0`."
+    },
+    {
+     "name": "tendsto_truncation_norm_all",
+     "full": "GFNBounds.Core.tendsto_truncation_norm_all",
+     "kind": "theorem",
+     "line": 145,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tendsto_truncation_norm_all (P Pi : Lp ℝ p ν →L[ℝ] Lp ℝ p ν) (θ : Lp ℝ p ν) : Tendsto (fun η : ℝ => ‖truncation P Pi (constOne ν p) θ η‖) atTop (𝓝 0)",
+     "doc": "**Step 3 of `theo:universality_L2_full`, at every exponent**: `‖ψ_η‖_{L^p(ν)} → 0` as `η → +∞`, for every `p ∈ [1, +∞]`."
+    },
+    {
+     "name": "residuals_le_of_kernel",
+     "full": "GFNBounds.Core.residuals_le_of_kernel",
+     "kind": "theorem",
+     "line": 165,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem residuals_le_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν p hinv hb) ^ n - meanProj ν p‖) {f_init f_term : Lp ℝ p ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) (η : ℝ) : 0 ≤ liftedOutflow (densityActionCLM κ ν p hinv hb) (meanProj ν p) (constOne ν p) (f_term - f_init) η ∧ ‖Mixing.S (densityActionCLM κ ν p hinv hb) (meanProj ν p) (f_term - f_init)‖ ≤ Mixing.B (densityActionCLM κ ν p hinv hb) (meanProj ν p) * ‖f_term - f_init‖ ∧ ‖resInit (densityActionCLM κ ν p hinv hb) (f_term - f_init) (liftedOutflow (densityActionCLM κ ν p hinv hb) (meanProj ν p) (constOne ν p) (f_term - f_init) η)‖ + ‖resTerm (densityActionCLM κ ν p hinv hb) (f_term - f_init) (liftedOutflow (densityActionCLM κ ν p hinv hb) (meanProj ν p) (constOne ν p) (f_term - f_init) η)‖ ≤ 2 * (1 + ‖densityActionCLM κ ν p hinv hb‖) * ‖truncation (densityActionCLM κ ν p hinv hb) (meanProj ν p) (constOne ν p) (f_term - f_init) η‖ ∧ ‖resInit (densityActionCLM κ ν p hinv hb) (f_term - f_init) (liftedOutflow (densityActionCLM κ ν p hinv hb) (meanProj ν p) (constOne ν p) (f_term - f_init) η)‖ + ‖resTerm (densityActionCLM κ ν p hinv hb) (f_term - f_init) (liftedOutflow (densityActionCLM κ ν p hinv hb) (meanProj ν p) (constOne ν p) (f_term - f_init) η)‖ ≤ 2 * (1 + C) * ‖truncation (densityActionCLM κ ν p hinv hb) (meanProj ν p) (constOne ν p) (f_term - f_init) η‖",
+     "doc": "**`equ:universality_quantitative` at the kernel's own density action.** `π⋆` a Markov kernel, `ν` finite and `π⋆`-invariant, `P⋆` bounded on `L^p(ν)` with constant `C`, summable mixing against the mean projection, and `f_init, f_term ∈ L^p(ν)` of equal total mass."
+    },
+    {
+     "name": "tendsto_residuals_of_kernel",
+     "full": "GFNBounds.Core.tendsto_residuals_of_kernel",
+     "kind": "theorem",
+     "line": 203,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tendsto_residuals_of_kernel (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] (p : ℝ≥0∞) [Fact (1 ≤ p)] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν p C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν p hinv hb) ^ n - meanProj ν p‖) {f_init f_term : Lp ℝ p ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : Tendsto (fun η : ℝ => ‖resInit (densityActionCLM κ ν p hinv hb) (f_term - f_init) (liftedOutflow (densityActionCLM κ ν p hinv hb) (meanProj ν p) (constOne ν p) (f_term - f_init) η)‖ + ‖resTerm (densityActionCLM κ ν p hinv hb) (f_term - f_init) (liftedOutflow (densityActionCLM κ ν p hinv hb) (meanProj ν p) (constOne ν p) (f_term - f_init) η)‖) atTop (𝓝 0)",
+     "doc": "**The arrow of `equ:universality_quantitative`**: at the kernel's density action, the two residuals of the lifted outflow `f_out^η` vanish together as `η → +∞`, at **every** `p ∈ [1, +∞]`."
+    },
+    {
+     "name": "defect_eq_zero_of_kernel_top",
+     "full": "GFNBounds.Core.defect_eq_zero_of_kernel_top",
+     "kind": "theorem",
+     "line": 225,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem defect_eq_zero_of_kernel_top (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν ⊤ C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν ⊤ hinv hb) ^ n - meanProj ν ⊤‖) {f_init f_term : Lp ℝ ⊤ ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : defect (densityActionCLM κ ν ⊤ hinv hb) (f_term - f_init) (liftedOutflow (densityActionCLM κ ν ⊤ hinv hb) (meanProj ν ⊤) (constOne ν ⊤) (f_term - f_init) ‖Mixing.S (densityActionCLM κ ν ⊤ hinv hb) (meanProj ν ⊤) (f_term - f_init)‖) = 0",
+     "doc": "**The `p = +∞` sentence of `theo:universality_L2_full`, exact flow matching**: \"taking `η := ‖Sθ‖_{L^∞(ν_B)}` gives […] the flow-matching constraint holds exactly\" (`proofs.tex:73`), at the kernel's density action — the defect `D = (P⋆ − Id) f_out^η − θ` of the lifted outflow at that `η` is `0`."
+    },
+    {
+     "name": "residuals_eq_zero_of_kernel_top",
+     "full": "GFNBounds.Core.residuals_eq_zero_of_kernel_top",
+     "kind": "theorem",
+     "line": 240,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem residuals_eq_zero_of_kernel_top (κ : Kernel α α) [IsMarkovKernel κ] (ν : Measure α) [IsFiniteMeasure ν] {C : ℝ} (hinv : ν.bind ⇑κ = ν) (hb : IsBoundedDensityAction κ ν ⊤ C) (hsum : Summable fun n : ℕ => ‖(densityActionCLM κ ν ⊤ hinv hb) ^ n - meanProj ν ⊤‖) {f_init f_term : Lp ℝ ⊤ ν} (hmass : ∫ x, f_init x ∂ν = ∫ x, f_term x ∂ν) : resInit (densityActionCLM κ ν ⊤ hinv hb) (f_term - f_init) (liftedOutflow (densityActionCLM κ ν ⊤ hinv hb) (meanProj ν ⊤) (constOne ν ⊤) (f_term - f_init) ‖Mixing.S (densityActionCLM κ ν ⊤ hinv hb) (meanProj ν ⊤) (f_term - f_init)‖) = 0 ∧ resTerm (densityActionCLM κ ν ⊤ hinv hb) (f_term - f_init) (liftedOutflow (densityActionCLM κ ν ⊤ hinv hb) (meanProj ν ⊤) (constOne ν ⊤) (f_term - f_init) ‖Mixing.S (densityActionCLM κ ν ⊤ hinv hb) (meanProj ν ⊤) (f_term - f_init)‖) = 0",
+     "doc": "**The `p = +∞` sentence of `theo:universality_L2_full`**: \"taking `η := ‖Sθ‖_{L^∞(ν_B)}` gives `δf_init = δf_term = 0`\" (`proofs.tex:73`), at the kernel's density action."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Core/UniversalityLp.lean",
    "title": "The truncation vanishes on `L^p(ν)` for `p < ∞`, and weak universality follows",
    "labels": [],
@@ -11593,6 +12309,278 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/DescentStatement.lean",
+   "title": "The descent chain, stated in the paper's shape with its constants named",
+   "labels": [
+    "lem:doubling_descent",
+    "def:doubling_setting",
+    "def:doubling_decay_notation"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.DescentLaw"
+   ],
+   "variables": [
+    "variable (D : Decay)"
+   ],
+   "lines": 368,
+   "decls": [
+    {
+     "name": "c4",
+     "full": "GFNBounds.Doubling.Decay.c4",
+     "kind": "def",
+     "line": 106,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def c4 (D : Decay) : ℝ",
+     "doc": "**`c₄`, made effective.** `c₄ := 16 c τ`."
+    },
+    {
+     "name": "c4_pos",
+     "full": "GFNBounds.Doubling.Decay.c4_pos",
+     "kind": "theorem",
+     "line": 108,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c4_pos : 0 < D.c4",
+     "doc": ""
+    },
+    {
+     "name": "ell1",
+     "full": "GFNBounds.Doubling.Decay.ell1",
+     "kind": "def",
+     "line": 112,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ell1 (D : Decay) (d : ℕ) : ℕ",
+     "doc": "**`ℓ₁`, made effective.** `ℓ₁ := max(d + 1, ⌈32 c τ⌉)`: the first requirement is `ℓ₁ > d`, the second turns `|R₀ − 1| ≤ c₄/m` into `½ ≤ R₀ ≤ 2`."
+    },
+    {
+     "name": "lt_ell1",
+     "full": "GFNBounds.Doubling.Decay.lt_ell1",
+     "kind": "theorem",
+     "line": 114,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lt_ell1 (d : ℕ) : d < D.ell1 d",
+     "doc": ""
+    },
+    {
+     "name": "one_le_of_ell1_le",
+     "full": "GFNBounds.Doubling.Decay.one_le_of_ell1_le",
+     "kind": "theorem",
+     "line": 116,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_le_of_ell1_le {d m : ℕ} (hm : D.ell1 d ≤ m) : 1 ≤ m",
+     "doc": ""
+    },
+    {
+     "name": "thr_of_ell1",
+     "full": "GFNBounds.Doubling.Decay.thr_of_ell1",
+     "kind": "theorem",
+     "line": 120,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem thr_of_ell1 {d m : ℕ} (hm : D.ell1 d ≤ m) : 32 * D.c * D.tau ≤ (m : ℝ)",
+     "doc": ""
+    },
+    {
+     "name": "R0_between_of_ell1",
+     "full": "GFNBounds.Doubling.Decay.R0_between_of_ell1",
+     "kind": "theorem",
+     "line": 128,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem R0_between_of_ell1 {d m : ℕ} (hm : D.ell1 d ≤ m) : 1 / 2 ≤ D.R0 m ∧ D.R0 m ≤ 2",
+     "doc": "**`eq:doubling_R0`, first half, at `m ≥ ℓ₁`.**"
+    },
+    {
+     "name": "R0_sub_one_le_c4",
+     "full": "GFNBounds.Doubling.Decay.R0_sub_one_le_c4",
+     "kind": "theorem",
+     "line": 132,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem R0_sub_one_le_c4 {d m : ℕ} (hm : D.ell1 d ≤ m) : |D.R0 m - 1| ≤ D.c4 / (m : ℝ)",
+     "doc": "**`eq:doubling_R0`, second half, at `m ≥ ℓ₁`.**"
+    },
+    {
+     "name": "IsDescentPath",
+     "full": "GFNBounds.Doubling.Decay.IsDescentPath",
+     "kind": "def",
+     "line": 139,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsDescentPath (ℓ : ℕ) (Y : ℕ → ℕ) : Prop",
+     "doc": "**A path of the descent chain at the level `ℓ`**: `Y_{n+1} ∈ W(Y_n)` when `Y_n ≥ 2ℓ`, and `Y_{n+1} = Y_n` when `Y_n < 2ℓ` — the support of the transition law of `lem:doubling_descent`."
+    },
+    {
+     "name": "exitTime",
+     "full": "GFNBounds.Doubling.Decay.exitTime",
+     "kind": "def",
+     "line": 143,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def exitTime (ℓ : ℕ) (Y : ℕ → ℕ) : ℕ",
+     "doc": "**`N_ℓ := inf{n ≥ 0 : Y_n < 2ℓ}`.**"
+    },
+    {
+     "name": "greedyStep",
+     "full": "GFNBounds.Doubling.Decay.greedyStep",
+     "kind": "def",
+     "line": 146,
+     "attrs": "",
+     "private": false,
+     "statement": "def greedyStep (ℓ y : ℕ) : ℕ",
+     "doc": "One greedy step: to the bottom `⌈y/2⌉ = (y+1)/2` of the window while `y ≥ 2ℓ`, else stay."
+    },
+    {
+     "name": "exists_descentPath",
+     "full": "GFNBounds.Doubling.Decay.exists_descentPath",
+     "kind": "theorem",
+     "line": 150,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_descentPath {ℓ : ℕ} (hℓ : 1 ≤ ℓ) (m : ℕ) : ∃ Y : ℕ → ℕ, IsDescentPath ℓ Y ∧ Y 0 = m",
+     "doc": "**The pathwise fields are not vacuous.** From every start `m` there is a path of the descent chain at the level `ℓ ≥ 1`: the greedy path `n ↦ greedyStep ℓ^[n] m`."
+    },
+    {
+     "name": "ceil_le_of_mem_window",
+     "full": "GFNBounds.Doubling.Decay.ceil_le_of_mem_window",
+     "kind": "theorem",
+     "line": 161,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ceil_le_of_mem_window {y j : ℕ} (hj : j ∈ window y) : ⌈(y : ℝ) / 2⌉₊ ≤ j ∧ j ≤ y - 1",
+     "doc": "`⌈y/2⌉ ≤ j ≤ y − 1` on `W(y)`: the paper's reading of `j ∈ W(y)`."
+    },
+    {
+     "name": "path_add_le",
+     "full": "GFNBounds.Doubling.Decay.path_add_le",
+     "kind": "theorem",
+     "line": 171,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem path_add_le {ℓ m : ℕ} {Y : ℕ → ℕ} (hY : IsDescentPath ℓ Y) (h0 : Y 0 = m) : ∀ n, (∀ k < n, 2 * ℓ ≤ Y k) → Y n + n ≤ m",
+     "doc": "Along a path that has not yet exited, each step loses at least one: `Y_n + n ≤ m`."
+    },
+    {
+     "name": "exitTime_spec",
+     "full": "GFNBounds.Doubling.Decay.exitTime_spec",
+     "kind": "theorem",
+     "line": 183,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exitTime_spec {ℓ m : ℕ} {Y : ℕ → ℕ} (hY : IsDescentPath ℓ Y) (h0 : Y 0 = m) (hm : 2 * ℓ ≤ m) : exitTime ℓ Y ≤ m ∧ Y (exitTime ℓ Y) < 2 * ℓ ∧ (∀ n < exitTime ℓ Y, 2 * ℓ ≤ Y n) ∧ 1 ≤ exitTime ℓ Y",
+     "doc": "**`N_ℓ` is attained, `N_ℓ ≤ m`, and `N_ℓ ≥ 1`.**"
+    },
+    {
+     "name": "descent_item1_path",
+     "full": "GFNBounds.Doubling.Decay.descent_item1_path",
+     "kind": "theorem",
+     "line": 209,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem descent_item1_path {ℓ m : ℕ} {Y : ℕ → ℕ} (hY : IsDescentPath ℓ Y) (h0 : Y 0 = m) (hm : 2 * ℓ ≤ m) : (∀ n < exitTime ℓ Y, ⌈(Y n : ℝ) / 2⌉₊ ≤ Y (n + 1) ∧ Y (n + 1) ≤ Y n - 1) ∧ exitTime ℓ Y ≤ m",
+     "doc": "**`lem:doubling_descent`(1), pathwise.**"
+    },
+    {
+     "name": "descent_item2_path",
+     "full": "GFNBounds.Doubling.Decay.descent_item2_path",
+     "kind": "theorem",
+     "line": 217,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem descent_item2_path {ℓ m : ℕ} {Y : ℕ → ℕ} (hY : IsDescentPath ℓ Y) (h0 : Y 0 = m) (hm : 2 * ℓ ≤ m) : ℓ ≤ Y (exitTime ℓ Y) ∧ Y (exitTime ℓ Y) < 2 * ℓ",
+     "doc": "**`lem:doubling_descent`(2), pathwise.** `Y_{N_ℓ} ∈ [ℓ, 2ℓ)` on every path."
+    },
+    {
+     "name": "descent_Z_pos",
+     "full": "GFNBounds.Doubling.Decay.descent_Z_pos",
+     "kind": "theorem",
+     "line": 229,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem descent_Z_pos {ℓ m : ℕ} (hℓ : 1 ≤ ℓ) {Y : ℕ → ℕ} (hY : IsDescentPath ℓ Y) (h0 : Y 0 = m) (hm : 2 * ℓ ≤ m) : 0 < ∏ n ∈ Finset.range (exitTime ℓ Y), D.R0 (Y n)",
+     "doc": "**`Z_ℓ := ∏_{n<N_ℓ} R₀(Y_n)` is positive**, on every path."
+    },
+    {
+     "name": "exitLaw_eq_zero_of_notMem",
+     "full": "GFNBounds.Doubling.Decay.exitLaw_eq_zero_of_notMem",
+     "kind": "theorem",
+     "line": 240,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exitLaw_eq_zero_of_notMem {ℓ j : ℕ} (hj : j ∉ Finset.Ico ℓ (2 * ℓ)) : ∀ y : ℕ, ℓ ≤ y → D.exitLaw ℓ y j = 0",
+     "doc": "The exit law vanishes off the base block: `P(Y_{N_ℓ} = j | Y_0 = y) = 0` for `j ∉ [ℓ,2ℓ)`."
+    },
+    {
+     "name": "descZ",
+     "full": "GFNBounds.Doubling.Decay.descZ",
+     "kind": "def",
+     "line": 259,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def descZ (D : Decay) (ℓ : ℕ) (g : ℕ → ℝ) (m : ℕ) : ℝ",
+     "doc": "**`E(Z_ℓ g(Y_{N_ℓ}) | Y_0 = m)`**, as the first-step recursion of the normalised chain with weight `R₀` per step: `Σ_{j∈W(m)} (w_m(j)/R₀(m)) · R₀(m) · descZ g j`."
+    },
+    {
+     "name": "descZ_of_lt",
+     "full": "GFNBounds.Doubling.Decay.descZ_of_lt",
+     "kind": "theorem",
+     "line": 265,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem descZ_of_lt {ℓ : ℕ} (g : ℕ → ℝ) {m : ℕ} (h : m < 2 * ℓ) : D.descZ ℓ g m = g m",
+     "doc": ""
+    },
+    {
+     "name": "descZ_of_ge",
+     "full": "GFNBounds.Doubling.Decay.descZ_of_ge",
+     "kind": "theorem",
+     "line": 268,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem descZ_of_ge {ℓ : ℕ} (g : ℕ → ℝ) {m : ℕ} (h : ¬ m < 2 * ℓ) : D.descZ ℓ g m = ∑ j ∈ window m, D.kern m j * (D.R0 m * D.descZ ℓ g j)",
+     "doc": ""
+    },
+    {
+     "name": "descZ_eq_descW",
+     "full": "GFNBounds.Doubling.Decay.descZ_eq_descW",
+     "kind": "theorem",
+     "line": 275,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem descZ_eq_descW {ℓ : ℕ} (hℓ : 1 ≤ ℓ) (g : ℕ → ℝ) : ∀ m : ℕ, D.descZ ℓ g m = D.descW ℓ g m",
+     "doc": "**The normalisations cancel.** `E(Z_ℓ g(Y_{N_ℓ}) | Y_0 = m)` in the normalised form is the unnormalised transform `descW` of `Descent.lean`."
+    },
+    {
+     "name": "DescentStatement",
+     "full": "GFNBounds.Doubling.Decay.DescentStatement",
+     "kind": "structure",
+     "line": 291,
+     "attrs": "",
+     "private": false,
+     "statement": "structure DescentStatement (D : Decay) (d : ℕ) : Prop",
+     "doc": "**`lem:doubling_descent`**, clause by clause, with `c₄ = c4 D` and `ℓ₁ = ell1 D d`."
+    },
+    {
+     "name": "doubling_descent",
+     "full": "GFNBounds.Doubling.Decay.doubling_descent",
+     "kind": "theorem",
+     "line": 335,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem doubling_descent (d : ℕ) : D.DescentStatement d",
+     "doc": "**`lem:doubling_descent`.** With `c₄ := 16cτ` and `ℓ₁ := max(d+1, ⌈32cτ⌉)`, every clause of the lemma holds."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -15271,6 +16259,229 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Doubling/MainPackaging.lean",
+   "title": "The umbrella theorem's dependence clauses and state count, as formulas",
+   "labels": [
+    "theo:doubling_main",
+    "theo:doubling_decay"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.TruncationBhat"
+   ],
+   "variables": [
+    "variable {S : Setting}",
+    "variable (D : Decay)",
+    "variable {D}"
+   ],
+   "lines": 365,
+   "decls": [
+    {
+     "name": "card_chainFinset",
+     "full": "GFNBounds.Doubling.card_chainFinset",
+     "kind": "theorem",
+     "line": 90,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem card_chainFinset (K : ℕ) : (chainFinset K).card = K + 2",
+     "doc": "The chain set of the truncation at `K` has `K + 2` elements: the `K + 1` ladder states `0, …, K` and the sink."
+    },
+    {
+     "name": "main_truncation_states",
+     "full": "GFNBounds.Doubling.main_truncation_states",
+     "kind": "theorem",
+     "line": 101,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem main_truncation_states (K : ℕ) : Nat.card {x : St // OnChain (some K) x} = K + 2",
+     "doc": "**`theo:doubling_main`(5), \"on `K + 2` states\".** The on-chain states of the truncation at `K` number exactly `K + 2`."
+    },
+    {
+     "name": "block_nonempty",
+     "full": "GFNBounds.Doubling.Decay.block_nonempty",
+     "kind": "theorem",
+     "line": 112,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem block_nonempty (d : ℕ) : (Finset.Ico 1 (2 * D.m0 d)).Nonempty",
+     "doc": "The initial block `1 ≤ j < 2m₀` is non-empty, `m₀ > d ≥ 0`."
+    },
+    {
+     "name": "c1Of",
+     "full": "GFNBounds.Doubling.Decay.c1Of",
+     "kind": "def",
+     "line": 117,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def c1Of (d : ℕ) (lam : ℕ → ℝ) : ℝ",
+     "doc": "**`c₁` of `theo:doubling_decay`(2), written out**: `(min_{1≤j<2m₀} λ_j j^{p_*}) e^{−c₅c₄/m₀}`, `c₄ = 16cτ`."
+    },
+    {
+     "name": "c2Of",
+     "full": "GFNBounds.Doubling.Decay.c2Of",
+     "kind": "def",
+     "line": 122,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def c2Of (d : ℕ) (lam : ℕ → ℝ) : ℝ",
+     "doc": "**`c₂` of `theo:doubling_decay`(2), written out**: `(max_{1≤j<2m₀} λ_j j^{p_*}) e^{c₅c₄/m₀}`."
+    },
+    {
+     "name": "c7Of",
+     "full": "GFNBounds.Doubling.Decay.c7Of",
+     "kind": "def",
+     "line": 127,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def c7Of (d : ℕ) (lam : ℕ → ℝ) : ℝ",
+     "doc": "**`c₇ := ½ √(c₁/(c₂(p_*−1)))`** of `cor:doubling_family` and `theo:doubling_main`(3)."
+    },
+    {
+     "name": "c1Of_congr",
+     "full": "GFNBounds.Doubling.Decay.c1Of_congr",
+     "kind": "theorem",
+     "line": 132,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c1Of_congr {d : ℕ} {lam lam' : ℕ → ℝ} (h : ∀ j : ℕ, 1 ≤ j → j < 2 * D.m0 d → lam j = lam' j) : D.c1Of d lam = D.c1Of d lam'",
+     "doc": ""
+    },
+    {
+     "name": "c2Of_congr",
+     "full": "GFNBounds.Doubling.Decay.c2Of_congr",
+     "kind": "theorem",
+     "line": 140,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c2Of_congr {d : ℕ} {lam lam' : ℕ → ℝ} (h : ∀ j : ℕ, 1 ≤ j → j < 2 * D.m0 d → lam j = lam' j) : D.c2Of d lam = D.c2Of d lam'",
+     "doc": ""
+    },
+    {
+     "name": "c7Of_congr",
+     "full": "GFNBounds.Doubling.Decay.c7Of_congr",
+     "kind": "theorem",
+     "line": 150,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c7Of_congr {d : ℕ} {lam lam' : ℕ → ℝ} (h : ∀ j : ℕ, 1 ≤ j → j < 2 * D.m0 d → lam j = lam' j) : D.c7Of d lam = D.c7Of d lam'",
+     "doc": "**`theo:doubling_main`(3), \"`c₇` depends only on `c`, `d` and `λ_1, …, λ_{2m₀}`\".** Two profiles agreeing on the initial block `1 ≤ j < 2m₀` have the same `c₇`."
+    },
+    {
+     "name": "expo_nonneg",
+     "full": "GFNBounds.Doubling.Decay.expo_nonneg",
+     "kind": "theorem",
+     "line": 155,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem expo_nonneg (d : ℕ) : 0 ≤ D.c5 * (16 * D.c * D.tau) / (D.m0 d : ℝ)",
+     "doc": "The exponent `c₅c₄/m₀` is non-negative."
+    },
+    {
+     "name": "c1Of_pos",
+     "full": "GFNBounds.Doubling.Decay.c1Of_pos",
+     "kind": "theorem",
+     "line": 161,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c1Of_pos {d : ℕ} {lam : ℕ → ℝ} (hpos : ∀ j : ℕ, 1 ≤ j → j < 2 * D.m0 d → 0 < lam j) : 0 < D.c1Of d lam",
+     "doc": ""
+    },
+    {
+     "name": "c1Of_le_c2Of",
+     "full": "GFNBounds.Doubling.Decay.c1Of_le_c2Of",
+     "kind": "theorem",
+     "line": 168,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c1Of_le_c2Of {d : ℕ} {lam : ℕ → ℝ} (hpos : ∀ j : ℕ, 1 ≤ j → j < 2 * D.m0 d → 0 < lam j) : D.c1Of d lam ≤ D.c2Of d lam",
+     "doc": ""
+    },
+    {
+     "name": "c7Of_pos",
+     "full": "GFNBounds.Doubling.Decay.c7Of_pos",
+     "kind": "theorem",
+     "line": 186,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c7Of_pos {d : ℕ} {lam : ℕ → ℝ} (hpos : ∀ j : ℕ, 1 ≤ j → j < 2 * D.m0 d → 0 < lam j) : 0 < D.c7Of d lam",
+     "doc": ""
+    },
+    {
+     "name": "c7Of_sq",
+     "full": "GFNBounds.Doubling.Decay.c7Of_sq",
+     "kind": "theorem",
+     "line": 197,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c7Of_sq {d : ℕ} {lam : ℕ → ℝ} (hpos : ∀ j : ℕ, 1 ≤ j → j < 2 * D.m0 d → 0 < lam j) : D.c7Of d lam ^ 2 = D.c1Of d lam / (4 * D.c2Of d lam * (D.p - 1))",
+     "doc": "`c₇² = c₁/(4c₂(p_*−1))`."
+    },
+    {
+     "name": "decay_c1Of_c2Of",
+     "full": "GFNBounds.Doubling.Decay.decay_c1Of_c2Of",
+     "kind": "theorem",
+     "line": 207,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem decay_c1Of_c2Of {d : ℕ} {lam : ℕ → ℝ} (h : D.CutBal d lam ⊤) (hpos : ∀ j : ℕ, 1 ≤ j → j < 2 * D.m0 d → 0 < lam j) : ∀ j : ℕ, 1 ≤ j → D.c1Of d lam * (j : ℝ) ^ (-D.p) ≤ lam j ∧ lam j ≤ D.c2Of d lam * (j : ℝ) ^ (-D.p)",
+     "doc": "**`eq:doubling_decay` at `c₁ = c1Of`, `c₂ = c2Of`.**"
+    },
+    {
+     "name": "mass_defect_centredTail_pos",
+     "full": "GFNBounds.Doubling.Stat.mass_defect_centredTail_pos",
+     "kind": "theorem",
+     "line": 228,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_defect_centredTail_pos (L : Stat S none) {m : ℕ} (hdm : S.d < m) : 0 < L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x)",
+     "doc": "**`eq:doubling_step1`'s consequence**: on the loop closure the defect of `f_m` has positive `L²(λ)` mass at every cut `m > d` — it is at least `λ_m (1 − ε(m))²`."
+    },
+    {
+     "name": "rate_explicit",
+     "full": "GFNBounds.Doubling.Stat.rate_explicit",
+     "kind": "theorem",
+     "line": 244,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rate_explicit (D : Decay) (hDeps : ∀ j, S.eps j = D.eps j) (L : Stat S none) : 0 < D.c1Of S.d (fun j => L.lam (.lad j)) ∧ D.c1Of S.d (fun j => L.lam (.lad j)) ≤ D.c2Of S.d (fun j => L.lam (.lad j)) ∧ (∀ j : ℕ, 1 ≤ j → D.c1Of S.d (fun j => L.lam (.lad j)) * (j : ℝ) ^ (-D.p) ≤ L.lam (.lad j) ∧ L.lam (.lad j) ≤ D.c2Of S.d (fun j => L.lam (.lad j)) * (j : ℝ) ^ (-D.p)) ∧ 0 < D.c7Of S.d (fun j => L.lam (.lad j)) ∧ ∃ m₂ : ℕ, S.d < m₂ ∧ ∀ m : ℕ, m₂ ≤ m → D.c1Of S.d (fun j => L.lam (.lad j)) * (m : ℝ) * L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ≤ 4 * D.c2Of S.d (fun j => L.lam (.lad j)) * (D.p - 1) * L.mass 2 (L.centredTail m) ∧ D.c7Of S.d (fun j => L.lam (.lad j)) * Real.sqrt (m : ℝ) * Real.sqrt (L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x)) ≤ Real.sqrt (L.mass 2 (L.centredTail m)) ∧ 0 < L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ∧ D.c7Of S.d (fun j => L.lam (.lad j)) * Real.sqrt (m : ℝ) ≤ Real.sqrt (L.mass 2 (L.centredTail m)) / Real.sqrt (L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x))",
+     "doc": "**`theo:doubling_main`(3), the `c₇√m` clause, with its constants written out.** For any `Decay` `D` carrying the family and any invariant probability `λ` of the loop closure, with `λ_j := λ(j)` on the ladder: `0 < c₁ ≤ c₂` for `c₁ = c1Of`, `c₂ = c2Of`, the two-sided decay holds with them, `c₇ = c7Of > 0`, and there is `m₂ > d` such that for every `m ≥ m₂` `c₁ m ‖(Id−P⋆)f_m‖² ≤ 4c₂(p_*−1) ‖f_m‖²`, `c₇ √m ‖(Id−P⋆)f_m‖ ≤ ‖f_m‖`, the denominator is positive, and `c₇ √m ≤ ‖f_m‖ / ‖(Id−P⋆)f_m‖` (`eq:doubling_explicit`)."
+    },
+    {
+     "name": "main_rate_explicit",
+     "full": "GFNBounds.Doubling.main_rate_explicit",
+     "kind": "theorem",
+     "line": 301,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem main_rate_explicit {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) (L : Stat S none) : psi c (Decay.ofC hc0 hc1).p = 0 ∧ 1 < (Decay.ofC hc0 hc1).p ∧ 0 < (Decay.ofC hc0 hc1).c7Of S.d (fun j => L.lam (.lad j)) ∧ ∃ m₂ : ℕ, S.d < m₂ ∧ ∀ m : ℕ, m₂ ≤ m → (Decay.ofC hc0 hc1).c7Of S.d (fun j => L.lam (.lad j)) * Real.sqrt (m : ℝ) * Real.sqrt (L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x)) ≤ Real.sqrt (L.mass 2 (L.centredTail m)) ∧ 0 < L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ∧ (Decay.ofC hc0 hc1).c7Of S.d (fun j => L.lam (.lad j)) * Real.sqrt (m : ℝ) ≤ Real.sqrt (L.mass 2 (L.centredTail m)) / Real.sqrt (L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x))",
+     "doc": "**`theo:doubling_main`(3), the `c₇√m` clause, with `c₇` named.** At `s = 1`, `0 < c < 1`, with `p_* = (Decay.ofC hc0 hc1).p` the Cramér root and `λ` an invariant probability of the loop closure: `c₇ := c7Of (Decay.ofC hc0 hc1) d (λ on the ladder) = ½√(c₁/(c₂(p_*−1)))` is positive and there is `m₂ > d` with `‖f_m‖_{L²(λ)} ≥ c₇ √m ‖(Id−P⋆)f_m‖_{L²(λ)}` for every `m ≥ m₂`, in norm form and in the paper's ratio form with a positive denominator."
+    },
+    {
+     "name": "main_c7_congr",
+     "full": "GFNBounds.Doubling.main_c7_congr",
+     "kind": "theorem",
+     "line": 322,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem main_c7_congr {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) {S' : Setting} (hd : S.d = S'.d) (L : Stat S none) (L' : Stat S' none) (hagree : ∀ j : ℕ, 1 ≤ j → j < 2 * (Decay.ofC hc0 hc1).m0 S.d → L.lam (.lad j) = L'.lam (.lad j)) : (Decay.ofC hc0 hc1).c7Of S.d (fun j => L.lam (.lad j)) = (Decay.ofC hc0 hc1).c7Of S'.d (fun j => L'.lam (.lad j))",
+     "doc": "**`theo:doubling_main`(3), \"`c₇` depends only on `c`, `d` and `λ_1, …, λ_{2m₀}`\", across settings.** Two invariant probabilities of loop closures with the same `c` and `d` whose ladder masses agree on `1 ≤ j < 2m₀` have the same `c₇`."
+    },
+    {
+     "name": "main_truncation_explicit",
+     "full": "GFNBounds.Doubling.main_truncation_explicit",
+     "kind": "theorem",
+     "line": 341,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem main_truncation_explicit {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) : (∀ K : ℕ, Even K → ∀ hdK : S.d ≤ K, Nat.card {x : St // OnChain (some K) x} = K + 2 ∧ (∀ x y : St, OnChain (some K) y → Reach S (some K) x y) ∧ Nonempty (Stat S (some K)) ∧ (∀ L L' : Stat S (some K), L.lam = L'.lam) ∧ ∀ L : Stat S (some K), (1 - L.pstarL2 (rowOnChain_some hdK)) * L.diffOpK hdK = 1 - L.piL2 ∧ L.diffOpK hdK * (1 - L.pstarL2 (rowOnChain_some hdK)) = 1 - L.piL2 ∧ L.piL2 * L.diffOpK hdK = 0 ∧ L.diffOpK hdK * L.piL2 = 0 ∧ L.bhatK hdK = ‖L.diffOpK hdK‖) ∧ S.d ≤ (Decay.ofC hc0 hc1).K0Of S.d ∧ 0 < (Decay.ofC hc0 hc1).c8Of S.d S.jbar ∧ ∀ K : ℕ, (Decay.ofC hc0 hc1).K0Of S.d ≤ K → ∀ (hdK : S.d ≤ K) (L : Stat S (some K)), (Decay.ofC hc0 hc1).c8Of S.d S.jbar * Real.sqrt (K : ℝ) ≤ L.bhatK hdK",
+     "doc": "**`theo:doubling_main`(5), with `c₈` and `K₀` named.** At `s = 1`, `0 < c < 1`, with `D = Decay.ofC hc0 hc1`: for every even `K ≥ d` the truncation has `K + 2` on-chain states, is irreducible, carries exactly one invariant probability `λ^K`, and at every such `λ^K` the paper's operator `S = (Id − P⋆ + Π)^{-1} − Π` satisfies `eq:doubling_resolvent`, so `B̂_K = ‖S‖ < +∞`; `K₀ := D.K0Of d = 8m₀ + 2 ≥ d` and `c₈ := D.c8Of d j̄ > 0`, formulas in `c`, `d` and `j̄`, give `B̂_K ≥ c₈ √K` for every `K ≥ K₀`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Doubling/Operator.lean",
    "title": "The diffusion operator: the resolvent identities",
    "labels": [
@@ -15481,6 +16692,110 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/OperatorFiniteSum.lean",
+   "title": "On a finite chain the diffusion operator is at most the mixing sum",
+   "labels": [
+    "lem:doubling_operator"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.Operator",
+    "GFNBounds.Doubling.OperatorL2"
+   ],
+   "variables": [
+    "variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]",
+    "variable {P Pi R : E →L[ℝ] E}",
+    "variable {S : Setting}",
+    "variable {K : ℕ} (L : Stat S (some K))"
+   ],
+   "lines": 197,
+   "decls": [
+    {
+     "name": "resolvent_eq_tsum_of_bdd",
+     "full": "GFNBounds.Doubling.resolvent_eq_tsum_of_bdd",
+     "kind": "theorem",
+     "line": 104,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem resolvent_eq_tsum_of_bdd [CompleteSpace E] (hPi2 : Pi * Pi = Pi) (hPiP : Pi * P = Pi) (hPPi : P * Pi = Pi) (hRM : R * (1 - P + Pi) = 1) {B : ℝ} (hB : ∀ N : ℕ, ∑ n ∈ Finset.range N, ‖P ^ n - Pi‖ ≤ B) : R - Pi = ∑' n : ℕ, (P ^ n - Pi) ∧ ‖R - Pi‖ ≤ B",
+     "doc": "**`lem:doubling_operator`(3), with the partial sums bounded instead of convergent.** In a Banach space, if every partial sum of `Σ‖P^n − Π‖` is at most `B`, then the series `Σ(P^n − Π)` converges absolutely, a left inverse `R` of `Id − P + Π` satisfies `R − Π = Σ'(P^n − Π)`, and `‖R − Π‖ ≤ B`."
+    },
+    {
+     "name": "inverse_sub_le_of_bdd",
+     "full": "GFNBounds.Doubling.inverse_sub_le_of_bdd",
+     "kind": "theorem",
+     "line": 124,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inverse_sub_le_of_bdd [FiniteDimensional ℝ E] (hPi2 : Pi * Pi = Pi) (hPiP : Pi * P = Pi) (hPPi : P * Pi = Pi) (hker : ∀ f : E, P f = f → Pi f = f) {B : ℝ} (hB : ∀ N : ℕ, ∑ n ∈ Finset.range N, ‖P ^ n - Pi‖ ≤ B) : Ring.inverse (1 - P + Pi) - Pi = ∑' n : ℕ, (P ^ n - Pi) ∧ ‖Ring.inverse (1 - P + Pi) - Pi‖ ≤ B",
+     "doc": "**`lem:doubling_operator`(3), \"in particular\", abstractly.** On a finite-dimensional space with `Π² = Π`, `ΠP = PΠ = Π` and `hker` (the consequence of irreducibility the argument uses), the diffusion operator `S = (Id − P + Π)^{-1} − Π` has `‖S‖ ≤ B` for every real `B` bounding the partial sums of `Σ‖P^n − Π‖`."
+    },
+    {
+     "name": "sum_norm_pstarL2_pow_sub_piL2",
+     "full": "GFNBounds.Doubling.Stat.sum_norm_pstarL2_pow_sub_piL2",
+     "kind": "theorem",
+     "line": 143,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_norm_pstarL2_pow_sub_piL2 (hdK : S.d ≤ K) (N : ℕ) : ∑ n ∈ Finset.range N, ‖L.pstarL2 (rowOnChain_some hdK) ^ n - L.piL2‖ = ∑ n ∈ Finset.range N, L.betaHat (rowOnChain_some hdK) n",
+     "doc": "The partial sums of `Σ‖P⋆^n − Π‖` are those of `Σ β̂_n` (`lem:doubling_operator`(1))."
+    },
+    {
+     "name": "bhat_le_sum_betaHat",
+     "full": "GFNBounds.Doubling.Stat.bhat_le_sum_betaHat",
+     "kind": "theorem",
+     "line": 151,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bhat_le_sum_betaHat (hdK : S.d ≤ K) {R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu} (hRM : R * (1 - L.pstarL2 (rowOnChain_some hdK) + L.piL2) = 1) {B : ℝ} (hB : ∀ N : ℕ, ∑ n ∈ Finset.range N, L.betaHat (rowOnChain_some hdK) n ≤ B) : ‖R - L.piL2‖ ≤ B",
+     "doc": "**`lem:doubling_operator`(3), \"in particular\", at a given inverse.** On the truncation, a left inverse `R` of `Id − P⋆ + Π` has `‖R − Π‖ ≤ B` for every real `B` bounding the partial sums `Σ_{n<N} β̂_n`: vacuous when `Σ β̂_n = +∞`."
+    },
+    {
+     "name": "sub_piL2_eq_tsum",
+     "full": "GFNBounds.Doubling.Stat.sub_piL2_eq_tsum",
+     "kind": "theorem",
+     "line": 160,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sub_piL2_eq_tsum (hdK : S.d ≤ K) {R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu} (hRM : R * (1 - L.pstarL2 (rowOnChain_some hdK) + L.piL2) = 1) (hs : Summable (L.betaHat (rowOnChain_some hdK))) : R - L.piL2 = ∑' n : ℕ, (L.pstarL2 (rowOnChain_some hdK) ^ n - L.piL2) ∧ ‖R - L.piL2‖ ≤ ∑' n : ℕ, L.betaHat (rowOnChain_some hdK) n",
+     "doc": "**`lem:doubling_operator`(3), the finite case, at a given inverse.** When `Σ β̂_n < +∞` a left inverse `R` of `Id − P⋆ + Π` has `R − Π = U := Σ'(P⋆^n − Π)` and `‖R − Π‖ ≤ Σ' β̂_n`."
+    },
+    {
+     "name": "isUnit_resolventOp",
+     "full": "GFNBounds.Doubling.Stat.isUnit_resolventOp",
+     "kind": "theorem",
+     "line": 170,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isUnit_resolventOp (hdK : S.d ≤ K) : IsUnit (1 - L.pstarL2 (rowOnChain_some hdK) + L.piL2)",
+     "doc": "`Id − P⋆ + Π` is a unit on `L²(λ^K)` (`Stat.exists_diffusionOp`)."
+    },
+    {
+     "name": "inverse_sub_piL2_le_sum_betaHat",
+     "full": "GFNBounds.Doubling.Stat.inverse_sub_piL2_le_sum_betaHat",
+     "kind": "theorem",
+     "line": 180,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inverse_sub_piL2_le_sum_betaHat (hdK : S.d ≤ K) {B : ℝ} (hB : ∀ N : ℕ, ∑ n ∈ Finset.range N, L.betaHat (rowOnChain_some hdK) n ≤ B) : ‖Ring.inverse (1 - L.pstarL2 (rowOnChain_some hdK) + L.piL2) - L.piL2‖ ≤ B",
+     "doc": "**`lem:doubling_operator`(3), \"in particular\": `B̂ ≤ Σ_{n≥0} β̂_n` on the truncation**, the inequality being vacuous when its right side is `+∞`."
+    },
+    {
+     "name": "inverse_sub_piL2_eq_tsum",
+     "full": "GFNBounds.Doubling.Stat.inverse_sub_piL2_eq_tsum",
+     "kind": "theorem",
+     "line": 187,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inverse_sub_piL2_eq_tsum (hdK : S.d ≤ K) (hs : Summable (L.betaHat (rowOnChain_some hdK))) : Ring.inverse (1 - L.pstarL2 (rowOnChain_some hdK) + L.piL2) - L.piL2 = ∑' n : ℕ, (L.pstarL2 (rowOnChain_some hdK) ^ n - L.piL2) ∧ ‖Ring.inverse (1 - L.pstarL2 (rowOnChain_some hdK) + L.piL2) - L.piL2‖ ≤ ∑' n : ℕ, L.betaHat (rowOnChain_some hdK) n",
+     "doc": "**`lem:doubling_operator`(3), the finite case of \"in particular\": `S = U` and `B̂ ≤ Σ β̂_n`** when `Σ β̂_n < +∞`, at the paper's `S := (Id − P⋆ + Π)^{-1} − Π`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -19559,6 +20874,240 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Doubling/TruncationBhat.lean",
+   "title": "The truncation at the paper's `B̂_K`, with constants of `c`, `d` and `j̄` alone",
+   "labels": [
+    "cor:doubling_truncation",
+    "def:doubling_setting"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.Main"
+   ],
+   "variables": [
+    "variable {S : Setting}",
+    "variable {K : ℕ}",
+    "variable (D : Decay)",
+    "variable {K : ℕ}"
+   ],
+   "lines": 390,
+   "decls": [
+    {
+     "name": "diffOpK",
+     "full": "GFNBounds.Doubling.Stat.diffOpK",
+     "kind": "def",
+     "line": 98,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def diffOpK (L : Stat S (some K)) (hdK : S.d ≤ K) : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu",
+     "doc": "**`eq:doubling_Bhat` on the truncation.** `S := (Id − P⋆ + Π)^{-1} − Π` on `L²(λ^K)`, the inverse being `Ring.inverse`, which is the two-sided inverse wherever one exists (`diffOpK_resolvent`)."
+    },
+    {
+     "name": "bhatK",
+     "full": "GFNBounds.Doubling.Stat.bhatK",
+     "kind": "def",
+     "line": 103,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def bhatK (L : Stat S (some K)) (hdK : S.d ≤ K) : ℝ",
+     "doc": "**`B̂_K := ‖S‖_{L²(λ^K)}`** (`eq:doubling_Bhat`)."
+    },
+    {
+     "name": "diffOpK_resolvent",
+     "full": "GFNBounds.Doubling.Stat.diffOpK_resolvent",
+     "kind": "theorem",
+     "line": 108,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem diffOpK_resolvent (L : Stat S (some K)) (hdK : S.d ≤ K) : (1 - L.pstarL2 (rowOnChain_some hdK)) * L.diffOpK hdK = 1 - L.piL2 ∧ L.diffOpK hdK * (1 - L.pstarL2 (rowOnChain_some hdK)) = 1 - L.piL2 ∧ L.piL2 * L.diffOpK hdK = 0 ∧ L.diffOpK hdK * L.piL2 = 0",
+     "doc": "**`eq:doubling_resolvent` at the paper's `S`.** The operator `diffOpK` satisfies `(Id − P⋆)S = S(Id − P⋆) = Id − Π` and `ΠS = SΠ = 0`: `Ring.inverse` is the inverse that `Stat.exists_diffusionOp` produces."
+    },
+    {
+     "name": "percut_leftInverse",
+     "full": "GFNBounds.Doubling.Stat.percut_leftInverse",
+     "kind": "theorem",
+     "line": 124,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem percut_leftInverse (L : Stat S (some K)) (hdK : S.d ≤ K) {Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu} (hS : Sop * (1 - L.pstarL2 (rowOnChain_some hdK)) = 1 - L.piL2) {m : ℕ} (hdm : S.d < m) (hmK : m ≤ K / 2) : L.tailMass m * (1 - L.tailMass m) ≤ 2 * L.lam (.lad m) * ‖Sop‖ ^ 2",
+     "doc": "**`eq:doubling_percut_K`, squared, at every bounded left inverse.** If `S(Id − P⋆) = Id − Π` on `L²(λ^K)` then `L_K(m)(1 − L_K(m)) ≤ 2λ^K_m ‖S‖²` at every cut `d < m ≤ K/2`."
+    },
+    {
+     "name": "percut_bhatK",
+     "full": "GFNBounds.Doubling.Stat.percut_bhatK",
+     "kind": "theorem",
+     "line": 134,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem percut_bhatK (L : Stat S (some K)) (hdK : S.d ≤ K) {m : ℕ} (hdm : S.d < m) (hmK : m ≤ K / 2) : Real.sqrt (L.tailMass m * (1 - L.tailMass m) / (2 * L.lam (.lad m))) ≤ L.bhatK hdK",
+     "doc": "**`eq:doubling_percut_K`, as written.** `B̂_K ≥ √(L_K(m)(1 − L_K(m)) / (2λ^K_m))` at every cut `d < m ≤ K/2`."
+    },
+    {
+     "name": "Setting.withEpsMax",
+     "full": "GFNBounds.Doubling.Setting.withEpsMax",
+     "kind": "def",
+     "line": 152,
+     "attrs": "",
+     "private": false,
+     "statement": "def Setting.withEpsMax (S : Setting) (e : ℝ) (he : ∀ ⦃j⦄, 1 ≤ j → S.eps j ≤ e) (he1 : e < 1) : Setting",
+     "doc": "The same setting with its bound `ε_max` replaced by another admissible bound."
+    },
+    {
+     "name": "Stat.withEpsMax",
+     "full": "GFNBounds.Doubling.Stat.withEpsMax",
+     "kind": "def",
+     "line": 157,
+     "attrs": "",
+     "private": false,
+     "statement": "def Stat.withEpsMax {cap : Option ℕ} (L : Stat S cap) (e : ℝ) (he : ∀ ⦃j⦄, 1 ≤ j → S.eps j ≤ e) (he1 : e < 1) : Stat (S.withEpsMax e he he1) cap",
+     "doc": "An invariant probability of `S` is one of `S.withEpsMax e`, with the same masses."
+    },
+    {
+     "name": "Stat.withEpsMax_lam",
+     "full": "GFNBounds.Doubling.Stat.withEpsMax_lam",
+     "kind": "theorem",
+     "line": 162,
+     "attrs": "@[simp]",
+     "private": false,
+     "statement": "@[simp] theorem Stat.withEpsMax_lam {cap : Option ℕ} (L : Stat S cap) (e : ℝ) (he : ∀ ⦃j⦄, 1 ≤ j → S.eps j ≤ e) (he1 : e < 1) : (L.withEpsMax e he he1).lam = L.lam",
+     "doc": "The transported invariant probability has the same masses."
+    },
+    {
+     "name": "truncQ",
+     "full": "GFNBounds.Doubling.Decay.truncQ",
+     "kind": "def",
+     "line": 172,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def truncQ (d : ℕ) : ℝ",
+     "doc": "The block-ratio constant `Q = (1 − c/2)^{−m₀} + ((c/(2m₀+1))^{m₀})^{−1}` of `cor:doubling_truncation` Step 4, with `ε_max = c/2` the family's supremum."
+    },
+    {
+     "name": "c9Of",
+     "full": "GFNBounds.Doubling.Decay.c9Of",
+     "kind": "def",
+     "line": 176,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def c9Of (d : ℕ) : ℝ",
+     "doc": "**`c₉`** of `cor:doubling_truncation`(2): `e^{2c₅c₄/m₀} · 2^{p_*} · Q²`, with `c₄ = 16cτ`."
+    },
+    {
+     "name": "K0Of",
+     "full": "GFNBounds.Doubling.Decay.K0Of",
+     "kind": "def",
+     "line": 180,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def K0Of (d : ℕ) : ℕ",
+     "doc": "**`K₀ := 8m₀ + 2`** of `cor:doubling_truncation`(2), Step 4."
+    },
+    {
+     "name": "c8Of",
+     "full": "GFNBounds.Doubling.Decay.c8Of",
+     "kind": "def",
+     "line": 183,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def c8Of (d : ℕ) (jbar : ℝ) : ℝ",
+     "doc": "**`c₈ := (2^{p_*+4} c₉ (2 + j̄/(1−c)))^{−1/2}`** of `cor:doubling_truncation`(3), Step 7."
+    },
+    {
+     "name": "one_le_truncQ",
+     "full": "GFNBounds.Doubling.Decay.one_le_truncQ",
+     "kind": "theorem",
+     "line": 186,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_le_truncQ (d : ℕ) : 1 ≤ D.truncQ d",
+     "doc": ""
+    },
+    {
+     "name": "one_le_c9Of",
+     "full": "GFNBounds.Doubling.Decay.one_le_c9Of",
+     "kind": "theorem",
+     "line": 197,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_le_c9Of (d : ℕ) : 1 ≤ D.c9Of d",
+     "doc": "`c₉ ≥ 1`."
+    },
+    {
+     "name": "le_K0Of",
+     "full": "GFNBounds.Doubling.Decay.le_K0Of",
+     "kind": "theorem",
+     "line": 207,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_K0Of (d : ℕ) : d ≤ D.K0Of d",
+     "doc": "`K₀ ≥ d` — indeed `K₀ > d`."
+    },
+    {
+     "name": "c8Of_pos",
+     "full": "GFNBounds.Doubling.Decay.c8Of_pos",
+     "kind": "theorem",
+     "line": 211,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem c8Of_pos (d : ℕ) {jbar : ℝ} (hjb : 0 ≤ jbar) : 0 < D.c8Of d jbar",
+     "doc": "`c₈ > 0` when `j̄ ≥ 0`, which every target row has."
+    },
+    {
+     "name": "decayK_explicit",
+     "full": "GFNBounds.Doubling.Stat.decayK_explicit",
+     "kind": "theorem",
+     "line": 232,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem decayK_explicit (D : Decay) (hDeps : ∀ j, S.eps j = D.eps j) (hK : D.K0Of S.d ≤ K) (L : Stat S (some K)) : ∃ Cm Cp : ℝ, 0 < Cm ∧ Cm ≤ Cp ∧ Cp ≤ D.c9Of S.d * Cm ∧ ∀ m : ℕ, D.m0 S.d ≤ m → m ≤ K / 2 → Cm * (m : ℝ) ^ (-D.p) ≤ L.lam (.lad m) ∧ L.lam (.lad m) ≤ Cp * (m : ℝ) ^ (-D.p)",
+     "doc": "**`eq:doubling_decayK` with its constants written out.** For every `K ≥ K₀ = 8m₀ + 2` and every invariant probability `λ^K` of the truncation there are `0 < C⁻ ≤ C⁺` with `C⁺ ≤ c₉ C⁻` and `C⁻ m^{−p_*} ≤ λ^K_m ≤ C⁺ m^{−p_*}` for `m₀ ≤ m ≤ K/2`; `m₀ = D.m0 d`, `K₀ = D.K0Of d` and `c₉ = D.c9Of d` are formulas in `c`, `p_*` and `d`."
+    },
+    {
+     "name": "sqrtK_explicit",
+     "full": "GFNBounds.Doubling.Stat.sqrtK_explicit",
+     "kind": "theorem",
+     "line": 270,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sqrtK_explicit (D : Decay) (hDeps : ∀ j, S.eps j = D.eps j) (hK : D.K0Of S.d ≤ K) (L : Stat S (some K)) (hrow : RowOnChain S (some K)) {Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu} (hS : Sop * (1 - L.pstarL2 hrow) = 1 - L.piL2) : D.c8Of S.d S.jbar * Real.sqrt (K : ℝ) ≤ ‖Sop‖",
+     "doc": "**`eq:doubling_sqrtK` with its constant written out, at every bounded left inverse.** For every `K ≥ K₀` and every `S` on `L²(λ^K)` with `S(Id − P⋆) = Id − Π`, `c₈ √K ≤ ‖S‖`, where `c₈ = D.c8Of d j̄` is a formula in `c`, `p_*`, `d` and `j̄`."
+    },
+    {
+     "name": "sqrtK_bhatK",
+     "full": "GFNBounds.Doubling.Stat.sqrtK_bhatK",
+     "kind": "theorem",
+     "line": 324,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sqrtK_bhatK (D : Decay) (hDeps : ∀ j, S.eps j = D.eps j) (hK : D.K0Of S.d ≤ K) (hdK : S.d ≤ K) (L : Stat S (some K)) : D.c8Of S.d S.jbar * Real.sqrt (K : ℝ) ≤ L.bhatK hdK",
+     "doc": "**`eq:doubling_sqrtK`, as written.** `B̂_K ≥ c₈ √K` for every `K ≥ K₀`."
+    },
+    {
+     "name": "truncation_explicit",
+     "full": "GFNBounds.Doubling.truncation_explicit",
+     "kind": "theorem",
+     "line": 340,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem truncation_explicit (D : Decay) (hDeps : ∀ j, S.eps j = D.eps j) : (∀ (K : ℕ) (hdK : S.d ≤ K) (L : Stat S (some K)) (m : ℕ), S.d < m → m ≤ K / 2 → Real.sqrt (L.tailMass m * (1 - L.tailMass m) / (2 * L.lam (.lad m))) ≤ L.bhatK hdK) ∧ S.d ≤ D.K0Of S.d ∧ 1 ≤ D.c9Of S.d ∧ (∀ K : ℕ, D.K0Of S.d ≤ K → ∀ L : Stat S (some K), ∃ Cm Cp : ℝ, 0 < Cm ∧ Cm ≤ Cp ∧ Cp / Cm ≤ D.c9Of S.d ∧ ∀ m : ℕ, D.m0 S.d ≤ m → m ≤ K / 2 → Cm * (m : ℝ) ^ (-D.p) ≤ L.lam (.lad m) ∧ L.lam (.lad m) ≤ Cp * (m : ℝ) ^ (-D.p)) ∧ 0 < D.c8Of S.d S.jbar ∧ ∀ (K : ℕ), D.K0Of S.d ≤ K → ∀ (hdK : S.d ≤ K) (L : Stat S (some K)), D.c8Of S.d S.jbar * Real.sqrt (K : ℝ) ≤ L.bhatK hdK",
+     "doc": "**`cor:doubling_truncation`, with its constants.** At `s = 1`, for any `Decay` `D` carrying the family (`ε(j) = c/(j+1)`, `p = p_*`), with `m₀ = D.m0 d`, `K₀ = D.K0Of d = 8m₀+2`, `c₉ = D.c9Of d` and `c₈ = D.c8Of d j̄`: (1) `B̂_K ≥ √(L_K(m)(1−L_K(m))/(2λ^K_m))` for `K ≥ d`, `d < m ≤ K/2`; (2) `K₀ ≥ d`, `c₉ ≥ 1`, and every `K ≥ K₀` has `0 < C⁻ ≤ C⁺`, `C⁺/C⁻ ≤ c₉`, and the sandwich `eq:doubling_decayK` on `m₀ ≤ m ≤ K/2`; (3) `c₈ > 0` and `B̂_K ≥ c₈√K` for every `K ≥ K₀`."
+    },
+    {
+     "name": "main_truncation",
+     "full": "GFNBounds.Doubling.main_truncation",
+     "kind": "theorem",
+     "line": 367,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem main_truncation {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) : ∃ p : ℝ, psi c p = 0 ∧ 1 < p ∧ ∀ d : ℕ, ∃ m₀ K₀ : ℕ, ∃ c₉ : ℝ, d ≤ K₀ ∧ 1 ≤ c₉ ∧ ∀ jbar : ℝ, 0 ≤ jbar → ∃ c₈ : ℝ, 0 < c₈ ∧ ∀ S : Setting, S.d = d → S.jbar = jbar → (∀ j, S.eps j = epsCS c 1 j) → (∀ (K : ℕ) (hdK : S.d ≤ K) (L : Stat S (some K)) (m : ℕ), S.d < m → m ≤ K / 2 → Real.sqrt (L.tailMass m * (1 - L.tailMass m) / (2 * L.lam (.lad m))) ≤ L.bhatK hdK) ∧ (∀ K : ℕ, K₀ ≤ K → ∀ L : Stat S (some K), ∃ Cm Cp : ℝ, 0 < Cm ∧ Cm ≤ Cp ∧ Cp / Cm ≤ c₉ ∧ ∀ m : ℕ, m₀ ≤ m → m ≤ K / 2 → Cm * (m : ℝ) ^ (-p) ≤ L.lam (.lad m) ∧ L.lam (.lad m) ≤ Cp * (m : ℝ) ^ (-p)) ∧ ∀ (K : ℕ), K₀ ≤ K → ∀ (hdK : S.d ≤ K) (L : Stat S (some K)), c₈ * Real.sqrt (K : ℝ) ≤ L.bhatK hdK",
+     "doc": "**`cor:doubling_truncation`.** At `s = 1`, `0 < c < 1`, with `p_*` the Cramér root, for every `d` there are `m₀`, `K₀ ≥ d` and `c₉ ≥ 1`, and for every `j̄ ≥ 0` a `c₈ > 0`, such that every setting with that `d`, that `j̄` and the family `ε(j) = c/(j+1)` has: (1) for every `K ≥ d` and `d < m ≤ K/2`, `B̂_K ≥ √(L_K(m)(1−L_K(m))/(2λ^K_m))`; (2) every `K ≥ K₀` has `0 < C⁻_K ≤ C⁺_K` with `C⁺_K/C⁻_K ≤ c₉` and `C⁻_K m^{−p_*} ≤ λ^K_m ≤ C⁺_K m^{−p_*}` for `m₀ ≤ m ≤ K/2`; (3) `B̂_K ≥ c₈√K` for every `K ≥ K₀`, `K₀` the integer of (2)."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Doubling/TruncationStat.lean",
    "title": "The truncation carries a unique invariant probability",
    "labels": [
@@ -20684,6 +22233,112 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Graph/CycleBlowup.lean",
+   "title": "On the five-vertex cycle, `B̂_σ` blows up as the leak closes",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Graph.MorozovConsume"
+   ],
+   "variables": [],
+   "lines": 200,
+   "decls": [
+    {
+     "name": "inv_one_sub_tendsto_atTop",
+     "full": "GFNBounds.Graph.CycleExample.inv_one_sub_tendsto_atTop",
+     "kind": "theorem",
+     "line": 96,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inv_one_sub_tendsto_atTop : Tendsto (fun p : ℝ => (1 - p)⁻¹) (𝓝[<] 1) atTop",
+     "doc": "`1/(1−p) → +∞` as `p → 1⁻`."
+    },
+    {
+     "name": "eventually_mem_Ioo_zero_one",
+     "full": "GFNBounds.Graph.CycleExample.eventually_mem_Ioo_zero_one",
+     "kind": "theorem",
+     "line": 109,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eventually_mem_Ioo_zero_one : ∀ᶠ p : ℝ in 𝓝[<] 1, 0 < p ∧ p < 1",
+     "doc": "`p ∈ (0,1)` eventually as `p → 1⁻`."
+    },
+    {
+     "name": "three_div_one_sub_tendsto_atTop",
+     "full": "GFNBounds.Graph.CycleExample.three_div_one_sub_tendsto_atTop",
+     "kind": "theorem",
+     "line": 115,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem three_div_one_sub_tendsto_atTop : Tendsto (fun p : ℝ => 3 / (1 - p)) (𝓝[<] 1) atTop",
+     "doc": "**The backward-length bound blows up**: `3/(1−p) → +∞` as `p → 1⁻` (`proofs.tex:838`)."
+    },
+    {
+     "name": "three_div_le_bhatSigma",
+     "full": "GFNBounds.Graph.CycleExample.three_div_le_bhatSigma",
+     "kind": "theorem",
+     "line": 123,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem three_div_le_bhatSigma {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) : 3 / (1 - p) ≤ Balance.BhatSigma cyc (hitExp p) (lam p)",
+     "doc": "`B̂_σ ≥ 3/(1−p)` on the cycle, for every `p ∈ (0,1)`: in the closed form `((4−p)/(1−p))·√((5−2p)/(1−p))`, `4−p ≥ 3` and the square root is at least `1`."
+    },
+    {
+     "name": "bhatSigma_cycle_tendsto",
+     "full": "GFNBounds.Graph.CycleExample.bhatSigma_cycle_tendsto",
+     "kind": "theorem",
+     "line": 147,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bhatSigma_cycle_tendsto : Tendsto (fun p => Balance.BhatSigma cyc (hitExp p) (lam p)) (𝓝[<] 1) atTop",
+     "doc": "**`rem:cycle_no_stalemate`, the `B̂_σ` clause**: on the five-vertex cycle, `B̂_σ = σ_*/√λ_min → +∞` as `p → 1⁻`."
+    },
+    {
+     "name": "blowupDelta_pos",
+     "full": "GFNBounds.Graph.CycleExample.blowupDelta_pos",
+     "kind": "theorem",
+     "line": 154,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem blowupDelta_pos (C : ℝ) : 0 < 3 / (|C| + 3)",
+     "doc": "The explicit threshold `δ(C) = 3/(|C|+3) ∈ (0,1]`: `0 < δ(C)`."
+    },
+    {
+     "name": "lt_three_div_of_blowupDelta",
+     "full": "GFNBounds.Graph.CycleExample.lt_three_div_of_blowupDelta",
+     "kind": "theorem",
+     "line": 160,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lt_three_div_of_blowupDelta {C p : ℝ} (hp1 : p < 1) (hpδ : 1 - 3 / (|C| + 3) < p) : C < 3 / (1 - p)",
+     "doc": "**The explicit threshold works**: `1 − 3/(|C|+3) < p < 1` gives `C < 3/(1−p)`."
+    },
+    {
+     "name": "bhatSigma_blowup_paper_form",
+     "full": "GFNBounds.Graph.CycleExample.bhatSigma_blowup_paper_form",
+     "kind": "theorem",
+     "line": 176,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bhatSigma_blowup_paper_form (C : ℝ) : ∀ (p : ℝ) (hp0 : 0 < p) (hp1 : p < 1), 1 - 3 / (|C| + 3) < p → ∀ uH gr : Fin 5 → ℝ, (pol hp0 hp1).IsHitExp uH → (pol hp0 hp1).IsGreen gr → C < sigmaStar cyc uH * Real.sqrt ((2 + (pol hp0 hp1).sigmaBar uH) / minOver cyc (visits cyc gr))",
+     "doc": "**`rem:cycle_no_stalemate`, the `B̂_σ` clause, in `prop:morozov_rate`'s defining form** `B̂_σ = σ_*√((2+σ̄)/min_x N(x))`, with the explicit threshold `δ(C) = 3/(|C|+3)` (`blowupDelta_pos`): at every `p ∈ (0,1)` with `p > 1 − 3/(|C|+3)`, and for every solution `uH` of the hitting-time system and `gr` of the renewal equation of the policy `pol p`, `B̂_σ > C`."
+    },
+    {
+     "name": "sigmaBar_blowup",
+     "full": "GFNBounds.Graph.CycleExample.sigmaBar_blowup",
+     "kind": "theorem",
+     "line": 192,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sigmaBar_blowup (C : ℝ) : ∀ (p : ℝ) (hp0 : 0 < p) (hp1 : p < 1), 1 - 3 / (|C| + 3) < p → ∀ uH : Fin 5 → ℝ, (pol hp0 hp1).IsHitExp uH → C < (pol hp0 hp1).sigmaBar uH",
+     "doc": "**`σ̄ → +∞` as `p → 1⁻`**, in the same form with the same explicit threshold `δ(C) = 3/(|C|+3)`: the limit strengthening of `CycleExample.sigmaBar_unbounded`, for every solution of the hitting-time system — which exists, `CycleExample.isHitExp`, and is unique, `hitExp_unique`, so the quantifier is not vacuous."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -22210,13 +23865,13 @@
     "variable [DecidableEq V]",
     "variable {G : MarkedGraph V} (B : BackwardPolicy G)"
    ],
-   "lines": 711,
+   "lines": 713,
    "decls": [
     {
      "name": "edgeInflow",
      "full": "GFNBounds.Graph.edgeInflow",
      "kind": "def",
-     "line": 200,
+     "line": 201,
      "attrs": "",
      "private": false,
      "statement": "def edgeInflow (F : V → V → ℝ) : V → ℝ",
@@ -22226,7 +23881,7 @@
      "name": "edgeOutflow",
      "full": "GFNBounds.Graph.edgeOutflow",
      "kind": "def",
-     "line": 203,
+     "line": 204,
      "attrs": "",
      "private": false,
      "statement": "def edgeOutflow (F : V → V → ℝ) : V → ℝ",
@@ -22236,17 +23891,17 @@
      "name": "IsCirculation",
      "full": "GFNBounds.Graph.IsCirculation",
      "kind": "def",
-     "line": 208,
+     "line": 210,
      "attrs": "",
      "private": false,
      "statement": "def IsCirculation (F : V → V → ℝ) : Prop",
-     "doc": "**A `0`-flow**, in the sense `eq:def_stability` quantifies over (`cv_divergence.tex:179–181`): an edgeflow that neither creates nor destroys mass at any vertex, i.e."
+     "doc": "**A circulation**: an edgeflow that neither creates nor destroys mass at any vertex."
     },
     {
      "name": "MarkedCirculation",
      "full": "GFNBounds.Graph.MarkedCirculation",
      "kind": "structure",
-     "line": 216,
+     "line": 218,
      "attrs": "",
      "private": false,
      "statement": "structure MarkedCirculation (G : MarkedGraph V)",
@@ -22256,7 +23911,7 @@
      "name": "exists_apply_ne_zero",
      "full": "GFNBounds.Graph.exists_apply_ne_zero",
      "kind": "theorem",
-     "line": 232,
+     "line": 234,
      "attrs": "",
      "private": false,
      "statement": "theorem exists_apply_ne_zero {c : V → V → ℝ} (hne : c ≠ 0) : ∃ u v, c u v ≠ 0",
@@ -22266,7 +23921,7 @@
      "name": "MarkedCirculation.exists_ne_zero",
      "full": "GFNBounds.Graph.MarkedCirculation.exists_ne_zero",
      "kind": "theorem",
-     "line": 240,
+     "line": 242,
      "attrs": "",
      "private": false,
      "statement": "theorem MarkedCirculation.exists_ne_zero {G : MarkedGraph V} (γ : MarkedCirculation G) : ∃ u v, γ.circ u v ≠ 0",
@@ -22276,7 +23931,7 @@
      "name": "epsCirc",
      "full": "GFNBounds.Graph.epsCirc",
      "kind": "def",
-     "line": 245,
+     "line": 247,
      "attrs": "",
      "private": false,
      "statement": "def epsCirc (eps : ℝ) (c : V → V → ℝ) : V → V → ℝ",
@@ -22286,7 +23941,7 @@
      "name": "epsCirc_apply",
      "full": "GFNBounds.Graph.epsCirc_apply",
      "kind": "theorem",
-     "line": 249,
+     "line": 251,
      "attrs": "",
      "private": false,
      "statement": "theorem epsCirc_apply (eps : ℝ) (c : V → V → ℝ) (u v : V) : epsCirc eps c u v = eps * c u v",
@@ -22296,7 +23951,7 @@
      "name": "epsCirc_nonneg",
      "full": "GFNBounds.Graph.epsCirc_nonneg",
      "kind": "theorem",
-     "line": 253,
+     "line": 255,
      "attrs": "",
      "private": false,
      "statement": "theorem epsCirc_nonneg {eps : ℝ} (heps : 0 ≤ eps) {c : V → V → ℝ} (hc : ∀ u v, 0 ≤ c u v) (u v : V) : 0 ≤ epsCirc eps c u v",
@@ -22306,7 +23961,7 @@
      "name": "edgeInflow_epsCirc",
      "full": "GFNBounds.Graph.edgeInflow_epsCirc",
      "kind": "theorem",
-     "line": 258,
+     "line": 260,
      "attrs": "",
      "private": false,
      "statement": "theorem edgeInflow_epsCirc (eps : ℝ) (c : V → V → ℝ) (v : V) : edgeInflow (epsCirc eps c) v = eps * edgeInflow c v",
@@ -22316,7 +23971,7 @@
      "name": "edgeOutflow_epsCirc",
      "full": "GFNBounds.Graph.edgeOutflow_epsCirc",
      "kind": "theorem",
-     "line": 263,
+     "line": 265,
      "attrs": "",
      "private": false,
      "statement": "theorem edgeOutflow_epsCirc (eps : ℝ) (c : V → V → ℝ) (u : V) : edgeOutflow (epsCirc eps c) u = eps * edgeOutflow c u",
@@ -22326,7 +23981,7 @@
      "name": "isCirculation_epsCirc",
      "full": "GFNBounds.Graph.isCirculation_epsCirc",
      "kind": "theorem",
-     "line": 270,
+     "line": 272,
      "attrs": "",
      "private": false,
      "statement": "theorem isCirculation_epsCirc (eps : ℝ) {c : V → V → ℝ} (hc : IsCirculation c) : IsCirculation (epsCirc eps c)",
@@ -22336,7 +23991,7 @@
      "name": "sum_edgeInflow_pos",
      "full": "GFNBounds.Graph.sum_edgeInflow_pos",
      "kind": "theorem",
-     "line": 277,
+     "line": 279,
      "attrs": "",
      "private": false,
      "statement": "theorem sum_edgeInflow_pos {c : V → V → ℝ} (hnn : ∀ u v, 0 ≤ c u v) (hne : c ≠ 0) : 0 < ∑ v, edgeInflow c v",
@@ -22346,7 +24001,7 @@
      "name": "stateRatio",
      "full": "GFNBounds.Graph.BackwardPolicy.stateRatio",
      "kind": "def",
-     "line": 296,
+     "line": 298,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def stateRatio (mu : V → ℝ) : V → ℝ",
@@ -22356,7 +24011,7 @@
      "name": "stateRatio_apply",
      "full": "GFNBounds.Graph.BackwardPolicy.stateRatio_apply",
      "kind": "theorem",
-     "line": 298,
+     "line": 300,
      "attrs": "",
      "private": false,
      "statement": "theorem stateRatio_apply (mu : V → ℝ) (y : V) : B.stateRatio mu y = (∑ x, mu x * B.phat x y) / mu y",
@@ -22366,7 +24021,7 @@
      "name": "balanced_iff",
      "full": "GFNBounds.Graph.BackwardPolicy.balanced_iff",
      "kind": "theorem",
-     "line": 303,
+     "line": 305,
      "attrs": "",
      "private": false,
      "statement": "theorem balanced_iff (mu : V → ℝ) : Balance.Balanced B.phat mu 1 ↔ ∀ y, ∑ x, mu x * B.phat x y = mu y",
@@ -22376,7 +24031,7 @@
      "name": "stateRatio_eq_one_iff",
      "full": "GFNBounds.Graph.BackwardPolicy.stateRatio_eq_one_iff",
      "kind": "theorem",
-     "line": 309,
+     "line": 311,
      "attrs": "",
      "private": false,
      "statement": "theorem stateRatio_eq_one_iff {mu : V → ℝ} (hmu : ∀ y, 0 < mu y) : (∀ y, B.stateRatio mu y = 1) ↔ ∀ y, ∑ x, mu x * B.phat x y = mu y",
@@ -22386,7 +24041,7 @@
      "name": "fmLoss",
      "full": "GFNBounds.Graph.BackwardPolicy.fmLoss",
      "kind": "def",
-     "line": 320,
+     "line": 322,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def fmLoss (g : ℝ → ℝ) (nu mu : V → ℝ) : ℝ",
@@ -22396,7 +24051,7 @@
      "name": "exists_phat_pos_into",
      "full": "GFNBounds.Graph.BackwardPolicy.exists_phat_pos_into",
      "kind": "theorem",
-     "line": 324,
+     "line": 326,
      "attrs": "",
      "private": false,
      "statement": "theorem exists_phat_pos_into {lam : V → ℝ} (h : B.IsInvProb lam) (hlam : ∀ x, 0 < lam x) (y : V) : ∃ x, 0 < B.phat x y",
@@ -22406,7 +24061,7 @@
      "name": "stateRatio_pos",
      "full": "GFNBounds.Graph.BackwardPolicy.stateRatio_pos",
      "kind": "theorem",
-     "line": 337,
+     "line": 339,
      "attrs": "",
      "private": false,
      "statement": "theorem stateRatio_pos {lam : V → ℝ} (h : B.IsInvProb lam) (hlam : ∀ x, 0 < lam x) {mu : V → ℝ} (hmu : ∀ x, 0 < mu x) (y : V) : 0 < B.stateRatio mu y",
@@ -22416,7 +24071,7 @@
      "name": "fmLoss_eq_zero",
      "full": "GFNBounds.Graph.BackwardPolicy.fmLoss_eq_zero",
      "kind": "theorem",
-     "line": 346,
+     "line": 348,
      "attrs": "",
      "private": false,
      "statement": "theorem fmLoss_eq_zero {mu : V → ℝ} (hmu : ∀ y, 0 < mu y) (hinv : ∀ y, ∑ x, mu x * B.phat x y = mu y) {g : ℝ → ℝ} (hg1 : g 1 = 0) (nu : V → ℝ) : B.fmLoss g nu mu = 0",
@@ -22426,7 +24081,7 @@
      "name": "fmLoss_pos",
      "full": "GFNBounds.Graph.BackwardPolicy.fmLoss_pos",
      "kind": "theorem",
-     "line": 354,
+     "line": 356,
      "attrs": "",
      "private": false,
      "statement": "theorem fmLoss_pos {mu : V → ℝ} (hr : ∀ y, 0 < B.stateRatio mu y) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nu : V → ℝ} (hnu : ∀ x, 0 < nu x) {y : V} (hy : B.stateRatio mu y ≠ 1) : 0 < B.fmLoss g nu mu",
@@ -22436,7 +24091,7 @@
      "name": "AdmissibleEps",
      "full": "GFNBounds.Graph.BackwardPolicy.AdmissibleEps",
      "kind": "def",
-     "line": 368,
+     "line": 370,
      "attrs": "",
      "private": false,
      "statement": "def AdmissibleEps (lam : V → ℝ) (eps : ℝ) (c : V → V → ℝ) : Prop",
@@ -22446,7 +24101,7 @@
      "name": "perturbedFlow",
      "full": "GFNBounds.Graph.BackwardPolicy.perturbedFlow",
      "kind": "def",
-     "line": 373,
+     "line": 375,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def perturbedFlow (lam : V → ℝ) (eps : ℝ) (c : V → V → ℝ) : V → V → ℝ",
@@ -22456,7 +24111,7 @@
      "name": "edgeFlow_pos_of_hatEdge",
      "full": "GFNBounds.Graph.BackwardPolicy.edgeFlow_pos_of_hatEdge",
      "kind": "theorem",
-     "line": 379,
+     "line": 381,
      "attrs": "",
      "private": false,
      "statement": "theorem edgeFlow_pos_of_hatEdge (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) {c : ℝ} (hc : 0 < c) {u v : V} (he : G.hatEdge u v) : 0 < B.edgeFlow lam c u v",
@@ -22466,7 +24121,7 @@
      "name": "exists_admissibleEps",
      "full": "GFNBounds.Graph.BackwardPolicy.exists_admissibleEps",
      "kind": "theorem",
-     "line": 395,
+     "line": 397,
      "attrs": "",
      "private": false,
      "statement": "theorem exists_admissibleEps (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) : ∃ eps : ℝ, 0 < eps ∧ B.AdmissibleEps lam eps γ.circ",
@@ -22476,7 +24131,7 @@
      "name": "epsCirc_le_perturbedFlow",
      "full": "GFNBounds.Graph.BackwardPolicy.epsCirc_le_perturbedFlow",
      "kind": "theorem",
-     "line": 430,
+     "line": 432,
      "attrs": "",
      "private": false,
      "statement": "theorem epsCirc_le_perturbedFlow {lam : V → ℝ} {eps : ℝ} {c : V → V → ℝ} (hadm : B.AdmissibleEps lam eps c) (u v : V) : epsCirc eps c u v ≤ B.perturbedFlow lam eps c u v",
@@ -22486,7 +24141,7 @@
      "name": "perturbedFlow_add_epsCirc",
      "full": "GFNBounds.Graph.BackwardPolicy.perturbedFlow_add_epsCirc",
      "kind": "theorem",
-     "line": 438,
+     "line": 440,
      "attrs": "",
      "private": false,
      "statement": "theorem perturbedFlow_add_epsCirc (lam : V → ℝ) (eps : ℝ) (c : V → V → ℝ) : B.perturbedFlow lam eps c + epsCirc eps c = B.edgeFlow lam 1",
@@ -22496,7 +24151,7 @@
      "name": "edgeInflow_edgeFlow_one",
      "full": "GFNBounds.Graph.BackwardPolicy.edgeInflow_edgeFlow_one",
      "kind": "theorem",
-     "line": 444,
+     "line": 446,
      "attrs": "",
      "private": false,
      "statement": "theorem edgeInflow_edgeFlow_one (lam : V → ℝ) : edgeInflow (B.edgeFlow lam 1) = lam",
@@ -22506,7 +24161,7 @@
      "name": "edgeInflow_perturbedFlow",
      "full": "GFNBounds.Graph.BackwardPolicy.edgeInflow_perturbedFlow",
      "kind": "theorem",
-     "line": 449,
+     "line": 451,
      "attrs": "",
      "private": false,
      "statement": "theorem edgeInflow_perturbedFlow (lam : V → ℝ) (eps : ℝ) (c : V → V → ℝ) (v : V) : edgeInflow (B.perturbedFlow lam eps c) v = lam v - eps * edgeInflow c v",
@@ -22516,7 +24171,7 @@
      "name": "edgeInflow_perturbedFlow_ge",
      "full": "GFNBounds.Graph.BackwardPolicy.edgeInflow_perturbedFlow_ge",
      "kind": "theorem",
-     "line": 462,
+     "line": 464,
      "attrs": "",
      "private": false,
      "statement": "theorem edgeInflow_perturbedFlow_ge {lam : V → ℝ} {eps : ℝ} {c : V → V → ℝ} (hadm : B.AdmissibleEps lam eps c) (v : V) : lam v / 2 ≤ edgeInflow (B.perturbedFlow lam eps c) v",
@@ -22526,7 +24181,7 @@
      "name": "sum_edgeInflow_perturbedFlow",
      "full": "GFNBounds.Graph.BackwardPolicy.sum_edgeInflow_perturbedFlow",
      "kind": "theorem",
-     "line": 479,
+     "line": 481,
      "attrs": "",
      "private": false,
      "statement": "theorem sum_edgeInflow_perturbedFlow {lam : V → ℝ} (h : B.IsInvProb lam) (eps : ℝ) (c : V → V → ℝ) : ∑ v, edgeInflow (B.perturbedFlow lam eps c) v = 1 - eps * ∑ v, edgeInflow c v",
@@ -22536,7 +24191,7 @@
      "name": "isCirculation_perturbedFlow",
      "full": "GFNBounds.Graph.BackwardPolicy.isCirculation_perturbedFlow",
      "kind": "theorem",
-     "line": 486,
+     "line": 488,
      "attrs": "",
      "private": false,
      "statement": "theorem isCirculation_perturbedFlow {lam : V → ℝ} (h : B.IsInvProb lam) (eps : ℝ) {c : V → V → ℝ} (hc : IsCirculation c) : IsCirculation (B.perturbedFlow lam eps c)",
@@ -22546,7 +24201,7 @@
      "name": "not_invariant_perturbedFlow",
      "full": "GFNBounds.Graph.BackwardPolicy.not_invariant_perturbedFlow",
      "kind": "theorem",
-     "line": 508,
+     "line": 510,
      "attrs": "",
      "private": false,
      "statement": "theorem not_invariant_perturbedFlow (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (γ : MarkedCirculation G) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : ¬ ∀ y, ∑ x, edgeInflow (B.perturbedFlow lam eps γ.circ) x * B.phat x y = edgeInflow (B.perturbedFlow lam eps γ.circ) y",
@@ -22556,27 +24211,27 @@
      "name": "frozen_unstable_full_fm",
      "full": "GFNBounds.Graph.BackwardPolicy.frozen_unstable_full_fm",
      "kind": "theorem",
-     "line": 554,
+     "line": 556,
      "attrs": "",
      "private": false,
      "statement": "theorem frozen_unstable_full_fm (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (γ : MarkedCirculation G) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nu : V → ℝ} (hnu : ∀ x, 0 < nu x) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : (∀ u v, 0 ≤ epsCirc eps γ.circ u v) ∧ (∀ u v, epsCirc eps γ.circ u v ≤ B.perturbedFlow lam eps γ.circ u v) ∧ B.fmLoss g nu (edgeInflow (B.perturbedFlow lam eps γ.circ + epsCirc eps γ.circ)) = 0 ∧ 0 < B.fmLoss g nu (edgeInflow (B.perturbedFlow lam eps γ.circ))",
-     "doc": "**`prop:frozen_unstable_full`, the FM half** (statement `proofs.tex:659–669`, proof `proofs.tex:671–683`), in one statement."
+     "doc": "**`prop:frozen_unstable_full`, the FM half** (statement `proofs.tex:680–690`, proof `proofs.tex:692–704`), in one statement."
     },
     {
      "name": "pcut",
      "full": "GFNBounds.Graph.BackwardPolicy.pcut",
      "kind": "def",
-     "line": 585,
+     "line": 587,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def pcut : V → V → ℝ",
-     "doc": "**`rem:loop_closure_necessary`, the backward kernel of `G` itself** (`proofs.tex:1014`): `π_←` with the row at `s₀` emptied."
+     "doc": "**`rem:loop_closure_necessary`, the backward kernel of `G` itself** (`proofs.tex:1091`): `π_←` with the row at `s₀` emptied."
     },
     {
      "name": "pcut_src",
      "full": "GFNBounds.Graph.BackwardPolicy.pcut_src",
      "kind": "theorem",
-     "line": 587,
+     "line": 589,
      "attrs": "@[simp]",
      "private": false,
      "statement": "@[simp] theorem pcut_src (s' : V) : B.pcut G.src s' = 0",
@@ -22586,7 +24241,7 @@
      "name": "pcut_of_ne_src",
      "full": "GFNBounds.Graph.BackwardPolicy.pcut_of_ne_src",
      "kind": "theorem",
-     "line": 589,
+     "line": 591,
      "attrs": "",
      "private": false,
      "statement": "theorem pcut_of_ne_src {s : V} (hs : s ≠ G.src) (s' : V) : B.pcut s s' = B.pb s s'",
@@ -22596,7 +24251,7 @@
      "name": "pcut_nonneg",
      "full": "GFNBounds.Graph.BackwardPolicy.pcut_nonneg",
      "kind": "theorem",
-     "line": 592,
+     "line": 594,
      "attrs": "",
      "private": false,
      "statement": "theorem pcut_nonneg (s s' : V) : 0 ≤ B.pcut s s'",
@@ -22606,7 +24261,7 @@
      "name": "pcut_row_sum_of_ne_src",
      "full": "GFNBounds.Graph.BackwardPolicy.pcut_row_sum_of_ne_src",
      "kind": "theorem",
-     "line": 598,
+     "line": 600,
      "attrs": "",
      "private": false,
      "statement": "theorem pcut_row_sum_of_ne_src {s : V} (hs : s ≠ G.src) : ∑ s', B.pcut s s' = 1",
@@ -22616,7 +24271,7 @@
      "name": "pcut_row_sum_src",
      "full": "GFNBounds.Graph.BackwardPolicy.pcut_row_sum_src",
      "kind": "theorem",
-     "line": 603,
+     "line": 605,
      "attrs": "",
      "private": false,
      "statement": "theorem pcut_row_sum_src : ∑ s', B.pcut G.src s' = 0",
@@ -22626,17 +24281,17 @@
      "name": "CutBalance",
      "full": "GFNBounds.Graph.BackwardPolicy.CutBalance",
      "kind": "def",
-     "line": 609,
+     "line": 611,
      "attrs": "",
      "private": false,
      "statement": "def CutBalance (pf : V → V → ℝ) (fout : V → ℝ) : Prop",
-     "doc": "**`rem:loop_closure_necessary`, the frozen-backward family on `G`** (`proofs.tex:1014`): the family `Θ_{π_←}` of `theo:universality_graphs`*(2)* with `π̂_←` replaced by the kernel of `G` itself, in the same coordinates — `f_out(u) π_→(u → v) = π_←(v → u) f_out(v)` at every transition."
+     "doc": "**`rem:loop_closure_necessary`, the frozen-backward family on `G`** (`proofs.tex:1091`): the family `Θ_{π_←}` of `theo:universality_graphs`*(2)* with `π̂_←` replaced by the kernel of `G` itself, in the same coordinates — `f_out(u) π_→(u → v) = π_←(v → u) f_out(v)` at every transition."
     },
     {
      "name": "cutBalance_zero",
      "full": "GFNBounds.Graph.BackwardPolicy.cutBalance_zero",
      "kind": "theorem",
-     "line": 614,
+     "line": 616,
      "attrs": "",
      "private": false,
      "statement": "theorem cutBalance_zero (pf : V → V → ℝ) : B.CutBalance pf 0",
@@ -22646,27 +24301,27 @@
      "name": "cutBalance_invariant",
      "full": "GFNBounds.Graph.BackwardPolicy.cutBalance_invariant",
      "kind": "theorem",
-     "line": 621,
+     "line": 623,
      "attrs": "",
      "private": false,
      "statement": "theorem cutBalance_invariant {pf : V → V → ℝ} {fout : V → ℝ} (hrow : ∀ u, ∑ v, pf u v = 1) (hcb : B.CutBalance pf fout) (u : V) : ∑ v, fout v * B.pcut v u = fout u",
-     "doc": "**`rem:loop_closure_necessary`, the marginal argument** (`proofs.tex:1014`): summing the constraint over `v` at fixed `u`, the rows of `π_→` summing to `1`, makes `f_out μ` invariant under `π_←`."
+     "doc": "**`rem:loop_closure_necessary`, the marginal argument** (`proofs.tex:1091`): summing the constraint over `v` at fixed `u`, the rows of `π_→` summing to `1`, makes `f_out μ` invariant under `π_←`."
     },
     {
      "name": "cutBalance_src_eq_zero",
      "full": "GFNBounds.Graph.BackwardPolicy.cutBalance_src_eq_zero",
      "kind": "theorem",
-     "line": 636,
+     "line": 638,
      "attrs": "",
      "private": false,
      "statement": "theorem cutBalance_src_eq_zero {pf : V → V → ℝ} {fout : V → ℝ} (hrow : ∀ u, ∑ v, pf u v = 1) (hcb : B.CutBalance pf fout) : fout G.src = 0",
-     "doc": "**`rem:loop_closure_necessary`: the marginal argument forces `f_out(s₀) = 0`** (`proofs.tex:1014`)."
+     "doc": "**`rem:loop_closure_necessary`: the marginal argument forces `f_out(s₀) = 0`** (`proofs.tex:1091`)."
     },
     {
      "name": "cutInvariant_step",
      "full": "GFNBounds.Graph.BackwardPolicy.cutInvariant_step",
      "kind": "theorem",
-     "line": 665,
+     "line": 667,
      "attrs": "",
      "private": false,
      "statement": "theorem cutInvariant_step (hbpos : B.PositiveOnEdges) {fout : V → ℝ} (hnn : ∀ x, 0 ≤ fout x) (hinv : ∀ u, ∑ v, fout v * B.pcut v u = fout u) {u v : V} (he : G.Edge u v) (hu : fout u = 0) : fout v = 0",
@@ -22676,7 +24331,7 @@
      "name": "cutInvariant_eq_zero_of_reach",
      "full": "GFNBounds.Graph.BackwardPolicy.cutInvariant_eq_zero_of_reach",
      "kind": "theorem",
-     "line": 683,
+     "line": 685,
      "attrs": "",
      "private": false,
      "statement": "theorem cutInvariant_eq_zero_of_reach (hbpos : B.PositiveOnEdges) {fout : V → ℝ} (hnn : ∀ x, 0 ≤ fout x) (hinv : ∀ u, ∑ v, fout v * B.pcut v u = fout u) {a b : V} (hr : G.Reach a b) (ha : fout a = 0) : fout b = 0",
@@ -22686,15 +24341,316 @@
      "name": "loop_closure_necessary",
      "full": "GFNBounds.Graph.BackwardPolicy.loop_closure_necessary",
      "kind": "theorem",
-     "line": 700,
+     "line": 702,
      "attrs": "",
      "private": false,
      "statement": "theorem loop_closure_necessary (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {pf : V → V → ℝ} {fout : V → ℝ} (hrow : ∀ u, ∑ v, pf u v = 1) (hnn : ∀ x, 0 ≤ fout x) (hcb : B.CutBalance pf fout) : fout = 0",
-     "doc": "**`rem:loop_closure_necessary`** (`proofs.tex:1014–1016`): *on `G` itself, i.e."
+     "doc": "**`rem:loop_closure_necessary`** (`proofs.tex:1091–1093`): *on `G` itself, i.e."
     }
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Graph/FrozenUnstableDB.lean",
+   "title": "Freezing the backward policy does not restore stability of the detailed-balance loss either",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Graph.FrozenUnstable",
+    "GFNBounds.Balance.Lift"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]",
+    "variable [DecidableEq V]",
+    "variable {G : MarkedGraph V} (B : BackwardPolicy G)"
+   ],
+   "lines": 496,
+   "decls": [
+    {
+     "name": "IsEdgeflow",
+     "full": "GFNBounds.Graph.IsEdgeflow",
+     "kind": "def",
+     "line": 158,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsEdgeflow (G : MarkedGraph V) (F : V → V → ℝ) : Prop",
+     "doc": "**An edgeflow of the loop closure `Ĝ`** (`brunswic2024theory` §2: \"an assignment `F` of a non-negative value on each edge\"): `F ≥ 0`, and `F = 0` off the edges of `Ĝ`."
+    },
+    {
+     "name": "IsFlow",
+     "full": "GFNBounds.Graph.IsFlow",
+     "kind": "def",
+     "line": 163,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsFlow (G : MarkedGraph V) (F : V → V → ℝ) : Prop",
+     "doc": "**A flow**, Definition 1 of `brunswic2024theory` transported to `Ĝ`: an edgeflow satisfying flow matching, which on the loop closure is conservation at every vertex."
+    },
+    {
+     "name": "IsZeroFlow",
+     "full": "GFNBounds.Graph.IsZeroFlow",
+     "kind": "def",
+     "line": 168,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsZeroFlow (G : MarkedGraph V) (F₀ : V → V → ℝ) : Prop",
+     "doc": "**A `0`-flow**, Definition 2 of `brunswic2024theory`: a flow satisfying the reward constraint for the null reward, i.e."
+    },
+    {
+     "name": "Stable",
+     "full": "GFNBounds.Graph.Stable",
+     "kind": "def",
+     "line": 177,
+     "attrs": "",
+     "private": false,
+     "statement": "def Stable (G : MarkedGraph V) (L : (V → V → ℝ) → ℝ) : Prop",
+     "doc": "**`eq:def_stability`** (`cv_divergence.tex:183–185`), Definition 3 of `brunswic2024theory` at `p = 1`: a loss `𝓛` on edgeflows is *stable* when `𝓛(F + F₀) ≥ 𝓛(F)` for every flow `F` and every `0`-flow `F₀` that is a subflow of `F` (`F₀ ≤ F` edgewise)."
+    },
+    {
+     "name": "not_stable_of_witness",
+     "full": "GFNBounds.Graph.not_stable_of_witness",
+     "kind": "theorem",
+     "line": 181,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem not_stable_of_witness {G : MarkedGraph V} {L : (V → V → ℝ) → ℝ} {F F₀ : V → V → ℝ} (hF : IsFlow G F) (hF₀ : IsZeroFlow G F₀) (hsub : ∀ u v, F₀ u v ≤ F u v) (hlt : L (F + F₀) < L F) : ¬ Stable G L",
+     "doc": "A single flow strictly improved by adding a `0`-subflow refutes `eq:def_stability`."
+    },
+    {
+     "name": "edgeFlow_one_eq_edgeMeasure",
+     "full": "GFNBounds.Graph.BackwardPolicy.edgeFlow_one_eq_edgeMeasure",
+     "kind": "theorem",
+     "line": 196,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeFlow_one_eq_edgeMeasure (lam : V → ℝ) : B.edgeFlow lam 1 = Balance.edgeMeasure B.phat lam",
+     "doc": "**`F* = λ₂`**: the balanced edgeflow `F*(u→v) = λ(v) π̂_←(v→u)` of `Graph.Universality` is the edge measure `λ₂(u,v) = π̂_←(v→u) λ(v)` of `Balance.Lift`."
+    },
+    {
+     "name": "phat_pos_of_hatEdge",
+     "full": "GFNBounds.Graph.BackwardPolicy.phat_pos_of_hatEdge",
+     "kind": "theorem",
+     "line": 203,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem phat_pos_of_hatEdge (hbpos : B.PositiveOnEdges) {u v : V} (he : G.hatEdge u v) : 0 < B.phat v u",
+     "doc": "`π̂_←(v → u) > 0` on every edge `u → v` of `Ĝ`."
+    },
+    {
+     "name": "phat_eq_zero_of_not_hatEdge",
+     "full": "GFNBounds.Graph.BackwardPolicy.phat_eq_zero_of_not_hatEdge",
+     "kind": "theorem",
+     "line": 210,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem phat_eq_zero_of_not_hatEdge {u v : V} (he : ¬ G.hatEdge u v) : B.phat v u = 0",
+     "doc": "`π̂_←(v → u) = 0` off the edges of `Ĝ`."
+    },
+    {
+     "name": "edgeFlow_eq_zero_of_not_hatEdge",
+     "full": "GFNBounds.Graph.BackwardPolicy.edgeFlow_eq_zero_of_not_hatEdge",
+     "kind": "theorem",
+     "line": 215,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeFlow_eq_zero_of_not_hatEdge (lam : V → ℝ) (c : ℝ) {u v : V} (he : ¬ G.hatEdge u v) : B.edgeFlow lam c u v = 0",
+     "doc": "`F* = 0` off the edges of `Ĝ`."
+    },
+    {
+     "name": "circ_eq_zero_of_not_hatEdge",
+     "full": "GFNBounds.Graph.BackwardPolicy.circ_eq_zero_of_not_hatEdge",
+     "kind": "theorem",
+     "line": 220,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem circ_eq_zero_of_not_hatEdge {lam : V → ℝ} (γ : MarkedCirculation G) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) {u v : V} (he : ¬ G.hatEdge u v) : γ.circ u v = 0",
+     "doc": "An admissible `ε > 0` forces `1_γ = 0` off the edges of `Ĝ`: there `2ε1_γ ≤ F* = 0`."
+    },
+    {
+     "name": "perturbedFlow_eq_zero_of_not_hatEdge",
+     "full": "GFNBounds.Graph.BackwardPolicy.perturbedFlow_eq_zero_of_not_hatEdge",
+     "kind": "theorem",
+     "line": 231,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem perturbedFlow_eq_zero_of_not_hatEdge {lam : V → ℝ} (γ : MarkedCirculation G) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) {u v : V} (he : ¬ G.hatEdge u v) : B.perturbedFlow lam eps γ.circ u v = 0",
+     "doc": "**`F = F* − ε1_γ` vanishes off the edges of `Ĝ`.**"
+    },
+    {
+     "name": "perturbedFlow_pos_of_hatEdge",
+     "full": "GFNBounds.Graph.BackwardPolicy.perturbedFlow_pos_of_hatEdge",
+     "kind": "theorem",
+     "line": 238,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem perturbedFlow_pos_of_hatEdge (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) {eps : ℝ} {c : V → V → ℝ} (hadm : B.AdmissibleEps lam eps c) {u v : V} (he : G.hatEdge u v) : 0 < B.perturbedFlow lam eps c u v",
+     "doc": "**`F = F* − ε1_γ` is positive on every edge of `Ĝ`**: `2ε1_γ ≤ F*` gives `F ≥ F*/2 > 0`."
+    },
+    {
+     "name": "perturbedFlow_isEdgeflow",
+     "full": "GFNBounds.Graph.BackwardPolicy.perturbedFlow_isEdgeflow",
+     "kind": "theorem",
+     "line": 248,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem perturbedFlow_isEdgeflow {lam : V → ℝ} (γ : MarkedCirculation G) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : IsEdgeflow G (B.perturbedFlow lam eps γ.circ)",
+     "doc": "**`prop:frozen_unstable_full`, *Admissibility*** (`proofs.tex:695`): \"`F` is a flow\"."
+    },
+    {
+     "name": "invariant_edgeInflow_of_pushEdge_eq",
+     "full": "GFNBounds.Graph.BackwardPolicy.invariant_edgeInflow_of_pushEdge_eq",
+     "kind": "theorem",
+     "line": 260,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem invariant_edgeInflow_of_pushEdge_eq {F : V → V → ℝ} (hcirc : IsCirculation F) (heq : Balance.pushEdge B.phat F = F) : ∀ y, ∑ x, edgeInflow F x * B.phat x y = edgeInflow F y",
+     "doc": "**\"Summing over `v` at each `u`\"** (`proofs.tex:701`): if a circulation `F` is in edge-level balance, `F K₂ = F`, then its inflow is `π̂_←`-invariant."
+    },
+    {
+     "name": "pushEdge_perturbedFlow_ne",
+     "full": "GFNBounds.Graph.BackwardPolicy.pushEdge_perturbedFlow_ne",
+     "kind": "theorem",
+     "line": 276,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pushEdge_perturbedFlow_ne (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (γ : MarkedCirculation G) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : Balance.pushEdge B.phat (B.perturbedFlow lam eps γ.circ) ≠ B.perturbedFlow lam eps γ.circ",
+     "doc": "**Edge-level balance fails at `F`** (`proofs.tex:701`): `F K₂ ≠ F`, since otherwise `μ_F π̂_← = μ_F`, contradicting `not_invariant_perturbedFlow`."
+    },
+    {
+     "name": "perturbedFlow_isFlow",
+     "full": "GFNBounds.Graph.BackwardPolicy.perturbedFlow_isFlow",
+     "kind": "theorem",
+     "line": 288,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem perturbedFlow_isFlow {lam : V → ℝ} (h : B.IsInvProb lam) (γ : MarkedCirculation G) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : IsFlow G (B.perturbedFlow lam eps γ.circ)",
+     "doc": "**`prop:frozen_unstable_full`, *Admissibility*** (`proofs.tex:695`): \"`F` is a flow\", in the sense of Definition 1 — an edgeflow of `Ĝ` that is conserved at every vertex."
+    },
+    {
+     "name": "epsCirc_isZeroFlow",
+     "full": "GFNBounds.Graph.BackwardPolicy.epsCirc_isZeroFlow",
+     "kind": "theorem",
+     "line": 295,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem epsCirc_isZeroFlow {lam : V → ℝ} (γ : MarkedCirculation G) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : IsZeroFlow G (epsCirc eps γ.circ)",
+     "doc": "**`prop:frozen_unstable_full`, *Admissibility*** (`proofs.tex:695`): \"`F₀` is a `0`-subflow\", in the sense of Definition 2 — a flow with zero inflow at `s_f`, because `γ` avoids `s_f`."
+    },
+    {
+     "name": "edgeMeasure_pos_iff_hatEdge",
+     "full": "GFNBounds.Graph.BackwardPolicy.edgeMeasure_pos_iff_hatEdge",
+     "kind": "theorem",
+     "line": 305,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeMeasure_pos_iff_hatEdge (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (u v : V) : 0 < Balance.edgeMeasure B.phat lam u v ↔ G.hatEdge u v",
+     "doc": "**`λ₂` is positive exactly on the edges of `Ĝ`**: `λ₂(u,v) = π̂_←(v→u) λ(v)` with `λ > 0`."
+    },
+    {
+     "name": "dbLoss",
+     "full": "GFNBounds.Graph.BackwardPolicy.dbLoss",
+     "kind": "def",
+     "line": 322,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def dbLoss (g : ℝ → ℝ) (nuHat F : V → V → ℝ) : ℝ",
+     "doc": "**`prop:frozen_unstable_full`, the DB loss with frozen backward policy, read on edgeflows** (`proofs.tex:701`, through `prop:db_lift`, `proofs.tex:524–531`): `𝓛_{DB,g,ν̂}(F) = ∫ g(d(FK₂)/dF) dν̂ = ∑_{u,v} ν̂(u,v) g((FK₂)(u,v) / F(u,v))`, with `K₂` the edge lift of `π̂_←`."
+    },
+    {
+     "name": "dbLoss_eq_edgeRatio",
+     "full": "GFNBounds.Graph.BackwardPolicy.dbLoss_eq_edgeRatio",
+     "kind": "theorem",
+     "line": 328,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbLoss_eq_edgeRatio {F : V → V → ℝ} (hF : ∀ u v, 0 ≤ F u v) (g : ℝ → ℝ) (nuHat : V → V → ℝ) : B.dbLoss g nuHat F = ∑ u, ∑ v, nuHat u v * g (Balance.marg₁ F v * B.phat v u / (Balance.marg₁ F u * Balance.disint F u v))",
+     "doc": "**`prop:db_lift`, read here**: for a non-negative edgeflow the DB loss is the `g`-divergence of the detailed-balance edge ratio `F(v) π̂_←(v→u) / (F(u) π_→^F(u→v))`, with `F(·)` the first marginal and `π_→^F` the disintegration."
+    },
+    {
+     "name": "dbLoss_sub_eq_of_support",
+     "full": "GFNBounds.Graph.BackwardPolicy.dbLoss_sub_eq_of_support",
+     "kind": "theorem",
+     "line": 337,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbLoss_sub_eq_of_support {g : ℝ → ℝ} {nuHat nuHat' F F' : V → V → ℝ} (hnu : ∀ u v, G.hatEdge u v → nuHat' u v = nuHat u v) (hF : ∀ u v, ¬ G.hatEdge u v → F u v = 0) (hF' : ∀ u v, ¬ G.hatEdge u v → F' u v = 0) : B.dbLoss g nuHat F' - B.dbLoss g nuHat F = B.dbLoss g nuHat' F' - B.dbLoss g nuHat' F",
+     "doc": "**Between two edgeflows of `Ĝ`, the DB loss difference sees `ν̂` only on the edges.** Off the edges both ratios are `0/0 = 0`, so the terms `ν̂(u,v) g(0)` cancel; any `ν̂'` agreeing with `ν̂` on the edges gives the same difference."
+    },
+    {
+     "name": "dbLoss_eq_zero_of",
+     "full": "GFNBounds.Graph.BackwardPolicy.dbLoss_eq_zero_of",
+     "kind": "theorem",
+     "line": 349,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbLoss_eq_zero_of {g : ℝ → ℝ} (hg1 : g 1 = 0) {nuHat F : V → V → ℝ} (hnu0 : ∀ u v, ¬ G.hatEdge u v → nuHat u v = 0) (hr : ∀ u v, G.hatEdge u v → Balance.pushEdge B.phat F u v / F u v = 1) : B.dbLoss g nuHat F = 0",
+     "doc": "**The DB loss vanishes at edge-level balance**: ratio `1` on every edge of `Ĝ`, `ν̂ = 0` off them, and `g(1) = 0`."
+    },
+    {
+     "name": "dbLoss_pos_of",
+     "full": "GFNBounds.Graph.BackwardPolicy.dbLoss_pos_of",
+     "kind": "theorem",
+     "line": 361,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbLoss_pos_of {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat F : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) (hnu0 : ∀ u v, ¬ G.hatEdge u v → nuHat u v = 0) (hrpos : ∀ u v, G.hatEdge u v → 0 < Balance.pushEdge B.phat F u v / F u v) {u₀ v₀ : V} (he₀ : G.hatEdge u₀ v₀) (hne : Balance.pushEdge B.phat F u₀ v₀ / F u₀ v₀ ≠ 1) : 0 < B.dbLoss g nuHat F",
+     "doc": "**The DB loss is positive at one unbalanced edge**: `ν̂ > 0` on the edges of `Ĝ` and `0` off them, positive ratios on the edges, and one edge whose ratio is not `1`; `g > 0` off `1` does the rest."
+    },
+    {
+     "name": "dbRatio_edgeFlow_eq_one",
+     "full": "GFNBounds.Graph.BackwardPolicy.dbRatio_edgeFlow_eq_one",
+     "kind": "theorem",
+     "line": 384,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbRatio_edgeFlow_eq_one (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) {u v : V} (he : G.hatEdge u v) : Balance.pushEdge B.phat (B.edgeFlow lam 1) u v / B.edgeFlow lam 1 u v = 1",
+     "doc": "**At `F + F₀ = F*` the DB ratio is `1` on every edge of `Ĝ`** (`proofs.tex:701`, \"this holds by construction\"): `F* = λ₂` is `K₂`-invariant (`Balance.pushEdge_edgeMeasure_graph`) and `F* > 0` on the edges."
+    },
+    {
+     "name": "dbRatio_perturbedFlow_pos",
+     "full": "GFNBounds.Graph.BackwardPolicy.dbRatio_perturbedFlow_pos",
+     "kind": "theorem",
+     "line": 396,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbRatio_perturbedFlow_pos (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (γ : MarkedCirculation G) {eps : ℝ} (hadm : B.AdmissibleEps lam eps γ.circ) {u v : V} (he : G.hatEdge u v) : 0 < Balance.pushEdge B.phat (B.perturbedFlow lam eps γ.circ) u v / B.perturbedFlow lam eps γ.circ u v",
+     "doc": "**At `F` the DB ratio is positive on every edge of `Ĝ`** — what `g > 0` on `ℝ_{>0}` needs: `π̂_←(v→u) > 0`, the outflow of `F` at `v` equals its inflow, which is `≥ λ(v)/2 > 0`, and `F(u→v) > 0`."
+    },
+    {
+     "name": "frozen_unstable_full_db",
+     "full": "GFNBounds.Graph.BackwardPolicy.frozen_unstable_full_db",
+     "kind": "theorem",
+     "line": 418,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem frozen_unstable_full_db (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (γ : MarkedCirculation G) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) (hnu0 : ∀ u v, ¬ G.hatEdge u v → nuHat u v = 0) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : (∀ u v, 0 ≤ epsCirc eps γ.circ u v) ∧ (∀ u v, epsCirc eps γ.circ u v ≤ B.perturbedFlow lam eps γ.circ u v) ∧ B.dbLoss g nuHat (B.perturbedFlow lam eps γ.circ + epsCirc eps γ.circ) = 0 ∧ 0 < B.dbLoss g nuHat (B.perturbedFlow lam eps γ.circ)",
+     "doc": "**`prop:frozen_unstable_full`, the DB half** (statement `proofs.tex:680–690`, *The DB case* `proofs.tex:701`), in the four-part form of `frozen_unstable_full_fm`."
+    },
+    {
+     "name": "frozen_not_stable_fm",
+     "full": "GFNBounds.Graph.BackwardPolicy.frozen_not_stable_fm",
+     "kind": "theorem",
+     "line": 451,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem frozen_not_stable_fm (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nu : V → ℝ} (hnu : ∀ x, 0 < nu x) : ¬ Stable G (fun F => B.fmLoss g nu (edgeInflow F))",
+     "doc": "**`prop:frozen_unstable_full`, the FM loss is unstable in the sense of `eq:def_stability`** (`proofs.tex:689`)."
+    },
+    {
+     "name": "frozen_not_stable_db",
+     "full": "GFNBounds.Graph.BackwardPolicy.frozen_not_stable_db",
+     "kind": "theorem",
+     "line": 469,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem frozen_not_stable_db (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) : ¬ Stable G (B.dbLoss g nuHat)",
+     "doc": "**`prop:frozen_unstable_full`, the DB loss is unstable in the sense of `eq:def_stability`** (`proofs.tex:689`, and \"the same pair `(F, F₀)` therefore witnesses DB instability\", `proofs.tex:701`)."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -25303,6 +27259,64 @@
    "library": "scaffold",
    "tracked": true,
    "root_reachable": true
+  },
+  {
+   "file": "scaffold/GFNBoundsScaffold/Balance/GlobalConvergence.lean",
+   "title": "From every positive initialization, the `(log x)²` gradient flow converges to the balanced flow of its sphere",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.TrainingSpeed"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]"
+   ],
+   "lines": 257,
+   "decls": [
+    {
+     "name": "nrmL2_const_of_total",
+     "full": "GFNBounds.Balance.nrmL2_const_of_total",
+     "kind": "theorem",
+     "line": 110,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_const_of_total {lam : V → ℝ} (htot : ∑ x, lam x = 1) (c : ℝ) : Graph.nrmL2 lam (fun _ => c) = |c|",
+     "doc": "`‖c‖_{L²(λ)} = |c|` for a constant density, on a probability `λ`."
+    },
+    {
+     "name": "continuous_nrmL2",
+     "full": "GFNBounds.Balance.continuous_nrmL2",
+     "kind": "theorem",
+     "line": 117,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem continuous_nrmL2 (lam : V → ℝ) : Continuous fun a : V → ℝ => Graph.nrmL2 lam a",
+     "doc": "`a ↦ ‖a‖_{L²(λ)}` is continuous on `V → ℝ`."
+    },
+    {
+     "name": "no_distant_equilibrium_three_converges",
+     "full": "GFNBounds.Balance.no_distant_equilibrium_three_converges",
+     "kind": "theorem",
+     "line": 131,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_distant_equilibrium_three_converges {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam wf : V → ℝ} {wmin : ℝ} {u : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam (u 0)) ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam (u 0)) ∧ Graph.nrmL2 lam (fun _ => Graph.nrmL2 lam (u 0)) = Graph.nrmL2 lam (u 0) ∧ ∀ v : V → ℝ, (∀ x, 0 < v x) → Balanced B.phat lam v → Graph.nrmL2 lam v = Graph.nrmL2 lam (u 0) → v = fun _ => Graph.nrmL2 lam (u 0)",
+     "doc": "**`prop:no_distant_equilibrium`*(3)*, the convergence clause, for `g = (log x)²`**: on the loop closure of a finite path-connected marked graph, the gradient flow from any `μ₀ ∼ λ` converges to the balanced flow of its sphere."
+    },
+    {
+     "name": "global_dichotomy_full_one_converges",
+     "full": "GFNBounds.Balance.global_dichotomy_full_one_converges",
+     "kind": "theorem",
+     "line": 238,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem global_dichotomy_full_one_converges {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam wf : V → ℝ} {wmin : ℝ} {u : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : 0 < Graph.nrmL2 lam (u 0) ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam (u 0)) ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam (u 0))",
+     "doc": "**`theo:global_dichotomy_full`*(1)*, the convergence clause, for `g = (log x)²`**: on the loop closure of a finite path-connected marked graph, with `ν = wλ` and `w ≥ w_min > 0`, the gradient flow converges to a balanced flow from every initialization `μ₀ ∼ λ` — explicitly, to the constant density `‖u₀‖_{L²(λ)} > 0`."
+    }
+   ],
+   "library": "scaffold",
+   "tracked": false,
+   "root_reachable": false
   }
  ]
 }

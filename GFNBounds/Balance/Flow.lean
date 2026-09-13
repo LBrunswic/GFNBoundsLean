@@ -263,7 +263,15 @@ noncomputable def lossGrad (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ 
 on a finite state space as what it is there: an **ODE in `ℝ^V`**, one scalar equation per state.
 
 `u t x` is the `λ`-density of `μ_t` at the state `x`. Existence of such a curve is not claimed
-anywhere in this file; every statement below hypothesises one. -/
+anywhere in this file; every statement below hypothesises one.
+
+**Known defect (2026-09-13), not yet repaired.** The ODE is asked at *every real* `t`, while the
+paper's flow runs forward from `μ_0`. For `g = (log x)²` the backward flow leaves the positive cone
+in finite time, so on the two-vertex marked graph no curve satisfies this predicate from a
+non-balanced start (proved; numerically the same on the five-cycle, generic case unproved). Every
+theorem hypothesising `IsGradientFlow` is therefore, as far as is known, vacuous off balanced
+starts. The proposed repair re-ranges the quantifier to `0 ≤ t`; see `paper-map.json`,
+`cor:global_lojasiewicz`. -/
 def IsGradientFlow (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : ℝ → V → ℝ) : Prop :=
   ∀ (t : ℝ) (x : V), HasDerivAt (fun s : ℝ => u s x) (-lossGrad K lam nu gd (u t) x) t
 

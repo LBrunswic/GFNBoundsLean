@@ -50,6 +50,18 @@ import GFNBounds.Doubling.Ratios
 import GFNBounds.Doubling.Unbounded
 import GFNBounds.Doubling.RayleighBridge
 import GFNBounds.Doubling.UnboundedL2
+import GFNBounds.Balance.WeightedL2Norm
+import GFNBounds.Balance.LocalConvergenceClauses
+import GFNBounds.Balance.LocalConvergenceMixing
+import GFNBounds.Balance.SqGenerator
+import GFNBounds.Balance.FreezingGeneral
+import GFNBounds.Core.UniversalityKernelBound
+import GFNBounds.Doubling.OperatorFiniteSum
+import GFNBounds.Doubling.DescentStatement
+import GFNBounds.Graph.CycleBlowup
+import GFNBounds.Doubling.TruncationBhat
+import GFNBounds.Doubling.MainPackaging
+import GFNBounds.Graph.FrozenUnstableDB
 
 /-!
 # Axiom audit
@@ -434,3 +446,151 @@ namespace GFNBounds.Doubling
 #print axioms main_constant_functional
 
 end GFNBounds.Doubling
+
+/-! ## Wave 1 (2026-09-13): the first non-Doubling certificates
+
+Balance, Core, Graph and the new Doubling files graduated from the scaffold on 2026-09-13.
+Before this section `Audit.lean` checked Doubling only; these modules were covered solely by
+`scripts/AxiomSweep.lean`. Names are fully qualified. -/
+
+-- `theo/lem:sigma_mixing + prop:nonlinear_freezing(2)` — GFNBounds/Balance/WeightedL2Norm.lean
+#print axioms GFNBounds.Balance.one_sub_meanOp_ne_zero
+#print axioms GFNBounds.Balance.norm_one_sub_meanOp
+#print axioms GFNBounds.Balance.beta_zero_densOp_meanOp
+#print axioms GFNBounds.Balance.one_le_B_densOp
+#print axioms GFNBounds.Balance.rho_densOp_le
+#print axioms GFNBounds.Balance.twoState_mixing_densOp
+#print axioms GFNBounds.Balance.twoState_mixing_coefficients
+#print axioms GFNBounds.Balance.twoState_rho_eq
+#print axioms GFNBounds.Balance.twoState_rho_freezing
+
+-- `theo:local_convergence_full clauses` — GFNBounds/Balance/LocalConvergenceClauses.lean
+#print axioms GFNBounds.Balance.eps0_le_a_div
+#print axioms GFNBounds.Balance.eps0_mem_Ioc
+#print axioms GFNBounds.Balance.one_le_max_C7
+#print axioms GFNBounds.Balance.local_convergence_full_C
+#print axioms GFNBounds.Balance.gamma0_pos
+#print axioms GFNBounds.Balance.Lgd_pos
+#print axioms GFNBounds.Balance.gamma0_pos_of_weights
+#print axioms GFNBounds.Balance.local_convergence_gd_window
+#print axioms GFNBounds.Balance.abs_ratio_sub_one_le_two_a_div_three
+#print axioms GFNBounds.Balance.hasDerivAt_loss_local
+#print axioms GFNBounds.Balance.hasDerivAt_loss_ipL2_local
+#print axioms GFNBounds.Balance.local_convergence_gd_welldefined
+
+-- `theo:local_convergence_full at Core.Mixing.B` — GFNBounds/Balance/LocalConvergenceMixing.lean
+#print axioms GFNBounds.Balance.local_convergence_full_mixing
+#print axioms GFNBounds.Balance.local_convergence_gd_mixing
+#print axioms GFNBounds.Balance.eps0_mem_Ioc_mixing
+#print axioms GFNBounds.Balance.local_convergence_full_C_mixing
+#print axioms GFNBounds.Balance.gamma0_pos_of_weights_mixing
+#print axioms GFNBounds.Balance.local_convergence_gd_welldefined_mixing
+#print axioms GFNBounds.Balance.mixing_densOp_iff_summable
+#print axioms GFNBounds.Balance.meanOp_eq_of_densOp_eq
+#print axioms GFNBounds.Balance.eq_const_of_densAct_eq
+
+-- `prop:no_distant_equilibrium(3) for (x-1)^2` — GFNBounds/Balance/SqGenerator.lean
+#print axioms GFNBounds.Balance.sqDeriv_mul_one_sub_le_sharp
+#print axioms GFNBounds.Balance.sqDeriv_mul_one_sub_le
+#print axioms GFNBounds.Balance.le_abs_sqDeriv_mul_one_sub
+#print axioms GFNBounds.Balance.sqDeriv_mul_one_sub_nonpos
+#print axioms GFNBounds.Balance.no_distant_equilibrium_three_far_of
+#print axioms GFNBounds.Balance.no_distant_equilibrium_three_sq
+
+-- `prop:nonlinear_freezing(1) widened` — GFNBounds/Balance/FreezingGeneral.lean
+#print axioms GFNBounds.Balance.const_on_band_of_deriv_zero
+#print axioms GFNBounds.Balance.FreezingBands.pos_of_mem_bands
+#print axioms GFNBounds.Balance.eventually_loss_eq_of
+#print axioms GFNBounds.Balance.loss_pos_of
+#print axioms GFNBounds.Balance.loss_pos_of_nonneg
+#print axioms GFNBounds.Balance.hasFDerivAt_loss_zero_of
+#print axioms GFNBounds.Balance.freezing_item_one_general
+#print axioms GFNBounds.Balance.freezing_hasDerivAt_zero_general
+#print axioms GFNBounds.Balance.freezing_item_one_of_general
+
+-- `theo:universality_L2_full at the kernel` — GFNBounds/Core/UniversalityKernelBound.lean
+#print axioms GFNBounds.Core.coeFn_liftedOutflow
+#print axioms GFNBounds.Core.truncation_eq_zero_top
+#print axioms GFNBounds.Core.tendsto_truncation_norm_all
+#print axioms GFNBounds.Core.residuals_le_of_kernel
+#print axioms GFNBounds.Core.tendsto_residuals_of_kernel
+#print axioms GFNBounds.Core.defect_eq_zero_of_kernel_top
+#print axioms GFNBounds.Core.residuals_eq_zero_of_kernel_top
+
+-- `lem:doubling_operator(3), rem:doubling_two_constants` — GFNBounds/Doubling/OperatorFiniteSum.lean
+#print axioms GFNBounds.Doubling.resolvent_eq_tsum_of_bdd
+#print axioms GFNBounds.Doubling.inverse_sub_le_of_bdd
+#print axioms GFNBounds.Doubling.Stat.bhat_le_sum_betaHat
+#print axioms GFNBounds.Doubling.Stat.sub_piL2_eq_tsum
+#print axioms GFNBounds.Doubling.Stat.inverse_sub_piL2_le_sum_betaHat
+#print axioms GFNBounds.Doubling.Stat.inverse_sub_piL2_eq_tsum
+
+-- `lem:doubling_descent` — GFNBounds/Doubling/DescentStatement.lean
+#print axioms GFNBounds.Doubling.Decay.c4_pos
+#print axioms GFNBounds.Doubling.Decay.lt_ell1
+#print axioms GFNBounds.Doubling.Decay.thr_of_ell1
+#print axioms GFNBounds.Doubling.Decay.R0_between_of_ell1
+#print axioms GFNBounds.Doubling.Decay.R0_sub_one_le_c4
+#print axioms GFNBounds.Doubling.Decay.descent_item1_path
+#print axioms GFNBounds.Doubling.Decay.descent_item2_path
+#print axioms GFNBounds.Doubling.Decay.descent_Z_pos
+#print axioms GFNBounds.Doubling.Decay.exitLaw_eq_zero_of_notMem
+#print axioms GFNBounds.Doubling.Decay.descZ_eq_descW
+#print axioms GFNBounds.Doubling.Decay.exists_descentPath
+#print axioms GFNBounds.Doubling.Decay.doubling_descent
+
+-- `rem:cycle_no_stalemate` — GFNBounds/Graph/CycleBlowup.lean
+#print axioms GFNBounds.Graph.CycleExample.bhatSigma_cycle_tendsto
+#print axioms GFNBounds.Graph.CycleExample.bhatSigma_blowup_paper_form
+#print axioms GFNBounds.Graph.CycleExample.sigmaBar_blowup
+#print axioms GFNBounds.Graph.CycleExample.blowupDelta_pos
+#print axioms GFNBounds.Graph.CycleExample.lt_three_div_of_blowupDelta
+
+-- `cor:doubling_truncation` — GFNBounds/Doubling/TruncationBhat.lean
+#print axioms GFNBounds.Doubling.Stat.diffOpK_resolvent
+#print axioms GFNBounds.Doubling.Stat.percut_leftInverse
+#print axioms GFNBounds.Doubling.Stat.percut_bhatK
+#print axioms GFNBounds.Doubling.Stat.withEpsMax_lam
+#print axioms GFNBounds.Doubling.Decay.one_le_c9Of
+#print axioms GFNBounds.Doubling.Decay.c8Of_pos
+#print axioms GFNBounds.Doubling.Stat.decayK_explicit
+#print axioms GFNBounds.Doubling.Stat.sqrtK_explicit
+#print axioms GFNBounds.Doubling.Stat.sqrtK_bhatK
+#print axioms GFNBounds.Doubling.truncation_explicit
+#print axioms GFNBounds.Doubling.main_truncation
+
+-- `theo:doubling_main packaging` — GFNBounds/Doubling/MainPackaging.lean
+#print axioms GFNBounds.Doubling.card_chainFinset
+#print axioms GFNBounds.Doubling.main_truncation_states
+#print axioms GFNBounds.Doubling.Decay.c7Of_congr
+#print axioms GFNBounds.Doubling.Decay.c7Of_pos
+#print axioms GFNBounds.Doubling.Stat.mass_defect_centredTail_pos
+#print axioms GFNBounds.Doubling.Stat.rate_explicit
+#print axioms GFNBounds.Doubling.main_rate_explicit
+#print axioms GFNBounds.Doubling.main_c7_congr
+#print axioms GFNBounds.Doubling.main_truncation_explicit
+
+-- `prop:frozen_unstable_full` (DB half, eq:def_stability) — GFNBounds/Graph/FrozenUnstableDB.lean
+#print axioms GFNBounds.Graph.not_stable_of_witness
+#print axioms GFNBounds.Graph.BackwardPolicy.edgeFlow_one_eq_edgeMeasure
+#print axioms GFNBounds.Graph.BackwardPolicy.phat_pos_of_hatEdge
+#print axioms GFNBounds.Graph.BackwardPolicy.phat_eq_zero_of_not_hatEdge
+#print axioms GFNBounds.Graph.BackwardPolicy.edgeFlow_eq_zero_of_not_hatEdge
+#print axioms GFNBounds.Graph.BackwardPolicy.circ_eq_zero_of_not_hatEdge
+#print axioms GFNBounds.Graph.BackwardPolicy.perturbedFlow_eq_zero_of_not_hatEdge
+#print axioms GFNBounds.Graph.BackwardPolicy.perturbedFlow_pos_of_hatEdge
+#print axioms GFNBounds.Graph.BackwardPolicy.perturbedFlow_isEdgeflow
+#print axioms GFNBounds.Graph.BackwardPolicy.invariant_edgeInflow_of_pushEdge_eq
+#print axioms GFNBounds.Graph.BackwardPolicy.pushEdge_perturbedFlow_ne
+#print axioms GFNBounds.Graph.BackwardPolicy.perturbedFlow_isFlow
+#print axioms GFNBounds.Graph.BackwardPolicy.epsCirc_isZeroFlow
+#print axioms GFNBounds.Graph.BackwardPolicy.edgeMeasure_pos_iff_hatEdge
+#print axioms GFNBounds.Graph.BackwardPolicy.dbLoss_eq_edgeRatio
+#print axioms GFNBounds.Graph.BackwardPolicy.dbLoss_sub_eq_of_support
+#print axioms GFNBounds.Graph.BackwardPolicy.dbLoss_eq_zero_of
+#print axioms GFNBounds.Graph.BackwardPolicy.dbLoss_pos_of
+#print axioms GFNBounds.Graph.BackwardPolicy.dbRatio_edgeFlow_eq_one
+#print axioms GFNBounds.Graph.BackwardPolicy.dbRatio_perturbedFlow_pos
+#print axioms GFNBounds.Graph.BackwardPolicy.frozen_unstable_full_db
+#print axioms GFNBounds.Graph.BackwardPolicy.frozen_not_stable_fm
+#print axioms GFNBounds.Graph.BackwardPolicy.frozen_not_stable_db

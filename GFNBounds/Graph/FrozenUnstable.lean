@@ -4,15 +4,15 @@ import GFNBounds.Graph.Universality
 /-!
 # Freezing the backward policy does not restore stability, and the loop closure is what makes the frozen family nonempty
 
-**`prop:frozen_unstable_full`** — statement `proofs.tex:659–669`, proof `proofs.tex:671–683`.
+**`prop:frozen_unstable_full`** — statement `proofs.tex:680–690`, proof `proofs.tex:692–704`.
 
-**`rem:loop_closure_necessary`** — `proofs.tex:1014–1016`.
+**`rem:loop_closure_necessary`** — `proofs.tex:1091–1093`.
 
 (The bold-backtick form of each label, each alone on its line, is what `scripts/trace_check.py`
 and the paper-side ledger machine-read; a label mentioned only in prose is not a claim to
 certify it.) The standing prose defining *marked graph* and *backward policy* is
 `proofs.tex:949`, and the stability being negated is `eq:def_stability`
-(`cv_divergence.tex:179–181`):
+(`cv_divergence.tex:183–185`):
 
 > `𝓛(F + F₀) ≥ 𝓛(F)` for every `0`-flow `F₀` that is a subflow of `F`.
 
@@ -114,10 +114,11 @@ halves of that reading are load-bearing; see SCOPE.
 ## SCOPE (disclosed)
 
 * **Only the FM half of `prop:frozen_unstable_full`.** The paper's *DB case* paragraph
-  (`proofs.tex:680`) reads the DB loss on edgeflows through `prop:db_lift`
-  (`proofs.tex:524–535`), which is **not formalized** — it is `bucket C` and unassigned in
-  `paper-map.json`. Nothing below mentions the DB loss, and the sentence "the same pair
-  `(F, F₀)` therefore witnesses DB instability" is not certified here.
+  (`proofs.tex:701`), which reads the DB loss on edgeflows through `prop:db_lift`
+  (`proofs.tex:524–531`), is certified in `GFNBounds.Graph.FrozenUnstableDB`
+  (`frozen_unstable_full_db`), together with `eq:def_stability` as a formal predicate `Stable`
+  and the negations `frozen_not_stable_fm`, `frozen_not_stable_db`. Nothing below mentions the
+  DB loss.
 * **The loss is defined, not derived.** `fmLoss` is `∑_x ν(x) g(r(x))`; that this is the FM loss
   of Definition 3 of `brunswic2024theory` read on edgeflows is the paper's first proof
   paragraph, and it is taken as the definition. Neither the edgeflow FM loss nor
@@ -202,9 +203,10 @@ def edgeInflow (F : V → V → ℝ) : V → ℝ := fun v => ∑ u, F u v
 /-- The outflow of an edgeflow, `∑_v F(u → v)`. -/
 def edgeOutflow (F : V → V → ℝ) : V → ℝ := fun u => ∑ v, F u v
 
-/-- **A `0`-flow**, in the sense `eq:def_stability` quantifies over
-(`cv_divergence.tex:179–181`): an edgeflow that neither creates nor destroys mass at any vertex,
-i.e. a circulation. -/
+/-- **A circulation**: an edgeflow that neither creates nor destroys mass at any vertex. The
+`0`-flows `eq:def_stability` (`cv_divergence.tex:183–185`) quantifies over are narrower —
+Definition 2 of `brunswic2024theory`, formalized as `GFNBounds.Graph.IsZeroFlow` in
+`FrozenUnstableDB.lean`. -/
 def IsCirculation (F : V → V → ℝ) : Prop := ∀ x, edgeOutflow F x = edgeInflow F x
 
 /-- **`prop:frozen_unstable_full`, the unit circulation `1_γ`** (`proofs.tex:663`), as the
@@ -538,8 +540,8 @@ theorem not_invariant_perturbedFlow (hpc : G.PathConnected) (hbpos : B.PositiveO
 
 /-! ### `prop:frozen_unstable_full`, the FM half -/
 
-/-- **`prop:frozen_unstable_full`, the FM half** (statement `proofs.tex:659–669`, proof
-`proofs.tex:671–683`), in one statement.
+/-- **`prop:frozen_unstable_full`, the FM half** (statement `proofs.tex:680–690`, proof
+`proofs.tex:692–704`), in one statement.
 
 On a finite path-connected marked graph carrying a `0`-flow `1_γ` that avoids both marks, with an
 everywhere-positive frozen backward policy, `λ` an invariant probability of the loop closure, `g`
@@ -575,7 +577,7 @@ theorem frozen_unstable_full_fm (hpc : G.PathConnected) (hbpos : B.PositiveOnEdg
 
 /-! ### `rem:loop_closure_necessary`: on `G` itself the frozen family is trivial -/
 
-/-- **`rem:loop_closure_necessary`, the backward kernel of `G` itself** (`proofs.tex:1014`):
+/-- **`rem:loop_closure_necessary`, the backward kernel of `G` itself** (`proofs.tex:1091`):
 `π_←` with the row at `s₀` emptied. `s₀` has no in-neighbour in `G`, so the paper's "`π_←` being
 undefined at `s₀`" is the absence of that row; the kernel is substochastic, its rows summing to
 `1` off `s₀` and to `0` at `s₀`.
@@ -602,7 +604,7 @@ theorem pcut_row_sum_of_ne_src {s : V} (hs : s ≠ G.src) : ∑ s', B.pcut s s' 
 /-- At the source the row is empty: this is the deficit the marginal argument reads off. -/
 theorem pcut_row_sum_src : ∑ s', B.pcut G.src s' = 0 := by simp
 
-/-- **`rem:loop_closure_necessary`, the frozen-backward family on `G`** (`proofs.tex:1014`): the
+/-- **`rem:loop_closure_necessary`, the frozen-backward family on `G`** (`proofs.tex:1091`): the
 family `Θ_{π_←}` of `theo:universality_graphs`*(2)* with `π̂_←` replaced by the kernel of `G`
 itself, in the same coordinates —
 `f_out(u) π_→(u → v) = π_←(v → u) f_out(v)` at every transition. -/
@@ -615,7 +617,7 @@ theorem cutBalance_zero (pf : V → V → ℝ) : B.CutBalance pf 0 := by
   intro u v
   simp
 
-/-- **`rem:loop_closure_necessary`, the marginal argument** (`proofs.tex:1014`): summing the
+/-- **`rem:loop_closure_necessary`, the marginal argument** (`proofs.tex:1091`): summing the
 constraint over `v` at fixed `u`, the rows of `π_→` summing to `1`, makes `f_out μ` invariant
 under `π_←`. -/
 theorem cutBalance_invariant {pf : V → V → ℝ} {fout : V → ℝ} (hrow : ∀ u, ∑ v, pf u v = 1)
@@ -628,7 +630,7 @@ theorem cutBalance_invariant {pf : V → V → ℝ} {fout : V → ℝ} (hrow : �
     _ = fout u := h1.symm
 
 /-- **`rem:loop_closure_necessary`: the marginal argument forces `f_out(s₀) = 0`**
-(`proofs.tex:1014`).
+(`proofs.tex:1091`).
 
 Summing the invariance identity over `u` moves the row sums of `π_←` outside: they are `1` at
 every state but `s₀`, where the row is empty. So `∑_u f_out(u) = ∑_v f_out(v) − f_out(s₀)`. No
@@ -687,7 +689,7 @@ theorem cutInvariant_eq_zero_of_reach (hbpos : B.PositiveOnEdges) {fout : V → 
   | refl => exact ha
   | tail _ he ih => exact B.cutInvariant_step hbpos hnn hinv he ih
 
-/-- **`rem:loop_closure_necessary`** (`proofs.tex:1014–1016`): *on `G` itself, i.e. without the
+/-- **`rem:loop_closure_necessary`** (`proofs.tex:1091–1093`): *on `G` itself, i.e. without the
 wrap edge, the frozen-backward family is trivial.*
 
 Every member of `Θ_{π_←}` on `G` — a forward policy `π_→` with rows summing to `1`, a

@@ -238,40 +238,40 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 |---|---|---|---|
 | `GFNBounds/Audit.lean` | Axiom audit | — | 0 |
 | `GFNBounds/Balance/BoundaryBlowup.lean` | The boundary blow-up: the loss explodes where the density vanishes, so the flow stays positive **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D, ✅ `cor:global_lojasiewicz` A | 32 |
-| `GFNBounds/Balance/Discrete.lean` | Discrete gradient descent contracts by `1 − εϱ` per step **[SCOPE]** | 🟡 `theo:db_stable_frozen_full` D | 5 |
-| `GFNBounds/Balance/Expansion.lean` | The gradient field at `μ = (1+h)λ`: `D = A†[g''(1) w Ah_⊥] + E` with `‖E‖ ≤ Kε‖Ah_⊥‖` **[SCOPE]** | 🟡 `theo:gd_diffusion_full` D, ✅ `theo:local_convergence_full` B | 47 |
-| `GFNBounds/Balance/FirstVariation.lean` | The first variation of the balance loss: `D = Qφ − rφ` is a derivative, not a definition **[SCOPE]** | 🟡 `theo:first_variation_full` D | 19 |
-| `GFNBounds/Balance/Flow.lean` | The gradient flow: the identity `−𝓛̇ = ‖D‖²`, and the decay Grönwall turns the coercivity into **[SCOPE]** | 🟡 `theo:first_variation_full` D, 🟡 `theo:db_stable_frozen_full` D, 🟡 `prop:no_distant_equilibrium` D, ✅ `cor:global_lojasiewicz` A | 23 |
-| `GFNBounds/Balance/Freezing.lean` | Nonlinear freezing: an admissible generator whose gradient vanishes on an open set of flows **[SCOPE]** | 🟡 `prop:nonlinear_freezing` D, 🟡 `theo:global_dichotomy_full` D | 77 |
-| `GFNBounds/Balance/FreezingGeneral.lean` | Nonlinear freezing for every generator that is flat and positive on the bands **[SCOPE]** | 🟡 `prop:nonlinear_freezing` D, 🟡 `theo:global_dichotomy_full` D | 9 |
-| `GFNBounds/Balance/GlobalConvergence.lean` | From every positive initialization, the `(log x)²` gradient flow converges to the balanced flow of its sphere **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D, 🟡 `theo:global_dichotomy_full` D | 3 |
+| `GFNBounds/Balance/Discrete.lean` | Discrete gradient descent contracts by `1 − εϱ` per step **[SCOPE]** | 🟡 `theo:db_stable_frozen_full` D, 🟡 `theo:db_stable_frozen` D | 5 |
+| `GFNBounds/Balance/Expansion.lean` | The gradient field at `μ = (1+h)λ`: `D = A†[g''(1) w Ah_⊥] + E` with `‖E‖ ≤ Kε‖Ah_⊥‖` **[SCOPE]** | 🟡 `theo:gd_diffusion_full` D, ✅ `theo:local_convergence_full` B, 🟡 `theo:gd_diffusion` D, ✅ `theo:local_convergence` B | 47 |
+| `GFNBounds/Balance/FirstVariation.lean` | The first variation of the balance loss: `D = Qφ − rφ` is a derivative, not a definition **[SCOPE]** | 🟡 `theo:first_variation_full` D, 🟡 `theo:first_variation` D | 19 |
+| `GFNBounds/Balance/Flow.lean` | The gradient flow: the identity `−𝓛̇ = ‖D‖²`, and the decay Grönwall turns the coercivity into **[SCOPE]** | 🟡 `theo:first_variation_full` D, 🟡 `theo:db_stable_frozen_full` D, 🟡 `prop:no_distant_equilibrium` D, ✅ `cor:global_lojasiewicz` A, 🟡 `theo:first_variation` D, 🟡 `theo:db_stable_frozen` D | 23 |
+| `GFNBounds/Balance/Freezing.lean` | Nonlinear freezing: an admissible generator whose gradient vanishes on an open set of flows **[SCOPE]** | 🟡 `prop:nonlinear_freezing` D, 🟡 `theo:global_dichotomy_full` D, 🟡 `theo:global_dichotomy` D | 77 |
+| `GFNBounds/Balance/FreezingGeneral.lean` | Nonlinear freezing for every generator that is flat and positive on the bands **[SCOPE]** | 🟡 `prop:nonlinear_freezing` D, 🟡 `theo:global_dichotomy_full` D, 🟡 `theo:global_dichotomy` D | 9 |
+| `GFNBounds/Balance/GlobalConvergence.lean` | From every positive initialization, the `(log x)²` gradient flow converges to the balanced flow of its sphere **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D, 🟡 `theo:global_dichotomy_full` D, 🟡 `theo:global_dichotomy` D | 3 |
 | `GFNBounds/Balance/GradientFormulas.lean` | The two corollaries of the first variation: the FM gradient and the DB gradient **[SCOPE]** | 🟡 `cor:gradient_formulas` D, 🟡 `cor:db_gradient` D | 23 |
-| `GFNBounds/Balance/L2Toolkit.lean` | The `L²(λ)` shelf the frozen-policy convergence block stands on: `A = P − I`, its adjoint, and a continuity bootstrap **[SCOPE]** | ✅ `theo:local_convergence_full` B | 39 |
+| `GFNBounds/Balance/L2Toolkit.lean` | The `L²(λ)` shelf the frozen-policy convergence block stands on: `A = P − I`, its adjoint, and a continuity bootstrap **[SCOPE]** | ✅ `theo:local_convergence_full` B, ✅ `theo:local_convergence` B | 39 |
 | `GFNBounds/Balance/Lift.lean` | The edge lift: detailed balance is flow matching one step up **[SCOPE]** | 🟡 `def:edge_lift` D, 🟡 `lem:lift_wellposed` D, 🟡 `prop:db_lift` D, 🟡 `lem:lift_mixing` D | 63 |
-| `GFNBounds/Balance/LocalConvergence.lean` | Steps 4 and 5 of the local convergence theorem, and its gradient-descent clause **[SCOPE]** | ✅ `theo:local_convergence_full` B | 54 |
-| `GFNBounds/Balance/LocalConvergenceClauses.lean` | The four clauses the local convergence theorem gained on 2026-09-13 **[SCOPE]** | ✅ `theo:local_convergence_full` B | 12 |
-| `GFNBounds/Balance/LocalConvergenceMixing.lean` | The local convergence theorem at the paper's mixing sum `B̂` **[SCOPE]** | ✅ `theo:local_convergence_full` B | 9 |
-| `GFNBounds/Balance/LocalEnergy.lean` | Steps 2 and 3 of the local convergence theorem: the energy estimate, and the drift of the mass **[SCOPE]** | ✅ `theo:local_convergence_full` B | 36 |
+| `GFNBounds/Balance/LocalConvergence.lean` | Steps 4 and 5 of the local convergence theorem, and its gradient-descent clause **[SCOPE]** | ✅ `theo:local_convergence_full` B, ✅ `theo:local_convergence` B | 54 |
+| `GFNBounds/Balance/LocalConvergenceClauses.lean` | The four clauses the local convergence theorem gained on 2026-09-13 **[SCOPE]** | ✅ `theo:local_convergence_full` B, ✅ `theo:local_convergence` B | 12 |
+| `GFNBounds/Balance/LocalConvergenceMixing.lean` | The local convergence theorem at the paper's mixing sum `B̂` **[SCOPE]** | ✅ `theo:local_convergence_full` B, ✅ `theo:local_convergence` B | 9 |
+| `GFNBounds/Balance/LocalEnergy.lean` | Steps 2 and 3 of the local convergence theorem: the energy estimate, and the drift of the mass **[SCOPE]** | ✅ `theo:local_convergence_full` B, ✅ `theo:local_convergence` B | 36 |
 | `GFNBounds/Balance/LogSqTaylor.lean` | A second-order Taylor bound on `g'` for `g = (log x)²`, near `x = 1` **[SCOPE]** | — | 3 |
 | `GFNBounds/Balance/Lojasiewicz.lean` | Coercivity off balance, and the Łojasiewicz inequality it delivers **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D, ✅ `cor:global_lojasiewicz` A | 27 |
 | `GFNBounds/Balance/MassAscent.lean` | The mass is the Lyapunov function: monotone ascent on the sphere, and the entry time **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D, ✅ `cor:global_lojasiewicz` A | 25 |
-| `GFNBounds/Balance/MassIdentity.lean` | The mass identity: a strictly unimodal generator admits no distant equilibrium **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D, 🟡 `theo:global_dichotomy_full` D | 25 |
-| `GFNBounds/Balance/RatioBridge.lean` | From the ratio variable to the density variable: the local-phase rescaling step **[SCOPE]** | 🟡 `theo:training_speed_full` B | 17 |
+| `GFNBounds/Balance/MassIdentity.lean` | The mass identity: a strictly unimodal generator admits no distant equilibrium **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D, 🟡 `theo:global_dichotomy_full` D, 🟡 `theo:global_dichotomy` D | 25 |
+| `GFNBounds/Balance/RatioBridge.lean` | From the ratio variable to the density variable: the local-phase rescaling step **[SCOPE]** | 🟡 `theo:training_speed_full` B, 🟡 `theo:training_speed` B | 17 |
 | `GFNBounds/Balance/SqGenerator.lean` | The generator `(x − 1)²` is coercive off balance, and item *(3)*'s display holds for it **[SCOPE]** | 🟡 `prop:no_distant_equilibrium` D | 6 |
-| `GFNBounds/Balance/TrainingSpeed.lean` | The training-speed theorem, assembled: two phases, and every constant in `σ_*`, `σ̄`, `N_min` **[SCOPE]** | 🟡 `theo:training_speed_full` B | 29 |
-| `GFNBounds/Balance/WeightedL2.lean` | Weighted `L²(λ)` as an inner-product space, and the contraction at `H = g''(1)A^†M_wA` **[SCOPE]** | 🟡 `theo:db_stable_frozen_full` D | 62 |
-| `GFNBounds/Balance/WeightedL2Norm.lean` | The mean projection is orthogonal on `L²(λ)`, so `β̂₀ = ‖I − Π‖ = 1` exactly **[SCOPE]** | ✅ `lem:sigma_mixing` A, ✅ `theo:local_convergence_full` B, 🟡 `prop:nonlinear_freezing` D | 15 |
+| `GFNBounds/Balance/TrainingSpeed.lean` | The training-speed theorem, assembled: two phases, and every constant in `σ_*`, `σ̄`, `N_min` **[SCOPE]** | 🟡 `theo:training_speed_full` B, 🟡 `theo:training_speed` B | 29 |
+| `GFNBounds/Balance/WeightedL2.lean` | Weighted `L²(λ)` as an inner-product space, and the contraction at `H = g''(1)A^†M_wA` **[SCOPE]** | 🟡 `theo:db_stable_frozen_full` D, 🟡 `theo:db_stable_frozen` D | 62 |
+| `GFNBounds/Balance/WeightedL2Norm.lean` | The mean projection is orthogonal on `L²(λ)`, so `β̂₀ = ‖I − Π‖ = 1` exactly **[SCOPE]** | ✅ `lem:sigma_mixing` A, ✅ `theo:local_convergence_full` B, 🟡 `prop:nonlinear_freezing` D, ✅ `theo:local_convergence` B | 15 |
 | `GFNBounds/Core/Adjoint.lean` | The `λ`-reversal of a Markov kernel, and the `L²(λ)`-adjointness it carries **[SCOPE]** | 🟡 `lem:adjoint` D | 46 |
-| `GFNBounds/Core/Flow.lean` | The mean projection, and the two identities `Core.Mixing` assumes **[SCOPE]** | ✅ `theo:universality_L2_full` A | 18 |
-| `GFNBounds/Core/ILBound.lean` | The KL-weak-FM loss has the target's self-entropy as its floor, and controls the sampling error **[SCOPE]** | 🟡 `theo:IL_CV_bound` B | 25 |
-| `GFNBounds/Core/Kernel.lean` | The density action of a Markov kernel, and the two conditions `Core.Flow` assumes **[SCOPE]** | ✅ `theo:universality_L2_full` A | 45 |
-| `GFNBounds/Core/Mixing.lean` | The mixing sum, and the Poisson equation it solves **[SCOPE]** | ✅ `theo:universality_L2_full` A, ✅ `lem:sigma_mixing` A | 20 |
+| `GFNBounds/Core/Flow.lean` | The mean projection, and the two identities `Core.Mixing` assumes **[SCOPE]** | ✅ `theo:universality_L2_full` A, ✅ `theo:universality_L2` A | 18 |
+| `GFNBounds/Core/ILBound.lean` | The KL-weak-FM loss has the target's self-entropy as its floor, and controls the sampling error **[SCOPE]** | 🟡 `theo:IL_CV_bound` B, 🟡 `theo:IL_CV_bound_body` B | 25 |
+| `GFNBounds/Core/Kernel.lean` | The density action of a Markov kernel, and the two conditions `Core.Flow` assumes **[SCOPE]** | ✅ `theo:universality_L2_full` A, ✅ `theo:universality_L2` A | 45 |
+| `GFNBounds/Core/Mixing.lean` | The mixing sum, and the Poisson equation it solves **[SCOPE]** | ✅ `theo:universality_L2_full` A, ✅ `lem:sigma_mixing` A, ✅ `theo:universality_L2` A | 20 |
 | `GFNBounds/Core/MixingBase.lean` | The base coefficient of the mixing sum: `β̂₀ = ‖I − Π‖ ≥ 1`, hence `B̂ ≥ 1` **[SCOPE]** | ✅ `lem:sigma_mixing` A | 24 |
-| `GFNBounds/Core/StableBound.lean` | A stable `L^q` flow-matching loss controls the sampling error and the initial-mass defect **[SCOPE]** | 🟡 `theo:RL_CV_bound_full` B | 22 |
-| `GFNBounds/Core/StrongUniversality.lean` | Strong universality at `p = +∞`, and the transfer of the realized outflow to every `L^r` **[SCOPE]** | ✅ `theo:universality_L2_full` A | 20 |
-| `GFNBounds/Core/Universality.lean` | Universality: the lifted outflow, its defect, and the quantitative bound **[SCOPE]** | ✅ `theo:universality_L2_full` A | 21 |
-| `GFNBounds/Core/UniversalityKernelBound.lean` | The quantitative universality bound, read at the density action of a Markov kernel **[SCOPE]** | ✅ `theo:universality_L2_full` A | 7 |
-| `GFNBounds/Core/UniversalityLp.lean` | The truncation vanishes on `L^p(ν)` for `p < ∞`, and weak universality follows **[SCOPE]** | ✅ `theo:universality_L2_full` A | 6 |
+| `GFNBounds/Core/StableBound.lean` | A stable `L^q` flow-matching loss controls the sampling error and the initial-mass defect **[SCOPE]** | 🟡 `theo:RL_CV_bound_full` B, 🟡 `theo:RL_CV_bound` B | 22 |
+| `GFNBounds/Core/StrongUniversality.lean` | Strong universality at `p = +∞`, and the transfer of the realized outflow to every `L^r` **[SCOPE]** | ✅ `theo:universality_L2_full` A, 🟡 `def:universality` B, ✅ `theo:universality_L2` A | 20 |
+| `GFNBounds/Core/Universality.lean` | Universality: the lifted outflow, its defect, and the quantitative bound **[SCOPE]** | ✅ `theo:universality_L2_full` A, 🟡 `def:universality` B, ✅ `theo:universality_L2` A | 21 |
+| `GFNBounds/Core/UniversalityKernelBound.lean` | The quantitative universality bound, read at the density action of a Markov kernel **[SCOPE]** | ✅ `theo:universality_L2_full` A, ✅ `theo:universality_L2` A | 7 |
+| `GFNBounds/Core/UniversalityLp.lean` | The truncation vanishes on `L^p(ν)` for `p < ∞`, and weak universality follows **[SCOPE]** | ✅ `theo:universality_L2_full` A, ✅ `theo:universality_L2` A | 6 |
 | `Adjoint.lean` | The density action `P`, and `P⋆ = P*` **[SCOPE]** | 🟡 `lem:doubling_operator` D | 30 |
 | `AdjointL2.lean` | `P⋆ = P*` on `L²(λ)`, and `‖P⋆ⁿ − Π‖ = β̂ₙ` **[SCOPE]** | 🟡 `lem:doubling_operator` D | 29 |
 | `Balance.lean` | The measure action, its duality with `P⋆`, and the pointwise balance equations **[SCOPE]** | 🟡 `lem:doubling_operator` D | 20 |
@@ -336,10 +336,10 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `Weight.lean` | `lem:doubling_weight`: the weight of a descent deviates from `1` by `O(1/ℓ)` in mean **[SCOPE]** | 🟡 `lem:doubling_weight` B, ✅ `def:doubling_setting` A, ✅ `def:doubling_decay_notation` A, ✅ `lem:doubling_descent` A, ✅ `lem:doubling_escape` A | 12 |
 | `WindowSum.lean` | Sums of a power over a window, by telescoping | 🟡 `lem:doubling_expansion` B | 5 |
 | `GFNBounds/Graph/CycleBlowup.lean` | On the five-vertex cycle, `B̂_σ` blows up as the leak closes **[SCOPE]** | 🟡 `rem:cycle_no_stalemate` B | 9 |
-| `GFNBounds/Graph/CycleDivergence.lean` | No bound on the sampling error can hold for a divergence-based FM loss: the cyclic counter-example **[SCOPE]** | — | 100 |
+| `GFNBounds/Graph/CycleDivergence.lean` | No bound on the sampling error can hold for a divergence-based FM loss: the cyclic counter-example **[SCOPE]** | ✅ `theo:no_bound_divergence` B | 100 |
 | `GFNBounds/Graph/CycleExample.lean` | A five-vertex cycle: the frozen policy and the inflation force never deadlock **[SCOPE]** | 🟡 `rem:cycle_no_stalemate` B | 47 |
-| `GFNBounds/Graph/FrozenUnstable.lean` | Freezing the backward policy does not restore stability, and the loop closure is what makes the frozen family nonempty **[SCOPE]** | ✅ `prop:frozen_unstable_full` B, ✅ `rem:loop_closure_necessary` A | 48 |
-| `GFNBounds/Graph/FrozenUnstableDB.lean` | Freezing the backward policy does not restore stability of the detailed-balance loss either **[SCOPE]** | ✅ `prop:frozen_unstable_full` B | 28 |
+| `GFNBounds/Graph/FrozenUnstable.lean` | Freezing the backward policy does not restore stability, and the loop closure is what makes the frozen family nonempty **[SCOPE]** | ✅ `prop:frozen_unstable_full` B, ✅ `rem:loop_closure_necessary` A, ✅ `prop:frozen_unstable` B | 48 |
+| `GFNBounds/Graph/FrozenUnstableDB.lean` | Freezing the backward policy does not restore stability of the detailed-balance loss either **[SCOPE]** | ✅ `prop:frozen_unstable_full` B, ✅ `prop:frozen_unstable` B | 28 |
 | `GFNBounds/Graph/Morozov.lean` | The training rate in the variables of Morozov et al., with no Markov chain underneath **[SCOPE]** | 🟡 `prop:morozov_rate` B | 84 |
 | `GFNBounds/Graph/MorozovConsume.lean` | The three downstream theorems, re-read at `B̂_σ`: item *(3)* as a certificate of its own **[SCOPE]** | 🟡 `prop:morozov_rate` B | 30 |
 | `GFNBounds/Graph/Setting.lean` | Finite marked graphs, their loop closure, and the invariant measure of the backward chain **[SCOPE]** | ✅ `def:path_connected` A, ✅ `def:loop_closure` A, 🟡 `theo:universality_graphs` B | 42 |

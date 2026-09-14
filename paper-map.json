@@ -1,7 +1,7 @@
 {
   "paper": {
     "path": "/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex",
-    "git_commit": "0b49e66",
+    "git_commit": "51ce665",
     "appendix": "H"
   },
   "statements": [
@@ -2380,6 +2380,516 @@
       "status": "open",
       "bucket": "T",
       "scope_notes": "TERMINAL (bucket T, out of the closure target), from the paper-side ledger's terminal_reason: Reads prop:silva_no_uniform(ii) against rem:silva_model_constant; every truth-valued content (star: M' <= 1, chi^2 = 0; corridor: M' unbounded) is carried by those two rows, and 'distinct channels' has no definition behind it. proof-checker, 2026-09-13."
+    },
+    {
+      "label": "def:universality",
+      "source": "universality.tex",
+      "tex_span": [
+        10,
+        19
+      ],
+      "block_sha256": "69ec6e342f11b0dc84d1cdd19adba539ffa3b30c2fae70f49692a626853f42b1",
+      "lean_files": [
+        "GFNBounds/Core/StrongUniversality.lean",
+        "GFNBounds/Core/Universality.lean"
+      ],
+      "decls": [
+        "GFNBounds.Core.WeaklyUniversalAt",
+        "GFNBounds.Core.StronglyUniversalAt",
+        "GFNBounds.Core.WeaklyUniversal",
+        "GFNBounds.Core.StronglyUniversal",
+        "GFNBounds.Core.StronglyUniversal.weaklyUniversal"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "BODY STATEMENT with no appendix twin, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). Status and bucket as the paper-side ledger records them. STATED 2026-09-08. `WeaklyUniversalAt P theta` / `StronglyUniversalAt P theta` are the definition at ONE admissible pair; `WeaklyUniversal P Pi` closes the quantifier over pairs and is the one that matches def:universality. The paper does allow a different outflow per pair -- the infimum sits inside its 'for any distributions' -- so the per-pair predicate is the right unit. Disclosed narrowings: the family is fixed at Theta = {P} x E+, which is the family theo:universality_L2_full is about; theta is any element with Pi theta = 0 rather than a difference of equal-mass densities; and STRONG universality is now defined at both levels (`StronglyUniversalAt`, `StronglyUniversal`) with `StronglyUniversal.weaklyUniversal` proving the implication the paper's parenthetical presupposes. The cross-p clause is proved at one pair (L^inf to L^r) but not as strong L^r-universality of the L^r family."
+    },
+    {
+      "label": "theo:universality_L2",
+      "source": "universality.tex",
+      "tex_span": [
+        36,
+        40
+      ],
+      "block_sha256": "7a9437cb4eb794123de43e4bce063b9b7f0d5e1503dd34308a6bdd6f98b16016",
+      "lean_files": [
+        "GFNBounds/Core/Flow.lean",
+        "GFNBounds/Core/Kernel.lean",
+        "GFNBounds/Core/Mixing.lean",
+        "GFNBounds/Core/StrongUniversality.lean",
+        "GFNBounds/Core/Universality.lean",
+        "GFNBounds/Core/UniversalityLp.lean",
+        "GFNBounds/Core/UniversalityKernelBound.lean"
+      ],
+      "decls": [
+        "GFNBounds.Core.defect",
+        "GFNBounds.Core.resInit",
+        "GFNBounds.Core.resTerm",
+        "GFNBounds.Core.WeaklyUniversalAt",
+        "GFNBounds.Core.StronglyUniversalAt",
+        "GFNBounds.Core.WeaklyUniversal",
+        "GFNBounds.Core.liftedOutflow",
+        "GFNBounds.Core.truncation",
+        "GFNBounds.Core.defect_eq_truncation",
+        "GFNBounds.Core.residuals_le",
+        "GFNBounds.Core.stronglyUniversalAt_of_le",
+        "GFNBounds.Core.weaklyUniversalAt_of_tendsto",
+        "GFNBounds.Core.constOne",
+        "GFNBounds.Core.tendsto_truncation_norm",
+        "GFNBounds.Core.weaklyUniversalAt_Lp",
+        "GFNBounds.Core.weaklyUniversal_Lp",
+        "GFNBounds.Core.integralCLM",
+        "GFNBounds.Core.meanProj",
+        "GFNBounds.Core.meanProj_comp_left",
+        "GFNBounds.Core.comp_meanProj",
+        "GFNBounds.Core.meanProj_sub_eq_zero",
+        "GFNBounds.Core.mixing_of_massPreserving",
+        "GFNBounds.Core.weaklyUniversal_of_massPreserving",
+        "GFNBounds.Core.weaklyUniversalAt_of_equalMass",
+        "GFNBounds.Core.eq_meanProj_of_invariant",
+        "GFNBounds.Core.bindDensity",
+        "GFNBounds.Core.densityAction",
+        "GFNBounds.Core.bind_absolutelyContinuous_bind",
+        "GFNBounds.Core.bind_withDensity_absolutelyContinuous",
+        "GFNBounds.Core.withDensity_bindDensity",
+        "GFNBounds.Core.integral_densityAction",
+        "GFNBounds.Core.densityAction_one",
+        "GFNBounds.Core.IsBoundedDensityAction",
+        "GFNBounds.Core.densityActionCLM",
+        "GFNBounds.Core.norm_densityActionCLM_le",
+        "GFNBounds.Core.isBoundedDensityAction_id",
+        "GFNBounds.Core.weaklyUniversal_of_kernel",
+        "GFNBounds.Core.weaklyUniversalAt_of_kernel",
+        "GFNBounds.Core.ae_le_norm_top",
+        "GFNBounds.Core.le_norm_smul_constOne",
+        "GFNBounds.Core.stronglyUniversalAt_top",
+        "GFNBounds.Core.StronglyUniversal",
+        "GFNBounds.Core.stronglyUniversal_top",
+        "GFNBounds.Core.stronglyUniversal_of_kernel_top",
+        "GFNBounds.Core.inclTop",
+        "GFNBounds.Core.CompatibleAcrossTop",
+        "GFNBounds.Core.exists_outflow_memLp_of_top",
+        "GFNBounds.Core.compatibleAcrossTop_densityActionCLM",
+        "GFNBounds.Core.stronglyUniversalAt_of_kernel_Lr",
+        "GFNBounds.Core.coeFn_liftedOutflow",
+        "GFNBounds.Core.truncation_eq_zero_top",
+        "GFNBounds.Core.tendsto_truncation_norm_all",
+        "GFNBounds.Core.residuals_le_of_kernel",
+        "GFNBounds.Core.tendsto_residuals_of_kernel",
+        "GFNBounds.Core.defect_eq_zero_of_kernel_top",
+        "GFNBounds.Core.residuals_eq_zero_of_kernel_top"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "BODY RESTATEMENT of theo:universality_L2_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- Hidden: finite nu_B and bounded P-star, both in the Section 3 setting; the constant 2(1+|P|) is hidden and flagged 'quantitative'. proof-checker 2026-09-13.. The twin's row carries the disclosures."
+    },
+    {
+      "label": "theo:RL_CV_bound",
+      "source": "cv_stable.tex",
+      "tex_span": [
+        3,
+        13
+      ],
+      "block_sha256": "daa9c7172f437eb3f449806e2fb9f83d5206f7fe043ac037b3d2d453a8020dd4",
+      "lean_files": [
+        "GFNBounds/Core/StableBound.lean"
+      ],
+      "decls": [
+        "GFNBounds.Core.tvD",
+        "GFNBounds.Core.tvD_triangle",
+        "GFNBounds.Core.tvD_normalization",
+        "GFNBounds.Core.tvD_normalization_le",
+        "GFNBounds.Core.posPart_mass",
+        "GFNBounds.Core.mass_defect_le",
+        "GFNBounds.Core.tv_le_two_fmL1",
+        "GFNBounds.Core.holderConst",
+        "GFNBounds.Core.stableConst",
+        "GFNBounds.Core.stableLoss",
+        "GFNBounds.Core.fmL1_le_holderConst_mul_loss",
+        "GFNBounds.Core.mass_floor",
+        "GFNBounds.Core.stable_bound"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "BODY RESTATEMENT of theo:RL_CV_bound_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- Integrability hypotheses flagged by the body itself ('under technical integrability assumptions'); C given at cv_stable.tex:20-21. proof-checker 2026-09-13.. The twin's row carries the disclosures."
+    },
+    {
+      "label": "theo:IL_CV_bound_body",
+      "source": "cv_stable.tex",
+      "tex_span": [
+        42,
+        51
+      ],
+      "block_sha256": "c9eb2a0f1cc20cdddbecc65c1397a74b3011c37b4d18bed7053dda5aef5a85ce",
+      "lean_files": [
+        "GFNBounds/Core/ILBound.lean"
+      ],
+      "decls": [
+        "GFNBounds.Core.klD",
+        "GFNBounds.Core.selfEntropy",
+        "GFNBounds.Core.wklfmLoss",
+        "GFNBounds.Core.klD_nonneg",
+        "GFNBounds.Core.il_mass_identity",
+        "GFNBounds.Core.loss_ge_selfEntropy",
+        "GFNBounds.Core.il_holder",
+        "GFNBounds.Core.il_tv_bound",
+        "GFNBounds.Core.loss_le_of_domination",
+        "GFNBounds.Core.isGLB_of_domination",
+        "GFNBounds.Core.loss_eq_selfEntropy_of_domination_zero"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "BODY RESTATEMENT of theo:IL_CV_bound, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- Hides only finite H and nu_train << nu_B, both implied by the loss being well defined. proof-checker 2026-09-13.. The twin's row carries the disclosures."
+    },
+    {
+      "label": "theo:no_bound_divergence",
+      "source": "cv_divergence.tex",
+      "tex_span": [
+        7,
+        17
+      ],
+      "block_sha256": "cfdabbc377d95be7f33cedc141aae95ec04a42f4e46d2082b9cf5053ff7e75a8",
+      "lean_files": [
+        "GFNBounds/Graph/CycleDivergence.lean"
+      ],
+      "decls": [
+        "GFNBounds.Graph.CycleDivergence.no_bound_divergence",
+        "GFNBounds.Graph.CycleDivergence.no_bound_divergence_sup",
+        "GFNBounds.Graph.CycleDivergence.exists_Fk_loss_le",
+        "GFNBounds.Graph.CycleDivergence.tvFin_termLaw_Fk",
+        "GFNBounds.Graph.CycleDivergence.exists_cycle_of_size"
+      ],
+      "status": "closed",
+      "bucket": "B",
+      "scope_notes": "RULING R1 (2026-09-14): 'divergence-based FM-loss' denotes the source's class, brunswic2024theory (arXiv 2312.15246) Sec. 4.1 eqs. (10)-(11): L_FM(F) = int g(dF_in/dF_out) dnu_state, g : R+ -> R+ zero exactly at 1. The Lean's fmLossTarget reads that form on graphs and additionally hypothesises ContinuousAt g 1, as proofs.tex:393 does; whether the theorem needs it is a Phase 1 proof-checker question. BODY STATEMENT with no appendix twin, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). Status and bucket as the paper-side ledger records them. Proved at proofs.tex:385, but the statement quantifies over 'a divergence-based FM-loss' -- a schema the paper describes rather than a class it defines. A faithful formalization has first to fix that class, which is a decision for the author, not a formalization step. Until then the honest Lean statement is the counterexample family alone, not the minimax identity."
+    },
+    {
+      "label": "theo:training_speed",
+      "source": "cv_divergence.tex",
+      "tex_span": [
+        68,
+        81
+      ],
+      "block_sha256": "894a74f41efd55dde4d6fffd524c8c5aa90ee4c1f801cf3349d049986da02bc8",
+      "lean_files": [
+        "GFNBounds/Balance/RatioBridge.lean",
+        "GFNBounds/Balance/TrainingSpeed.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.Aop_eq_ratio_sub_one_mul",
+        "GFNBounds.Balance.Aop_eq_ratio_sub_one",
+        "GFNBounds.Balance.nrmL2_Aop_le_of_ratio_close",
+        "GFNBounds.Balance.nrmL2_perpL2_le_of_ratio_close",
+        "GFNBounds.Balance.dev_eq_smul_perpL2",
+        "GFNBounds.Balance.meanL2_dev_eq_zero",
+        "GFNBounds.Balance.rescaled_dev_bound",
+        "GFNBounds.Balance.mass_le_nrmL2",
+        "GFNBounds.Balance.delta0",
+        "GFNBounds.Balance.delta0_pos",
+        "GFNBounds.Balance.delta0_le_eps0",
+        "GFNBounds.Balance.delta0_le_half",
+        "GFNBounds.Balance.exists_delta_for_radius",
+        "GFNBounds.Balance.twoState_ratioBridge_check",
+        "GFNBounds.Balance.BhatSigma",
+        "GFNBounds.Balance.BhatSigma_eq",
+        "GFNBounds.Balance.rhoSigma",
+        "GFNBounds.Balance.T0",
+        "GFNBounds.Balance.minOver_div_const",
+        "GFNBounds.Balance.minOver_lam_eq",
+        "GFNBounds.Balance.one_le_sigmaStar",
+        "GFNBounds.Balance.minOver_le_one",
+        "GFNBounds.Balance.one_le_BhatSigma",
+        "GFNBounds.Balance.BhatSigma_pos",
+        "GFNBounds.Balance.hcoer_of_graph",
+        "GFNBounds.Balance.rhoL_eq_rhoSigma",
+        "GFNBounds.Balance.rhoSigma_eq_visits",
+        "GFNBounds.Balance.T0_eq",
+        "GFNBounds.Balance.flow_translate",
+        "GFNBounds.Balance.flow_unit_mass",
+        "GFNBounds.Balance.eps0Sq",
+        "GFNBounds.Balance.eps0_le_half",
+        "GFNBounds.Balance.eps0Sq_le_half",
+        "GFNBounds.Balance.eps0Sq_pos",
+        "GFNBounds.Balance.delta0Sq_le_half",
+        "GFNBounds.Balance.entry_and_rescale",
+        "GFNBounds.Balance.logSqDeriv_taylor_half",
+        "GFNBounds.Balance.training_speed_full",
+        "GFNBounds.Balance.cycle_minOver_lam",
+        "GFNBounds.Balance.cycle_training_speed_check",
+        "GFNBounds.Balance.cycle_training_speed_check_half",
+        "GFNBounds.Balance.training_speed_full_of_pos",
+        "GFNBounds.Balance.training_speed_full_of_init"
+      ],
+      "status": "partial",
+      "bucket": "B",
+      "scope_notes": "BODY RESTATEMENT of theo:training_speed_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13: W2 written in; body Theorem 6 now states both phases for flow and descent with a step chosen from the initialization, faithful to theo:training_speed_full (proof-checker).. The twin's row carries the disclosures."
+    },
+    {
+      "label": "theo:first_variation",
+      "source": "cv_divergence.tex",
+      "tex_span": [
+        121,
+        127
+      ],
+      "block_sha256": "50b8689f662a452cbbda23b82c224b7f9e82c0af531d592aa42e38ce427029ea",
+      "lean_files": [
+        "GFNBounds/Balance/FirstVariation.lean",
+        "GFNBounds/Balance/Flow.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.ratio_expansion",
+        "GFNBounds.Balance.remainder_abs_le",
+        "GFNBounds.Balance.ratio_second_order",
+        "GFNBounds.Balance.hasDerivAt_ratio",
+        "GFNBounds.Balance.hasDerivAt_loss",
+        "GFNBounds.Balance.firstVariation_adjoint",
+        "GFNBounds.Balance.gradDensity_eq_densAct_reversal",
+        "GFNBounds.Balance.hasDerivAt_loss_ipL2",
+        "GFNBounds.Balance.hasDerivAt_loss_ipL2_precond",
+        "GFNBounds.Balance.lossGradDensity_unique",
+        "GFNBounds.Balance.balanced_of_hasDerivAt_zero",
+        "GFNBounds.Balance.freezing_hasDerivAt_zero",
+        "GFNBounds.Balance.twoState_hasDerivAt_loss",
+        "GFNBounds.Balance.IsGradientFlow",
+        "GFNBounds.Balance.hasDerivAt_loss_comp_ipL2",
+        "GFNBounds.Balance.hasDerivAt_loss_flow",
+        "GFNBounds.Balance.hasDerivAt_loss_flow_at",
+        "GFNBounds.Balance.hasDerivAt_loss_flow_line",
+        "GFNBounds.Balance.ipL2_lossGrad_self",
+        "GFNBounds.Balance.nrmL2_const_of_flow",
+        "GFNBounds.Balance.twoState_nrmL2_lossGrad_sq"
+      ],
+      "status": "partial",
+      "bucket": "D",
+      "scope_notes": "BODY RESTATEMENT of theo:first_variation_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13 after repair: the body overstated its full form (see the findings triage); draft-writer applied the verifier's smallest fix and proof-checker re-read the pair.. The twin's row carries the disclosures."
+    },
+    {
+      "label": "theo:gd_diffusion",
+      "source": "cv_divergence.tex",
+      "tex_span": [
+        146,
+        152
+      ],
+      "block_sha256": "59677e36ccf8a388fe5dc6fe3c47a5405045bc74ff0571887e9018e8f54403db",
+      "lean_files": [
+        "GFNBounds/Balance/Expansion.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.linHess",
+        "GFNBounds.Balance.gd_diffusion_display",
+        "GFNBounds.Balance.linHess_reversible",
+        "GFNBounds.Balance.linHess_eigen",
+        "GFNBounds.Balance.linHess_symm",
+        "GFNBounds.Balance.meanL2_linHess",
+        "GFNBounds.Balance.linHess_upper",
+        "GFNBounds.Balance.linHess_coercive",
+        "GFNBounds.Balance.twoState_expansion_check"
+      ],
+      "status": "partial",
+      "bucket": "D",
+      "scope_notes": "BODY RESTATEMENT of theo:gd_diffusion_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13 after repair: the body overstated its full form (see the findings triage); draft-writer applied the verifier's smallest fix and proof-checker re-read the pair.. The twin's row carries the disclosures."
+    },
+    {
+      "label": "theo:db_stable_frozen",
+      "source": "cv_divergence.tex",
+      "tex_span": [
+        158,
+        164
+      ],
+      "block_sha256": "12dff1d3f16142d368b2c78a0270f494338aed11f018b657a00d3fede7b45cb4",
+      "lean_files": [
+        "GFNBounds/Balance/Flow.lean",
+        "GFNBounds/Balance/Discrete.lean",
+        "GFNBounds/Balance/WeightedL2.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.inner_ge_of_mixing",
+        "GFNBounds.Balance.stable_frozen_decay",
+        "GFNBounds.Balance.scalar_decay_check",
+        "GFNBounds.Balance.inner_sq_le_of_symm_nonneg",
+        "GFNBounds.Balance.norm_apply_le_of_symm_bounds",
+        "GFNBounds.Balance.H_proj_eq_zero",
+        "GFNBounds.Balance.stable_frozen_discrete",
+        "GFNBounds.Balance.scalar_discrete_check",
+        "GFNBounds.Balance.wtL2",
+        "GFNBounds.Balance.inner_wtL2",
+        "GFNBounds.Balance.norm_wtL2",
+        "GFNBounds.Balance.hessOp",
+        "GFNBounds.Balance.meanOp",
+        "GFNBounds.Balance.densOp",
+        "GFNBounds.Balance.mixing_coercivity_finite",
+        "GFNBounds.Balance.stable_frozen_discrete_finite",
+        "GFNBounds.Balance.stable_frozen_discrete_mixing",
+        "GFNBounds.Balance.stable_frozen_decay_finite",
+        "GFNBounds.Balance.twoState_contraction_check"
+      ],
+      "status": "partial",
+      "bucket": "D",
+      "scope_notes": "BODY RESTATEMENT of theo:db_stable_frozen_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13 after repair: the body overstated its full form (see the findings triage); draft-writer applied the verifier's smallest fix and proof-checker re-read the pair.. The twin's row carries the disclosures."
+    },
+    {
+      "label": "theo:local_convergence",
+      "source": "cv_divergence.tex",
+      "tex_span": [
+        169,
+        174
+      ],
+      "block_sha256": "cd7a6155daa7e7dfbf20c9f3ed7792ac4c58e96c58b43d614301b68dd10baa2d",
+      "lean_files": [
+        "GFNBounds/Balance/Expansion.lean",
+        "GFNBounds/Balance/L2Toolkit.lean",
+        "GFNBounds/Balance/LocalEnergy.lean",
+        "GFNBounds/Balance/LocalConvergence.lean",
+        "GFNBounds/Balance/LocalConvergenceClauses.lean",
+        "GFNBounds/Balance/LocalConvergenceMixing.lean",
+        "GFNBounds/Balance/WeightedL2Norm.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.C4",
+        "GFNBounds.Balance.Cg",
+        "GFNBounds.Balance.C5",
+        "GFNBounds.Balance.Kexp",
+        "GFNBounds.Balance.ratio_one_add_sub_one",
+        "GFNBounds.Balance.abs_ratio_sub_one_le_four_thirds",
+        "GFNBounds.Balance.abs_ratio_sub_one_le_a",
+        "GFNBounds.Balance.abs_inv_sq_sub_one_le",
+        "GFNBounds.Balance.sq_ratio_sub_one_le",
+        "GFNBounds.Balance.phi_expansion",
+        "GFNBounds.Balance.abs_gd_le_Cg",
+        "GFNBounds.Balance.abs_ratio_sub_one_mul_phi_le",
+        "GFNBounds.Balance.lossGrad_eq_Adj_sub",
+        "GFNBounds.Balance.gradient_expansion",
+        "GFNBounds.Balance.Aop_perpL2",
+        "GFNBounds.Balance.nrmL2_Aop_le_two",
+        "GFNBounds.Balance.nrmL2_Adj_le_two",
+        "GFNBounds.Balance.bootstrap_of_continuous",
+        "GFNBounds.Balance.eps1",
+        "GFNBounds.Balance.C6",
+        "GFNBounds.Balance.C7",
+        "GFNBounds.Balance.rhoL",
+        "GFNBounds.Balance.energy_lower",
+        "GFNBounds.Balance.hasDerivAt_mean",
+        "GFNBounds.Balance.hasDerivAt_perp_sq",
+        "GFNBounds.Balance.perp_decay_on",
+        "GFNBounds.Balance.energy_integral_Ioi",
+        "GFNBounds.Balance.abs_deriv_mean_le",
+        "GFNBounds.Balance.mean_drift_on",
+        "GFNBounds.Balance.mean_cauchy_on",
+        "GFNBounds.Balance.mean_cauchy_on_sharp",
+        "GFNBounds.Balance.twoState_energy_check",
+        "GFNBounds.Balance.Cinf",
+        "GFNBounds.Balance.epsW",
+        "GFNBounds.Balance.eps0",
+        "GFNBounds.Balance.eps0_pos",
+        "GFNBounds.Balance.Lgd",
+        "GFNBounds.Balance.gamma0",
+        "GFNBounds.Balance.sup_bootstrap_step",
+        "GFNBounds.Balance.sup_global",
+        "GFNBounds.Balance.mean_tendsto",
+        "GFNBounds.Balance.local_convergence_full",
+        "GFNBounds.Balance.local_convergence_gd",
+        "GFNBounds.Balance.twoState_local_convergence_check",
+        "GFNBounds.Balance.eps0_le_a_div",
+        "GFNBounds.Balance.eps0_mem_Ioc",
+        "GFNBounds.Balance.one_le_max_C7",
+        "GFNBounds.Balance.local_convergence_full_C",
+        "GFNBounds.Balance.gamma0_pos",
+        "GFNBounds.Balance.Lgd_pos",
+        "GFNBounds.Balance.gamma0_pos_of_weights",
+        "GFNBounds.Balance.local_convergence_gd_window",
+        "GFNBounds.Balance.abs_ratio_sub_one_le_two_a_div_three",
+        "GFNBounds.Balance.hasDerivAt_loss_local",
+        "GFNBounds.Balance.hasDerivAt_loss_ipL2_local",
+        "GFNBounds.Balance.local_convergence_gd_welldefined",
+        "GFNBounds.Balance.local_convergence_full_mixing",
+        "GFNBounds.Balance.local_convergence_gd_mixing",
+        "GFNBounds.Balance.eps0_mem_Ioc_mixing",
+        "GFNBounds.Balance.local_convergence_full_C_mixing",
+        "GFNBounds.Balance.gamma0_pos_of_weights_mixing",
+        "GFNBounds.Balance.local_convergence_gd_welldefined_mixing",
+        "GFNBounds.Balance.mixing_densOp_iff_summable",
+        "GFNBounds.Balance.meanOp_eq_of_densOp_eq",
+        "GFNBounds.Balance.eq_const_of_densAct_eq"
+      ],
+      "status": "closed",
+      "bucket": "B",
+      "scope_notes": "BODY RESTATEMENT of theo:local_convergence_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13 after repair: the body overstated its full form (see the findings triage); draft-writer applied the verifier's smallest fix and proof-checker re-read the pair.. The twin's row carries the disclosures."
+    },
+    {
+      "label": "prop:frozen_unstable",
+      "source": "cv_divergence.tex",
+      "tex_span": [
+        190,
+        197
+      ],
+      "block_sha256": "fb0be52648fc509bec29fc8d985a86890ce2ee22a0a6a5e6c2bef15113c8790e",
+      "lean_files": [
+        "GFNBounds/Graph/FrozenUnstable.lean",
+        "GFNBounds/Graph/FrozenUnstableDB.lean"
+      ],
+      "decls": [
+        "GFNBounds.Graph.BackwardPolicy.frozen_unstable_full_fm",
+        "GFNBounds.Graph.MarkedCirculation",
+        "GFNBounds.Graph.BackwardPolicy.AdmissibleEps",
+        "GFNBounds.Graph.BackwardPolicy.perturbedFlow",
+        "GFNBounds.Graph.BackwardPolicy.exists_admissibleEps",
+        "GFNBounds.Graph.BackwardPolicy.edgeInflow_perturbedFlow_ge",
+        "GFNBounds.Graph.BackwardPolicy.not_invariant_perturbedFlow",
+        "GFNBounds.Graph.BackwardPolicy.fmLoss",
+        "GFNBounds.Graph.IsEdgeflow",
+        "GFNBounds.Graph.IsFlow",
+        "GFNBounds.Graph.IsZeroFlow",
+        "GFNBounds.Graph.Stable",
+        "GFNBounds.Graph.not_stable_of_witness",
+        "GFNBounds.Graph.BackwardPolicy.edgeFlow_one_eq_edgeMeasure",
+        "GFNBounds.Graph.BackwardPolicy.edgeMeasure_pos_iff_hatEdge",
+        "GFNBounds.Graph.BackwardPolicy.perturbedFlow_isFlow",
+        "GFNBounds.Graph.BackwardPolicy.epsCirc_isZeroFlow",
+        "GFNBounds.Graph.BackwardPolicy.dbLoss",
+        "GFNBounds.Graph.BackwardPolicy.dbLoss_eq_edgeRatio",
+        "GFNBounds.Graph.BackwardPolicy.dbLoss_sub_eq_of_support",
+        "GFNBounds.Graph.BackwardPolicy.frozen_unstable_full_db",
+        "GFNBounds.Graph.BackwardPolicy.frozen_not_stable_fm",
+        "GFNBounds.Graph.BackwardPolicy.frozen_not_stable_db"
+      ],
+      "status": "closed",
+      "bucket": "B",
+      "scope_notes": "BODY RESTATEMENT of prop:frozen_unstable_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13 after repair: the body overstated its full form (see the findings triage); draft-writer applied the verifier's smallest fix and proof-checker re-read the pair.. The twin's row carries the disclosures."
+    },
+    {
+      "label": "theo:global_dichotomy",
+      "source": "cv_divergence.tex",
+      "tex_span": [
+        221,
+        230
+      ],
+      "block_sha256": "6347baef31da80006acd51a51a6aa367cf2ea93f598db494203351b37ed7cbee",
+      "lean_files": [
+        "GFNBounds/Balance/MassIdentity.lean",
+        "GFNBounds/Balance/Freezing.lean",
+        "GFNBounds/Balance/GlobalConvergence.lean",
+        "GFNBounds/Balance/FreezingGeneral.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.gradDensity",
+        "GFNBounds.Balance.Invariant",
+        "GFNBounds.Balance.StrictlyUnimodal",
+        "GFNBounds.Balance.ratio",
+        "GFNBounds.Balance.Balanced",
+        "GFNBounds.Balance.gradMass",
+        "GFNBounds.Balance.integral_gradDensity",
+        "GFNBounds.Balance.ratio_pos",
+        "GFNBounds.Balance.no_distant_equilibrium_one",
+        "GFNBounds.Balance.global_dichotomy_full_one",
+        "GFNBounds.Balance.balanced_of_critical",
+        "GFNBounds.Balance.strictlyUnimodal_logSqDeriv",
+        "GFNBounds.Balance.global_dichotomy_full_one_converges",
+        "GFNBounds.Balance.freezing_critical",
+        "GFNBounds.Balance.freezing_item_one_general"
+      ],
+      "status": "partial",
+      "bucket": "D",
+      "scope_notes": "BODY RESTATEMENT of theo:global_dichotomy_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13 after repair: the body overstated its full form (see the findings triage); draft-writer applied the verifier's smallest fix and proof-checker re-read the pair.. The twin's row carries the disclosures."
     }
   ],
   "sources": {
@@ -2394,6 +2904,18 @@
     "app_doubling.tex": {
       "path": "/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex",
       "appendix": "H"
+    },
+    "universality.tex": {
+      "path": "/home/maxbrain/Dropbox/GFN Bounds/universality.tex",
+      "appendix": "S2"
+    },
+    "cv_stable.tex": {
+      "path": "/home/maxbrain/Dropbox/GFN Bounds/cv_stable.tex",
+      "appendix": "S3"
+    },
+    "cv_divergence.tex": {
+      "path": "/home/maxbrain/Dropbox/GFN Bounds/cv_divergence.tex",
+      "appendix": "S4"
     }
   }
 }

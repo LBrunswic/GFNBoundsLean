@@ -13,7 +13,7 @@ The library began as Appendix H alone and was widened to A and B on 2026-09-08, 
 instruction. Appendices C–G are **not** in scope.
 
 Coverage: **[`docs/COVERAGE.md`](docs/COVERAGE.md)**. Open `sorry`s:
-[`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md). The whole-paper ledger — all 129 statements with
+[`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md). The whole-paper ledger — all 130 statements with
 their natural-language status, their Lean status and the dependency DAG — lives on the paper side
 at `FORMALIZATION-LEDGER.md`.
 

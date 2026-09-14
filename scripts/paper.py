@@ -19,6 +19,11 @@ SOURCES = {
     "proofs.tex": "A",
     "silva_comparison.tex": "B",
     "app_doubling.tex": "H",
+    # The body since 2026-09-14 (author's ruling R2): its twelve statements are digested here too,
+    # so an edit to a body theorem stales its row on this side as well as in the paper's ledger.
+    "universality.tex": "S2",
+    "cv_stable.tex": "S3",
+    "cv_divergence.tex": "S4",
 }
 
 DEFAULT_SOURCE = "app_doubling.tex"

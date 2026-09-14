@@ -1690,7 +1690,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Gra
 *strict library; 369 lines; 5 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:db_stable_frozen_full` (bucket D)
+Certifies: 🟡 `theo:db_stable_frozen_full` (bucket D), 🟡 `theo:db_stable_frozen` (bucket D)
 
 
 In scope: `variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]`, `variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]`
@@ -1711,7 +1711,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 *strict library; 913 lines; 47 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:gd_diffusion_full` (bucket D), ✅ `theo:local_convergence_full` (bucket B)
+Certifies: 🟡 `theo:gd_diffusion_full` (bucket D), ✅ `theo:local_convergence_full` (bucket B), 🟡 `theo:gd_diffusion` (bucket D), ✅ `theo:local_convergence` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -1774,7 +1774,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 589 lines; 19 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:first_variation_full` (bucket D)
+Certifies: 🟡 `theo:first_variation_full` (bucket D), 🟡 `theo:first_variation` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}`
@@ -1809,7 +1809,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Mar
 *strict library; 850 lines; 23 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:first_variation_full` (bucket D), 🟡 `theo:db_stable_frozen_full` (bucket D), 🟡 `prop:no_distant_equilibrium` (bucket D), ✅ `cor:global_lojasiewicz` (bucket A)
+Certifies: 🟡 `theo:first_variation_full` (bucket D), 🟡 `theo:db_stable_frozen_full` (bucket D), 🟡 `prop:no_distant_equilibrium` (bucket D), ✅ `cor:global_lojasiewicz` (bucket A), 🟡 `theo:first_variation` (bucket D), 🟡 `theo:db_stable_frozen` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]`
@@ -1848,7 +1848,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`
 *strict library; 795 lines; 77 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:nonlinear_freezing` (bucket D), 🟡 `theo:global_dichotomy_full` (bucket D)
+Certifies: 🟡 `prop:nonlinear_freezing` (bucket D), 🟡 `theo:global_dichotomy_full` (bucket D), 🟡 `theo:global_dichotomy` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable (F : FreezingBands)`, `variable (F : FreezingBands)`, `variable {V : Type*} [Fintype V]`
@@ -1941,7 +1941,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable (F : FreezingBands)`, `v
 *strict library; 226 lines; 9 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:nonlinear_freezing` (bucket D), 🟡 `theo:global_dichotomy_full` (bucket D)
+Certifies: 🟡 `prop:nonlinear_freezing` (bucket D), 🟡 `theo:global_dichotomy_full` (bucket D), 🟡 `theo:global_dichotomy` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -1966,7 +1966,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 253 lines; 3 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:no_distant_equilibrium` (bucket D), 🟡 `theo:global_dichotomy_full` (bucket D)
+Certifies: 🟡 `prop:no_distant_equilibrium` (bucket D), 🟡 `theo:global_dichotomy_full` (bucket D), 🟡 `theo:global_dichotomy` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`
@@ -2024,7 +2024,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`
 *strict library; 528 lines; 39 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket B)
+Certifies: ✅ `theo:local_convergence_full` (bucket B), ✅ `theo:local_convergence` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2158,7 +2158,7 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : Mar
 *strict library; 1268 lines; 54 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket B)
+Certifies: ✅ `theo:local_convergence_full` (bucket B), ✅ `theo:local_convergence` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2228,7 +2228,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 443 lines; 12 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket B)
+Certifies: ✅ `theo:local_convergence_full` (bucket B), ✅ `theo:local_convergence` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2256,7 +2256,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 278 lines; 9 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket B)
+Certifies: ✅ `theo:local_convergence_full` (bucket B), ✅ `theo:local_convergence` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2281,7 +2281,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 1162 lines; 36 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket B)
+Certifies: ✅ `theo:local_convergence_full` (bucket B), ✅ `theo:local_convergence` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2430,7 +2430,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] 
 *strict library; 442 lines; 25 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:no_distant_equilibrium` (bucket D), 🟡 `theo:global_dichotomy_full` (bucket D)
+Certifies: 🟡 `prop:no_distant_equilibrium` (bucket D), 🟡 `theo:global_dichotomy_full` (bucket D), 🟡 `theo:global_dichotomy` (bucket D)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}`
@@ -2471,7 +2471,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Mar
 *strict library; 375 lines; 17 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:training_speed_full` (bucket B)
+Certifies: 🟡 `theo:training_speed_full` (bucket B), 🟡 `theo:training_speed` (bucket B)
 
 
 In scope: `variable, `∀ x, |r(x) − 1| < δ`. Step 4 of `theo:local_convergence_full` wants a radius in the`, `variable {V : Type*} [Fintype V]`
@@ -2526,7 +2526,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 759 lines; 29 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:training_speed_full` (bucket B)
+Certifies: 🟡 `theo:training_speed_full` (bucket B), 🟡 `theo:training_speed` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`
@@ -2571,7 +2571,7 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Typ
 *strict library; 790 lines; 62 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:db_stable_frozen_full` (bucket D)
+Certifies: 🟡 `theo:db_stable_frozen_full` (bucket D), 🟡 `theo:db_stable_frozen` (bucket D)
 
 
 In scope: `variable {V : Type*}`, `variable [Fintype V]`
@@ -2649,7 +2649,7 @@ In scope: `variable {V : Type*}`, `variable [Fintype V]`
 *strict library; 250 lines; 15 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:sigma_mixing` (bucket A), ✅ `theo:local_convergence_full` (bucket B), 🟡 `prop:nonlinear_freezing` (bucket D)
+Certifies: ✅ `lem:sigma_mixing` (bucket A), ✅ `theo:local_convergence_full` (bucket B), 🟡 `prop:nonlinear_freezing` (bucket D), ✅ `theo:local_convergence` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2742,7 +2742,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] 
 *strict library; 343 lines; 18 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_L2_full` (bucket A)
+Certifies: ✅ `theo:universality_L2_full` (bucket A), ✅ `theo:universality_L2` (bucket A)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α] {ν : Measure α} [IsFiniteMeasure ν]`, `variable {P : Lp ℝ p ν →L[ℝ] Lp ℝ p ν}`
@@ -2776,7 +2776,7 @@ In scope: `variable {α : Type*} [MeasurableSpace α] {ν : Measure α} [IsFinit
 *strict library; 621 lines; 25 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:IL_CV_bound` (bucket B)
+Certifies: 🟡 `theo:IL_CV_bound` (bucket B), 🟡 `theo:IL_CV_bound_body` (bucket B)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α]`
@@ -2817,7 +2817,7 @@ In scope: `variable {α : Type*} [MeasurableSpace α]`
 *strict library; 664 lines; 45 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_L2_full` (bucket A)
+Certifies: ✅ `theo:universality_L2_full` (bucket A), ✅ `theo:universality_L2` (bucket A)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α]`
@@ -2878,7 +2878,7 @@ In scope: `variable {α : Type*} [MeasurableSpace α]`
 *strict library; 226 lines; 20 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_L2_full` (bucket A), ✅ `lem:sigma_mixing` (bucket A)
+Certifies: ✅ `theo:universality_L2_full` (bucket A), ✅ `lem:sigma_mixing` (bucket A), ✅ `theo:universality_L2` (bucket A)
 
 
 In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi : E →L[ℝ] E}`
@@ -2954,7 +2954,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi
 *strict library; 474 lines; 22 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:RL_CV_bound_full` (bucket B)
+Certifies: 🟡 `theo:RL_CV_bound_full` (bucket B), 🟡 `theo:RL_CV_bound` (bucket B)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α]`, `variable {ν : Measure α} {e k : α → ℝ}`
@@ -2992,7 +2992,7 @@ In scope: `variable {α : Type*} [MeasurableSpace α]`, `variable {ν : Measure 
 *strict library; 355 lines; 20 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_L2_full` (bucket A)
+Certifies: ✅ `theo:universality_L2_full` (bucket A), 🟡 `def:universality` (bucket B), ✅ `theo:universality_L2` (bucket A)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α] {ν : Measure α}`, `variable [IsFiniteMeasure ν]`, `variable {E : Type*} [NormedAddCommGroup E] [Lattice E] [NormedSpace ℝ E]`, `variable {r : ℝ≥0∞} [Fact (1 ≤ r)] {P : Lp ℝ ⊤ ν →L[ℝ] Lp ℝ ⊤ ν}`
@@ -3028,7 +3028,7 @@ In scope: `variable {α : Type*} [MeasurableSpace α] {ν : Measure α}`, `varia
 *strict library; 304 lines; 21 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_L2_full` (bucket A)
+Certifies: ✅ `theo:universality_L2_full` (bucket A), 🟡 `def:universality` (bucket B), ✅ `theo:universality_L2` (bucket A)
 
 
 In scope: `variable {E : Type*} [NormedAddCommGroup E] [Lattice E] [HasSolidNorm E]`, `variable {F : Type*} [NormedAddCommGroup F] [Lattice F] [HasSolidNorm F] [IsOrderedAddMonoid F]`, `variable {P Pi : E →L[ℝ] E} {one θ : E}`, `variable [CompleteSpace E]`
@@ -3065,7 +3065,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [Lattice E] [HasSolidNorm
 *strict library; 255 lines; 7 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_L2_full` (bucket A)
+Certifies: ✅ `theo:universality_L2_full` (bucket A), ✅ `theo:universality_L2` (bucket A)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α]`, `variable {ν : Measure α} [IsFiniteMeasure ν] {p : ℝ≥0∞} [Fact (1 ≤ p)]`
@@ -3088,7 +3088,7 @@ In scope: `variable {α : Type*} [MeasurableSpace α]`, `variable {ν : Measure 
 *strict library; 202 lines; 6 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_L2_full` (bucket A)
+Certifies: ✅ `theo:universality_L2_full` (bucket A), ✅ `theo:universality_L2` (bucket A)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α] {ν : Measure α} [IsFiniteMeasure ν]`
@@ -5210,6 +5210,9 @@ Certifies: 🟡 `rem:cycle_no_stalemate` (bucket B)
 *strict library; 897 lines; 100 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
+Certifies: ✅ `theo:no_bound_divergence` (bucket B)
+
+
 In scope: `variable {M : ℕ}`, `variable {V : Type*}`, `variable [DecidableEq V]`, `variable [Fintype V]`
 
 
@@ -5383,7 +5386,7 @@ Certifies: 🟡 `rem:cycle_no_stalemate` (bucket B)
 *strict library; 713 lines; 48 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `prop:frozen_unstable_full` (bucket B), ✅ `rem:loop_closure_necessary` (bucket A)
+Certifies: ✅ `prop:frozen_unstable_full` (bucket B), ✅ `rem:loop_closure_necessary` (bucket A), ✅ `prop:frozen_unstable` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`, `variable {G : MarkedGraph V} (B : BackwardPolicy G)`
@@ -5447,7 +5450,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`, `varia
 *strict library; 496 lines; 28 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `prop:frozen_unstable_full` (bucket B)
+Certifies: ✅ `prop:frozen_unstable_full` (bucket B), ✅ `prop:frozen_unstable` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`, `variable {G : MarkedGraph V} (B : BackwardPolicy G)`

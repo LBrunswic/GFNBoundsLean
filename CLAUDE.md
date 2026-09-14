@@ -14,26 +14,17 @@ This file is what binds every session, master and sub-session alike.
 and B on 2026-09-08 at the author's instruction; where a file, a script or a docstring still says
 "Appendix H" as if it were the whole charter, that is a leftover and may be corrected.
 
-**A gap in traceability, named rather than papered over.** `scripts/paper.py`'s `SOURCES` lists
-the three appendix files, so `trace_check`'s invariant (c) polices exactly the labels defined in
-them. A handful of labels the library certifies live in the **body** instead — `def:universality`
-(`universality.tex:10`) is the one that matters, since `theo:universality_L2_full` is the theorem
-*about* it. Those are **not** in `paper-map.json` and (c) does not fire on them. They are tracked
-on the paper side, by `FORMALIZATION-LEDGER.md`, which covers all 130 statements of the document
-and cross-checks against this map (`formalization_ledger.py check`). Adding `universality.tex`
-here would widen the charter past what the author asked for, so the split is deliberate: the map
-is the appendices, the ledger is the paper.
-
-**The sharpest instance, recorded 2026-09-12.** `theo:no_bound_divergence` — Theorem 5 — is
-**closed** in `GFNBounds/Graph/CycleDivergence.lean`, and it is the one closed certificate in
-this repository with *no* coupling to the paper text at all. Its `\label` is in
-`cv_divergence.tex`, which is not in `SOURCES`, so it has no `paper-map.json` row, hence no
-`block_sha256`, hence **no stale-digest detection**: if the author reworded the theorem,
-`make check` would stay green and the certificate would silently stop matching. The file
-discloses this itself, so nothing is laundered, and the ledger tracks the label on the paper
-side. But the exposure is real and it is not the same as `def:universality`'s, which at least
-has a digest through its `_full` twin. Closing it means adding `cv_divergence.tex` to `SOURCES`
-and `--init`-ing the rows — **a charter decision, and the author's**, not a maintenance task.
+**The body is traced too, since 2026-09-14** (author's ruling R2: "as many programmatic bindings
+of the tex–Lean link as possible"). `scripts/paper.py`'s `SOURCES` lists the three appendix files
+and the three body files (`universality.tex` S2, `cv_stable.tex` S3, `cv_divergence.tex` S4), so
+`trace_check` digests all twelve body statements and its invariant (c) polices their labels. A
+body row with an appendix twin (`theo:local_convergence` for `theo:local_convergence_full`, …)
+carries the twin's files, declarations, status and bucket, and says so in its scope notes; the
+twin's row carries the disclosures. The two body statements without a twin, `def:universality`
+and `theo:no_bound_divergence`, have their own rows. This closes the gap recorded on 2026-09-12:
+`theo:no_bound_divergence` was a closed certificate with no digest on this side, so a reworded
+Theorem 5 would have left `make check` green. The paper-side ledger
+(`FORMALIZATION-LEDGER.md`, all 130 statements) still cross-checks every mapped row.
 
 ## Orientation, in reading order
 

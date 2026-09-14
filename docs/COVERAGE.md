@@ -86,7 +86,7 @@ The **bucket** says how far the rest is, and every non-`A` row carries its obstr
 | A | `prop:nonlinear_freezing` | 840–868 | 🟡 partial | D | `Balance/Freezing.lean`<br>`Balance/WeightedL2Norm.lean`<br>`Balance/FreezingGeneral.lean` | — |
 | A | `rem:freezing` | 870–872 | ⬜ open | B | — | — |
 | A | `prop:no_distant_equilibrium` | 874–908 | 🟡 partial | D | `Balance/Flow.lean`<br>`Balance/Lojasiewicz.lean`<br>`Balance/MassIdentity.lean`<br>`Balance/MassAscent.lean`<br>`Balance/BoundaryBlowup.lean`<br>`Balance/SqGenerator.lean`<br>`Balance/GlobalConvergence.lean`<br>`Balance/RatioBridge.lean`<br>`Balance/FlowExistence.lean` | — |
-| A | `rem:cycle_no_stalemate` | 910–912 | 🟡 partial | B | `Graph/CycleExample.lean`<br>`Graph/CycleBlowup.lean` | — |
+| A | `rem:cycle_no_stalemate` | 910–912 | 🟡 partial | B | `Graph/CycleExample.lean`<br>`Graph/CycleBlowup.lean`<br>`Graph/CycleRemarks.lean` | — |
 | A | `theo:global_dichotomy_full` | 914–924 | 🟡 partial | D | `Balance/MassIdentity.lean`<br>`Balance/Freezing.lean`<br>`Balance/GlobalConvergence.lean`<br>`Balance/FreezingGeneral.lean` | — |
 | A | `prop:morozov_rate` | 930–972 | 🟡 partial | B | `Graph/Morozov.lean`<br>`Graph/MorozovConsume.lean`<br>`Balance/LiftFinite.lean` | — |
 | A | `cor:global_lojasiewicz` | 974–997 | ✅ closed | A | `Balance/Flow.lean`<br>`Balance/Lojasiewicz.lean`<br>`Balance/MassAscent.lean`<br>`Balance/BoundaryBlowup.lean` | — |
@@ -117,5 +117,5 @@ The **bucket** says how far the rest is, and every non-`A` row carries its obstr
 | S4 | `theo:local_convergence` | 170–174 | ✅ closed | A | `Balance/Expansion.lean`<br>`Balance/L2Toolkit.lean`<br>`Balance/LocalEnergy.lean`<br>`Balance/LocalConvergence.lean`<br>`Balance/LocalConvergenceClauses.lean`<br>`Balance/LocalConvergenceMixing.lean`<br>`Balance/WeightedL2Norm.lean`<br>`Balance/C3Wrappers.lean`<br>`Balance/TrainingSpeedAssembled.lean` | — |
 | S4 | `prop:frozen_unstable` | 190–197 | ✅ closed | A | `Graph/FrozenUnstable.lean`<br>`Graph/FrozenUnstableDB.lean` | — |
 | S4 | `theo:global_dichotomy` | 221–230 | 🟡 partial | D | `Balance/MassIdentity.lean`<br>`Balance/Freezing.lean`<br>`Balance/GlobalConvergence.lean`<br>`Balance/FreezingGeneral.lean` | — |
-| A | `lem:cycle_counterexample` | 385–404 | 🟡 partial | B | `Graph/CycleDivergence.lean` | — |
+| A | `lem:cycle_counterexample` | 385–404 | 🟡 partial | D | `Graph/CycleDivergence.lean`<br>`Graph/CycleRemarks.lean` | — |
 | A | `lem:lift_coercivity` | 572–587 | 🟡 partial | D | `Balance/LiftFinite.lean` | — |

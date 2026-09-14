@@ -71,6 +71,7 @@ import GFNBounds.Balance.LiftFinite
 import GFNBounds.Balance.DiscreteGlobal
 import GFNBounds.Doubling.Remarks
 import GFNBounds.Balance.TrainingSpeedAssembled
+import GFNBounds.Graph.CycleRemarks
 
 /-!
 # Axiom audit
@@ -748,3 +749,29 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.kinkGen_C3On_not_C3
 #print axioms GFNBounds.Balance.twoState_exists_check
 #print axioms GFNBounds.Balance.cycle_training_speed_paper_check
+
+-- `lem:cycle_counterexample` items (1)-(2) and `rem:cycle_no_stalemate` — GFNBounds/Graph/CycleRemarks.lean
+#print axioms GFNBounds.Graph.CycleRemarks.cycle_counterexample
+#print axioms GFNBounds.Graph.CycleRemarks.cycle_counterexample_check
+#print axioms GFNBounds.Graph.CycleRemarks.inflation_force_max_mono
+#print axioms GFNBounds.Graph.CycleRemarks.not_critical
+#print axioms GFNBounds.Graph.CycleRemarks.rescaled_flow
+#print axioms GFNBounds.Graph.CycleRemarks.entryTimes_scale
+#print axioms GFNBounds.Graph.CycleRemarks.cycle_rescaled_flow
+#print axioms GFNBounds.Graph.CycleRemarks.cycle_rescaled_flow_sq
+#print axioms GFNBounds.Graph.CycleRemarks.cycle_rescaled_flow_check
+#print axioms GFNBounds.Graph.CycleRemarks.mixing_sum_endpoints
+#print axioms GFNBounds.Graph.CycleRemarks.mixing_sum_gt
+#print axioms GFNBounds.Graph.CycleRemarks.mixing_sum_tendsto_top
+#print axioms GFNBounds.Graph.CycleRemarks.betaCyc_summable
+#print axioms GFNBounds.Graph.CycleRemarks.betaCyc_le_geometric
+#print axioms GFNBounds.Graph.CycleRemarks.mixing_cycle
+#print axioms GFNBounds.Graph.CycleRemarks.mixing_B_coercive
+#print axioms GFNBounds.Graph.CycleRemarks.mixing_B_tendsto_atTop
+#print axioms GFNBounds.Graph.CycleRemarks.rho_mixing_tendsto
+#print axioms GFNBounds.Graph.CycleRemarks.rhoSigma_cycle_tendsto
+#print axioms GFNBounds.Graph.CycleRemarks.kappa_cycle_tendsto
+#print axioms GFNBounds.Graph.CycleRemarks.kappa_cycle_tendsto_gen
+#print axioms GFNBounds.Graph.CycleRemarks.kappa_cycle_tendsto_fixed_measure
+#print axioms GFNBounds.Graph.CycleRemarks.cycle_no_stalemate_limits
+#print axioms GFNBounds.Graph.CycleRemarks.betaCyc_eq

@@ -2086,7 +2086,8 @@
       "block_sha256": "3f267989c9bc225a63b4191793810e62eaab6892dcd46d4247dd455bea0551a8",
       "lean_files": [
         "GFNBounds/Graph/CycleExample.lean",
-        "GFNBounds/Graph/CycleBlowup.lean"
+        "GFNBounds/Graph/CycleBlowup.lean",
+        "GFNBounds/Graph/CycleRemarks.lean"
       ],
       "decls": [
         "GFNBounds.Graph.CycleExample.cyc",
@@ -2106,11 +2107,35 @@
         "GFNBounds.Graph.CycleExample.bhatSigma_blowup_paper_form",
         "GFNBounds.Graph.CycleExample.sigmaBar_blowup",
         "GFNBounds.Graph.CycleExample.blowupDelta_pos",
-        "GFNBounds.Graph.CycleExample.lt_three_div_of_blowupDelta"
+        "GFNBounds.Graph.CycleExample.lt_three_div_of_blowupDelta",
+        "GFNBounds.Graph.CycleRemarks.inflation_force_max_mono",
+        "GFNBounds.Graph.CycleRemarks.not_critical",
+        "GFNBounds.Graph.CycleRemarks.rescaled_flow",
+        "GFNBounds.Graph.CycleRemarks.cycle_rescaled_flow",
+        "GFNBounds.Graph.CycleRemarks.cycle_rescaled_flow_sq",
+        "GFNBounds.Graph.CycleRemarks.entryTimes_scale",
+        "GFNBounds.Graph.CycleRemarks.nrmL2_scale",
+        "GFNBounds.Graph.CycleRemarks.mixing_sum_endpoints",
+        "GFNBounds.Graph.CycleRemarks.invProb_endpoint_unique",
+        "GFNBounds.Graph.CycleRemarks.betaCyc",
+        "GFNBounds.Graph.CycleRemarks.betaCyc_eq",
+        "GFNBounds.Graph.CycleRemarks.betaCyc_summable",
+        "GFNBounds.Graph.CycleRemarks.betaCyc_le_geometric",
+        "GFNBounds.Graph.CycleRemarks.mixing_cycle",
+        "GFNBounds.Graph.CycleRemarks.mixing_B_coercive",
+        "GFNBounds.Graph.CycleRemarks.mixing_B_tendsto_atTop",
+        "GFNBounds.Graph.CycleRemarks.mixing_sum_gt",
+        "GFNBounds.Graph.CycleRemarks.rho_mixing_tendsto",
+        "GFNBounds.Graph.CycleRemarks.rhoSigma_cycle_tendsto",
+        "GFNBounds.Graph.CycleRemarks.kappa_cycle_tendsto",
+        "GFNBounds.Graph.CycleRemarks.kappa_cycle_tendsto_fixed_measure",
+        "GFNBounds.Graph.CycleRemarks.kappa_cycle_tendsto_gen",
+        "GFNBounds.Graph.CycleRemarks.cycle_no_stalemate_limits",
+        "GFNBounds.Graph.CycleRemarks.cycle_rescaled_flow_check"
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "2026-09-14 (Phase 1 re-read against commit 3194054): proved claims stand; the rewrite adds unproved ones: the force is largest at s0 and increases with M; the rescaling t -> alpha mu_{t/alpha^2}; the mixing sum is +inf at p in {0,1} and -> inf as p -> 1; rho, rho_sigma, kappa -> 0. The Prop 3.12 citation and the numerics 0.720, 1.62 are not certification targets. || CORRECTION 2026-09-14: claims 3 and 4 were corrected in the draft on 2026-09-13 (r(s_0) = M exactly on u = dmu/dlambda; the transient is Theta(M^2), not M/log M), and B-hat_sigma -> inf is certified in CycleBlowup.lean; the 'claims 3 and 4 stand uncorrected' and 'M/log M' statements below are superseded. Remaining: the remark rewrite pass (author ruling 2026-09-14), then the claims it leaves. PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 44 declarations on V = Fin 5. All four claims formalized; THREE OF THEM DID NOT COME OUT AS PRINTED, see the paper findings. Claim 1's number was corrected in the draft on 2026-09-08; claims 3 and 4 stand uncorrected. Claim 2 is exactly right, with q = 1/(5-2p), and its uniqueness goes through theo:universality_graphs(1). Claim 3's r(x_1) = r(x_2) = r(s_f) = 1 hold EXACTLY at every M, not just in the limit, and r(x_3) = p + (1-p)/M -> p. Claim 4 is certified as `no_stalemate`: at the over-inflated configuration the total mass of the gradient density is STRICTLY negative for every training measure of positive density -- by the remark's own route, prop:no_distant_equilibrium(1) plus the observation that r(x_3) < 1 so the configuration is not balanced. `decide` carried the three MarkedGraph side conditions and nothing else; PathConnected is not decidable (ReflTransGen) and was built by hand off the single walk. NOT CERTIFIED, and classified as interpretation rather than claim: the closing 'B-hat blows up and every rate degenerates ... interpolates smoothly toward the instability regime' -- B-hat is an operator norm (obstruction 2), and only its checkable half `sigmaBar_unbounded` is proved. The dynamical continuations (the source refilling at logarithmic speed, the M/log M transient, the handover to theo:local_convergence) are not stated: there is no ODE layer and they do not follow from the computation.\n\n2026-09-13, paper repairs verified by proof-checker: the printed statement now claims more than this Lean certifies. New clause B-hat_sigma -> inf has no lemma (one line from bSigma_eq). The claim that the coercivity constant stays bounded was REMOVED from the paper as underived.\n\n[Wave 1, 2026-09-13, audited] The B-hat_sigma clause CLOSED (CycleBlowup.lean): B-hat_sigma -> +inf as p -> 1 from below, both as BhatSigma and in the defining form sigma_* sqrt((2+sigma-bar)/min N) for every solution of the hitting-time and renewal systems, with explicit threshold delta(C) = 3/(|C|+3); sigma-bar = 3/(1-p) -> inf as a limit. NOT covered anywhere: B-hat -> inf (missing: a Core.Mixing instance for this chain's densOp and a lower bound on beta-hat_n -- NOT obstruction 2); 'every certified rate degenerates'; the p in {0,1} no-mixing clause; the M^2 transient. The M/log M transient in older notes was withdrawn from the paper on 2026-09-13."
+      "scope_notes": "2026-09-14 (Phase 2C, GFNBounds/Graph/CycleRemarks.lean, audited READY): certified -- S1 (mixing sum +inf at p in {0,1}; endpoints use kern p, matched to the loop closure by formula), S2's sigma-bar = 3/(1-p), S3-S8 (force 2 log M maximal at s_0 and increasing in M; not a critical point, for (log x)^2 only; the rescaled flow t -> alpha u(t/alpha^2) exists, is unique, entry times scale by alpha^2 exactly), summability on (0,1) by a Doeblin argument (presupposed by the paper), and the closing limits as p -> 1^- (sigma-bar, B-hat, B-hat_sigma -> inf; rho, rho_sigma, kappa -> 0, kappa for fixed u_0, fixed mu_0, or norms bounded below). NOT certified (claims, keep the row out of A): (i) the eigenvalue aside beta-hat_n >= |zeta_p|^n with zeta_1 = e^{2 i pi/3} (true; needs an implicit-function argument plus a spectral lower bound -- or a /writer rewording to the test-vector argument); (ii) the example identity 'total flow through internal states F(s_f) 3/(1-p)' (a few lines from invProb_paper) and the reading 'no exploding circulation'. Not targets: the heuristic leak ratio, the numerical sentences (0.720, 'after which ... takes over', 1.62). The DB instances are not claims of the remark as printed. Author call on (i)-(ii): certify or reword. || 2026-09-14 (Phase 1 re-read against commit 3194054): proved claims stand; the rewrite adds unproved ones: the force is largest at s0 and increases with M; the rescaling t -> alpha mu_{t/alpha^2}; the mixing sum is +inf at p in {0,1} and -> inf as p -> 1; rho, rho_sigma, kappa -> 0. The Prop 3.12 citation and the numerics 0.720, 1.62 are not certification targets. || CORRECTION 2026-09-14: claims 3 and 4 were corrected in the draft on 2026-09-13 (r(s_0) = M exactly on u = dmu/dlambda; the transient is Theta(M^2), not M/log M), and B-hat_sigma -> inf is certified in CycleBlowup.lean; the 'claims 3 and 4 stand uncorrected' and 'M/log M' statements below are superseded. Remaining: the remark rewrite pass (author ruling 2026-09-14), then the claims it leaves. PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 44 declarations on V = Fin 5. All four claims formalized; THREE OF THEM DID NOT COME OUT AS PRINTED, see the paper findings. Claim 1's number was corrected in the draft on 2026-09-08; claims 3 and 4 stand uncorrected. Claim 2 is exactly right, with q = 1/(5-2p), and its uniqueness goes through theo:universality_graphs(1). Claim 3's r(x_1) = r(x_2) = r(s_f) = 1 hold EXACTLY at every M, not just in the limit, and r(x_3) = p + (1-p)/M -> p. Claim 4 is certified as `no_stalemate`: at the over-inflated configuration the total mass of the gradient density is STRICTLY negative for every training measure of positive density -- by the remark's own route, prop:no_distant_equilibrium(1) plus the observation that r(x_3) < 1 so the configuration is not balanced. `decide` carried the three MarkedGraph side conditions and nothing else; PathConnected is not decidable (ReflTransGen) and was built by hand off the single walk. NOT CERTIFIED, and classified as interpretation rather than claim: the closing 'B-hat blows up and every rate degenerates ... interpolates smoothly toward the instability regime' -- B-hat is an operator norm (obstruction 2), and only its checkable half `sigmaBar_unbounded` is proved. The dynamical continuations (the source refilling at logarithmic speed, the M/log M transient, the handover to theo:local_convergence) are not stated: there is no ODE layer and they do not follow from the computation.\n\n2026-09-13, paper repairs verified by proof-checker: the printed statement now claims more than this Lean certifies. New clause B-hat_sigma -> inf has no lemma (one line from bSigma_eq). The claim that the coercivity constant stays bounded was REMOVED from the paper as underived.\n\n[Wave 1, 2026-09-13, audited] The B-hat_sigma clause CLOSED (CycleBlowup.lean): B-hat_sigma -> +inf as p -> 1 from below, both as BhatSigma and in the defining form sigma_* sqrt((2+sigma-bar)/min N) for every solution of the hitting-time and renewal systems, with explicit threshold delta(C) = 3/(|C|+3); sigma-bar = 3/(1-p) -> inf as a limit. NOT covered anywhere: B-hat -> inf (missing: a Core.Mixing instance for this chain's densOp and a lower bound on beta-hat_n -- NOT obstruction 2); 'every certified rate degenerates'; the p in {0,1} no-mixing clause; the M^2 transient. The M/log M transient in older notes was withdrawn from the paper on 2026-09-13."
     },
     {
       "label": "theo:global_dichotomy_full",
@@ -3201,7 +3226,8 @@
       ],
       "block_sha256": "aadce6fc501ab060885ff716ecb6409b2972ca8f971ab7e59f570c48eeca6c8b",
       "lean_files": [
-        "GFNBounds/Graph/CycleDivergence.lean"
+        "GFNBounds/Graph/CycleDivergence.lean",
+        "GFNBounds/Graph/CycleRemarks.lean"
       ],
       "decls": [
         "GFNBounds.Graph.CycleDivergence.cycGraph",
@@ -3226,11 +3252,23 @@
         "GFNBounds.Graph.CycleDivergence.fmRatio_Fk_tendsto_one",
         "GFNBounds.Graph.CycleDivergence.fmLossTarget_Fk_tendsto_zero",
         "GFNBounds.Graph.CycleDivergence.exists_Fk_loss_le",
-        "GFNBounds.Graph.CycleDivergence.fmLossTarget_eq_loss"
+        "GFNBounds.Graph.CycleDivergence.fmLossTarget_eq_loss",
+        "GFNBounds.Graph.CycleRemarks.extT",
+        "GFNBounds.Graph.CycleRemarks.Fk_src_x",
+        "GFNBounds.Graph.CycleRemarks.Fk_x_snk",
+        "GFNBounds.Graph.CycleRemarks.Fk_FM_const",
+        "GFNBounds.Graph.CycleRemarks.tvFin_termLaw_Fk_gen",
+        "GFNBounds.Graph.CycleRemarks.bG",
+        "GFNBounds.Graph.CycleRemarks.fmRatio_Fk_gen",
+        "GFNBounds.Graph.CycleRemarks.den_pos_and_ratio_pos",
+        "GFNBounds.Graph.CycleRemarks.abs_fmRatio_Fk_sub_one",
+        "GFNBounds.Graph.CycleRemarks.fmLossTarget_Fk_tendsto_zero_gen",
+        "GFNBounds.Graph.CycleRemarks.cycle_counterexample",
+        "GFNBounds.Graph.CycleRemarks.cycle_counterexample_check"
       ],
       "status": "partial",
-      "bucket": "B",
-      "scope_notes": "2026-09-14 (Phase 1 re-read against commit 3194054): new lemma (extracted from the proof of theo:no_bound_divergence). Items (1)-(2) are proved in CycleDivergence.lean only for the theorem's target (targetC delta) and real k >= 0, not for every probability target and integer k (generalizes with b_i = target(x_i) + 1_{i=1}); s_tau(F_k) ~ delta_{x2} is theo:sampling_theorem; 'defined for k >= 1' not stated."
+      "bucket": "D",
+      "scope_notes": "2026-09-14 (Phase 2C, GFNBounds/Graph/CycleRemarks.lean, audited READY): items (1)-(2) certified for every N >= 2, every integer k >= 0, every probability target and real weight nu; g needs only g(1) = 0 and continuity at 1 (g >= 0, 'exactly at 1', finiteness of nu unused); 'defined for k >= 1' read as a positive denominator and rho > 0, with |rho - 1| <= 1/k. NOT certified: s_tau(F_k) ~ delta_{x2} (theo:sampling_theorem, Phase 3); TV taken against termLaw = delta_{x2}. Supersedes the 'only for targetC delta and real k' note below. (Auditor: theo:no_bound_divergence records the same sampler gap as closed/B -- inconsistent; to reconcile at the ledger pass.) || 2026-09-14 (Phase 1 re-read against commit 3194054): new lemma (extracted from the proof of theo:no_bound_divergence). Items (1)-(2) are proved in CycleDivergence.lean only for the theorem's target (targetC delta) and real k >= 0, not for every probability target and integer k (generalizes with b_i = target(x_i) + 1_{i=1}); s_tau(F_k) ~ delta_{x2} is theo:sampling_theorem; 'defined for k >= 1' not stated."
     },
     {
       "label": "lem:lift_coercivity",

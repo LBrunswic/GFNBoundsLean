@@ -2436,7 +2436,7 @@
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "PARTIAL since 2026-09-14 (was recorded closed): two clauses of the statement are not certified -- item (3)'s sampler clause (the sample s_tau has law target/Z), which rests on theo:sampling_theorem, and the closing paragraph's 'the infimum vanishes and is attained, for every p', not bridged to Core.StronglyUniversalAt. Items (1)-(2) and the rest of (3) are certified as below. CLOSED 2026-09-08 in ALL THREE ITEMS, sorry-free, axiom-swept, graduated. (1) irreducibility, existence, uniqueness and positivity of lambda, and lambda(s_0) = lambda(s_f) -- Mathlib v4.31 has no finite-chain Perron-Frobenius, so the paper's Levin-Peres citation was PROVED. (2) the frozen-backward family is exactly the ray f_out = c.lambda with pf the lambda-reversal, both directions. (3) cutting the wrap edge gives exact flow matching: `fmDefect_eq_zero` at every internal state, `termFlow_eq_target` (F_term = Z.pb(s_f -> .)), `sum_initFlow` (mass Z), and `residuals_eq_zero`. Two disclosed choices. (a) The forward half of (2) assumes of pi_-> only that its rows sum to 1, never non-negativity -- the paper's Theta asks for a kernel, and dropping an unused hypothesis strengthens the statement; the converse proves both halves for the reversal, so no member is lost. (b) The paper lets f_out* vanish and calls the policy 'immaterial' there; rather than adding a side condition, `outflowStar_mul_fwdStar` proves the identity the flow-matching computation actually consumes -- f_out*(u) . pi_->*(u->v) = e(u->v) -- UNCONDITIONALLY, since f_out*(u) = 0 forces e(u->v) = 0. Not a corner case: on s_0 -> a -> s_f the unique internal state has f_out* = 0 exactly. NOT DONE, and named: the sampler clause of item (3) and the closing paragraph rest on theo:sampling_theorem, which the paper quotes from bengio2021flow; there is no trajectory space in the file and no hypothesis carrying it, because without a model of the sampler such a conditional would merely restate its own hypothesis. Nor is the bridge to Core's `StronglyUniversalAt` built -- see the obstruction note."
+      "scope_notes": "2026-09-14 (FamilyUniversality audit): FINDING for this row -- with an edge s_0 -> s_f (allowed by the marked-graph definition, proofs.tex:1108), item (3)'s flow has mass Z(1 - pi_B(s_f -> s_0)) < Z on S, R = Z pi_B(s_f -> .) charges s_0 not in S so s_tau ~ R/Z fails (triangle 0->1->2, 0->2: s_tau = 1), and the concluding 'freeze pi_B(s_f -> .) := R' breaks positivity on that edge; proofs.tex:1140 also freezes to R where R/Z is needed. Author: exclude s_0 -> s_f or define 'terminating state'. || PARTIAL since 2026-09-14 (was recorded closed): two clauses of the statement are not certified -- item (3)'s sampler clause (the sample s_tau has law target/Z), which rests on theo:sampling_theorem, and the closing paragraph's 'the infimum vanishes and is attained, for every p', not bridged to Core.StronglyUniversalAt. Items (1)-(2) and the rest of (3) are certified as below. CLOSED 2026-09-08 in ALL THREE ITEMS, sorry-free, axiom-swept, graduated. (1) irreducibility, existence, uniqueness and positivity of lambda, and lambda(s_0) = lambda(s_f) -- Mathlib v4.31 has no finite-chain Perron-Frobenius, so the paper's Levin-Peres citation was PROVED. (2) the frozen-backward family is exactly the ray f_out = c.lambda with pf the lambda-reversal, both directions. (3) cutting the wrap edge gives exact flow matching: `fmDefect_eq_zero` at every internal state, `termFlow_eq_target` (F_term = Z.pb(s_f -> .)), `sum_initFlow` (mass Z), and `residuals_eq_zero`. Two disclosed choices. (a) The forward half of (2) assumes of pi_-> only that its rows sum to 1, never non-negativity -- the paper's Theta asks for a kernel, and dropping an unused hypothesis strengthens the statement; the converse proves both halves for the reversal, so no member is lost. (b) The paper lets f_out* vanish and calls the policy 'immaterial' there; rather than adding a side condition, `outflowStar_mul_fwdStar` proves the identity the flow-matching computation actually consumes -- f_out*(u) . pi_->*(u->v) = e(u->v) -- UNCONDITIONALLY, since f_out*(u) = 0 forces e(u->v) = 0. Not a corner case: on s_0 -> a -> s_f the unique internal state has f_out* = 0 exactly. NOT DONE, and named: the sampler clause of item (3) and the closing paragraph rest on theo:sampling_theorem, which the paper quotes from bengio2021flow; there is no trajectory space in the file and no hypothesis carrying it, because without a model of the sampler such a conditional would merely restate its own hypothesis. Nor is the bridge to Core's `StronglyUniversalAt` built -- see the obstruction note."
     },
     {
       "label": "rem:loop_closure_necessary",
@@ -2481,11 +2481,35 @@
         1183
       ],
       "block_sha256": "25ff7bcf99edad569d5f3b0adad185e95ff629481a219faffc999bfaa824ad4a",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "B",
-      "scope_notes": "A remark."
+      "lean_files": [
+        "GFNBounds/Core/FamilyUniversality.lean"
+      ],
+      "decls": [
+        "GFNBounds.Graph.PartialSupport.IsTarget",
+        "GFNBounds.Graph.PartialSupport.subVerts",
+        "GFNBounds.Graph.PartialSupport.subGraph",
+        "GFNBounds.Graph.PartialSupport.subGraph_pathConnected",
+        "GFNBounds.Graph.PartialSupport.restrict_policy",
+        "GFNBounds.Graph.PartialSupport.partial_support_exact",
+        "GFNBounds.Graph.PartialSupport.not_memberFlow",
+        "GFNBounds.Graph.PartialSupport.partial_support_not_in_G",
+        "GFNBounds.Graph.PartialSupport.FrozenUnion",
+        "GFNBounds.Graph.PartialSupport.memberFlow",
+        "GFNBounds.Graph.PartialSupport.member_dichotomy",
+        "GFNBounds.Graph.PartialSupport.member_epsTarget",
+        "GFNBounds.Graph.PartialSupport.graphResidual",
+        "GFNBounds.Graph.PartialSupport.iInf_graphResidual_eq_zero",
+        "GFNBounds.Graph.PartialSupport.not_attained",
+        "GFNBounds.Graph.PartialSupport.graphResidual_ne_zero",
+        "GFNBounds.Graph.PartialSupport.mem_internal_of_edge_snk",
+        "GFNBounds.Graph.PartialSupport.not_attained_of_not_edge_src_snk",
+        "GFNBounds.Graph.PartialSupport.graphResidual_ne_zero_of_not_edge_src_snk",
+        "GFNBounds.Graph.PartialSupport.diamond_partial_support",
+        "GFNBounds.Graph.PartialSupport.triangle_attained"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-14 (Phase 2D, GFNBounds/Core/FamilyUniversality.lean, audited READY after one repair): CLOSED IN A. G' built and path-connected (R != 0); restriction certified with the renormalized sink row; exact matching with the sink row set to R/Z -- the remark's claim is true via theo:universality_graphs' concluding freeze on G', only the word 'renormalized' is wrong (wording finding to the author; also proofs.tex:1140 freezes to R where R/Z is needed); the member carries the Markov conditions FrozenUnion requires. 'Not in G's family' on edge flows over every positive backward policy. Infimum over the union vanishes at every p (counting measure on S, residual against each member's own F_init, the reading of 'strongly universal over terminal targets'); dichotomy certified; non-attainment for an internal terminating state where R vanishes, NO edge condition (terminating states are internal, introduction.tex:84-86, proofs.tex:1162). Disclosed: when s_0 -> s_f is an edge, subGraph and unif also count s_0 as terminating -- the case in which theo:universality_graphs(3) is itself inconsistent on S (pointer to that row). triangle_attained shows the reading of 'terminating state' matters; it is not a refutation. || A remark."
     },
     {
       "label": "prop:silva_explicit",
@@ -2630,18 +2654,39 @@
       "block_sha256": "8d4d62805d1617afc7a48bd63846e932bff11f1a13ef0f20500be5d81554f2bd",
       "lean_files": [
         "GFNBounds/Core/StrongUniversality.lean",
-        "GFNBounds/Core/Universality.lean"
+        "GFNBounds/Core/Universality.lean",
+        "GFNBounds/Core/FamilyUniversality.lean"
       ],
       "decls": [
         "GFNBounds.Core.WeaklyUniversalAt",
         "GFNBounds.Core.StronglyUniversalAt",
         "GFNBounds.Core.WeaklyUniversal",
         "GFNBounds.Core.StronglyUniversal",
-        "GFNBounds.Core.StronglyUniversal.weaklyUniversal"
+        "GFNBounds.Core.StronglyUniversal.weaklyUniversal",
+        "GFNBounds.Core.Family.IsGenerativeFlow",
+        "GFNBounds.Core.Family.IsFlowFamily",
+        "GFNBounds.Core.Family.defectFn",
+        "GFNBounds.Core.Family.resInitFn",
+        "GFNBounds.Core.Family.resTermFn",
+        "GFNBounds.Core.Family.residual",
+        "GFNBounds.Core.Family.IsAdmissiblePair",
+        "GFNBounds.Core.Family.IsBoundedPolicy",
+        "GFNBounds.Core.Family.WeaklyUniversal",
+        "GFNBounds.Core.Family.StronglyUniversal",
+        "GFNBounds.Core.Family.StronglyUniversal.weaklyUniversal",
+        "GFNBounds.Core.Family.realizes_of_le",
+        "GFNBounds.Core.Family.StronglyUniversal.realizes_of_le",
+        "GFNBounds.Core.Family.integral_defectFn",
+        "GFNBounds.Core.Family.mass_gap_div_le_iInf",
+        "GFNBounds.Core.Family.iInf_pos_of_mass_ne",
+        "GFNBounds.Core.Family.weaklyUniversal_fixedPolicyFamily_iff",
+        "GFNBounds.Core.Family.stronglyUniversal_fixedPolicyFamily_iff",
+        "GFNBounds.Core.Family.weaklyUniversal_const_kernel",
+        "GFNBounds.Core.Family.stronglyUniversal_const_kernel_top"
       ],
-      "status": "partial",
-      "bucket": "B",
-      "scope_notes": "2026-09-14 (Phase 1 re-read against commit 3194054): parenthetical now per pair and for r in [1,p]: exactly stronglyUniversalAt_inclTop / _of_kernel_Lr at p = inf; the finite-p inclusion L^p -> L^r is not stated. Still narrowed: Theta = {P} x E+. || BODY STATEMENT with no appendix twin, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). Status and bucket as the paper-side ledger records them. STATED 2026-09-08. `WeaklyUniversalAt P theta` / `StronglyUniversalAt P theta` are the definition at ONE admissible pair; `WeaklyUniversal P Pi` closes the quantifier over pairs and is the one that matches def:universality. The paper does allow a different outflow per pair -- the infimum sits inside its 'for any distributions' -- so the per-pair predicate is the right unit. Disclosed narrowings: the family is fixed at Theta = {P} x E+, which is the family theo:universality_L2_full is about; theta is any element with Pi theta = 0 rather than a difference of equal-mass densities; and STRONG universality is now defined at both levels (`StronglyUniversalAt`, `StronglyUniversal`) with `StronglyUniversal.weaklyUniversal` proving the implication the paper's parenthetical presupposes. The cross-p clause is proved at one pair (L^inf to L^r) but not as strong L^r-universality of the L^r family."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-14 (Phase 2D, GFNBounds/Core/FamilyUniversality.lean, audited READY): CLOSED IN A. Arbitrary family Theta; distributions carried as densities (Radon-Nikodym); residual in [0, inf]; boundedness per member; IsBoundedPolicy's nu pi* << nu is FORCED by the paper's operator norm (f = 1), not added (without it the rnDeriv density action passes singular kernels at C = 0). First parenthetical certified with the explicit floor |F_init(S) - F_term(S)|/nu(S)^{1-1/p}. Second parenthetical (ruling R6) per pair, as printed ('realizes it for that pair at every r in [1,p]'); no family-level L^p -> L^r transfer claimed. At Theta = {pi*} x L^p_+ the predicates are EQUIVALENT to Core.WeaklyUniversal/StronglyUniversal. Inhabited by the i.i.d. resampling kernel (weakly universal at every finite p, strongly at p = inf). Supersedes 'Still narrowed: Theta = {P} x E+' below. || 2026-09-14 (Phase 1 re-read against commit 3194054): parenthetical now per pair and for r in [1,p]: exactly stronglyUniversalAt_inclTop / _of_kernel_Lr at p = inf; the finite-p inclusion L^p -> L^r is not stated. Still narrowed: Theta = {P} x E+. || BODY STATEMENT with no appendix twin, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). Status and bucket as the paper-side ledger records them. STATED 2026-09-08. `WeaklyUniversalAt P theta` / `StronglyUniversalAt P theta` are the definition at ONE admissible pair; `WeaklyUniversal P Pi` closes the quantifier over pairs and is the one that matches def:universality. The paper does allow a different outflow per pair -- the infimum sits inside its 'for any distributions' -- so the per-pair predicate is the right unit. Disclosed narrowings: the family is fixed at Theta = {P} x E+, which is the family theo:universality_L2_full is about; theta is any element with Pi theta = 0 rather than a difference of equal-mass densities; and STRONG universality is now defined at both levels (`StronglyUniversalAt`, `StronglyUniversal`) with `StronglyUniversal.weaklyUniversal` proving the implication the paper's parenthetical presupposes. The cross-p clause is proved at one pair (L^inf to L^r) but not as strong L^r-universality of the L^r family."
     },
     {
       "label": "theo:universality_L2",

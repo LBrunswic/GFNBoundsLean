@@ -72,6 +72,7 @@ import GFNBounds.Balance.DiscreteGlobal
 import GFNBounds.Doubling.Remarks
 import GFNBounds.Balance.TrainingSpeedAssembled
 import GFNBounds.Graph.CycleRemarks
+import GFNBounds.Core.FamilyUniversality
 
 /-!
 # Axiom audit
@@ -775,3 +776,26 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Graph.CycleRemarks.kappa_cycle_tendsto_fixed_measure
 #print axioms GFNBounds.Graph.CycleRemarks.cycle_no_stalemate_limits
 #print axioms GFNBounds.Graph.CycleRemarks.betaCyc_eq
+
+-- `def:universality` for an arbitrary family, and `rem:partial_support` — GFNBounds/Core/FamilyUniversality.lean
+#print axioms GFNBounds.Core.Family.realizes_of_le
+#print axioms GFNBounds.Core.Family.StronglyUniversal.realizes_of_le
+#print axioms GFNBounds.Core.Family.mass_gap_div_le_iInf
+#print axioms GFNBounds.Core.Family.iInf_pos_of_mass_ne
+#print axioms GFNBounds.Core.Family.weaklyUniversal_fixedPolicyFamily_iff
+#print axioms GFNBounds.Core.Family.stronglyUniversal_fixedPolicyFamily_iff
+#print axioms GFNBounds.Core.Family.weaklyUniversal_const_kernel
+#print axioms GFNBounds.Core.Family.stronglyUniversal_const_kernel_top
+#print axioms GFNBounds.Graph.PartialSupport.subGraph_pathConnected
+#print axioms GFNBounds.Graph.PartialSupport.restrict_policy
+#print axioms GFNBounds.Graph.PartialSupport.partial_support_exact
+#print axioms GFNBounds.Graph.PartialSupport.partial_support_not_in_G
+#print axioms GFNBounds.Graph.PartialSupport.member_dichotomy
+#print axioms GFNBounds.Graph.PartialSupport.member_epsTarget
+#print axioms GFNBounds.Graph.PartialSupport.iInf_graphResidual_eq_zero
+#print axioms GFNBounds.Graph.PartialSupport.not_attained
+#print axioms GFNBounds.Graph.PartialSupport.graphResidual_ne_zero
+#print axioms GFNBounds.Graph.PartialSupport.not_attained_of_not_edge_src_snk
+#print axioms GFNBounds.Graph.PartialSupport.graphResidual_ne_zero_of_not_edge_src_snk
+#print axioms GFNBounds.Graph.PartialSupport.triangle_attained
+#print axioms GFNBounds.Graph.PartialSupport.diamond_partial_support

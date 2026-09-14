@@ -46131,6 +46131,17 @@
    "doc":
    "`w_min > 0` forces `‖w‖_{L^∞} > 0`, read at one state — which a probability `λ` supplies\nthrough `nonempty_of_total`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.winC3":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 12,
+   "type": "ℝ → Set ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 187,
+   "kind": "def",
+   "doc": "The closed window `[1 − a, 1 + a]`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.unwtL2_wtL2":
   {"uses_value":
    ["GFNBounds.Balance.unwtL2",
@@ -46193,6 +46204,17 @@
    "line": 149,
    "kind": "def",
    "doc": "The inverse weighting, `v ↦ (v(x)/√λ(x))_x`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.uniqueDiffOn_winC3":
+  {"uses_value": [],
+   "uses_type": ["GFNBounds.Balance.winC3"],
+   "uses_external": 136,
+   "type": "∀ {a : ℝ}, 0 < a → UniqueDiffOn ℝ (GFNBounds.Balance.winC3 a)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 195,
+   "kind": "theorem",
+   "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.uMin_pos":
   {"uses_value":
@@ -47313,6 +47335,49 @@
    "doc":
    "**`gradient_expansion`, evaluated and checked against a hand computation.**\n\nThree things at once: the error is the number computed by hand (`‖E‖² = 805093/37324800`), the\ntheorem's own bound holds on this instance and reads `16/15`, and the two are consistent with a\nfactor of about `7.3` to spare. A type-correct theorem about the wrong object would still\ncompile; this is what says the object is the paper's. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.twoState_exists_check":
+  {"uses_value":
+   ["GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.CW",
+    "GFNBounds.Balance.Cinf",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.constW_bounds",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.gamma0W",
+    "GFNBounds.Balance.local_convergence_full_exists",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.logSq_C3On_bundle",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.pushMass",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Balance.twoStateK",
+    "GFNBounds.Balance.twoStateLam",
+    "GFNBounds.Balance.twoStateLam_pos",
+    "GFNBounds.Balance.twoState_coercivity",
+    "GFNBounds.Balance.twoState_isInvariant",
+    "GFNBounds.Balance.twoState_isMarkovOn",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.twoStateK",
+    "GFNBounds.Balance.twoStateLam"],
+   "uses_external": 338,
+   "type":
+   "∃ h,\n  (GFNBounds.Balance.IsGradientFlow GFNBounds.Balance.twoStateK GFNBounds.Balance.twoStateLam\n      (fun z => GFNBounds.Balance.twoStateLam z * 1) GFNBounds.Balance.logSqDeriv fun s x => 1 + h s x) ∧\n    ¬GFNBounds.Balance.Balanced GFNBounds.Balance.twoStateK GFNBounds.Balance.twoStateLam fun x => 1 + h 0 x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 1363,
+   "kind": "theorem",
+   "doc":
+   "**The existence clause is inhabited off balance**: on the two-state chain, `g = (log x)²`,\n`a = 1/2`, `w ≡ 1`, `λ_min = 1/2`, `B̂ = 1`, from `h₀ = (ε₀/2, −ε₀/2)` — a non-balanced start\ninside the basin — `local_convergence_full_exists` produces a solution of the flow predicate. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.twoState_epsW":
   {"uses_value":
    ["GFNBounds.Balance.Kexp",
@@ -48052,6 +48117,96 @@
    "doc":
    "The bands of `prop:nonlinear_freezing`*(2)*: `U⁻ = (5/8, 7/8) ∋ 3/4` and\n`U⁺ = (11/8, 13/8) ∋ 3/2`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.training_speed_full_paper":
+  {"uses_value":
+   ["GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.BhatSigma",
+    "GFNBounds.Balance.BhatSigma_eq",
+    "GFNBounds.Balance.BhatSigma_pos",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.T0",
+    "GFNBounds.Balance.T0_eq",
+    "GFNBounds.Balance.cDelta",
+    "GFNBounds.Balance.delta0",
+    "GFNBounds.Balance.eps0Gamma3",
+    "GFNBounds.Balance.eps0Gamma3_pos",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.eps0W_logSq",
+    "GFNBounds.Balance.global_phase_exact",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.logSq_deriv2_one",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.lossVal",
+    "GFNBounds.Balance.mean_le_nrmL2_iff_const",
+    "GFNBounds.Balance.no_distant_equilibrium_three_of_init",
+    "GFNBounds.Balance.one_le_sigmaStar",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.rhoSigma",
+    "GFNBounds.Balance.rhoSigma_eq_visits",
+    "GFNBounds.Balance.training_speed_full_Gamma3",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsGreen",
+    "GFNBounds.Graph.BackwardPolicy.IsHitExp",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb.inv",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb.pos",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb.total",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.BackwardPolicy.phat_nonneg",
+    "GFNBounds.Graph.BackwardPolicy.sigmaBar",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.MarkedGraph.src",
+    "GFNBounds.Graph.le_maxOver",
+    "GFNBounds.Graph.maxOver",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.minOver",
+    "GFNBounds.Graph.minOver_le",
+    "GFNBounds.Graph.minOver_pos",
+    "GFNBounds.Graph.nrmL2",
+    "GFNBounds.Graph.sigmaStar",
+    "GFNBounds.Graph.visits"],
+   "uses_type":
+   ["GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.BhatSigma",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.lossVal",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.rhoSigma",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsGreen",
+    "GFNBounds.Graph.BackwardPolicy.IsHitExp",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.BackwardPolicy.sigmaBar",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.maxOver",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.minOver",
+    "GFNBounds.Graph.nrmL2",
+    "GFNBounds.Graph.sigmaStar",
+    "GFNBounds.Graph.visits"],
+   "uses_external": 156,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V}\n  {B : GFNBounds.Graph.BackwardPolicy G} {lam gr uH wf : V → ℝ} {wmin : ℝ},\n  G.PathConnected →\n    B.PositiveOnEdges →\n      B.IsInvProb lam →\n        B.IsGreen gr →\n          B.IsHitExp uH →\n            0 < wmin →\n              (∀ (x : V), wmin ≤ wf x) →\n                ∀ {u0 : V → ℝ},\n                  (∀ (x : V), 0 < u0 x) →\n                    (∀ (x : V), lam x = GFNBounds.Graph.visits G gr x / (2 + B.sigmaBar uH)) ∧\n                      GFNBounds.Graph.minOver G lam =\n                          GFNBounds.Graph.minOver G (GFNBounds.Graph.visits G gr) / (2 + B.sigmaBar uH) ∧\n                        GFNBounds.Balance.rhoSigma (deriv (deriv GFNBounds.Balance.logSq) 1) wmin\n                              (GFNBounds.Graph.minOver G lam) (GFNBounds.Graph.sigmaStar G uH) =\n                            2 * wmin * GFNBounds.Graph.minOver G (GFNBounds.Graph.visits G gr) /\n                              (GFNBounds.Graph.sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)) ∧\n                          ∃ u,\n                            u 0 = u0 ∧\n                              GFNBounds.Balance.IsGradientFlow B.phat lam (fun x => lam x * wf x)\n                                  GFNBounds.Balance.logSqDeriv u ∧\n                                (∀ (t : ℝ), 0 ≤ t → ∀ (x : V), 0 < u t x) ∧\n                                  (∀ (v : ℝ → V → ℝ),\n                                      v 0 = u0 →\n                                        GFNBounds.Balance.IsGradientFlow B.phat lam (fun x => lam x * wf x)\n                                            GFNBounds.Balance.logSqDeriv v →\n                                          (∀ (t : ℝ), 0 ≤ t → ∀ (x : V), 0 < v t x) → ∀ (t : ℝ), 0 ≤ t → v t = u t) ∧\n                                    Filter.Tendsto u Filter.atTop (nhds fun x => GFNBounds.Graph.nrmL2 lam u0) ∧\n                                      (GFNBounds.Balance.Balanced B.phat lam fun x => GFNBounds.Graph.nrmL2 lam u0) ∧\n                                        (∀ (t : ℝ),\n                                            0 ≤ t →\n                                              HasDerivAt\n                                                  (fun s =>\n                                                    GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                      (GFNBounds.Balance.ratio B.phat lam (u s)))\n                                                  (-GFNBounds.Graph.nrmL2 lam\n                                                        (GFNBounds.Balance.lossGrad B.phat lam (fun x => lam x * wf x)\n                                                          GFNBounds.Balance.logSqDeriv (u t)) ^\n                                                      2)\n                                                  t ∧\n                                                (wmin * √(GFNBounds.Graph.minOver G lam) /\n                                                        (GFNBounds.Graph.nrmL2 lam u0 * GFNBounds.Graph.maxOver G wf *\n                                                          max 1\n                                                            √(GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                                  (GFNBounds.Balance.ratio B.phat lam u0) /\n                                                                (wmin * GFNBounds.Graph.minOver G lam)))) ^\n                                                      2 *\n                                                    GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                        (GFNBounds.Balance.ratio B.phat lam (u t)) ^\n                                                      2 ≤\n                                                  GFNBounds.Graph.nrmL2 lam\n                                                      (GFNBounds.Balance.lossGrad B.phat lam (fun x => lam x * wf x)\n                                                        GFNBounds.Balance.logSqDeriv (u t)) ^\n                                                    2) ∧\n                                          (∀ (t : ℝ),\n                                              0 ≤ t →\n                                                ENNReal.ofReal\n                                                    (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                      (GFNBounds.Balance.ratio B.phat lam (u t))) ≤\n                                                  ((ENNReal.ofReal\n                                                          (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                            (GFNBounds.Balance.ratio B.phat lam u0)))⁻¹ +\n                                                      ENNReal.ofReal\n                                                        ((wmin * √(GFNBounds.Graph.minOver G lam) /\n                                                              (GFNBounds.Graph.nrmL2 lam u0 *\n                                                                  GFNBounds.Graph.maxOver G wf *\n                                                                max 1\n                                                                  √(GFNBounds.Balance.lossVal lam wf\n                                                                        GFNBounds.Balance.logSq\n                                                                        (GFNBounds.Balance.ratio B.phat lam u0) /\n                                                                      (wmin * GFNBounds.Graph.minOver G lam)))) ^\n                                                            2 *\n                                                          t))⁻¹) ∧\n                                            (GFNBounds.Balance.Balanced B.phat lam u0 ↔\n                                                (ENNReal.ofReal\n                                                      (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                        (GFNBounds.Balance.ratio B.phat lam u0)))⁻¹ =\n                                                  ⊤) ∧\n                                              ∃\n                                                t₁ ∈\n                                                  Set.Icc 0\n                                                    (4 *\n                                                            GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                              (GFNBounds.Balance.ratio B.phat lam u0) *\n                                                          GFNBounds.Graph.nrmL2 lam u0 ^ 6 *\n                                                        GFNBounds.Graph.sigmaStar G uH ^ 4 /\n                                                      (wmin ^ 2 *\n                                                            GFNBounds.Balance.eps0W GFNBounds.Balance.logSq (1 / 2) wmin\n                                                                (GFNBounds.Graph.maxOver G wf)\n                                                                (GFNBounds.Balance.BhatSigma G uH lam)\n                                                                (GFNBounds.Graph.minOver G lam) ^\n                                                              4 *\n                                                          GFNBounds.Graph.meanL2 lam u0 ^ 4 *\n                                                        GFNBounds.Graph.minOver G lam ^ 5)),\n                                                GFNBounds.Graph.meanL2 lam u0 ≤ GFNBounds.Graph.meanL2 lam (u t₁) ∧\n                                                  GFNBounds.Graph.meanL2 lam (u t₁) ≤ GFNBounds.Graph.nrmL2 lam u0 ∧\n                                                    (GFNBounds.Graph.nrmL2 lam fun x =>\n                                                          u t₁ x / GFNBounds.Graph.meanL2 lam (u t₁) - 1) ≤\n                                                        GFNBounds.Balance.eps0W GFNBounds.Balance.logSq (1 / 2) wmin\n                                                          (GFNBounds.Graph.maxOver G wf)\n                                                          (GFNBounds.Balance.BhatSigma G uH lam)\n                                                          (GFNBounds.Graph.minOver G lam) ∧\n                                                      ∃ cinf,\n                                                        (GFNBounds.Balance.Balanced B.phat lam fun x => cinf) ∧\n                                                          ∀ (t : ℝ),\n                                                            t₁ ≤ t →\n                                                              (GFNBounds.Graph.nrmL2 lam fun x =>\n                                                                  u t x / GFNBounds.Graph.meanL2 lam (u t₁) - cinf) ≤\n                                                                2 *\n                                                                    Real.exp\n                                                                      (-(GFNBounds.Balance.rhoSigma\n                                                                              (deriv (deriv GFNBounds.Balance.logSq) 1)\n                                                                              wmin (GFNBounds.Graph.minOver G lam)\n                                                                              (GFNBounds.Graph.sigmaStar G uH) *\n                                                                            (t - t₁) /\n                                                                          (2 *\n                                                                            GFNBounds.Graph.meanL2 lam (u t₁) ^ 2))) *\n                                                                  GFNBounds.Graph.nrmL2 lam\n                                                                    (GFNBounds.Balance.perpL2 lam fun x =>\n                                                                      u t₁ x / GFNBounds.Graph.meanL2 lam (u t₁) - 1)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 1079,
+   "kind": "theorem",
+   "doc":
+   "**`theo:training_speed_full`, the preamble and items 1 and 2, as printed** (`proofs.tex:999–1021`),\nfrom the paper's hypotheses only — a finite path-connected marked graph, a backward policy positive\non the edges of its loop closure, `λ` its invariant probability, `g = (log x)²`, `ν = wλ` with\n`w ≥ w_min > 0`, and an initialization `μ₀ = u₀λ ∼ λ`. No flow is hypothesised.\n\n* the visit ratio `λ(x) = N(x)/(2+σ̄)`, `λ_min = N_min/(2+σ̄)`, and\n  `ϱ_σ = g''(1)w_min λ_min/σ_*² = 2w_min N_min/(σ_*²(2+σ̄))`;\n* the gradient flow from `u₀` **exists**, stays positive, is **unique** among positive solutions,\n  and converges to the balanced flow of its sphere (the constant `‖u₀‖`);\n* item 1: `−𝓛̇ = ‖∇𝓛‖² ≥ κ²𝓛²` at every `t ≥ 0`, and `𝓛(μ_t) ≤ (𝓛(μ₀)⁻¹ + κ²t)⁻¹` in `[0,∞]`,\n  `𝓛(μ₀)⁻¹ = ∞` exactly when `μ₀` is balanced;\n* item 2: with `ε₀` Theorem 10's radius for `(log x)²` at `a = 1/2`, `B̂_σ`, `C_∞ = λ_min^{−1/2}`\n  (`eps0W logSq (1/2)`), there is `t₁ ≤ T₀ = 4𝓛(μ₀)‖u₀‖⁶σ_*⁴/(w_min²ε₀⁴m₀⁴λ_min⁵)` at which\n  `m₁ ∈ [m₀, ‖u₀‖]` and the flow rescaled to unit mass is within `ε₀` of `1`, and from `t₁` on it\n  converges to a balanced `c_∞λ` at rate `ϱ_σ/(2m₁²)`.\n\n`‖w‖_{L^∞}` is `Graph.maxOver G wf` itself, not a bound. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.training_speed_full_of_pos":
   {"uses_value":
    ["GFNBounds.Balance.IsGradientFlow",
@@ -48446,6 +48601,27 @@
    "doc":
    "**The shape of Step 3's convergence argument, with the flow removed.** `A` grows, `B` drifts\nno faster than `A` grows, both are bounded on `[0,∞)`: then `B` converges at `+∞`, because\n`A ± B` are monotone and bounded and `B = ((A+B) − (A−B))/2`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.taylor_of_C3On":
+  {"uses_value":
+   ["GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.abs_g2W_sub_le",
+    "GFNBounds.Balance.abs_le_quadratic_of_deriv_Ico",
+    "GFNBounds.Balance.hasDerivWithinAt_iteratedDerivWithin_winC3",
+    "GFNBounds.Balance.mem_nhds_winC3",
+    "GFNBounds.Balance.one_mem_winC3",
+    "GFNBounds.Balance.uniqueDiffOn_winC3",
+    "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.Gamma3W", "GFNBounds.Balance.winC3"],
+   "uses_external": 325,
+   "type":
+   "∀ {g gd : ℝ → ℝ} {a : ℝ},\n  0 < a →\n    ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n      (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (gd y) (GFNBounds.Balance.winC3 a) y) →\n        gd 1 = 0 →\n          ∀ (y : ℝ),\n            |y - 1| ≤ a →\n              |gd y - iteratedDerivWithin 2 g (GFNBounds.Balance.winC3 a) 1 * (y - 1)| ≤\n                GFNBounds.Balance.Gamma3W g a / 2 * (y - 1) ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 254,
+   "kind": "theorem",
+   "doc":
+   "**`theo:local_convergence_full`, the `C³` hypothesis on the closed window read as the Taylor\nbound Step 1 uses** (Taylor's formula in `theo:gd_diffusion_full`'s proof):\nfor any `g'` of `g` on `[1−a,1+a]` (one-sided at the ends) with `g'(1) = 0`,\n`|g'(y) − g''(1)(y−1)| ≤ (Γ₃/2)(y−1)²` for `|y − 1| ≤ a`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.taylor_of_C3":
   {"uses_value":
    ["GFNBounds.Balance.Gamma3",
@@ -48462,6 +48638,23 @@
    "kind": "theorem",
    "doc":
    "**`theo:local_convergence_full`, the `C³` hypothesis read as the Taylor bound it is used\nthrough** (Taylor's formula in `theo:gd_diffusion_full`'s proof, `proofs.tex:616–626`, which Step 1\nof the proof invokes): `|g'(y) − g''(1)(y−1)| ≤ (Γ₃/2)(y−1)²` for `|y − 1| ≤ a`, given\n`g'(1) = 0` — the library's `htaylor` at `gd = g'`, `g2 = g''(1)`, `M3 = Γ₃`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.taylor_bundle_of_C3On":
+  {"uses_value":
+   ["GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.deriv_one_eq_of_C3On",
+    "GFNBounds.Balance.taylor_of_C3On",
+    "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.Gamma3W", "GFNBounds.Balance.winC3"],
+   "uses_external": 95,
+   "type":
+   "∀ {g gd : ℝ → ℝ} {a : ℝ},\n  0 < a →\n    ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n      (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (gd y) (GFNBounds.Balance.winC3 a) y) →\n        deriv g 1 = 0 →\n          ∀ (y : ℝ),\n            |y - 1| ≤ a → |gd y - deriv (deriv g) 1 * (y - 1)| ≤ GFNBounds.Balance.Gamma3W g a / 2 * (y - 1) ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 435,
+   "kind": "theorem",
+   "doc":
+   "The `C³`-on-the-window hypotheses, turned into the Taylor bound the library consumes, at `gd`\nand at the classical `g''(1)`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.sup_global":
   {"uses_value":
@@ -48515,6 +48708,71 @@
    "kind": "theorem",
    "doc":
    "**Step 4** (`proofs.tex:643`): `‖h_0‖ ≤ ε₀` makes the window global — `‖h_t‖_{L^∞} ≤ ε/2`\nfor every `t ≥ 0`, so Steps 1–3 hold on all of `ℝ₊`.\n\n`L2Toolkit.bootstrap_of_continuous` is the continuation argument; `sup_bootstrap_step` is its\n`hboot`, and its `hstart` is the `t = 0` case, **which the paper's Step 4 does not state**. It\nholds for the same reason and by a shorter route: `‖h_0‖_{L^∞} ≤ C_∞‖h_0‖ ≤ C_∞ε₀ ≤ ε/4`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.sup_bootstrap_step_on":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.C6",
+    "GFNBounds.Balance.C7",
+    "GFNBounds.Balance.Cg",
+    "GFNBounds.Balance.Cinf",
+    "GFNBounds.Balance.Cinf_pos",
+    "GFNBounds.Balance.Kexp",
+    "GFNBounds.Balance.Kexp_nonneg",
+    "GFNBounds.Balance.abs_deriv_mean_le",
+    "GFNBounds.Balance.abs_le_Cinf_mean_add_perp",
+    "GFNBounds.Balance.abs_meanL2_le_nrmL2",
+    "GFNBounds.Balance.energy_lower",
+    "GFNBounds.Balance.eps0",
+    "GFNBounds.Balance.eps0_le_basin",
+    "GFNBounds.Balance.eps0_le_one",
+    "GFNBounds.Balance.eps0_nonneg",
+    "GFNBounds.Balance.eps1",
+    "GFNBounds.Balance.epsW",
+    "GFNBounds.Balance.epsW_le_eps1",
+    "GFNBounds.Balance.epsW_le_window",
+    "GFNBounds.Balance.epsW_nonneg",
+    "GFNBounds.Balance.hasDerivAt_mean_of_at",
+    "GFNBounds.Balance.hasDerivAt_perp_sq_of_at",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.nonempty_of_total",
+    "GFNBounds.Balance.nrmL2_perpL2_le",
+    "GFNBounds.Balance.one_le_Cinf",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Balance.rhoL_nonneg",
+    "GFNBounds.Balance.wsup_pos",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Core.IsMarkovOn.nonneg",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2",
+    "GFNBounds.Graph.nrmL2_nonneg"],
+   "uses_type":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.C6",
+    "GFNBounds.Balance.C7",
+    "GFNBounds.Balance.Cg",
+    "GFNBounds.Balance.Cinf",
+    "GFNBounds.Balance.Kexp",
+    "GFNBounds.Balance.eps0",
+    "GFNBounds.Balance.epsW",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 396,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam w : V → ℝ} {gd : ℝ → ℝ} {h : ℝ → V → ℝ}\n  {g2 a M3 wsup wmin Bhat lamMin t : ℝ},\n  GFNBounds.Core.IsMarkovOn lam K →\n    GFNBounds.Core.IsInvariant lam K →\n      (∀ (x : V), 0 < lam x) →\n        ∑ x, lam x = 1 →\n          0 < lamMin →\n            (∀ (x : V), lamMin ≤ lam x) →\n              0 < g2 →\n                0 ≤ M3 →\n                  0 ≤ a →\n                    (∀ (x : V), |w x| ≤ wsup) →\n                      0 < wmin →\n                        (∀ (x : V), wmin ≤ w x) →\n                          1 ≤ Bhat →\n                            (∀ (f : V → ℝ),\n                                GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam f) ≤\n                                  Bhat * GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.Aop K lam f)) →\n                              (∀ (y : ℝ), |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) →\n                                GFNBounds.Graph.nrmL2 lam (h 0) ≤\n                                    GFNBounds.Balance.eps0\n                                      (GFNBounds.Balance.epsW a g2 wmin (GFNBounds.Balance.Kexp g2 a M3 wsup) Bhat)\n                                      (GFNBounds.Balance.Cinf lamMin)\n                                      (GFNBounds.Balance.C7 (GFNBounds.Balance.C6 (GFNBounds.Balance.Cg g2 a M3) wsup)\n                                        g2 wmin)\n                                      (GFNBounds.Balance.rhoL g2 wmin Bhat)\n                                      (GFNBounds.Balance.C6 (GFNBounds.Balance.Cg g2 a M3) wsup) →\n                                  0 ≤ t →\n                                    (∀ s ∈ Set.Icc 0 t,\n                                        ∀ (x : V),\n                                          HasDerivAt (fun r => h r x)\n                                            (-GFNBounds.Balance.lossGrad K lam (fun z => lam z * w z) gd\n                                                (fun z => 1 + h s z) x)\n                                            s) →\n                                      (∀ s ∈ Set.Icc 0 t,\n                                          ∀ (x : V),\n                                            |h s x| ≤\n                                              GFNBounds.Balance.epsW a g2 wmin (GFNBounds.Balance.Kexp g2 a M3 wsup)\n                                                Bhat) →\n                                        ∀ (x : V),\n                                          |h t x| ≤\n                                            GFNBounds.Balance.epsW a g2 wmin (GFNBounds.Balance.Kexp g2 a M3 wsup)\n                                                Bhat /\n                                              2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 652,
+   "kind": "theorem",
+   "doc":
+   "**Step 4's inner estimate with the ODE asked on `[0,t]` only** (`LocalConvergence.sup_bootstrap_step`\non a curve that solves the gradient-flow ODE on `[0,t]` and nowhere else): on the window\n`‖h_s‖_{L^∞} ≤ ε`, `s ∈ [0,t]`, `‖h_0‖ ≤ ε₀` gives `‖h_t‖_{L^∞} ≤ ε/2`.\n\nSteps 2 and 3 are run without integrals: `‖h^⊥‖²` and `C₇‖h^⊥‖² ± m` have non-positive\nderivative on the window (`d/dt‖h^⊥‖² ≤ −g''(1)w_min‖Ah^⊥‖²`, `|ṁ| ≤ C₆‖Ah^⊥‖²`,\n`C₇g''(1)w_min = C₆`), so they are antitone there — the monotonicity form of the paper's Step 3. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.sup_bootstrap_step":
   {"uses_value":
@@ -49652,6 +49910,19 @@
    "doc":
    "The action of `K₂` on measures: `μ ↦ μK₂`, written out as\n`(μK₂)(z,w) = ∑_{s,s'} μ(s,s') K₂((s,s') → (z,w))`.\n\n`mu` here is a **measure** on `𝒮²`, given by its values against the counting structure. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.pos_of_mem_box":
+  {"uses_value":
+   ["GFNBounds.Balance.densityBox", "GFNBounds.Balance.mem_densityBox"],
+   "uses_type": ["GFNBounds.Balance.densityBox"],
+   "uses_external": 180,
+   "type":
+   "∀ {V : Type u_1} {e : ℝ},\n  e ≤ 1 / 4 → ∀ {v : V → ℝ}, v ∈ GFNBounds.Balance.densityBox V (1 - e) (1 + e) → ∀ (x : V), 0 < v x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 567,
+   "kind": "theorem",
+   "doc": "On the box `[1−e, 1+e]^V`, `e ≤ 1/4`, the density is positive. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.pos_of_loss_le":
   {"uses_value":
    ["GFNBounds.Balance.CrossingFloor",
@@ -50274,6 +50545,17 @@
    "line": 524,
    "kind": "theorem",
    "doc": "**`(I − P)h` is `−Ah`**, so `‖(I − P)h‖ = ‖Ah‖_{L²(λ)}`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.one_mem_winC3":
+  {"uses_value": [],
+   "uses_type": ["GFNBounds.Balance.winC3"],
+   "uses_external": 110,
+   "type": "∀ {a : ℝ}, 0 ≤ a → 1 ∈ GFNBounds.Balance.winC3 a",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 207,
+   "kind": "theorem",
+   "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.one_le_sigmaStar":
   {"uses_value":
@@ -51315,6 +51597,18 @@
    "kind": "theorem",
    "doc":
    "Dividing a function by a positive constant divides its minimum by it. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.mem_nhds_winC3":
+  {"uses_value": [],
+   "uses_type": ["GFNBounds.Balance.winC3"],
+   "uses_external": 29,
+   "type":
+   "∀ {a y : ℝ}, y ∈ Set.Ioo (1 - a) (1 + a) → GFNBounds.Balance.winC3 a ∈ nhds y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 238,
+   "kind": "theorem",
+   "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.mem_farSet":
   {"uses_value": ["GFNBounds.Balance.farSet"],
@@ -52791,6 +53085,32 @@
    "doc":
    "**The `C³` bundle is inhabited by the paper's generator**: `g = (log x)²` at `a = 1/2`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.logSq_C3On_bundle":
+  {"uses_value":
+   ["GFNBounds.Balance.C3On_of_C3",
+    "GFNBounds.Balance.Gamma3",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.hasDerivAt_logSq",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.logSq_C3",
+    "GFNBounds.Balance.logSq_deriv2_one",
+    "GFNBounds.Balance.logSq_deriv_one",
+    "GFNBounds.Balance.winC3"],
+   "uses_type":
+   ["GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.winC3"],
+   "uses_external": 228,
+   "type":
+   "ContDiffOn ℝ 3 GFNBounds.Balance.logSq (GFNBounds.Balance.winC3 (1 / 2)) ∧\n  (∀ y ∈ GFNBounds.Balance.winC3 (1 / 2),\n      HasDerivWithinAt GFNBounds.Balance.logSq (GFNBounds.Balance.logSqDeriv y) (GFNBounds.Balance.winC3 (1 / 2)) y) ∧\n    deriv GFNBounds.Balance.logSq 1 = 0 ∧ 0 < deriv (deriv GFNBounds.Balance.logSq) 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 1289,
+   "kind": "theorem",
+   "doc":
+   "**The `C³`-on-the-window bundle is inhabited by `g = (log x)²`** at `a = 1/2`, `gd = 2 log x/x`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.logSq_C3":
   {"uses_value": ["GFNBounds.Balance.logSq"],
    "uses_type": ["GFNBounds.Balance.logSq"],
@@ -53235,6 +53555,56 @@
    "doc":
    "**`theo:local_convergence_full`, the gradient-descent clause, at the paper's `B̂`**\n(`proofs.tex:617`, Step 6 at `:652–677`): `local_convergence_gd` with `B̂` the mixing sum,\nunder summable mixing `hmx`; `hcoer` and `hB1` are discharged as in\n`local_convergence_full_mixing`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.local_convergence_gd_DB_C3On":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeKernelE_isMarkovOn",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Balance.edgeMeasureE_isInvariant",
+    "GFNBounds.Balance.edgeMeasureE_pos",
+    "GFNBounds.Balance.edgeMeasureE_total",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.gamma0W",
+    "GFNBounds.Balance.invariant_of_isInvariant",
+    "GFNBounds.Balance.local_convergence_gd_C3On",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsInvariant.nonneg",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Core.IsMarkovOn.nonneg",
+    "GFNBounds.Core.IsMarkovOn.row_sum",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.gamma0W",
+    "GFNBounds.Balance.loss",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 95,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {lam : V → ℝ}\n  {w : GFNBounds.Balance.EdgeSet pb → ℝ} {g gd : ℝ → ℝ} {hk : ℕ → GFNBounds.Balance.EdgeSet pb → ℝ}\n  {a wsup wmin Bhat lamMin gam : ℝ},\n  GFNBounds.Core.IsMarkovOn lam pb →\n    GFNBounds.Core.IsInvariant lam pb →\n      (∀ (x : V), 0 < lam x) →\n        ∑ x, lam x = 1 →\n          0 < lamMin →\n            (∀ (e : GFNBounds.Balance.EdgeSet pb), lamMin ≤ GFNBounds.Balance.edgeMeasureE pb lam e) →\n              0 < a →\n                ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n                  (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (gd y) (GFNBounds.Balance.winC3 a) y) →\n                    deriv g 1 = 0 →\n                      0 < deriv (deriv g) 1 →\n                        (∀ (e : GFNBounds.Balance.EdgeSet pb), |w e| ≤ wsup) →\n                          0 < wmin →\n                            (∀ (e : GFNBounds.Balance.EdgeSet pb), wmin ≤ w e) →\n                              1 ≤ Bhat →\n                                (∀ (f : GFNBounds.Balance.EdgeSet pb → ℝ),\n                                    GFNBounds.Graph.nrmL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                        (GFNBounds.Balance.perpL2 (GFNBounds.Balance.edgeMeasureE pb lam) f) ≤\n                                      Bhat *\n                                        GFNBounds.Graph.nrmL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                          (GFNBounds.Balance.Aop (GFNBounds.Balance.edgeKernelE pb)\n                                            (GFNBounds.Balance.edgeMeasureE pb lam) f)) →\n                                  (∀ (k : ℕ),\n                                      hk (k + 1) = fun e =>\n                                        hk k e -\n                                          gam *\n                                            GFNBounds.Balance.lossGrad (GFNBounds.Balance.edgeKernelE pb)\n                                              (GFNBounds.Balance.edgeMeasureE pb lam)\n                                              (fun z => GFNBounds.Balance.edgeMeasureE pb lam z * w z) gd\n                                              (fun z => 1 + hk k z) e) →\n                                    0 ≤ gam →\n                                      gam ≤ GFNBounds.Balance.gamma0W g a wmin wsup Bhat →\n                                        GFNBounds.Graph.nrmL2 (GFNBounds.Balance.edgeMeasureE pb lam) (hk 0) ≤\n                                            GFNBounds.Balance.eps0W g a wmin wsup Bhat lamMin →\n                                          ∀ (k : ℕ),\n                                            ((∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < 1 + hk k e) ∧\n                                                (∀ (e : GFNBounds.Balance.EdgeSet pb),\n                                                    |GFNBounds.Balance.ratio (GFNBounds.Balance.edgeKernelE pb)\n                                                            (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                            (fun z => 1 + hk k z) e -\n                                                          1| ≤\n                                                      2 * a / 3) ∧\n                                                  ∀ (d : GFNBounds.Balance.EdgeSet pb → ℝ),\n                                                    HasDerivAt\n                                                      (fun t =>\n                                                        GFNBounds.Balance.loss (GFNBounds.Balance.edgeKernelE pb)\n                                                          (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                          (fun z => GFNBounds.Balance.edgeMeasureE pb lam z * w z)\n                                                          (fun e => 1 + hk k e + t * d e) g)\n                                                      (GFNBounds.Graph.ipL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                        (GFNBounds.Balance.lossGrad (GFNBounds.Balance.edgeKernelE pb)\n                                                          (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                          (fun z => GFNBounds.Balance.edgeMeasureE pb lam z * w z) gd\n                                                          fun z => 1 + hk k z)\n                                                        d)\n                                                      0) ∧\n                                              GFNBounds.Graph.nrmL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                  (GFNBounds.Balance.perpL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                    (hk (k + 1))) ≤\n                                                (1 - gam * GFNBounds.Balance.rhoL (deriv (deriv g) 1) wmin Bhat / 4) *\n                                                  GFNBounds.Graph.nrmL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                    (GFNBounds.Balance.perpL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                      (hk k))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 1245,
+   "kind": "theorem",
+   "doc":
+   "**`theo:local_convergence_full` for the DB loss, gradient-descent clause, under `C³` on the\nclosed window.** ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.local_convergence_gd_DB":
   {"uses_value":
    ["GFNBounds.Balance.Aop",
@@ -53282,6 +53652,51 @@
    "kind": "theorem",
    "doc":
    "**`theo:local_convergence_full` for the DB loss, the gradient-descent clause**, on `E` with\n`λ₂`, as `local_convergence_full_DB`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.local_convergence_gd_C3On":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.Gamma3W_nonneg",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.gamma0W",
+    "GFNBounds.Balance.local_convergence_gd",
+    "GFNBounds.Balance.local_convergence_gd_welldefined",
+    "GFNBounds.Balance.loss",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.mem_nhds_winC3",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Balance.taylor_bundle_of_C3On",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.gamma0W",
+    "GFNBounds.Balance.loss",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 201,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam w : V → ℝ} {g gd : ℝ → ℝ} {hk : ℕ → V → ℝ}\n  {a wsup wmin Bhat lamMin gam : ℝ},\n  GFNBounds.Core.IsMarkovOn lam K →\n    GFNBounds.Core.IsInvariant lam K →\n      (∀ (x : V), 0 < lam x) →\n        ∑ x, lam x = 1 →\n          0 < lamMin →\n            (∀ (x : V), lamMin ≤ lam x) →\n              0 < a →\n                ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n                  (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (gd y) (GFNBounds.Balance.winC3 a) y) →\n                    deriv g 1 = 0 →\n                      0 < deriv (deriv g) 1 →\n                        (∀ (x : V), |w x| ≤ wsup) →\n                          0 < wmin →\n                            (∀ (x : V), wmin ≤ w x) →\n                              1 ≤ Bhat →\n                                (∀ (f : V → ℝ),\n                                    GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam f) ≤\n                                      Bhat * GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.Aop K lam f)) →\n                                  (∀ (k : ℕ),\n                                      hk (k + 1) = fun x =>\n                                        hk k x -\n                                          gam *\n                                            GFNBounds.Balance.lossGrad K lam (fun z => lam z * w z) gd\n                                              (fun z => 1 + hk k z) x) →\n                                    0 ≤ gam →\n                                      gam ≤ GFNBounds.Balance.gamma0W g a wmin wsup Bhat →\n                                        GFNBounds.Graph.nrmL2 lam (hk 0) ≤\n                                            GFNBounds.Balance.eps0W g a wmin wsup Bhat lamMin →\n                                          ∀ (k : ℕ),\n                                            ((∀ (x : V), 0 < 1 + hk k x) ∧\n                                                (∀ (x : V),\n                                                    |GFNBounds.Balance.ratio K lam (fun z => 1 + hk k z) x - 1| ≤\n                                                      2 * a / 3) ∧\n                                                  ∀ (d : V → ℝ),\n                                                    HasDerivAt\n                                                      (fun t =>\n                                                        GFNBounds.Balance.loss K lam (fun z => lam z * w z)\n                                                          (fun x => 1 + hk k x + t * d x) g)\n                                                      (GFNBounds.Graph.ipL2 lam\n                                                        (GFNBounds.Balance.lossGrad K lam (fun z => lam z * w z) gd\n                                                          fun z => 1 + hk k z)\n                                                        d)\n                                                      0) ∧\n                                              GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam (hk (k + 1))) ≤\n                                                (1 - gam * GFNBounds.Balance.rhoL (deriv (deriv g) 1) wmin Bhat / 4) *\n                                                  GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam (hk k))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 485,
+   "kind": "theorem",
+   "doc":
+   "**`theo:local_convergence_full`, the gradient-descent clause, under `C³` on the closed\nwindow**: the descent driven by `gd` is well defined at every step and contracts by\n`1 − γϱ/4`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.local_convergence_gd_C3":
   {"uses_value":
@@ -53442,6 +53857,84 @@
    "doc":
    "**`theo:local_convergence_full`, the flow clause, at the paper's `B̂`** (`proofs.tex:612–618`):\n`local_convergence_full` with `B̂ := ∑_{n≥0}‖Pⁿ − Π‖_{L²(λ)}` the mixing sum, under summable mixing\n`hmx`. The coercivity of Step 2 is `lem:sigma_mixing` (`mixing_coercivity_finite`) and\n`B̂ ≥ β̂₀ = 1` is `one_le_B_densOp`; neither is a hypothesis. `[Nontrivial V]` is the paper's\n`β̂₀ = 1`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.local_convergence_full_exists":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.C6",
+    "GFNBounds.Balance.C7",
+    "GFNBounds.Balance.CW",
+    "GFNBounds.Balance.Cg",
+    "GFNBounds.Balance.Cinf",
+    "GFNBounds.Balance.Cinf_pos",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.Gamma3W_nonneg",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.Kexp",
+    "GFNBounds.Balance.Kexp_pos",
+    "GFNBounds.Balance.abs_le_Cinf_mul_nrmL2",
+    "GFNBounds.Balance.abs_ratio_le_of_mem_box",
+    "GFNBounds.Balance.balanced_const",
+    "GFNBounds.Balance.bootstrap_of_continuous",
+    "GFNBounds.Balance.clampBox",
+    "GFNBounds.Balance.clampBox_eq",
+    "GFNBounds.Balance.clampBox_mem",
+    "GFNBounds.Balance.densityBox",
+    "GFNBounds.Balance.eps0",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.eps0_le_basin",
+    "GFNBounds.Balance.eps0_nonneg",
+    "GFNBounds.Balance.epsW",
+    "GFNBounds.Balance.epsW_le_window",
+    "GFNBounds.Balance.epsW_pos",
+    "GFNBounds.Balance.exists_forall_hasDerivAt_of_lipschitzWith",
+    "GFNBounds.Balance.exists_lipschitzOnWith_lossGrad_box",
+    "GFNBounds.Balance.invariant_of_isInvariant",
+    "GFNBounds.Balance.isCompact_densityBox",
+    "GFNBounds.Balance.isGradientFlow_iff",
+    "GFNBounds.Balance.lipschitzWith_clampBox",
+    "GFNBounds.Balance.local_convergence_full_C3On",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.mem_densityBox",
+    "GFNBounds.Balance.nonempty_of_total",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Balance.rhoL_nonneg",
+    "GFNBounds.Balance.sup_bootstrap_step_on",
+    "GFNBounds.Balance.sup_global",
+    "GFNBounds.Balance.taylor_bundle_of_C3On",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Balance.wsup_pos",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Core.IsMarkovOn.nonneg",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.CW",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 408,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam w : V → ℝ} {g gd : ℝ → ℝ} {a wsup wmin Bhat lamMin : ℝ},\n  GFNBounds.Core.IsMarkovOn lam K →\n    GFNBounds.Core.IsInvariant lam K →\n      (∀ (x : V), 0 < lam x) →\n        ∑ x, lam x = 1 →\n          0 < lamMin →\n            (∀ (x : V), lamMin ≤ lam x) →\n              0 < a →\n                ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n                  (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (gd y) (GFNBounds.Balance.winC3 a) y) →\n                    deriv g 1 = 0 →\n                      0 < deriv (deriv g) 1 →\n                        (∀ (x : V), |w x| ≤ wsup) →\n                          0 < wmin →\n                            (∀ (x : V), wmin ≤ w x) →\n                              1 ≤ Bhat →\n                                (∀ (f : V → ℝ),\n                                    GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam f) ≤\n                                      Bhat * GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.Aop K lam f)) →\n                                  ∀ {h0 : V → ℝ},\n                                    GFNBounds.Graph.nrmL2 lam h0 ≤ GFNBounds.Balance.eps0W g a wmin wsup Bhat lamMin →\n                                      ∃ h,\n                                        h 0 = h0 ∧\n                                          (GFNBounds.Balance.IsGradientFlow K lam (fun z => lam z * w z) gd fun s x =>\n                                              1 + h s x) ∧\n                                            (∀ (t : ℝ),\n                                                0 ≤ t →\n                                                  ∀ (x : V),\n                                                    0 < 1 + h t x ∧\n                                                      |GFNBounds.Balance.ratio K lam (fun z => 1 + h t z) x - 1| ≤\n                                                        2 * a / 3) ∧\n                                              (∀ (h' : ℝ → V → ℝ),\n                                                  h' 0 = h0 →\n                                                    (GFNBounds.Balance.IsGradientFlow K lam (fun z => lam z * w z) gd\n                                                        fun s x => 1 + h' s x) →\n                                                      ∀ (t : ℝ), 0 ≤ t → h' t = h t) ∧\n                                                ∃ cinf,\n                                                  (GFNBounds.Balance.Balanced K lam fun x => cinf) ∧\n                                                    |cinf - 1 - GFNBounds.Graph.meanL2 lam h0| ≤\n                                                        GFNBounds.Balance.CW g a wmin wsup *\n                                                          GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam h0) ^\n                                                            2 ∧\n                                                      ∀ (t : ℝ),\n                                                        0 ≤ t →\n                                                          (GFNBounds.Graph.nrmL2 lam fun x => h t x - (cinf - 1)) ≤\n                                                            2 *\n                                                                Real.exp\n                                                                  (-(GFNBounds.Balance.rhoL (deriv (deriv g) 1) wmin\n                                                                          Bhat *\n                                                                        t /\n                                                                      2)) *\n                                                              GFNBounds.Graph.nrmL2 lam\n                                                                (GFNBounds.Balance.perpL2 lam h0)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 784,
+   "kind": "theorem",
+   "doc":
+   "**`theo:local_convergence_full`, the flow clause with existence, under `C³` on the closed\nwindow** (`proofs.tex:666–672`): from every `h₀` with `‖h₀‖_{L²(λ)} ≤ ε₀`, the nonlinear gradient\nflow `μ̇ = −∇^λ𝓛_{g,ν}(μ)` from `μ₀ = (1+h₀)λ`, driven by a derivative `gd` of `g` on\n`[1−a,1+a]`, **exists**; it stays positive with every ratio within `2a/3` of `1`; it is **unique**\namong all solutions of the flow predicate from `μ₀`; and it converges to a balanced flow `c_∞λ`\nwith `|c_∞ − 1 − Πh₀| ≤ C‖h₀ − Πh₀‖²` and `‖h_t − (c_∞−1)‖ ≤ 2e^{−ϱt/2}‖h₀ − Πh₀‖`.\n\nExistence is the route of `FlowExistence.lean`: the field clamped to the box `[1−ε, 1+ε]^V`\n(`ε` Step 4's window) is globally Lipschitz and bounded, so a global solution exists; the box is\nnever left on `[0,∞)` by `sup_bootstrap_step_on`, so the clamp is inactive and the curve solves\nthe true ODE. Uniqueness: every solution from `μ₀` stays in the box (`LocalConvergence.sup_global`),\nwhere the field is Lipschitz; Grönwall. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.local_convergence_full_DB_witness":
   {"uses_value":
    ["GFNBounds.Balance.CC3",
@@ -53491,6 +53984,54 @@
    "kind": "theorem",
    "doc":
    "**The DB bundle, all hypotheses at once, on the two-state uniform policy**: `local_convergence_full_DB`\napplies with `g = (log x)²`, `a = 1/2`, `w ≡ 1`, `λ_min = 1/4`, `B̂ = 2`, and the balanced flow\n`h ≡ 0`. The flow is the trivial one; a non-trivial flow is not exhibited here. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.local_convergence_full_DB_exists":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeKernelE_isMarkovOn",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Balance.edgeMeasureE_isInvariant",
+    "GFNBounds.Balance.edgeMeasureE_pos",
+    "GFNBounds.Balance.edgeMeasureE_total",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.invariant_of_isInvariant",
+    "GFNBounds.Balance.local_convergence_full_exists",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsInvariant.nonneg",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Core.IsMarkovOn.nonneg",
+    "GFNBounds.Core.IsMarkovOn.row_sum",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.CW",
+    "GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 89,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {lam : V → ℝ}\n  {w : GFNBounds.Balance.EdgeSet pb → ℝ} {g gd : ℝ → ℝ} {a wsup wmin Bhat lamMin : ℝ},\n  GFNBounds.Core.IsMarkovOn lam pb →\n    GFNBounds.Core.IsInvariant lam pb →\n      (∀ (x : V), 0 < lam x) →\n        ∑ x, lam x = 1 →\n          0 < lamMin →\n            (∀ (e : GFNBounds.Balance.EdgeSet pb), lamMin ≤ GFNBounds.Balance.edgeMeasureE pb lam e) →\n              0 < a →\n                ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n                  (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (gd y) (GFNBounds.Balance.winC3 a) y) →\n                    deriv g 1 = 0 →\n                      0 < deriv (deriv g) 1 →\n                        (∀ (e : GFNBounds.Balance.EdgeSet pb), |w e| ≤ wsup) →\n                          0 < wmin →\n                            (∀ (e : GFNBounds.Balance.EdgeSet pb), wmin ≤ w e) →\n                              1 ≤ Bhat →\n                                (∀ (f : GFNBounds.Balance.EdgeSet pb → ℝ),\n                                    GFNBounds.Graph.nrmL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                        (GFNBounds.Balance.perpL2 (GFNBounds.Balance.edgeMeasureE pb lam) f) ≤\n                                      Bhat *\n                                        GFNBounds.Graph.nrmL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                          (GFNBounds.Balance.Aop (GFNBounds.Balance.edgeKernelE pb)\n                                            (GFNBounds.Balance.edgeMeasureE pb lam) f)) →\n                                  ∀ {h0 : GFNBounds.Balance.EdgeSet pb → ℝ},\n                                    GFNBounds.Graph.nrmL2 (GFNBounds.Balance.edgeMeasureE pb lam) h0 ≤\n                                        GFNBounds.Balance.eps0W g a wmin wsup Bhat lamMin →\n                                      ∃ h,\n                                        h 0 = h0 ∧\n                                          (GFNBounds.Balance.IsGradientFlow (GFNBounds.Balance.edgeKernelE pb)\n                                              (GFNBounds.Balance.edgeMeasureE pb lam)\n                                              (fun e => GFNBounds.Balance.edgeMeasureE pb lam e * w e) gd fun s e =>\n                                              1 + h s e) ∧\n                                            (∀ (t : ℝ),\n                                                0 ≤ t →\n                                                  ∀ (e : GFNBounds.Balance.EdgeSet pb),\n                                                    0 < 1 + h t e ∧\n                                                      |GFNBounds.Balance.ratio (GFNBounds.Balance.edgeKernelE pb)\n                                                              (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                              (fun z => 1 + h t z) e -\n                                                            1| ≤\n                                                        2 * a / 3) ∧\n                                              (∀ (h' : ℝ → GFNBounds.Balance.EdgeSet pb → ℝ),\n                                                  h' 0 = h0 →\n                                                    (GFNBounds.Balance.IsGradientFlow (GFNBounds.Balance.edgeKernelE pb)\n                                                        (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                        (fun e => GFNBounds.Balance.edgeMeasureE pb lam e * w e) gd\n                                                        fun s e => 1 + h' s e) →\n                                                      ∀ (t : ℝ), 0 ≤ t → h' t = h t) ∧\n                                                ∃ cinf,\n                                                  (GFNBounds.Balance.Balanced (GFNBounds.Balance.edgeKernelE pb)\n                                                      (GFNBounds.Balance.edgeMeasureE pb lam) fun x => cinf) ∧\n                                                    |cinf - 1 -\n                                                            GFNBounds.Graph.meanL2\n                                                              (GFNBounds.Balance.edgeMeasureE pb lam) h0| ≤\n                                                        GFNBounds.Balance.CW g a wmin wsup *\n                                                          GFNBounds.Graph.nrmL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                              (GFNBounds.Balance.perpL2\n                                                                (GFNBounds.Balance.edgeMeasureE pb lam) h0) ^\n                                                            2 ∧\n                                                      ∀ (t : ℝ),\n                                                        0 ≤ t →\n                                                          (GFNBounds.Graph.nrmL2 (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                              fun e => h t e - (cinf - 1)) ≤\n                                                            2 *\n                                                                Real.exp\n                                                                  (-(GFNBounds.Balance.rhoL (deriv (deriv g) 1) wmin\n                                                                          Bhat *\n                                                                        t /\n                                                                      2)) *\n                                                              GFNBounds.Graph.nrmL2\n                                                                (GFNBounds.Balance.edgeMeasureE pb lam)\n                                                                (GFNBounds.Balance.perpL2\n                                                                  (GFNBounds.Balance.edgeMeasureE pb lam) h0)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 1205,
+   "kind": "theorem",
+   "doc":
+   "**`theo:local_convergence_full` for the DB loss, flow clause with existence, under `C³` on the\nclosed window**: `local_convergence_full_exists` on `(E, K₂, λ₂)`, the kernel, invariance,\npositivity and total mass of `λ₂` proved from the backward policy (`C3Wrappers`). ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.local_convergence_full_DB":
   {"uses_value":
@@ -53586,6 +54127,42 @@
    "kind": "theorem",
    "doc":
    "**`theo:local_convergence_full`, the flow clause with the printed `C := max(1, C₇)`, at the\npaper's `B̂`** (`proofs.tex:612–618`, Step 5 at `:645`): `local_convergence_full_C` with `hB1`\nand `hcoer` discharged. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.local_convergence_full_C3On":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.Gamma3W_nonneg",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.local_convergence_full_C",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.taylor_bundle_of_C3On",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.CW",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkovOn",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 82,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam w : V → ℝ} {g gd : ℝ → ℝ} {h : ℝ → V → ℝ}\n  {a wsup wmin Bhat lamMin : ℝ},\n  GFNBounds.Core.IsMarkovOn lam K →\n    GFNBounds.Core.IsInvariant lam K →\n      (∀ (x : V), 0 < lam x) →\n        ∑ x, lam x = 1 →\n          0 < lamMin →\n            (∀ (x : V), lamMin ≤ lam x) →\n              0 < a →\n                ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n                  (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (gd y) (GFNBounds.Balance.winC3 a) y) →\n                    deriv g 1 = 0 →\n                      0 < deriv (deriv g) 1 →\n                        (∀ (x : V), |w x| ≤ wsup) →\n                          0 < wmin →\n                            (∀ (x : V), wmin ≤ w x) →\n                              1 ≤ Bhat →\n                                (∀ (f : V → ℝ),\n                                    GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam f) ≤\n                                      Bhat * GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.Aop K lam f)) →\n                                  (GFNBounds.Balance.IsGradientFlow K lam (fun z => lam z * w z) gd fun s x =>\n                                      1 + h s x) →\n                                    GFNBounds.Graph.nrmL2 lam (h 0) ≤\n                                        GFNBounds.Balance.eps0W g a wmin wsup Bhat lamMin →\n                                      ∃ cinf,\n                                        |cinf - 1 - GFNBounds.Graph.meanL2 lam (h 0)| ≤\n                                            GFNBounds.Balance.CW g a wmin wsup *\n                                              GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam (h 0)) ^ 2 ∧\n                                          ∀ (t : ℝ),\n                                            0 ≤ t →\n                                              (GFNBounds.Graph.nrmL2 lam fun x => h t x - (cinf - 1)) ≤\n                                                2 *\n                                                    Real.exp\n                                                      (-(GFNBounds.Balance.rhoL (deriv (deriv g) 1) wmin Bhat * t /\n                                                          2)) *\n                                                  GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam (h 0))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 446,
+   "kind": "theorem",
+   "doc":
+   "**`theo:local_convergence_full`, the flow clause, under `C³` on the closed window**: every\ngradient flow driven by a derivative `gd` of `g` on `[1−a,1+a]` (one-sided at the ends), from\n`‖h₀‖ ≤ ε₀`, converges to `c_∞λ` with the printed `C` and rate. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.local_convergence_full_C3":
   {"uses_value":
@@ -54657,6 +55234,31 @@
    "kind": "def",
    "doc": "`‖f‖_{L²(λ)}`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.kinkGen_C3On_not_C3":
+  {"uses_value": ["GFNBounds.Balance.kinkGen", "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.kinkGen", "GFNBounds.Balance.winC3"],
+   "uses_external": 351,
+   "type":
+   "ContDiffOn ℝ 3 GFNBounds.Balance.kinkGen (GFNBounds.Balance.winC3 (1 / 2)) ∧\n  (∀ y ∈ GFNBounds.Balance.winC3 (1 / 2),\n      HasDerivWithinAt GFNBounds.Balance.kinkGen (2 * (y - 1)) (GFNBounds.Balance.winC3 (1 / 2)) y) ∧\n    deriv GFNBounds.Balance.kinkGen 1 = 0 ∧\n      0 < deriv (deriv GFNBounds.Balance.kinkGen) 1 ∧ ¬DifferentiableAt ℝ GFNBounds.Balance.kinkGen (3 / 2)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 1302,
+   "kind": "theorem",
+   "doc":
+   "**The widening is real**: `kinkGen` meets the `C³`-on-the-window bundle at `a = 1/2` with\n`gd = 2(y−1)`, and is not differentiable at the endpoint `3/2`, so the two-sided reading of\n`C3Wrappers` does not cover it. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.kinkGen":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 26,
+   "type": "ℝ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 1299,
+   "kind": "def",
+   "doc":
+   "A generator that is `C³` on `[1/2, 3/2]` only from inside: `(y−1)²` plus a kink at `3/2`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.isReversalPair_edgeKernelProd":
   {"uses_value":
    ["GFNBounds.Balance.dualEdgeKernel",
@@ -55422,6 +56024,33 @@
    "doc":
    "**A band-valued flow is a Fréchet critical point of `𝓛_{g̃,ν}` for every training measure**\n(`proofs.tex:783`, proof `:793–797`): the loss is locally constant near `u`, so its Fréchet\nderivative there is `0`. No invariance, and no differentiability of `g̃` off the bands. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.hasDerivWithinAt_iteratedDerivWithin_winC3":
+  {"uses_value":
+   ["GFNBounds.Balance.uniqueDiffOn_winC3", "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.winC3"],
+   "uses_external": 114,
+   "type":
+   "∀ {g : ℝ → ℝ} {a : ℝ},\n  0 < a →\n    ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n      ∀ {m : ℕ},\n        m < 3 →\n          ∀ {y : ℝ},\n            y ∈ GFNBounds.Balance.winC3 a →\n              HasDerivWithinAt (iteratedDerivWithin m g (GFNBounds.Balance.winC3 a))\n                (iteratedDerivWithin (m + 1) g (GFNBounds.Balance.winC3 a) y) (GFNBounds.Balance.winC3 a) y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 228,
+   "kind": "theorem",
+   "doc":
+   "The first and second derivatives within the window, as within-derivatives on it. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.hasDerivWithinAt_derivWithin_of_C3On":
+  {"uses_value": ["GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.winC3"],
+   "uses_external": 42,
+   "type":
+   "∀ {g : ℝ → ℝ} {a : ℝ},\n  ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n    ∀ y ∈ GFNBounds.Balance.winC3 a,\n      HasDerivWithinAt g (derivWithin g (GFNBounds.Balance.winC3 a) y) (GFNBounds.Balance.winC3 a) y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 374,
+   "kind": "theorem",
+   "doc":
+   "**The derivative hypothesis is always dischargeable**: under `C³` on the window, the\nwithin-derivative `derivWithin g [1−a,1+a]` is a derivative of `g` there, one-sided at the ends. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.hasDerivAt_ratio_comp":
   {"uses_value":
    ["GFNBounds.Balance.dirDens",
@@ -55463,6 +56092,29 @@
    "doc":
    "**`δr = v − r·u`** (`proofs.tex:463`, `:470`): the derivative at `t = 0` of the perturbed\nratio, by the quotient rule on `ratio_perturb`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.hasDerivAt_perp_sq_of_at":
+  {"uses_value":
+   ["GFNBounds.Balance.hasDerivAt_mean_of_at",
+    "GFNBounds.Balance.meanL2_perpL2",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2",
+    "GFNBounds.Graph.sq_nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 178,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {lam : V → ℝ} {h : ℝ → V → ℝ} {Dv : V → ℝ} {t : ℝ},\n  (∀ (x : V), 0 ≤ lam x) →\n    ∑ x, lam x = 1 →\n      (∀ (x : V), HasDerivAt (fun s => h s x) (-Dv x) t) →\n        HasDerivAt (fun s => GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam (h s)) ^ 2)\n          (-(2 * GFNBounds.Graph.ipL2 lam (GFNBounds.Balance.perpL2 lam (h t)) Dv)) t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 616,
+   "kind": "theorem",
+   "doc":
+   "`ḣ = −D` at one time gives `d/dt‖h^⊥‖² = −2⟨h^⊥, D⟩` there (`LocalEnergy.hasDerivAt_perp_sq`\nwith the ODE asked at that time only). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.hasDerivAt_perp_sq":
   {"uses_value":
    ["GFNBounds.Balance.IsGradientFlow",
@@ -55490,6 +56142,18 @@
    "kind": "theorem",
    "doc":
    "**`d/dt‖h^⊥_t‖² = −2⟨h^⊥_t, D_t⟩`** (`proofs.tex:636`), the quantity Grönwall is applied to.\n\nAssembled on the explicit sum `∑_x λ(x)h^⊥_t(x)²`: `(V → ℝ, ⟪·∣·⟫_λ)` is not an\n`InnerProductSpace` in this library, so there is no `HasDerivAt.inner` to call. The mean drifts\ntoo, and its contribution vanishes because `Πh^⊥ = 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.hasDerivAt_mean_of_at":
+  {"uses_value": ["GFNBounds.Graph.meanL2"],
+   "uses_type": ["GFNBounds.Graph.meanL2"],
+   "uses_external": 87,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {lam : V → ℝ} {h : ℝ → V → ℝ} {Dv : V → ℝ} {t : ℝ},\n  (∀ (x : V), HasDerivAt (fun s => h s x) (-Dv x) t) →\n    HasDerivAt (fun s => GFNBounds.Graph.meanL2 lam (h s)) (-GFNBounds.Graph.meanL2 lam Dv) t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 605,
+   "kind": "theorem",
+   "doc": "`ḣ = −D` at one time gives `ṁ = −ΠD` there. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.hasDerivAt_mean":
   {"uses_value":
@@ -56122,6 +56786,52 @@
    "doc":
    "**`D = Qφ − rφ`**, the gradient density of `prop:no_distant_equilibrium`'s proof\n(`proofs.tex:822`).\n\n**This is a definition, not a derivation.** That `D` represents `∇^λ 𝓛_{g,ν}(μ)` is\n`theo:first_variation_full` (`proofs.tex:447–483`), which is not formalized; see the module\nSCOPE. Everything below is a theorem about this expression. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.global_phase_exact":
+  {"uses_value":
+   ["GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.global_lojasiewicz_flow'",
+    "GFNBounds.Balance.global_lojasiewicz_sq",
+    "GFNBounds.Balance.hasDerivAt_logSq",
+    "GFNBounds.Balance.hasDerivAt_loss_flow",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.loss",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.lossGradDensity",
+    "GFNBounds.Balance.lossGrad_of_weight",
+    "GFNBounds.Balance.lossVal",
+    "GFNBounds.Balance.lossVal_antitone_flow",
+    "GFNBounds.Balance.lossVal_eq_zero_iff_balanced",
+    "GFNBounds.Balance.lossVal_nonneg",
+    "GFNBounds.Balance.loss_eq_lossVal",
+    "GFNBounds.Balance.mean_le_nrmL2_iff_const",
+    "GFNBounds.Balance.nonempty_of_total",
+    "GFNBounds.Balance.nrmL2_const_of_flow",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.lossVal",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 296,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin wmin wsup : ℝ} {u : ℝ → V → ℝ},\n  GFNBounds.Balance.Invariant K lam →\n    (∀ (x y : V), 0 ≤ K x y) →\n      (∀ (x : V), 0 < lam x) →\n        ∑ x, lam x = 1 →\n          (∀ (t : ℝ), 0 ≤ t → ∀ (x : V), 0 < u t x) →\n            (∀ (x : V), lamMin ≤ lam x) →\n              0 < lamMin →\n                0 < wmin →\n                  (∀ (x : V), wmin ≤ wf x) →\n                    (∀ (x : V), wf x ≤ wsup) →\n                      GFNBounds.Balance.IsGradientFlow K lam (fun x => lam x * wf x) GFNBounds.Balance.logSqDeriv u →\n                        (∀ (t : ℝ),\n                            0 ≤ t →\n                              HasDerivAt\n                                  (fun s =>\n                                    GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                      (GFNBounds.Balance.ratio K lam (u s)))\n                                  (-GFNBounds.Graph.nrmL2 lam\n                                        (GFNBounds.Balance.lossGrad K lam (fun x => lam x * wf x)\n                                          GFNBounds.Balance.logSqDeriv (u t)) ^\n                                      2)\n                                  t ∧\n                                (wmin * √lamMin /\n                                        (GFNBounds.Graph.nrmL2 lam (u 0) * wsup *\n                                          max 1\n                                            √(GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                  (GFNBounds.Balance.ratio K lam (u 0)) /\n                                                (wmin * lamMin)))) ^\n                                      2 *\n                                    GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                        (GFNBounds.Balance.ratio K lam (u t)) ^\n                                      2 ≤\n                                  GFNBounds.Graph.nrmL2 lam\n                                      (GFNBounds.Balance.lossGrad K lam (fun x => lam x * wf x)\n                                        GFNBounds.Balance.logSqDeriv (u t)) ^\n                                    2) ∧\n                          (∀ (t : ℝ),\n                              0 ≤ t →\n                                ENNReal.ofReal\n                                    (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                      (GFNBounds.Balance.ratio K lam (u t))) ≤\n                                  ((ENNReal.ofReal\n                                          (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                            (GFNBounds.Balance.ratio K lam (u 0))))⁻¹ +\n                                      ENNReal.ofReal\n                                        ((wmin * √lamMin /\n                                              (GFNBounds.Graph.nrmL2 lam (u 0) * wsup *\n                                                max 1\n                                                  √(GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                        (GFNBounds.Balance.ratio K lam (u 0)) /\n                                                      (wmin * lamMin)))) ^\n                                            2 *\n                                          t))⁻¹) ∧\n                            (GFNBounds.Balance.Balanced K lam (u 0) ↔\n                                (ENNReal.ofReal\n                                      (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                        (GFNBounds.Balance.ratio K lam (u 0))))⁻¹ =\n                                  ⊤) ∧\n                              (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                      (GFNBounds.Balance.ratio K lam (u 0)) =\n                                    0 →\n                                  ∀ (t : ℝ),\n                                    0 ≤ t →\n                                      GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                          (GFNBounds.Balance.ratio K lam (u t)) =\n                                        0) ∧\n                                (0 <\n                                    GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                      (GFNBounds.Balance.ratio K lam (u 0)) →\n                                  ∀ (t : ℝ),\n                                    0 ≤ t →\n                                      GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                          (GFNBounds.Balance.ratio K lam (u t)) ≤\n                                        ((GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                (GFNBounds.Balance.ratio K lam (u 0)))⁻¹ +\n                                            (wmin * √lamMin /\n                                                  (GFNBounds.Graph.nrmL2 lam (u 0) * wsup *\n                                                    max 1\n                                                      √(GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                            (GFNBounds.Balance.ratio K lam (u 0)) /\n                                                          (wmin * lamMin)))) ^\n                                                2 *\n                                              t)⁻¹)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 980,
+   "kind": "theorem",
+   "doc":
+   "**`theo:training_speed_full`, item 1, as printed** (`proofs.tex:1005–1011`): along the\n`(log x)²` gradient flow, at every `t ≥ 0`,\n\n* `t ↦ 𝓛(μ_t)` is differentiable with `−(d/dt)𝓛(μ_t) = ‖∇𝓛(μ_t)‖²`, and `κ²𝓛(μ_t)² ≤ ‖∇𝓛(μ_t)‖²`\n  — the Łojasiewicz inequality `−𝓛̇ ≥ κ²𝓛²`;\n* `𝓛(μ_t) ≤ (𝓛(μ₀)⁻¹ + κ²t)⁻¹` read in `[0,∞]`, where `0⁻¹ = ∞` and `∞⁻¹ = 0` — the paper's\n  convention `𝓛(μ₀)⁻¹ := +∞` exactly, and `(𝓛(μ₀))⁻¹ = ∞` holds iff `μ₀` is balanced;\n* and, unfolded in `ℝ`: at a balanced start `𝓛(μ_t) = 0` for every `t ≥ 0`, otherwise the real\n  display.\n\n`κ = w_min λ_min^{1/2}/(‖u₀‖ ‖w‖_{L^∞} M)`, `M = max(1, √(𝓛(μ₀)/(w_min λ_min)))`, with\n`λ_min`, `‖w‖_{L^∞}` read as the bounds `lamMin ≤ λ`, `w ≤ wsup`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.global_lojasiewicz_static":
   {"uses_value":
    ["GFNBounds.Balance.Invariant",
@@ -56578,6 +57288,22 @@
    "kind": "theorem",
    "doc":
    "**`γ₀ > 0`** (`proofs.tex:617`, formula at Step 6, `:652`) as soon as `L > 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.gamma0W":
+  {"uses_value":
+   ["GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.Kexp",
+    "GFNBounds.Balance.Lgd",
+    "GFNBounds.Balance.epsW",
+    "GFNBounds.Balance.gamma0"],
+   "uses_type": [],
+   "uses_external": 17,
+   "type": "(ℝ → ℝ) → ℝ → ℝ → ℝ → ℝ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 402,
+   "kind": "def",
+   "doc": "`γ₀` at `g''(1)`, `Γ₃ = Gamma3W g a`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.gamma0C3":
   {"uses_value":
@@ -57411,6 +58137,34 @@
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.exists_lipschitzOnWith_lossGrad_box":
+  {"uses_value":
+   ["GFNBounds.Balance.abs_ratio_le_of_mem_box",
+    "GFNBounds.Balance.contDiffAt_gd_of_C3On",
+    "GFNBounds.Balance.contDiffAt_lossGrad_local",
+    "GFNBounds.Balance.convex_densityBox",
+    "GFNBounds.Balance.densityBox",
+    "GFNBounds.Balance.isCompact_densityBox",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.pos_of_mem_box",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant"],
+   "uses_type":
+   ["GFNBounds.Balance.densityBox",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.winC3",
+    "GFNBounds.Core.IsInvariant"],
+   "uses_external": 262,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {a e : ℝ},\n  (∀ (x y : V), 0 ≤ K x y) →\n    GFNBounds.Core.IsInvariant lam K →\n      (∀ (x : V), 0 < lam x) →\n        0 < a →\n          ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n            (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (gd y) (GFNBounds.Balance.winC3 a) y) →\n              0 ≤ e →\n                e ≤ min a 1 / 4 →\n                  ∃ L,\n                    LipschitzOnWith L (fun v => GFNBounds.Balance.lossGrad K lam nu gd v)\n                      (GFNBounds.Balance.densityBox V (1 - e) (1 + e))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 587,
+   "kind": "theorem",
+   "doc":
+   "**`D` is Lipschitz on the box `[1−e, 1+e]^V`**, `e ≤ min(a,1)/4`, for `g` `C³` on the window. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.exists_lipschitzOnWith_lossGrad":
   {"uses_value":
    ["GFNBounds.Balance.Invariant",
@@ -58040,6 +58794,56 @@
    "line": 733,
    "kind": "theorem",
    "doc": "**The radius is antitone in `M₃`.** ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.eps0W_logSq":
+  {"uses_value":
+   ["GFNBounds.Balance.C6",
+    "GFNBounds.Balance.C7",
+    "GFNBounds.Balance.Cg",
+    "GFNBounds.Balance.Cinf",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.Gamma3W_logSq",
+    "GFNBounds.Balance.Kexp",
+    "GFNBounds.Balance.eps0",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.epsW",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSq_deriv2_one",
+    "GFNBounds.Balance.rhoL"],
+   "uses_type":
+   ["GFNBounds.Balance.eps0Gamma3",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.logSq"],
+   "uses_external": 42,
+   "type":
+   "∀ (wmin wsup Bhat lamMin : ℝ),\n  GFNBounds.Balance.eps0W GFNBounds.Balance.logSq (1 / 2) wmin wsup Bhat lamMin =\n    GFNBounds.Balance.eps0Gamma3 wmin wsup Bhat lamMin",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 427,
+   "kind": "theorem",
+   "doc":
+   "**`theo:training_speed_full` item 2, `ε₀`**: Theorem 10's radius for `g = (log x)²` at `a = 1/2` is\n`C3Wrappers.eps0Gamma3`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.eps0W":
+  {"uses_value":
+   ["GFNBounds.Balance.C6",
+    "GFNBounds.Balance.C7",
+    "GFNBounds.Balance.Cg",
+    "GFNBounds.Balance.Cinf",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.Kexp",
+    "GFNBounds.Balance.eps0",
+    "GFNBounds.Balance.epsW",
+    "GFNBounds.Balance.rhoL"],
+   "uses_type": [],
+   "uses_external": 17,
+   "type": "(ℝ → ℝ) → ℝ → ℝ → ℝ → ℝ → ℝ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 392,
+   "kind": "def",
+   "doc":
+   "`ε₀` of `theo:local_convergence_full` at `g''(1)` and `Γ₃ = Gamma3W g a`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.eps0Sq_pos":
   {"uses_value":
@@ -59350,6 +60154,23 @@
    "doc":
    "**`h = m^{-1}(u − Πu)`** (`proofs.tex:813`): the deviation of the rescaled density is the\northogonal part of `u` divided by the mass, because `Πu` **is** `m`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.deriv_one_eq_of_C3On":
+  {"uses_value":
+   ["GFNBounds.Balance.mem_nhds_winC3",
+    "GFNBounds.Balance.one_mem_winC3",
+    "GFNBounds.Balance.uniqueDiffOn_winC3",
+    "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.winC3"],
+   "uses_external": 185,
+   "type":
+   "∀ {g gd : ℝ → ℝ} {a : ℝ},\n  0 < a →\n    (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (gd y) (GFNBounds.Balance.winC3 a) y) →\n      deriv g 1 = gd 1 ∧ deriv (deriv g) 1 = iteratedDerivWithin 2 g (GFNBounds.Balance.winC3 a) 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 343,
+   "kind": "theorem",
+   "doc":
+   "At the interior point `1`, the derivatives within the window are the classical ones:\n`g'(1) = gd 1` and `g''(1) = iteratedDerivWithin 2 g [1−a,1+a] 1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.deriv_logSq_eq":
   {"uses_value":
    ["GFNBounds.Balance.hasDerivAt_logSq",
@@ -59927,6 +60748,70 @@
    "doc":
    "**`prop:db_lift`, the \"in particular\"** (`proofs.tex:530`): `μK₂ = μ` if and only if\n`(F, π_→^μ)` satisfies detailed balance with respect to `π_←`.\n\nBoth sides are the same pair of pointwise equations: `μK₂ = μ` reads\n`π_←(s'→s)·F(s') = μ(s,s')`, and `μ(s,s') = F(s)·π_→^μ(s→s')` by `marg₁_mul_disint`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.cycle_training_speed_paper_check":
+  {"uses_value":
+   ["GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.BhatSigma",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.lossVal",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.ratio_eq_one_iff_balanced",
+    "GFNBounds.Balance.rhoSigma",
+    "GFNBounds.Balance.training_speed_full_paper",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.BackwardPolicy.sigmaBar",
+    "GFNBounds.Graph.CycleExample.cyc",
+    "GFNBounds.Graph.CycleExample.green",
+    "GFNBounds.Graph.CycleExample.hitExp",
+    "GFNBounds.Graph.CycleExample.isGreen",
+    "GFNBounds.Graph.CycleExample.isHitExp",
+    "GFNBounds.Graph.CycleExample.isInvProb",
+    "GFNBounds.Graph.CycleExample.lam",
+    "GFNBounds.Graph.CycleExample.lam_pos",
+    "GFNBounds.Graph.CycleExample.pathConnected",
+    "GFNBounds.Graph.CycleExample.pol",
+    "GFNBounds.Graph.CycleExample.positiveOnEdges",
+    "GFNBounds.Graph.CycleExample.ratio_src",
+    "GFNBounds.Graph.CycleExample.uInfl",
+    "GFNBounds.Graph.CycleExample.uInfl_pos",
+    "GFNBounds.Graph.maxOver",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.minOver",
+    "GFNBounds.Graph.nrmL2",
+    "GFNBounds.Graph.sigmaStar",
+    "GFNBounds.Graph.visits"],
+   "uses_type":
+   ["GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.BhatSigma",
+    "GFNBounds.Balance.IsGradientFlow",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.CycleExample.cyc",
+    "GFNBounds.Graph.CycleExample.hitExp",
+    "GFNBounds.Graph.CycleExample.lam",
+    "GFNBounds.Graph.CycleExample.pol",
+    "GFNBounds.Graph.CycleExample.uInfl",
+    "GFNBounds.Graph.maxOver",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.minOver",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 164,
+   "type":
+   "∃ u,\n  u 0 = GFNBounds.Graph.CycleExample.uInfl 2 ∧\n    GFNBounds.Balance.IsGradientFlow (GFNBounds.Graph.CycleExample.pol ⋯ ⋯).phat\n        (GFNBounds.Graph.CycleExample.lam (1 / 2)) (fun x => GFNBounds.Graph.CycleExample.lam (1 / 2) x * 1)\n        GFNBounds.Balance.logSqDeriv u ∧\n      ¬GFNBounds.Balance.Balanced (GFNBounds.Graph.CycleExample.pol ⋯ ⋯).phat (GFNBounds.Graph.CycleExample.lam (1 / 2))\n            (u 0) ∧\n        ∃ t₁,\n          0 ≤ t₁ ∧\n            (GFNBounds.Graph.nrmL2 (GFNBounds.Graph.CycleExample.lam (1 / 2)) fun x =>\n                u t₁ x / GFNBounds.Graph.meanL2 (GFNBounds.Graph.CycleExample.lam (1 / 2)) (u t₁) - 1) ≤\n              GFNBounds.Balance.eps0W GFNBounds.Balance.logSq (1 / 2) 1\n                (GFNBounds.Graph.maxOver GFNBounds.Graph.CycleExample.cyc fun x => 1)\n                (GFNBounds.Balance.BhatSigma GFNBounds.Graph.CycleExample.cyc\n                  (GFNBounds.Graph.CycleExample.hitExp (1 / 2)) (GFNBounds.Graph.CycleExample.lam (1 / 2)))\n                (GFNBounds.Graph.minOver GFNBounds.Graph.CycleExample.cyc (GFNBounds.Graph.CycleExample.lam (1 / 2)))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 1400,
+   "kind": "theorem",
+   "doc":
+   "**`training_speed_full_paper` applies, with no flow hypothesised**, on the five-vertex cycle of\n`rem:cycle_no_stalemate` at `p = 1/2`, `w ≡ 1`, from the over-inflated `uInfl 2`: a flow exists,\nstarts off balance, and enters the paper's neighbourhood at some `t₁ ≥ 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.cycle_training_speed_check_half":
   {"uses_value":
    ["GFNBounds.Balance.BhatSigma",
@@ -60262,6 +61147,23 @@
    "doc":
    "The ratio `r(u)(y) = (μT)(y)/(λ(y)u(y))` is `C¹` in `u` wherever its denominator is not `0`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.contDiffAt_lossGrad_local":
+  {"uses_value":
+   ["GFNBounds.Balance.contDiffAt_ratio",
+    "GFNBounds.Balance.funAct",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.ratio"],
+   "uses_type": ["GFNBounds.Balance.lossGrad", "GFNBounds.Balance.ratio"],
+   "uses_external": 91,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : V → ℝ},\n  (∀ (x : V), 0 < lam x) →\n    (∀ (x : V), 0 < u x) →\n      (∀ (y : V), ContDiffAt ℝ 1 gd (GFNBounds.Balance.ratio K lam u y)) →\n        ContDiffAt ℝ 1 (fun v => GFNBounds.Balance.lossGrad K lam nu gd v) u",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 533,
+   "kind": "theorem",
+   "doc":
+   "**`D(u)` is `C¹` in `u` at a positive `u` whose ratios all sit where `g'` is `C¹`**\n(`FlowExistence.contDiffAt_lossGrad`, with `g'` asked `C¹` only at the values the ratio takes). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.contDiffAt_lossGrad":
   {"uses_value":
    ["GFNBounds.Balance.Invariant",
@@ -60280,6 +61182,22 @@
    "kind": "theorem",
    "doc":
    "**`D(u) = P†φ − rφ`, `φ = g'(r)w/u`, is a `C¹` function of `u` on the open cone**\n(`proofs.tex:900`, \"are `C^∞` functions of `u ∈ 𝒰`\"), for any `g'` that is `C¹` on `(0,∞)`:\n`r > 0` there (`MassIdentity.ratio_pos`), so `g'` is only ever evaluated where it is smooth. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.contDiffAt_gd_of_C3On":
+  {"uses_value":
+   ["GFNBounds.Balance.mem_nhds_winC3",
+    "GFNBounds.Balance.uniqueDiffOn_winC3",
+    "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.winC3"],
+   "uses_external": 140,
+   "type":
+   "∀ {g gd : ℝ → ℝ} {a : ℝ},\n  0 < a →\n    ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n      (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (gd y) (GFNBounds.Balance.winC3 a) y) →\n        ∀ {y : ℝ}, y ∈ Set.Ioo (1 - a) (1 + a) → ContDiffAt ℝ 1 gd y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 553,
+   "kind": "theorem",
+   "doc":
+   "**`g'` is `C¹` at every interior point of the window**: it agrees near such a point with the\nwithin-derivative, which is `C²` on the closed window. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.const_on_band_of_deriv_zero":
   {"uses_value": [],
@@ -60325,6 +61243,105 @@
    "kind": "theorem",
    "doc":
    "**Balanced ⇒ constant, and this is ergodicity** (`proofs.tex:807`).\n\n`λu` is a non-negative non-zero vector invariant under the backward chain, so it is `cλ` by\n`Graph.eq_smul_invProb` — `theo:universality_graphs`*(2)*'s un-normalized uniqueness — and `u ≡ c`\nfollows from `λ > 0`. There is **no** abstract-kernel version: see the module SCOPE. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.constW_eq_constC3":
+  {"uses_value":
+   ["GFNBounds.Balance.C3On_of_C3",
+    "GFNBounds.Balance.C6",
+    "GFNBounds.Balance.C7",
+    "GFNBounds.Balance.CC3",
+    "GFNBounds.Balance.CW",
+    "GFNBounds.Balance.Cg",
+    "GFNBounds.Balance.Cinf",
+    "GFNBounds.Balance.Gamma3",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.Kexp",
+    "GFNBounds.Balance.Lgd",
+    "GFNBounds.Balance.eps0",
+    "GFNBounds.Balance.eps0C3",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.epsW",
+    "GFNBounds.Balance.gamma0",
+    "GFNBounds.Balance.gamma0C3",
+    "GFNBounds.Balance.gamma0W",
+    "GFNBounds.Balance.rhoL",
+    "GFNBounds.Balance.winC3"],
+   "uses_type":
+   ["GFNBounds.Balance.CC3",
+    "GFNBounds.Balance.CW",
+    "GFNBounds.Balance.eps0C3",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.gamma0C3",
+    "GFNBounds.Balance.gamma0W"],
+   "uses_external": 90,
+   "type":
+   "∀ {g : ℝ → ℝ} {a : ℝ},\n  0 < a →\n    (∀ y ∈ Set.Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) →\n      ∀ (wmin wsup Bhat lamMin : ℝ),\n        GFNBounds.Balance.eps0W g a wmin wsup Bhat lamMin = GFNBounds.Balance.eps0C3 g a wmin wsup Bhat lamMin ∧\n          GFNBounds.Balance.CW g a wmin wsup = GFNBounds.Balance.CC3 g a wmin wsup ∧\n            GFNBounds.Balance.gamma0W g a wmin wsup Bhat = GFNBounds.Balance.gamma0C3 g a wmin wsup Bhat",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 418,
+   "kind": "theorem",
+   "doc": "Under the two-sided reading the constants are `C3Wrappers`'. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.constW_congr":
+  {"uses_value":
+   ["GFNBounds.Balance.C6",
+    "GFNBounds.Balance.C7",
+    "GFNBounds.Balance.CW",
+    "GFNBounds.Balance.Cg",
+    "GFNBounds.Balance.Cinf",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.Kexp",
+    "GFNBounds.Balance.Lgd",
+    "GFNBounds.Balance.eps0",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.epsW",
+    "GFNBounds.Balance.gamma0",
+    "GFNBounds.Balance.gamma0W",
+    "GFNBounds.Balance.rhoL"],
+   "uses_type":
+   ["GFNBounds.Balance.CW",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.gamma0W"],
+   "uses_external": 31,
+   "type":
+   "∀ {g g' : ℝ → ℝ} {a : ℝ},\n  deriv (deriv g) 1 = deriv (deriv g') 1 →\n    GFNBounds.Balance.Gamma3W g a = GFNBounds.Balance.Gamma3W g' a →\n      ∀ (wmin wsup Bhat lamMin : ℝ),\n        GFNBounds.Balance.eps0W g a wmin wsup Bhat lamMin = GFNBounds.Balance.eps0W g' a wmin wsup Bhat lamMin ∧\n          GFNBounds.Balance.CW g a wmin wsup = GFNBounds.Balance.CW g' a wmin wsup ∧\n            GFNBounds.Balance.gamma0W g a wmin wsup Bhat = GFNBounds.Balance.gamma0W g' a wmin wsup Bhat",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 408,
+   "kind": "theorem",
+   "doc":
+   "**`theo:local_convergence_full`, \"depending only on `g''(1)`, `sup_{[1−a,1+a]}|g'''|`, `a`,\n`w_min`, `‖w‖_{L^∞}`, `B̂`, `C_∞`\"**, as a congruence. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.constW_bounds":
+  {"uses_value":
+   ["GFNBounds.Balance.C6",
+    "GFNBounds.Balance.CW",
+    "GFNBounds.Balance.Cg",
+    "GFNBounds.Balance.Cinf",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.Gamma3W_nonneg",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.eps0_mem_Ioc",
+    "GFNBounds.Balance.gamma0W",
+    "GFNBounds.Balance.gamma0_pos_of_weights",
+    "GFNBounds.Balance.one_le_max_C7",
+    "GFNBounds.Balance.winC3"],
+   "uses_type":
+   ["GFNBounds.Balance.CW",
+    "GFNBounds.Balance.Cinf",
+    "GFNBounds.Balance.eps0W",
+    "GFNBounds.Balance.gamma0W",
+    "GFNBounds.Balance.winC3"],
+   "uses_external": 66,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {lam w : V → ℝ} {g : ℝ → ℝ} {a wsup wmin Bhat lamMin : ℝ},\n  ∑ x, lam x = 1 →\n    0 < lamMin →\n      0 < a →\n        ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n          0 < deriv (deriv g) 1 →\n            (∀ (x : V), |w x| ≤ wsup) →\n              0 < wmin →\n                (∀ (x : V), wmin ≤ w x) →\n                  1 ≤ Bhat →\n                    GFNBounds.Balance.eps0W g a wmin wsup Bhat lamMin ∈\n                        Set.Ioc 0 (a / (16 * GFNBounds.Balance.Cinf lamMin)) ∧\n                      1 ≤ GFNBounds.Balance.CW g a wmin wsup ∧ 0 < GFNBounds.Balance.gamma0W g a wmin wsup Bhat",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 471,
+   "kind": "theorem",
+   "doc":
+   "**`theo:local_convergence_full`, the constants, under `C³` on the closed window**:\n`ε₀ ∈ (0, a/(16C_∞)]`, `C ≥ 1`, `γ₀ > 0`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.constC3_congr":
   {"uses_value":
@@ -60612,6 +61629,19 @@
    "kind": "theorem",
    "doc":
    "The set of bounds is bounded below by `0`, which is all `csInf_le` needs. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.bddAbove_abs_g3W":
+  {"uses_value":
+   ["GFNBounds.Balance.uniqueDiffOn_winC3", "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.winC3"],
+   "uses_external": 70,
+   "type":
+   "∀ {g : ℝ → ℝ} {a : ℝ},\n  0 < a →\n    ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n      BddAbove ((fun y => |iteratedDerivWithin 3 g (GFNBounds.Balance.winC3 a) y|) '' GFNBounds.Balance.winC3 a)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 198,
+   "kind": "theorem",
+   "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.bddAbove_abs_g3":
   {"uses_value": [],
@@ -60911,6 +61941,27 @@
    "doc":
    "**`|r−1| ≤ a`** — the two previous bounds chained, which is what puts `r` inside the window\n`[1−a, 1+a]` on which `htaylor` speaks. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.abs_ratio_le_of_mem_box":
+  {"uses_value":
+   ["GFNBounds.Balance.abs_ratio_sub_one_le_two_a_div_three",
+    "GFNBounds.Balance.densityBox",
+    "GFNBounds.Balance.mem_densityBox",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Core.IsInvariant"],
+   "uses_type":
+   ["GFNBounds.Balance.densityBox",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Core.IsInvariant"],
+   "uses_external": 146,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam : V → ℝ} {a e : ℝ},\n  (∀ (x y : V), 0 ≤ K x y) →\n    GFNBounds.Core.IsInvariant lam K →\n      (∀ (x : V), 0 < lam x) →\n        0 ≤ e →\n          e ≤ min a 1 / 4 →\n            ∀ {v : V → ℝ},\n              v ∈ GFNBounds.Balance.densityBox V (1 - e) (1 + e) →\n                ∀ (y : V), |GFNBounds.Balance.ratio K lam v y - 1| ≤ 2 * a / 3",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 573,
+   "kind": "theorem",
+   "doc":
+   "On the box `[1−e, 1+e]^V`, `e ≤ min(a,1)/4`, every ratio lies in `[1 − 2a/3, 1 + 2a/3]`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.abs_mean_sub_le_energy_integral":
   {"uses_value":
    ["GFNBounds.Balance.Aop",
@@ -61001,6 +62052,19 @@
    "kind": "theorem",
    "doc":
    "**`|log y − (y−1)| ≤ 2(y−1)²` for `|y − 1| ≤ 1/2`.**\n\nBoth halves are one-sided logarithm bounds the library already has: `log y ≤ y − 1` is\n`Real.log_le_sub_one_of_pos`, and `(y−1)/y ≤ log y` is `sub_one_le_mul_log` divided by `y`. The\nsecond gives `log y − (y−1) ≥ −(y−1)²/y ≥ −2(y−1)²`, the factor `2` being `1/y` at `y = 1/2`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.abs_le_quadratic_of_deriv_Ico":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 188,
+   "type":
+   "∀ {e e' : ℝ → ℝ} {M b : ℝ},\n  0 ≤ b →\n    ContinuousOn e (Set.Icc 0 b) →\n      (∀ s ∈ Set.Ico 0 b, HasDerivAt e (e' s) s) → e 0 = 0 → (∀ s ∈ Set.Ico 0 b, |e' s| ≤ M * s) → |e b| ≤ M / 2 * b ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 213,
+   "kind": "theorem",
+   "doc":
+   "A quadratic fence with the derivative asked on `[0,b)` only and continuity on `[0,b]`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.abs_le_quadratic_of_deriv":
   {"uses_value": [],
@@ -61105,6 +62169,19 @@
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.abs_g3W_le":
+  {"uses_value":
+   ["GFNBounds.Balance.bddAbove_abs_g3W", "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.Gamma3W", "GFNBounds.Balance.winC3"],
+   "uses_external": 39,
+   "type":
+   "∀ {g : ℝ → ℝ} {a : ℝ},\n  0 < a →\n    ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n      ∀ {y : ℝ},\n        y ∈ GFNBounds.Balance.winC3 a →\n          |iteratedDerivWithin 3 g (GFNBounds.Balance.winC3 a) y| ≤ GFNBounds.Balance.Gamma3W g a",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 203,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.abs_g2_sub_le":
   {"uses_value":
    ["GFNBounds.Balance.Gamma3",
@@ -61120,6 +62197,24 @@
    "kind": "theorem",
    "doc":
    "**`|g''(t) − g''(1)| ≤ Γ₃|t − 1|`** on the window, by the mean value theorem. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.abs_g2W_sub_le":
+  {"uses_value":
+   ["GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.abs_g3W_le",
+    "GFNBounds.Balance.hasDerivWithinAt_iteratedDerivWithin_winC3",
+    "GFNBounds.Balance.one_mem_winC3",
+    "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.Gamma3W", "GFNBounds.Balance.winC3"],
+   "uses_external": 106,
+   "type":
+   "∀ {g : ℝ → ℝ} {a : ℝ},\n  0 < a →\n    ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) →\n      ∀ {t : ℝ},\n        t ∈ GFNBounds.Balance.winC3 a →\n          |iteratedDerivWithin 2 g (GFNBounds.Balance.winC3 a) t -\n                iteratedDerivWithin 2 g (GFNBounds.Balance.winC3 a) 1| ≤\n            GFNBounds.Balance.Gamma3W g a * |t - 1|",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 241,
+   "kind": "theorem",
+   "doc":
+   "**`|g''(t) − g''(1)| ≤ Γ₃|t − 1|`** on the closed window, derivatives within it. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.abs_deriv_mean_le":
   {"uses_value":
@@ -61443,6 +62538,54 @@
    "kind": "theorem",
    "doc":
    "**`theo:training_speed_full` item 2, `Γ₃ = sup_{[1/2,3/2]} |g'''| = 48 + 32 log 2`** for\n`g = (log x)²` (`proofs.tex:1013`, the\nradius of item 2): `|g'''(x)| = (6 − 4 log x)/x³` is largest at `x = 1/2`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.Gamma3W_nonneg":
+  {"uses_value":
+   ["GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.abs_g3W_le",
+    "GFNBounds.Balance.one_mem_winC3",
+    "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.Gamma3W", "GFNBounds.Balance.winC3"],
+   "uses_external": 43,
+   "type":
+   "∀ {g : ℝ → ℝ} {a : ℝ}, 0 < a → ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) → 0 ≤ GFNBounds.Balance.Gamma3W g a",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 209,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.Gamma3W_logSq":
+  {"uses_value":
+   ["GFNBounds.Balance.C3On_of_C3",
+    "GFNBounds.Balance.Gamma3",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.Gamma3_logSq",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSq_C3",
+    "GFNBounds.Balance.winC3"],
+   "uses_type": ["GFNBounds.Balance.Gamma3W", "GFNBounds.Balance.logSq"],
+   "uses_external": 114,
+   "type":
+   "GFNBounds.Balance.Gamma3W GFNBounds.Balance.logSq (1 / 2) = 48 + 32 * Real.log 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 381,
+   "kind": "theorem",
+   "doc":
+   "**`theo:training_speed_full` item 2, `Γ₃ = 48 + 32 log 2` for `g = (log x)²` at `a = 1/2`**,\nin the within-window reading. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.Gamma3W":
+  {"uses_value": ["GFNBounds.Balance.winC3"],
+   "uses_type": [],
+   "uses_external": 18,
+   "type": "(ℝ → ℝ) → ℝ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 190,
+   "kind": "def",
+   "doc":
+   "**`Γ₃ := sup_{[1−a,1+a]} |g'''|`, with `g'''` the third derivative within the closed window**\n(one-sided at `1 ± a`). ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.Gamma3":
   {"uses_value": [],
@@ -64966,6 +66109,21 @@
    "doc":
    "**`C_g := g''(1) + aM₃/2`** (`proofs.tex:628`), the Lipschitz constant of `g'` at `1` on the\nwindow `[1−a, 1+a]`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.CW":
+  {"uses_value":
+   ["GFNBounds.Balance.C6",
+    "GFNBounds.Balance.C7",
+    "GFNBounds.Balance.Cg",
+    "GFNBounds.Balance.Gamma3W"],
+   "uses_type": [],
+   "uses_external": 19,
+   "type": "(ℝ → ℝ) → ℝ → ℝ → ℝ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 398,
+   "kind": "def",
+   "doc": "`C := max(1, C₇)` at `g''(1)`, `Γ₃ = Gamma3W g a`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.CC3":
   {"uses_value":
    ["GFNBounds.Balance.C6",
@@ -65050,6 +66208,26 @@
    "kind": "def",
    "doc":
    "**`C₄ := ‖w‖_{L^∞}(4g''(1) + 3M₃)`** (`proofs.tex:626`), the constant of the pointwise\nremainder in the expansion of `φ`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.C3On_of_C3":
+  {"uses_value":
+   ["GFNBounds.Balance.Gamma3",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.uniqueDiffOn_winC3",
+    "GFNBounds.Balance.winC3"],
+   "uses_type":
+   ["GFNBounds.Balance.Gamma3",
+    "GFNBounds.Balance.Gamma3W",
+    "GFNBounds.Balance.winC3"],
+   "uses_external": 120,
+   "type":
+   "∀ {g : ℝ → ℝ} {a : ℝ},\n  0 < a →\n    (∀ y ∈ Set.Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) →\n      ContDiffOn ℝ 3 g (GFNBounds.Balance.winC3 a) ∧\n        (∀ y ∈ GFNBounds.Balance.winC3 a, HasDerivWithinAt g (deriv g y) (GFNBounds.Balance.winC3 a) y) ∧\n          GFNBounds.Balance.Gamma3W g a = GFNBounds.Balance.Gamma3 g a",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TrainingSpeedAssembled",
+   "line": 358,
+   "kind": "theorem",
+   "doc":
+   "**`theo:local_convergence_full`, the two-sided reading of `C³` is a special case**: `C³` at\nevery point of the closed window gives\n`C³` on it, `g' = deriv g` a derivative within it, and the same `Γ₃`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.BhatSigma_pos":
   {"uses_value":

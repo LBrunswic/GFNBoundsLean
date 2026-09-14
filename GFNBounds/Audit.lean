@@ -70,6 +70,7 @@ import GFNBounds.Doubling.WeightFull
 import GFNBounds.Balance.LiftFinite
 import GFNBounds.Balance.DiscreteGlobal
 import GFNBounds.Doubling.Remarks
+import GFNBounds.Balance.TrainingSpeedAssembled
 
 /-!
 # Axiom audit
@@ -729,3 +730,21 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.Remarks.two_constants_flip_half
 #print axioms GFNBounds.Doubling.Remarks.bhat_le_mixing_sum_check
 #print axioms GFNBounds.Doubling.Remarks.diffusion_series_converges_check
+
+-- `theo:local_convergence_full` (one-sided C^3, existence) and `theo:training_speed_full` items 1-2 as printed — GFNBounds/Balance/TrainingSpeedAssembled.lean
+#print axioms GFNBounds.Balance.taylor_of_C3On
+#print axioms GFNBounds.Balance.C3On_of_C3
+#print axioms GFNBounds.Balance.Gamma3W_logSq
+#print axioms GFNBounds.Balance.eps0W_logSq
+#print axioms GFNBounds.Balance.local_convergence_full_C3On
+#print axioms GFNBounds.Balance.constW_bounds
+#print axioms GFNBounds.Balance.local_convergence_gd_C3On
+#print axioms GFNBounds.Balance.sup_bootstrap_step_on
+#print axioms GFNBounds.Balance.local_convergence_full_exists
+#print axioms GFNBounds.Balance.local_convergence_full_DB_exists
+#print axioms GFNBounds.Balance.local_convergence_gd_DB_C3On
+#print axioms GFNBounds.Balance.global_phase_exact
+#print axioms GFNBounds.Balance.training_speed_full_paper
+#print axioms GFNBounds.Balance.kinkGen_C3On_not_C3
+#print axioms GFNBounds.Balance.twoState_exists_check
+#print axioms GFNBounds.Balance.cycle_training_speed_paper_check

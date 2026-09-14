@@ -67,6 +67,7 @@ import GFNBounds.Balance.FlowExistence
 import GFNBounds.Balance.C3Wrappers
 import GFNBounds.Doubling.ExpansionSecond
 import GFNBounds.Doubling.WeightFull
+import GFNBounds.Balance.LiftFinite
 
 /-!
 # Axiom audit
@@ -674,3 +675,16 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.Decay.trajOf_mem_descPaths
 #print axioms GFNBounds.Doubling.Decay.exists_descentPath_of_mem
 #print axioms GFNBounds.Doubling.Decay.weightDev_le_c3
+
+-- `lem:lift_mixing` (equality) and `lem:lift_coercivity`, finite forms — GFNBounds/Balance/LiftFinite.lean
+#print axioms GFNBounds.Balance.lift_mixing_dens
+#print axioms GFNBounds.Balance.lift_mixing_beta
+#print axioms GFNBounds.Balance.lift_mixing_opNorm_eq
+#print axioms GFNBounds.Balance.lift_mixing_ge
+#print axioms GFNBounds.Balance.opBound_opNorm
+#print axioms GFNBounds.Balance.opNorm_densDeviation
+#print axioms GFNBounds.Balance.lift_coercivity_finite
+#print axioms GFNBounds.Balance.lift_coercivity_edgeSupport
+#print axioms GFNBounds.Balance.lift_coercivity_graph
+#print axioms GFNBounds.Balance.lift_coercivity_twoState
+#print axioms GFNBounds.Balance.twoState_lift_beta_one

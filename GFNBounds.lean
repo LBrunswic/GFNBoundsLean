@@ -112,4 +112,5 @@ import GFNBounds.Balance.FlowExistence
 import GFNBounds.Balance.C3Wrappers
 import GFNBounds.Doubling.ExpansionSecond
 import GFNBounds.Doubling.WeightFull
+import GFNBounds.Balance.LiftFinite
 import GFNBounds.Audit

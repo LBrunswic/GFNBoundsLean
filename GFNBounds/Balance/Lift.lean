@@ -26,8 +26,12 @@ machine-read; a label mentioned only in prose is not a claim to certify it.)
 > detailed-balance loss with frozen backward policy. In particular `μK₂ = μ` if and only if
 > `(F, π_→^μ)` satisfies detailed balance with respect to `π_←`.
 
-> (`lem:lift_mixing`) For all `n ≥ 1`, `β̂_n ≤ β_{n−1}`; for the window lift `K_ℓ`,
-> `β̂_n ≤ β_{n−ℓ+1}` for `n ≥ ℓ−1`.
+> (`lem:lift_mixing`, as quoted when this file was written) For all `n ≥ 1`, `β̂_n ≤ β_{n−1}`; for
+> the window lift `K_ℓ`, `β̂_n ≤ β_{n−ℓ+1}` for `n ≥ ℓ−1`.
+>
+> **Since 2026-09-14 the paper states the lift at `ℓ = 2` only and `lem:lift_mixing` is the
+> equality `β̂_n = β_{n−1}`**; the equality, with `hattained` and the density/function-norm step
+> below discharged, is `LiftFinite.lean`.
 
 The engine of the whole block is one identity, `eq:muK2_density` (`proofs.tex:518–520`),
 
@@ -84,7 +88,8 @@ identification of a measure with its `λ₂`-density is carried by hand, `f ↦ 
   **every downstream consumer of the block in the paper is on a finite graph**
   (`prop:frozen_unstable_full`, `prop:morozov_rate`, `theo:global_dichotomy_full`). On a finite
   space the disintegration `π_→^μ` is the elementary quotient `μ(s,s')/F(s)`.
-* **The window lift `K_ℓ`, `ℓ ≥ 3`, is not formalized.** `def:edge_lift`'s second sentence, the
+* **The window lift `K_ℓ`, `ℓ ≥ 3`, is not formalized — and since 2026-09-14 no longer stated by
+  the paper** (author's ruling: narrow to what is proved). Historical note: `def:edge_lift`'s second sentence, the
   "the same holds for `K_ℓ`" of `lem:lift_wellposed`, and the second half of `lem:lift_mixing`
   (`β̂_n ≤ β_{n−ℓ+1}` for `n ≥ ℓ−1`) are **absent**. The paper defines `λ_ℓ` as "the stationary
   backward path measure of length `ℓ`", which needs a path-measure construction on `𝒮^ℓ` that
@@ -733,7 +738,8 @@ theorem lift_mixing_opNorm {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x
   csInf_le (bddBelow_opBound₂ _ _)
     ⟨hbeta.1, fun f => lift_mixing hnn hrow hlam hinv hbeta.1 hbeta.2 f⟩
 
-/-- **`lem:lift_mixing` verbatim**: `β̂_{n+1} ≤ β_n`, i.e. the paper's `β̂_n ≤ β_{n−1}` for
+/-- **`lem:lift_mixing`, the `≤` half** (the paper now states the equality, proved with no
+`hattained` in `LiftFinite.lean` as `lift_mixing_dens`): `β̂_{n+1} ≤ β_n`, i.e. `β̂_n ≤ β_{n−1}` for
 `n ≥ 1`.
 
 The one hypothesis beyond the paper's is `hattained`: that `β_n`, defined as the infimum of the

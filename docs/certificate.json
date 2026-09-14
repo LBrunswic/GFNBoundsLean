@@ -1,14 +1,14 @@
 {
   "schema": 1,
-  "source_date": "2026-09-14T21:55:05+01:00",
-  "commit": "975b6e821c0bb090fc4b521e9fb95decc90ba392",
-  "commit_short": "975b6e8",
+  "source_date": "2026-09-14T21:59:25+01:00",
+  "commit": "e3cfd50d4f8319b9fc57228a23a6b6ecebdadd9e",
+  "commit_short": "e3cfd50",
   "branch": "main",
   "dirty": true,
   "dirty_files": [
     "GFNBounds.lean",
     "GFNBounds/Audit.lean",
-    "GFNBounds/Balance/DiscreteGlobal.lean",
+    "GFNBounds/Doubling/Remarks.lean",
     "docs/COVERAGE.md",
     "docs/REPO-INDEX.md",
     "docs/REPO-MAP.md",
@@ -47,21 +47,21 @@
     "scaffold/GFNBoundsScaffold.lean",
     "scaffold/GFNBoundsScaffold/Balance/TrainingSpeedAssembled.lean",
     "scaffold/GFNBoundsScaffold/Core/FamilyUniversality.lean",
-    "scaffold/GFNBoundsScaffold/Doubling/Remarks.lean",
-    "scaffold/GFNBoundsScaffold/Graph/CycleRemarks.lean"
+    "scaffold/GFNBoundsScaffold/Graph/CycleRemarks.lean",
+    "scaffold/GFNBoundsScaffold/Graph/MorozovDB.lean"
   ],
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 3112,
+    "declarations": 3190,
     "by_namespace": {
-      "GFNBounds.Doubling": 1305,
+      "GFNBounds.Doubling": 1383,
       "GFNBounds.Balance": 954,
       "GFNBounds.Graph": 512,
       "GFNBounds.Core": 290,
       "GFNBounds.Silva": 51
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "d39e755764c520f260fec409ed71f157c318d44e64424611b0c0b63f2cd3a64e"
+    "sha256": "50b6f731aeb848f3ab7a0a4987ecbf94b7f3712a20fb5030bda25a609bde16cc"
   }
 }

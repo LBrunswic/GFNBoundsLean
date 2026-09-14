@@ -152,15 +152,26 @@
       "block_sha256": "012b15f50c442d68cb08176e7af1156415a037b925fcbed55b3df7ee0c4837da",
       "lean_files": [
         "GFNBounds/Doubling/Operator.lean",
-        "GFNBounds/Doubling/OperatorFiniteSum.lean"
+        "GFNBounds/Doubling/OperatorFiniteSum.lean",
+        "GFNBounds/Doubling/Remarks.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.resolvent_norm_le",
-        "GFNBounds.Doubling.Stat.inverse_sub_piL2_le_sum_betaHat"
+        "GFNBounds.Doubling.Stat.inverse_sub_piL2_le_sum_betaHat",
+        "GFNBounds.Doubling.Remarks.bhat_le_mixing_sum",
+        "GFNBounds.Doubling.Remarks.norm_funOp_pow_sub",
+        "GFNBounds.Doubling.Remarks.two_constants_flip_three_quarters",
+        "GFNBounds.Doubling.Remarks.two_constants_flip_half",
+        "GFNBounds.Doubling.Remarks.flipK_funAct_centred",
+        "GFNBounds.Doubling.Remarks.flipK_invariant_unique",
+        "GFNBounds.Doubling.Remarks.diffusion_apply_eq_series",
+        "GFNBounds.Doubling.Remarks.inverse_sub_eq_of_tendsto",
+        "GFNBounds.Doubling.Remarks.bhat_le_mixing_sum_check",
+        "GFNBounds.Doubling.Remarks.diffusion_series_converges_check"
       ],
       "status": "partial",
       "bucket": "B",
-      "scope_notes": "2026-09-14 (Phase 1 re-read against commit 3194054): 'numerically distinct' became 'need not coincide' with a two-state witness (flip 3/4: B-hat = 2/3, sum = 2; flip 1/2: both 1), routine but not in Lean; the ordering is resolvent_norm_le / inverse_sub_piL2_le_sum_betaHat. || \n\n[Wave 1, 2026-09-13, audited] The ordering B-hat <= sum beta-hat_n is proved on the truncation (inverse_sub_piL2_le_sum_betaHat). 'Need not coincide / differ at the measurement' is numerical, not formalized. The trajectory reading splits: the pointwise series identity is routine (B), the reading as E(theta(X_n)|X_0=x) needs a chain (D).",
+      "scope_notes": "2026-09-14 (Phase 2B, GFNBounds/Doubling/Remarks.lean, audited READY): the ordering B-hat <= sum beta-hat_n proved on every finite Markov chain with a positive invariant probability (wider than 'finite irreducible'; irreducibility unused, bounded partial sums make Id - P* + Pi invertible); the witnesses exact (flip 3/4: B-hat = 2/3, beta-hat_n = 2^{-n}, sum = 2; flip 1/2: both 1); the measured K = 64 sentence not a target (R18). The trajectory reading certified as the pointwise series sum((P*^n theta)(x) - lambda(theta)); its identification with E(theta(X_n)|X_0 = x) is not stated -- routine as a finite path-law identity (as lem:doubling_descent), or a ruling that the display is notation, closes the row in A. || 2026-09-14 (Phase 1 re-read against commit 3194054): 'numerically distinct' became 'need not coincide' with a two-state witness (flip 3/4: B-hat = 2/3, sum = 2; flip 1/2: both 1), routine but not in Lean; the ordering is resolvent_norm_le / inverse_sub_piL2_le_sum_betaHat. || \n\n[Wave 1, 2026-09-13, audited] The ordering B-hat <= sum beta-hat_n is proved on the truncation (inverse_sub_piL2_le_sum_betaHat). 'Need not coincide / differ at the measurement' is numerical, not formalized. The trajectory reading splits: the pointwise series identity is routine (B), the reading as E(theta(X_n)|X_0=x) needs a chain (D).",
       "source": "app_doubling.tex"
     },
     {
@@ -688,11 +699,34 @@
         1316
       ],
       "block_sha256": "8230d03c23ca15a8701d522bd170daf12a206ae91176647e4ba7b613f8e3f01a",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "B",
-      "scope_notes": "",
+      "lean_files": [
+        "GFNBounds/Doubling/Remarks.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.Remarks.integral_kern",
+        "GFNBounds.Doubling.Remarks.kernMeasure_univ",
+        "GFNBounds.Doubling.Remarks.kernMeasure_absolutelyContinuous",
+        "GFNBounds.Doubling.Remarks.kernMeasure_nonlattice",
+        "GFNBounds.Doubling.Remarks.kbar_zero",
+        "GFNBounds.Doubling.Remarks.kbar_one",
+        "GFNBounds.Doubling.Remarks.hasDerivAt_kbar",
+        "GFNBounds.Doubling.Remarks.abs_kern_le",
+        "GFNBounds.Doubling.Remarks.kern_boundedVariationOn",
+        "GFNBounds.Doubling.Remarks.rhs_eq_shift",
+        "GFNBounds.Doubling.Remarks.renewal_rhs_lipschitz",
+        "GFNBounds.Doubling.Remarks.renewal_lipschitz",
+        "GFNBounds.Doubling.Remarks.Gfun_eq_shift",
+        "GFNBounds.Doubling.Remarks.hasDerivAt_Gfun",
+        "GFNBounds.Doubling.Remarks.renewal_hasDerivAt_G",
+        "GFNBounds.Doubling.Remarks.renewal_G_const",
+        "GFNBounds.Doubling.Remarks.renewal_limit",
+        "GFNBounds.Doubling.Remarks.integral_kbar_eq_kernMean",
+        "GFNBounds.Doubling.Remarks.kernMean_eq",
+        "GFNBounds.Doubling.Remarks.renewal_limit_check"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-14 (Phase 2B, GFNBounds/Doubling/Remarks.lean, audited READY): CLOSED against the current text (3194054): every non-heuristic sentence certified -- kernel integrates to 1 (Cramer relation), law absolutely continuous and non-lattice, k-bar closed form, V Lipschitz (constant M(2K_0+K_1), via a Lipschitz bound on k; BV also proved), G' = 0 by the Leibniz computation, limit ell = G(x_0)/int k-bar with int k-bar = psi'(p*)/(p* ln 2) = tau/(tau-1) - 1/(p* ln 2) > 0. Range widened to c > 0 and any non-zero root of psi (the Cramer lemma's range; safe direction). The constant C not derived, as the remark says. FINDING FOR THE AUTHOR (prover and auditor independently): by Choquet-Deny (bounded continuous form; supp of the law of -v is [-1,0], generating R) every bounded solution of the limit equation on all of R is constant, so the remark's hypothesis class is the constants and its limit clause reads ell = ell; the non-lattice sentence is used nowhere. The presumably intended content is the one-sided problem (x >= x_0 with data on [x_0-1, x_0)), where the key renewal theorem needs non-lattice; a restatement there reopens this row.",
       "source": "app_doubling.tex"
     },
     {

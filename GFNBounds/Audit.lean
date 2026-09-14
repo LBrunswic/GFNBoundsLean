@@ -69,6 +69,7 @@ import GFNBounds.Doubling.ExpansionSecond
 import GFNBounds.Doubling.WeightFull
 import GFNBounds.Balance.LiftFinite
 import GFNBounds.Balance.DiscreteGlobal
+import GFNBounds.Doubling.Remarks
 
 /-!
 # Axiom audit
@@ -709,3 +710,22 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.DiscreteGlobal.Gamma3_logSq_eq_Gamma3Val
 #print axioms GFNBounds.Balance.DiscreteGlobal.eps0At_Gamma3Val_eq
 #print axioms GFNBounds.Balance.DiscreteGlobal.gamma0At_Gamma3Val_eq
+
+-- `rem:doubling_renewal` and `rem:doubling_two_constants` — GFNBounds/Doubling/Remarks.lean
+#print axioms GFNBounds.Doubling.Remarks.renewal_limit
+#print axioms GFNBounds.Doubling.Remarks.renewal_G_const
+#print axioms GFNBounds.Doubling.Remarks.renewal_hasDerivAt_G
+#print axioms GFNBounds.Doubling.Remarks.renewal_lipschitz
+#print axioms GFNBounds.Doubling.Remarks.renewal_rhs_lipschitz
+#print axioms GFNBounds.Doubling.Remarks.kernMean_eq
+#print axioms GFNBounds.Doubling.Remarks.integral_kbar_eq_kernMean
+#print axioms GFNBounds.Doubling.Remarks.kernMeasure_nonlattice
+#print axioms GFNBounds.Doubling.Remarks.kernMeasure_univ
+#print axioms GFNBounds.Doubling.Remarks.kern_boundedVariationOn
+#print axioms GFNBounds.Doubling.Remarks.renewal_limit_check
+#print axioms GFNBounds.Doubling.Remarks.bhat_le_mixing_sum
+#print axioms GFNBounds.Doubling.Remarks.diffusion_apply_eq_series
+#print axioms GFNBounds.Doubling.Remarks.two_constants_flip_three_quarters
+#print axioms GFNBounds.Doubling.Remarks.two_constants_flip_half
+#print axioms GFNBounds.Doubling.Remarks.bhat_le_mixing_sum_check
+#print axioms GFNBounds.Doubling.Remarks.diffusion_series_converges_check

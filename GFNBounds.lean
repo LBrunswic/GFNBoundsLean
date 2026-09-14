@@ -113,4 +113,5 @@ import GFNBounds.Balance.C3Wrappers
 import GFNBounds.Doubling.ExpansionSecond
 import GFNBounds.Doubling.WeightFull
 import GFNBounds.Balance.LiftFinite
+import GFNBounds.Balance.DiscreteGlobal
 import GFNBounds.Audit

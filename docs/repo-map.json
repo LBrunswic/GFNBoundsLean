@@ -121,10 +121,11 @@
     "GFNBounds.Doubling.ExpansionSecond",
     "GFNBounds.Doubling.WeightFull",
     "GFNBounds.Balance.LiftFinite",
+    "GFNBounds.Balance.DiscreteGlobal",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 116,
+   "lines": 117,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -205,10 +206,11 @@
     "GFNBounds.Balance.C3Wrappers",
     "GFNBounds.Doubling.ExpansionSecond",
     "GFNBounds.Doubling.WeightFull",
-    "GFNBounds.Balance.LiftFinite"
+    "GFNBounds.Balance.LiftFinite",
+    "GFNBounds.Balance.DiscreteGlobal"
    ],
    "variables": [],
-   "lines": 690,
+   "lines": 711,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -1242,6 +1244,783 @@
      "private": false,
      "statement": "theorem scalar_discrete_check : (∀ k : ℕ, ‖(5 : ℝ) * (1 / 2) ^ k‖ ≤ (1 - (1 / 4 : ℝ) * 2) ^ k * ‖(5 : ℝ) * (1 / 2) ^ (0 : ℕ)‖) ∧ (∀ k : ℕ, ‖(5 : ℝ) * (1 / 2) ^ k‖ = (1 - (1 / 4 : ℝ) * 2) ^ k * ‖(5 : ℝ) * (1 / 2) ^ (0 : ℕ)‖) ∧ (1 - (1 / 4 : ℝ) * 2) < Real.sqrt (1 - (1 / 4 : ℝ) * 2)",
      "doc": "**The discrete contraction, evaluated, attained, and separated from its square root.** On `E = ℝ` with `H = 2·id`, `Π = 0`, `ε = 1/4`, `ϱ = 2`, `Λ = 2` and `h_k = 5·(1/2)^k` — a genuine solution of `h_{k+1} = h_k − εHh_k`, since `h_k − (1/4)(2h_k) = h_k/2` — `stable_frozen_discrete` gives `‖h_k‖ ≤ (1 − εϱ)^k‖h_0‖` with `1 − εϱ = 1/2`, and the two sides are **equal at every `k`**."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/DiscreteGlobal.lean",
+   "title": "The discrete global phase: gradient descent converges from every positive initialization, with a step chosen from it",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.TrainingSpeed",
+    "GFNBounds.Balance.LocalConvergenceClauses",
+    "GFNBounds.Balance.C3Wrappers"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable {V : Type*} [Fintype V] [DecidableEq V]"
+   ],
+   "lines": 2343,
+   "decls": [
+    {
+     "name": "taylor_upper",
+     "full": "GFNBounds.Balance.DiscreteGlobal.taylor_upper",
+     "kind": "theorem",
+     "line": 162,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem taylor_upper {F F' F'' : ℝ → ℝ} {γ C : ℝ} (hγ : 0 ≤ γ) (hF : ∀ s ∈ Set.Icc 0 γ, HasDerivAt F (F' s) s) (hF' : ∀ s ∈ Set.Icc 0 γ, HasDerivAt F' (F'' s) s) (hC : ∀ s ∈ Set.Icc 0 γ, F'' s ≤ C) : F γ ≤ F 0 + γ * F' 0 + C * γ ^ 2 / 2",
+     "doc": "**Taylor's formula, one-sided**: `F(γ) ≤ F(0) + γF'(0) + Cγ²/2` when `F'' ≤ C` on `[0,γ]`."
+    },
+    {
+     "name": "hasDerivAt_line",
+     "full": "GFNBounds.Balance.DiscreteGlobal.hasDerivAt_line",
+     "kind": "theorem",
+     "line": 193,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_line (a b s : ℝ) : HasDerivAt (fun t => a - t * b) (-b) s",
+     "doc": "The line `t ↦ a − tb`."
+    },
+    {
+     "name": "hasDerivAt_div_line",
+     "full": "GFNBounds.Balance.DiscreteGlobal.hasDerivAt_div_line",
+     "kind": "theorem",
+     "line": 197,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_div_line {a b s : ℝ} (h : a - s * b ≠ 0) : HasDerivAt (fun t => b / (a - t * b)) ((b / (a - s * b)) ^ 2) s",
+     "doc": "`t ↦ b/(a − tb)` has derivative `(b/(a − sb))²`."
+    },
+    {
+     "name": "hasDerivAt_sq_logdiff",
+     "full": "GFNBounds.Balance.DiscreteGlobal.hasDerivAt_sq_logdiff",
+     "kind": "theorem",
+     "line": 204,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_sq_logdiff {a b c d s : ℝ} (ha : 0 < a - s * b) (hc : 0 < c - s * d) : HasDerivAt (fun t => (Real.log (a - t * b) - Real.log (c - t * d)) ^ 2) (2 * (Real.log (a - s * b) - Real.log (c - s * d)) * (d / (c - s * d) - b / (a - s * b))) s",
+     "doc": "**`q(t) = (log(a − tb) − log(c − td))²`**, the per-state loss term along a line, and its first derivative."
+    },
+    {
+     "name": "hasDerivAt_sq_logdiff_deriv",
+     "full": "GFNBounds.Balance.DiscreteGlobal.hasDerivAt_sq_logdiff_deriv",
+     "kind": "theorem",
+     "line": 215,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_sq_logdiff_deriv {a b c d s : ℝ} (ha : 0 < a - s * b) (hc : 0 < c - s * d) : HasDerivAt (fun t => 2 * (Real.log (a - t * b) - Real.log (c - t * d)) * (d / (c - t * d) - b / (a - t * b))) (2 * (d / (c - s * d) - b / (a - s * b)) ^ 2 + 2 * (Real.log (a - s * b) - Real.log (c - s * d)) * ((d / (c - s * d)) ^ 2 - (b / (a - s * b)) ^ 2)) s",
+     "doc": "The second derivative of `q`."
+    },
+    {
+     "name": "sq_logdiff_deriv2_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.sq_logdiff_deriv2_le",
+     "kind": "theorem",
+     "line": 234,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sq_logdiff_deriv2_le (l τ ρ : ℝ) : 2 * (τ - ρ) ^ 2 + 2 * l * (τ ^ 2 - ρ ^ 2) ≤ (4 + 2 * |l|) * (τ ^ 2 + ρ ^ 2)",
+     "doc": "`q'' ≤ (4 + 2|ℓ|)(τ² + ρ²)`."
+    },
+    {
+     "name": "Mp",
+     "full": "GFNBounds.Balance.DiscreteGlobal.Mp",
+     "kind": "def",
+     "line": 245,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Mp (M : ℝ) : ℝ",
+     "doc": "**`M' := M + ln 3`** (`proofs.tex:1048`)."
+    },
+    {
+     "name": "b1",
+     "full": "GFNBounds.Balance.DiscreteGlobal.b1",
+     "kind": "def",
+     "line": 248,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def b1 (M : ℝ) : ℝ",
+     "doc": "**`b₁ := 2M'e^{M'}`** (`proofs.tex:1048`), the bound on `|g'|` on `[e^{−M'}, e^{M'}]`."
+    },
+    {
+     "name": "b2",
+     "full": "GFNBounds.Balance.DiscreteGlobal.b2",
+     "kind": "def",
+     "line": 251,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def b2 (M : ℝ) : ℝ",
+     "doc": "**`b₂ := 2(1+M')e^{2M'}`** (`proofs.tex:1048`), the bound on `|g''|` on `[e^{−M'}, e^{M'}]`."
+    },
+    {
+     "name": "b3",
+     "full": "GFNBounds.Balance.DiscreteGlobal.b3",
+     "kind": "def",
+     "line": 254,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def b3 (W umin M : ℝ) : ℝ",
+     "doc": "**`b₃ := (4‖w‖_{L^∞}/u_min²)(1+e^{M'})(b₂(1+e^{M'}) + 2b₁)`** (`proofs.tex:1050`)."
+    },
+    {
+     "name": "exp_Mp",
+     "full": "GFNBounds.Balance.DiscreteGlobal.exp_Mp",
+     "kind": "theorem",
+     "line": 257,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exp_Mp (M : ℝ) : Real.exp (Mp M) = 3 * Real.exp M",
+     "doc": ""
+    },
+    {
+     "name": "exp_two_Mp",
+     "full": "GFNBounds.Balance.DiscreteGlobal.exp_two_Mp",
+     "kind": "theorem",
+     "line": 260,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exp_two_Mp (M : ℝ) : Real.exp (2 * Mp M) = 9 * Real.exp M ^ 2",
+     "doc": ""
+    },
+    {
+     "name": "Mp_nonneg",
+     "full": "GFNBounds.Balance.DiscreteGlobal.Mp_nonneg",
+     "kind": "theorem",
+     "line": 263,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Mp_nonneg {M : ℝ} (hM : 0 ≤ M) : 0 ≤ Mp M",
+     "doc": ""
+    },
+    {
+     "name": "b3_bracket_eq",
+     "full": "GFNBounds.Balance.DiscreteGlobal.b3_bracket_eq",
+     "kind": "theorem",
+     "line": 268,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem b3_bracket_eq (M : ℝ) : (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) = (1 + 3 * Real.exp M) * (18 * (1 + Mp M) * Real.exp M ^ 2 * (1 + 3 * Real.exp M) + 12 * Mp M * Real.exp M)",
+     "doc": "The bracket of `b₃`, in `E = e^M`."
+    },
+    {
+     "name": "b3_bracket_ge",
+     "full": "GFNBounds.Balance.DiscreteGlobal.b3_bracket_ge",
+     "kind": "theorem",
+     "line": 277,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem b3_bracket_ge {M : ℝ} (hM : 0 ≤ M) : M * (Real.exp M + 1) ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) ∧ (4 + 2 * Mp M) * (1 + Real.exp M ^ 2) ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) ∧ 8 ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M)",
+     "doc": "The three lower bounds on the bracket of `b₃` the proof spends: the relative step (`M(e^M+1)`), the second derivative (`(4 + 2M')(1 + e^{2M})`, the form this file's `f''` bound takes), and `8` (for `γ ≤ u_min²/(32‖w‖_{L^∞})`)."
+    },
+    {
+     "name": "pushMass_line",
+     "full": "GFNBounds.Balance.DiscreteGlobal.pushMass_line",
+     "kind": "theorem",
+     "line": 313,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pushMass_line (K : V → V → ℝ) (lam u v : V → ℝ) (s : ℝ) (y : V) : pushMass K lam (fun x => u x - s * v x) y = pushMass K lam u y - s * pushMass K lam v y",
+     "doc": ""
+    },
+    {
+     "name": "ratio_line",
+     "full": "GFNBounds.Balance.DiscreteGlobal.ratio_line",
+     "kind": "theorem",
+     "line": 318,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_line (K : V → V → ℝ) (lam u v : V → ℝ) (s : ℝ) (y : V) : ratio K lam (fun x => u x - s * v x) y = (pushMass K lam u y - s * pushMass K lam v y) / (lam y * u y - s * (lam y * v y))",
+     "doc": ""
+    },
+    {
+     "name": "pushMass_eq_densAct",
+     "full": "GFNBounds.Balance.DiscreteGlobal.pushMass_eq_densAct",
+     "kind": "theorem",
+     "line": 324,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pushMass_eq_densAct {K : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (v : V → ℝ) (y : V) : pushMass K lam v y = lam y * Core.densAct lam K v y",
+     "doc": ""
+    },
+    {
+     "name": "logSq_div_eq",
+     "full": "GFNBounds.Balance.DiscreteGlobal.logSq_div_eq",
+     "kind": "theorem",
+     "line": 329,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem logSq_div_eq {p q : ℝ} (hp : 0 < p) (hq : 0 < q) : logSq (p / q) = (Real.log p - Real.log q) ^ 2",
+     "doc": ""
+    },
+    {
+     "name": "exp_neg_le_of_abs_log_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.exp_neg_le_of_abs_log_le",
+     "kind": "theorem",
+     "line": 334,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exp_neg_le_of_abs_log_le {r M : ℝ} (hr : 0 < r) (h : |Real.log r| ≤ M) : Real.exp (-M) ≤ r ∧ r ≤ Real.exp M",
+     "doc": "`e^{−M} ≤ r ≤ e^M` from `|log r| ≤ M`."
+    },
+    {
+     "name": "abs_lossGrad_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.abs_lossGrad_le",
+     "kind": "theorem",
+     "line": 353,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_lossGrad_le {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, |Real.log (ratio K lam u x)| ≤ M) (x : V) : |lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x| ≤ 2 * M * W * (Real.exp M + 1) * u x / umin ^ 2",
+     "doc": "**`|D(u)| ≤ 2M‖w‖_{L^∞}(e^M+1)u/u_min²`**: `|P†ψ| ≤ max|ψ| ≤ 2M‖w‖e^M/u_min` and `|rψ| ≤ 2M‖w‖/u`, read against `u ≥ u_min` (`proofs.tex:1062`)."
+    },
+    {
+     "name": "rel_step_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.rel_step_le",
+     "kind": "theorem",
+     "line": 427,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rel_step_le {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin γ : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, |Real.log (ratio K lam u x)| ≤ M) (hγ0 : 0 ≤ γ) (hγ : γ * b3 W umin M ≤ 1) (x : V) : γ * |lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x| ≤ u x / 2",
+     "doc": "**`γ|D(u)| ≤ u/2`** (`proofs.tex:1062`) at `γ ≤ 1/b₃`."
+    },
+    {
+     "name": "pushMass_mono",
+     "full": "GFNBounds.Balance.DiscreteGlobal.pushMass_mono",
+     "kind": "theorem",
+     "line": 455,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pushMass_mono {K : V → V → ℝ} {lam v v' : V → ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 ≤ lam x) (h : ∀ x, v x ≤ v' x) (y : V) : pushMass K lam v y ≤ pushMass K lam v' y",
+     "doc": ""
+    },
+    {
+     "name": "pushMass_smul",
+     "full": "GFNBounds.Balance.DiscreteGlobal.pushMass_smul",
+     "kind": "theorem",
+     "line": 461,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pushMass_smul (K : V → V → ℝ) (lam u : V → ℝ) (c : ℝ) (y : V) : pushMass K lam (fun x => c * u x) y = c * pushMass K lam u y",
+     "doc": ""
+    },
+    {
+     "name": "abs_logdiff_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.abs_logdiff_le",
+     "kind": "theorem",
+     "line": 468,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_logdiff_le {a a' c c' : ℝ} (ha : 0 < a) (hc : 0 < c) (ha1 : a / 2 ≤ a') (ha2 : a' ≤ 3 * a / 2) (hc1 : c / 2 ≤ c') (hc2 : c' ≤ 3 * c / 2) : |Real.log a' - Real.log c'| ≤ |Real.log (a / c)| + Real.log 3",
+     "doc": "`|log(a − sb) − log(c − sd)| ≤ |log(a/c)| + ln 3` when both lines stay within a factor two of `a` and `c`: the ratio moves by at most a factor `3` along the segment (`proofs.tex:1062`)."
+    },
+    {
+     "name": "descent_step",
+     "full": "GFNBounds.Balance.DiscreteGlobal.descent_step",
+     "kind": "theorem",
+     "line": 502,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem descent_step {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin γ : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hW0 : 0 ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, |Real.log (ratio K lam u x)| ≤ M) (hγ0 : 0 ≤ γ) (hγ : γ * b3 W umin M ≤ 1) : (∀ x, u x / 2 ≤ u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ lossVal lam wf logSq (ratio K lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x)) ≤ lossVal lam wf logSq (ratio K lam u) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2",
+     "doc": "**`theo:training_speed_full`*(3)*, the descent lemma** (`proofs.tex:1062–1066`): on a positive density whose ratio is within `e^{±M}` of `1` and which is at least `u_min`, one step `u⁺ = u − γD(u)` with `0 ≤ γ ≤ 1/b₃` satisfies `u⁺ ≥ u/2` and `𝓛(u⁺) ≤ 𝓛(u) − (γ/2)‖D(u)‖²`."
+    },
+    {
+     "name": "abs_log_ratio_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.abs_log_ratio_le",
+     "kind": "theorem",
+     "line": 746,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_log_ratio_le {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin wmin L0 : ℝ} (hlam : ∀ x, 0 < lam x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL : lossVal lam wf logSq (ratio K lam u) ≤ L0) (x : V) : |Real.log (ratio K lam u x)| ≤ ratioCap lamMin wmin L0",
+     "doc": "**The positivity floor** (`proofs.tex:1061`): `𝓛(u) ≤ L₀` and `Πu ≥ m₀` give `e^{−M} ≤ r(u) ≤ e^M`, i.e."
+    },
+    {
+     "name": "meanL2_lossGrad_nonpos",
+     "full": "GFNBounds.Balance.DiscreteGlobal.meanL2_lossGrad_nonpos",
+     "kind": "theorem",
+     "line": 759,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanL2_lossGrad_nonpos {K : V → V → ℝ} {lam wf u : V → ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hwpos : ∀ x, 0 < wf x) (hu : ∀ x, 0 < u x) : Graph.meanL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ≤ 0",
+     "doc": "`ΠD(u) ≤ 0`, `prop:no_distant_equilibrium`*(1)*, read at `ν = wλ`."
+    },
+    {
+     "name": "region_step",
+     "full": "GFNBounds.Balance.DiscreteGlobal.region_step",
+     "kind": "theorem",
+     "line": 771,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem region_step {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin pmin wmin W L0 m0 γ : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hm0 : 0 < m0) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin L0 m0) (ratioCap lamMin wmin L0) ≤ 1) (hu : ∀ x, 0 < u x) (hL : lossVal lam wf logSq (ratio K lam u) ≤ L0) (hm : m0 ≤ Graph.meanL2 lam u) : (∀ x, uMin V lamMin pmin wmin L0 m0 ≤ u x) ∧ (∀ x, 0 < u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ lossVal lam wf logSq (ratio K lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x)) ≤ lossVal lam wf logSq (ratio K lam u) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2 ∧ Graph.meanL2 lam u ≤ Graph.meanL2 lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ Graph.nrmL2 lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ^ 2 = Graph.nrmL2 lam u ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2",
+     "doc": "**One step inside the region** (`proofs.tex:1060–1071`): a positive `u` with `𝓛(u) ≤ L₀` and `Πu ≥ m₀` has `u ≥ u_min`, and one step at `0 ≤ γ ≤ 1/b₃` keeps positivity, descends by `(γ/2)‖D‖²`, raises the mass, and adds exactly `γ²‖D‖²` to the squared norm."
+    },
+    {
+     "name": "traj_region",
+     "full": "GFNBounds.Balance.DiscreteGlobal.traj_region",
+     "kind": "theorem",
+     "line": 820,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem traj_region {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) : ∀ k, (∀ x, 0 < uk k x) ∧ lossVal lam wf logSq (ratio K lam (uk k)) ≤ lossVal lam wf logSq (ratio K lam (uk 0)) ∧ Graph.meanL2 lam (uk 0) ≤ Graph.meanL2 lam (uk k) ∧ Graph.nrmL2 lam (uk k) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk k)) ≤ Graph.nrmL2 lam (uk 0) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0))",
+     "doc": "**The region is invariant** (`proofs.tex:1067–1071`): every iterate is positive, has loss at most `𝓛(μ₀)`, mass at least `m₀`, and `‖u_k‖² + 2γ𝓛(u_k) ≤ ‖u₀‖² + 2γ𝓛(μ₀)`."
+    },
+    {
+     "name": "traj_a",
+     "full": "GFNBounds.Balance.DiscreteGlobal.traj_a",
+     "kind": "theorem",
+     "line": 856,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem traj_a {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k, (∀ x, uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0)) ≤ uk k x) ∧ lossVal lam wf logSq (ratio K lam (uk (k + 1))) ≤ lossVal lam wf logSq (ratio K lam (uk k)) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.meanL2 lam (uk k) ≤ Graph.meanL2 lam (uk (k + 1)) ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 = Graph.nrmL2 lam (uk k) ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2",
+     "doc": "**`theo:training_speed_full`, assertion *3(a)*** (`proofs.tex:1023`): for every `k`, `u_k ≥ u_min`, the loss descends by `(γ/2)‖D(u_k)‖²`, the mass does not decrease, and `‖u_{k+1}‖² = ‖u_k‖² + γ²‖D(u_k)‖² ≤ 2‖u₀‖²`."
+    },
+    {
+     "name": "inv_recursion",
+     "full": "GFNBounds.Balance.DiscreteGlobal.inv_recursion",
+     "kind": "theorem",
+     "line": 900,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inv_recursion {L : ℕ → ℝ} {a : ℝ} (ha : 0 ≤ a) (hL : ∀ k, 0 ≤ L k) (hrec : ∀ k, L (k + 1) ≤ L k - a * L k ^ 2) : ∀ k : ℕ, L k ≤ ((L 0)⁻¹ + k * a)⁻¹",
+     "doc": "A real sequence with `L_{k+1} ≤ L_k − aL_k²` satisfies `L_k ≤ (L_0^{−1} + ka)^{−1}` (`proofs.tex:1077`), with Lean's `0^{−1} = 0` standing in for the paper's `+∞` at a balanced start."
+    },
+    {
+     "name": "traj_nrm_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.traj_nrm_le",
+     "kind": "theorem",
+     "line": 953,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem traj_nrm_le {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k, Graph.nrmL2 lam (uk k) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2 ∧ Graph.nrmL2 lam (uk k) ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Graph.meanL2 lam (uk k) ≤ Graph.nrmL2 lam (uk k) ∧ 0 < Graph.meanL2 lam (uk k)",
+     "doc": "`‖u_k‖ ≤ √2‖u₀‖` and `0 < ‖u_k‖` along the descent."
+    },
+    {
+     "name": "traj_b",
+     "full": "GFNBounds.Balance.DiscreteGlobal.traj_b",
+     "kind": "theorem",
+     "line": 998,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem traj_b {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k : ℕ, lossVal lam wf logSq (ratio K lam (uk k)) ≤ ((lossVal lam wf logSq (ratio K lam (uk 0)))⁻¹ + k * γ * (wmin * Real.sqrt lamMin / (Graph.nrmL2 lam (uk 0) * W * ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) ^ 2 / 4)⁻¹",
+     "doc": "**`theo:training_speed_full`, assertion *3(b)*, the discrete Łojasiewicz envelope** (`proofs.tex:1024`, proof `:1072–1077`): `𝓛(u_k) ≤ (𝓛(μ₀)^{−1} + kγκ²/4)^{−1}` with the continuous phase's `κ = w_min λ_min^{1/2}/(‖u₀‖‖w‖_{L^∞}M)`."
+    },
+    {
+     "name": "delta1",
+     "full": "GFNBounds.Balance.DiscreteGlobal.delta1",
+     "kind": "def",
+     "line": 1077,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def delta1 (eps0 m0 Bhat U0 : ℝ) : ℝ",
+     "doc": "**`δ₁ := ε₀m₀/(√2 B̂_σ‖u₀‖)`** (`proofs.tex:1054`)."
+    },
+    {
+     "name": "kappa",
+     "full": "GFNBounds.Balance.DiscreteGlobal.kappa",
+     "kind": "def",
+     "line": 1080,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def kappa (wmin lamMin U0 W M : ℝ) : ℝ",
+     "doc": "**`κ := w_min λ_min^{1/2}/(‖u₀‖‖w‖_{L^∞}M)`** (`proofs.tex:1010`)."
+    },
+    {
+     "name": "k0real",
+     "full": "GFNBounds.Balance.DiscreteGlobal.k0real",
+     "kind": "def",
+     "line": 1084,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def k0real (γ κ lamMin wmin δ1 : ℝ) : ℝ",
+     "doc": "**The first form of `k₀(γ)`**, `16/(γκ²λ_min w_min δ₁²)` (`proofs.tex:1055`), before its ceiling; `k0_closed_form` is the printed closed form."
+    },
+    {
+     "name": "abs_exp_sub_one_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.abs_exp_sub_one_le",
+     "kind": "theorem",
+     "line": 1086,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_exp_sub_one_le {y d : ℝ} (hy : |y| ≤ d / 2) (hd : d ≤ 1) : |Real.exp y - 1| ≤ d",
+     "doc": ""
+    },
+    {
+     "name": "traj_entry",
+     "full": "GFNBounds.Balance.DiscreteGlobal.traj_entry",
+     "kind": "theorem",
+     "line": 1100,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem traj_entry {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat eps0 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (heps0 : 0 < eps0) (heps1 : eps0 ≤ 1 / 32) : ∀ k : ℕ, ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 eps0 (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊ ≤ k → (∀ x, |ratio K lam (uk k) x - 1| ≤ delta1 eps0 (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0))) ∧ Graph.nrmL2 lam (perpL2 lam (uk k)) ≤ eps0 * Graph.meanL2 lam (uk 0) ∧ Graph.nrmL2 lam (fun x => uk k x / Graph.meanL2 lam (uk k) - 1) ≤ eps0",
+     "doc": "**`theo:training_speed_full`*(3)*, the entry bound** (`proofs.tex:1078`): for every `k ≥ k₀(γ)`, `|r(u_k) − 1| ≤ δ₁` at every state, `‖u_k − Πu_k‖ ≤ ε₀m₀`, and `‖u_k/Πu_k − 1‖ ≤ ε₀`."
+    },
+    {
+     "name": "Gamma3Val",
+     "full": "GFNBounds.Balance.DiscreteGlobal.Gamma3Val",
+     "kind": "def",
+     "line": 1213,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Gamma3Val : ℝ",
+     "doc": "**`Γ₃ := sup_{[1/2,3/2]}|g'''| = 48 + 32 ln 2`** for `g = (log x)²`, attained at `x = 1/2` (`g'''(x) = 2(2 ln x − 3)/x³`): the constant `theo:local_convergence_full` is read at in items *2* and *3*."
+    },
+    {
+     "name": "twentyfour_le_Gamma3Val",
+     "full": "GFNBounds.Balance.DiscreteGlobal.twentyfour_le_Gamma3Val",
+     "kind": "theorem",
+     "line": 1215,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twentyfour_le_Gamma3Val : (24:ℝ) ≤ Gamma3Val",
+     "doc": ""
+    },
+    {
+     "name": "eps0At",
+     "full": "GFNBounds.Balance.DiscreteGlobal.eps0At",
+     "kind": "def",
+     "line": 1221,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def eps0At (M3 wmin W Bhat lamMin : ℝ) : ℝ",
+     "doc": "**`ε₀` of `theo:local_convergence_full` for `g = (log x)²` at `a = 1/2`**, `g''(1) = 2`, with third-derivative constant `M₃`, `‖w‖_{L^∞} = W`, coercivity constant `B̂` and `C_∞ = λ_min^{−1/2}`."
+    },
+    {
+     "name": "gamma0At",
+     "full": "GFNBounds.Balance.DiscreteGlobal.gamma0At",
+     "kind": "def",
+     "line": 1226,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def gamma0At (M3 wmin W Bhat : ℝ) : ℝ",
+     "doc": "**`γ₀` of `theo:local_convergence_full`** at the same constants."
+    },
+    {
+     "name": "eps0At_pos",
+     "full": "GFNBounds.Balance.DiscreteGlobal.eps0At_pos",
+     "kind": "theorem",
+     "line": 1229,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eps0At_pos {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) (hlmin0 : 0 < lamMin) : 0 < eps0At M3 wmin W Bhat lamMin",
+     "doc": ""
+    },
+    {
+     "name": "gamma0At_pos",
+     "full": "GFNBounds.Balance.DiscreteGlobal.gamma0At_pos",
+     "kind": "theorem",
+     "line": 1237,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gamma0At_pos {M3 wmin W Bhat : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) : 0 < gamma0At M3 wmin W Bhat",
+     "doc": ""
+    },
+    {
+     "name": "Cinf_mul_eps0At_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.Cinf_mul_eps0At_le",
+     "kind": "theorem",
+     "line": 1245,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Cinf_mul_eps0At_le {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hlmin0 : 0 < lamMin) : Cinf lamMin * eps0At M3 wmin W Bhat lamMin ≤ 1 / 32",
+     "doc": "**`C_∞ε₀ ≤ 1/32`**, i.e."
+    },
+    {
+     "name": "eps0At_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.eps0At_le",
+     "kind": "theorem",
+     "line": 1258,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eps0At_le {lam : V → ℝ} {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (htot : ∑ x, lam x = 1) : eps0At M3 wmin W Bhat lamMin ≤ 1 / 32",
+     "doc": ""
+    },
+    {
+     "name": "perpL2_div_sub_one",
+     "full": "GFNBounds.Balance.DiscreteGlobal.perpL2_div_sub_one",
+     "kind": "theorem",
+     "line": 1268,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem perpL2_div_sub_one {lam u : V → ℝ} (htot : ∑ x, lam x = 1) {m : ℝ} (hm : m ≠ 0) : perpL2 lam (fun x => u x / m - 1) = fun x => m⁻¹ * perpL2 lam u x",
+     "doc": "The deviation of `u/m` from `1`, orthogonalised, is `m⁻¹` times that of `u`."
+    },
+    {
+     "name": "traj_c",
+     "full": "GFNBounds.Balance.DiscreteGlobal.traj_c",
+     "kind": "theorem",
+     "line": 1286,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem traj_c {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat M3 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hγ0 : γ ≤ gamma0At M3 wmin W Bhat * Graph.meanL2 lam (uk 0) ^ 2) (hM3 : 24 ≤ M3) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) : ∀ k : ℕ, ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊ ≤ k → Graph.nrmL2 lam (perpL2 lam (uk (k + 1))) ≤ (1 - γ * rhoL 2 wmin Bhat / (4 * Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ^ 2)) * Graph.nrmL2 lam (perpL2 lam (uk k))",
+     "doc": "**`theo:training_speed_full`, assertion *3(c)*'s contraction** (`proofs.tex:1079`): with `m := Πu_{k₀(γ)}` and `h_j := u_{k₀+j}/m − 1`, homogeneity gives `h_{j+1} = h_j − (γ/m²)D(1 + h_j)`, the step `γ/m²` is at most `γ₀`, `‖h_0‖ ≤ ε₀`, and `LocalConvergence.local_convergence_gd` gives the per-step contraction; multiplying by `m` gives `‖u_{k+1} − Πu_{k+1}‖ ≤ (1 − γϱ/(4m²))‖u_k − Πu_k‖`."
+    },
+    {
+     "name": "delta1_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.delta1_le",
+     "kind": "theorem",
+     "line": 1389,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem delta1_le {eps0 m0 Bhat U0 : ℝ} (heps0 : 0 ≤ eps0) (hm0 : 0 < m0) (hB1 : 1 ≤ Bhat) (hmU : m0 ≤ U0) : delta1 eps0 m0 Bhat U0 ≤ eps0",
+     "doc": ""
+    },
+    {
+     "name": "abs_log_le_of_close",
+     "full": "GFNBounds.Balance.DiscreteGlobal.abs_log_le_of_close",
+     "kind": "theorem",
+     "line": 1402,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_log_le_of_close {r : ℝ} (h : |r - 1| ≤ 1 / 32) : |Real.log r| ≤ 32 / 31 * |r - 1|",
+     "doc": "`|log r| ≤ (32/31)|r − 1|` when `|r − 1| ≤ 1/32`."
+    },
+    {
+     "name": "loss_le_perp_sq",
+     "full": "GFNBounds.Balance.DiscreteGlobal.loss_le_perp_sq",
+     "kind": "theorem",
+     "line": 1423,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem loss_le_perp_sq {K : V → V → ℝ} {lam wf u : V → ℝ} {W m : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hW : ∀ x, wf x ≤ W) (hW0 : 0 ≤ W) (hm : 0 < m) (hu : ∀ x, 31 / 32 * m ≤ u x) (hr : ∀ x, |ratio K lam u x - 1| ≤ 1 / 32) : lossVal lam wf logSq (ratio K lam u) ≤ 24 / 5 * W * Graph.nrmL2 lam (perpL2 lam u) ^ 2 / m ^ 2",
+     "doc": "**`𝓛(u) ≤ (24/5)‖w‖_{L^∞}‖u − Πu‖²/m²`** near the balanced ray (`proofs.tex:1081`): `r ≥ 31/32` gives `|log r| ≤ (32/31)|r − 1|`, `u ≥ 31m/32` gives `|r − 1| ≤ (32/31)|(P−I)ξ|/m`, and `‖P − I‖ ≤ 2`, `(32/31)⁴ ≤ 6/5`."
+    },
+    {
+     "name": "limit_arith",
+     "full": "GFNBounds.Balance.DiscreteGlobal.limit_arith",
+     "kind": "theorem",
+     "line": 1483,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem limit_arith {mk minf m ξ e0 : ℝ} (hm : 0 < m) (hmk : m ≤ mk) (hkinf : mk ≤ minf) (hsq : minf ^ 2 ≤ mk ^ 2 + 13 / 10 * ξ ^ 2) (hξ0 : 0 ≤ ξ) (hξ : ξ ≤ e0 * m) (he1 : e0 ≤ 1 / 32) : minf - mk ≤ ξ ^ 2 / m ∧ ξ + (minf - mk) ≤ 9 / 8 * ξ",
+     "doc": "The real arithmetic closing *(d)* (`proofs.tex:1088`): from `0 < m ≤ Πu_k ≤ m_∞`, `m_∞² ≤ (Πu_k)² + (13/10)‖ξ‖²` and `‖ξ‖ ≤ ε₀m` with `ε₀ ≤ 1/32`, the gap is at most `‖ξ‖²/m` and `‖ξ‖ + (m_∞ − Πu_k) ≤ (9/8)‖ξ‖`."
+    },
+    {
+     "name": "nrmL2_sub_const_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.nrmL2_sub_const_le",
+     "kind": "theorem",
+     "line": 1505,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrmL2_sub_const_le {lam u : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1) (c : ℝ) : Graph.nrmL2 lam (fun x => u x - c) ≤ Graph.nrmL2 lam (perpL2 lam u) + |Graph.meanL2 lam u - c|",
+     "doc": "`‖u − c‖ ≤ ‖u − Πu‖ + |Πu − c|`."
+    },
+    {
+     "name": "past_bound",
+     "full": "GFNBounds.Balance.DiscreteGlobal.past_bound",
+     "kind": "theorem",
+     "line": 1518,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem past_bound {K : V → V → ℝ} {lam wf : V → ℝ} {uk : ℕ → V → ℝ} {lamMin W γ m e0 : ℝ} {k : ℕ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hW : ∀ x, wf x ≤ W) (hW0 : 0 < W) (hγ : 0 ≤ γ) (hmpos : 0 < m) (he1 : e0 ≤ 1 / 32) (hCe : Cinf lamMin * e0 ≤ 1 / 32) (hmono : Monotone fun j => Graph.meanL2 lam (uk j)) (hbdd : BddAbove (Set.range fun j => Graph.meanL2 lam (uk j))) (hmk : m ≤ Graph.meanL2 lam (uk k)) (hr32 : ∀ x, |ratio K lam (uk k) x - 1| ≤ 1 / 32) (hξm : Graph.nrmL2 lam (perpL2 lam (uk k)) ≤ e0 * m) (hγW : γ * (32 * W) ≤ m ^ 2) (hsq : ∀ j, k ≤ j → Graph.meanL2 lam (uk j) ^ 2 ≤ Graph.meanL2 lam (uk k) ^ 2 + Graph.nrmL2 lam (perpL2 lam (uk k)) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk k))) : (⨆ j, Graph.meanL2 lam (uk j)) - Graph.meanL2 lam (uk k) ≤ Graph.nrmL2 lam (perpL2 lam (uk k)) ^ 2 / m ∧ Graph.nrmL2 lam (fun x => uk k x - ⨆ j, Graph.meanL2 lam (uk j)) ≤ 9 / 8 * Graph.nrmL2 lam (perpL2 lam (uk k))",
+     "doc": "**The estimates of *(d)* at one `k ≥ k₀`** (`proofs.tex:1080–1088`), from the entry bound, the monotone mass, the non-increasing `‖u‖² + 2γ𝓛` and `γ ≤ m²/(32‖w‖_{L^∞})`."
+    },
+    {
+     "name": "traj_d",
+     "full": "GFNBounds.Balance.DiscreteGlobal.traj_d",
+     "kind": "theorem",
+     "line": 1586,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem traj_d {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat M3 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hγ0 : γ ≤ gamma0At M3 wmin W Bhat * Graph.meanL2 lam (uk 0) ^ 2) (hM3 : 24 ≤ M3) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) : Graph.meanL2 lam (uk 0) ≤ Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ∧ Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Monotone (fun k => Graph.meanL2 lam (uk k)) ∧ ∃ minf : ℝ, Filter.Tendsto (fun k => Graph.meanL2 lam (uk k)) Filter.atTop (nhds minf) ∧ minf ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Balanced K lam (fun _ => minf)",
+     "doc": "**`theo:training_speed_full`, assertions *3(c)* (the bounds on `Πu_{k₀}`) and *3(d)*** (`proofs.tex:1029–1030`, proof `:1079–1088`): `Πu_k` increases to some `m_∞ ≤ √2‖u₀‖`, `m_∞λ` is balanced, and for `k ≥ k₀(γ)`, `m_∞ − Πu_k ≤ ‖u_k − Πu_k‖²/Πu_{k₀}` and `‖u_k − m_∞‖ ≤ (9/8)‖u_k − Πu_k‖`; moreover `‖u_k − m_∞‖ → 0`, the convergence the item's header announces."
+    },
+    {
+     "name": "gammaStar",
+     "full": "GFNBounds.Balance.DiscreteGlobal.gammaStar",
+     "kind": "def",
+     "line": 1776,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def gammaStar (b3v U0 L0 γ0 m0 : ℝ) : ℝ",
+     "doc": "**`theo:training_speed_full`*(3)*: `γ_* := min(1/b₃, (‖u₀‖²/2)𝓛(μ₀)^{−1}, γ₀m₀²)`** (`proofs.tex:1051`), with the paper's convention `𝓛(μ₀)^{−1} := +∞` at a balanced start read as dropping the middle entry."
+    },
+    {
+     "name": "gammaStar_pos",
+     "full": "GFNBounds.Balance.DiscreteGlobal.gammaStar_pos",
+     "kind": "theorem",
+     "line": 1780,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gammaStar_pos {b3v U0 L0 γ0 m0 : ℝ} (hb : 0 < b3v) (hU0 : 0 < U0) (hL0 : 0 ≤ L0) (hγ0 : 0 < γ0) (hm0 : 0 < m0) : 0 < gammaStar b3v U0 L0 γ0 m0",
+     "doc": ""
+    },
+    {
+     "name": "le_gammaStar",
+     "full": "GFNBounds.Balance.DiscreteGlobal.le_gammaStar",
+     "kind": "theorem",
+     "line": 1789,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_gammaStar {b3v U0 L0 γ0 m0 γ : ℝ} (hb : 0 < b3v) (hL0 : 0 ≤ L0) (h : γ ≤ gammaStar b3v U0 L0 γ0 m0) : γ * b3v ≤ 1 ∧ 2 * γ * L0 ≤ U0 ^ 2 ∧ γ ≤ γ0 * m0 ^ 2",
+     "doc": "What `0 ≤ γ ≤ γ_*` delivers: `γb₃ ≤ 1`, `2γ𝓛(μ₀) ≤ ‖u₀‖²` and `γ ≤ γ₀m₀²`."
+    },
+    {
+     "name": "k0",
+     "full": "GFNBounds.Balance.DiscreteGlobal.k0",
+     "kind": "def",
+     "line": 1809,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def k0 (γ U0 W M sigStar wmin lamMin e0 m0 : ℝ) : ℕ",
+     "doc": "**`theo:training_speed_full`*(3)*: `k₀(γ) := ⌈32‖u₀‖⁴‖w‖²_{L^∞}M²σ_*²/(γw_min³λ_min³ε₀²m₀²)⌉`** (`proofs.tex:1056`), the printed closed form."
+    },
+    {
+     "name": "k0real_eq",
+     "full": "GFNBounds.Balance.DiscreteGlobal.k0real_eq",
+     "kind": "theorem",
+     "line": 1814,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem k0real_eq {γ U0 W M sigStar wmin lamMin e0 m0 : ℝ} (hγ : 0 < γ) (hU0 : 0 < U0) (hW : 0 < W) (hM : 0 < M) (hsig : 0 < sigStar) (hwmin : 0 < wmin) (hlmin0 : 0 < lamMin) (he0 : 0 < e0) (hm0 : 0 < m0) : k0real γ (kappa wmin lamMin U0 W M) lamMin wmin (delta1 e0 m0 (sigStar / Real.sqrt lamMin) U0) = 32 * U0 ^ 4 * W ^ 2 * M ^ 2 * sigStar ^ 2 / (γ * wmin ^ 3 * lamMin ^ 3 * e0 ^ 2 * m0 ^ 2)",
+     "doc": "**The two forms of `k₀(γ)` agree** (`proofs.tex:1056`, \"the last equality by `B̂_σ = σ_*λ_min^{−1/2}`\")."
+    },
+    {
+     "name": "no_uniform_step",
+     "full": "GFNBounds.Balance.DiscreteGlobal.no_uniform_step",
+     "kind": "theorem",
+     "line": 1839,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_uniform_step {K : V → V → ℝ} {lam wf u0 : V → ℝ} {γ : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hwpos : ∀ x, 0 < wf x) (hu0 : ∀ x, 0 < u0 x) (hbal : ¬ Balanced K lam u0) (hγ : 0 < γ) : ∃ y : V, ∃ s0 : ℝ, 0 < s0 ∧ ∀ s : ℝ, 0 < s → s < s0 → s * u0 y - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (fun x => s * u0 x) y < 0",
+     "doc": "**`theo:training_speed_full`*(3)*, no step bound independent of the initialization exists** (`proofs.tex:1032`, proof `:1090`): for every `γ > 0` and every positive non-balanced `u₀`, there is a state `y` at which `su₀ − γD(su₀)` is negative for every small enough `s > 0`."
+    },
+    {
+     "name": "training_speed_gd",
+     "full": "GFNBounds.Balance.DiscreteGlobal.training_speed_gd",
+     "kind": "theorem",
+     "line": 1905,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem training_speed_gd {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam uH wf : V → ℝ} {wmin wsup pmin γ : ℝ} {uk : ℕ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hhit : B.IsHitExp uH) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hpmin : ∀ y z : V, 0 < B.phat y z → pmin ≤ B.phat y z) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγs : γ ≤ gammaStar (b3 wsup (uMin V (Graph.minOver G lam) pmin wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))))) (Graph.nrmL2 lam (uk 0)) (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (gamma0At Gamma3Val wmin wsup (BhatSigma G uH lam)) (Graph.meanL2 lam (uk 0))) : (∀ k, (∀ x, uMin V (Graph.minOver G lam) pmin wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (Graph.meanL2 lam (uk 0)) ≤ uk k x) ∧ lossVal lam wf logSq (ratio B.phat lam (uk (k + 1))) ≤ lossVal lam wf logSq (ratio B.phat lam (uk k)) - γ / 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.meanL2 lam (uk k) ≤ Graph.meanL2 lam (uk (k + 1)) ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 = Graph.nrmL2 lam (uk k) ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2)",
+     "doc": "**`theo:training_speed_full`, item *3*, gradient descent with a step chosen from the initialization** (`proofs.tex:1021–1033`, proof `:1048–1090`)."
+    },
+    {
+     "name": "minPos",
+     "full": "GFNBounds.Balance.DiscreteGlobal.minPos",
+     "kind": "def",
+     "line": 2077,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def minPos (K : V → V → ℝ) : ℝ",
+     "doc": "**`p_min`, the smallest positive transition probability** of a kernel (`proofs.tex:1000`); `1` if no entry is positive."
+    },
+    {
+     "name": "minPos_pos",
+     "full": "GFNBounds.Balance.DiscreteGlobal.minPos_pos",
+     "kind": "theorem",
+     "line": 2083,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem minPos_pos (K : V → V → ℝ) : 0 < minPos K",
+     "doc": ""
+    },
+    {
+     "name": "minPos_le",
+     "full": "GFNBounds.Balance.DiscreteGlobal.minPos_le",
+     "kind": "theorem",
+     "line": 2092,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem minPos_le {K : V → V → ℝ} {y z : V} (hyz : 0 < K y z) : minPos K ≤ K y z",
+     "doc": ""
+    },
+    {
+     "name": "minPos_le_one",
+     "full": "GFNBounds.Balance.DiscreteGlobal.minPos_le_one",
+     "kind": "theorem",
+     "line": 2100,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem minPos_le_one {K : V → V → ℝ} (hK : Core.IsMarkov K) [Nonempty V] : minPos K ≤ 1",
+     "doc": "`p_min ≤ 1` for a Markov kernel on a non-empty state space."
+    },
+    {
+     "name": "no_uniform_step_graph",
+     "full": "GFNBounds.Balance.DiscreteGlobal.no_uniform_step_graph",
+     "kind": "theorem",
+     "line": 2116,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_uniform_step_graph {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam wf u0 : V → ℝ} {wmin γ : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u0 x) (hbal : ¬ Balanced B.phat lam u0) (hγ : 0 < γ) : ∃ y : V, ∃ s0 : ℝ, 0 < s0 ∧ ∀ s : ℝ, 0 < s → s < s0 → s * u0 y - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (fun x => s * u0 x) y < 0",
+     "doc": "**`theo:training_speed_full`*(3)*, the necessity sentence on the paper's setting** (`proofs.tex:1032`): on the loop closure, for every step `γ > 0` and every non-balanced positive `u₀`, `su₀ − γD(su₀)` leaves the positive cone for every small enough `s > 0`; no step bound independent of the initialization exists."
+    },
+    {
+     "name": "exists_descent_seq",
+     "full": "GFNBounds.Balance.DiscreteGlobal.exists_descent_seq",
+     "kind": "theorem",
+     "line": 2129,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_descent_seq (K : V → V → ℝ) (lam wf u0 : V → ℝ) (γ : ℝ) : ∃ uk : ℕ → V → ℝ, uk 0 = u0 ∧ ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x",
+     "doc": "**The descent sequence exists**: `hstep` is a recursion, and any `u₀` starts one."
+    },
+    {
+     "name": "training_speed_gd_inhabited",
+     "full": "GFNBounds.Balance.DiscreteGlobal.training_speed_gd_inhabited",
+     "kind": "theorem",
+     "line": 2137,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem training_speed_gd_inhabited {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam uH wf u0 : V → ℝ} {wmin wsup pmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hhit : B.IsHitExp uH) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hpmin0 : 0 < pmin) (hu0 : ∀ x, 0 < u0 x) : ∃ γ : ℝ, 0 < γ ∧ γ ≤ gammaStar (b3 wsup (uMin V (Graph.minOver G lam) pmin wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0)) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))) (Graph.nrmL2 lam u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0At Gamma3Val wmin wsup (BhatSigma G uH lam)) (Graph.meanL2 lam u0) ∧ ∃ uk : ℕ → V → ℝ, uk 0 = u0 ∧ ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k) x",
+     "doc": "**The hypotheses of `training_speed_gd` are inhabited** on every instance of its setting and every positive initialization: `γ_* > 0`, and the descent at `γ = γ_*` is a sequence."
+    },
+    {
+     "name": "cycle_training_speed_gd_nonvacuous",
+     "full": "GFNBounds.Balance.DiscreteGlobal.cycle_training_speed_gd_nonvacuous",
+     "kind": "theorem",
+     "line": 2182,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_training_speed_gd_nonvacuous : ¬ Balanced (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2) ∧ ∃ γ : ℝ, 0 < γ ∧ γ ≤ gammaStar (b3 1 (uMin (Fin 5) (Graph.minOver Graph.CycleExample.cyc (Graph.CycleExample.lam (1/2))) (minPos (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat) 1 (lossVal (Graph.CycleExample.lam (1/2)) (fun _ => 1) logSq (ratio (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2))) (Graph.meanL2 (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2))) (ratioCap (Graph.minOver Graph.CycleExample.cyc (Graph.CycleExample.lam (1/2))) 1 (lossVal (Graph.CycleExample.lam (1/2)) (fun _ => 1) logSq (ratio (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2))))) (Graph.nrmL2 (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2)) (lossVal (Graph.CycleExample.lam (1/2)) (fun _ => 1) logSq (ratio (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2))) (gamma0At Gamma3Val 1 1 (BhatSigma Graph.CycleExample.cyc (Graph.CycleExample.hitExp (1/2)) (Graph.CycleExample.lam (1/2)))) (Graph.meanL2 (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2)) ∧ ∃ uk : ℕ → Fin 5 → ℝ, uk 0 = Graph.CycleExample.uInfl 2 ∧ ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat (Graph.CycleExample.lam (1/2)) (fun z => Graph.CycleExample.lam (1/2) z * 1) logSqDeriv (uk k) x",
+     "doc": "**Non-vacuity on `rem:cycle_no_stalemate`'s five-vertex cycle** at `p = 1/2`, `w ≡ 1`, from the over-inflated density `u₀ = uInfl 2`, which is **not** balanced (`r(s₀) = 2`): the setting's predicates hold, and a step `0 < γ ≤ γ_*` and its descent sequence exist, so `training_speed_gd` applies to a non-balanced start."
+    },
+    {
+     "name": "training_speed_gd_minPos",
+     "full": "GFNBounds.Balance.DiscreteGlobal.training_speed_gd_minPos",
+     "kind": "theorem",
+     "line": 2225,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem training_speed_gd_minPos {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam uH wf : V → ℝ} {wmin wsup γ : ℝ} {uk : ℕ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hhit : B.IsHitExp uH) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγs : γ ≤ gammaStar (b3 wsup (uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))))) (Graph.nrmL2 lam (uk 0)) (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (gamma0At Gamma3Val wmin wsup (BhatSigma G uH lam)) (Graph.meanL2 lam (uk 0))) : (∀ k, (∀ x, uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (Graph.meanL2 lam (uk 0)) ≤ uk k x) ∧ lossVal lam wf logSq (ratio B.phat lam (uk (k + 1))) ≤ lossVal lam wf logSq (ratio B.phat lam (uk k)) - γ / 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.meanL2 lam (uk k) ≤ Graph.meanL2 lam (uk (k + 1)) ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 = Graph.nrmL2 lam (uk k) ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2) ∧ (∀ k : ℕ, lossVal lam wf logSq (ratio B.phat lam (uk k))",
+     "doc": "**`theo:training_speed_full`, item *3*, at the paper's own `p_min`** — the smallest positive transition probability of the loop-closed backward policy (`minPos`), which is the constant `proofs.tex:1000` names: `training_speed_gd` with its floor hypotheses discharged by `minPos_pos`, `minPos_le_one` and `minPos_le`."
+    },
+    {
+     "name": "Gamma3_logSq_eq_Gamma3Val",
+     "full": "GFNBounds.Balance.DiscreteGlobal.Gamma3_logSq_eq_Gamma3Val",
+     "kind": "theorem",
+     "line": 2326,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Gamma3_logSq_eq_Gamma3Val : GFNBounds.Balance.Gamma3 GFNBounds.Balance.logSq (1/2) = Gamma3Val",
+     "doc": "**`Γ₃ = sup_{[1/2,3/2]}|g'''|` for `g = (log x)²`** is `Gamma3Val` (`Gamma3_logSq`)."
+    },
+    {
+     "name": "eps0At_Gamma3Val_eq",
+     "full": "GFNBounds.Balance.DiscreteGlobal.eps0At_Gamma3Val_eq",
+     "kind": "theorem",
+     "line": 2331,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eps0At_Gamma3Val_eq (wmin W Bhat lamMin : ℝ) : eps0At Gamma3Val wmin W Bhat lamMin = GFNBounds.Balance.eps0Gamma3 wmin W Bhat lamMin",
+     "doc": "**The entry radius of item *3* is item *2*'s**, `eps0Gamma3`."
+    },
+    {
+     "name": "gamma0At_Gamma3Val_eq",
+     "full": "GFNBounds.Balance.DiscreteGlobal.gamma0At_Gamma3Val_eq",
+     "kind": "theorem",
+     "line": 2335,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gamma0At_Gamma3Val_eq (wmin W Bhat : ℝ) : gamma0At Gamma3Val wmin W Bhat = GFNBounds.Balance.gamma0C3 GFNBounds.Balance.logSq (1/2) wmin W Bhat",
+     "doc": "**The step cap `γ₀` of item *3* is Theorem 10's** for `g = (log x)²` at `a = 1/2`."
     }
    ],
    "library": "strict",
@@ -30209,752 +30988,6 @@
    "root_reachable": true
   },
   {
-   "file": "scaffold/GFNBoundsScaffold/Balance/DiscreteGlobal.lean",
-   "title": "The discrete global phase: gradient descent converges from every positive initialization, with a step chosen from it",
-   "labels": [],
-   "scope_disclosed": true,
-   "imports": [
-    "GFNBounds.Balance.TrainingSpeed",
-    "GFNBounds.Balance.LocalConvergenceClauses"
-   ],
-   "variables": [
-    "variable {V : Type*} [Fintype V]",
-    "variable {V : Type*} [Fintype V]",
-    "variable {V : Type*} [Fintype V]",
-    "variable {V : Type*} [Fintype V]",
-    "variable {V : Type*} [Fintype V]",
-    "variable {V : Type*} [Fintype V]",
-    "variable {V : Type*} [Fintype V] [DecidableEq V]",
-    "variable {V : Type*} [Fintype V] [DecidableEq V]"
-   ],
-   "lines": 2316,
-   "decls": [
-    {
-     "name": "taylor_upper",
-     "full": "GFNBounds.Balance.DiscreteGlobal.taylor_upper",
-     "kind": "theorem",
-     "line": 161,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem taylor_upper {F F' F'' : ℝ → ℝ} {γ C : ℝ} (hγ : 0 ≤ γ) (hF : ∀ s ∈ Set.Icc 0 γ, HasDerivAt F (F' s) s) (hF' : ∀ s ∈ Set.Icc 0 γ, HasDerivAt F' (F'' s) s) (hC : ∀ s ∈ Set.Icc 0 γ, F'' s ≤ C) : F γ ≤ F 0 + γ * F' 0 + C * γ ^ 2 / 2",
-     "doc": "**Taylor's formula, one-sided**: `F(γ) ≤ F(0) + γF'(0) + Cγ²/2` when `F'' ≤ C` on `[0,γ]`."
-    },
-    {
-     "name": "hasDerivAt_line",
-     "full": "GFNBounds.Balance.DiscreteGlobal.hasDerivAt_line",
-     "kind": "theorem",
-     "line": 192,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem hasDerivAt_line (a b s : ℝ) : HasDerivAt (fun t => a - t * b) (-b) s",
-     "doc": "The line `t ↦ a − tb`."
-    },
-    {
-     "name": "hasDerivAt_div_line",
-     "full": "GFNBounds.Balance.DiscreteGlobal.hasDerivAt_div_line",
-     "kind": "theorem",
-     "line": 196,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem hasDerivAt_div_line {a b s : ℝ} (h : a - s * b ≠ 0) : HasDerivAt (fun t => b / (a - t * b)) ((b / (a - s * b)) ^ 2) s",
-     "doc": "`t ↦ b/(a − tb)` has derivative `(b/(a − sb))²`."
-    },
-    {
-     "name": "hasDerivAt_sq_logdiff",
-     "full": "GFNBounds.Balance.DiscreteGlobal.hasDerivAt_sq_logdiff",
-     "kind": "theorem",
-     "line": 203,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem hasDerivAt_sq_logdiff {a b c d s : ℝ} (ha : 0 < a - s * b) (hc : 0 < c - s * d) : HasDerivAt (fun t => (Real.log (a - t * b) - Real.log (c - t * d)) ^ 2) (2 * (Real.log (a - s * b) - Real.log (c - s * d)) * (d / (c - s * d) - b / (a - s * b))) s",
-     "doc": "**`q(t) = (log(a − tb) − log(c − td))²`**, the per-state loss term along a line, and its first derivative."
-    },
-    {
-     "name": "hasDerivAt_sq_logdiff_deriv",
-     "full": "GFNBounds.Balance.DiscreteGlobal.hasDerivAt_sq_logdiff_deriv",
-     "kind": "theorem",
-     "line": 214,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem hasDerivAt_sq_logdiff_deriv {a b c d s : ℝ} (ha : 0 < a - s * b) (hc : 0 < c - s * d) : HasDerivAt (fun t => 2 * (Real.log (a - t * b) - Real.log (c - t * d)) * (d / (c - t * d) - b / (a - t * b))) (2 * (d / (c - s * d) - b / (a - s * b)) ^ 2 + 2 * (Real.log (a - s * b) - Real.log (c - s * d)) * ((d / (c - s * d)) ^ 2 - (b / (a - s * b)) ^ 2)) s",
-     "doc": "The second derivative of `q`."
-    },
-    {
-     "name": "sq_logdiff_deriv2_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.sq_logdiff_deriv2_le",
-     "kind": "theorem",
-     "line": 233,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem sq_logdiff_deriv2_le (l τ ρ : ℝ) : 2 * (τ - ρ) ^ 2 + 2 * l * (τ ^ 2 - ρ ^ 2) ≤ (4 + 2 * |l|) * (τ ^ 2 + ρ ^ 2)",
-     "doc": "`q'' ≤ (4 + 2|ℓ|)(τ² + ρ²)`."
-    },
-    {
-     "name": "Mp",
-     "full": "GFNBounds.Balance.DiscreteGlobal.Mp",
-     "kind": "def",
-     "line": 244,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def Mp (M : ℝ) : ℝ",
-     "doc": "**`M' := M + ln 3`** (`proofs.tex:1048`)."
-    },
-    {
-     "name": "b1",
-     "full": "GFNBounds.Balance.DiscreteGlobal.b1",
-     "kind": "def",
-     "line": 247,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def b1 (M : ℝ) : ℝ",
-     "doc": "**`b₁ := 2M'e^{M'}`** (`proofs.tex:1048`), the bound on `|g'|` on `[e^{−M'}, e^{M'}]`."
-    },
-    {
-     "name": "b2",
-     "full": "GFNBounds.Balance.DiscreteGlobal.b2",
-     "kind": "def",
-     "line": 250,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def b2 (M : ℝ) : ℝ",
-     "doc": "**`b₂ := 2(1+M')e^{2M'}`** (`proofs.tex:1048`), the bound on `|g''|` on `[e^{−M'}, e^{M'}]`."
-    },
-    {
-     "name": "b3",
-     "full": "GFNBounds.Balance.DiscreteGlobal.b3",
-     "kind": "def",
-     "line": 253,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def b3 (W umin M : ℝ) : ℝ",
-     "doc": "**`b₃ := (4‖w‖_{L^∞}/u_min²)(1+e^{M'})(b₂(1+e^{M'}) + 2b₁)`** (`proofs.tex:1050`)."
-    },
-    {
-     "name": "exp_Mp",
-     "full": "GFNBounds.Balance.DiscreteGlobal.exp_Mp",
-     "kind": "theorem",
-     "line": 256,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem exp_Mp (M : ℝ) : Real.exp (Mp M) = 3 * Real.exp M",
-     "doc": ""
-    },
-    {
-     "name": "exp_two_Mp",
-     "full": "GFNBounds.Balance.DiscreteGlobal.exp_two_Mp",
-     "kind": "theorem",
-     "line": 259,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem exp_two_Mp (M : ℝ) : Real.exp (2 * Mp M) = 9 * Real.exp M ^ 2",
-     "doc": ""
-    },
-    {
-     "name": "Mp_nonneg",
-     "full": "GFNBounds.Balance.DiscreteGlobal.Mp_nonneg",
-     "kind": "theorem",
-     "line": 262,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem Mp_nonneg {M : ℝ} (hM : 0 ≤ M) : 0 ≤ Mp M",
-     "doc": ""
-    },
-    {
-     "name": "b3_bracket_eq",
-     "full": "GFNBounds.Balance.DiscreteGlobal.b3_bracket_eq",
-     "kind": "theorem",
-     "line": 267,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem b3_bracket_eq (M : ℝ) : (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) = (1 + 3 * Real.exp M) * (18 * (1 + Mp M) * Real.exp M ^ 2 * (1 + 3 * Real.exp M) + 12 * Mp M * Real.exp M)",
-     "doc": "The bracket of `b₃`, in `E = e^M`."
-    },
-    {
-     "name": "b3_bracket_ge",
-     "full": "GFNBounds.Balance.DiscreteGlobal.b3_bracket_ge",
-     "kind": "theorem",
-     "line": 276,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem b3_bracket_ge {M : ℝ} (hM : 0 ≤ M) : M * (Real.exp M + 1) ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) ∧ (4 + 2 * Mp M) * (1 + Real.exp M ^ 2) ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) ∧ 8 ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M)",
-     "doc": "The three lower bounds on the bracket of `b₃` the proof spends: the relative step (`M(e^M+1)`), the second derivative (`(4 + 2M')(1 + e^{2M})`, the form this file's `f''` bound takes), and `8` (for `γ ≤ u_min²/(32‖w‖_{L^∞})`)."
-    },
-    {
-     "name": "pushMass_line",
-     "full": "GFNBounds.Balance.DiscreteGlobal.pushMass_line",
-     "kind": "theorem",
-     "line": 312,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem pushMass_line (K : V → V → ℝ) (lam u v : V → ℝ) (s : ℝ) (y : V) : pushMass K lam (fun x => u x - s * v x) y = pushMass K lam u y - s * pushMass K lam v y",
-     "doc": ""
-    },
-    {
-     "name": "ratio_line",
-     "full": "GFNBounds.Balance.DiscreteGlobal.ratio_line",
-     "kind": "theorem",
-     "line": 317,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem ratio_line (K : V → V → ℝ) (lam u v : V → ℝ) (s : ℝ) (y : V) : ratio K lam (fun x => u x - s * v x) y = (pushMass K lam u y - s * pushMass K lam v y) / (lam y * u y - s * (lam y * v y))",
-     "doc": ""
-    },
-    {
-     "name": "pushMass_eq_densAct",
-     "full": "GFNBounds.Balance.DiscreteGlobal.pushMass_eq_densAct",
-     "kind": "theorem",
-     "line": 323,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem pushMass_eq_densAct {K : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (v : V → ℝ) (y : V) : pushMass K lam v y = lam y * Core.densAct lam K v y",
-     "doc": ""
-    },
-    {
-     "name": "logSq_div_eq",
-     "full": "GFNBounds.Balance.DiscreteGlobal.logSq_div_eq",
-     "kind": "theorem",
-     "line": 328,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem logSq_div_eq {p q : ℝ} (hp : 0 < p) (hq : 0 < q) : logSq (p / q) = (Real.log p - Real.log q) ^ 2",
-     "doc": ""
-    },
-    {
-     "name": "exp_neg_le_of_abs_log_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.exp_neg_le_of_abs_log_le",
-     "kind": "theorem",
-     "line": 333,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem exp_neg_le_of_abs_log_le {r M : ℝ} (hr : 0 < r) (h : |Real.log r| ≤ M) : Real.exp (-M) ≤ r ∧ r ≤ Real.exp M",
-     "doc": "`e^{−M} ≤ r ≤ e^M` from `|log r| ≤ M`."
-    },
-    {
-     "name": "abs_lossGrad_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.abs_lossGrad_le",
-     "kind": "theorem",
-     "line": 352,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem abs_lossGrad_le {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, |Real.log (ratio K lam u x)| ≤ M) (x : V) : |lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x| ≤ 2 * M * W * (Real.exp M + 1) * u x / umin ^ 2",
-     "doc": "**`|D(u)| ≤ 2M‖w‖_{L^∞}(e^M+1)u/u_min²`**: `|P†ψ| ≤ max|ψ| ≤ 2M‖w‖e^M/u_min` and `|rψ| ≤ 2M‖w‖/u`, read against `u ≥ u_min` (`proofs.tex:1062`)."
-    },
-    {
-     "name": "rel_step_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.rel_step_le",
-     "kind": "theorem",
-     "line": 426,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem rel_step_le {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin γ : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, |Real.log (ratio K lam u x)| ≤ M) (hγ0 : 0 ≤ γ) (hγ : γ * b3 W umin M ≤ 1) (x : V) : γ * |lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x| ≤ u x / 2",
-     "doc": "**`γ|D(u)| ≤ u/2`** (`proofs.tex:1062`) at `γ ≤ 1/b₃`."
-    },
-    {
-     "name": "pushMass_mono",
-     "full": "GFNBounds.Balance.DiscreteGlobal.pushMass_mono",
-     "kind": "theorem",
-     "line": 454,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem pushMass_mono {K : V → V → ℝ} {lam v v' : V → ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 ≤ lam x) (h : ∀ x, v x ≤ v' x) (y : V) : pushMass K lam v y ≤ pushMass K lam v' y",
-     "doc": ""
-    },
-    {
-     "name": "pushMass_smul",
-     "full": "GFNBounds.Balance.DiscreteGlobal.pushMass_smul",
-     "kind": "theorem",
-     "line": 460,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem pushMass_smul (K : V → V → ℝ) (lam u : V → ℝ) (c : ℝ) (y : V) : pushMass K lam (fun x => c * u x) y = c * pushMass K lam u y",
-     "doc": ""
-    },
-    {
-     "name": "abs_logdiff_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.abs_logdiff_le",
-     "kind": "theorem",
-     "line": 467,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem abs_logdiff_le {a a' c c' : ℝ} (ha : 0 < a) (hc : 0 < c) (ha1 : a / 2 ≤ a') (ha2 : a' ≤ 3 * a / 2) (hc1 : c / 2 ≤ c') (hc2 : c' ≤ 3 * c / 2) : |Real.log a' - Real.log c'| ≤ |Real.log (a / c)| + Real.log 3",
-     "doc": "`|log(a − sb) − log(c − sd)| ≤ |log(a/c)| + ln 3` when both lines stay within a factor two of `a` and `c`: the ratio moves by at most a factor `3` along the segment (`proofs.tex:1062`)."
-    },
-    {
-     "name": "descent_step",
-     "full": "GFNBounds.Balance.DiscreteGlobal.descent_step",
-     "kind": "theorem",
-     "line": 501,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem descent_step {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin γ : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hW0 : 0 ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, |Real.log (ratio K lam u x)| ≤ M) (hγ0 : 0 ≤ γ) (hγ : γ * b3 W umin M ≤ 1) : (∀ x, u x / 2 ≤ u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ lossVal lam wf logSq (ratio K lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x)) ≤ lossVal lam wf logSq (ratio K lam u) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2",
-     "doc": "**`theo:training_speed_full`*(3)*, the descent lemma** (`proofs.tex:1062–1066`): on a positive density whose ratio is within `e^{±M}` of `1` and which is at least `u_min`, one step `u⁺ = u − γD(u)` with `0 ≤ γ ≤ 1/b₃` satisfies `u⁺ ≥ u/2` and `𝓛(u⁺) ≤ 𝓛(u) − (γ/2)‖D(u)‖²`."
-    },
-    {
-     "name": "abs_log_ratio_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.abs_log_ratio_le",
-     "kind": "theorem",
-     "line": 745,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem abs_log_ratio_le {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin wmin L0 : ℝ} (hlam : ∀ x, 0 < lam x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL : lossVal lam wf logSq (ratio K lam u) ≤ L0) (x : V) : |Real.log (ratio K lam u x)| ≤ ratioCap lamMin wmin L0",
-     "doc": "**The positivity floor** (`proofs.tex:1061`): `𝓛(u) ≤ L₀` and `Πu ≥ m₀` give `e^{−M} ≤ r(u) ≤ e^M`, i.e."
-    },
-    {
-     "name": "meanL2_lossGrad_nonpos",
-     "full": "GFNBounds.Balance.DiscreteGlobal.meanL2_lossGrad_nonpos",
-     "kind": "theorem",
-     "line": 758,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem meanL2_lossGrad_nonpos {K : V → V → ℝ} {lam wf u : V → ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hwpos : ∀ x, 0 < wf x) (hu : ∀ x, 0 < u x) : Graph.meanL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ≤ 0",
-     "doc": "`ΠD(u) ≤ 0`, `prop:no_distant_equilibrium`*(1)*, read at `ν = wλ`."
-    },
-    {
-     "name": "region_step",
-     "full": "GFNBounds.Balance.DiscreteGlobal.region_step",
-     "kind": "theorem",
-     "line": 770,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem region_step {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin pmin wmin W L0 m0 γ : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hm0 : 0 < m0) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin L0 m0) (ratioCap lamMin wmin L0) ≤ 1) (hu : ∀ x, 0 < u x) (hL : lossVal lam wf logSq (ratio K lam u) ≤ L0) (hm : m0 ≤ Graph.meanL2 lam u) : (∀ x, uMin V lamMin pmin wmin L0 m0 ≤ u x) ∧ (∀ x, 0 < u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ lossVal lam wf logSq (ratio K lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x)) ≤ lossVal lam wf logSq (ratio K lam u) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2 ∧ Graph.meanL2 lam u ≤ Graph.meanL2 lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ Graph.nrmL2 lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ^ 2 = Graph.nrmL2 lam u ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2",
-     "doc": "**One step inside the region** (`proofs.tex:1060–1071`): a positive `u` with `𝓛(u) ≤ L₀` and `Πu ≥ m₀` has `u ≥ u_min`, and one step at `0 ≤ γ ≤ 1/b₃` keeps positivity, descends by `(γ/2)‖D‖²`, raises the mass, and adds exactly `γ²‖D‖²` to the squared norm."
-    },
-    {
-     "name": "traj_region",
-     "full": "GFNBounds.Balance.DiscreteGlobal.traj_region",
-     "kind": "theorem",
-     "line": 819,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem traj_region {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) : ∀ k, (∀ x, 0 < uk k x) ∧ lossVal lam wf logSq (ratio K lam (uk k)) ≤ lossVal lam wf logSq (ratio K lam (uk 0)) ∧ Graph.meanL2 lam (uk 0) ≤ Graph.meanL2 lam (uk k) ∧ Graph.nrmL2 lam (uk k) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk k)) ≤ Graph.nrmL2 lam (uk 0) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0))",
-     "doc": "**The region is invariant** (`proofs.tex:1067–1071`): every iterate is positive, has loss at most `𝓛(μ₀)`, mass at least `m₀`, and `‖u_k‖² + 2γ𝓛(u_k) ≤ ‖u₀‖² + 2γ𝓛(μ₀)`."
-    },
-    {
-     "name": "traj_a",
-     "full": "GFNBounds.Balance.DiscreteGlobal.traj_a",
-     "kind": "theorem",
-     "line": 855,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem traj_a {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k, (∀ x, uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0)) ≤ uk k x) ∧ lossVal lam wf logSq (ratio K lam (uk (k + 1))) ≤ lossVal lam wf logSq (ratio K lam (uk k)) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.meanL2 lam (uk k) ≤ Graph.meanL2 lam (uk (k + 1)) ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 = Graph.nrmL2 lam (uk k) ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2",
-     "doc": "**`theo:training_speed_full`, assertion *3(a)*** (`proofs.tex:1023`): for every `k`, `u_k ≥ u_min`, the loss descends by `(γ/2)‖D(u_k)‖²`, the mass does not decrease, and `‖u_{k+1}‖² = ‖u_k‖² + γ²‖D(u_k)‖² ≤ 2‖u₀‖²`."
-    },
-    {
-     "name": "inv_recursion",
-     "full": "GFNBounds.Balance.DiscreteGlobal.inv_recursion",
-     "kind": "theorem",
-     "line": 899,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem inv_recursion {L : ℕ → ℝ} {a : ℝ} (ha : 0 ≤ a) (hL : ∀ k, 0 ≤ L k) (hrec : ∀ k, L (k + 1) ≤ L k - a * L k ^ 2) : ∀ k : ℕ, L k ≤ ((L 0)⁻¹ + k * a)⁻¹",
-     "doc": "A real sequence with `L_{k+1} ≤ L_k − aL_k²` satisfies `L_k ≤ (L_0^{−1} + ka)^{−1}` (`proofs.tex:1077`), with Lean's `0^{−1} = 0` standing in for the paper's `+∞` at a balanced start."
-    },
-    {
-     "name": "traj_nrm_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.traj_nrm_le",
-     "kind": "theorem",
-     "line": 952,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem traj_nrm_le {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k, Graph.nrmL2 lam (uk k) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2 ∧ Graph.nrmL2 lam (uk k) ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Graph.meanL2 lam (uk k) ≤ Graph.nrmL2 lam (uk k) ∧ 0 < Graph.meanL2 lam (uk k)",
-     "doc": "`‖u_k‖ ≤ √2‖u₀‖` and `0 < ‖u_k‖` along the descent."
-    },
-    {
-     "name": "traj_b",
-     "full": "GFNBounds.Balance.DiscreteGlobal.traj_b",
-     "kind": "theorem",
-     "line": 997,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem traj_b {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k : ℕ, lossVal lam wf logSq (ratio K lam (uk k)) ≤ ((lossVal lam wf logSq (ratio K lam (uk 0)))⁻¹ + k * γ * (wmin * Real.sqrt lamMin / (Graph.nrmL2 lam (uk 0) * W * ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) ^ 2 / 4)⁻¹",
-     "doc": "**`theo:training_speed_full`, assertion *3(b)*, the discrete Łojasiewicz envelope** (`proofs.tex:1024`, proof `:1072–1077`): `𝓛(u_k) ≤ (𝓛(μ₀)^{−1} + kγκ²/4)^{−1}` with the continuous phase's `κ = w_min λ_min^{1/2}/(‖u₀‖‖w‖_{L^∞}M)`."
-    },
-    {
-     "name": "delta1",
-     "full": "GFNBounds.Balance.DiscreteGlobal.delta1",
-     "kind": "def",
-     "line": 1076,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def delta1 (eps0 m0 Bhat U0 : ℝ) : ℝ",
-     "doc": "**`δ₁ := ε₀m₀/(√2 B̂_σ‖u₀‖)`** (`proofs.tex:1054`)."
-    },
-    {
-     "name": "kappa",
-     "full": "GFNBounds.Balance.DiscreteGlobal.kappa",
-     "kind": "def",
-     "line": 1079,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def kappa (wmin lamMin U0 W M : ℝ) : ℝ",
-     "doc": "**`κ := w_min λ_min^{1/2}/(‖u₀‖‖w‖_{L^∞}M)`** (`proofs.tex:1010`)."
-    },
-    {
-     "name": "k0real",
-     "full": "GFNBounds.Balance.DiscreteGlobal.k0real",
-     "kind": "def",
-     "line": 1083,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def k0real (γ κ lamMin wmin δ1 : ℝ) : ℝ",
-     "doc": "**The first form of `k₀(γ)`**, `16/(γκ²λ_min w_min δ₁²)` (`proofs.tex:1055`), before its ceiling; `k0_closed_form` is the printed closed form."
-    },
-    {
-     "name": "abs_exp_sub_one_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.abs_exp_sub_one_le",
-     "kind": "theorem",
-     "line": 1085,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem abs_exp_sub_one_le {y d : ℝ} (hy : |y| ≤ d / 2) (hd : d ≤ 1) : |Real.exp y - 1| ≤ d",
-     "doc": ""
-    },
-    {
-     "name": "traj_entry",
-     "full": "GFNBounds.Balance.DiscreteGlobal.traj_entry",
-     "kind": "theorem",
-     "line": 1099,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem traj_entry {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat eps0 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (heps0 : 0 < eps0) (heps1 : eps0 ≤ 1 / 32) : ∀ k : ℕ, ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 eps0 (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊ ≤ k → (∀ x, |ratio K lam (uk k) x - 1| ≤ delta1 eps0 (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0))) ∧ Graph.nrmL2 lam (perpL2 lam (uk k)) ≤ eps0 * Graph.meanL2 lam (uk 0) ∧ Graph.nrmL2 lam (fun x => uk k x / Graph.meanL2 lam (uk k) - 1) ≤ eps0",
-     "doc": "**`theo:training_speed_full`*(3)*, the entry bound** (`proofs.tex:1078`): for every `k ≥ k₀(γ)`, `|r(u_k) − 1| ≤ δ₁` at every state, `‖u_k − Πu_k‖ ≤ ε₀m₀`, and `‖u_k/Πu_k − 1‖ ≤ ε₀`."
-    },
-    {
-     "name": "Gamma3Val",
-     "full": "GFNBounds.Balance.DiscreteGlobal.Gamma3Val",
-     "kind": "def",
-     "line": 1212,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def Gamma3Val : ℝ",
-     "doc": "**`Γ₃ := sup_{[1/2,3/2]}|g'''| = 48 + 32 ln 2`** for `g = (log x)²`, attained at `x = 1/2` (`g'''(x) = 2(2 ln x − 3)/x³`): the constant `theo:local_convergence_full` is read at in items *2* and *3*."
-    },
-    {
-     "name": "twentyfour_le_Gamma3Val",
-     "full": "GFNBounds.Balance.DiscreteGlobal.twentyfour_le_Gamma3Val",
-     "kind": "theorem",
-     "line": 1214,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem twentyfour_le_Gamma3Val : (24:ℝ) ≤ Gamma3Val",
-     "doc": ""
-    },
-    {
-     "name": "eps0At",
-     "full": "GFNBounds.Balance.DiscreteGlobal.eps0At",
-     "kind": "def",
-     "line": 1220,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def eps0At (M3 wmin W Bhat lamMin : ℝ) : ℝ",
-     "doc": "**`ε₀` of `theo:local_convergence_full` for `g = (log x)²` at `a = 1/2`**, `g''(1) = 2`, with third-derivative constant `M₃`, `‖w‖_{L^∞} = W`, coercivity constant `B̂` and `C_∞ = λ_min^{−1/2}`."
-    },
-    {
-     "name": "gamma0At",
-     "full": "GFNBounds.Balance.DiscreteGlobal.gamma0At",
-     "kind": "def",
-     "line": 1225,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def gamma0At (M3 wmin W Bhat : ℝ) : ℝ",
-     "doc": "**`γ₀` of `theo:local_convergence_full`** at the same constants."
-    },
-    {
-     "name": "eps0At_pos",
-     "full": "GFNBounds.Balance.DiscreteGlobal.eps0At_pos",
-     "kind": "theorem",
-     "line": 1228,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem eps0At_pos {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) (hlmin0 : 0 < lamMin) : 0 < eps0At M3 wmin W Bhat lamMin",
-     "doc": ""
-    },
-    {
-     "name": "gamma0At_pos",
-     "full": "GFNBounds.Balance.DiscreteGlobal.gamma0At_pos",
-     "kind": "theorem",
-     "line": 1236,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem gamma0At_pos {M3 wmin W Bhat : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) : 0 < gamma0At M3 wmin W Bhat",
-     "doc": ""
-    },
-    {
-     "name": "Cinf_mul_eps0At_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.Cinf_mul_eps0At_le",
-     "kind": "theorem",
-     "line": 1244,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem Cinf_mul_eps0At_le {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hlmin0 : 0 < lamMin) : Cinf lamMin * eps0At M3 wmin W Bhat lamMin ≤ 1 / 32",
-     "doc": "**`C_∞ε₀ ≤ 1/32`**, i.e."
-    },
-    {
-     "name": "eps0At_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.eps0At_le",
-     "kind": "theorem",
-     "line": 1257,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem eps0At_le {lam : V → ℝ} {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (htot : ∑ x, lam x = 1) : eps0At M3 wmin W Bhat lamMin ≤ 1 / 32",
-     "doc": ""
-    },
-    {
-     "name": "perpL2_div_sub_one",
-     "full": "GFNBounds.Balance.DiscreteGlobal.perpL2_div_sub_one",
-     "kind": "theorem",
-     "line": 1267,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem perpL2_div_sub_one {lam u : V → ℝ} (htot : ∑ x, lam x = 1) {m : ℝ} (hm : m ≠ 0) : perpL2 lam (fun x => u x / m - 1) = fun x => m⁻¹ * perpL2 lam u x",
-     "doc": "The deviation of `u/m` from `1`, orthogonalised, is `m⁻¹` times that of `u`."
-    },
-    {
-     "name": "traj_c",
-     "full": "GFNBounds.Balance.DiscreteGlobal.traj_c",
-     "kind": "theorem",
-     "line": 1285,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem traj_c {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat M3 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hγ0 : γ ≤ gamma0At M3 wmin W Bhat * Graph.meanL2 lam (uk 0) ^ 2) (hM3 : 24 ≤ M3) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) : ∀ k : ℕ, ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊ ≤ k → Graph.nrmL2 lam (perpL2 lam (uk (k + 1))) ≤ (1 - γ * rhoL 2 wmin Bhat / (4 * Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ^ 2)) * Graph.nrmL2 lam (perpL2 lam (uk k))",
-     "doc": "**`theo:training_speed_full`, assertion *3(c)*'s contraction** (`proofs.tex:1079`): with `m := Πu_{k₀(γ)}` and `h_j := u_{k₀+j}/m − 1`, homogeneity gives `h_{j+1} = h_j − (γ/m²)D(1 + h_j)`, the step `γ/m²` is at most `γ₀`, `‖h_0‖ ≤ ε₀`, and `LocalConvergence.local_convergence_gd` gives the per-step contraction; multiplying by `m` gives `‖u_{k+1} − Πu_{k+1}‖ ≤ (1 − γϱ/(4m²))‖u_k − Πu_k‖`."
-    },
-    {
-     "name": "delta1_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.delta1_le",
-     "kind": "theorem",
-     "line": 1388,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem delta1_le {eps0 m0 Bhat U0 : ℝ} (heps0 : 0 ≤ eps0) (hm0 : 0 < m0) (hB1 : 1 ≤ Bhat) (hmU : m0 ≤ U0) : delta1 eps0 m0 Bhat U0 ≤ eps0",
-     "doc": ""
-    },
-    {
-     "name": "abs_log_le_of_close",
-     "full": "GFNBounds.Balance.DiscreteGlobal.abs_log_le_of_close",
-     "kind": "theorem",
-     "line": 1401,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem abs_log_le_of_close {r : ℝ} (h : |r - 1| ≤ 1 / 32) : |Real.log r| ≤ 32 / 31 * |r - 1|",
-     "doc": "`|log r| ≤ (32/31)|r − 1|` when `|r − 1| ≤ 1/32`."
-    },
-    {
-     "name": "loss_le_perp_sq",
-     "full": "GFNBounds.Balance.DiscreteGlobal.loss_le_perp_sq",
-     "kind": "theorem",
-     "line": 1422,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem loss_le_perp_sq {K : V → V → ℝ} {lam wf u : V → ℝ} {W m : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hW : ∀ x, wf x ≤ W) (hW0 : 0 ≤ W) (hm : 0 < m) (hu : ∀ x, 31 / 32 * m ≤ u x) (hr : ∀ x, |ratio K lam u x - 1| ≤ 1 / 32) : lossVal lam wf logSq (ratio K lam u) ≤ 24 / 5 * W * Graph.nrmL2 lam (perpL2 lam u) ^ 2 / m ^ 2",
-     "doc": "**`𝓛(u) ≤ (24/5)‖w‖_{L^∞}‖u − Πu‖²/m²`** near the balanced ray (`proofs.tex:1081`): `r ≥ 31/32` gives `|log r| ≤ (32/31)|r − 1|`, `u ≥ 31m/32` gives `|r − 1| ≤ (32/31)|(P−I)ξ|/m`, and `‖P − I‖ ≤ 2`, `(32/31)⁴ ≤ 6/5`."
-    },
-    {
-     "name": "limit_arith",
-     "full": "GFNBounds.Balance.DiscreteGlobal.limit_arith",
-     "kind": "theorem",
-     "line": 1482,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem limit_arith {mk minf m ξ e0 : ℝ} (hm : 0 < m) (hmk : m ≤ mk) (hkinf : mk ≤ minf) (hsq : minf ^ 2 ≤ mk ^ 2 + 13 / 10 * ξ ^ 2) (hξ0 : 0 ≤ ξ) (hξ : ξ ≤ e0 * m) (he1 : e0 ≤ 1 / 32) : minf - mk ≤ ξ ^ 2 / m ∧ ξ + (minf - mk) ≤ 9 / 8 * ξ",
-     "doc": "The real arithmetic closing *(d)* (`proofs.tex:1088`): from `0 < m ≤ Πu_k ≤ m_∞`, `m_∞² ≤ (Πu_k)² + (13/10)‖ξ‖²` and `‖ξ‖ ≤ ε₀m` with `ε₀ ≤ 1/32`, the gap is at most `‖ξ‖²/m` and `‖ξ‖ + (m_∞ − Πu_k) ≤ (9/8)‖ξ‖`."
-    },
-    {
-     "name": "nrmL2_sub_const_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.nrmL2_sub_const_le",
-     "kind": "theorem",
-     "line": 1504,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem nrmL2_sub_const_le {lam u : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1) (c : ℝ) : Graph.nrmL2 lam (fun x => u x - c) ≤ Graph.nrmL2 lam (perpL2 lam u) + |Graph.meanL2 lam u - c|",
-     "doc": "`‖u − c‖ ≤ ‖u − Πu‖ + |Πu − c|`."
-    },
-    {
-     "name": "past_bound",
-     "full": "GFNBounds.Balance.DiscreteGlobal.past_bound",
-     "kind": "theorem",
-     "line": 1517,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem past_bound {K : V → V → ℝ} {lam wf : V → ℝ} {uk : ℕ → V → ℝ} {lamMin W γ m e0 : ℝ} {k : ℕ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hW : ∀ x, wf x ≤ W) (hW0 : 0 < W) (hγ : 0 ≤ γ) (hmpos : 0 < m) (he1 : e0 ≤ 1 / 32) (hCe : Cinf lamMin * e0 ≤ 1 / 32) (hmono : Monotone fun j => Graph.meanL2 lam (uk j)) (hbdd : BddAbove (Set.range fun j => Graph.meanL2 lam (uk j))) (hmk : m ≤ Graph.meanL2 lam (uk k)) (hr32 : ∀ x, |ratio K lam (uk k) x - 1| ≤ 1 / 32) (hξm : Graph.nrmL2 lam (perpL2 lam (uk k)) ≤ e0 * m) (hγW : γ * (32 * W) ≤ m ^ 2) (hsq : ∀ j, k ≤ j → Graph.meanL2 lam (uk j) ^ 2 ≤ Graph.meanL2 lam (uk k) ^ 2 + Graph.nrmL2 lam (perpL2 lam (uk k)) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk k))) : (⨆ j, Graph.meanL2 lam (uk j)) - Graph.meanL2 lam (uk k) ≤ Graph.nrmL2 lam (perpL2 lam (uk k)) ^ 2 / m ∧ Graph.nrmL2 lam (fun x => uk k x - ⨆ j, Graph.meanL2 lam (uk j)) ≤ 9 / 8 * Graph.nrmL2 lam (perpL2 lam (uk k))",
-     "doc": "**The estimates of *(d)* at one `k ≥ k₀`** (`proofs.tex:1080–1088`), from the entry bound, the monotone mass, the non-increasing `‖u‖² + 2γ𝓛` and `γ ≤ m²/(32‖w‖_{L^∞})`."
-    },
-    {
-     "name": "traj_d",
-     "full": "GFNBounds.Balance.DiscreteGlobal.traj_d",
-     "kind": "theorem",
-     "line": 1585,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem traj_d {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat M3 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hγ0 : γ ≤ gamma0At M3 wmin W Bhat * Graph.meanL2 lam (uk 0) ^ 2) (hM3 : 24 ≤ M3) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) : Graph.meanL2 lam (uk 0) ≤ Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ∧ Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Monotone (fun k => Graph.meanL2 lam (uk k)) ∧ ∃ minf : ℝ, Filter.Tendsto (fun k => Graph.meanL2 lam (uk k)) Filter.atTop (nhds minf) ∧ minf ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Balanced K lam (fun _ => minf)",
-     "doc": "**`theo:training_speed_full`, assertions *3(c)* (the bounds on `Πu_{k₀}`) and *3(d)*** (`proofs.tex:1029–1030`, proof `:1079–1088`): `Πu_k` increases to some `m_∞ ≤ √2‖u₀‖`, `m_∞λ` is balanced, and for `k ≥ k₀(γ)`, `m_∞ − Πu_k ≤ ‖u_k − Πu_k‖²/Πu_{k₀}` and `‖u_k − m_∞‖ ≤ (9/8)‖u_k − Πu_k‖`; moreover `‖u_k − m_∞‖ → 0`, the convergence the item's header announces."
-    },
-    {
-     "name": "gammaStar",
-     "full": "GFNBounds.Balance.DiscreteGlobal.gammaStar",
-     "kind": "def",
-     "line": 1775,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def gammaStar (b3v U0 L0 γ0 m0 : ℝ) : ℝ",
-     "doc": "**`theo:training_speed_full`*(3)*: `γ_* := min(1/b₃, (‖u₀‖²/2)𝓛(μ₀)^{−1}, γ₀m₀²)`** (`proofs.tex:1051`), with the paper's convention `𝓛(μ₀)^{−1} := +∞` at a balanced start read as dropping the middle entry."
-    },
-    {
-     "name": "gammaStar_pos",
-     "full": "GFNBounds.Balance.DiscreteGlobal.gammaStar_pos",
-     "kind": "theorem",
-     "line": 1779,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem gammaStar_pos {b3v U0 L0 γ0 m0 : ℝ} (hb : 0 < b3v) (hU0 : 0 < U0) (hL0 : 0 ≤ L0) (hγ0 : 0 < γ0) (hm0 : 0 < m0) : 0 < gammaStar b3v U0 L0 γ0 m0",
-     "doc": ""
-    },
-    {
-     "name": "le_gammaStar",
-     "full": "GFNBounds.Balance.DiscreteGlobal.le_gammaStar",
-     "kind": "theorem",
-     "line": 1788,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem le_gammaStar {b3v U0 L0 γ0 m0 γ : ℝ} (hb : 0 < b3v) (hL0 : 0 ≤ L0) (h : γ ≤ gammaStar b3v U0 L0 γ0 m0) : γ * b3v ≤ 1 ∧ 2 * γ * L0 ≤ U0 ^ 2 ∧ γ ≤ γ0 * m0 ^ 2",
-     "doc": "What `0 ≤ γ ≤ γ_*` delivers: `γb₃ ≤ 1`, `2γ𝓛(μ₀) ≤ ‖u₀‖²` and `γ ≤ γ₀m₀²`."
-    },
-    {
-     "name": "k0",
-     "full": "GFNBounds.Balance.DiscreteGlobal.k0",
-     "kind": "def",
-     "line": 1808,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def k0 (γ U0 W M sigStar wmin lamMin e0 m0 : ℝ) : ℕ",
-     "doc": "**`theo:training_speed_full`*(3)*: `k₀(γ) := ⌈32‖u₀‖⁴‖w‖²_{L^∞}M²σ_*²/(γw_min³λ_min³ε₀²m₀²)⌉`** (`proofs.tex:1056`), the printed closed form."
-    },
-    {
-     "name": "k0real_eq",
-     "full": "GFNBounds.Balance.DiscreteGlobal.k0real_eq",
-     "kind": "theorem",
-     "line": 1813,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem k0real_eq {γ U0 W M sigStar wmin lamMin e0 m0 : ℝ} (hγ : 0 < γ) (hU0 : 0 < U0) (hW : 0 < W) (hM : 0 < M) (hsig : 0 < sigStar) (hwmin : 0 < wmin) (hlmin0 : 0 < lamMin) (he0 : 0 < e0) (hm0 : 0 < m0) : k0real γ (kappa wmin lamMin U0 W M) lamMin wmin (delta1 e0 m0 (sigStar / Real.sqrt lamMin) U0) = 32 * U0 ^ 4 * W ^ 2 * M ^ 2 * sigStar ^ 2 / (γ * wmin ^ 3 * lamMin ^ 3 * e0 ^ 2 * m0 ^ 2)",
-     "doc": "**The two forms of `k₀(γ)` agree** (`proofs.tex:1056`, \"the last equality by `B̂_σ = σ_*λ_min^{−1/2}`\")."
-    },
-    {
-     "name": "no_uniform_step",
-     "full": "GFNBounds.Balance.DiscreteGlobal.no_uniform_step",
-     "kind": "theorem",
-     "line": 1838,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem no_uniform_step {K : V → V → ℝ} {lam wf u0 : V → ℝ} {γ : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hwpos : ∀ x, 0 < wf x) (hu0 : ∀ x, 0 < u0 x) (hbal : ¬ Balanced K lam u0) (hγ : 0 < γ) : ∃ y : V, ∃ s0 : ℝ, 0 < s0 ∧ ∀ s : ℝ, 0 < s → s < s0 → s * u0 y - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (fun x => s * u0 x) y < 0",
-     "doc": "**`theo:training_speed_full`*(3)*, no step bound independent of the initialization exists** (`proofs.tex:1032`, proof `:1090`): for every `γ > 0` and every positive non-balanced `u₀`, there is a state `y` at which `su₀ − γD(su₀)` is negative for every small enough `s > 0`."
-    },
-    {
-     "name": "training_speed_gd",
-     "full": "GFNBounds.Balance.DiscreteGlobal.training_speed_gd",
-     "kind": "theorem",
-     "line": 1904,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem training_speed_gd {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam uH wf : V → ℝ} {wmin wsup pmin γ : ℝ} {uk : ℕ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hhit : B.IsHitExp uH) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hpmin : ∀ y z : V, 0 < B.phat y z → pmin ≤ B.phat y z) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγs : γ ≤ gammaStar (b3 wsup (uMin V (Graph.minOver G lam) pmin wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))))) (Graph.nrmL2 lam (uk 0)) (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (gamma0At Gamma3Val wmin wsup (BhatSigma G uH lam)) (Graph.meanL2 lam (uk 0))) : (∀ k, (∀ x, uMin V (Graph.minOver G lam) pmin wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (Graph.meanL2 lam (uk 0)) ≤ uk k x) ∧ lossVal lam wf logSq (ratio B.phat lam (uk (k + 1))) ≤ lossVal lam wf logSq (ratio B.phat lam (uk k)) - γ / 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.meanL2 lam (uk k) ≤ Graph.meanL2 lam (uk (k + 1)) ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 = Graph.nrmL2 lam (uk k) ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2)",
-     "doc": "**`theo:training_speed_full`, item *3*, gradient descent with a step chosen from the initialization** (`proofs.tex:1021–1033`, proof `:1048–1090`)."
-    },
-    {
-     "name": "minPos",
-     "full": "GFNBounds.Balance.DiscreteGlobal.minPos",
-     "kind": "def",
-     "line": 2076,
-     "attrs": "",
-     "private": false,
-     "statement": "noncomputable def minPos (K : V → V → ℝ) : ℝ",
-     "doc": "**`p_min`, the smallest positive transition probability** of a kernel (`proofs.tex:1000`); `1` if no entry is positive."
-    },
-    {
-     "name": "minPos_pos",
-     "full": "GFNBounds.Balance.DiscreteGlobal.minPos_pos",
-     "kind": "theorem",
-     "line": 2082,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem minPos_pos (K : V → V → ℝ) : 0 < minPos K",
-     "doc": ""
-    },
-    {
-     "name": "minPos_le",
-     "full": "GFNBounds.Balance.DiscreteGlobal.minPos_le",
-     "kind": "theorem",
-     "line": 2091,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem minPos_le {K : V → V → ℝ} {y z : V} (hyz : 0 < K y z) : minPos K ≤ K y z",
-     "doc": ""
-    },
-    {
-     "name": "minPos_le_one",
-     "full": "GFNBounds.Balance.DiscreteGlobal.minPos_le_one",
-     "kind": "theorem",
-     "line": 2099,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem minPos_le_one {K : V → V → ℝ} (hK : Core.IsMarkov K) [Nonempty V] : minPos K ≤ 1",
-     "doc": "`p_min ≤ 1` for a Markov kernel on a non-empty state space."
-    },
-    {
-     "name": "no_uniform_step_graph",
-     "full": "GFNBounds.Balance.DiscreteGlobal.no_uniform_step_graph",
-     "kind": "theorem",
-     "line": 2115,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem no_uniform_step_graph {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam wf u0 : V → ℝ} {wmin γ : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u0 x) (hbal : ¬ Balanced B.phat lam u0) (hγ : 0 < γ) : ∃ y : V, ∃ s0 : ℝ, 0 < s0 ∧ ∀ s : ℝ, 0 < s → s < s0 → s * u0 y - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (fun x => s * u0 x) y < 0",
-     "doc": "**`theo:training_speed_full`*(3)*, the necessity sentence on the paper's setting** (`proofs.tex:1032`): on the loop closure, for every step `γ > 0` and every non-balanced positive `u₀`, `su₀ − γD(su₀)` leaves the positive cone for every small enough `s > 0`; no step bound independent of the initialization exists."
-    },
-    {
-     "name": "exists_descent_seq",
-     "full": "GFNBounds.Balance.DiscreteGlobal.exists_descent_seq",
-     "kind": "theorem",
-     "line": 2128,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem exists_descent_seq (K : V → V → ℝ) (lam wf u0 : V → ℝ) (γ : ℝ) : ∃ uk : ℕ → V → ℝ, uk 0 = u0 ∧ ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x",
-     "doc": "**The descent sequence exists**: `hstep` is a recursion, and any `u₀` starts one."
-    },
-    {
-     "name": "training_speed_gd_inhabited",
-     "full": "GFNBounds.Balance.DiscreteGlobal.training_speed_gd_inhabited",
-     "kind": "theorem",
-     "line": 2136,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem training_speed_gd_inhabited {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam uH wf u0 : V → ℝ} {wmin wsup pmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hhit : B.IsHitExp uH) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hpmin0 : 0 < pmin) (hu0 : ∀ x, 0 < u0 x) : ∃ γ : ℝ, 0 < γ ∧ γ ≤ gammaStar (b3 wsup (uMin V (Graph.minOver G lam) pmin wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0)) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))) (Graph.nrmL2 lam u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0At Gamma3Val wmin wsup (BhatSigma G uH lam)) (Graph.meanL2 lam u0) ∧ ∃ uk : ℕ → V → ℝ, uk 0 = u0 ∧ ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k) x",
-     "doc": "**The hypotheses of `training_speed_gd` are inhabited** on every instance of its setting and every positive initialization: `γ_* > 0`, and the descent at `γ = γ_*` is a sequence."
-    },
-    {
-     "name": "cycle_training_speed_gd_nonvacuous",
-     "full": "GFNBounds.Balance.DiscreteGlobal.cycle_training_speed_gd_nonvacuous",
-     "kind": "theorem",
-     "line": 2181,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem cycle_training_speed_gd_nonvacuous : ¬ Balanced (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2) ∧ ∃ γ : ℝ, 0 < γ ∧ γ ≤ gammaStar (b3 1 (uMin (Fin 5) (Graph.minOver Graph.CycleExample.cyc (Graph.CycleExample.lam (1/2))) (minPos (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat) 1 (lossVal (Graph.CycleExample.lam (1/2)) (fun _ => 1) logSq (ratio (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2))) (Graph.meanL2 (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2))) (ratioCap (Graph.minOver Graph.CycleExample.cyc (Graph.CycleExample.lam (1/2))) 1 (lossVal (Graph.CycleExample.lam (1/2)) (fun _ => 1) logSq (ratio (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2))))) (Graph.nrmL2 (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2)) (lossVal (Graph.CycleExample.lam (1/2)) (fun _ => 1) logSq (ratio (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2))) (gamma0At Gamma3Val 1 1 (BhatSigma Graph.CycleExample.cyc (Graph.CycleExample.hitExp (1/2)) (Graph.CycleExample.lam (1/2)))) (Graph.meanL2 (Graph.CycleExample.lam (1/2)) (Graph.CycleExample.uInfl 2)) ∧ ∃ uk : ℕ → Fin 5 → ℝ, uk 0 = Graph.CycleExample.uInfl 2 ∧ ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad (Graph.CycleExample.pol (p := 1/2) (by norm_num) (by norm_num)).phat (Graph.CycleExample.lam (1/2)) (fun z => Graph.CycleExample.lam (1/2) z * 1) logSqDeriv (uk k) x",
-     "doc": "**Non-vacuity on `rem:cycle_no_stalemate`'s five-vertex cycle** at `p = 1/2`, `w ≡ 1`, from the over-inflated density `u₀ = uInfl 2`, which is **not** balanced (`r(s₀) = 2`): the setting's predicates hold, and a step `0 < γ ≤ γ_*` and its descent sequence exist, so `training_speed_gd` applies to a non-balanced start."
-    },
-    {
-     "name": "training_speed_gd_minPos",
-     "full": "GFNBounds.Balance.DiscreteGlobal.training_speed_gd_minPos",
-     "kind": "theorem",
-     "line": 2224,
-     "attrs": "",
-     "private": false,
-     "statement": "theorem training_speed_gd_minPos {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam uH wf : V → ℝ} {wmin wsup γ : ℝ} {uk : ℕ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hhit : B.IsHitExp uH) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγs : γ ≤ gammaStar (b3 wsup (uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))))) (Graph.nrmL2 lam (uk 0)) (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (gamma0At Gamma3Val wmin wsup (BhatSigma G uH lam)) (Graph.meanL2 lam (uk 0))) : (∀ k, (∀ x, uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (Graph.meanL2 lam (uk 0)) ≤ uk k x) ∧ lossVal lam wf logSq (ratio B.phat lam (uk (k + 1))) ≤ lossVal lam wf logSq (ratio B.phat lam (uk k)) - γ / 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.meanL2 lam (uk k) ≤ Graph.meanL2 lam (uk (k + 1)) ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 = Graph.nrmL2 lam (uk k) ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2) ∧ (∀ k : ℕ, lossVal lam wf logSq (ratio B.phat lam (uk k))",
-     "doc": "**`theo:training_speed_full`, item *3*, at the paper's own `p_min`** — the smallest positive transition probability of the loop-closed backward policy (`minPos`), which is the constant `proofs.tex:1000` names: `training_speed_gd` with its floor hypotheses discharged by `minPos_pos`, `minPos_le_one` and `minPos_le`."
-    }
-   ],
-   "library": "scaffold",
-   "tracked": false,
-   "root_reachable": false
-  },
-  {
    "file": "scaffold/GFNBoundsScaffold/Balance/TrainingSpeedAssembled.lean",
    "title": "Draft header (being written)",
    "labels": [],
@@ -30963,8 +30996,10 @@
     "GFNBounds.Balance.C3Wrappers",
     "GFNBounds.Balance.FlowExistence"
    ],
-   "variables": [],
-   "lines": 190,
+   "variables": [
+    "variable {V : Type*} [Fintype V]"
+   ],
+   "lines": 347,
    "decls": [
     {
      "name": "winC3",
@@ -31093,8 +31128,471 @@
      "line": 174,
      "attrs": "",
      "private": false,
-     "statement": "theorem deriv_one_eq_of_C3On {g gd : ℝ → ℝ} {a : ℝ} (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) : deriv g 1 = gd 1 ∧ deriv (deriv g) 1 = iteratedDerivWithin 2 g (winC3 a) 1",
+     "statement": "theorem deriv_one_eq_of_C3On {g gd : ℝ → ℝ} {a : ℝ} (ha : 0 < a) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) : deriv g 1 = gd 1 ∧ deriv (deriv g) 1 = iteratedDerivWithin 2 g (winC3 a) 1",
      "doc": "At the interior point `1`, the derivatives within the window are the classical ones: `g'(1) = gd 1` and `g''(1) = iteratedDerivWithin 2 g [1−a,1+a] 1`."
+    },
+    {
+     "name": "C3On_of_C3",
+     "full": "GFNBounds.Balance.C3On_of_C3",
+     "kind": "theorem",
+     "line": 189,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem C3On_of_C3 {g : ℝ → ℝ} {a : ℝ} (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) : ContDiffOn ℝ 3 g (winC3 a) ∧ (∀ y ∈ winC3 a, HasDerivWithinAt g (deriv g y) (winC3 a) y) ∧ Gamma3W g a = Gamma3 g a",
+     "doc": "**The two-sided reading is a special case**: `C³` at every point of the closed window gives `C³` on it, `g' = deriv g` a derivative within it, and the same `Γ₃`."
+    },
+    {
+     "name": "Gamma3W_logSq",
+     "full": "GFNBounds.Balance.Gamma3W_logSq",
+     "kind": "theorem",
+     "line": 203,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Gamma3W_logSq : Gamma3W logSq (1/2) = 48 + 32 * Real.log 2",
+     "doc": "**`Γ₃ = 48 + 32 log 2` for `g = (log x)²` at `a = 1/2`**, in the within-window reading."
+    },
+    {
+     "name": "eps0W",
+     "full": "GFNBounds.Balance.eps0W",
+     "kind": "def",
+     "line": 213,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def eps0W (g : ℝ → ℝ) (a wmin wsup Bhat lamMin : ℝ) : ℝ",
+     "doc": "`ε₀` of `theo:local_convergence_full` at `g''(1)` and `Γ₃ = Gamma3W g a`."
+    },
+    {
+     "name": "CW",
+     "full": "GFNBounds.Balance.CW",
+     "kind": "def",
+     "line": 219,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def CW (g : ℝ → ℝ) (a wmin wsup : ℝ) : ℝ",
+     "doc": "`C := max(1, C₇)` at `g''(1)`, `Γ₃ = Gamma3W g a`."
+    },
+    {
+     "name": "gamma0W",
+     "full": "GFNBounds.Balance.gamma0W",
+     "kind": "def",
+     "line": 223,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def gamma0W (g : ℝ → ℝ) (a wmin wsup Bhat : ℝ) : ℝ",
+     "doc": "`γ₀` at `g''(1)`, `Γ₃ = Gamma3W g a`."
+    },
+    {
+     "name": "constW_congr",
+     "full": "GFNBounds.Balance.constW_congr",
+     "kind": "theorem",
+     "line": 230,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem constW_congr {g g' : ℝ → ℝ} {a : ℝ} (h2 : deriv (deriv g) 1 = deriv (deriv g') 1) (h3 : Gamma3W g a = Gamma3W g' a) (wmin wsup Bhat lamMin : ℝ) : eps0W g a wmin wsup Bhat lamMin = eps0W g' a wmin wsup Bhat lamMin ∧ CW g a wmin wsup = CW g' a wmin wsup ∧ gamma0W g a wmin wsup Bhat = gamma0W g' a wmin wsup Bhat",
+     "doc": "**\"depending only on `g''(1)`, `sup_{[1−a,1+a]}|g'''|`, `a`, `w_min`, `‖w‖_{L^∞}`, `B̂`, `C_∞`\"**, as a congruence."
+    },
+    {
+     "name": "constW_eq_constC3",
+     "full": "GFNBounds.Balance.constW_eq_constC3",
+     "kind": "theorem",
+     "line": 239,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem constW_eq_constC3 {g : ℝ → ℝ} {a : ℝ} (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (wmin wsup Bhat lamMin : ℝ) : eps0W g a wmin wsup Bhat lamMin = eps0C3 g a wmin wsup Bhat lamMin ∧ CW g a wmin wsup = CC3 g a wmin wsup ∧ gamma0W g a wmin wsup Bhat = gamma0C3 g a wmin wsup Bhat",
+     "doc": "Under the two-sided reading the constants are `C3Wrappers`'."
+    },
+    {
+     "name": "eps0W_logSq",
+     "full": "GFNBounds.Balance.eps0W_logSq",
+     "kind": "theorem",
+     "line": 249,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eps0W_logSq (wmin wsup Bhat lamMin : ℝ) : eps0W logSq (1/2) wmin wsup Bhat lamMin = eps0Gamma3 wmin wsup Bhat lamMin",
+     "doc": "**Item 2's `ε₀`** (`proofs.tex:1013`), Theorem 10's radius for `g = (log x)²` at `a = 1/2`, is `C3Wrappers.eps0Gamma3`."
+    },
+    {
+     "name": "taylor_bundle_of_C3On",
+     "full": "GFNBounds.Balance.taylor_bundle_of_C3On",
+     "kind": "theorem",
+     "line": 257,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem taylor_bundle_of_C3On {g gd : ℝ → ℝ} {a : ℝ} (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) (hg1 : deriv g 1 = 0) : ∀ y : ℝ, |y - 1| ≤ a → |gd y - deriv (deriv g) 1 * (y - 1)| ≤ Gamma3W g a / 2 * (y - 1) ^ 2",
+     "doc": "The `C³`-on-the-window hypotheses, turned into the Taylor bound the library consumes, at `gd` and at the classical `g''(1)`."
+    },
+    {
+     "name": "local_convergence_full_C3On",
+     "full": "GFNBounds.Balance.local_convergence_full_C3On",
+     "kind": "theorem",
+     "line": 269,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_full_C3On {K : V → V → ℝ} {lam w : V → ℝ} {g gd : ℝ → ℝ} {h : ℝ → V → ℝ} {a wsup wmin Bhat lamMin : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (hflow : IsGradientFlow K lam (fun z => lam z * w z) gd fun s x => 1 + h s x) (hnorm0 : Graph.nrmL2 lam (h 0) ≤ eps0W g a wmin wsup Bhat lamMin) : ∃ cinf : ℝ, |cinf - 1 - Graph.meanL2 lam (h 0)| ≤ CW g a wmin wsup * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL (deriv (deriv g) 1) wmin Bhat * t / 2)) * Graph.nrmL2 lam (perpL2 lam (h 0))",
+     "doc": "**`theo:local_convergence_full`, the flow clause, under `C³` on the closed window**: every gradient flow driven by a derivative `gd` of `g` on `[1−a,1+a]` (one-sided at the ends), from `‖h₀‖ ≤ ε₀`, converges to `c_∞λ` with the printed `C` and rate."
+    },
+    {
+     "name": "constW_bounds",
+     "full": "GFNBounds.Balance.constW_bounds",
+     "kind": "theorem",
+     "line": 293,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem constW_bounds {lam w : V → ℝ} {g : ℝ → ℝ} {a wsup wmin Bhat lamMin : ℝ} (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) : eps0W g a wmin wsup Bhat lamMin ∈ Set.Ioc 0 (a / (16 * Cinf lamMin)) ∧ 1 ≤ CW g a wmin wsup ∧ 0 < gamma0W g a wmin wsup Bhat",
+     "doc": "**`theo:local_convergence_full`, the constants, under `C³` on the closed window**: `ε₀ ∈ (0, a/(16C_∞)]`, `C ≥ 1`, `γ₀ > 0`."
+    },
+    {
+     "name": "local_convergence_gd_C3On",
+     "full": "GFNBounds.Balance.local_convergence_gd_C3On",
+     "kind": "theorem",
+     "line": 308,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_gd_C3On {K : V → V → ℝ} {lam w : V → ℝ} {g gd : ℝ → ℝ} {hk : ℕ → V → ℝ} {a wsup wmin Bhat lamMin gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, |w x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (hstep : ∀ k : ℕ, hk (k + 1) = fun x => hk k x - gam * lossGrad K lam (fun z => lam z * w z) gd (fun z => 1 + hk k z) x) (hgam0 : 0 ≤ gam) (hgam : gam ≤ gamma0W g a wmin wsup Bhat) (hnorm0 : Graph.nrmL2 lam (hk 0) ≤ eps0W g a wmin wsup Bhat lamMin) : ∀ k : ℕ, ((∀ x : V, 0 < 1 + hk k x) ∧ (∀ x : V, |ratio K lam (fun z => 1 + hk k z) x - 1| ≤ 2 * a / 3) ∧ ∀ d : V → ℝ, HasDerivAt (fun t : ℝ => loss K lam (fun z => lam z * w z) (fun x => 1 + hk k x + t * d x) g) (Graph.ipL2 lam (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + hk k z) d) 0) ∧ Graph.nrmL2 lam (perpL2 lam (hk (k + 1))) ≤ (1 - gam * rhoL (deriv (deriv g) 1) wmin Bhat / 4) * Graph.nrmL2 lam (perpL2 lam (hk k))",
+     "doc": "**`theo:local_convergence_full`, the gradient-descent clause, under `C³` on the closed window**: the descent driven by `gd` is well defined at every step and contracts by `1 − γϱ/4`."
+    }
+   ],
+   "library": "scaffold",
+   "tracked": false,
+   "root_reachable": false
+  },
+  {
+   "file": "scaffold/GFNBoundsScaffold/Core/FamilyUniversality.lean",
+   "title": "draft",
+   "labels": [],
+   "scope_disclosed": false,
+   "imports": [
+    "GFNBounds.Core.StrongUniversality",
+    "GFNBounds.Graph.Universality"
+   ],
+   "variables": [
+    "variable {α : Type*} [MeasurableSpace α]",
+    "variable {ν : Measure α} {θ : Kernel α α × (α → ℝ)} {f_init f_term : α → ℝ}",
+    "variable {ν : Measure α} {θ : Kernel α α × (α → ℝ)} {f_init f_term : α → ℝ} {p r : ℝ≥0∞}",
+    "variable {ν : Measure α}",
+    "variable {θ : Kernel α α × (α → ℝ)} {f_init f_term : α → ℝ}"
+   ],
+   "lines": 306,
+   "decls": [
+    {
+     "name": "IsGenerativeFlow",
+     "full": "GFNBounds.Core.Family.IsGenerativeFlow",
+     "kind": "structure",
+     "line": 18,
+     "attrs": "",
+     "private": false,
+     "statement": "structure IsGenerativeFlow (ν : Measure α) (θ : Kernel α α × (α → ℝ)) : Prop",
+     "doc": "A generative flow `(π⋆, f_out⋆)` on `(𝒮, ν_B)` (`proofs.tex:34`)."
+    },
+    {
+     "name": "IsFlowFamily",
+     "full": "GFNBounds.Core.Family.IsFlowFamily",
+     "kind": "def",
+     "line": 24,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsFlowFamily (ν : Measure α) (Θ : Set (Kernel α α × (α → ℝ))) : Prop",
+     "doc": "A family of generative flows."
+    },
+    {
+     "name": "defectFn",
+     "full": "GFNBounds.Core.Family.defectFn",
+     "kind": "def",
+     "line": 28,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def defectFn (ν : Measure α) (θ : Kernel α α × (α → ℝ)) (f_init f_term : α → ℝ) : α → ℝ",
+     "doc": "The flow-matching defect."
+    },
+    {
+     "name": "resInitFn",
+     "full": "GFNBounds.Core.Family.resInitFn",
+     "kind": "def",
+     "line": 32,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def resInitFn (ν : Measure α) (θ : Kernel α α × (α → ℝ)) (f_init f_term : α → ℝ) : α → ℝ",
+     "doc": ""
+    },
+    {
+     "name": "resTermFn",
+     "full": "GFNBounds.Core.Family.resTermFn",
+     "kind": "def",
+     "line": 36,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def resTermFn (ν : Measure α) (θ : Kernel α α × (α → ℝ)) (f_init f_term : α → ℝ) : α → ℝ",
+     "doc": ""
+    },
+    {
+     "name": "residual",
+     "full": "GFNBounds.Core.Family.residual",
+     "kind": "def",
+     "line": 40,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def residual (ν : Measure α) (p : ℝ≥0∞) (θ : Kernel α α × (α → ℝ)) (f_init f_term : α → ℝ) : ℝ≥0∞",
+     "doc": ""
+    },
+    {
+     "name": "IsAdmissiblePair",
+     "full": "GFNBounds.Core.Family.IsAdmissiblePair",
+     "kind": "structure",
+     "line": 44,
+     "attrs": "",
+     "private": false,
+     "statement": "structure IsAdmissiblePair (ν : Measure α) (p : ℝ≥0∞) (f_init f_term : α → ℝ) : Prop",
+     "doc": ""
+    },
+    {
+     "name": "IsBoundedPolicy",
+     "full": "GFNBounds.Core.Family.IsBoundedPolicy",
+     "kind": "def",
+     "line": 51,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsBoundedPolicy (ν : Measure α) (p : ℝ≥0∞) (κ : Kernel α α) : Prop",
+     "doc": ""
+    },
+    {
+     "name": "WeaklyUniversal",
+     "full": "GFNBounds.Core.Family.WeaklyUniversal",
+     "kind": "def",
+     "line": 54,
+     "attrs": "",
+     "private": false,
+     "statement": "def WeaklyUniversal (ν : Measure α) (p : ℝ≥0∞) (Θ : Set (Kernel α α × (α → ℝ))) : Prop",
+     "doc": ""
+    },
+    {
+     "name": "StronglyUniversal",
+     "full": "GFNBounds.Core.Family.StronglyUniversal",
+     "kind": "def",
+     "line": 59,
+     "attrs": "",
+     "private": false,
+     "statement": "def StronglyUniversal (ν : Measure α) (p : ℝ≥0∞) (Θ : Set (Kernel α α × (α → ℝ))) : Prop",
+     "doc": ""
+    },
+    {
+     "name": "iInf_eq_zero_iff",
+     "full": "GFNBounds.Core.Family.iInf_eq_zero_iff",
+     "kind": "theorem",
+     "line": 66,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem iInf_eq_zero_iff {ι : Type*} (s : Set ι) (r : ι → ℝ≥0∞) : (⨅ i ∈ s, r i) = 0 ↔ ∀ ε : ℝ, 0 < ε → ∃ i ∈ s, r i < ENNReal.ofReal ε",
+     "doc": ""
+    },
+    {
+     "name": "StronglyUniversal.weaklyUniversal",
+     "full": "GFNBounds.Core.Family.StronglyUniversal.weaklyUniversal",
+     "kind": "theorem",
+     "line": 83,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem StronglyUniversal.weaklyUniversal {ν : Measure α} {p : ℝ≥0∞} {Θ : Set (Kernel α α × (α → ℝ))} (h : StronglyUniversal ν p Θ) : WeaklyUniversal ν p Θ",
+     "doc": ""
+    },
+    {
+     "name": "aestronglyMeasurable_defectFn",
+     "full": "GFNBounds.Core.Family.aestronglyMeasurable_defectFn",
+     "kind": "theorem",
+     "line": 97,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem aestronglyMeasurable_defectFn (hθ : AEStronglyMeasurable θ.2 ν) (hi : AEStronglyMeasurable f_init ν) (ht : AEStronglyMeasurable f_term ν) : AEStronglyMeasurable (defectFn ν θ f_init f_term) ν",
+     "doc": ""
+    },
+    {
+     "name": "aestronglyMeasurable_resInitFn",
+     "full": "GFNBounds.Core.Family.aestronglyMeasurable_resInitFn",
+     "kind": "theorem",
+     "line": 102,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem aestronglyMeasurable_resInitFn (hθ : AEStronglyMeasurable θ.2 ν) (hi : AEStronglyMeasurable f_init ν) (ht : AEStronglyMeasurable f_term ν) : AEStronglyMeasurable (resInitFn ν θ f_init f_term) ν",
+     "doc": ""
+    },
+    {
+     "name": "aestronglyMeasurable_resTermFn",
+     "full": "GFNBounds.Core.Family.aestronglyMeasurable_resTermFn",
+     "kind": "theorem",
+     "line": 107,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem aestronglyMeasurable_resTermFn (hθ : AEStronglyMeasurable θ.2 ν) (hi : AEStronglyMeasurable f_init ν) (ht : AEStronglyMeasurable f_term ν) : AEStronglyMeasurable (resTermFn ν θ f_init f_term) ν",
+     "doc": ""
+    },
+    {
+     "name": "defectFn_eq_sub",
+     "full": "GFNBounds.Core.Family.defectFn_eq_sub",
+     "kind": "theorem",
+     "line": 113,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem defectFn_eq_sub (x : α) : defectFn ν θ f_init f_term x = resTermFn ν θ f_init f_term x - resInitFn ν θ f_init f_term x",
+     "doc": "`D = δf_term − δf_init`, pointwise."
+    },
+    {
+     "name": "ae_eq_zero_of_residual_eq_zero",
+     "full": "GFNBounds.Core.Family.ae_eq_zero_of_residual_eq_zero",
+     "kind": "theorem",
+     "line": 126,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ae_eq_zero_of_residual_eq_zero (hp : p ≠ 0) (hθ : AEStronglyMeasurable θ.2 ν) (hi : AEStronglyMeasurable f_init ν) (ht : AEStronglyMeasurable f_term ν) (h : residual ν p θ f_init f_term = 0) : resInitFn ν θ f_init f_term =ᵐ[ν] 0 ∧ resTermFn ν θ f_init f_term =ᵐ[ν] 0",
+     "doc": "A flow realizing the zero infimum for a pair has almost-everywhere-zero residuals."
+    },
+    {
+     "name": "residual_eq_zero_of_ae",
+     "full": "GFNBounds.Core.Family.residual_eq_zero_of_ae",
+     "kind": "theorem",
+     "line": 135,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem residual_eq_zero_of_ae (h : resInitFn ν θ f_init f_term =ᵐ[ν] 0 ∧ resTermFn ν θ f_init f_term =ᵐ[ν] 0) (r : ℝ≥0∞) : residual ν r θ f_init f_term = 0",
+     "doc": "Almost-everywhere-zero residuals have zero norm at every exponent."
+    },
+    {
+     "name": "IsAdmissiblePair.mono",
+     "full": "GFNBounds.Core.Family.IsAdmissiblePair.mono",
+     "kind": "theorem",
+     "line": 140,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsAdmissiblePair.mono [IsFiniteMeasure ν] (h : IsAdmissiblePair ν p f_init f_term) (hrp : r ≤ p) : IsAdmissiblePair ν r f_init f_term",
+     "doc": "On a finite measure an `L^p`-admissible pair is `L^r`-admissible for `r ≤ p`."
+    },
+    {
+     "name": "realizes_of_le",
+     "full": "GFNBounds.Core.Family.realizes_of_le",
+     "kind": "theorem",
+     "line": 147,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem realizes_of_le [IsFiniteMeasure ν] (hθ : IsGenerativeFlow ν θ) (hpair : IsAdmissiblePair ν p f_init f_term) (hp : 1 ≤ p) (h : residual ν p θ f_init f_term = 0) (hrp : r ≤ p) : IsAdmissiblePair ν r f_init f_term ∧ residual ν r θ f_init f_term = 0",
+     "doc": "**`def:universality`'s parenthetical** (ruling R6): a flow realizing the zero infimum for an `L^p`-admissible pair realizes it for that pair at every `r ∈ [1, p]`."
+    },
+    {
+     "name": "StronglyUniversal.realizes_of_le",
+     "full": "GFNBounds.Core.Family.StronglyUniversal.realizes_of_le",
+     "kind": "theorem",
+     "line": 156,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem StronglyUniversal.realizes_of_le [IsFiniteMeasure ν] {Θ : Set (Kernel α α × (α → ℝ))} (h : StronglyUniversal ν p Θ) (hp : 1 ≤ p) (hrp : r ≤ p) (hpair : IsAdmissiblePair ν p f_init f_term) : ∃ θ ∈ Θ, IsAdmissiblePair ν r f_init f_term ∧ residual ν r θ f_init f_term = 0",
+     "doc": "The same at family level, pair by pair."
+    },
+    {
+     "name": "bind_withDensity_ac",
+     "full": "GFNBounds.Core.Family.bind_withDensity_ac",
+     "kind": "theorem",
+     "line": 172,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bind_withDensity_ac (κ : Kernel α α) (hac : ν.bind ⇑κ ≪ ν) (f : α → ℝ≥0∞) : (ν.withDensity f).bind ⇑κ ≪ ν",
+     "doc": ""
+    },
+    {
+     "name": "lintegral_bindDensity_of_ac",
+     "full": "GFNBounds.Core.Family.lintegral_bindDensity_of_ac",
+     "kind": "theorem",
+     "line": 176,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lintegral_bindDensity_of_ac (κ : Kernel α α) [IsMarkovKernel κ] [SigmaFinite ν] (hac : ν.bind ⇑κ ≪ ν) (f : α → ℝ≥0∞) : ∫⁻ x, bindDensity κ ν f x ∂ν = ∫⁻ x, f x ∂ν",
+     "doc": ""
+    },
+    {
+     "name": "integrable_toReal_bindDensity_of_ac",
+     "full": "GFNBounds.Core.Family.integrable_toReal_bindDensity_of_ac",
+     "kind": "theorem",
+     "line": 186,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integrable_toReal_bindDensity_of_ac (κ : Kernel α α) [IsMarkovKernel κ] [SigmaFinite ν] (hac : ν.bind ⇑κ ≪ ν) {f : α → ℝ} (hf : Integrable f ν) : Integrable (fun x => (bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x).toReal) ν",
+     "doc": ""
+    },
+    {
+     "name": "integral_toReal_bindDensity_of_ac",
+     "full": "GFNBounds.Core.Family.integral_toReal_bindDensity_of_ac",
+     "kind": "theorem",
+     "line": 192,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_toReal_bindDensity_of_ac (κ : Kernel α α) [IsMarkovKernel κ] [SigmaFinite ν] (hac : ν.bind ⇑κ ≪ ν) {f : α → ℝ} (hf : Integrable f ν) : ∫ x, (bindDensity κ ν (fun y => ENNReal.ofReal (f y)) x).toReal ∂ν = (∫⁻ x, ENNReal.ofReal (f x) ∂ν).toReal",
+     "doc": ""
+    },
+    {
+     "name": "integrable_densityAction_of_ac",
+     "full": "GFNBounds.Core.Family.integrable_densityAction_of_ac",
+     "kind": "theorem",
+     "line": 203,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integrable_densityAction_of_ac (κ : Kernel α α) [IsMarkovKernel κ] [SigmaFinite ν] (hac : ν.bind ⇑κ ≪ ν) {f : α → ℝ} (hf : Integrable f ν) : Integrable (densityAction κ ν f) ν",
+     "doc": "`P⋆ f` is integrable, with no invariance: absolute continuity `ν π⋆ ≪ ν` suffices."
+    },
+    {
+     "name": "integral_densityAction_of_ac",
+     "full": "GFNBounds.Core.Family.integral_densityAction_of_ac",
+     "kind": "theorem",
+     "line": 210,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_densityAction_of_ac (κ : Kernel α α) [IsMarkovKernel κ] [SigmaFinite ν] (hac : ν.bind ⇑κ ≪ ν) {f : α → ℝ} (hf : Integrable f ν) : ∫ x, densityAction κ ν f x ∂ν = ∫ x, f x ∂ν",
+     "doc": "`∫ P⋆ f dν = ∫ f dν`, from stochasticity and `ν π⋆ ≪ ν`, with no invariance."
+    },
+    {
+     "name": "integral_defectFn",
+     "full": "GFNBounds.Core.Family.integral_defectFn",
+     "kind": "theorem",
+     "line": 223,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_defectFn [SigmaFinite ν] (hθ : IsGenerativeFlow ν θ) (hac : ν.bind ⇑θ.1 ≪ ν) (hi : Integrable f_init ν) (ht : Integrable f_term ν) : ∫ x, defectFn ν θ f_init f_term x ∂ν = ∫ x, f_init x ∂ν - ∫ x, f_term x ∂ν",
+     "doc": "**The defect integrates to `F_init(𝒮) − F_term(𝒮)`** (`universality.tex:11`)."
+    },
+    {
+     "name": "ofReal_abs_mass_le_residual_one",
+     "full": "GFNBounds.Core.Family.ofReal_abs_mass_le_residual_one",
+     "kind": "theorem",
+     "line": 241,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ofReal_abs_mass_le_residual_one [SigmaFinite ν] (hθ : IsGenerativeFlow ν θ) (hac : ν.bind ⇑θ.1 ≪ ν) (hi : Integrable f_init ν) (ht : Integrable f_term ν) : ENNReal.ofReal |∫ x, f_init x ∂ν - ∫ x, f_term x ∂ν| ≤ residual ν 1 θ f_init f_term",
+     "doc": "The mass gap is bounded by the `L¹` residuals."
+    },
+    {
+     "name": "ofReal_abs_mass_le_residual",
+     "full": "GFNBounds.Core.Family.ofReal_abs_mass_le_residual",
+     "kind": "theorem",
+     "line": 259,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ofReal_abs_mass_le_residual [IsFiniteMeasure ν] (hθ : IsGenerativeFlow ν θ) (hac : ν.bind ⇑θ.1 ≪ ν) (hi : Integrable f_init ν) (ht : Integrable f_term ν) {p : ℝ≥0∞} (hp : 1 ≤ p) : ENNReal.ofReal |∫ x, f_init x ∂ν - ∫ x, f_term x ∂ν| ≤ residual ν p θ f_init f_term * ν Set.univ ^ (1 - 1 / p.toReal)",
+     "doc": "**Unequal masses floor the residuals away from `0`**, at every exponent `p ≥ 1`, with the explicit constant `ν(𝒮)^{1 − 1/p}`."
+    },
+    {
+     "name": "mass_gap_div_le_iInf",
+     "full": "GFNBounds.Core.Family.mass_gap_div_le_iInf",
+     "kind": "theorem",
+     "line": 275,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_gap_div_le_iInf [IsFiniteMeasure ν] {Θ : Set (Kernel α α × (α → ℝ))} (hfam : IsFlowFamily ν Θ) (hac : ∀ θ ∈ Θ, ν.bind ⇑θ.1 ≪ ν) (hi : Integrable f_init ν) (ht : Integrable f_term ν) {p : ℝ≥0∞} (hp : 1 ≤ p) : ENNReal.ofReal |∫ x, f_init x ∂ν - ∫ x, f_term x ∂ν| / ν Set.univ ^ (1 - 1 / p.toReal) ≤ ⨅ θ ∈ Θ, residual ν p θ f_init f_term",
+     "doc": "**`def:universality`'s first parenthetical, at family level**: the infimum is at least `|F_init(𝒮) − F_term(𝒮)| / ν(𝒮)^{1 − 1/p}`."
+    },
+    {
+     "name": "iInf_pos_of_mass_ne",
+     "full": "GFNBounds.Core.Family.iInf_pos_of_mass_ne",
+     "kind": "theorem",
+     "line": 284,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem iInf_pos_of_mass_ne [IsFiniteMeasure ν] {Θ : Set (Kernel α α × (α → ℝ))} (hfam : IsFlowFamily ν Θ) (hac : ∀ θ ∈ Θ, ν.bind ⇑θ.1 ≪ ν) (hi : Integrable f_init ν) (ht : Integrable f_term ν) {p : ℝ≥0∞} (hp : 1 ≤ p) (hmass : ∫ x, f_init x ∂ν ≠ ∫ x, f_term x ∂ν) : 0 < ⨅ θ ∈ Θ, residual ν p θ f_init f_term",
+     "doc": "Unequal masses: the infimum is not `0`."
     }
    ],
    "library": "scaffold",
@@ -31116,9 +31614,12 @@
     "variable {c p : ℝ}",
     "variable {c p : ℝ} {V : ℝ → ℝ} {M : ℝ}",
     "variable {V : Type*} [Fintype V]",
-    "variable {V : Type*} [Fintype V] {K : V → V → ℝ} {lam : V → ℝ}"
+    "variable {V : Type*} [Fintype V] {K : V → V → ℝ} {lam : V → ℝ}",
+    "variable {q : ℝ}",
+    "variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {Q : E →L[ℝ] E}",
+    "variable {q : ℝ}"
    ],
-   "lines": 819,
+   "lines": 1057,
    "decls": [
     {
      "name": "kern",
@@ -31554,17 +32055,17 @@
      "name": "funAct_add'",
      "full": "GFNBounds.Doubling.Remarks.funAct_add'",
      "kind": "theorem",
-     "line": 628,
+     "line": 627,
      "attrs": "",
      "private": false,
-     "statement": "theorem funAct_add' [Fintype V] (K : V → V → ℝ) (a b : V → ℝ) : Core.funAct K (fun y => a y + b y) = fun x => Core.funAct K a x + Core.funAct K b x",
+     "statement": "theorem funAct_add' (K : V → V → ℝ) (a b : V → ℝ) : Core.funAct K (fun y => a y + b y) = fun x => Core.funAct K a x + Core.funAct K b x",
      "doc": ""
     },
     {
      "name": "funAct_smul'",
      "full": "GFNBounds.Doubling.Remarks.funAct_smul'",
      "kind": "theorem",
-     "line": 633,
+     "line": 632,
      "attrs": "",
      "private": false,
      "statement": "theorem funAct_smul' (K : V → V → ℝ) (c : ℝ) (a : V → ℝ) : Core.funAct K (fun y => c * a y) = fun x => c * Core.funAct K a x",
@@ -31574,7 +32075,7 @@
      "name": "funLin",
      "full": "GFNBounds.Doubling.Remarks.funLin",
      "kind": "def",
-     "line": 641,
+     "line": 640,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def funLin (lam : V → ℝ) (K : V → V → ℝ) : EuclideanSpace ℝ V →ₗ[ℝ] EuclideanSpace ℝ V",
@@ -31584,7 +32085,7 @@
      "name": "funOp",
      "full": "GFNBounds.Doubling.Remarks.funOp",
      "kind": "def",
-     "line": 653,
+     "line": 652,
      "attrs": "",
      "private": false,
      "statement": "noncomputable def funOp (lam : V → ℝ) (K : V → V → ℝ) : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V",
@@ -31594,7 +32095,7 @@
      "name": "funOp_wtL2",
      "full": "GFNBounds.Doubling.Remarks.funOp_wtL2",
      "kind": "theorem",
-     "line": 657,
+     "line": 656,
      "attrs": "",
      "private": false,
      "statement": "theorem funOp_wtL2 {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (a : V → ℝ) : funOp lam K (wtL2 lam a) = wtL2 lam (Core.funAct K a)",
@@ -31604,7 +32105,7 @@
      "name": "funOp_pow_wtL2",
      "full": "GFNBounds.Doubling.Remarks.funOp_pow_wtL2",
      "kind": "theorem",
-     "line": 662,
+     "line": 661,
      "attrs": "",
      "private": false,
      "statement": "theorem funOp_pow_wtL2 {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (a : V → ℝ) (n : ℕ) : (funOp lam K ^ n) (wtL2 lam a) = wtL2 lam ((Core.funAct K)^[n] a)",
@@ -31614,7 +32115,7 @@
      "name": "inner_funOp",
      "full": "GFNBounds.Doubling.Remarks.inner_funOp",
      "kind": "theorem",
-     "line": 673,
+     "line": 672,
      "attrs": "",
      "private": false,
      "statement": "theorem inner_funOp {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (u v : EuclideanSpace ℝ V) : ⟪funOp lam K u, v⟫ = ⟪u, densOp lam K v⟫",
@@ -31624,7 +32125,7 @@
      "name": "funOp_eq_star",
      "full": "GFNBounds.Doubling.Remarks.funOp_eq_star",
      "kind": "theorem",
-     "line": 691,
+     "line": 690,
      "attrs": "",
      "private": false,
      "statement": "theorem funOp_eq_star {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) : funOp lam K = star (densOp lam K)",
@@ -31634,7 +32135,7 @@
      "name": "meanOp_eq_star",
      "full": "GFNBounds.Doubling.Remarks.meanOp_eq_star",
      "kind": "theorem",
-     "line": 696,
+     "line": 695,
      "attrs": "",
      "private": false,
      "statement": "theorem meanOp_eq_star {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) : meanOp lam = star (meanOp lam)",
@@ -31644,7 +32145,7 @@
      "name": "norm_funOp_pow_sub",
      "full": "GFNBounds.Doubling.Remarks.norm_funOp_pow_sub",
      "kind": "theorem",
-     "line": 702,
+     "line": 701,
      "attrs": "",
      "private": false,
      "statement": "theorem norm_funOp_pow_sub {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (n : ℕ) : ‖funOp lam K ^ n - meanOp lam‖ = Core.Mixing.beta (densOp lam K) (meanOp lam) n",
@@ -31654,7 +32155,7 @@
      "name": "meanOp_mul_funOp",
      "full": "GFNBounds.Doubling.Remarks.meanOp_mul_funOp",
      "kind": "theorem",
-     "line": 712,
+     "line": 711,
      "attrs": "",
      "private": false,
      "statement": "theorem meanOp_mul_funOp {K : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) : meanOp lam * funOp lam K = meanOp lam",
@@ -31664,7 +32165,7 @@
      "name": "funOp_mul_meanOp",
      "full": "GFNBounds.Doubling.Remarks.funOp_mul_meanOp",
      "kind": "theorem",
-     "line": 719,
+     "line": 718,
      "attrs": "",
      "private": false,
      "statement": "theorem funOp_mul_meanOp {K : V → V → ℝ} {lam : V → ℝ} (hK : Core.IsMarkov K) (hlam : ∀ x, 0 < lam x) : funOp lam K * meanOp lam = meanOp lam",
@@ -31674,7 +32175,7 @@
      "name": "meanOp_mul_self",
      "full": "GFNBounds.Doubling.Remarks.meanOp_mul_self",
      "kind": "theorem",
-     "line": 725,
+     "line": 724,
      "attrs": "",
      "private": false,
      "statement": "theorem meanOp_mul_self {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) : meanOp lam * meanOp lam = meanOp lam",
@@ -31684,7 +32185,7 @@
      "name": "inverse_sub_eq_of_tendsto",
      "full": "GFNBounds.Doubling.Remarks.inverse_sub_eq_of_tendsto",
      "kind": "theorem",
-     "line": 739,
+     "line": 738,
      "attrs": "",
      "private": false,
      "statement": "theorem inverse_sub_eq_of_tendsto (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hconv : Tendsto (partialSum (funOp lam K) (meanOp lam)) atTop (𝓝 U)) : IsUnit (1 - funOp lam K + meanOp lam) ∧ Ring.inverse (1 - funOp lam K + meanOp lam) - meanOp lam = U",
@@ -31694,7 +32195,7 @@
      "name": "bhat_le_mixing_sum",
      "full": "GFNBounds.Doubling.Remarks.bhat_le_mixing_sum",
      "kind": "theorem",
-     "line": 763,
+     "line": 762,
      "attrs": "",
      "private": false,
      "statement": "theorem bhat_le_mixing_sum (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {B : ℝ} (hB : ∀ N : ℕ, ∑ n ∈ Finset.range N, Core.Mixing.beta (densOp lam K) (meanOp lam) n ≤ B) : ‖Ring.inverse (1 - funOp lam K + meanOp lam) - meanOp lam‖ ≤ B",
@@ -31704,11 +32205,201 @@
      "name": "diffusion_apply_eq_series",
      "full": "GFNBounds.Doubling.Remarks.diffusion_apply_eq_series",
      "kind": "theorem",
-     "line": 784,
+     "line": 783,
      "attrs": "",
      "private": false,
      "statement": "theorem diffusion_apply_eq_series (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hconv : Tendsto (partialSum (funOp lam K) (meanOp lam)) atTop (𝓝 U)) (θ : V → ℝ) (x : V) : Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N, ((Core.funAct K)^[n] θ x - Graph.meanL2 lam θ)) atTop (𝓝 (unwtL2 lam ((Ring.inverse (1 - funOp lam K + meanOp lam) - meanOp lam) (wtL2 lam θ)) x))",
      "doc": "**`rem:doubling_two_constants`, the trajectory reading, as a pointwise series**: on a finite chain, wherever `Σ(P⋆ⁿ − Π)` converges in operator norm, `(Sθ)(x) = Σ_{n≥0}((P⋆ⁿθ)(x) − λ(θ))`, with `(P⋆ⁿθ)(x) = ∑_y Tⁿ(x→y)θ(y)` the `n`-fold function action — the paper's `E(θ(Xₙ) | X₀ = x)`."
+    },
+    {
+     "name": "flipK",
+     "full": "GFNBounds.Doubling.Remarks.flipK",
+     "kind": "def",
+     "line": 823,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def flipK (q : ℝ) : Fin 2 → Fin 2 → ℝ",
+     "doc": "The two-state chain that flips with probability `q`."
+    },
+    {
+     "name": "flipK_isMarkov",
+     "full": "GFNBounds.Doubling.Remarks.flipK_isMarkov",
+     "kind": "theorem",
+     "line": 827,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flipK_isMarkov (hq0 : 0 ≤ q) (hq1 : q ≤ 1) : Core.IsMarkov (flipK q)",
+     "doc": ""
+    },
+    {
+     "name": "flipK_isInvariant",
+     "full": "GFNBounds.Doubling.Remarks.flipK_isInvariant",
+     "kind": "theorem",
+     "line": 833,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flipK_isInvariant (q : ℝ) : Core.IsInvariant twoStateLam (flipK q)",
+     "doc": ""
+    },
+    {
+     "name": "flipK_invariant_unique",
+     "full": "GFNBounds.Doubling.Remarks.flipK_invariant_unique",
+     "kind": "theorem",
+     "line": 839,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flipK_invariant_unique (hq : q ≠ 0) {mu : Fin 2 → ℝ} (hinv : ∀ y, ∑ x, mu x * flipK q x y = mu y) (htot : ∑ x, mu x = 1) : mu = twoStateLam",
+     "doc": "**\"whose invariant probability is uniform\"**: for `q ≠ 0` the uniform law is the only invariant probability of the flip chain."
+    },
+    {
+     "name": "densOp_flipK",
+     "full": "GFNBounds.Doubling.Remarks.densOp_flipK",
+     "kind": "theorem",
+     "line": 853,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densOp_flipK (q : ℝ) : densOp twoStateLam (flipK q) = meanOp twoStateLam + (1 - 2 * q) • (1 - meanOp twoStateLam)",
+     "doc": "The flip chain's operators, in terms of `Π`: `P = P⋆ = Π + (1 − 2q)(Id − Π)`."
+    },
+    {
+     "name": "funOp_flipK",
+     "full": "GFNBounds.Doubling.Remarks.funOp_flipK",
+     "kind": "theorem",
+     "line": 866,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funOp_flipK (q : ℝ) : funOp twoStateLam (flipK q) = meanOp twoStateLam + (1 - 2 * q) • (1 - meanOp twoStateLam)",
+     "doc": ""
+    },
+    {
+     "name": "flipK_funAct_centred",
+     "full": "GFNBounds.Doubling.Remarks.flipK_funAct_centred",
+     "kind": "theorem",
+     "line": 881,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flipK_funAct_centred (q : ℝ) {f : Fin 2 → ℝ} (hf : Graph.meanL2 twoStateLam f = 0) : Core.funAct (flipK q) f = fun x => (1 - 2 * q) * f x",
+     "doc": "**\"centred functions are eigenfunctions of its transition operator at the eigenvalue `1 − 2q`\"** (`−1/2` at `q = 3/4`)."
+    },
+    {
+     "name": "mul_proj_add_smul",
+     "full": "GFNBounds.Doubling.Remarks.mul_proj_add_smul",
+     "kind": "theorem",
+     "line": 893,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mul_proj_add_smul (hQ : Q * Q = Q) (a b : ℝ) : (Q + a • (1 - Q)) * (Q + b • (1 - Q)) = Q + (a * b) • (1 - Q)",
+     "doc": "Operators of the form `Q + a(Id − Q)`, `Q` idempotent, multiply by multiplying `a`."
+    },
+    {
+     "name": "pow_proj_add_smul",
+     "full": "GFNBounds.Doubling.Remarks.pow_proj_add_smul",
+     "kind": "theorem",
+     "line": 902,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pow_proj_add_smul (hQ : Q * Q = Q) (r : ℝ) (n : ℕ) : (Q + r • (1 - Q)) ^ n = Q + r ^ n • (1 - Q)",
+     "doc": ""
+    },
+    {
+     "name": "beta_flipK",
+     "full": "GFNBounds.Doubling.Remarks.beta_flipK",
+     "kind": "theorem",
+     "line": 913,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem beta_flipK (q : ℝ) (n : ℕ) : Core.Mixing.beta (densOp twoStateLam (flipK q)) (meanOp twoStateLam) n = |1 - 2 * q| ^ n",
+     "doc": "`β̂ₙ = |1 − 2q|ⁿ` on the flip chain, with `β̂ₙ = ‖Pⁿ − Π‖` on the density action."
+    },
+    {
+     "name": "mixing_flipK",
+     "full": "GFNBounds.Doubling.Remarks.mixing_flipK",
+     "kind": "theorem",
+     "line": 920,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mixing_flipK (hq0 : 0 < q) (hq1 : q < 1) : Core.Mixing (densOp twoStateLam (flipK q)) (meanOp twoStateLam)",
+     "doc": "**Summable mixing exhibited** on the flip chain, `0 < q < 1`."
+    },
+    {
+     "name": "B_flipK",
+     "full": "GFNBounds.Doubling.Remarks.B_flipK",
+     "kind": "theorem",
+     "line": 931,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem B_flipK (hq0 : 0 < q) (hq1 : q < 1) : Core.Mixing.B (densOp twoStateLam (flipK q)) (meanOp twoStateLam) = (1 - |1 - 2 * q|)⁻¹",
+     "doc": "The mixing sum `Σ β̂ₙ = (1 − |1 − 2q|)⁻¹` on the flip chain, `0 < q < 1`."
+    },
+    {
+     "name": "diffusion_flipK",
+     "full": "GFNBounds.Doubling.Remarks.diffusion_flipK",
+     "kind": "theorem",
+     "line": 939,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem diffusion_flipK (hq : q ≠ 0) : Ring.inverse (1 - funOp twoStateLam (flipK q) + meanOp twoStateLam) - meanOp twoStateLam = (2 * q)⁻¹ • (1 - meanOp twoStateLam)",
+     "doc": "**The diffusion operator of the flip chain**: `S = (Id − P⋆ + Π)^{-1} − Π = (2q)^{-1}(Id − Π)`, for `q ≠ 0`."
+    },
+    {
+     "name": "norm_diffusion_flipK",
+     "full": "GFNBounds.Doubling.Remarks.norm_diffusion_flipK",
+     "kind": "theorem",
+     "line": 965,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_diffusion_flipK {q : ℝ} (hq : 0 < q) : ‖Ring.inverse (1 - funOp twoStateLam (flipK q) + meanOp twoStateLam) - meanOp twoStateLam‖ = (2 * q)⁻¹",
+     "doc": "`‖S‖ = (2q)^{-1}` on the flip chain, `q > 0`."
+    },
+    {
+     "name": "two_constants_flip_three_quarters",
+     "full": "GFNBounds.Doubling.Remarks.two_constants_flip_three_quarters",
+     "kind": "theorem",
+     "line": 976,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem two_constants_flip_three_quarters : (∀ mu : Fin 2 → ℝ, (∀ y, ∑ x, mu x * flipK (3 / 4) x y = mu y) → ∑ x, mu x = 1 → mu = twoStateLam) ∧ Core.IsInvariant twoStateLam (flipK (3 / 4)) ∧ (∀ f : Fin 2 → ℝ, Graph.meanL2 twoStateLam f = 0 → Core.funAct (flipK (3 / 4)) f = fun x => -(1 / 2) * f x) ∧ ‖Ring.inverse (1 - funOp twoStateLam (flipK (3 / 4)) + meanOp twoStateLam) - meanOp twoStateLam‖ = 2 / 3 ∧ (∀ n : ℕ, Core.Mixing.beta (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam) n = ((2 : ℝ) ^ n)⁻¹) ∧ Core.Mixing (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam) ∧ Core.Mixing.B (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam) = 2 ∧ ‖Ring.inverse (1 - funOp twoStateLam (flipK (3 / 4)) + meanOp twoStateLam) - meanOp twoStateLam‖ ≠ Core.Mixing.B (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam)",
+     "doc": "**`rem:doubling_two_constants`, the witness**: on the two-state chain that flips with probability `3/4`, whose invariant probability is uniform and whose centred functions are eigenfunctions of its transition operator at `−1/2`, the diffusion constant is `B̂ = 2/3` while `β̂ₙ = 2^{-n}` for every `n ≥ 0` and `Σₙ β̂ₙ = 2`: the two constants written `B̂` do not coincide."
+    },
+    {
+     "name": "two_constants_flip_half",
+     "full": "GFNBounds.Doubling.Remarks.two_constants_flip_half",
+     "kind": "theorem",
+     "line": 1008,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem two_constants_flip_half : ‖Ring.inverse (1 - funOp twoStateLam (flipK (1 / 2)) + meanOp twoStateLam) - meanOp twoStateLam‖ = 1 ∧ Core.Mixing.B (densOp twoStateLam (flipK (1 / 2))) (meanOp twoStateLam) = 1",
+     "doc": "**`rem:doubling_two_constants`, \"at the flip probability `1/2` both equal `1`\"**."
+    },
+    {
+     "name": "flipK_half_eq_twoStateK",
+     "full": "GFNBounds.Doubling.Remarks.flipK_half_eq_twoStateK",
+     "kind": "theorem",
+     "line": 1020,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flipK_half_eq_twoStateK : flipK (1 / 2) = twoStateK",
+     "doc": "The flip chain at `q = 1/2` is `Freezing.lean`'s `twoStateK`, the chain of `prop:nonlinear_freezing`(2), whose `B̂ = 1` is `twoState_B_densOp`."
+    },
+    {
+     "name": "bhat_le_mixing_sum_check",
+     "full": "GFNBounds.Doubling.Remarks.bhat_le_mixing_sum_check",
+     "kind": "theorem",
+     "line": 1027,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bhat_le_mixing_sum_check : ‖Ring.inverse (1 - funOp twoStateLam (flipK (3 / 4)) + meanOp twoStateLam) - meanOp twoStateLam‖ ≤ 2",
+     "doc": "**The ordering, checked on the witness**: `bhat_le_mixing_sum` applies to the flip chain at `3/4` (its hypotheses are met), and returns `2/3 ≤ 2`."
+    },
+    {
+     "name": "diffusion_series_converges_check",
+     "full": "GFNBounds.Doubling.Remarks.diffusion_series_converges_check",
+     "kind": "theorem",
+     "line": 1040,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem diffusion_series_converges_check : ∃ U : EuclideanSpace ℝ (Fin 2) →L[ℝ] EuclideanSpace ℝ (Fin 2), Tendsto (partialSum (funOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam)) atTop (𝓝 U)",
+     "doc": "**Non-vacuity of `diffusion_apply_eq_series`**: on the flip chain at `3/4` the series `Σ(P⋆ⁿ − Π)` converges in operator norm, so the trajectory reading applies there."
     }
    ],
    "library": "scaffold",
@@ -31730,7 +32421,7 @@
     "variable {V : Type*} [Fintype V]",
     "variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]"
    ],
-   "lines": 558,
+   "lines": 994,
    "decls": [
     {
      "name": "extT",
@@ -32141,6 +32832,326 @@
      "private": false,
      "statement": "def testA : Fin 5 → ℝ",
      "doc": "The test density `𝟙_{x₁} − 𝟙_{x₂}`, of `λ`-mean zero."
+    },
+    {
+     "name": "meanL2_testA",
+     "full": "GFNBounds.Graph.CycleRemarks.meanL2_testA",
+     "kind": "theorem",
+     "line": 555,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanL2_testA (p : ℝ) : Graph.meanL2 (lam p) testA = 0",
+     "doc": ""
+    },
+    {
+     "name": "ipL2_testA",
+     "full": "GFNBounds.Graph.CycleRemarks.ipL2_testA",
+     "kind": "theorem",
+     "line": 559,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_testA (p : ℝ) : Graph.ipL2 (lam p) testA testA = 2 / (5 - 2 * p)",
+     "doc": ""
+    },
+    {
+     "name": "meanOp_testA",
+     "full": "GFNBounds.Graph.CycleRemarks.meanOp_testA",
+     "kind": "theorem",
+     "line": 563,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanOp_testA {p : ℝ} (hp1 : p < 1) : meanOp (lam p) (wtL2 (lam p) testA) = 0",
+     "doc": ""
+    },
+    {
+     "name": "norm_wtL2_sq",
+     "full": "GFNBounds.Graph.CycleRemarks.norm_wtL2_sq",
+     "kind": "theorem",
+     "line": 566,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_wtL2_sq {p : ℝ} (hp1 : p ≤ 1) (a : Fin 5 → ℝ) : ‖wtL2 (lam p) a‖ ^ 2 = Graph.ipL2 (lam p) a a",
+     "doc": ""
+    },
+    {
+     "name": "delta3",
+     "full": "GFNBounds.Graph.CycleRemarks.delta3",
+     "kind": "def",
+     "line": 572,
+     "attrs": "",
+     "private": false,
+     "statement": "def delta3 (p : ℝ) : Fin 5 → ℝ",
+     "doc": "Three steps of the shift move `𝟙_{x₁} − 𝟙_{x₂}` by `δ₃ = (0, p−1, 1−p, 1−p, −1)`."
+    },
+    {
+     "name": "shiftK_three_sub",
+     "full": "GFNBounds.Graph.CycleRemarks.shiftK_three_sub",
+     "kind": "theorem",
+     "line": 579,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem shiftK_three_sub (p : ℝ) : (fun x => (shiftK p)^[3] testA x - testA x) = delta3 p",
+     "doc": ""
+    },
+    {
+     "name": "ipL2_delta3",
+     "full": "GFNBounds.Graph.CycleRemarks.ipL2_delta3",
+     "kind": "theorem",
+     "line": 586,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_delta3 (p : ℝ) : Graph.ipL2 (lam p) (delta3 p) (delta3 p) = (1 - p) * (4 - 3 * p) / (5 - 2 * p)",
+     "doc": ""
+    },
+    {
+     "name": "three_step_defect",
+     "full": "GFNBounds.Graph.CycleRemarks.three_step_defect",
+     "kind": "theorem",
+     "line": 593,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem three_step_defect {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p < 1) : ‖(densOp (lam p) (kern p) ^ 3) (wtL2 (lam p) testA) - wtL2 (lam p) testA‖ ^ 2 ≤ 2 * (1 - p) * ‖wtL2 (lam p) testA‖ ^ 2",
+     "doc": "**The three-step defect is `O(√(1−p))`**: `‖P³v − v‖² ≤ 2(1−p)‖v‖²` for `v = 𝟙_{x₁} − 𝟙_{x₂}` in `L²(λ)`, on `[0,1)`."
+    },
+    {
+     "name": "betaCyc_three_mul_ge_half",
+     "full": "GFNBounds.Graph.CycleRemarks.betaCyc_three_mul_ge_half",
+     "kind": "theorem",
+     "line": 604,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem betaCyc_three_mul_ge_half {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p < 1) {K : ℕ} (hK : 8 * (K : ℝ) ^ 2 * (1 - p) ≤ 1) {k : ℕ} (hk : k ≤ K) : 1 / 2 ≤ betaCyc p (3 * k)",
+     "doc": "**`β̂_{3k} ≥ 1/2` for `k ≤ K` once `8K²(1−p) ≤ 1`.**"
+    },
+    {
+     "name": "betaCyc_partial_sum_ge",
+     "full": "GFNBounds.Graph.CycleRemarks.betaCyc_partial_sum_ge",
+     "kind": "theorem",
+     "line": 650,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem betaCyc_partial_sum_ge {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p < 1) {K : ℕ} (hK : 8 * (K : ℝ) ^ 2 * (1 - p) ≤ 1) : (K : ℝ) / 2 ≤ ∑ n ∈ Finset.range (3 * K), betaCyc p n",
+     "doc": "**`∑_{n<3K} β̂_n ≥ K/2` once `8K²(1−p) ≤ 1`.**"
+    },
+    {
+     "name": "blowK",
+     "full": "GFNBounds.Graph.CycleRemarks.blowK",
+     "kind": "def",
+     "line": 661,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def blowK (C : ℝ) : ℕ",
+     "doc": "The explicit number of blocks `K(C) := ⌊2|C|⌋₊ + 1`."
+    },
+    {
+     "name": "mixing_sum_gt",
+     "full": "GFNBounds.Graph.CycleRemarks.mixing_sum_gt",
+     "kind": "theorem",
+     "line": 666,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mixing_sum_gt {C p : ℝ} (hp0 : 0 ≤ p) (hp1 : p < 1) (hpδ : 1 - 1 / (8 * (blowK C : ℝ) ^ 2) < p) : C < ∑ n ∈ Finset.range (3 * blowK C), betaCyc p n",
+     "doc": "**`rem:cycle_no_stalemate`, the mixing sum tends to `+∞` as `p → 1`, with an explicit threshold**: if `1 − 1/(8K(C)²) < p < 1` (and `p ≥ 0`), then the partial sum of `β̂_n` over `n < 3K(C)` exceeds `C`."
+    },
+    {
+     "name": "eventually_mixing_threshold",
+     "full": "GFNBounds.Graph.CycleRemarks.eventually_mixing_threshold",
+     "kind": "theorem",
+     "line": 684,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eventually_mixing_threshold (C : ℝ) : ∀ᶠ p in 𝓝[<] (1 : ℝ), 0 ≤ p ∧ p < 1 ∧ 1 - 1 / (8 * (blowK C : ℝ) ^ 2) < p",
+     "doc": ""
+    },
+    {
+     "name": "mixing_sum_eventually_gt",
+     "full": "GFNBounds.Graph.CycleRemarks.mixing_sum_eventually_gt",
+     "kind": "theorem",
+     "line": 695,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mixing_sum_eventually_gt (C : ℝ) : ∀ᶠ p in 𝓝[<] (1 : ℝ), ∃ N : ℕ, C < ∑ n ∈ Finset.range N, betaCyc p n",
+     "doc": "**The mixing sum tends to `+∞` as `p → 1⁻`**, partial-sum form (kb 0031): for every `C` the partial sums eventually exceed `C`."
+    },
+    {
+     "name": "mixing_sum_tendsto_top",
+     "full": "GFNBounds.Graph.CycleRemarks.mixing_sum_tendsto_top",
+     "kind": "theorem",
+     "line": 701,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mixing_sum_tendsto_top : Tendsto (fun p : ℝ => ∑' n, ENNReal.ofReal (betaCyc p n)) (𝓝[<] 1) (𝓝 ⊤)",
+     "doc": "**The mixing sum `∑ₙ β̂ₙ`, read in `[0,∞]`, tends to `+∞` as `p → 1⁻`.**"
+    },
+    {
+     "name": "rho_mixing_ennreal_tendsto",
+     "full": "GFNBounds.Graph.CycleRemarks.rho_mixing_ennreal_tendsto",
+     "kind": "theorem",
+     "line": 717,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rho_mixing_ennreal_tendsto (c : ℝ) : Tendsto (fun p : ℝ => ENNReal.ofReal c / (∑' n, ENNReal.ofReal (betaCyc p n)) ^ 2) (𝓝[<] 1) (𝓝 0)",
+     "doc": "**The rate `ϱ = g''(1)w_min/B̂²` read at the mixing sum tends to `0` as `p → 1⁻`**, in `[0,∞]`, where `c/∞ = 0`: no summability is assumed."
+    },
+    {
+     "name": "rho_mixing_partial",
+     "full": "GFNBounds.Graph.CycleRemarks.rho_mixing_partial",
+     "kind": "theorem",
+     "line": 728,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rho_mixing_partial (g2 wmin : ℝ) (hc : 0 ≤ g2 * wmin) {ε : ℝ} (hε : 0 < ε) : ∀ᶠ p in 𝓝[<] (1 : ℝ), ∀ B : ℝ, (∀ N : ℕ, ∑ n ∈ Finset.range N, betaCyc p n ≤ B) → rhoL g2 wmin B < ε",
+     "doc": "**The same, in `ℝ`, for every real bound of the partial sums** (kb 0031): eventually as `p → 1⁻`, every `B` bounding all partial sums of `β̂_n` gives `ϱ = g''(1)w_min/B² < ε`."
+    },
+    {
+     "name": "rho_mixing_tsum_tendsto",
+     "full": "GFNBounds.Graph.CycleRemarks.rho_mixing_tsum_tendsto",
+     "kind": "theorem",
+     "line": 751,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rho_mixing_tsum_tendsto (g2 wmin : ℝ) (hc : 0 ≤ g2 * wmin) : Tendsto (fun p : ℝ => rhoL g2 wmin (Core.Mixing.B (densOp (lam p) (kern p)) (meanOp (lam p)))) (𝓝[<] 1) (𝓝 0)",
+     "doc": "**The same, at the library's `Core.Mixing.B`** (the `tsum` in `ℝ`): `rhoL g''(1) w_min B̂ → 0`."
+    },
+    {
+     "name": "not_summable_of_one_le",
+     "full": "GFNBounds.Graph.CycleRemarks.not_summable_of_one_le",
+     "kind": "theorem",
+     "line": 766,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem not_summable_of_one_le {β : ℕ → ℝ} {m : ℕ} (hm : 0 < m) (h : ∀ k, 1 ≤ β (m * k)) : ¬ Summable β",
+     "doc": ""
+    },
+    {
+     "name": "tsum_ofReal_eq_top_of_one_le",
+     "full": "GFNBounds.Graph.CycleRemarks.tsum_ofReal_eq_top_of_one_le",
+     "kind": "theorem",
+     "line": 774,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tsum_ofReal_eq_top_of_one_le {β : ℕ → ℝ} (hβ : ∀ n, 0 ≤ β n) {m : ℕ} (hm : 0 < m) (h : ∀ k, 1 ≤ β (m * k)) : ∑' n, ENNReal.ofReal (β n) = ⊤",
+     "doc": ""
+    },
+    {
+     "name": "ipL2_testA_pos",
+     "full": "GFNBounds.Graph.CycleRemarks.ipL2_testA_pos",
+     "kind": "theorem",
+     "line": 790,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_testA_pos {p : ℝ} (hp1 : p ≤ 1) : 0 < ‖wtL2 (lam p) testA‖",
+     "doc": ""
+    },
+    {
+     "name": "one_le_beta_of_fixed",
+     "full": "GFNBounds.Graph.CycleRemarks.one_le_beta_of_fixed",
+     "kind": "theorem",
+     "line": 796,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_le_beta_of_fixed {P Pi : EuclideanSpace ℝ (Fin 5) →L[ℝ] EuclideanSpace ℝ (Fin 5)} {v : EuclideanSpace ℝ (Fin 5)} (hv : 0 < ‖v‖) (hPi : Pi v = 0) {n : ℕ} (hfix : (P ^ n) v = v) : 1 ≤ Core.Mixing.beta P Pi n",
+     "doc": ""
+    },
+    {
+     "name": "betaCyc_zero_ge",
+     "full": "GFNBounds.Graph.CycleRemarks.betaCyc_zero_ge",
+     "kind": "theorem",
+     "line": 805,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem betaCyc_zero_ge (k : ℕ) : 1 ≤ betaCyc 0 (5 * k)",
+     "doc": "**At `p = 0` the chain is the deterministic `5`-cycle**: `β̂_{5k} ≥ 1` for every `k`."
+    },
+    {
+     "name": "shift1",
+     "full": "GFNBounds.Graph.CycleRemarks.shift1",
+     "kind": "def",
+     "line": 817,
+     "attrs": "",
+     "private": false,
+     "statement": "def shift1 (a : Fin 5 → ℝ) : Fin 5 → ℝ",
+     "doc": "The density action of `kern 1` in closed form: on `λ = (0, 1/3, 1/3, 1/3, 0)` the two marks carry no mass and the cycle is a deterministic rotation."
+    },
+    {
+     "name": "cutA",
+     "full": "GFNBounds.Graph.CycleRemarks.cutA",
+     "kind": "def",
+     "line": 825,
+     "attrs": "",
+     "private": false,
+     "statement": "def cutA (a : Fin 5 → ℝ) : Fin 5 → ℝ",
+     "doc": "`a` cut to the support of `lam 1`."
+    },
+    {
+     "name": "unwt_wt_one",
+     "full": "GFNBounds.Graph.CycleRemarks.unwt_wt_one",
+     "kind": "theorem",
+     "line": 832,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unwt_wt_one (a : Fin 5 → ℝ) : unwtL2 (lam 1) (wtL2 (lam 1) a) = cutA a",
+     "doc": ""
+    },
+    {
+     "name": "densOp_one_wtL2",
+     "full": "GFNBounds.Graph.CycleRemarks.densOp_one_wtL2",
+     "kind": "theorem",
+     "line": 844,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densOp_one_wtL2 (a : Fin 5 → ℝ) : densOp (lam 1) (kern 1) (wtL2 (lam 1) a) = wtL2 (lam 1) (shift1 a)",
+     "doc": ""
+    },
+    {
+     "name": "meanOp_one_testA",
+     "full": "GFNBounds.Graph.CycleRemarks.meanOp_one_testA",
+     "kind": "theorem",
+     "line": 853,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanOp_one_testA : meanOp (lam 1) (wtL2 (lam 1) testA) = 0",
+     "doc": ""
+    },
+    {
+     "name": "betaCyc_one_ge",
+     "full": "GFNBounds.Graph.CycleRemarks.betaCyc_one_ge",
+     "kind": "theorem",
+     "line": 862,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem betaCyc_one_ge (k : ℕ) : 1 ≤ betaCyc 1 (3 * k)",
+     "doc": "**At `p = 1` the cycle `x₁ → x₃ → x₂ → x₁` closes**: `β̂_{3k} ≥ 1` for every `k`."
+    },
+    {
+     "name": "mixing_sum_endpoints",
+     "full": "GFNBounds.Graph.CycleRemarks.mixing_sum_endpoints",
+     "kind": "theorem",
+     "line": 875,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mixing_sum_endpoints : kern 1 1 0 = 0 ∧ kern 0 1 3 = 0 ∧ ∀ p : ℝ, p = 0 ∨ p = 1 → Core.IsMarkov (kern p) ∧ Core.IsInvariant (lam p) (kern p) ∧ ∑ x, lam p x = 1 ∧ (∀ m : Fin 5 → ℝ, (∀ y, ∑ x, m x * kern p x y = m y) → ∑ x, m x = 1 → m = lam p) ∧ ¬ Summable (betaCyc p) ∧ ∑' n, ENNReal.ofReal (betaCyc p n) = ⊤",
+     "doc": "**`rem:cycle_no_stalemate`, the endpoints**: at `p = 1` the edge `s₀ → x₁` carries no backward probability, at `p = 0` the edge `x₃ → x₁` carries none; at both, `kern p` is Markov, `lam p` is its invariant probability and the only one, and the mixing sum `∑ₙ β̂ₙ` is `+∞` — the coefficients are not summable, and their sum in `[0,∞]` is `⊤`."
+    },
+    {
+     "name": "rhoSigma_cycle_tendsto",
+     "full": "GFNBounds.Graph.CycleRemarks.rhoSigma_cycle_tendsto",
+     "kind": "theorem",
+     "line": 905,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rhoSigma_cycle_tendsto (g2 wmin : ℝ) : Tendsto (fun p => rhoL g2 wmin (BhatSigma cyc (hitExp p) (lam p))) (𝓝[<] 1) (𝓝 0) ∧ Tendsto (fun p => rhoSigma g2 wmin (Graph.minOver cyc (lam p)) (Graph.sigmaStar cyc (hitExp p))) (𝓝[<] 1) (𝓝 0)",
+     "doc": "**`rem:cycle_no_stalemate`, `ϱ_σ → 0` as `p → 1⁻`**: the rate of `prop:morozov_rate`*(3)*, `ϱ_σ = g''(1)w_min/B̂_σ² = g''(1)w_min λ_min/σ_*²`, in both library forms."
+    },
+    {
+     "name": "kappa_cycle_tendsto",
+     "full": "GFNBounds.Graph.CycleRemarks.kappa_cycle_tendsto",
+     "kind": "theorem",
+     "line": 921,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem kappa_cycle_tendsto {wmin wsup : ℝ} (hwmin : 0 < wmin) (hws : wmin ≤ wsup) {u0 : Fin 5 → ℝ} (hu0 : ∀ x, 0 < u0 x) (L0 : ℝ → ℝ) : Tendsto (fun p => wmin * Real.sqrt (Graph.minOver cyc (lam p)) / (Graph.nrmL2 (lam p) u0 * wsup * max 1 (Real.sqrt (L0 p / (wmin * Graph.minOver cyc (lam p)))))) (𝓝[<] 1) (𝓝 0)",
+     "doc": "**`rem:cycle_no_stalemate`, the constant of `cor:global_lojasiewicz` tends to `0` as `p → 1⁻`**: `κ = w_min λ_min^{1/2}/(‖u₀‖_{L²(λ)} ‖w‖_∞ M)`, `M = max(1, √(𝓛(μ₀)/(w_min λ_min)))`, at a fixed positive `u₀`, fixed `0 < w_min ≤ ‖w‖_∞`, and for any value `L0 p` of the initial loss."
     }
    ],
    "library": "scaffold",

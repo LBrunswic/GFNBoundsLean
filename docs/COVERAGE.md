@@ -90,7 +90,7 @@ The **bucket** says how far the rest is, and every non-`A` row carries its obstr
 | A | `theo:global_dichotomy_full` | 914–924 | 🟡 partial | D | `Balance/MassIdentity.lean`<br>`Balance/Freezing.lean`<br>`Balance/GlobalConvergence.lean`<br>`Balance/FreezingGeneral.lean` | — |
 | A | `prop:morozov_rate` | 930–972 | 🟡 partial | B | `Graph/Morozov.lean`<br>`Graph/MorozovConsume.lean`<br>`Balance/LiftFinite.lean` | — |
 | A | `cor:global_lojasiewicz` | 974–997 | ✅ closed | A | `Balance/Flow.lean`<br>`Balance/Lojasiewicz.lean`<br>`Balance/MassAscent.lean`<br>`Balance/BoundaryBlowup.lean` | — |
-| A | `theo:training_speed_full` | 999–1093 | 🟡 partial | B | `Balance/RatioBridge.lean`<br>`Balance/TrainingSpeed.lean`<br>`Balance/C3Wrappers.lean` | — |
+| A | `theo:training_speed_full` | 999–1093 | 🟡 partial | B | `Balance/RatioBridge.lean`<br>`Balance/TrainingSpeed.lean`<br>`Balance/C3Wrappers.lean`<br>`Balance/DiscreteGlobal.lean` | — |
 | A | `rem:visit_ratio` | 1095–1101 | ⬜ open | B | — | — |
 | A | `def:path_connected` | 1110–1112 | ✅ closed | A | `Graph/Setting.lean` | — |
 | A | `def:loop_closure` | 1114–1116 | ✅ closed | A | `Graph/Setting.lean` | — |
@@ -110,7 +110,7 @@ The **bucket** says how far the rest is, and every non-`A` row carries its obstr
 | S3 | `theo:RL_CV_bound` | 3–13 | 🟡 partial | B | `Core/StableBound.lean` | — |
 | S3 | `theo:IL_CV_bound_body` | 42–51 | 🟡 partial | B | `Core/ILBound.lean` | — |
 | S4 | `theo:no_bound_divergence` | 7–17 | ✅ closed | B | `Graph/CycleDivergence.lean` | — |
-| S4 | `theo:training_speed` | 69–82 | 🟡 partial | B | `Balance/RatioBridge.lean`<br>`Balance/TrainingSpeed.lean`<br>`Balance/C3Wrappers.lean` | — |
+| S4 | `theo:training_speed` | 69–82 | 🟡 partial | B | `Balance/RatioBridge.lean`<br>`Balance/TrainingSpeed.lean`<br>`Balance/C3Wrappers.lean`<br>`Balance/DiscreteGlobal.lean` | — |
 | S4 | `theo:first_variation` | 122–128 | 🟡 partial | D | `Balance/FirstVariation.lean`<br>`Balance/Flow.lean` | — |
 | S4 | `theo:gd_diffusion` | 147–153 | 🟡 partial | D | `Balance/Expansion.lean` | — |
 | S4 | `theo:db_stable_frozen` | 159–165 | 🟡 partial | D | `Balance/Flow.lean`<br>`Balance/Discrete.lean`<br>`Balance/WeightedL2.lean` | — |

@@ -68,6 +68,7 @@ import GFNBounds.Balance.C3Wrappers
 import GFNBounds.Doubling.ExpansionSecond
 import GFNBounds.Doubling.WeightFull
 import GFNBounds.Balance.LiftFinite
+import GFNBounds.Balance.DiscreteGlobal
 
 /-!
 # Axiom audit
@@ -688,3 +689,23 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.lift_coercivity_graph
 #print axioms GFNBounds.Balance.lift_coercivity_twoState
 #print axioms GFNBounds.Balance.twoState_lift_beta_one
+
+-- `theo:training_speed_full` item 3, the discrete global phase — GFNBounds/Balance/DiscreteGlobal.lean
+#print axioms GFNBounds.Balance.DiscreteGlobal.training_speed_gd
+#print axioms GFNBounds.Balance.DiscreteGlobal.training_speed_gd_minPos
+#print axioms GFNBounds.Balance.DiscreteGlobal.no_uniform_step
+#print axioms GFNBounds.Balance.DiscreteGlobal.no_uniform_step_graph
+#print axioms GFNBounds.Balance.DiscreteGlobal.descent_step
+#print axioms GFNBounds.Balance.DiscreteGlobal.traj_a
+#print axioms GFNBounds.Balance.DiscreteGlobal.traj_b
+#print axioms GFNBounds.Balance.DiscreteGlobal.traj_entry
+#print axioms GFNBounds.Balance.DiscreteGlobal.traj_c
+#print axioms GFNBounds.Balance.DiscreteGlobal.traj_d
+#print axioms GFNBounds.Balance.DiscreteGlobal.k0real_eq
+#print axioms GFNBounds.Balance.DiscreteGlobal.gammaStar_pos
+#print axioms GFNBounds.Balance.DiscreteGlobal.exists_descent_seq
+#print axioms GFNBounds.Balance.DiscreteGlobal.training_speed_gd_inhabited
+#print axioms GFNBounds.Balance.DiscreteGlobal.cycle_training_speed_gd_nonvacuous
+#print axioms GFNBounds.Balance.DiscreteGlobal.Gamma3_logSq_eq_Gamma3Val
+#print axioms GFNBounds.Balance.DiscreteGlobal.eps0At_Gamma3Val_eq
+#print axioms GFNBounds.Balance.DiscreteGlobal.gamma0At_Gamma3Val_eq

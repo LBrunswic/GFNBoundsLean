@@ -73,6 +73,7 @@ import GFNBounds.Doubling.Remarks
 import GFNBounds.Balance.TrainingSpeedAssembled
 import GFNBounds.Graph.CycleRemarks
 import GFNBounds.Core.FamilyUniversality
+import GFNBounds.Graph.MorozovDB
 
 /-!
 # Axiom audit
@@ -799,3 +800,23 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Graph.PartialSupport.graphResidual_ne_zero_of_not_edge_src_snk
 #print axioms GFNBounds.Graph.PartialSupport.triangle_attained
 #print axioms GFNBounds.Graph.PartialSupport.diamond_partial_support
+
+-- `prop:morozov_rate` DB half of (3) and the leveled paragraph — GFNBounds/Graph/MorozovDB.lean
+#print axioms GFNBounds.Graph.morozov_rate_three_DB
+#print axioms GFNBounds.Graph.stable_frozen_discrete_DB_sigma
+#print axioms GFNBounds.Graph.stable_frozen_decay_DB_sigma
+#print axioms GFNBounds.Graph.local_convergence_full_DB_sigma
+#print axioms GFNBounds.Graph.local_convergence_gd_DB_sigma
+#print axioms GFNBounds.Graph.edge_reach_all
+#print axioms GFNBounds.Graph.Leveled.one_le_beta
+#print axioms GFNBounds.Graph.Leveled.mixing_sum_eq_top
+#print axioms GFNBounds.Graph.Leveled.not_mixing
+#print axioms GFNBounds.Graph.Leveled.periodic
+#print axioms GFNBounds.Graph.Leveled.bhatSigma_leveled_eq
+#print axioms GFNBounds.Graph.exists_linFlow
+#print axioms GFNBounds.Graph.ar_DB_check
+#print axioms GFNBounds.Graph.ar_stable_frozen_DB_witness
+#print axioms GFNBounds.Graph.ar_leveled_mixing_check
+#print axioms GFNBounds.Graph.arEps0_pos
+#print axioms GFNBounds.Graph.ar_local_convergence_DB_witness
+#print axioms GFNBounds.Graph.tri_leveled_mixing_check

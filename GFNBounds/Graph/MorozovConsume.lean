@@ -351,7 +351,7 @@ theorem morozov_rate_three {lam gr uH wf : V → ℝ} {gd : ℝ → ℝ}
 /-! ### The closing paragraph: the leveled graph -/
 
 /-- **`B̂_σ ≤ (t_m+1)√((2+t_m)/min_x N(x))` on a leveled graph** (`proofs.tex:857`), for the
-constant `TrainingSpeed.BhatSigma` that the substituted theorems consume, with `t_m := ℓ(s_f)`.
+constant `TrainingSpeed.BhatSigma` that the substituted theorems consume, with `t_m := ℓ(s_f)`. **(Convention corrected 2026-09-14: the paper's proof forces `t_m = ℓ(s_f) − 1`, the number of internal states — under `t_m := ℓ(s_f)` "period `t_m + 2`" would be false; the bound here stays true, one step looser. See `MorozovDB.lean`, where the bound is an equality.)**
 
 `Morozov.Leveled.bsigma_le` is the bound; all this adds is `bhatSigma_eq_visits`, which says the
 quantity it bounds is the one Theorems 9 and 10 are read at. **The other half of the paper's
@@ -486,7 +486,7 @@ theorem ar_minOver_visits : minOver ar (visits ar arGreen) = 1 := by
   · fin_cases x <;> norm_num [visits, arGreen, ar]
 
 /-- **The closing paragraph, on an instance.** On the two-vertex leveled graph `σ_* = t_m = 1`,
-`σ̄ = t_m − 1 = 0`, `N_min = 1` and `B̂_σ = √2`, comfortably inside the paper's leveled bound
+`σ̄ = t_m − 1 = 0`, `N_min = 1` and `B̂_σ = √2`, inside the leveled bound read at `t_m := ℓ(s_f)` (at the paper's `t_m = ℓ(s_f) − 1 = 0` it is an equality, `MorozovDB.lean`),
 `(t_m+1)√((2+t_m)/N_min) = 2√3`. The chain is the swap, hence periodic; that `B̂ = +∞` is not
 certified here. -/
 theorem ar_leveled_check :

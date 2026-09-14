@@ -86,7 +86,7 @@ pointwise adjointness identity `⟪Pa, b⟫ = ⟪a, Qb⟫` is used, never an ope
   see it. The rate `ϱ_σ = g''(1) w_min min N/(σ_*²(2+σ̄))` is not stated: it is `B̂_σ`
   substituted into a theorem this library does not have.
 * **The leveled-graph witness is stated only in its `B̂_σ` half.** `Leveled.bsigma_le` proves
-  `B̂_σ ≤ (t_m+1)√((2+t_m)/min N)` with `t_m := ℓ(s_f)`, and in fact the sharper
+  `B̂_σ ≤ (t_m+1)√((2+t_m)/min N)` with `t_m := ℓ(s_f)` **(Convention corrected 2026-09-14: the paper's proof forces `t_m = ℓ(s_f) − 1`, the number of internal states — under `t_m := ℓ(s_f)` "period `t_m + 2`" would be false; the bound here stays true, one step looser. See `MorozovDB.lean`, where the bound is an equality.)**, and in fact the sharper
   `σ_* = t_m`, `σ̄ = t_m − 1`. The other half — that the loop-closed chain is periodic, so
   `‖P^n − Π‖ ↛ 0` and `B̂ = +∞` — needs the operator-norm layer of obstruction 2 and is **not**
   stated. Without it the file exhibits a finite `B̂_σ` on a graph where the paper says `B̂` is
@@ -1139,7 +1139,7 @@ theorem sigmaBar_eq : B.sigmaBar L.lvl = L.lvl G.snk - 1 := by
   rw [BackwardPolicy.sigmaBar]
   linarith
 
-/-- **The leveled witness for `B̂_σ`** (`proofs.tex:855`): with `t_m := ℓ(s_f)`,
+/-- **The leveled witness for `B̂_σ`** (`proofs.tex:952`): with `t_m := ℓ(s_f)` **(Convention corrected 2026-09-14: the paper's proof forces `t_m = ℓ(s_f) − 1`, the number of internal states — under `t_m := ℓ(s_f)` "period `t_m + 2`" would be false; the bound here stays true, one step looser. See `MorozovDB.lean`, where the bound is an equality.)**,
 `B̂_σ ≤ (t_m + 1)√((2 + t_m)/min_x N(x))` — a finite bound with no aperiodicity anywhere, on the
 graphs where the paper says the mixing constant `B̂` is infinite.
 

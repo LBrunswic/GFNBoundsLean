@@ -5637,7 +5637,7 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : Mar
 *strict library; 610 lines; 42 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `def:path_connected` (bucket A), ✅ `def:loop_closure` (bucket A), ✅ `theo:universality_graphs` (bucket B)
+Certifies: ✅ `def:path_connected` (bucket A), ✅ `def:loop_closure` (bucket A), 🟡 `theo:universality_graphs` (bucket B)
 
 
 In scope: `variable {V : Type*} (G : MarkedGraph V)`, `variable {G}`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : MarkedGraph V} (B : BackwardPolicy G)`, `variable {B}`, `variable (B)`
@@ -5695,7 +5695,7 @@ In scope: `variable {V : Type*} (G : MarkedGraph V)`, `variable {G}`, `variable 
 *strict library; 546 lines; 38 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_graphs` (bucket B)
+Certifies: 🟡 `theo:universality_graphs` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable (G : MarkedGraph V)`, `variable {G}`, `variable {G : MarkedGraph V} (B : BackwardPolicy G)`

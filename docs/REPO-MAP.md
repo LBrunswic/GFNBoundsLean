@@ -342,8 +342,8 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `GFNBounds/Graph/FrozenUnstableDB.lean` | Freezing the backward policy does not restore stability of the detailed-balance loss either **[SCOPE]** | ✅ `prop:frozen_unstable_full` B | 28 |
 | `GFNBounds/Graph/Morozov.lean` | The training rate in the variables of Morozov et al., with no Markov chain underneath **[SCOPE]** | 🟡 `prop:morozov_rate` B | 84 |
 | `GFNBounds/Graph/MorozovConsume.lean` | The three downstream theorems, re-read at `B̂_σ`: item *(3)* as a certificate of its own **[SCOPE]** | 🟡 `prop:morozov_rate` B | 30 |
-| `GFNBounds/Graph/Setting.lean` | Finite marked graphs, their loop closure, and the invariant measure of the backward chain **[SCOPE]** | ✅ `def:path_connected` A, ✅ `def:loop_closure` A, ✅ `theo:universality_graphs` B | 42 |
-| `GFNBounds/Graph/Universality.lean` | The frozen-backward family: the balanced ray, and the flow left by cutting the wrap edge **[SCOPE]** | ✅ `theo:universality_graphs` B | 38 |
+| `GFNBounds/Graph/Setting.lean` | Finite marked graphs, their loop closure, and the invariant measure of the backward chain **[SCOPE]** | ✅ `def:path_connected` A, ✅ `def:loop_closure` A, 🟡 `theo:universality_graphs` B | 42 |
+| `GFNBounds/Graph/Universality.lean` | The frozen-backward family: the balanced ray, and the flow left by cutting the wrap edge **[SCOPE]** | 🟡 `theo:universality_graphs` B | 38 |
 | `GFNBounds/Silva/Basic.lean` | Appendix B: the shared vocabulary | ✅ `prop:silva_explicit` A, ✅ `prop:silva_no_uniform` A | 15 |
 | `GFNBounds/Silva/Explicit.lean` | The Silva et al. total-variation bound, with the constant written out **[SCOPE]** | ✅ `prop:silva_explicit` A | 5 |
 | `GFNBounds/Silva/NoUniform.lean` | The state-space dependence of the Silva bound is unavoidable **[SCOPE]** | ✅ `prop:silva_no_uniform` A | 30 |

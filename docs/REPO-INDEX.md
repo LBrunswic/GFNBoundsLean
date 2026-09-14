@@ -2228,7 +2228,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 443 lines; 12 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket B), ✅ `theo:local_convergence` (bucket B)
+Certifies: 🟡 `theo:gd_diffusion_full` (bucket D), ✅ `theo:local_convergence_full` (bucket B), ✅ `theo:local_convergence` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2471,7 +2471,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Mar
 *strict library; 375 lines; 17 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:training_speed_full` (bucket B), 🟡 `theo:training_speed` (bucket B)
+Certifies: 🟡 `prop:no_distant_equilibrium` (bucket D), 🟡 `theo:training_speed_full` (bucket B), 🟡 `theo:training_speed` (bucket B)
 
 
 In scope: `variable, `∀ x, |r(x) − 1| < δ`. Step 4 of `theo:local_convergence_full` wants a radius in the`, `variable {V : Type*} [Fintype V]`
@@ -2649,7 +2649,7 @@ In scope: `variable {V : Type*}`, `variable [Fintype V]`
 *strict library; 250 lines; 15 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:sigma_mixing` (bucket A), ✅ `theo:local_convergence_full` (bucket B), 🟡 `prop:nonlinear_freezing` (bucket D), ✅ `theo:local_convergence` (bucket B)
+Certifies: 🟡 `lem:sigma_mixing` (bucket B), ✅ `theo:local_convergence_full` (bucket B), 🟡 `prop:nonlinear_freezing` (bucket D), ✅ `theo:local_convergence` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V]`
@@ -2878,7 +2878,7 @@ In scope: `variable {α : Type*} [MeasurableSpace α]`
 *strict library; 226 lines; 20 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_L2_full` (bucket A), ✅ `lem:sigma_mixing` (bucket A), ✅ `theo:universality_L2` (bucket A)
+Certifies: ✅ `theo:universality_L2_full` (bucket A), 🟡 `lem:sigma_mixing` (bucket B), ✅ `theo:universality_L2` (bucket A)
 
 
 In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi : E →L[ℝ] E}`
@@ -2914,7 +2914,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi
 *strict library; 326 lines; 24 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `lem:sigma_mixing` (bucket A)
+Certifies: 🟡 `lem:sigma_mixing` (bucket B)
 
 
 In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi : E →L[ℝ] E}`
@@ -5210,7 +5210,7 @@ Certifies: 🟡 `rem:cycle_no_stalemate` (bucket B)
 *strict library; 897 lines; 100 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:no_bound_divergence` (bucket B)
+Certifies: ✅ `theo:no_bound_divergence` (bucket B), 🟡 `lem:cycle_counterexample` (bucket B)
 
 
 In scope: `variable {M : ℕ}`, `variable {V : Type*}`, `variable [DecidableEq V]`, `variable [Fintype V]`
@@ -5386,7 +5386,7 @@ Certifies: 🟡 `rem:cycle_no_stalemate` (bucket B)
 *strict library; 713 lines; 48 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `prop:frozen_unstable_full` (bucket B), ✅ `rem:loop_closure_necessary` (bucket A), ✅ `prop:frozen_unstable` (bucket B)
+Certifies: ✅ `prop:frozen_unstable_full` (bucket A), ✅ `rem:loop_closure_necessary` (bucket A), ✅ `prop:frozen_unstable` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`, `variable {G : MarkedGraph V} (B : BackwardPolicy G)`
@@ -5450,7 +5450,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`, `varia
 *strict library; 496 lines; 28 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `prop:frozen_unstable_full` (bucket B), ✅ `prop:frozen_unstable` (bucket B)
+Certifies: ✅ `prop:frozen_unstable_full` (bucket A), ✅ `prop:frozen_unstable` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`, `variable {G : MarkedGraph V} (B : BackwardPolicy G)`

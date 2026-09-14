@@ -63,6 +63,8 @@ import GFNBounds.Doubling.TruncationBhat
 import GFNBounds.Doubling.MainPackaging
 import GFNBounds.Graph.FrozenUnstableDB
 import GFNBounds.Balance.GlobalConvergence
+import GFNBounds.Balance.FlowExistence
+import GFNBounds.Balance.C3Wrappers
 
 /-!
 # Axiom audit
@@ -600,3 +602,43 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.continuous_nrmL2
 #print axioms GFNBounds.Balance.no_distant_equilibrium_three_converges
 #print axioms GFNBounds.Balance.global_dichotomy_full_one_converges
+
+-- `prop:no_distant_equilibrium`(3), existence and uniqueness of the gradient flow — GFNBounds/Balance/FlowExistence.lean
+#print axioms GFNBounds.Balance.FlowGenerator.exists_flow
+#print axioms GFNBounds.Balance.FlowGenerator.existsUnique_flow
+#print axioms GFNBounds.Balance.isGradientFlow_unique
+#print axioms GFNBounds.Balance.reach_of_uniqueInvariant
+#print axioms GFNBounds.Balance.existsUnique_flow_logSq_of_ergodic
+#print axioms GFNBounds.Balance.existsUnique_flow_sq_of_ergodic
+#print axioms GFNBounds.Balance.existsUnique_flow_logSq
+#print axioms GFNBounds.Balance.existsUnique_flow_sq
+#print axioms GFNBounds.Balance.existsUnique_flow_logSq_graph
+#print axioms GFNBounds.Balance.existsUnique_flow_sq_graph
+#print axioms GFNBounds.Balance.no_distant_equilibrium_three_of_init
+#print axioms GFNBounds.Balance.uFloor_logSq_eq_uMin
+#print axioms GFNBounds.Balance.twoState_uniqueInvariant
+#print axioms GFNBounds.Balance.twoState_flow_exists_check
+#print axioms GFNBounds.Balance.twoState_flow_exists_check_sq
+#print axioms GFNBounds.Balance.cycle_flow_converges_check
+
+-- `theo:local_convergence_full` C^3 wrapper and DB instance; `theo:training_speed_full` items 1-2 at Gamma_3 — GFNBounds/Balance/C3Wrappers.lean
+#print axioms GFNBounds.Balance.taylor_of_C3
+#print axioms GFNBounds.Balance.local_convergence_full_C3
+#print axioms GFNBounds.Balance.local_convergence_gd_C3
+#print axioms GFNBounds.Balance.constC3_bounds
+#print axioms GFNBounds.Balance.constC3_congr
+#print axioms GFNBounds.Balance.local_convergence_full_DB
+#print axioms GFNBounds.Balance.local_convergence_gd_DB
+#print axioms GFNBounds.Balance.loss_edgeE_eq_db
+#print axioms GFNBounds.Balance.edgeKernel_mem_edgeSet
+#print axioms GFNBounds.Balance.edgeKernelE_isMarkovOn
+#print axioms GFNBounds.Balance.edgeMeasureE_isInvariant
+#print axioms GFNBounds.Balance.edgeMeasureE_pos
+#print axioms GFNBounds.Balance.edgeMeasureE_total
+#print axioms GFNBounds.Balance.Gamma3_logSq
+#print axioms GFNBounds.Balance.eps0_antitone_M3
+#print axioms GFNBounds.Balance.eps0Gamma3_le_eps0Sq
+#print axioms GFNBounds.Balance.eps0Gamma3_le_sqrt
+#print axioms GFNBounds.Balance.training_speed_full_Gamma3
+#print axioms GFNBounds.Balance.coer_edgeU
+#print axioms GFNBounds.Balance.local_convergence_full_DB_witness

@@ -4,8 +4,20 @@
   "commit": "47e2250971d3cddbfebd8dd3568180093c27d1c3",
   "commit_short": "47e2250",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "GFNBounds.lean",
+    "GFNBounds/Audit.lean",
+    "GFNBounds/Balance/C3Wrappers.lean",
+    "GFNBounds/Balance/FlowExistence.lean",
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json",
+    "paper-map.json",
+    "scaffold/GFNBoundsScaffold/"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -33,20 +45,24 @@
   "strict_library": "GFNBounds",
   "scaffold_library": "GFNBoundsScaffold",
   "scaffold_modules": [
-    "scaffold/GFNBoundsScaffold.lean"
+    "scaffold/GFNBoundsScaffold.lean",
+    "scaffold/GFNBoundsScaffold/Balance/DiscreteGlobal.lean",
+    "scaffold/GFNBoundsScaffold/Balance/LiftFinite.lean",
+    "scaffold/GFNBoundsScaffold/Doubling/ExpansionSecond.lean",
+    "scaffold/GFNBoundsScaffold/Doubling/WeightFull.lean"
   ],
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 2738,
+    "declarations": 2865,
     "by_namespace": {
       "GFNBounds.Doubling": 1199,
-      "GFNBounds.Balance": 686,
+      "GFNBounds.Balance": 813,
       "GFNBounds.Graph": 512,
       "GFNBounds.Core": 290,
       "GFNBounds.Silva": 51
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "a4e80ec1da7bca7eed927777ba0ca3d6d48b94cee463e9312346d130a922181b"
+    "sha256": "e5d6e6b9d7502b06be15d173e0a81f27934c8a129c7555983cdd1f040b9dc994"
   }
 }

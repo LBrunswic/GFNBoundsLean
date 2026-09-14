@@ -46,6 +46,66 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `twoState_ratioCap` | `BoundaryBlowup.lean` | `theorem twoState_ratioCap : ratioCap (1 / 2 : ℝ) 1 (1 / 2) = 1` |
 | `twoState_uMin` | `BoundaryBlowup.lean` | `theorem twoState_uMin : uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 = Real.exp (-1) / 4` |
 | `twoState_boundary_blowup_check` | `BoundaryBlowup.lean` | `theorem twoState_boundary_blowup_check : uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 = Real.exp (-1) / 4 ∧ 0 < Real.exp (-1) / 4 ∧ Real.exp (-1) / 4 ≤ 1 / 2 ∧ ∀ x, uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 ≤ blowupU x` |
+| `Gamma3` | `C3Wrappers.lean` | `noncomputable def Gamma3 (g : ℝ → ℝ) (a : ℝ) : ℝ` |
+| `bddAbove_abs_g3` | `C3Wrappers.lean` | `theorem bddAbove_abs_g3 {g : ℝ → ℝ} {a : ℝ} (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) : BddAbove ((fun y => \|deriv (deriv (deriv g)) y\|) '' Icc (1 - a) (1 + a))` |
+| `abs_g3_le_Gamma3` | `C3Wrappers.lean` | `theorem abs_g3_le_Gamma3 {g : ℝ → ℝ} {a : ℝ} (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) {y : ℝ} (hy : y ∈ Icc (1 - a) (1 + a)) : \|deriv (deriv (deriv g)) y\| ≤ Gamma3 g a` |
+| `Gamma3_nonneg` | `C3Wrappers.lean` | `theorem Gamma3_nonneg {g : ℝ → ℝ} {a : ℝ} (ha0 : 0 ≤ a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) : 0 ≤ Gamma3 g a` |
+| `abs_le_quadratic_of_deriv` | `C3Wrappers.lean` | `theorem abs_le_quadratic_of_deriv {e e' : ℝ → ℝ} {M b : ℝ} (hb : 0 ≤ b) (he : ∀ s ∈ Icc 0 b, HasDerivAt e (e' s) s) (h0 : e 0 = 0) (hbound : ∀ s ∈ Icc 0 b, \|e' s\| ≤ M * s) : \|e b\| ≤ M / 2 * b ^ 2` |
+| `hasDerivAt_deriv_of_C3` | `C3Wrappers.lean` | `theorem hasDerivAt_deriv_of_C3 {g : ℝ → ℝ} {a : ℝ} (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) {y : ℝ} (hy : y ∈ Icc (1 - a) (1 + a)) : HasDerivAt g (deriv g y) y ∧ HasDerivAt (deriv g) (deriv (deriv g) y) y ∧ HasDerivAt (deriv (deriv g)) (deriv (deriv (deriv g)) y) y` |
+| `abs_g2_sub_le` | `C3Wrappers.lean` | `theorem abs_g2_sub_le {g : ℝ → ℝ} {a : ℝ} (ha0 : 0 ≤ a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) {t : ℝ} (ht : t ∈ Icc (1 - a) (1 + a)) : \|deriv (deriv g) t - deriv (deriv g) 1\| ≤ Gamma3 g a * \|t - 1\|` |
+| `taylor_of_C3` | `C3Wrappers.lean` | `theorem taylor_of_C3 {g : ℝ → ℝ} {a : ℝ} (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg1 : deriv g 1 = 0) : ∀ y : ℝ, \|y - 1\| ≤ a → \|deriv g y - deriv (deriv g) 1 * (y - 1)\| ≤ Gamma3 g a / 2 * (y - 1) ^ 2` |
+| `eps0C3` | `C3Wrappers.lean` | `noncomputable def eps0C3 (g : ℝ → ℝ) (a wmin wsup Bhat lamMin : ℝ) : ℝ` |
+| `CC3` | `C3Wrappers.lean` | `noncomputable def CC3 (g : ℝ → ℝ) (a wmin wsup : ℝ) : ℝ` |
+| `gamma0C3` | `C3Wrappers.lean` | `noncomputable def gamma0C3 (g : ℝ → ℝ) (a wmin wsup Bhat : ℝ) : ℝ` |
+| `constC3_congr` | `C3Wrappers.lean` | `theorem constC3_congr {g g' : ℝ → ℝ} {a : ℝ} (h2 : deriv (deriv g) 1 = deriv (deriv g') 1) (h3 : Gamma3 g a = Gamma3 g' a) (wmin wsup Bhat lamMin : ℝ) : eps0C3 g a wmin wsup Bhat lamMin = eps0C3 g' a wmin wsup Bhat lamMin ∧ CC3 g a wmin wsup = CC3 g' a wmin wsup ∧ gamma0C3 g a wmin wsup Bhat = gamma0C3 g' a wmin wsup Bhat` |
+| `epsW_eq_of_lt_one` | `C3Wrappers.lean` | `theorem epsW_eq_of_lt_one {a g2 wmin Kex Bhat : ℝ} (ha1 : a < 1) : epsW a g2 wmin Kex Bhat = min (a / 4) (eps1 g2 wmin Kex Bhat)` |
+| `local_convergence_full_C3` | `C3Wrappers.lean` | `theorem local_convergence_full_C3 {K : V → V → ℝ} {lam w : V → ℝ} {g : ℝ → ℝ} {h : ℝ → V → ℝ} {a wsup wmin Bhat lamMin : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, \|w x\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (hflow : IsGradientFlow K lam (fun z => lam z * w z) (deriv g) fun s x => 1 + h s x) (hnorm0 : Graph.nrmL2 lam (h 0) ≤ eps0C3 g a wmin wsup Bhat lamMin) : ∃ cinf : ℝ, \|cinf - 1 - Graph.meanL2 lam (h 0)\| ≤ CC3 g a wmin wsup * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL (deriv (deriv g) 1) wmin Bhat * t / 2)) * Graph.nrmL2 lam (perpL2 lam (h 0))` |
+| `constC3_bounds` | `C3Wrappers.lean` | `theorem constC3_bounds {lam w : V → ℝ} {g : ℝ → ℝ} {a wsup wmin Bhat lamMin : ℝ} (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, \|w x\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) : eps0C3 g a wmin wsup Bhat lamMin ∈ Set.Ioc 0 (a / (16 * Cinf lamMin)) ∧ 1 ≤ CC3 g a wmin wsup ∧ 0 < gamma0C3 g a wmin wsup Bhat` |
+| `local_convergence_gd_C3` | `C3Wrappers.lean` | `theorem local_convergence_gd_C3 {K : V → V → ℝ} {lam w : V → ℝ} {g : ℝ → ℝ} {hk : ℕ → V → ℝ} {a wsup wmin Bhat lamMin gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, \|w x\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (hstep : ∀ k : ℕ, hk (k + 1) = fun x => hk k x - gam * lossGrad K lam (fun z => lam z * w z) (deriv g) (fun z => 1 + hk k z) x) (hgam0 : 0 ≤ gam) (hgam : gam ≤ gamma0C3 g a wmin wsup Bhat) (hnorm0 : Graph.nrmL2 lam (hk 0) ≤ eps0C3 g a wmin wsup Bhat lamMin) : ∀ k : ℕ, ((∀ x : V, 0 < 1 + hk k x) ∧ (∀ x : V, \|ratio K lam (fun z => 1 + hk k z) x - 1\| ≤ 2 * a / 3) ∧ ∀ d : V → ℝ, HasDerivAt (fun t : ℝ => loss K lam (fun z => lam z * w z) (fun x => 1 + hk k x + t * d x) g) (Graph.ipL2 lam (lossGrad K lam (fun z => lam z * w z) (deriv g) fun z => 1 + hk k z) d) 0) ∧ Graph.nrmL2 lam (perpL2 lam (hk (k + 1))) ≤ (1 - gam * rhoL (deriv (deriv g) 1) wmin Bhat / 4) * Graph.nrmL2 lam (perpL2 lam (hk k))` |
+| `EdgeSet` | `C3Wrappers.lean` | `abbrev EdgeSet (pb : V → V → ℝ) : Type _` |
+| `edgeKernelE` | `C3Wrappers.lean` | `def edgeKernelE (pb : V → V → ℝ) (e e' : EdgeSet pb) : ℝ` |
+| `edgeMeasureE` | `C3Wrappers.lean` | `def edgeMeasureE (pb : V → V → ℝ) (lam : V → ℝ) (e : EdgeSet pb) : ℝ` |
+| `sum_edgeSet_eq` | `C3Wrappers.lean` | `theorem sum_edgeSet_eq {pb : V → V → ℝ} (f : V × V → ℝ) (hf : ∀ p : V × V, ¬ 0 < pb p.2 p.1 → f p = 0) : ∑ e : EdgeSet pb, f e.1 = ∑ p : V × V, f p` |
+| `edgeKernel_mem_edgeSet` | `C3Wrappers.lean` | `theorem edgeKernel_mem_edgeSet {pb : V → V → ℝ} {s s' z w : V} (hpos : 0 < edgeKernel pb s s' z w) : 0 < pb w z` |
+| `edgeKernel_eq_zero_of_not_mem` | `C3Wrappers.lean` | `theorem edgeKernel_eq_zero_of_not_mem {pb : V → V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) {s s' z w : V} (hzw : ¬ 0 < pb w z) : edgeKernel pb s s' z w = 0` |
+| `edgeMeasure_eq_zero_of_not_mem` | `C3Wrappers.lean` | `theorem edgeMeasure_eq_zero_of_not_mem {pb : V → V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (lam : V → ℝ) {s s' : V} (hss : ¬ 0 < pb s' s) : edgeMeasure pb lam s s' = 0` |
+| `edgeKernelE_isMarkovOn` | `C3Wrappers.lean` | `theorem edgeKernelE_isMarkovOn {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) : Core.IsMarkovOn (edgeMeasureE pb lam) (edgeKernelE pb)` |
+| `edgeMeasureE_pos` | `C3Wrappers.lean` | `theorem edgeMeasureE_pos {pb : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (e : EdgeSet pb) : 0 < edgeMeasureE pb lam e` |
+| `edgeMeasureE_total` | `C3Wrappers.lean` | `theorem edgeMeasureE_total {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (htot : ∑ x, lam x = 1) : ∑ e : EdgeSet pb, edgeMeasureE pb lam e = 1` |
+| `edgeMeasureE_isInvariant` | `C3Wrappers.lean` | `theorem edgeMeasureE_isInvariant {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) : Core.IsInvariant (edgeMeasureE pb lam) (edgeKernelE pb)` |
+| `local_convergence_full_DB` | `C3Wrappers.lean` | `theorem local_convergence_full_DB {pb : V → V → ℝ} {lam : V → ℝ} {w : EdgeSet pb → ℝ} {g : ℝ → ℝ} {h : ℝ → EdgeSet pb → ℝ} {a wsup wmin Bhat lamMin : ℝ} (hpb : Core.IsMarkovOn lam pb) (hinvpb : Core.IsInvariant lam pb) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ e, lamMin ≤ edgeMeasureE pb lam e) (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ e, \|w e\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : EdgeSet pb → ℝ, Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) f) ≤ Bhat * Graph.nrmL2 (edgeMeasureE pb lam) (Aop (edgeKernelE pb) (edgeMeasureE pb lam) f)) (hflow : IsGradientFlow (edgeKernelE pb) (edgeMeasureE pb lam) (fun e => edgeMeasureE pb lam e * w e) (deriv g) fun s e => 1 + h s e) (hnorm0 : Graph.nrmL2 (edgeMeasureE pb lam) (h 0) ≤ eps0C3 g a wmin wsup Bhat lamMin) : ∃ cinf : ℝ, \|cinf - 1 - Graph.meanL2 (edgeMeasureE pb lam) (h 0)\| ≤ CC3 g a wmin wsup * Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 (edgeMeasureE pb lam) (fun e => h t e - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL (deriv (deriv g) 1) wmin Bhat * t / 2)) * Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) (h 0))` |
+| `local_convergence_gd_DB` | `C3Wrappers.lean` | `theorem local_convergence_gd_DB {pb : V → V → ℝ} {lam : V → ℝ} {w : EdgeSet pb → ℝ} {g : ℝ → ℝ} {hk : ℕ → EdgeSet pb → ℝ} {a wsup wmin Bhat lamMin gam : ℝ} (hpb : Core.IsMarkovOn lam pb) (hinvpb : Core.IsInvariant lam pb) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ e, lamMin ≤ edgeMeasureE pb lam e) (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ e, \|w e\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : EdgeSet pb → ℝ, Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) f) ≤ Bhat * Graph.nrmL2 (edgeMeasureE pb lam) (Aop (edgeKernelE pb) (edgeMeasureE pb lam) f)) (hstep : ∀ k : ℕ, hk (k + 1) = fun e => hk k e - gam * lossGrad (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => edgeMeasureE pb lam z * w z) (deriv g) (fun z => 1 + hk k z) e) (hgam0 : 0 ≤ gam) (hgam : gam ≤ gamma0C3 g a wmin wsup Bhat) (hnorm0 : Graph.nrmL2 (edgeMeasureE pb lam) (hk 0) ≤ eps0C3 g a wmin wsup Bhat lamMin) : ∀ k : ℕ, ((∀ e, 0 < 1 + hk k e) ∧ (∀ e, \|ratio (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => 1 + hk k z) e - 1\| ≤ 2 * a / 3) ∧ ∀ d : EdgeSet pb → ℝ, HasDerivAt (fun t : ℝ => loss (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => edgeMeasureE pb lam z * w z) (fun e => 1 + hk k e + t * d e) g) (Graph.ipL2 (edgeMeasureE pb lam) (lossGrad (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => edgeMeasureE pb lam z * w z) (deriv g) fun z => 1 + hk k z) d) 0) ∧ Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) (hk (k + 1))) ≤ (1 - gam * rhoL (deriv (deriv g) 1) wmin Bhat / 4) * Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) (hk k))` |
+| `logSqDeriv2` | `C3Wrappers.lean` | `noncomputable def logSqDeriv2 (x : ℝ) : ℝ` |
+| `logSqDeriv3` | `C3Wrappers.lean` | `noncomputable def logSqDeriv3 (x : ℝ) : ℝ` |
+| `hasDerivAt_logSqDeriv` | `C3Wrappers.lean` | `theorem hasDerivAt_logSqDeriv {y : ℝ} (hy : 0 < y) : HasDerivAt logSqDeriv (logSqDeriv2 y) y` |
+| `hasDerivAt_logSqDeriv2` | `C3Wrappers.lean` | `theorem hasDerivAt_logSqDeriv2 {y : ℝ} (hy : 0 < y) : HasDerivAt logSqDeriv2 (logSqDeriv3 y) y` |
+| `deriv_logSq_eq` | `C3Wrappers.lean` | `theorem deriv_logSq_eq {y : ℝ} (hy : 0 < y) : deriv logSq y = logSqDeriv y ∧ deriv (deriv logSq) y = logSqDeriv2 y ∧ deriv (deriv (deriv logSq)) y = logSqDeriv3 y` |
+| `logSq_C3` | `C3Wrappers.lean` | `theorem logSq_C3 : ∀ y ∈ Icc (1 - (1/2 : ℝ)) (1 + 1/2), ContDiffAt ℝ 3 logSq y` |
+| `logSq_deriv_one` | `C3Wrappers.lean` | `theorem logSq_deriv_one : deriv logSq 1 = 0` |
+| `logSq_deriv2_one` | `C3Wrappers.lean` | `theorem logSq_deriv2_one : deriv (deriv logSq) 1 = 2` |
+| `Gamma3_logSq` | `C3Wrappers.lean` | `theorem Gamma3_logSq : Gamma3 logSq (1/2) = 48 + 32 * Real.log 2` |
+| `logSqDeriv_taylor_Gamma3` | `C3Wrappers.lean` | `theorem logSqDeriv_taylor_Gamma3 (y : ℝ) (hy : \|y - 1\| ≤ 1/2) : \|logSqDeriv y - 2 * (y - 1)\| ≤ (48 + 32 * Real.log 2) / 2 * (y - 1) ^ 2` |
+| `eps0Gamma3` | `C3Wrappers.lean` | `noncomputable def eps0Gamma3 (wmin wsup Bhat lamMin : ℝ) : ℝ` |
+| `eps0Gamma3_eq` | `C3Wrappers.lean` | `theorem eps0Gamma3_eq (wmin wsup Bhat lamMin : ℝ) : eps0Gamma3 wmin wsup Bhat lamMin = eps0C3 logSq (1/2) wmin wsup Bhat lamMin` |
+| `eps0_antitone_M3` | `C3Wrappers.lean` | `theorem eps0_antitone_M3 {g2 a wmin wsup Bhat Ci M M' : ℝ} (hg2 : 0 < g2) (ha : 0 < a) (hwmin : 0 < wmin) (hwsup : 0 < wsup) (hB : 0 < Bhat) (hCi : 0 < Ci) (hM : 0 ≤ M) (hMM : M ≤ M') : eps0 (epsW a g2 wmin (Kexp g2 a M' wsup) Bhat) Ci (C7 (C6 (Cg g2 a M') wsup) g2 wmin) (rhoL g2 wmin Bhat) (C6 (Cg g2 a M') wsup) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M wsup) Bhat) Ci (C7 (C6 (Cg g2 a M) wsup) g2 wmin) (rhoL g2 wmin Bhat) (C6 (Cg g2 a M) wsup)` |
+| `eps0Gamma3_le_eps0Sq` | `C3Wrappers.lean` | `theorem eps0Gamma3_le_eps0Sq {wmin wsup Bhat lamMin : ℝ} (hwmin : 0 < wmin) (hwsup : 0 < wsup) (hB : 0 < Bhat) (hlmin0 : 0 < lamMin) : eps0Gamma3 wmin wsup Bhat lamMin ≤ eps0Sq wmin wsup Bhat lamMin` |
+| `eps0Gamma3_pos` | `C3Wrappers.lean` | `theorem eps0Gamma3_pos {lamMin wmin wsup Bhat : ℝ} (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hwsup : 0 < wsup) (hB : 0 < Bhat) : 0 < eps0Gamma3 wmin wsup Bhat lamMin` |
+| `eps0Gamma3_le_sqrt` | `C3Wrappers.lean` | `theorem eps0Gamma3_le_sqrt {lamMin wmin wsup Bhat : ℝ} (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hwsup : 0 < wsup) : eps0Gamma3 wmin wsup Bhat lamMin ≤ Real.sqrt lamMin / 32` |
+| `training_speed_full_Gamma3` | `C3Wrappers.lean` | `theorem training_speed_full_Gamma3 {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam gr uH wf : V → ℝ} {wmin wsup : ℝ} {u : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : (∀ x, lam x = Graph.visits G gr x / (2 + B.sigmaBar uH)) ∧ Graph.minOver G lam = Graph.minOver G (Graph.visits G gr) / (2 + B.sigmaBar uH) ∧ (∀ t : ℝ, 0 ≤ t → lossVal lam wf logSq (ratio B.phat lam (u t)) ≤ ((lossVal lam wf logSq (ratio B.phat lam (u 0)))⁻¹ + (wmin * Real.sqrt (Graph.minOver G lam) / (Graph.nrmL2 lam (u 0) * wsup * max 1 (Real.sqrt (lossVal lam wf logSq (ratio B.phat lam (u 0)) / (wmin * Graph.minOver G lam))))) ^ 2 * t)⁻¹) ∧ ∃ t₁ ∈ Set.Icc (0:ℝ) (T0 (lossVal lam wf logSq (ratio B.phat lam (u 0))) (cDelta wmin (Graph.minOver G lam) (Graph.nrmL2 lam (u 0)) (delta0 (eps0Gamma3 wmin wsup (BhatSigma G uH lam) (Graph.minOver G lam)) (Graph.meanL2 lam (u 0)) (BhatSigma G uH lam) (Graph.nrmL2 lam (u 0))))), Graph.meanL2 lam (u 0) ≤ Graph.meanL2 lam (u t₁) ∧ Graph.meanL2 lam (u t₁) ≤ Graph.nrmL2 lam (u 0) ∧ Graph.nrmL2 lam (fun x => u t₁ x / Graph.meanL2 lam (u t₁) - 1) ≤ eps0Gamma3 wmin wsup (BhatSigma G uH lam) (Graph.minOver G lam) ∧ ∃ cinf : ℝ, Balanced B.phat lam (fun _ => cinf) ∧ ∀ t : ℝ, t₁ ≤ t → Graph.nrmL2 lam (fun x => u t x / Graph.meanL2 lam (u t₁) - cinf) ≤ 2 * Real.exp (-(rhoSigma 2 wmin (Graph.minOver G lam) (Graph.sigmaStar G uH) * (t - t₁)` |
+| `extE` | `C3Wrappers.lean` | `noncomputable def extE (pb : V → V → ℝ) (lam : V → ℝ) (u : EdgeSet pb → ℝ) : V → V → ℝ` |
+| `extE_apply` | `C3Wrappers.lean` | `theorem extE_apply (pb : V → V → ℝ) (lam : V → ℝ) (u : EdgeSet pb → ℝ) (e : EdgeSet pb) : extE pb lam u e.1.1 e.1.2 = edgeMeasureE pb lam e * u e` |
+| `ratio_edgeE_eq` | `C3Wrappers.lean` | `theorem ratio_edgeE_eq {pb : V → V → ℝ} {lam : V → ℝ} (u : EdgeSet pb → ℝ) (e : EdgeSet pb) : ratio (edgeKernelE pb) (edgeMeasureE pb lam) u e = pushEdge pb (extE pb lam u) e.1.1 e.1.2 / extE pb lam u e.1.1 e.1.2` |
+| `loss_edgeE_eq_db` | `C3Wrappers.lean` | `theorem loss_edgeE_eq_db {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hlam : ∀ x, 0 ≤ lam x) {u : EdgeSet pb → ℝ} (hu : ∀ e, 0 ≤ u e) (nu : EdgeSet pb → ℝ) (g : ℝ → ℝ) : loss (edgeKernelE pb) (edgeMeasureE pb lam) nu u g = ∑ e : EdgeSet pb, nu e * g (marg₁ (extE pb lam u) e.1.2 * pb e.1.2 e.1.1 / (marg₁ (extE pb lam u) e.1.1 * disint (extE pb lam u) e.1.1 e.1.2))` |
+| `logSq_C3_bundle` | `C3Wrappers.lean` | `theorem logSq_C3_bundle : (∀ y ∈ Icc (1 - (1/2 : ℝ)) (1 + 1/2), ContDiffAt ℝ 3 logSq y) ∧ deriv logSq 1 = 0 ∧ 0 < deriv (deriv logSq) 1` |
+| `isGradientFlow_one` | `C3Wrappers.lean` | `theorem isGradientFlow_one {V : Type*} [Fintype V] {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hgd : gd 1 = 0) : IsGradientFlow K lam nu gd (fun _ _ => 1)` |
+| `pbU` | `C3Wrappers.lean` | `noncomputable def pbU : Fin 2 → Fin 2 → ℝ` |
+| `lamU` | `C3Wrappers.lean` | `noncomputable def lamU : Fin 2 → ℝ` |
+| `pbU_pos` | `C3Wrappers.lean` | `theorem pbU_pos (p : Fin 2 × Fin 2) : 0 < pbU p.2 p.1` |
+| `sum_edgeSetU` | `C3Wrappers.lean` | `theorem sum_edgeSetU (F : EdgeSet pbU → ℝ) : ∑ e, F e = F ⟨(0, 0), pbU_pos _⟩ + F ⟨(0, 1), pbU_pos _⟩ + F ⟨(1, 0), pbU_pos _⟩ + F ⟨(1, 1), pbU_pos _⟩` |
+| `pbU_markov` | `C3Wrappers.lean` | `theorem pbU_markov : Core.IsMarkovOn lamU pbU` |
+| `pbU_invariant` | `C3Wrappers.lean` | `theorem pbU_invariant : Core.IsInvariant lamU pbU` |
+| `coer_edgeU` | `C3Wrappers.lean` | `theorem coer_edgeU (f : EdgeSet pbU → ℝ) : Graph.nrmL2 (edgeMeasureE pbU lamU) (perpL2 (edgeMeasureE pbU lamU) f) ≤ 2 * Graph.nrmL2 (edgeMeasureE pbU lamU) (Aop (edgeKernelE pbU) (edgeMeasureE pbU lamU) f)` |
+| `local_convergence_full_DB_witness` | `C3Wrappers.lean` | `theorem local_convergence_full_DB_witness : ∃ cinf : ℝ, \|cinf - 1 - Graph.meanL2 (edgeMeasureE pbU lamU) (fun _ => 0)\| ≤ CC3 logSq (1/2) 1 1 * Graph.nrmL2 (edgeMeasureE pbU lamU) (perpL2 (edgeMeasureE pbU lamU) fun _ => 0) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 (edgeMeasureE pbU lamU) (fun _ => 0 - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL (deriv (deriv logSq) 1) 1 2 * t / 2)) * Graph.nrmL2 (edgeMeasureE pbU lamU) (perpL2 (edgeMeasureE pbU lamU) fun _ => 0)` |
 | `inner_sq_le_of_symm_nonneg` | `Discrete.lean` | `theorem inner_sq_le_of_symm_nonneg {T : E →L[ℝ] E} (hsymm : ∀ x y : E, ⟪T x, y⟫ = ⟪x, T y⟫) (hnn : ∀ y : E, 0 ≤ ⟪y, T y⟫) (x y : E) : ⟪x, T y⟫ ^ 2 ≤ ⟪x, T x⟫ * ⟪y, T y⟫` |
 | `norm_apply_le_of_symm_bounds` | `Discrete.lean` | `theorem norm_apply_le_of_symm_bounds {T : E →L[ℝ] E} {S : Set E} {c : ℝ} (hsymm : ∀ x y : E, ⟪T x, y⟫ = ⟪x, T y⟫) (hnn : ∀ y : E, 0 ≤ ⟪y, T y⟫) (hc : 0 ≤ c) (hinv : ∀ x ∈ S, T x ∈ S) (hub : ∀ y ∈ S, ⟪y, T y⟫ ≤ c * ‖y‖ ^ 2) {x : E} (hx : x ∈ S) : ‖T x‖ ≤ c * ‖x‖` |
 | `H_proj_eq_zero` | `Discrete.lean` | `theorem H_proj_eq_zero {H Pi : E →L[ℝ] E} (hPisa : ∀ x y : E, ⟪Pi x, y⟫ = ⟪x, Pi y⟫) (hHsa : ∀ x y : E, ⟪H x, y⟫ = ⟪x, H y⟫) (hPiH : ∀ x : E, Pi (H x) = 0) (x : E) : H (Pi x) = 0` |
@@ -140,6 +200,52 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `inner_ge_of_mixing` | `Flow.lean` | `theorem inner_ge_of_mixing [CompleteSpace E] {P Pi H : E →L[ℝ] E} {c : ℝ} (hmix : Core.Mixing P Pi) (hB : 0 < Core.Mixing.B P Pi) (hc : 0 ≤ c) (hH : ∀ x : E, c * ‖(1 - P) x‖ ^ 2 ≤ ⟪x, H x⟫) (x : E) : c / Core.Mixing.B P Pi ^ 2 * ‖x - Pi x‖ ^ 2 ≤ ⟪x, H x⟫` |
 | `stable_frozen_decay` | `Flow.lean` | `theorem stable_frozen_decay {H Pi : E →L[ℝ] E} {rho : ℝ} {h : ℝ → E} (hPisa : ∀ x y : E, ⟪Pi x, y⟫ = ⟪x, Pi y⟫) (hPiH : ∀ x : E, Pi (H x) = 0) (hcoer : ∀ x : E, rho * ‖x - Pi x‖ ^ 2 ≤ ⟪x, H x⟫) (hflow : ∀ t : ℝ, HasDerivAt h (-H (h t)) t) : (∀ t : ℝ, Pi (h t) = Pi (h 0)) ∧ ∀ t : ℝ, 0 ≤ t → ‖h t - Pi (h t)‖ ≤ Real.exp (-(rho * t)) * ‖h 0 - Pi (h 0)‖` |
 | `scalar_decay_check` | `Flow.lean` | `theorem scalar_decay_check : (∀ t : ℝ, 0 ≤ t → ‖5 * Real.exp (-(2 * t))‖ ≤ Real.exp (-(2 * t)) * ‖5 * Real.exp (-(2 * (0 : ℝ)))‖) ∧ ‖5 * Real.exp (-(2 * (1 : ℝ)))‖ = Real.exp (-(2 * (1 : ℝ))) * ‖5 * Real.exp (-(2 * (0 : ℝ)))‖` |
+| `contDiffAt_ratio` | `FlowExistence.lean` | `theorem contDiffAt_ratio {K : V → V → ℝ} {lam : V → ℝ} {u : V → ℝ} (y : V) (hy : lam y * u y ≠ 0) : ContDiffAt ℝ 1 (fun v : V → ℝ => ratio K lam v y) u` |
+| `contDiffAt_lossGrad` | `FlowExistence.lean` | `theorem contDiffAt_lossGrad {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hgd : ∀ y : ℝ, 0 < y → ContDiffAt ℝ 1 gd y) : ContDiffAt ℝ 1 (fun v : V → ℝ => lossGrad K lam nu gd v) u` |
+| `densityBox` | `FlowExistence.lean` | `def densityBox (V : Type*) (a b : ℝ) : Set (V → ℝ)` |
+| `mem_densityBox` | `FlowExistence.lean` | `theorem mem_densityBox {a b : ℝ} {u : V → ℝ} : u ∈ densityBox V a b ↔ ∀ x, a ≤ u x ∧ u x ≤ b` |
+| `convex_densityBox` | `FlowExistence.lean` | `theorem convex_densityBox (a b : ℝ) : Convex ℝ (densityBox V a b)` |
+| `isCompact_densityBox` | `FlowExistence.lean` | `theorem isCompact_densityBox (a b : ℝ) : IsCompact (densityBox V a b)` |
+| `exists_lipschitzOnWith_lossGrad` | `FlowExistence.lean` | `theorem exists_lipschitzOnWith_lossGrad {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hgd : ∀ y : ℝ, 0 < y → ContDiffAt ℝ 1 gd y) {a b : ℝ} (ha : 0 < a) : ∃ L, LipschitzOnWith L (fun v : V → ℝ => lossGrad K lam nu gd v) (densityBox V a b)` |
+| `clampBox` | `FlowExistence.lean` | `def clampBox (a b : ℝ) (u : V → ℝ) : V → ℝ` |
+| `clampBox_mem` | `FlowExistence.lean` | `theorem clampBox_mem {a b : ℝ} (hab : a ≤ b) (u : V → ℝ) : clampBox a b u ∈ densityBox V a b` |
+| `clampBox_eq` | `FlowExistence.lean` | `theorem clampBox_eq {a b : ℝ} {u : V → ℝ} (hu : u ∈ densityBox V a b) : clampBox a b u = u` |
+| `lipschitzWith_clampBox` | `FlowExistence.lean` | `theorem lipschitzWith_clampBox (a b : ℝ) : LipschitzWith 1 (clampBox (V := V) a b)` |
+| `IsGradientFlowOn` | `FlowExistence.lean` | `def IsGradientFlowOn (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : ℝ → V → ℝ) (D : Set ℝ) : Prop` |
+| `IsGradientFlow.isGradientFlowOn` | `FlowExistence.lean` | `theorem IsGradientFlow.isGradientFlowOn {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (h : IsGradientFlow K lam nu gd u) : IsGradientFlowOn K lam nu gd u (Ici 0)` |
+| `loss_antitoneOn_of_on` | `FlowExistence.lean` | `theorem loss_antitoneOn_of_on {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hflow : IsGradientFlowOn K lam nu gd u D) : AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) D` |
+| `mass_monotoneOn_of_on` | `FlowExistence.lean` | `theorem mass_monotoneOn_of_on {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlowOn K lam nu gd u D) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) D` |
+| `nrmL2_eq_of_on` | `FlowExistence.lean` | `theorem nrmL2_eq_of_on {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hflow : IsGradientFlowOn K lam nu gd u D) {a b : ℝ} (ha : a ∈ D) (hb : b ∈ D) (hab : a ≤ b) : Graph.nrmL2 lam (u b) = Graph.nrmL2 lam (u a)` |
+| `edge_drop_of_ratio_le` | `FlowExistence.lean` | `theorem edge_drop_of_ratio_le {K : V → V → ℝ} {lam u : V → ℝ} {lamMin pmin R : ℝ} (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hR : 0 < R) (hr : ∀ x, ratio K lam u x ≤ R) {y z : V} (hyz : pmin ≤ K y z) : lamMin * pmin / R * u y ≤ u z` |
+| `floor_of_edge_drop` | `FlowExistence.lean` | `theorem floor_of_edge_drop {K : V → V → ℝ} {lam u : V → ℝ} {pmin c m0 : ℝ} (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hcross : CrossingFloor K pmin) (hc0 : 0 < c) (hc1 : c ≤ 1) (hdrop : ∀ y z : V, pmin ≤ K y z → c * u y ≤ u z) (hm0 : m0 ≤ Graph.meanL2 lam u) (x : V) : m0 * c ^ (Fintype.card V - 1) ≤ u x` |
+| `FlowGenerator.ratio_le` | `FlowExistence.lean` | `theorem FlowGenerator.ratio_le {g gd : ℝ → ℝ} (G : FlowGenerator g gd) {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin wmin L0 : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL : loss K lam (fun x => lam x * wf x) u g ≤ L0) (x : V) : ratio K lam u x ≤ G.capR (L0 / (wmin * lamMin))` |
+| `uFloor` | `FlowExistence.lean` | `noncomputable def uFloor (V : Type*) [Fintype V] (R lamMin pmin m0 : ℝ) : ℝ` |
+| `FlowGenerator.floor` | `FlowExistence.lean` | `theorem FlowGenerator.floor {g gd : ℝ → ℝ} (G : FlowGenerator g gd) {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin pmin wmin L0 m0 : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL : loss K lam (fun x => lam x * wf x) u g ≤ L0) (hm0 : m0 ≤ Graph.meanL2 lam u) (x : V) : uFloor V (G.capR (L0 / (wmin * lamMin))) lamMin pmin m0 ≤ u x` |
+| `exists_forall_hasDerivAt_of_lipschitzWith` | `FlowExistence.lean` | `theorem exists_forall_hasDerivAt_of_lipschitzWith {f : E → E} {L : ℝ≥0} {M : ℝ≥0} (hf : LipschitzWith L f) (hM : ∀ x, ‖f x‖ ≤ M) (x₀ : E) : ∃ α : ℝ → E, α 0 = x₀ ∧ ∀ t, HasDerivAt α (f (α t)) t` |
+| `abs_max_zero_max_le_iff` | `FlowExistence.lean` | `theorem abs_max_zero_max_le_iff {p q e : ℝ} (he : 0 ≤ e) : \|max 0 (max p q)\| ≤ e ↔ p ≤ e ∧ q ≤ e` |
+| `FlowGenerator.exists_flow` | `FlowExistence.lean` | `theorem FlowGenerator.exists_flow {g gd : ℝ → ℝ} (G : FlowGenerator g gd) {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) gd u ∧ ∀ t : ℝ, 0 ≤ t → ∀ x, uFloor V (G.capR (loss K lam (fun x => lam x * wf x) u0 g / (wmin * lamMin))) lamMin pmin (Graph.meanL2 lam u0) ≤ u t x` |
+| `exists_densityBox_of_continuousOn` | `FlowExistence.lean` | `theorem exists_densityBox_of_continuousOn [Nonempty V] {u : ℝ → V → ℝ} {S : Set ℝ} (hS : IsCompact S) (hc : ∀ x, ContinuousOn (fun s => u s x) S) (hpos : ∀ s ∈ S, ∀ x, 0 < u s x) : ∃ a b : ℝ, 0 < a ∧ ∀ s ∈ S, u s ∈ densityBox V a b` |
+| `densityBox_mono` | `FlowExistence.lean` | `theorem densityBox_mono {a b a' b' : ℝ} (ha : a' ≤ a) (hb : b ≤ b') : densityBox V a b ⊆ densityBox V a' b'` |
+| `isGradientFlow_unique` | `FlowExistence.lean` | `theorem isGradientFlow_unique {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hgd : ∀ y : ℝ, 0 < y → ContDiffAt ℝ 1 gd y) {u v : ℝ → V → ℝ} (hu : IsGradientFlow K lam nu gd u) (hv : IsGradientFlow K lam nu gd v) (hupos : ∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) (hvpos : ∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) (h0 : u 0 = v 0) : ∀ t : ℝ, 0 ≤ t → u t = v t` |
+| `sqGen` | `FlowExistence.lean` | `noncomputable def sqGen (y : ℝ) : ℝ` |
+| `logSqFlowGenerator` | `FlowExistence.lean` | `noncomputable def logSqFlowGenerator : FlowGenerator logSq logSqDeriv` |
+| `sqFlowGenerator` | `FlowExistence.lean` | `noncomputable def sqFlowGenerator : FlowGenerator sqGen (fun x : ℝ => 2 * (x - 1))` |
+| `uFloor_logSq_eq_uMin` | `FlowExistence.lean` | `theorem uFloor_logSq_eq_uMin (V : Type*) [Fintype V] (lamMin pmin wmin L0 m0 : ℝ) : uFloor V (logSqFlowGenerator.capR (L0 / (wmin * lamMin))) lamMin pmin m0 = uMin V lamMin pmin wmin L0 m0` |
+| `FlowGenerator.existsUnique_flow` | `FlowExistence.lean` | `theorem FlowGenerator.existsUnique_flow {g gd : ℝ → ℝ} (G : FlowGenerator g gd) {K : V → V → ℝ} {lam wf : V → ℝ} {wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hreach : ∀ x y : V, Relation.ReflTransGen (fun a b => 0 < K a b) x y) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) gd u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow K lam (fun x => lam x * wf x) gd v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| `existsUnique_flow_logSq` | `FlowExistence.lean` | `theorem existsUnique_flow_logSq {K : V → V → ℝ} {lam wf : V → ℝ} {wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hreach : ∀ x y : V, Relation.ReflTransGen (fun a b => 0 < K a b) x y) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| `existsUnique_flow_sq` | `FlowExistence.lean` | `theorem existsUnique_flow_sq {K : V → V → ℝ} {lam wf : V → ℝ} {wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hreach : ∀ x y : V, Relation.ReflTransGen (fun a b => 0 < K a b) x y) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow K lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| `UniqueInvariant` | `FlowExistence.lean` | `def UniqueInvariant (K : V → V → ℝ) (lam : V → ℝ) : Prop` |
+| `reach_of_uniqueInvariant` | `FlowExistence.lean` | `theorem reach_of_uniqueInvariant {K : V → V → ℝ} {lam : V → ℝ} (hK : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (herg : UniqueInvariant K lam) : ∀ x y : V, Relation.ReflTransGen (fun a b => 0 < K a b) x y` |
+| `existsUnique_flow_logSq_of_ergodic` | `FlowExistence.lean` | `theorem existsUnique_flow_logSq_of_ergodic {K : V → V → ℝ} {lam wf : V → ℝ} {wmin : ℝ} (hK : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (herg : UniqueInvariant K lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| `existsUnique_flow_sq_of_ergodic` | `FlowExistence.lean` | `theorem existsUnique_flow_sq_of_ergodic {K : V → V → ℝ} {lam wf : V → ℝ} {wmin : ℝ} (hK : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (herg : UniqueInvariant K lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow K lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| `existsUnique_flow_logSq_graph` | `FlowExistence.lean` | `theorem existsUnique_flow_logSq_graph {lam wf : V → ℝ} {wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| `existsUnique_flow_sq_graph` | `FlowExistence.lean` | `theorem existsUnique_flow_sq_graph {lam wf : V → ℝ} {wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow B.phat lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow B.phat lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| `no_distant_equilibrium_three_of_init` | `FlowExistence.lean` | `theorem no_distant_equilibrium_three_of_init {lam wf : V → ℝ} {wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ (∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t) ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam u0) ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam u0) ∧ ∀ w : V → ℝ, (∀ x, 0 < w x) → Balanced B.phat lam w → Graph.nrmL2 lam w = Graph.nrmL2 lam u0 → w = fun _ => Graph.nrmL2 lam u0` |
+| `twoState_uniqueInvariant` | `FlowExistence.lean` | `theorem twoState_uniqueInvariant : UniqueInvariant twoStateK twoStateLam` |
+| `twoStateK_row` | `FlowExistence.lean` | `theorem twoStateK_row : ∀ x, ∑ y, twoStateK x y = 1` |
+| `twoState_flow_exists_check` | `FlowExistence.lean` | `theorem twoState_flow_exists_check : ∃ u : ℝ → Fin 2 → ℝ, u 0 = blowupU ∧ IsGradientFlow twoStateK twoStateLam (fun x => twoStateLam x * 1) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ¬ Balanced twoStateK twoStateLam (u 0)` |
+| `twoState_flow_exists_check_sq` | `FlowExistence.lean` | `theorem twoState_flow_exists_check_sq : ∃ u : ℝ → Fin 2 → ℝ, u 0 = blowupU ∧ IsGradientFlow twoStateK twoStateLam (fun x => twoStateLam x * 1) (fun x => 2 * (x - 1)) u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ¬ Balanced twoStateK twoStateLam (u 0)` |
+| `cycle_flow_converges_check` | `FlowExistence.lean` | `theorem cycle_flow_converges_check : ∃ u : ℝ → Fin 5 → ℝ, u 0 = uInfl 2 ∧ IsGradientFlow (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (fun x => lam (1 / 2) x * 1) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ¬ Balanced (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (u 0) ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 (lam (1 / 2)) (uInfl 2))` |
 | `lossGradDensity_eq_zero_of_deriv_vanishes` | `Freezing.lean` | `theorem lossGradDensity_eq_zero_of_deriv_vanishes {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} (h : ∀ x, gd (ratio K lam u x) = 0) (x : V) : lossGradDensity K lam u w gd x = 0` |
 | `freezing_critical` | `Freezing.lean` | `theorem freezing_critical {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} {U : Set ℝ} (hband : ∀ x, ratio K lam u x ∈ U) (hgd : ∀ z ∈ U, gd z = 0) (x : V) : lossGradDensity K lam u w gd x = 0` |
 | `freezing_gradMass_eq_zero` | `Freezing.lean` | `theorem freezing_gradMass_eq_zero {K : V → V → ℝ} {lam u w : V → ℝ} {gd : ℝ → ℝ} {U : Set ℝ} (hband : ∀ x, ratio K lam u x ∈ U) (hgd : ∀ z ∈ U, gd z = 0) : gradMass K lam u w gd = 0` |
@@ -1630,6 +1736,111 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `exists_star_witness` | `NoUniform.lean` | `theorem exists_star_witness {ε : ℝ} (hε : 0 < ε) : ∃ K : ℕ, 0 < K ∧ (∀ x, 0 < starPi K x) ∧ (∀ x, 0 < starPF K x) ∧ (∑ x, starPi K x = 1) ∧ (∑ x, starPF K x = 1) ∧ (∀ x, 0 < starPET K x) ∧ (∑ x, starPET K x = 1) ∧ chiSq (unif (Star K)) (starPET K) = 0 ∧ MprimeLe (deltaPB (Star K)) (starPF K) (starPi K) 1 ∧ 0 < residual (starPET K) (starPi K) (deltaPB (Star K)) (starPF K) ∧ residual (starPET K) (starPi K) (deltaPB (Star K)) (starPF K) ≤ ε ∧ tv (starPF K) (starPi K) = 1 / 8` |
 | `no_state_space_free_bound` | `NoUniform.lean` | `theorem no_state_space_free_bound : ¬ ∃ F : ℝ → ℝ, Tendsto F (𝓝[>] (0 : ℝ)) (𝓝 0) ∧ ∀ (X T : Type) [Fintype X] [Fintype T] (pET : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) (π pT : X → ℝ), (∀ x, 0 < π x) → (∑ x, π x = 1) → (∀ x, 0 < pET x) → (∑ x, pET x = 1) → (∀ x t, 0 ≤ pB x t) → (∀ x, ∑ t, pB x t = 1) → (∀ x t, 0 < pB x t → 0 < pF t) → (∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) → chiSq (unif X) pET = 0 → MprimeLe pB pF π 1 → tv pT π ≤ F (residual pET π pB pF)` |
 | `no_three_argument_bound` | `NoUniform.lean` | `theorem no_three_argument_bound : ¬ ∃ F : ℝ → ℝ → ℝ → ℝ, Tendsto (fun e => F e 0 1) (𝓝[>] (0 : ℝ)) (𝓝 0) ∧ ∀ (X T : Type) [Fintype X] [Fintype T] (pET : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) (π pT : X → ℝ) (c : ℝ), (∀ x, 0 < π x) → (∑ x, π x = 1) → (∀ x, 0 < pET x) → (∑ x, pET x = 1) → (∀ x t, 0 ≤ pB x t) → (∀ x, ∑ t, pB x t = 1) → (∀ x t, 0 < pB x t → 0 < pF t) → (∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) → MprimeLe pB pF π c → tv pT π ≤ F (residual pET π pB pF) (chiSq (unif X) pET) c` |
+| `taylor_upper` | `DiscreteGlobal.lean` | `theorem taylor_upper {F F' F'' : ℝ → ℝ} {γ C : ℝ} (hγ : 0 ≤ γ) (hF : ∀ s ∈ Set.Icc 0 γ, HasDerivAt F (F' s) s) (hF' : ∀ s ∈ Set.Icc 0 γ, HasDerivAt F' (F'' s) s) (hC : ∀ s ∈ Set.Icc 0 γ, F'' s ≤ C) : F γ ≤ F 0 + γ * F' 0 + C * γ ^ 2 / 2` |
+| `hasDerivAt_line` | `DiscreteGlobal.lean` | `theorem hasDerivAt_line (a b s : ℝ) : HasDerivAt (fun t => a - t * b) (-b) s` |
+| `hasDerivAt_div_line` | `DiscreteGlobal.lean` | `theorem hasDerivAt_div_line {a b s : ℝ} (h : a - s * b ≠ 0) : HasDerivAt (fun t => b / (a - t * b)) ((b / (a - s * b)) ^ 2) s` |
+| `hasDerivAt_sq_logdiff` | `DiscreteGlobal.lean` | `theorem hasDerivAt_sq_logdiff {a b c d s : ℝ} (ha : 0 < a - s * b) (hc : 0 < c - s * d) : HasDerivAt (fun t => (Real.log (a - t * b) - Real.log (c - t * d)) ^ 2) (2 * (Real.log (a - s * b) - Real.log (c - s * d)) * (d / (c - s * d) - b / (a - s * b))) s` |
+| `hasDerivAt_sq_logdiff_deriv` | `DiscreteGlobal.lean` | `theorem hasDerivAt_sq_logdiff_deriv {a b c d s : ℝ} (ha : 0 < a - s * b) (hc : 0 < c - s * d) : HasDerivAt (fun t => 2 * (Real.log (a - t * b) - Real.log (c - t * d)) * (d / (c - t * d) - b / (a - t * b))) (2 * (d / (c - s * d) - b / (a - s * b)) ^ 2 + 2 * (Real.log (a - s * b) - Real.log (c - s * d)) * ((d / (c - s * d)) ^ 2 - (b / (a - s * b)) ^ 2)) s` |
+| `sq_logdiff_deriv2_le` | `DiscreteGlobal.lean` | `theorem sq_logdiff_deriv2_le (l τ ρ : ℝ) : 2 * (τ - ρ) ^ 2 + 2 * l * (τ ^ 2 - ρ ^ 2) ≤ (4 + 2 * \|l\|) * (τ ^ 2 + ρ ^ 2)` |
+| `Mp` | `DiscreteGlobal.lean` | `noncomputable def Mp (M : ℝ) : ℝ` |
+| `b1` | `DiscreteGlobal.lean` | `noncomputable def b1 (M : ℝ) : ℝ` |
+| `b2` | `DiscreteGlobal.lean` | `noncomputable def b2 (M : ℝ) : ℝ` |
+| `b3` | `DiscreteGlobal.lean` | `noncomputable def b3 (W umin M : ℝ) : ℝ` |
+| `exp_Mp` | `DiscreteGlobal.lean` | `theorem exp_Mp (M : ℝ) : Real.exp (Mp M) = 3 * Real.exp M` |
+| `exp_two_Mp` | `DiscreteGlobal.lean` | `theorem exp_two_Mp (M : ℝ) : Real.exp (2 * Mp M) = 9 * Real.exp M ^ 2` |
+| `Mp_nonneg` | `DiscreteGlobal.lean` | `theorem Mp_nonneg {M : ℝ} (hM : 0 ≤ M) : 0 ≤ Mp M` |
+| `b3_bracket_eq` | `DiscreteGlobal.lean` | `theorem b3_bracket_eq (M : ℝ) : (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) = (1 + 3 * Real.exp M) * (18 * (1 + Mp M) * Real.exp M ^ 2 * (1 + 3 * Real.exp M) + 12 * Mp M * Real.exp M)` |
+| `b3_bracket_ge` | `DiscreteGlobal.lean` | `theorem b3_bracket_ge {M : ℝ} (hM : 0 ≤ M) : M * (Real.exp M + 1) ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) ∧ (4 + 2 * Mp M) * (1 + Real.exp M ^ 2) ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) ∧ 8 ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M)` |
+| `pushMass_line` | `DiscreteGlobal.lean` | `theorem pushMass_line (K : V → V → ℝ) (lam u v : V → ℝ) (s : ℝ) (y : V) : pushMass K lam (fun x => u x - s * v x) y = pushMass K lam u y - s * pushMass K lam v y` |
+| `ratio_line` | `DiscreteGlobal.lean` | `theorem ratio_line (K : V → V → ℝ) (lam u v : V → ℝ) (s : ℝ) (y : V) : ratio K lam (fun x => u x - s * v x) y = (pushMass K lam u y - s * pushMass K lam v y) / (lam y * u y - s * (lam y * v y))` |
+| `pushMass_eq_densAct` | `DiscreteGlobal.lean` | `theorem pushMass_eq_densAct {K : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (v : V → ℝ) (y : V) : pushMass K lam v y = lam y * Core.densAct lam K v y` |
+| `logSq_div_eq` | `DiscreteGlobal.lean` | `theorem logSq_div_eq {p q : ℝ} (hp : 0 < p) (hq : 0 < q) : logSq (p / q) = (Real.log p - Real.log q) ^ 2` |
+| `exp_neg_le_of_abs_log_le` | `DiscreteGlobal.lean` | `theorem exp_neg_le_of_abs_log_le {r M : ℝ} (hr : 0 < r) (h : \|Real.log r\| ≤ M) : Real.exp (-M) ≤ r ∧ r ≤ Real.exp M` |
+| `abs_lossGrad_le` | `DiscreteGlobal.lean` | `theorem abs_lossGrad_le {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, \|Real.log (ratio K lam u x)\| ≤ M) (x : V) : \|lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x\| ≤ 2 * M * W * (Real.exp M + 1) * u x / umin ^ 2` |
+| `rel_step_le` | `DiscreteGlobal.lean` | `theorem rel_step_le {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin γ : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, \|Real.log (ratio K lam u x)\| ≤ M) (hγ0 : 0 ≤ γ) (hγ : γ * b3 W umin M ≤ 1) (x : V) : γ * \|lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x\| ≤ u x / 2` |
+| `pushMass_mono` | `DiscreteGlobal.lean` | `theorem pushMass_mono {K : V → V → ℝ} {lam v v' : V → ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 ≤ lam x) (h : ∀ x, v x ≤ v' x) (y : V) : pushMass K lam v y ≤ pushMass K lam v' y` |
+| `pushMass_smul` | `DiscreteGlobal.lean` | `theorem pushMass_smul (K : V → V → ℝ) (lam u : V → ℝ) (c : ℝ) (y : V) : pushMass K lam (fun x => c * u x) y = c * pushMass K lam u y` |
+| `abs_logdiff_le` | `DiscreteGlobal.lean` | `theorem abs_logdiff_le {a a' c c' : ℝ} (ha : 0 < a) (hc : 0 < c) (ha1 : a / 2 ≤ a') (ha2 : a' ≤ 3 * a / 2) (hc1 : c / 2 ≤ c') (hc2 : c' ≤ 3 * c / 2) : \|Real.log a' - Real.log c'\| ≤ \|Real.log (a / c)\| + Real.log 3` |
+| `descent_step` | `DiscreteGlobal.lean` | `theorem descent_step {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin γ : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hW0 : 0 ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, \|Real.log (ratio K lam u x)\| ≤ M) (hγ0 : 0 ≤ γ) (hγ : γ * b3 W umin M ≤ 1) : (∀ x, u x / 2 ≤ u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ lossVal lam wf logSq (ratio K lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x)) ≤ lossVal lam wf logSq (ratio K lam u) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2` |
+| `abs_log_ratio_le` | `DiscreteGlobal.lean` | `theorem abs_log_ratio_le {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin wmin L0 : ℝ} (hlam : ∀ x, 0 < lam x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL : lossVal lam wf logSq (ratio K lam u) ≤ L0) (x : V) : \|Real.log (ratio K lam u x)\| ≤ ratioCap lamMin wmin L0` |
+| `meanL2_lossGrad_nonpos` | `DiscreteGlobal.lean` | `theorem meanL2_lossGrad_nonpos {K : V → V → ℝ} {lam wf u : V → ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hwpos : ∀ x, 0 < wf x) (hu : ∀ x, 0 < u x) : Graph.meanL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ≤ 0` |
+| `region_step` | `DiscreteGlobal.lean` | `theorem region_step {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin pmin wmin W L0 m0 γ : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hm0 : 0 < m0) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin L0 m0) (ratioCap lamMin wmin L0) ≤ 1) (hu : ∀ x, 0 < u x) (hL : lossVal lam wf logSq (ratio K lam u) ≤ L0) (hm : m0 ≤ Graph.meanL2 lam u) : (∀ x, uMin V lamMin pmin wmin L0 m0 ≤ u x) ∧ (∀ x, 0 < u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ lossVal lam wf logSq (ratio K lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x)) ≤ lossVal lam wf logSq (ratio K lam u) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2 ∧ Graph.meanL2 lam u ≤ Graph.meanL2 lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ Graph.nrmL2 lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ^ 2 = Graph.nrmL2 lam u ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2` |
+| `traj_region` | `DiscreteGlobal.lean` | `theorem traj_region {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) : ∀ k, (∀ x, 0 < uk k x) ∧ lossVal lam wf logSq (ratio K lam (uk k)) ≤ lossVal lam wf logSq (ratio K lam (uk 0)) ∧ Graph.meanL2 lam (uk 0) ≤ Graph.meanL2 lam (uk k) ∧ Graph.nrmL2 lam (uk k) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk k)) ≤ Graph.nrmL2 lam (uk 0) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0))` |
+| `traj_a` | `DiscreteGlobal.lean` | `theorem traj_a {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k, (∀ x, uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0)) ≤ uk k x) ∧ lossVal lam wf logSq (ratio K lam (uk (k + 1))) ≤ lossVal lam wf logSq (ratio K lam (uk k)) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.meanL2 lam (uk k) ≤ Graph.meanL2 lam (uk (k + 1)) ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 = Graph.nrmL2 lam (uk k) ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2` |
+| `inv_recursion` | `DiscreteGlobal.lean` | `theorem inv_recursion {L : ℕ → ℝ} {a : ℝ} (ha : 0 ≤ a) (hL : ∀ k, 0 ≤ L k) (hrec : ∀ k, L (k + 1) ≤ L k - a * L k ^ 2) : ∀ k : ℕ, L k ≤ ((L 0)⁻¹ + k * a)⁻¹` |
+| `traj_nrm_le` | `DiscreteGlobal.lean` | `theorem traj_nrm_le {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k, Graph.nrmL2 lam (uk k) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2 ∧ Graph.nrmL2 lam (uk k) ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Graph.meanL2 lam (uk k) ≤ Graph.nrmL2 lam (uk k) ∧ 0 < Graph.meanL2 lam (uk k)` |
+| `traj_b` | `DiscreteGlobal.lean` | `theorem traj_b {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k : ℕ, lossVal lam wf logSq (ratio K lam (uk k)) ≤ ((lossVal lam wf logSq (ratio K lam (uk 0)))⁻¹ + k * γ * (wmin * Real.sqrt lamMin / (Graph.nrmL2 lam (uk 0) * W * ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) ^ 2 / 4)⁻¹` |
+| `delta1` | `DiscreteGlobal.lean` | `noncomputable def delta1 (eps0 m0 Bhat U0 : ℝ) : ℝ` |
+| `kappa` | `DiscreteGlobal.lean` | `noncomputable def kappa (wmin lamMin U0 W M : ℝ) : ℝ` |
+| `k0real` | `DiscreteGlobal.lean` | `noncomputable def k0real (γ κ lamMin wmin δ1 : ℝ) : ℝ` |
+| `abs_exp_sub_one_le` | `DiscreteGlobal.lean` | `theorem abs_exp_sub_one_le {y d : ℝ} (hy : \|y\| ≤ d / 2) (hd : d ≤ 1) : \|Real.exp y - 1\| ≤ d` |
+| `traj_entry` | `DiscreteGlobal.lean` | `theorem traj_entry {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat eps0 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (heps0 : 0 < eps0) (heps1 : eps0 ≤ 1 / 32) : ∀ k : ℕ, ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 eps0 (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊ ≤ k → (∀ x, \|ratio K lam (uk k) x - 1\| ≤ delta1 eps0 (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0))) ∧ Graph.nrmL2 lam (perpL2 lam (uk k)) ≤ eps0 * Graph.meanL2 lam (uk 0) ∧ Graph.nrmL2 lam (fun x => uk k x / Graph.meanL2 lam (uk k) - 1) ≤ eps0` |
+| `Gamma3` | `DiscreteGlobal.lean` | `noncomputable def Gamma3 : ℝ` |
+| `twentyfour_le_Gamma3` | `DiscreteGlobal.lean` | `theorem twentyfour_le_Gamma3 : (24:ℝ) ≤ Gamma3` |
+| `eps0At` | `DiscreteGlobal.lean` | `noncomputable def eps0At (M3 wmin W Bhat lamMin : ℝ) : ℝ` |
+| `gamma0At` | `DiscreteGlobal.lean` | `noncomputable def gamma0At (M3 wmin W Bhat : ℝ) : ℝ` |
+| `eps0At_pos` | `DiscreteGlobal.lean` | `theorem eps0At_pos {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) (hlmin0 : 0 < lamMin) : 0 < eps0At M3 wmin W Bhat lamMin` |
+| `gamma0At_pos` | `DiscreteGlobal.lean` | `theorem gamma0At_pos {M3 wmin W Bhat : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) : 0 < gamma0At M3 wmin W Bhat` |
+| `Cinf_mul_eps0At_le` | `DiscreteGlobal.lean` | `theorem Cinf_mul_eps0At_le {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hlmin0 : 0 < lamMin) : Cinf lamMin * eps0At M3 wmin W Bhat lamMin ≤ 1 / 32` |
+| `eps0At_le` | `DiscreteGlobal.lean` | `theorem eps0At_le {lam : V → ℝ} {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (htot : ∑ x, lam x = 1) : eps0At M3 wmin W Bhat lamMin ≤ 1 / 32` |
+| `perpL2_div_sub_one` | `DiscreteGlobal.lean` | `theorem perpL2_div_sub_one {lam u : V → ℝ} (htot : ∑ x, lam x = 1) {m : ℝ} (hm : m ≠ 0) : perpL2 lam (fun x => u x / m - 1) = fun x => m⁻¹ * perpL2 lam u x` |
+| `traj_c` | `DiscreteGlobal.lean` | `theorem traj_c {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat M3 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hγ0 : γ ≤ gamma0At M3 wmin W Bhat * Graph.meanL2 lam (uk 0) ^ 2) (hM3 : 24 ≤ M3) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) : ∀ k : ℕ, ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊ ≤ k → Graph.nrmL2 lam (perpL2 lam (uk (k + 1))) ≤ (1 - γ * rhoL 2 wmin Bhat / (4 * Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ^ 2)) * Graph.nrmL2 lam (perpL2 lam (uk k))` |
+| `delta1_le` | `DiscreteGlobal.lean` | `theorem delta1_le {eps0 m0 Bhat U0 : ℝ} (heps0 : 0 ≤ eps0) (hm0 : 0 < m0) (hB1 : 1 ≤ Bhat) (hmU : m0 ≤ U0) : delta1 eps0 m0 Bhat U0 ≤ eps0` |
+| `abs_log_le_of_close` | `DiscreteGlobal.lean` | `theorem abs_log_le_of_close {r : ℝ} (h : \|r - 1\| ≤ 1 / 32) : \|Real.log r\| ≤ 32 / 31 * \|r - 1\|` |
+| `loss_le_perp_sq` | `DiscreteGlobal.lean` | `theorem loss_le_perp_sq {K : V → V → ℝ} {lam wf u : V → ℝ} {W m : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hW : ∀ x, wf x ≤ W) (hW0 : 0 ≤ W) (hm : 0 < m) (hu : ∀ x, 31 / 32 * m ≤ u x) (hr : ∀ x, \|ratio K lam u x - 1\| ≤ 1 / 32) : lossVal lam wf logSq (ratio K lam u) ≤ 24 / 5 * W * Graph.nrmL2 lam (perpL2 lam u) ^ 2 / m ^ 2` |
+| `limit_arith` | `DiscreteGlobal.lean` | `theorem limit_arith {mk minf m ξ e0 : ℝ} (hm : 0 < m) (hmk : m ≤ mk) (hkinf : mk ≤ minf) (hsq : minf ^ 2 ≤ mk ^ 2 + 13 / 10 * ξ ^ 2) (hξ0 : 0 ≤ ξ) (hξ : ξ ≤ e0 * m) (he1 : e0 ≤ 1 / 32) : minf - mk ≤ ξ ^ 2 / m ∧ ξ + (minf - mk) ≤ 9 / 8 * ξ` |
+| `nrmL2_sub_const_le` | `DiscreteGlobal.lean` | `theorem nrmL2_sub_const_le {lam u : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1) (c : ℝ) : Graph.nrmL2 lam (fun x => u x - c) ≤ Graph.nrmL2 lam (perpL2 lam u) + \|Graph.meanL2 lam u - c\|` |
+| `past_bound` | `DiscreteGlobal.lean` | `theorem past_bound {K : V → V → ℝ} {lam wf : V → ℝ} {uk : ℕ → V → ℝ} {lamMin W γ m e0 : ℝ} {k : ℕ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hW : ∀ x, wf x ≤ W) (hW0 : 0 < W) (hγ : 0 ≤ γ) (hmpos : 0 < m) (he1 : e0 ≤ 1 / 32) (hCe : Cinf lamMin * e0 ≤ 1 / 32) (hmono : Monotone fun j => Graph.meanL2 lam (uk j)) (hbdd : BddAbove (Set.range fun j => Graph.meanL2 lam (uk j))) (hmk : m ≤ Graph.meanL2 lam (uk k)) (hr32 : ∀ x, \|ratio K lam (uk k) x - 1\| ≤ 1 / 32) (hξm : Graph.nrmL2 lam (perpL2 lam (uk k)) ≤ e0 * m) (hγW : γ * (32 * W) ≤ m ^ 2) (hsq : ∀ j, k ≤ j → Graph.meanL2 lam (uk j) ^ 2 ≤ Graph.meanL2 lam (uk k) ^ 2 + Graph.nrmL2 lam (perpL2 lam (uk k)) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk k))) : (⨆ j, Graph.meanL2 lam (uk j)) - Graph.meanL2 lam (uk k) ≤ Graph.nrmL2 lam (perpL2 lam (uk k)) ^ 2 / m ∧ Graph.nrmL2 lam (fun x => uk k x - ⨆ j, Graph.meanL2 lam (uk j)) ≤ 9 / 8 * Graph.nrmL2 lam (perpL2 lam (uk k))` |
+| `traj_d` | `DiscreteGlobal.lean` | `theorem traj_d {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat M3 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hγ0 : γ ≤ gamma0At M3 wmin W Bhat * Graph.meanL2 lam (uk 0) ^ 2) (hM3 : 24 ≤ M3) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) : Graph.meanL2 lam (uk 0) ≤ Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ∧ Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Monotone (fun k => Graph.meanL2 lam (uk k)) ∧ ∃ minf : ℝ, Filter.Tendsto (fun k => Graph.meanL2 lam (uk k)) Filter.atTop (nhds minf) ∧ minf ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Balanced K lam (fun _ => minf)` |
+| `gammaStar` | `DiscreteGlobal.lean` | `noncomputable def gammaStar (b3v U0 L0 γ0 m0 : ℝ) : ℝ` |
+| `gammaStar_pos` | `DiscreteGlobal.lean` | `theorem gammaStar_pos {b3v U0 L0 γ0 m0 : ℝ} (hb : 0 < b3v) (hU0 : 0 < U0) (hL0 : 0 ≤ L0) (hγ0 : 0 < γ0) (hm0 : 0 < m0) : 0 < gammaStar b3v U0 L0 γ0 m0` |
+| `le_gammaStar` | `DiscreteGlobal.lean` | `theorem le_gammaStar {b3v U0 L0 γ0 m0 γ : ℝ} (hb : 0 < b3v) (hL0 : 0 ≤ L0) (hγ : 0 ≤ γ) (h : γ ≤ gammaStar b3v U0 L0 γ0 m0) : γ * b3v ≤ 1 ∧ 2 * γ * L0 ≤ U0 ^ 2 ∧ γ ≤ γ0 * m0 ^ 2` |
+| `k0` | `DiscreteGlobal.lean` | `noncomputable def k0 (γ U0 W M sigStar wmin lamMin e0 m0 : ℝ) : ℕ` |
+| `k0real_eq` | `DiscreteGlobal.lean` | `theorem k0real_eq {γ U0 W M sigStar wmin lamMin e0 m0 : ℝ} (hγ : 0 < γ) (hU0 : 0 < U0) (hW : 0 < W) (hM : 0 < M) (hsig : 0 < sigStar) (hwmin : 0 < wmin) (hlmin0 : 0 < lamMin) (he0 : 0 < e0) (hm0 : 0 < m0) : k0real γ (kappa wmin lamMin U0 W M) lamMin wmin (delta1 e0 m0 (sigStar / Real.sqrt lamMin) U0) = 32 * U0 ^ 4 * W ^ 2 * M ^ 2 * sigStar ^ 2 / (γ * wmin ^ 3 * lamMin ^ 3 * e0 ^ 2 * m0 ^ 2)` |
+| `no_uniform_step` | `DiscreteGlobal.lean` | `theorem no_uniform_step {K : V → V → ℝ} {lam wf u0 : V → ℝ} {γ : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hwpos : ∀ x, 0 < wf x) (hu0 : ∀ x, 0 < u0 x) (hbal : ¬ Balanced K lam u0) (hγ : 0 < γ) : ∃ y : V, ∃ s0 : ℝ, 0 < s0 ∧ ∀ s : ℝ, 0 < s → s < s0 → s * u0 y - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (fun x => s * u0 x) y < 0` |
+| `l2norm_eq_nrmL2` | `LiftFinite.lean` | `theorem l2norm_eq_nrmL2 (w f : α → ℝ) : l2norm w f = Graph.nrmL2 w f` |
+| `opBound_opNorm` | `LiftFinite.lean` | `theorem opBound_opNorm {w : α → ℝ} {A : (α → ℝ) → (α → ℝ)} (hne : ∃ b, OpBound w A b) : OpBound w A (opNorm w A)` |
+| `opBound_of_adjoint` | `LiftFinite.lean` | `theorem opBound_of_adjoint {w : α → ℝ} (hw : ∀ x, 0 ≤ w x) {A B : (α → ℝ) → (α → ℝ)} (hadj : ∀ u v, Graph.ipL2 w (A u) v = Graph.ipL2 w u (B v)) {b : ℝ} (hb : OpBound w B b) : OpBound w A b` |
+| `opNorm_eq_of_adjoint` | `LiftFinite.lean` | `theorem opNorm_eq_of_adjoint {w : α → ℝ} (hw : ∀ x, 0 ≤ w x) {A B : (α → ℝ) → (α → ℝ)} (hadj : ∀ u v, Graph.ipL2 w (A u) v = Graph.ipL2 w u (B v)) : opNorm w A = opNorm w B` |
+| `densDeviation` | `LiftFinite.lean` | `noncomputable def densDeviation (K : α → α → ℝ) (w : α → ℝ) (n : ℕ) (u : α → ℝ) : α → ℝ` |
+| `densDeviation_eq` | `LiftFinite.lean` | `theorem densDeviation_eq (K : α → α → ℝ) (w : α → ℝ) (n : ℕ) (u : α → ℝ) : densDeviation K w n u = fun y => (Core.densAct w K)^[n] u y - ∑ x, w x * u x` |
+| `deviation_eq` | `LiftFinite.lean` | `theorem deviation_eq (K : α → α → ℝ) (w : α → ℝ) (n : ℕ) (g : α → ℝ) : deviation K w n g = fun x => (funAct K)^[n] g x - ∑ y, w y * g y` |
+| `ipL2_densAct_iterate` | `LiftFinite.lean` | `theorem ipL2_densAct_iterate {K : α → α → ℝ} {w : α → ℝ} (hinv : Core.IsInvariant w K) (hK : ∀ x y, 0 ≤ K x y) (n : ℕ) (u v : α → ℝ) : Graph.ipL2 w ((Core.densAct w K)^[n] u) v = Graph.ipL2 w u ((funAct K)^[n] v)` |
+| `ipL2_sub_const_left` | `LiftFinite.lean` | `theorem ipL2_sub_const_left (w a b : α → ℝ) (c : ℝ) : Graph.ipL2 w (fun x => a x - c) b = Graph.ipL2 w a b - c * ∑ x, w x * b x` |
+| `ipL2_densDeviation` | `LiftFinite.lean` | `theorem ipL2_densDeviation {K : α → α → ℝ} {w : α → ℝ} (hinv : Core.IsInvariant w K) (hK : ∀ x y, 0 ≤ K x y) (n : ℕ) (u v : α → ℝ) : Graph.ipL2 w (densDeviation K w n u) v = Graph.ipL2 w u (deviation K w n v)` |
+| `opNorm_densDeviation` | `LiftFinite.lean` | `theorem opNorm_densDeviation {K : α → α → ℝ} {w : α → ℝ} (hinv : Core.IsInvariant w K) (hK : ∀ x y, 0 ≤ K x y) (n : ℕ) : opNorm w (densDeviation K w n) = opNorm w (deviation K w n)` |
+| `nrmL2_funAct_iterate_le` | `LiftFinite.lean` | `theorem nrmL2_funAct_iterate_le {K : α → α → ℝ} {w : α → ℝ} (hK : Core.IsMarkovOn w K) (hinv : Core.IsInvariant w K) (n : ℕ) (g : α → ℝ) : Graph.nrmL2 w ((funAct K)^[n] g) ≤ Graph.nrmL2 w g` |
+| `opBound_deviation_two` | `LiftFinite.lean` | `theorem opBound_deviation_two {K : α → α → ℝ} {w : α → ℝ} (hK : Core.IsMarkovOn w K) (hinv : Core.IsInvariant w K) (htot : ∑ x, w x = 1) (n : ℕ) : OpBound w (deviation K w n) 2` |
+| `condBack_snd` | `LiftFinite.lean` | `theorem condBack_snd {pb : V → V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (φ : V → ℝ) : condBack pb (fun _ s' => φ s') = φ` |
+| `l2sq₂_of_snd` | `LiftFinite.lean` | `theorem l2sq₂_of_snd {pb : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (φ : V → ℝ) : l2sq₂ (edgeMeasure pb lam) (fun _ s' => φ s') = l2sq lam φ` |
+| `edgeDeviation_succ` | `LiftFinite.lean` | `theorem edgeDeviation_succ (pb : V → V → ℝ) (lam : V → ℝ) (n : ℕ) (f : V → V → ℝ) : edgeDeviation pb lam (n + 1) f = fun s _ => deviation pb lam n (condBack pb f) s` |
+| `lift_mixing_ge` | `LiftFinite.lean` | `theorem lift_mixing_ge {pb : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (hinv : Invariant pb lam) {b : ℝ} {n : ℕ} (hb : OpBound₂ (edgeMeasure pb lam) (edgeDeviation pb lam (n + 1)) b) : OpBound lam (deviation pb lam n) b` |
+| `lift_mixing_opNorm_eq` | `LiftFinite.lean` | `theorem lift_mixing_opNorm_eq {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) (htot : ∑ x, lam x = 1) (n : ℕ) : opNorm₂ (edgeMeasure pb lam) (edgeDeviation pb lam (n + 1)) = opNorm lam (deviation pb lam n)` |
+| `pairKernel` | `LiftFinite.lean` | `def pairKernel (pb : V → V → ℝ) (p q : V × V) : ℝ` |
+| `pairMeasure` | `LiftFinite.lean` | `def pairMeasure (pb : V → V → ℝ) (lam : V → ℝ) (p : V × V) : ℝ` |
+| `pairKernel_isMarkov` | `LiftFinite.lean` | `theorem pairKernel_isMarkov {pb : V → V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) : Core.IsMarkov (pairKernel pb)` |
+| `pairMeasure_isInvariant` | `LiftFinite.lean` | `theorem pairMeasure_isInvariant {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) : Core.IsInvariant (pairMeasure pb lam) (pairKernel pb)` |
+| `pairMeasure_total` | `LiftFinite.lean` | `theorem pairMeasure_total {pb : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (htot : ∑ x, lam x = 1) : ∑ p, pairMeasure pb lam p = 1` |
+| `funAct_pairKernel` | `LiftFinite.lean` | `theorem funAct_pairKernel (pb : V → V → ℝ) (f : V → V → ℝ) : funAct (pairKernel pb) (Function.uncurry f) = Function.uncurry (funActEdge pb f)` |
+| `funAct_pairKernel_iterate` | `LiftFinite.lean` | `theorem funAct_pairKernel_iterate (pb : V → V → ℝ) (n : ℕ) (f : V → V → ℝ) : (funAct (pairKernel pb))^[n] (Function.uncurry f) = Function.uncurry ((funActEdge pb)^[n] f)` |
+| `deviation_pair` | `LiftFinite.lean` | `theorem deviation_pair (pb : V → V → ℝ) (lam : V → ℝ) (n : ℕ) (f : V → V → ℝ) : deviation (pairKernel pb) (pairMeasure pb lam) n (Function.uncurry f) = Function.uncurry (edgeDeviation pb lam n f)` |
+| `l2norm_pair` | `LiftFinite.lean` | `theorem l2norm_pair (pb : V → V → ℝ) (lam : V → ℝ) (f : V → V → ℝ) : l2norm (pairMeasure pb lam) (Function.uncurry f) = l2norm₂ (edgeMeasure pb lam) f` |
+| `opNorm_pair` | `LiftFinite.lean` | `theorem opNorm_pair (pb : V → V → ℝ) (lam : V → ℝ) (n : ℕ) : opNorm (pairMeasure pb lam) (deviation (pairKernel pb) (pairMeasure pb lam) n) = opNorm₂ (edgeMeasure pb lam) (edgeDeviation pb lam n)` |
+| `lift_mixing_dens` | `LiftFinite.lean` | `theorem lift_mixing_dens {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) (htot : ∑ x, lam x = 1) (n : ℕ) : opNorm (pairMeasure pb lam) (densDeviation (pairKernel pb) (pairMeasure pb lam) (n + 1)) = opNorm lam (densDeviation pb lam n)` |
+| `condFwdPair` | `LiftFinite.lean` | `def condFwdPair (pf : V → V → ℝ) (h : V × V → ℝ) : V → ℝ` |
+| `pairMeasure_eq_reversal` | `LiftFinite.lean` | `theorem pairMeasure_eq_reversal {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam pb) (hnn : ∀ x y, 0 ≤ pb x y) (s z : V) : pairMeasure pb lam (s, z) = lam s * Core.reversal lam pb s z` |
+| `densAct_pair` | `LiftFinite.lean` | `theorem densAct_pair {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam pb) (hnn : ∀ x y, 0 ≤ pb x y) (h : V × V → ℝ) {q : V × V} (hq : pairMeasure pb lam q ≠ 0) : Core.densAct (pairMeasure pb lam) (pairKernel pb) h q = condFwdPair (Core.reversal lam pb) h q.2` |
+| `meanL2_pair` | `LiftFinite.lean` | `theorem meanL2_pair {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam pb) (hnn : ∀ x y, 0 ≤ pb x y) (h : V × V → ℝ) : Graph.meanL2 (pairMeasure pb lam) h = Graph.meanL2 lam (condFwdPair (Core.reversal lam pb) h)` |
+| `nrmL2_condFwdPair_le` | `LiftFinite.lean` | `theorem nrmL2_condFwdPair_le {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam pb) (hnn : ∀ x y, 0 ≤ pb x y) (h : V × V → ℝ) : Graph.nrmL2 lam (condFwdPair (Core.reversal lam pb) h) ≤ Graph.nrmL2 (pairMeasure pb lam) h` |
+| `nrmL2_pair_snd` | `LiftFinite.lean` | `theorem nrmL2_pair_snd {pb : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (φ : V → ℝ) : Graph.nrmL2 (pairMeasure pb lam) (fun q => φ q.2) = Graph.nrmL2 lam φ` |
+| `Aop_condFwdPair` | `LiftFinite.lean` | `theorem Aop_condFwdPair {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam pb) (hnn : ∀ x y, 0 ≤ pb x y) (h : V × V → ℝ) {s : V} (hs : lam s ≠ 0) : Aop pb lam (condFwdPair (Core.reversal lam pb) h) s = condFwdPair (Core.reversal lam pb) (Aop (pairKernel pb) (pairMeasure pb lam) h) s` |
+| `lift_coercivity_finite` | `LiftFinite.lean` | `theorem lift_coercivity_finite {pb : V → V → ℝ} {lam : V → ℝ} {C : ℝ} (hpb : Core.IsMarkov pb) (hinv : Core.IsInvariant lam pb) (hC : 0 ≤ C) (hcoer : ∀ φ : V → ℝ, Graph.nrmL2 lam (perpL2 lam φ) ≤ C * Graph.nrmL2 lam (Aop pb lam φ)) (h : V × V → ℝ) : Graph.nrmL2 (pairMeasure pb lam) (perpL2 (pairMeasure pb lam) h) ≤ (1 + C) * Graph.nrmL2 (pairMeasure pb lam) (Aop (pairKernel pb) (pairMeasure pb lam) h)` |
+| `trap_unit` | `ExpansionSecond.lean` | `theorem trap_unit {s t : ℝ} (hs : 0 < s) (hs1 : s ≠ 1) (ht : 0 < t) : \|(t ^ (-s) + (t + 1) ^ (-s)) / 2 - (t ^ (1 - s) - (t + 1) ^ (1 - s)) / (s - 1)\| ≤ s * (s + 1) * t ^ (-s - 2) / 12` |
+| `window_sum_second` | `ExpansionSecond.lean` | `theorem window_sum_second {s : ℝ} (hs : 1 < s) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : \|∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-s) - ((a : ℝ) ^ (1 - s) - (b : ℝ) ^ (1 - s)) / (s - 1) - ((a : ℝ) ^ (-s) - (b : ℝ) ^ (-s)) / 2\| ≤ s * (s + 1) / 12 * ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-s - 2)` |
+| `sum_Ico_rpow_le` | `ExpansionSecond.lean` | `theorem sum_Ico_rpow_le {q : ℝ} (hq : 0 ≤ q) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-q) ≤ ((b : ℝ) - (a : ℝ)) * (a : ℝ) ^ (-q)` |
+| `one_sub_le_rpow_neg` | `ExpansionSecond.lean` | `theorem one_sub_le_rpow_neg {q y : ℝ} (hq : 0 ≤ q) (hy : 0 ≤ y) : 1 - q * y ≤ (1 + y) ^ (-q)` |
+| `rpow_neg_le_one` | `ExpansionSecond.lean` | `theorem rpow_neg_le_one {q y : ℝ} (hq : 0 ≤ q) (hy : 0 ≤ y) : (1 + y) ^ (-q) ≤ 1` |
+| `rpow_neg_le_quad` | `ExpansionSecond.lean` | `theorem rpow_neg_le_quad {q y : ℝ} (hq : 1 ≤ q) (hy : 0 ≤ y) : (1 + y) ^ (-q) ≤ 1 - q * y + q ^ 2 * y ^ 2` |
 
 
 ## Every declaration, by file
@@ -1682,6 +1893,82 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Gra
 | 720 | theorem | `twoState_ratioCap` | `theorem twoState_ratioCap : ratioCap (1 / 2 : ℝ) 1 (1 / 2) = 1` |
 | 725 | theorem | `twoState_uMin` | `theorem twoState_uMin : uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 = Real.exp (-1) / 4` |
 | 732 | theorem | `twoState_boundary_blowup_check` | `theorem twoState_boundary_blowup_check : uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 = Real.exp (-1) / 4 ∧ 0 < Real.exp (-1) / 4 ∧ Real.exp (-1) / 4 ≤ 1 / 2 ∧ ∀ x, uMin (Fin 2) (1 / 2 : ℝ) (1 / 2) 1 (1 / 2) 1 ≤ blowupU x` |
+
+### `GFNBounds/Balance/C3Wrappers.lean`
+
+**Theorem 10 under its own `C³` hypothesis, for the DB loss on the edge set, and item 2 of the training-speed theorem at `Γ₃`**  
+
+*strict library; 1124 lines; 60 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `theo:local_convergence_full` (bucket B), 🟡 `theo:training_speed_full` (bucket B), 🟡 `theo:training_speed` (bucket B), ✅ `theo:local_convergence` (bucket B)
+
+
+In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 188 | def | `Gamma3` | `noncomputable def Gamma3 (g : ℝ → ℝ) (a : ℝ) : ℝ` |
+| 191 | theorem | `bddAbove_abs_g3` | `theorem bddAbove_abs_g3 {g : ℝ → ℝ} {a : ℝ} (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) : BddAbove ((fun y => \|deriv (deriv (deriv g)) y\|) '' Icc (1 - a) (1 + a))` |
+| 201 | theorem | `abs_g3_le_Gamma3` | `theorem abs_g3_le_Gamma3 {g : ℝ → ℝ} {a : ℝ} (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) {y : ℝ} (hy : y ∈ Icc (1 - a) (1 + a)) : \|deriv (deriv (deriv g)) y\| ≤ Gamma3 g a` |
+| 206 | theorem | `Gamma3_nonneg` | `theorem Gamma3_nonneg {g : ℝ → ℝ} {a : ℝ} (ha0 : 0 ≤ a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) : 0 ≤ Gamma3 g a` |
+| 211 | theorem | `abs_le_quadratic_of_deriv` | `theorem abs_le_quadratic_of_deriv {e e' : ℝ → ℝ} {M b : ℝ} (hb : 0 ≤ b) (he : ∀ s ∈ Icc 0 b, HasDerivAt e (e' s) s) (h0 : e 0 = 0) (hbound : ∀ s ∈ Icc 0 b, \|e' s\| ≤ M * s) : \|e b\| ≤ M / 2 * b ^ 2` |
+| 227 | theorem | `hasDerivAt_deriv_of_C3` | `theorem hasDerivAt_deriv_of_C3 {g : ℝ → ℝ} {a : ℝ} (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) {y : ℝ} (hy : y ∈ Icc (1 - a) (1 + a)) : HasDerivAt g (deriv g y) y ∧ HasDerivAt (deriv g) (deriv (deriv g) y) y ∧ HasDerivAt (deriv (deriv g)) (deriv (deriv (deriv g)) y) y` |
+| 239 | theorem | `abs_g2_sub_le` | `theorem abs_g2_sub_le {g : ℝ → ℝ} {a : ℝ} (ha0 : 0 ≤ a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) {t : ℝ} (ht : t ∈ Icc (1 - a) (1 + a)) : \|deriv (deriv g) t - deriv (deriv g) 1\| ≤ Gamma3 g a * \|t - 1\|` |
+| 253 | theorem | `taylor_of_C3` | `theorem taylor_of_C3 {g : ℝ → ℝ} {a : ℝ} (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg1 : deriv g 1 = 0) : ∀ y : ℝ, \|y - 1\| ≤ a → \|deriv g y - deriv (deriv g) 1 * (y - 1)\| ≤ Gamma3 g a / 2 * (y - 1) ^ 2` |
+| 318 | def | `eps0C3` | `noncomputable def eps0C3 (g : ℝ → ℝ) (a wmin wsup Bhat lamMin : ℝ) : ℝ` |
+| 324 | def | `CC3` | `noncomputable def CC3 (g : ℝ → ℝ) (a wmin wsup : ℝ) : ℝ` |
+| 328 | def | `gamma0C3` | `noncomputable def gamma0C3 (g : ℝ → ℝ) (a wmin wsup Bhat : ℝ) : ℝ` |
+| 335 | theorem | `constC3_congr` | `theorem constC3_congr {g g' : ℝ → ℝ} {a : ℝ} (h2 : deriv (deriv g) 1 = deriv (deriv g') 1) (h3 : Gamma3 g a = Gamma3 g' a) (wmin wsup Bhat lamMin : ℝ) : eps0C3 g a wmin wsup Bhat lamMin = eps0C3 g' a wmin wsup Bhat lamMin ∧ CC3 g a wmin wsup = CC3 g' a wmin wsup ∧ gamma0C3 g a wmin wsup Bhat = gamma0C3 g' a wmin wsup Bhat` |
+| 345 | theorem | `epsW_eq_of_lt_one` | `theorem epsW_eq_of_lt_one {a g2 wmin Kex Bhat : ℝ} (ha1 : a < 1) : epsW a g2 wmin Kex Bhat = min (a / 4) (eps1 g2 wmin Kex Bhat)` |
+| 356 | theorem | `local_convergence_full_C3` | `theorem local_convergence_full_C3 {K : V → V → ℝ} {lam w : V → ℝ} {g : ℝ → ℝ} {h : ℝ → V → ℝ} {a wsup wmin Bhat lamMin : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, \|w x\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (hflow : IsGradientFlow K lam (fun z => lam z * w z) (deriv g) fun s x => 1 + h s x) (hnorm0 : Graph.nrmL2 lam (h 0) ≤ eps0C3 g a wmin wsup Bhat lamMin) : ∃ cinf : ℝ, \|cinf - 1 - Graph.meanL2 lam (h 0)\| ≤ CC3 g a wmin wsup * Graph.nrmL2 lam (perpL2 lam (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL (deriv (deriv g) 1) wmin Bhat * t / 2)) * Graph.nrmL2 lam (perpL2 lam (h 0))` |
+| 379 | theorem | `constC3_bounds` | `theorem constC3_bounds {lam w : V → ℝ} {g : ℝ → ℝ} {a wsup wmin Bhat lamMin : ℝ} (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, \|w x\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) : eps0C3 g a wmin wsup Bhat lamMin ∈ Set.Ioc 0 (a / (16 * Cinf lamMin)) ∧ 1 ≤ CC3 g a wmin wsup ∧ 0 < gamma0C3 g a wmin wsup Bhat` |
+| 396 | theorem | `local_convergence_gd_C3` | `theorem local_convergence_gd_C3 {K : V → V → ℝ} {lam w : V → ℝ} {g : ℝ → ℝ} {hk : ℕ → V → ℝ} {a wsup wmin Bhat lamMin gam : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, \|w x\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (hstep : ∀ k : ℕ, hk (k + 1) = fun x => hk k x - gam * lossGrad K lam (fun z => lam z * w z) (deriv g) (fun z => 1 + hk k z) x) (hgam0 : 0 ≤ gam) (hgam : gam ≤ gamma0C3 g a wmin wsup Bhat) (hnorm0 : Graph.nrmL2 lam (hk 0) ≤ eps0C3 g a wmin wsup Bhat lamMin) : ∀ k : ℕ, ((∀ x : V, 0 < 1 + hk k x) ∧ (∀ x : V, \|ratio K lam (fun z => 1 + hk k z) x - 1\| ≤ 2 * a / 3) ∧ ∀ d : V → ℝ, HasDerivAt (fun t : ℝ => loss K lam (fun z => lam z * w z) (fun x => 1 + hk k x + t * d x) g) (Graph.ipL2 lam (lossGrad K lam (fun z => lam z * w z) (deriv g) fun z => 1 + hk k z) d) 0) ∧ Graph.nrmL2 lam (perpL2 lam (hk (k + 1))) ≤ (1 - gam * rhoL (deriv (deriv g) 1) wmin Bhat / 4) * Graph.nrmL2 lam (perpL2 lam (hk k))` |
+| 441 | abbrev | `EdgeSet` | `abbrev EdgeSet (pb : V → V → ℝ) : Type _` |
+| 445 | def | `edgeKernelE` | `def edgeKernelE (pb : V → V → ℝ) (e e' : EdgeSet pb) : ℝ` |
+| 449 | def | `edgeMeasureE` | `def edgeMeasureE (pb : V → V → ℝ) (lam : V → ℝ) (e : EdgeSet pb) : ℝ` |
+| 454 | theorem | `sum_edgeSet_eq` | `theorem sum_edgeSet_eq {pb : V → V → ℝ} (f : V × V → ℝ) (hf : ∀ p : V × V, ¬ 0 < pb p.2 p.1 → f p = 0) : ∑ e : EdgeSet pb, f e.1 = ∑ p : V × V, f p` |
+| 465 | theorem | `edgeKernel_mem_edgeSet` | `theorem edgeKernel_mem_edgeSet {pb : V → V → ℝ} {s s' z w : V} (hpos : 0 < edgeKernel pb s s' z w) : 0 < pb w z` |
+| 476 | theorem | `edgeKernel_eq_zero_of_not_mem` | `theorem edgeKernel_eq_zero_of_not_mem {pb : V → V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) {s s' z w : V} (hzw : ¬ 0 < pb w z) : edgeKernel pb s s' z w = 0` |
+| 484 | theorem | `edgeMeasure_eq_zero_of_not_mem` | `theorem edgeMeasure_eq_zero_of_not_mem {pb : V → V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (lam : V → ℝ) {s s' : V} (hss : ¬ 0 < pb s' s) : edgeMeasure pb lam s s' = 0` |
+| 490 | theorem | `edgeKernelE_isMarkovOn` | `theorem edgeKernelE_isMarkovOn {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) : Core.IsMarkovOn (edgeMeasureE pb lam) (edgeKernelE pb)` |
+| 502 | theorem | `edgeMeasureE_pos` | `theorem edgeMeasureE_pos {pb : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (e : EdgeSet pb) : 0 < edgeMeasureE pb lam e` |
+| 508 | theorem | `edgeMeasureE_total` | `theorem edgeMeasureE_total {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (htot : ∑ x, lam x = 1) : ∑ e : EdgeSet pb, edgeMeasureE pb lam e = 1` |
+| 519 | theorem | `edgeMeasureE_isInvariant` | `theorem edgeMeasureE_isInvariant {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) : Core.IsInvariant (edgeMeasureE pb lam) (edgeKernelE pb)` |
+| 536 | theorem | `local_convergence_full_DB` | `theorem local_convergence_full_DB {pb : V → V → ℝ} {lam : V → ℝ} {w : EdgeSet pb → ℝ} {g : ℝ → ℝ} {h : ℝ → EdgeSet pb → ℝ} {a wsup wmin Bhat lamMin : ℝ} (hpb : Core.IsMarkovOn lam pb) (hinvpb : Core.IsInvariant lam pb) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ e, lamMin ≤ edgeMeasureE pb lam e) (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ e, \|w e\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : EdgeSet pb → ℝ, Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) f) ≤ Bhat * Graph.nrmL2 (edgeMeasureE pb lam) (Aop (edgeKernelE pb) (edgeMeasureE pb lam) f)) (hflow : IsGradientFlow (edgeKernelE pb) (edgeMeasureE pb lam) (fun e => edgeMeasureE pb lam e * w e) (deriv g) fun s e => 1 + h s e) (hnorm0 : Graph.nrmL2 (edgeMeasureE pb lam) (h 0) ≤ eps0C3 g a wmin wsup Bhat lamMin) : ∃ cinf : ℝ, \|cinf - 1 - Graph.meanL2 (edgeMeasureE pb lam) (h 0)\| ≤ CC3 g a wmin wsup * Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) (h 0)) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 (edgeMeasureE pb lam) (fun e => h t e - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL (deriv (deriv g) 1) wmin Bhat * t / 2)) * Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) (h 0))` |
+| 566 | theorem | `local_convergence_gd_DB` | `theorem local_convergence_gd_DB {pb : V → V → ℝ} {lam : V → ℝ} {w : EdgeSet pb → ℝ} {g : ℝ → ℝ} {hk : ℕ → EdgeSet pb → ℝ} {a wsup wmin Bhat lamMin gam : ℝ} (hpb : Core.IsMarkovOn lam pb) (hinvpb : Core.IsInvariant lam pb) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin0 : 0 < lamMin) (hlmin : ∀ e, lamMin ≤ edgeMeasureE pb lam e) (ha : 0 < a) (hC3 : ∀ y ∈ Icc (1 - a) (1 + a), ContDiffAt ℝ 3 g y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ e, \|w e\| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : EdgeSet pb → ℝ, Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) f) ≤ Bhat * Graph.nrmL2 (edgeMeasureE pb lam) (Aop (edgeKernelE pb) (edgeMeasureE pb lam) f)) (hstep : ∀ k : ℕ, hk (k + 1) = fun e => hk k e - gam * lossGrad (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => edgeMeasureE pb lam z * w z) (deriv g) (fun z => 1 + hk k z) e) (hgam0 : 0 ≤ gam) (hgam : gam ≤ gamma0C3 g a wmin wsup Bhat) (hnorm0 : Graph.nrmL2 (edgeMeasureE pb lam) (hk 0) ≤ eps0C3 g a wmin wsup Bhat lamMin) : ∀ k : ℕ, ((∀ e, 0 < 1 + hk k e) ∧ (∀ e, \|ratio (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => 1 + hk k z) e - 1\| ≤ 2 * a / 3) ∧ ∀ d : EdgeSet pb → ℝ, HasDerivAt (fun t : ℝ => loss (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => edgeMeasureE pb lam z * w z) (fun e => 1 + hk k e + t * d e) g) (Graph.ipL2 (edgeMeasureE pb lam) (lossGrad (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => edgeMeasureE pb lam z * w z) (deriv g) fun z => 1 + hk k z) d) 0) ∧ Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) (hk (k + 1))) ≤ (1 - gam * rhoL (deriv (deriv g) 1) wmin Bhat / 4) * Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) (hk k))` |
+| 606 | def | `logSqDeriv2` | `noncomputable def logSqDeriv2 (x : ℝ) : ℝ` |
+| 609 | def | `logSqDeriv3` | `noncomputable def logSqDeriv3 (x : ℝ) : ℝ` |
+| 611 | theorem | `hasDerivAt_logSqDeriv` | `theorem hasDerivAt_logSqDeriv {y : ℝ} (hy : 0 < y) : HasDerivAt logSqDeriv (logSqDeriv2 y) y` |
+| 623 | theorem | `hasDerivAt_logSqDeriv2` | `theorem hasDerivAt_logSqDeriv2 {y : ℝ} (hy : 0 < y) : HasDerivAt logSqDeriv2 (logSqDeriv3 y) y` |
+| 638 | theorem | `deriv_logSq_eq` | `theorem deriv_logSq_eq {y : ℝ} (hy : 0 < y) : deriv logSq y = logSqDeriv y ∧ deriv (deriv logSq) y = logSqDeriv2 y ∧ deriv (deriv (deriv logSq)) y = logSqDeriv3 y` |
+| 656 | theorem | `logSq_C3` | `theorem logSq_C3 : ∀ y ∈ Icc (1 - (1/2 : ℝ)) (1 + 1/2), ContDiffAt ℝ 3 logSq y` |
+| 663 | theorem | `logSq_deriv_one` | `theorem logSq_deriv_one : deriv logSq 1 = 0` |
+| 667 | theorem | `logSq_deriv2_one` | `theorem logSq_deriv2_one : deriv (deriv logSq) 1 = 2` |
+| 674 | theorem | `Gamma3_logSq` | `theorem Gamma3_logSq : Gamma3 logSq (1/2) = 48 + 32 * Real.log 2` |
+| 714 | theorem | `logSqDeriv_taylor_Gamma3` | `theorem logSqDeriv_taylor_Gamma3 (y : ℝ) (hy : \|y - 1\| ≤ 1/2) : \|logSqDeriv y - 2 * (y - 1)\| ≤ (48 + 32 * Real.log 2) / 2 * (y - 1) ^ 2` |
+| 722 | def | `eps0Gamma3` | `noncomputable def eps0Gamma3 (wmin wsup Bhat lamMin : ℝ) : ℝ` |
+| 729 | theorem | `eps0Gamma3_eq` | `theorem eps0Gamma3_eq (wmin wsup Bhat lamMin : ℝ) : eps0Gamma3 wmin wsup Bhat lamMin = eps0C3 logSq (1/2) wmin wsup Bhat lamMin` |
+| 734 | theorem | `eps0_antitone_M3` | `theorem eps0_antitone_M3 {g2 a wmin wsup Bhat Ci M M' : ℝ} (hg2 : 0 < g2) (ha : 0 < a) (hwmin : 0 < wmin) (hwsup : 0 < wsup) (hB : 0 < Bhat) (hCi : 0 < Ci) (hM : 0 ≤ M) (hMM : M ≤ M') : eps0 (epsW a g2 wmin (Kexp g2 a M' wsup) Bhat) Ci (C7 (C6 (Cg g2 a M') wsup) g2 wmin) (rhoL g2 wmin Bhat) (C6 (Cg g2 a M') wsup) ≤ eps0 (epsW a g2 wmin (Kexp g2 a M wsup) Bhat) Ci (C7 (C6 (Cg g2 a M) wsup) g2 wmin) (rhoL g2 wmin Bhat) (C6 (Cg g2 a M) wsup)` |
+| 779 | theorem | `eps0Gamma3_le_eps0Sq` | `theorem eps0Gamma3_le_eps0Sq {wmin wsup Bhat lamMin : ℝ} (hwmin : 0 < wmin) (hwsup : 0 < wsup) (hB : 0 < Bhat) (hlmin0 : 0 < lamMin) : eps0Gamma3 wmin wsup Bhat lamMin ≤ eps0Sq wmin wsup Bhat lamMin` |
+| 786 | theorem | `eps0Gamma3_pos` | `theorem eps0Gamma3_pos {lamMin wmin wsup Bhat : ℝ} (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hwsup : 0 < wsup) (hB : 0 < Bhat) : 0 < eps0Gamma3 wmin wsup Bhat lamMin` |
+| 799 | theorem | `eps0Gamma3_le_sqrt` | `theorem eps0Gamma3_le_sqrt {lamMin wmin wsup Bhat : ℝ} (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hwsup : 0 < wsup) : eps0Gamma3 wmin wsup Bhat lamMin ≤ Real.sqrt lamMin / 32` |
+| 827 | theorem | `training_speed_full_Gamma3` | `theorem training_speed_full_Gamma3 {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam gr uH wf : V → ℝ} {wmin wsup : ℝ} {u : ℝ → V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup) (hu0 : ∀ x, 0 < u 0 x) (hflow : IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u) : (∀ x, lam x = Graph.visits G gr x / (2 + B.sigmaBar uH)) ∧ Graph.minOver G lam = Graph.minOver G (Graph.visits G gr) / (2 + B.sigmaBar uH) ∧ (∀ t : ℝ, 0 ≤ t → lossVal lam wf logSq (ratio B.phat lam (u t)) ≤ ((lossVal lam wf logSq (ratio B.phat lam (u 0)))⁻¹ + (wmin * Real.sqrt (Graph.minOver G lam) / (Graph.nrmL2 lam (u 0) * wsup * max 1 (Real.sqrt (lossVal lam wf logSq (ratio B.phat lam (u 0)) / (wmin * Graph.minOver G lam))))) ^ 2 * t)⁻¹) ∧ ∃ t₁ ∈ Set.Icc (0:ℝ) (T0 (lossVal lam wf logSq (ratio B.phat lam (u 0))) (cDelta wmin (Graph.minOver G lam) (Graph.nrmL2 lam (u 0)) (delta0 (eps0Gamma3 wmin wsup (BhatSigma G uH lam) (Graph.minOver G lam)) (Graph.meanL2 lam (u 0)) (BhatSigma G uH lam) (Graph.nrmL2 lam (u 0))))), Graph.meanL2 lam (u 0) ≤ Graph.meanL2 lam (u t₁) ∧ Graph.meanL2 lam (u t₁) ≤ Graph.nrmL2 lam (u 0) ∧ Graph.nrmL2 lam (fun x => u t₁ x / Graph.meanL2 lam (u t₁) - 1) ≤ eps0Gamma3 wmin wsup (BhatSigma G uH lam) (Graph.minOver G lam) ∧ ∃ cinf : ℝ, Balanced B.phat lam (fun _ => cinf) ∧ ∀ t : ℝ, t₁ ≤ t → Graph.nrmL2 lam (fun x => u t x / Graph.meanL2 lam (u t₁) - cinf) ≤ 2 * Real.exp (-(rhoSigma 2 wmin (Graph.minOver G lam) (Graph.sigmaStar G uH) * (t - t₁)` |
+| 943 | def | `extE` | `noncomputable def extE (pb : V → V → ℝ) (lam : V → ℝ) (u : EdgeSet pb → ℝ) : V → V → ℝ` |
+| 947 | theorem | `extE_apply` | `theorem extE_apply (pb : V → V → ℝ) (lam : V → ℝ) (u : EdgeSet pb → ℝ) (e : EdgeSet pb) : extE pb lam u e.1.1 e.1.2 = edgeMeasureE pb lam e * u e` |
+| 952 | theorem | `ratio_edgeE_eq` | `theorem ratio_edgeE_eq {pb : V → V → ℝ} {lam : V → ℝ} (u : EdgeSet pb → ℝ) (e : EdgeSet pb) : ratio (edgeKernelE pb) (edgeMeasureE pb lam) u e = pushEdge pb (extE pb lam u) e.1.1 e.1.2 / extE pb lam u e.1.1 e.1.2` |
+| 973 | theorem | `loss_edgeE_eq_db` | `theorem loss_edgeE_eq_db {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hlam : ∀ x, 0 ≤ lam x) {u : EdgeSet pb → ℝ} (hu : ∀ e, 0 ≤ u e) (nu : EdgeSet pb → ℝ) (g : ℝ → ℝ) : loss (edgeKernelE pb) (edgeMeasureE pb lam) nu u g = ∑ e : EdgeSet pb, nu e * g (marg₁ (extE pb lam u) e.1.2 * pb e.1.2 e.1.1 / (marg₁ (extE pb lam u) e.1.1 * disint (extE pb lam u) e.1.1 e.1.2))` |
+| 994 | theorem | `logSq_C3_bundle` | `theorem logSq_C3_bundle : (∀ y ∈ Icc (1 - (1/2 : ℝ)) (1 + 1/2), ContDiffAt ℝ 3 logSq y) ∧ deriv logSq 1 = 0 ∧ 0 < deriv (deriv logSq) 1` |
+| 1000 | theorem | `isGradientFlow_one` | `theorem isGradientFlow_one {V : Type*} [Fintype V] {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hgd : gd 1 = 0) : IsGradientFlow K lam nu gd (fun _ _ => 1)` |
+| 1015 | def | `pbU` | `noncomputable def pbU : Fin 2 → Fin 2 → ℝ` |
+| 1018 | def | `lamU` | `noncomputable def lamU : Fin 2 → ℝ` |
+| 1020 | theorem | `pbU_pos` | `theorem pbU_pos (p : Fin 2 × Fin 2) : 0 < pbU p.2 p.1` |
+| 1022 | theorem | `sum_edgeSetU` | `theorem sum_edgeSetU (F : EdgeSet pbU → ℝ) : ∑ e, F e = F ⟨(0, 0), pbU_pos _⟩ + F ⟨(0, 1), pbU_pos _⟩ + F ⟨(1, 0), pbU_pos _⟩ + F ⟨(1, 1), pbU_pos _⟩` |
+| 1030 | theorem | `pbU_markov` | `theorem pbU_markov : Core.IsMarkovOn lamU pbU` |
+| 1033 | theorem | `pbU_invariant` | `theorem pbU_invariant : Core.IsInvariant lamU pbU` |
+| 1039 | theorem | `coer_edgeU` | `theorem coer_edgeU (f : EdgeSet pbU → ℝ) : Graph.nrmL2 (edgeMeasureE pbU lamU) (perpL2 (edgeMeasureE pbU lamU) f) ≤ 2 * Graph.nrmL2 (edgeMeasureE pbU lamU) (Aop (edgeKernelE pbU) (edgeMeasureE pbU lamU) f)` |
+| 1088 | theorem | `local_convergence_full_DB_witness` | `theorem local_convergence_full_DB_witness : ∃ cinf : ℝ, \|cinf - 1 - Graph.meanL2 (edgeMeasureE pbU lamU) (fun _ => 0)\| ≤ CC3 logSq (1/2) 1 1 * Graph.nrmL2 (edgeMeasureE pbU lamU) (perpL2 (edgeMeasureE pbU lamU) fun _ => 0) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → Graph.nrmL2 (edgeMeasureE pbU lamU) (fun _ => 0 - (cinf - 1)) ≤ 2 * Real.exp (-(rhoL (deriv (deriv logSq) 1) 1 2 * t / 2)) * Graph.nrmL2 (edgeMeasureE pbU lamU) (perpL2 (edgeMeasureE pbU lamU) fun _ => 0)` |
 
 ### `GFNBounds/Balance/Discrete.lean`
 
@@ -1840,6 +2127,69 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`
 | 709 | theorem | `inner_ge_of_mixing` | `theorem inner_ge_of_mixing [CompleteSpace E] {P Pi H : E →L[ℝ] E} {c : ℝ} (hmix : Core.Mixing P Pi) (hB : 0 < Core.Mixing.B P Pi) (hc : 0 ≤ c) (hH : ∀ x : E, c * ‖(1 - P) x‖ ^ 2 ≤ ⟪x, H x⟫) (x : E) : c / Core.Mixing.B P Pi ^ 2 * ‖x - Pi x‖ ^ 2 ≤ ⟪x, H x⟫` |
 | 733 | theorem | `stable_frozen_decay` | `theorem stable_frozen_decay {H Pi : E →L[ℝ] E} {rho : ℝ} {h : ℝ → E} (hPisa : ∀ x y : E, ⟪Pi x, y⟫ = ⟪x, Pi y⟫) (hPiH : ∀ x : E, Pi (H x) = 0) (hcoer : ∀ x : E, rho * ‖x - Pi x‖ ^ 2 ≤ ⟪x, H x⟫) (hflow : ∀ t : ℝ, HasDerivAt h (-H (h t)) t) : (∀ t : ℝ, Pi (h t) = Pi (h 0)) ∧ ∀ t : ℝ, 0 ≤ t → ‖h t - Pi (h t)‖ ≤ Real.exp (-(rho * t)) * ‖h 0 - Pi (h 0)‖` |
 | 821 | theorem | `scalar_decay_check` | `theorem scalar_decay_check : (∀ t : ℝ, 0 ≤ t → ‖5 * Real.exp (-(2 * t))‖ ≤ Real.exp (-(2 * t)) * ‖5 * Real.exp (-(2 * (0 : ℝ)))‖) ∧ ‖5 * Real.exp (-(2 * (1 : ℝ)))‖ = Real.exp (-(2 * (1 : ℝ))) * ‖5 * Real.exp (-(2 * (0 : ℝ)))‖` |
+
+### `GFNBounds/Balance/FlowExistence.lean`
+
+**The gradient flow exists, stays positive, and is unique**  
+
+*strict library; 1250 lines; 47 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `prop:no_distant_equilibrium` (bucket D)
+
+
+In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] [DecidableEq V] {G : Graph.MarkedGraph V}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 159 | theorem | `contDiffAt_ratio` | `theorem contDiffAt_ratio {K : V → V → ℝ} {lam : V → ℝ} {u : V → ℝ} (y : V) (hy : lam y * u y ≠ 0) : ContDiffAt ℝ 1 (fun v : V → ℝ => ratio K lam v y) u` |
+| 171 | theorem | `contDiffAt_lossGrad` | `theorem contDiffAt_lossGrad {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hgd : ∀ y : ℝ, 0 < y → ContDiffAt ℝ 1 gd y) : ContDiffAt ℝ 1 (fun v : V → ℝ => lossGrad K lam nu gd v) u` |
+| 190 | def | `densityBox` | `def densityBox (V : Type*) (a b : ℝ) : Set (V → ℝ)` |
+| 194 | theorem | `mem_densityBox` | `theorem mem_densityBox {a b : ℝ} {u : V → ℝ} : u ∈ densityBox V a b ↔ ∀ x, a ≤ u x ∧ u x ≤ b` |
+| 200 | theorem | `convex_densityBox` | `theorem convex_densityBox (a b : ℝ) : Convex ℝ (densityBox V a b)` |
+| 205 | theorem | `isCompact_densityBox` | `theorem isCompact_densityBox (a b : ℝ) : IsCompact (densityBox V a b)` |
+| 210 | theorem | `exists_lipschitzOnWith_lossGrad` | `theorem exists_lipschitzOnWith_lossGrad {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hgd : ∀ y : ℝ, 0 < y → ContDiffAt ℝ 1 gd y) {a b : ℝ} (ha : 0 < a) : ∃ L, LipschitzOnWith L (fun v : V → ℝ => lossGrad K lam nu gd v) (densityBox V a b)` |
+| 220 | def | `clampBox` | `def clampBox (a b : ℝ) (u : V → ℝ) : V → ℝ` |
+| 224 | theorem | `clampBox_mem` | `theorem clampBox_mem {a b : ℝ} (hab : a ≤ b) (u : V → ℝ) : clampBox a b u ∈ densityBox V a b` |
+| 229 | theorem | `clampBox_eq` | `theorem clampBox_eq {a b : ℝ} {u : V → ℝ} (hu : u ∈ densityBox V a b) : clampBox a b u = u` |
+| 235 | theorem | `lipschitzWith_clampBox` | `theorem lipschitzWith_clampBox (a b : ℝ) : LipschitzWith 1 (clampBox (V := V) a b)` |
+| 263 | def | `IsGradientFlowOn` | `def IsGradientFlowOn (K : V → V → ℝ) (lam nu : V → ℝ) (gd : ℝ → ℝ) (u : ℝ → V → ℝ) (D : Set ℝ) : Prop` |
+| 268 | theorem | `IsGradientFlow.isGradientFlowOn` | `theorem IsGradientFlow.isGradientFlowOn {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (h : IsGradientFlow K lam nu gd u) : IsGradientFlowOn K lam nu gd u (Ici 0)` |
+| 274 | theorem | `loss_antitoneOn_of_on` | `theorem loss_antitoneOn_of_on {K : V → V → ℝ} {lam nu : V → ℝ} {g gd : ℝ → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hflow : IsGradientFlowOn K lam nu gd u D) : AntitoneOn (fun s : ℝ => loss K lam nu (u s) g) D` |
+| 292 | theorem | `mass_monotoneOn_of_on` | `theorem mass_monotoneOn_of_on {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlowOn K lam nu gd u D) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) D` |
+| 321 | theorem | `nrmL2_eq_of_on` | `theorem nrmL2_eq_of_on {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} {D : Set ℝ} (hD : Convex ℝ D) (hlam : ∀ x, 0 < lam x) (hupos : ∀ s ∈ D, ∀ x, 0 < u s x) (hflow : IsGradientFlowOn K lam nu gd u D) {a b : ℝ} (ha : a ∈ D) (hb : b ∈ D) (hab : a ≤ b) : Graph.nrmL2 lam (u b) = Graph.nrmL2 lam (u a)` |
+| 350 | theorem | `edge_drop_of_ratio_le` | `theorem edge_drop_of_ratio_le {K : V → V → ℝ} {lam u : V → ℝ} {lamMin pmin R : ℝ} (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hR : 0 < R) (hr : ∀ x, ratio K lam u x ≤ R) {y z : V} (hyz : pmin ≤ K y z) : lamMin * pmin / R * u y ≤ u z` |
+| 384 | theorem | `floor_of_edge_drop` | `theorem floor_of_edge_drop {K : V → V → ℝ} {lam u : V → ℝ} {pmin c m0 : ℝ} (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hcross : CrossingFloor K pmin) (hc0 : 0 < c) (hc1 : c ≤ 1) (hdrop : ∀ y z : V, pmin ≤ K y z → c * u y ≤ u z) (hm0 : m0 ≤ Graph.meanL2 lam u) (x : V) : m0 * c ^ (Fintype.card V - 1) ≤ u x` |
+| 471 | structure | `FlowGenerator` | `structure FlowGenerator (g gd : ℝ → ℝ)` |
+| 491 | theorem | `FlowGenerator.ratio_le` | `theorem FlowGenerator.ratio_le {g gd : ℝ → ℝ} (G : FlowGenerator g gd) {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin wmin L0 : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL : loss K lam (fun x => lam x * wf x) u g ≤ L0) (x : V) : ratio K lam u x ≤ G.capR (L0 / (wmin * lamMin))` |
+| 513 | def | `uFloor` | `noncomputable def uFloor (V : Type*) [Fintype V] (R lamMin pmin m0 : ℝ) : ℝ` |
+| 518 | theorem | `FlowGenerator.floor` | `theorem FlowGenerator.floor {g gd : ℝ → ℝ} (G : FlowGenerator g gd) {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin pmin wmin L0 m0 : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hu : ∀ x, 0 < u x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL : loss K lam (fun x => lam x * wf x) u g ≤ L0) (hm0 : m0 ≤ Graph.meanL2 lam u) (x : V) : uFloor V (G.capR (L0 / (wmin * lamMin))) lamMin pmin m0 ≤ u x` |
+| 555 | theorem | `exists_forall_hasDerivAt_of_lipschitzWith` | `theorem exists_forall_hasDerivAt_of_lipschitzWith {f : E → E} {L : ℝ≥0} {M : ℝ≥0} (hf : LipschitzWith L f) (hM : ∀ x, ‖f x‖ ≤ M) (x₀ : E) : ∃ α : ℝ → E, α 0 = x₀ ∧ ∀ t, HasDerivAt α (f (α t)) t` |
+| 631 | theorem | `abs_max_zero_max_le_iff` | `theorem abs_max_zero_max_le_iff {p q e : ℝ} (he : 0 ≤ e) : \|max 0 (max p q)\| ≤ e ↔ p ≤ e ∧ q ≤ e` |
+| 642 | theorem | `FlowGenerator.exists_flow` | `theorem FlowGenerator.exists_flow {g gd : ℝ → ℝ} (G : FlowGenerator g gd) {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) gd u ∧ ∀ t : ℝ, 0 ≤ t → ∀ x, uFloor V (G.capR (loss K lam (fun x => lam x * wf x) u0 g / (wmin * lamMin))) lamMin pmin (Graph.meanL2 lam u0) ≤ u t x` |
+| 769 | theorem | `exists_densityBox_of_continuousOn` | `theorem exists_densityBox_of_continuousOn [Nonempty V] {u : ℝ → V → ℝ} {S : Set ℝ} (hS : IsCompact S) (hc : ∀ x, ContinuousOn (fun s => u s x) S) (hpos : ∀ s ∈ S, ∀ x, 0 < u s x) : ∃ a b : ℝ, 0 < a ∧ ∀ s ∈ S, u s ∈ densityBox V a b` |
+| 792 | theorem | `densityBox_mono` | `theorem densityBox_mono {a b a' b' : ℝ} (ha : a' ≤ a) (hb : b ≤ b') : densityBox V a b ⊆ densityBox V a' b'` |
+| 801 | theorem | `isGradientFlow_unique` | `theorem isGradientFlow_unique {K : V → V → ℝ} {lam nu : V → ℝ} {gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hgd : ∀ y : ℝ, 0 < y → ContDiffAt ℝ 1 gd y) {u v : ℝ → V → ℝ} (hu : IsGradientFlow K lam nu gd u) (hv : IsGradientFlow K lam nu gd v) (hupos : ∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) (hvpos : ∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) (h0 : u 0 = v 0) : ∀ t : ℝ, 0 ≤ t → u t = v t` |
+| 846 | def | `sqGen` | `noncomputable def sqGen (y : ℝ) : ℝ` |
+| 850 | def | `logSqFlowGenerator` | `noncomputable def logSqFlowGenerator : FlowGenerator logSq logSqDeriv` |
+| 870 | def | `sqFlowGenerator` | `noncomputable def sqFlowGenerator : FlowGenerator sqGen (fun x : ℝ => 2 * (x - 1))` |
+| 888 | theorem | `uFloor_logSq_eq_uMin` | `theorem uFloor_logSq_eq_uMin (V : Type*) [Fintype V] (lamMin pmin wmin L0 m0 : ℝ) : uFloor V (logSqFlowGenerator.capR (L0 / (wmin * lamMin))) lamMin pmin m0 = uMin V lamMin pmin wmin L0 m0` |
+| 905 | theorem | `FlowGenerator.existsUnique_flow` | `theorem FlowGenerator.existsUnique_flow {g gd : ℝ → ℝ} (G : FlowGenerator g gd) {K : V → V → ℝ} {lam wf : V → ℝ} {wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hreach : ∀ x y : V, Relation.ReflTransGen (fun a b => 0 < K a b) x y) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) gd u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow K lam (fun x => lam x * wf x) gd v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| 938 | theorem | `existsUnique_flow_logSq` | `theorem existsUnique_flow_logSq {K : V → V → ℝ} {lam wf : V → ℝ} {wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hreach : ∀ x y : V, Relation.ReflTransGen (fun a b => 0 < K a b) x y) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| 952 | theorem | `existsUnique_flow_sq` | `theorem existsUnique_flow_sq {K : V → V → ℝ} {lam wf : V → ℝ} {wmin : ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hreach : ∀ x y : V, Relation.ReflTransGen (fun a b => 0 < K a b) x y) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow K lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| 968 | def | `UniqueInvariant` | `def UniqueInvariant (K : V → V → ℝ) (lam : V → ℝ) : Prop` |
+| 975 | theorem | `reach_of_uniqueInvariant` | `theorem reach_of_uniqueInvariant {K : V → V → ℝ} {lam : V → ℝ} (hK : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (herg : UniqueInvariant K lam) : ∀ x y : V, Relation.ReflTransGen (fun a b => 0 < K a b) x y` |
+| 1068 | theorem | `existsUnique_flow_logSq_of_ergodic` | `theorem existsUnique_flow_logSq_of_ergodic {K : V → V → ℝ} {lam wf : V → ℝ} {wmin : ℝ} (hK : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (herg : UniqueInvariant K lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow K lam (fun x => lam x * wf x) logSqDeriv v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| 1082 | theorem | `existsUnique_flow_sq_of_ergodic` | `theorem existsUnique_flow_sq_of_ergodic {K : V → V → ℝ} {lam wf : V → ℝ} {wmin : ℝ} (hK : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (herg : UniqueInvariant K lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow K lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow K lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| 1108 | theorem | `existsUnique_flow_logSq_graph` | `theorem existsUnique_flow_logSq_graph {lam wf : V → ℝ} {wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| 1121 | theorem | `existsUnique_flow_sq_graph` | `theorem existsUnique_flow_sq_graph {lam wf : V → ℝ} {wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow B.phat lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow B.phat lam (fun x => lam x * wf x) (fun x => 2 * (x - 1)) v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t` |
+| 1141 | theorem | `no_distant_equilibrium_three_of_init` | `theorem no_distant_equilibrium_three_of_init {lam wf : V → ℝ} {wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ (∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t) ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam u0) ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam u0) ∧ ∀ w : V → ℝ, (∀ x, 0 < w x) → Balanced B.phat lam w → Graph.nrmL2 lam w = Graph.nrmL2 lam u0 → w = fun _ => Graph.nrmL2 lam u0` |
+| 1169 | theorem | `twoState_uniqueInvariant` | `theorem twoState_uniqueInvariant : UniqueInvariant twoStateK twoStateLam` |
+| 1182 | theorem | `twoStateK_row` | `theorem twoStateK_row : ∀ x, ∑ y, twoStateK x y = 1` |
+| 1189 | theorem | `twoState_flow_exists_check` | `theorem twoState_flow_exists_check : ∃ u : ℝ → Fin 2 → ℝ, u 0 = blowupU ∧ IsGradientFlow twoStateK twoStateLam (fun x => twoStateLam x * 1) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ¬ Balanced twoStateK twoStateLam (u 0)` |
+| 1208 | theorem | `twoState_flow_exists_check_sq` | `theorem twoState_flow_exists_check_sq : ∃ u : ℝ → Fin 2 → ℝ, u 0 = blowupU ∧ IsGradientFlow twoStateK twoStateLam (fun x => twoStateLam x * 1) (fun x => 2 * (x - 1)) u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ¬ Balanced twoStateK twoStateLam (u 0)` |
+| 1229 | theorem | `cycle_flow_converges_check` | `theorem cycle_flow_converges_check : ∃ u : ℝ → Fin 5 → ℝ, u 0 = uInfl 2 ∧ IsGradientFlow (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (fun x => lam (1 / 2) x * 1) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ ¬ Balanced (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (u 0) ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 (lam (1 / 2)) (uInfl 2))` |
 
 ### `GFNBounds/Balance/Freezing.lean`
 
@@ -5837,6 +6187,269 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | 462 | theorem | `no_state_space_free_bound` | `theorem no_state_space_free_bound : ¬ ∃ F : ℝ → ℝ, Tendsto F (𝓝[>] (0 : ℝ)) (𝓝 0) ∧ ∀ (X T : Type) [Fintype X] [Fintype T] (pET : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) (π pT : X → ℝ), (∀ x, 0 < π x) → (∑ x, π x = 1) → (∀ x, 0 < pET x) → (∑ x, pET x = 1) → (∀ x t, 0 ≤ pB x t) → (∀ x, ∑ t, pB x t = 1) → (∀ x t, 0 < pB x t → 0 < pF t) → (∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) → chiSq (unif X) pET = 0 → MprimeLe pB pF π 1 → tv pT π ≤ F (residual pET π pB pF)` |
 | 495 | theorem | `no_three_argument_bound` | `theorem no_three_argument_bound : ¬ ∃ F : ℝ → ℝ → ℝ → ℝ, Tendsto (fun e => F e 0 1) (𝓝[>] (0 : ℝ)) (𝓝 0) ∧ ∀ (X T : Type) [Fintype X] [Fintype T] (pET : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) (π pT : X → ℝ) (c : ℝ), (∀ x, 0 < π x) → (∑ x, π x = 1) → (∀ x, 0 < pET x) → (∑ x, pET x = 1) → (∀ x t, 0 ≤ pB x t) → (∀ x, ∑ t, pB x t = 1) → (∀ x t, 0 < pB x t → 0 < pF t) → (∀ x, pT x = ∑ t, pB x t * (pF t / pB x t)) → MprimeLe pB pF π c → tv pT π ≤ F (residual pET π pB pF) (chiSq (unif X) pET) c` |
 
+### `scaffold/GFNBoundsScaffold/Balance/DiscreteGlobal.lean`
+
+**The discrete global phase of the training-speed theorem (draft header)**  
+
+*scaffold library; 1743 lines; 62 declarations.*
+
+
+In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 15 | theorem | `taylor_upper` | `theorem taylor_upper {F F' F'' : ℝ → ℝ} {γ C : ℝ} (hγ : 0 ≤ γ) (hF : ∀ s ∈ Set.Icc 0 γ, HasDerivAt F (F' s) s) (hF' : ∀ s ∈ Set.Icc 0 γ, HasDerivAt F' (F'' s) s) (hC : ∀ s ∈ Set.Icc 0 γ, F'' s ≤ C) : F γ ≤ F 0 + γ * F' 0 + C * γ ^ 2 / 2` |
+| 46 | theorem | `hasDerivAt_line` | `theorem hasDerivAt_line (a b s : ℝ) : HasDerivAt (fun t => a - t * b) (-b) s` |
+| 50 | theorem | `hasDerivAt_div_line` | `theorem hasDerivAt_div_line {a b s : ℝ} (h : a - s * b ≠ 0) : HasDerivAt (fun t => b / (a - t * b)) ((b / (a - s * b)) ^ 2) s` |
+| 57 | theorem | `hasDerivAt_sq_logdiff` | `theorem hasDerivAt_sq_logdiff {a b c d s : ℝ} (ha : 0 < a - s * b) (hc : 0 < c - s * d) : HasDerivAt (fun t => (Real.log (a - t * b) - Real.log (c - t * d)) ^ 2) (2 * (Real.log (a - s * b) - Real.log (c - s * d)) * (d / (c - s * d) - b / (a - s * b))) s` |
+| 68 | theorem | `hasDerivAt_sq_logdiff_deriv` | `theorem hasDerivAt_sq_logdiff_deriv {a b c d s : ℝ} (ha : 0 < a - s * b) (hc : 0 < c - s * d) : HasDerivAt (fun t => 2 * (Real.log (a - t * b) - Real.log (c - t * d)) * (d / (c - t * d) - b / (a - t * b))) (2 * (d / (c - s * d) - b / (a - s * b)) ^ 2 + 2 * (Real.log (a - s * b) - Real.log (c - s * d)) * ((d / (c - s * d)) ^ 2 - (b / (a - s * b)) ^ 2)) s` |
+| 87 | theorem | `sq_logdiff_deriv2_le` | `theorem sq_logdiff_deriv2_le (l τ ρ : ℝ) : 2 * (τ - ρ) ^ 2 + 2 * l * (τ ^ 2 - ρ ^ 2) ≤ (4 + 2 * \|l\|) * (τ ^ 2 + ρ ^ 2)` |
+| 98 | def | `Mp` | `noncomputable def Mp (M : ℝ) : ℝ` |
+| 101 | def | `b1` | `noncomputable def b1 (M : ℝ) : ℝ` |
+| 104 | def | `b2` | `noncomputable def b2 (M : ℝ) : ℝ` |
+| 107 | def | `b3` | `noncomputable def b3 (W umin M : ℝ) : ℝ` |
+| 110 | theorem | `exp_Mp` | `theorem exp_Mp (M : ℝ) : Real.exp (Mp M) = 3 * Real.exp M` |
+| 113 | theorem | `exp_two_Mp` | `theorem exp_two_Mp (M : ℝ) : Real.exp (2 * Mp M) = 9 * Real.exp M ^ 2` |
+| 116 | theorem | `Mp_nonneg` | `theorem Mp_nonneg {M : ℝ} (hM : 0 ≤ M) : 0 ≤ Mp M` |
+| 121 | theorem | `b3_bracket_eq` | `theorem b3_bracket_eq (M : ℝ) : (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) = (1 + 3 * Real.exp M) * (18 * (1 + Mp M) * Real.exp M ^ 2 * (1 + 3 * Real.exp M) + 12 * Mp M * Real.exp M)` |
+| 130 | theorem | `b3_bracket_ge` | `theorem b3_bracket_ge {M : ℝ} (hM : 0 ≤ M) : M * (Real.exp M + 1) ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) ∧ (4 + 2 * Mp M) * (1 + Real.exp M ^ 2) ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M) ∧ 8 ≤ (1 + Real.exp (Mp M)) * (b2 M * (1 + Real.exp (Mp M)) + 2 * b1 M)` |
+| 166 | theorem | `pushMass_line` | `theorem pushMass_line (K : V → V → ℝ) (lam u v : V → ℝ) (s : ℝ) (y : V) : pushMass K lam (fun x => u x - s * v x) y = pushMass K lam u y - s * pushMass K lam v y` |
+| 171 | theorem | `ratio_line` | `theorem ratio_line (K : V → V → ℝ) (lam u v : V → ℝ) (s : ℝ) (y : V) : ratio K lam (fun x => u x - s * v x) y = (pushMass K lam u y - s * pushMass K lam v y) / (lam y * u y - s * (lam y * v y))` |
+| 177 | theorem | `pushMass_eq_densAct` | `theorem pushMass_eq_densAct {K : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (v : V → ℝ) (y : V) : pushMass K lam v y = lam y * Core.densAct lam K v y` |
+| 182 | theorem | `logSq_div_eq` | `theorem logSq_div_eq {p q : ℝ} (hp : 0 < p) (hq : 0 < q) : logSq (p / q) = (Real.log p - Real.log q) ^ 2` |
+| 187 | theorem | `exp_neg_le_of_abs_log_le` | `theorem exp_neg_le_of_abs_log_le {r M : ℝ} (hr : 0 < r) (h : \|Real.log r\| ≤ M) : Real.exp (-M) ≤ r ∧ r ≤ Real.exp M` |
+| 206 | theorem | `abs_lossGrad_le` | `theorem abs_lossGrad_le {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, \|Real.log (ratio K lam u x)\| ≤ M) (x : V) : \|lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x\| ≤ 2 * M * W * (Real.exp M + 1) * u x / umin ^ 2` |
+| 280 | theorem | `rel_step_le` | `theorem rel_step_le {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin γ : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hrow : ∀ x, ∑ y, K x y = 1) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, \|Real.log (ratio K lam u x)\| ≤ M) (hγ0 : 0 ≤ γ) (hγ : γ * b3 W umin M ≤ 1) (x : V) : γ * \|lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x\| ≤ u x / 2` |
+| 308 | theorem | `pushMass_mono` | `theorem pushMass_mono {K : V → V → ℝ} {lam v v' : V → ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 ≤ lam x) (h : ∀ x, v x ≤ v' x) (y : V) : pushMass K lam v y ≤ pushMass K lam v' y` |
+| 314 | theorem | `pushMass_smul` | `theorem pushMass_smul (K : V → V → ℝ) (lam u : V → ℝ) (c : ℝ) (y : V) : pushMass K lam (fun x => c * u x) y = c * pushMass K lam u y` |
+| 321 | theorem | `abs_logdiff_le` | `theorem abs_logdiff_le {a a' c c' : ℝ} (ha : 0 < a) (hc : 0 < c) (ha1 : a / 2 ≤ a') (ha2 : a' ≤ 3 * a / 2) (hc1 : c / 2 ≤ c') (hc2 : c' ≤ 3 * c / 2) : \|Real.log a' - Real.log c'\| ≤ \|Real.log (a / c)\| + Real.log 3` |
+| 355 | theorem | `descent_step` | `theorem descent_step {K : V → V → ℝ} {lam wf u : V → ℝ} {W M umin γ : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hw0 : ∀ x, 0 ≤ wf x) (hW : ∀ x, wf x ≤ W) (hW0 : 0 ≤ W) (hu : ∀ x, 0 < u x) (humin0 : 0 < umin) (humin : ∀ x, umin ≤ u x) (hM0 : 0 ≤ M) (hlog : ∀ x, \|Real.log (ratio K lam u x)\| ≤ M) (hγ0 : 0 ≤ γ) (hγ : γ * b3 W umin M ≤ 1) : (∀ x, u x / 2 ≤ u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ lossVal lam wf logSq (ratio K lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x)) ≤ lossVal lam wf logSq (ratio K lam u) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2` |
+| 599 | theorem | `abs_log_ratio_le` | `theorem abs_log_ratio_le {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin wmin L0 : ℝ} (hlam : ∀ x, 0 < lam x) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hL : lossVal lam wf logSq (ratio K lam u) ≤ L0) (x : V) : \|Real.log (ratio K lam u x)\| ≤ ratioCap lamMin wmin L0` |
+| 612 | theorem | `meanL2_lossGrad_nonpos` | `theorem meanL2_lossGrad_nonpos {K : V → V → ℝ} {lam wf u : V → ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hwpos : ∀ x, 0 < wf x) (hu : ∀ x, 0 < u x) : Graph.meanL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ≤ 0` |
+| 624 | theorem | `region_step` | `theorem region_step {K : V → V → ℝ} {lam wf u : V → ℝ} {lamMin pmin wmin W L0 m0 γ : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hm0 : 0 < m0) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin L0 m0) (ratioCap lamMin wmin L0) ≤ 1) (hu : ∀ x, 0 < u x) (hL : lossVal lam wf logSq (ratio K lam u) ≤ L0) (hm : m0 ≤ Graph.meanL2 lam u) : (∀ x, uMin V lamMin pmin wmin L0 m0 ≤ u x) ∧ (∀ x, 0 < u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ lossVal lam wf logSq (ratio K lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x)) ≤ lossVal lam wf logSq (ratio K lam u) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2 ∧ Graph.meanL2 lam u ≤ Graph.meanL2 lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ∧ Graph.nrmL2 lam (fun x => u x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv u x) ^ 2 = Graph.nrmL2 lam u ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv u) ^ 2` |
+| 673 | theorem | `traj_region` | `theorem traj_region {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) : ∀ k, (∀ x, 0 < uk k x) ∧ lossVal lam wf logSq (ratio K lam (uk k)) ≤ lossVal lam wf logSq (ratio K lam (uk 0)) ∧ Graph.meanL2 lam (uk 0) ≤ Graph.meanL2 lam (uk k) ∧ Graph.nrmL2 lam (uk k) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk k)) ≤ Graph.nrmL2 lam (uk 0) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0))` |
+| 709 | theorem | `traj_a` | `theorem traj_a {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k, (∀ x, uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0)) ≤ uk k x) ∧ lossVal lam wf logSq (ratio K lam (uk (k + 1))) ≤ lossVal lam wf logSq (ratio K lam (uk k)) - γ / 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.meanL2 lam (uk k) ≤ Graph.meanL2 lam (uk (k + 1)) ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 = Graph.nrmL2 lam (uk k) ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2` |
+| 753 | theorem | `inv_recursion` | `theorem inv_recursion {L : ℕ → ℝ} {a : ℝ} (ha : 0 ≤ a) (hL : ∀ k, 0 ≤ L k) (hrec : ∀ k, L (k + 1) ≤ L k - a * L k ^ 2) : ∀ k : ℕ, L k ≤ ((L 0)⁻¹ + k * a)⁻¹` |
+| 806 | theorem | `traj_nrm_le` | `theorem traj_nrm_le {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k, Graph.nrmL2 lam (uk k) ^ 2 ≤ 2 * Graph.nrmL2 lam (uk 0) ^ 2 ∧ Graph.nrmL2 lam (uk k) ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Graph.meanL2 lam (uk k) ≤ Graph.nrmL2 lam (uk k) ∧ 0 < Graph.meanL2 lam (uk k)` |
+| 851 | theorem | `traj_b` | `theorem traj_b {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ0 : 0 ≤ γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) : ∀ k : ℕ, lossVal lam wf logSq (ratio K lam (uk k)) ≤ ((lossVal lam wf logSq (ratio K lam (uk 0)))⁻¹ + k * γ * (wmin * Real.sqrt lamMin / (Graph.nrmL2 lam (uk 0) * W * ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) ^ 2 / 4)⁻¹` |
+| 930 | def | `delta1` | `noncomputable def delta1 (eps0 m0 Bhat U0 : ℝ) : ℝ` |
+| 933 | def | `kappa` | `noncomputable def kappa (wmin lamMin U0 W M : ℝ) : ℝ` |
+| 937 | def | `k0real` | `noncomputable def k0real (γ κ lamMin wmin δ1 : ℝ) : ℝ` |
+| 939 | theorem | `abs_exp_sub_one_le` | `theorem abs_exp_sub_one_le {y d : ℝ} (hy : \|y\| ≤ d / 2) (hd : d ≤ 1) : \|Real.exp y - 1\| ≤ d` |
+| 953 | theorem | `traj_entry` | `theorem traj_entry {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat eps0 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) (heps0 : 0 < eps0) (heps1 : eps0 ≤ 1 / 32) : ∀ k : ℕ, ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 eps0 (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊ ≤ k → (∀ x, \|ratio K lam (uk k) x - 1\| ≤ delta1 eps0 (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0))) ∧ Graph.nrmL2 lam (perpL2 lam (uk k)) ≤ eps0 * Graph.meanL2 lam (uk 0) ∧ Graph.nrmL2 lam (fun x => uk k x / Graph.meanL2 lam (uk k) - 1) ≤ eps0` |
+| 1066 | def | `Gamma3` | `noncomputable def Gamma3 : ℝ` |
+| 1068 | theorem | `twentyfour_le_Gamma3` | `theorem twentyfour_le_Gamma3 : (24:ℝ) ≤ Gamma3` |
+| 1074 | def | `eps0At` | `noncomputable def eps0At (M3 wmin W Bhat lamMin : ℝ) : ℝ` |
+| 1079 | def | `gamma0At` | `noncomputable def gamma0At (M3 wmin W Bhat : ℝ) : ℝ` |
+| 1082 | theorem | `eps0At_pos` | `theorem eps0At_pos {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) (hlmin0 : 0 < lamMin) : 0 < eps0At M3 wmin W Bhat lamMin` |
+| 1090 | theorem | `gamma0At_pos` | `theorem gamma0At_pos {M3 wmin W Bhat : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) : 0 < gamma0At M3 wmin W Bhat` |
+| 1098 | theorem | `Cinf_mul_eps0At_le` | `theorem Cinf_mul_eps0At_le {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hlmin0 : 0 < lamMin) : Cinf lamMin * eps0At M3 wmin W Bhat lamMin ≤ 1 / 32` |
+| 1111 | theorem | `eps0At_le` | `theorem eps0At_le {lam : V → ℝ} {M3 wmin W Bhat lamMin : ℝ} (hM3 : 0 ≤ M3) (hwmin : 0 < wmin) (hW : 0 < W) (hB : 0 < Bhat) (hlmin0 : 0 < lamMin) (hlmin : ∀ x, lamMin ≤ lam x) (htot : ∑ x, lam x = 1) : eps0At M3 wmin W Bhat lamMin ≤ 1 / 32` |
+| 1121 | theorem | `perpL2_div_sub_one` | `theorem perpL2_div_sub_one {lam u : V → ℝ} (htot : ∑ x, lam x = 1) {m : ℝ} (hm : m ≠ 0) : perpL2 lam (fun x => u x / m - 1) = fun x => m⁻¹ * perpL2 lam u x` |
+| 1139 | theorem | `traj_c` | `theorem traj_c {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat M3 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hγ0 : γ ≤ gamma0At M3 wmin W Bhat * Graph.meanL2 lam (uk 0) ^ 2) (hM3 : 24 ≤ M3) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) : ∀ k : ℕ, ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊ ≤ k → Graph.nrmL2 lam (perpL2 lam (uk (k + 1))) ≤ (1 - γ * rhoL 2 wmin Bhat / (4 * Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ^ 2)) * Graph.nrmL2 lam (perpL2 lam (uk k))` |
+| 1242 | theorem | `delta1_le` | `theorem delta1_le {eps0 m0 Bhat U0 : ℝ} (heps0 : 0 ≤ eps0) (hm0 : 0 < m0) (hB1 : 1 ≤ Bhat) (hmU : m0 ≤ U0) : delta1 eps0 m0 Bhat U0 ≤ eps0` |
+| 1255 | theorem | `abs_log_le_of_close` | `theorem abs_log_le_of_close {r : ℝ} (h : \|r - 1\| ≤ 1 / 32) : \|Real.log r\| ≤ 32 / 31 * \|r - 1\|` |
+| 1276 | theorem | `loss_le_perp_sq` | `theorem loss_le_perp_sq {K : V → V → ℝ} {lam wf u : V → ℝ} {W m : ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hW : ∀ x, wf x ≤ W) (hW0 : 0 ≤ W) (hm : 0 < m) (hu : ∀ x, 31 / 32 * m ≤ u x) (hr : ∀ x, \|ratio K lam u x - 1\| ≤ 1 / 32) : lossVal lam wf logSq (ratio K lam u) ≤ 24 / 5 * W * Graph.nrmL2 lam (perpL2 lam u) ^ 2 / m ^ 2` |
+| 1336 | theorem | `limit_arith` | `theorem limit_arith {mk minf m ξ e0 : ℝ} (hm : 0 < m) (hmk : m ≤ mk) (hkinf : mk ≤ minf) (hsq : minf ^ 2 ≤ mk ^ 2 + 13 / 10 * ξ ^ 2) (hξ0 : 0 ≤ ξ) (hξ : ξ ≤ e0 * m) (he1 : e0 ≤ 1 / 32) : minf - mk ≤ ξ ^ 2 / m ∧ ξ + (minf - mk) ≤ 9 / 8 * ξ` |
+| 1358 | theorem | `nrmL2_sub_const_le` | `theorem nrmL2_sub_const_le {lam u : V → ℝ} (hnn : ∀ x, 0 ≤ lam x) (htot : ∑ x, lam x = 1) (c : ℝ) : Graph.nrmL2 lam (fun x => u x - c) ≤ Graph.nrmL2 lam (perpL2 lam u) + \|Graph.meanL2 lam u - c\|` |
+| 1371 | theorem | `past_bound` | `theorem past_bound {K : V → V → ℝ} {lam wf : V → ℝ} {uk : ℕ → V → ℝ} {lamMin W γ m e0 : ℝ} {k : ℕ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hW : ∀ x, wf x ≤ W) (hW0 : 0 < W) (hγ : 0 ≤ γ) (hmpos : 0 < m) (he1 : e0 ≤ 1 / 32) (hCe : Cinf lamMin * e0 ≤ 1 / 32) (hmono : Monotone fun j => Graph.meanL2 lam (uk j)) (hbdd : BddAbove (Set.range fun j => Graph.meanL2 lam (uk j))) (hmk : m ≤ Graph.meanL2 lam (uk k)) (hr32 : ∀ x, \|ratio K lam (uk k) x - 1\| ≤ 1 / 32) (hξm : Graph.nrmL2 lam (perpL2 lam (uk k)) ≤ e0 * m) (hγW : γ * (32 * W) ≤ m ^ 2) (hsq : ∀ j, k ≤ j → Graph.meanL2 lam (uk j) ^ 2 ≤ Graph.meanL2 lam (uk k) ^ 2 + Graph.nrmL2 lam (perpL2 lam (uk k)) ^ 2 + 2 * γ * lossVal lam wf logSq (ratio K lam (uk k))) : (⨆ j, Graph.meanL2 lam (uk j)) - Graph.meanL2 lam (uk k) ≤ Graph.nrmL2 lam (perpL2 lam (uk k)) ^ 2 / m ∧ Graph.nrmL2 lam (fun x => uk k x - ⨆ j, Graph.meanL2 lam (uk j)) ≤ 9 / 8 * Graph.nrmL2 lam (perpL2 lam (uk k))` |
+| 1439 | theorem | `traj_d` | `theorem traj_d {K : V → V → ℝ} {lam wf : V → ℝ} {lamMin pmin wmin W γ Bhat M3 : ℝ} {uk : ℕ → V → ℝ} (hKM : Core.IsMarkov K) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hlmin : ∀ x, lamMin ≤ lam x) (hlmin0 : 0 < lamMin) (hpmin0 : 0 < pmin) (hpmin1 : pmin ≤ 1) (hcross : CrossingFloor K pmin) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hW : ∀ x, wf x ≤ W) (hu0 : ∀ x, 0 < uk 0 x) (hstep : ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (uk k) x) (hγ : 0 < γ) (hγb : γ * b3 W (uMin V lamMin pmin wmin (lossVal lam wf logSq (ratio K lam (uk 0))) (Graph.meanL2 lam (uk 0))) (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0)))) ≤ 1) (hγL : 2 * γ * lossVal lam wf logSq (ratio K lam (uk 0)) ≤ Graph.nrmL2 lam (uk 0) ^ 2) (hγ0 : γ ≤ gamma0At M3 wmin W Bhat * Graph.meanL2 lam (uk 0) ^ 2) (hM3 : 24 ≤ M3) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) : Graph.meanL2 lam (uk 0) ≤ Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ∧ Graph.meanL2 lam (uk ⌈k0real γ (kappa wmin lamMin (Graph.nrmL2 lam (uk 0)) W (ratioCap lamMin wmin (lossVal lam wf logSq (ratio K lam (uk 0))))) lamMin wmin (delta1 (eps0At M3 wmin W Bhat lamMin) (Graph.meanL2 lam (uk 0)) Bhat (Graph.nrmL2 lam (uk 0)))⌉₊) ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Monotone (fun k => Graph.meanL2 lam (uk k)) ∧ ∃ minf : ℝ, Filter.Tendsto (fun k => Graph.meanL2 lam (uk k)) Filter.atTop (nhds minf) ∧ minf ≤ Real.sqrt 2 * Graph.nrmL2 lam (uk 0) ∧ Balanced K lam (fun _ => minf)` |
+| 1629 | def | `gammaStar` | `noncomputable def gammaStar (b3v U0 L0 γ0 m0 : ℝ) : ℝ` |
+| 1633 | theorem | `gammaStar_pos` | `theorem gammaStar_pos {b3v U0 L0 γ0 m0 : ℝ} (hb : 0 < b3v) (hU0 : 0 < U0) (hL0 : 0 ≤ L0) (hγ0 : 0 < γ0) (hm0 : 0 < m0) : 0 < gammaStar b3v U0 L0 γ0 m0` |
+| 1642 | theorem | `le_gammaStar` | `theorem le_gammaStar {b3v U0 L0 γ0 m0 γ : ℝ} (hb : 0 < b3v) (hL0 : 0 ≤ L0) (hγ : 0 ≤ γ) (h : γ ≤ gammaStar b3v U0 L0 γ0 m0) : γ * b3v ≤ 1 ∧ 2 * γ * L0 ≤ U0 ^ 2 ∧ γ ≤ γ0 * m0 ^ 2` |
+| 1662 | def | `k0` | `noncomputable def k0 (γ U0 W M sigStar wmin lamMin e0 m0 : ℝ) : ℕ` |
+| 1667 | theorem | `k0real_eq` | `theorem k0real_eq {γ U0 W M sigStar wmin lamMin e0 m0 : ℝ} (hγ : 0 < γ) (hU0 : 0 < U0) (hW : 0 < W) (hM : 0 < M) (hsig : 0 < sigStar) (hwmin : 0 < wmin) (hlmin0 : 0 < lamMin) (he0 : 0 < e0) (hm0 : 0 < m0) : k0real γ (kappa wmin lamMin U0 W M) lamMin wmin (delta1 e0 m0 (sigStar / Real.sqrt lamMin) U0) = 32 * U0 ^ 4 * W ^ 2 * M ^ 2 * sigStar ^ 2 / (γ * wmin ^ 3 * lamMin ^ 3 * e0 ^ 2 * m0 ^ 2)` |
+| 1692 | theorem | `no_uniform_step` | `theorem no_uniform_step {K : V → V → ℝ} {lam wf u0 : V → ℝ} {γ : ℝ} (hKnn : ∀ x y, 0 ≤ K x y) (hinv : Invariant K lam) (hlam : ∀ x, 0 < lam x) (hwpos : ∀ x, 0 < wf x) (hu0 : ∀ x, 0 < u0 x) (hbal : ¬ Balanced K lam u0) (hγ : 0 < γ) : ∃ y : V, ∃ s0 : ℝ, 0 < s0 ∧ ∀ s : ℝ, 0 < s → s < s0 → s * u0 y - γ * lossGrad K lam (fun z => lam z * wf z) logSqDeriv (fun x => s * u0 x) y < 0` |
+
+### `scaffold/GFNBoundsScaffold/Balance/LiftFinite.lean`
+
+**LiftFinite (draft)**  
+
+*scaffold library; 470 lines; 37 declarations.*
+
+
+In scope: `variable {α : Type*} [Fintype α]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 20 | theorem | `l2norm_eq_nrmL2` | `theorem l2norm_eq_nrmL2 (w f : α → ℝ) : l2norm w f = Graph.nrmL2 w f` |
+| 25 | theorem | `opBound_opNorm` | `theorem opBound_opNorm {w : α → ℝ} {A : (α → ℝ) → (α → ℝ)} (hne : ∃ b, OpBound w A b) : OpBound w A (opNorm w A)` |
+| 40 | theorem | `opBound_of_adjoint` | `theorem opBound_of_adjoint {w : α → ℝ} (hw : ∀ x, 0 ≤ w x) {A B : (α → ℝ) → (α → ℝ)} (hadj : ∀ u v, Graph.ipL2 w (A u) v = Graph.ipL2 w u (B v)) {b : ℝ} (hb : OpBound w B b) : OpBound w A b` |
+| 60 | theorem | `opNorm_eq_of_adjoint` | `theorem opNorm_eq_of_adjoint {w : α → ℝ} (hw : ∀ x, 0 ≤ w x) {A B : (α → ℝ) → (α → ℝ)} (hadj : ∀ u v, Graph.ipL2 w (A u) v = Graph.ipL2 w u (B v)) : opNorm w A = opNorm w B` |
+| 73 | def | `densDeviation` | `noncomputable def densDeviation (K : α → α → ℝ) (w : α → ℝ) (n : ℕ) (u : α → ℝ) : α → ℝ` |
+| 77 | theorem | `densDeviation_eq` | `theorem densDeviation_eq (K : α → α → ℝ) (w : α → ℝ) (n : ℕ) (u : α → ℝ) : densDeviation K w n u = fun y => (Core.densAct w K)^[n] u y - ∑ x, w x * u x` |
+| 81 | theorem | `deviation_eq` | `theorem deviation_eq (K : α → α → ℝ) (w : α → ℝ) (n : ℕ) (g : α → ℝ) : deviation K w n g = fun x => (funAct K)^[n] g x - ∑ y, w y * g y` |
+| 85 | theorem | `ipL2_densAct_iterate` | `theorem ipL2_densAct_iterate {K : α → α → ℝ} {w : α → ℝ} (hinv : Core.IsInvariant w K) (hK : ∀ x y, 0 ≤ K x y) (n : ℕ) (u v : α → ℝ) : Graph.ipL2 w ((Core.densAct w K)^[n] u) v = Graph.ipL2 w u ((funAct K)^[n] v)` |
+| 95 | theorem | `ipL2_sub_const_left` | `theorem ipL2_sub_const_left (w a b : α → ℝ) (c : ℝ) : Graph.ipL2 w (fun x => a x - c) b = Graph.ipL2 w a b - c * ∑ x, w x * b x` |
+| 103 | theorem | `ipL2_densDeviation` | `theorem ipL2_densDeviation {K : α → α → ℝ} {w : α → ℝ} (hinv : Core.IsInvariant w K) (hK : ∀ x y, 0 ≤ K x y) (n : ℕ) (u v : α → ℝ) : Graph.ipL2 w (densDeviation K w n u) v = Graph.ipL2 w u (deviation K w n v)` |
+| 113 | theorem | `opNorm_densDeviation` | `theorem opNorm_densDeviation {K : α → α → ℝ} {w : α → ℝ} (hinv : Core.IsInvariant w K) (hK : ∀ x y, 0 ≤ K x y) (n : ℕ) : opNorm w (densDeviation K w n) = opNorm w (deviation K w n)` |
+| 119 | theorem | `nrmL2_funAct_iterate_le` | `theorem nrmL2_funAct_iterate_le {K : α → α → ℝ} {w : α → ℝ} (hK : Core.IsMarkovOn w K) (hinv : Core.IsInvariant w K) (n : ℕ) (g : α → ℝ) : Graph.nrmL2 w ((funAct K)^[n] g) ≤ Graph.nrmL2 w g` |
+| 130 | theorem | `opBound_deviation_two` | `theorem opBound_deviation_two {K : α → α → ℝ} {w : α → ℝ} (hK : Core.IsMarkovOn w K) (hinv : Core.IsInvariant w K) (htot : ∑ x, w x = 1) (n : ℕ) : OpBound w (deviation K w n) 2` |
+| 158 | theorem | `condBack_snd` | `theorem condBack_snd {pb : V → V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (φ : V → ℝ) : condBack pb (fun _ s' => φ s') = φ` |
+| 167 | theorem | `l2sq₂_of_snd` | `theorem l2sq₂_of_snd {pb : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (φ : V → ℝ) : l2sq₂ (edgeMeasure pb lam) (fun _ s' => φ s') = l2sq lam φ` |
+| 178 | theorem | `edgeDeviation_succ` | `theorem edgeDeviation_succ (pb : V → V → ℝ) (lam : V → ℝ) (n : ℕ) (f : V → V → ℝ) : edgeDeviation pb lam (n + 1) f = fun s _ => deviation pb lam n (condBack pb f) s` |
+| 185 | theorem | `lift_mixing_ge` | `theorem lift_mixing_ge {pb : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (hinv : Invariant pb lam) {b : ℝ} {n : ℕ} (hb : OpBound₂ (edgeMeasure pb lam) (edgeDeviation pb lam (n + 1)) b) : OpBound lam (deviation pb lam n) b` |
+| 199 | theorem | `lift_mixing_opNorm_eq` | `theorem lift_mixing_opNorm_eq {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) (htot : ∑ x, lam x = 1) (n : ℕ) : opNorm₂ (edgeMeasure pb lam) (edgeDeviation pb lam (n + 1)) = opNorm lam (deviation pb lam n)` |
+| 221 | def | `pairKernel` | `def pairKernel (pb : V → V → ℝ) (p q : V × V) : ℝ` |
+| 224 | def | `pairMeasure` | `def pairMeasure (pb : V → V → ℝ) (lam : V → ℝ) (p : V × V) : ℝ` |
+| 227 | theorem | `pairKernel_isMarkov` | `theorem pairKernel_isMarkov {pb : V → V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) : Core.IsMarkov (pairKernel pb)` |
+| 236 | theorem | `pairMeasure_isInvariant` | `theorem pairMeasure_isInvariant {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) : Core.IsInvariant (pairMeasure pb lam) (pairKernel pb)` |
+| 248 | theorem | `pairMeasure_total` | `theorem pairMeasure_total {pb : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (htot : ∑ x, lam x = 1) : ∑ p, pairMeasure pb lam p = 1` |
+| 255 | theorem | `funAct_pairKernel` | `theorem funAct_pairKernel (pb : V → V → ℝ) (f : V → V → ℝ) : funAct (pairKernel pb) (Function.uncurry f) = Function.uncurry (funActEdge pb f)` |
+| 262 | theorem | `funAct_pairKernel_iterate` | `theorem funAct_pairKernel_iterate (pb : V → V → ℝ) (n : ℕ) (f : V → V → ℝ) : (funAct (pairKernel pb))^[n] (Function.uncurry f) = Function.uncurry ((funActEdge pb)^[n] f)` |
+| 271 | theorem | `deviation_pair` | `theorem deviation_pair (pb : V → V → ℝ) (lam : V → ℝ) (n : ℕ) (f : V → V → ℝ) : deviation (pairKernel pb) (pairMeasure pb lam) n (Function.uncurry f) = Function.uncurry (edgeDeviation pb lam n f)` |
+| 281 | theorem | `l2norm_pair` | `theorem l2norm_pair (pb : V → V → ℝ) (lam : V → ℝ) (f : V → V → ℝ) : l2norm (pairMeasure pb lam) (Function.uncurry f) = l2norm₂ (edgeMeasure pb lam) f` |
+| 287 | theorem | `opNorm_pair` | `theorem opNorm_pair (pb : V → V → ℝ) (lam : V → ℝ) (n : ℕ) : opNorm (pairMeasure pb lam) (deviation (pairKernel pb) (pairMeasure pb lam) n) = opNorm₂ (edgeMeasure pb lam) (edgeDeviation pb lam n)` |
+| 309 | theorem | `lift_mixing_dens` | `theorem lift_mixing_dens {pb : V → V → ℝ} {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) (htot : ∑ x, lam x = 1) (n : ℕ) : opNorm (pairMeasure pb lam) (densDeviation (pairKernel pb) (pairMeasure pb lam) (n + 1)) = opNorm lam (densDeviation pb lam n)` |
+| 328 | def | `condFwdPair` | `def condFwdPair (pf : V → V → ℝ) (h : V × V → ℝ) : V → ℝ` |
+| 333 | theorem | `pairMeasure_eq_reversal` | `theorem pairMeasure_eq_reversal {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam pb) (hnn : ∀ x y, 0 ≤ pb x y) (s z : V) : pairMeasure pb lam (s, z) = lam s * Core.reversal lam pb s z` |
+| 342 | theorem | `densAct_pair` | `theorem densAct_pair {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam pb) (hnn : ∀ x y, 0 ≤ pb x y) (h : V × V → ℝ) {q : V × V} (hq : pairMeasure pb lam q ≠ 0) : Core.densAct (pairMeasure pb lam) (pairKernel pb) h q = condFwdPair (Core.reversal lam pb) h q.2` |
+| 357 | theorem | `meanL2_pair` | `theorem meanL2_pair {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam pb) (hnn : ∀ x y, 0 ≤ pb x y) (h : V × V → ℝ) : Graph.meanL2 (pairMeasure pb lam) h = Graph.meanL2 lam (condFwdPair (Core.reversal lam pb) h)` |
+| 369 | theorem | `nrmL2_condFwdPair_le` | `theorem nrmL2_condFwdPair_le {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam pb) (hnn : ∀ x y, 0 ≤ pb x y) (h : V × V → ℝ) : Graph.nrmL2 lam (condFwdPair (Core.reversal lam pb) h) ≤ Graph.nrmL2 (pairMeasure pb lam) h` |
+| 390 | theorem | `nrmL2_pair_snd` | `theorem nrmL2_pair_snd {pb : V → V → ℝ} {lam : V → ℝ} (hrow : ∀ x, ∑ y, pb x y = 1) (φ : V → ℝ) : Graph.nrmL2 (pairMeasure pb lam) (fun q => φ q.2) = Graph.nrmL2 lam φ` |
+| 403 | theorem | `Aop_condFwdPair` | `theorem Aop_condFwdPair {pb : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam pb) (hnn : ∀ x y, 0 ≤ pb x y) (h : V × V → ℝ) {s : V} (hs : lam s ≠ 0) : Aop pb lam (condFwdPair (Core.reversal lam pb) h) s = condFwdPair (Core.reversal lam pb) (Aop (pairKernel pb) (pairMeasure pb lam) h) s` |
+| 437 | theorem | `lift_coercivity_finite` | `theorem lift_coercivity_finite {pb : V → V → ℝ} {lam : V → ℝ} {C : ℝ} (hpb : Core.IsMarkov pb) (hinv : Core.IsInvariant lam pb) (hC : 0 ≤ C) (hcoer : ∀ φ : V → ℝ, Graph.nrmL2 lam (perpL2 lam φ) ≤ C * Graph.nrmL2 lam (Aop pb lam φ)) (h : V × V → ℝ) : Graph.nrmL2 (pairMeasure pb lam) (perpL2 (pairMeasure pb lam) h) ≤ (1 + C) * Graph.nrmL2 (pairMeasure pb lam) (Aop (pairKernel pb) (pairMeasure pb lam) h)` |
+
+### `scaffold/GFNBoundsScaffold/Doubling/ExpansionSecond.lean`
+
+**The expansion of `R_α` to second order, with explicit constants**  
+
+*scaffold library; 1298 lines; 57 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `lem:doubling_expansion` (bucket B), 🟡 `rem:doubling_parity` (bucket B), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A)
+
+
+In scope: `variable (D : Decay)`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 112 | theorem | `trap_unit` | `theorem trap_unit {s t : ℝ} (hs : 0 < s) (hs1 : s ≠ 1) (ht : 0 < t) : \|(t ^ (-s) + (t + 1) ^ (-s)) / 2 - (t ^ (1 - s) - (t + 1) ^ (1 - s)) / (s - 1)\| ≤ s * (s + 1) * t ^ (-s - 2) / 12` |
+| 172 | theorem | `window_sum_second` | `theorem window_sum_second {s : ℝ} (hs : 1 < s) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : \|∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-s) - ((a : ℝ) ^ (1 - s) - (b : ℝ) ^ (1 - s)) / (s - 1) - ((a : ℝ) ^ (-s) - (b : ℝ) ^ (-s)) / 2\| ≤ s * (s + 1) / 12 * ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-s - 2)` |
+| 215 | theorem | `sum_Ico_rpow_le` | `theorem sum_Ico_rpow_le {q : ℝ} (hq : 0 ≤ q) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-q) ≤ ((b : ℝ) - (a : ℝ)) * (a : ℝ) ^ (-q)` |
+| 232 | theorem | `one_sub_le_rpow_neg` | `theorem one_sub_le_rpow_neg {q y : ℝ} (hq : 0 ≤ q) (hy : 0 ≤ y) : 1 - q * y ≤ (1 + y) ^ (-q)` |
+| 238 | theorem | `rpow_neg_le_one` | `theorem rpow_neg_le_one {q y : ℝ} (hq : 0 ≤ q) (hy : 0 ≤ y) : (1 + y) ^ (-q) ≤ 1` |
+| 243 | theorem | `rpow_neg_le_quad` | `theorem rpow_neg_le_quad {q y : ℝ} (hq : 1 ≤ q) (hy : 0 ≤ y) : (1 + y) ^ (-q) ≤ 1 - q * y + q ^ 2 * y ^ 2` |
+| 266 | theorem | `two_foot` | `theorem two_foot (m : ℕ) : 2 * ((m + 1) / 2) = m + delta m` |
+| 269 | theorem | `delta_cases` | `theorem delta_cases (m : ℕ) : (delta m : ℝ) = 0 ∨ (delta m : ℝ) = 1` |
+| 277 | def | `ufoot` | `noncomputable def ufoot (m : ℕ) : ℝ` |
+| 279 | theorem | `foot_eq` | `theorem foot_eq {m : ℕ} (hm : 1 ≤ m) : (((m + 1) / 2 : ℕ) : ℝ) = (m : ℝ) / 2 * ufoot m` |
+| 288 | theorem | `one_le_ufoot` | `theorem one_le_ufoot (m : ℕ) : 1 ≤ ufoot m` |
+| 294 | theorem | `foot_rpow` | `theorem foot_rpow {m : ℕ} (hm : 1 ≤ m) (e : ℝ) : (((m + 1) / 2 : ℕ) : ℝ) ^ e = (m : ℝ) ^ e * (2 : ℝ) ^ (-e) * ufoot m ^ e` |
+| 301 | theorem | `mpow_mul_rpow` | `theorem mpow_mul_rpow {m : ℕ} (hm : 1 ≤ m) (k : ℝ) : (m : ℝ) ^ D.p * (m : ℝ) ^ (-D.p - k) = (m : ℝ) ^ (-k)` |
+| 308 | theorem | `two_rpow_p_add` | `theorem two_rpow_p_add (k : ℕ) : (2 : ℝ) ^ (-(-D.p - k)) = D.tau * 2 ^ k` |
+| 312 | theorem | `m_rpow_neg_nat` | `theorem m_rpow_neg_nat {m : ℕ} (hm : 1 ≤ m) (k : ℕ) : (m : ℝ) ^ (-(k : ℝ)) = ((m : ℝ)⁻¹) ^ k` |
+| 318 | theorem | `mpow_foot` | `theorem mpow_foot {m : ℕ} (hm : 1 ≤ m) (k : ℕ) : (m : ℝ) ^ D.p * (((m + 1) / 2 : ℕ) : ℝ) ^ (-D.p - k) = D.tau * 2 ^ k * ((m : ℝ)⁻¹) ^ k * ufoot m ^ (-D.p - k)` |
+| 330 | def | `Ad` | `noncomputable def Ad (m : ℕ) : ℝ` |
+| 332 | theorem | `Ad_eq` | `theorem Ad_eq (m : ℕ) : D.Ad m = D.A0 - D.c * D.tau * (delta m : ℝ)` |
+| 341 | def | `Theta` | `noncomputable def Theta (α : ℝ) (m : ℕ) : ℝ` |
+| 345 | theorem | `coeff_identity` | `theorem coeff_identity (α : ℝ) (m : ℕ) : D.c * D.Theta α m + D.c - α = D.Ad m + D.Gam * α` |
+| 364 | def | `ePf` | `noncomputable def ePf (α : ℝ) (j : ℕ) : ℝ` |
+| 368 | theorem | `pf_eq` | `theorem pf_eq (α : ℝ) {j : ℕ} (hj : 1 ≤ j) : D.Phi α j / ((j : ℝ) + 1) = (j : ℝ) ^ (-D.p - 1) + (α - 1) * (j : ℝ) ^ (-D.p - 2) + D.ePf α j` |
+| 381 | theorem | `abs_ePf_le` | `theorem abs_ePf_le (α : ℝ) {j : ℕ} (hj : 1 ≤ j) : \|D.ePf α j\| ≤ \|1 - α\| * (j : ℝ) ^ (-D.p - 3)` |
+| 403 | theorem | `poly_one` | `theorem poly_one {p : ℝ} (hp : 1 < p) : 2 * p + 1 + (p + 1) * (p + 2) / 3 ≤ (p + 3) ^ 2` |
+| 406 | theorem | `poly_two` | `theorem poly_two {p : ℝ} (hp : 1 < p) : 8 + 2 * (p + 2) * (p + 3) / 3 ≤ (p + 3) ^ 2` |
+| 411 | def | `Tsum` | `noncomputable def Tsum (α : ℝ) (m : ℕ) : ℝ` |
+| 415 | def | `cT` | `noncomputable def cT (α : ℝ) : ℝ` |
+| 420 | theorem | `T_expansion` | `theorem T_expansion (α : ℝ) {m : ℕ} (hm : 1 ≤ m) : \|D.Tsum α m - (D.tau - 1) / D.p - D.Theta α m / (m : ℝ)\| ≤ D.cT α / (m : ℝ) ^ 2` |
+| 694 | theorem | `Ralpha_eq` | `theorem Ralpha_eq (α : ℝ) {m : ℕ} (hm : 1 ≤ m) : D.Ralpha α m = D.c / (1 - D.eps m) * D.Tsum α m / (1 + α * (m : ℝ)⁻¹)` |
+| 712 | theorem | `abs_Theta_le` | `theorem abs_Theta_le (α : ℝ) (m : ℕ) : \|D.Theta α m\| ≤ D.tau * (2 + \|α - 1\|)` |
+| 728 | theorem | `T0_le` | `theorem T0_le : (D.tau - 1) / D.p ≤ D.tau` |
+| 735 | theorem | `K_sub_le` | `theorem K_sub_le {m : ℕ} (hm : 1 ≤ m) : \|D.c / (1 - D.eps m) - D.c - D.c ^ 2 * (m : ℝ)⁻¹\| ≤ ((m : ℝ)⁻¹) ^ 2` |
+| 760 | def | `cR` | `noncomputable def cR (α : ℝ) : ℝ` |
+| 762 | theorem | `const_combine` | `theorem const_combine {τ P s t Θa B La : ℝ} (hτ : 2 ≤ τ) (hP : 16 ≤ P) (hs : 0 ≤ s) (ht : t ≤ 1 + s) (hΘa : Θa ≤ τ * (2 + t)) (hB : B = τ * P * (1 + t)) (hLa : La ≤ Θa + 1 + s) : 2 * (τ + 2 * Θa + 3 * B + s * La) ≤ 16 * τ * P * (1 + s) ^ 2` |
+| 790 | theorem | `Rexp` | `theorem Rexp (α : ℝ) {m : ℕ} (hm : 1 ≤ m) (hα : 2 * \|α\| ≤ (m : ℝ)) : \|D.Ralpha α m - 1 - (D.Ad m + D.Gam * α) / (m : ℝ)\| ≤ D.cR α / (m : ℝ) ^ 2` |
+| 912 | theorem | `Phi_zero_pos` | `theorem Phi_zero_pos {j : ℕ} (hj : 1 ≤ j) : 0 < D.Phi 0 j` |
+| 917 | theorem | `R0_eq_Ralpha_zero` | `theorem R0_eq_Ralpha_zero {m : ℕ} (hm : 1 ≤ m) : D.R0 m = D.Ralpha 0 m` |
+| 930 | theorem | `cR_zero` | `theorem cR_zero : D.cR 0 = 16 * D.tau * (D.p + 3) ^ 2` |
+| 934 | theorem | `Ralpha_zero_gt_one_of_even` | `theorem Ralpha_zero_gt_one_of_even {m : ℕ} (hm : 1 ≤ m) (hev : delta m = 0) (hth : D.cR 0 / D.A0 < (m : ℝ)) : 1 < D.Ralpha 0 m` |
+| 949 | theorem | `Ralpha_zero_lt_one_of_odd` | `theorem Ralpha_zero_lt_one_of_odd {m : ℕ} (hm : 1 ≤ m) (hodd : delta m = 1) (hth : D.cR 0 / (-D.A1) < (m : ℝ)) : D.Ralpha 0 m < 1` |
+| 965 | theorem | `R0_gt_one_of_even` | `theorem R0_gt_one_of_even {m : ℕ} (hm : 1 ≤ m) (hev : delta m = 0) (hth : D.cR 0 / D.A0 < (m : ℝ)) : 1 < D.R0 m` |
+| 970 | theorem | `R0_lt_one_of_odd` | `theorem R0_lt_one_of_odd {m : ℕ} (hm : 1 ≤ m) (hodd : delta m = 1) (hth : D.cR 0 / (-D.A1) < (m : ℝ)) : D.R0 m < 1` |
+| 976 | def | `IsSupersolution` | `def IsSupersolution (x : ℕ → ℝ) : Prop` |
+| 981 | def | `IsSubsolution` | `def IsSubsolution (x : ℕ → ℝ) : Prop` |
+| 985 | theorem | `sum_qm_Phi_zero` | `theorem sum_qm_Phi_zero {m : ℕ} (hm : 1 ≤ m) : ∑ j ∈ window m, D.qm m j * D.Phi 0 j = D.Ralpha 0 m * D.Phi 0 m` |
+| 991 | theorem | `not_isSupersolution_Phi_zero` | `theorem not_isSupersolution_Phi_zero : ¬ D.IsSupersolution (D.Phi 0)` |
+| 1009 | theorem | `not_isSubsolution_Phi_zero` | `theorem not_isSubsolution_Phi_zero : ¬ D.IsSubsolution (D.Phi 0)` |
+| 1029 | theorem | `wm_le_foot` | `theorem wm_le_foot {m j : ℕ} (hm : 1 ≤ m) (hj : j ∈ window m) : D.wm m j ≤ D.wm m ((m + 1) / 2)` |
+| 1049 | theorem | `wm_foot_expansion` | `theorem wm_foot_expansion {m : ℕ} (hm : 1 ≤ m) : \|D.wm m ((m + 1) / 2) - 2 * D.c * D.tau / (m : ℝ)\| ≤ 2 * D.tau * (D.p + 3) / (m : ℝ) ^ 2` |
+| 1173 | theorem | `qm_le_one` | `theorem qm_le_one {m j : ℕ} (hm : 1 ≤ m) (hj : 1 ≤ j) : D.qm m j ≤ 1` |
+| 1183 | theorem | `isSupersolution_two_pow` | `theorem isSupersolution_two_pow : D.IsSupersolution (fun j => (2 : ℝ) ^ j)` |
+| 1199 | theorem | `isSubsolution_inv_factorial_sq` | `theorem isSubsolution_inv_factorial_sq : D.IsSubsolution (fun j => (((j.factorial : ℕ) : ℝ) ^ 2)⁻¹)` |
+| 1250 | theorem | `Rexp_isBigO` | `theorem Rexp_isBigO (α : ℝ) : (fun m : ℕ => D.Ralpha α m - 1 - (D.Ad m + D.Gam * α) / (m : ℝ)) =O[Filter.atTop] (fun m : ℕ => ((m : ℝ) ^ 2)⁻¹)` |
+| 1270 | theorem | `p_congr` | `theorem p_congr {D D' : Decay} (h : D.c = D'.c) : D.p = D'.p` |
+| 1274 | theorem | `cR_congr` | `theorem cR_congr {D D' : Decay} (h : D.c = D'.c) (α : ℝ) : D.cR α = D'.cR α` |
+| 1278 | theorem | `parity_thresholds_congr` | `theorem parity_thresholds_congr {D D' : Decay} (h : D.c = D'.c) : D.cR 0 / D.A0 = D'.cR 0 / D'.A0 ∧ D.cR 0 / (-D.A1) = D'.cR 0 / (-D'.A1)` |
+| 1289 | theorem | `nonempty_decay` | `theorem nonempty_decay : Nonempty Decay` |
+
+### `scaffold/GFNBoundsScaffold/Doubling/WeightFull.lean`
+
+**`lem:doubling_weight` in the paper's form: `E(|Z_ℓ − 1| | Y_0 = m) ≤ c₃/ℓ`**  
+
+*scaffold library; 722 lines; 49 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `lem:doubling_weight` (bucket B), ✅ `def:doubling_setting` (bucket A), ✅ `def:doubling_decay_notation` (bucket A), ✅ `lem:doubling_descent` (bucket A), ✅ `lem:doubling_escape` (bucket A)
+
+
+In scope: `variable (D : Decay)`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 118 | def | `descJoint` | `noncomputable def descJoint (D : Decay) (ℓ : ℕ) (G : ℕ → ℝ → ℝ) (y : ℕ) (w : ℝ) : ℝ` |
+| 124 | theorem | `descJoint_of_lt` | `theorem descJoint_of_lt {ℓ : ℕ} (G : ℕ → ℝ → ℝ) {y : ℕ} (h : y < 2 * ℓ) (w : ℝ) : D.descJoint ℓ G y w = G y w` |
+| 128 | theorem | `descJoint_of_ge` | `theorem descJoint_of_ge {ℓ : ℕ} (G : ℕ → ℝ → ℝ) {y : ℕ} (h : ¬ y < 2 * ℓ) (w : ℝ) : D.descJoint ℓ G y w = ∑ j ∈ window y, D.kern y j * D.descJoint ℓ G j (w * D.R0 y)` |
+| 136 | theorem | `descJoint_mul_eq_descZ` | `theorem descJoint_mul_eq_descZ {ℓ : ℕ} (g : ℕ → ℝ) : ∀ (y : ℕ) (w : ℝ), D.descJoint ℓ (fun j v => v * g j) y w = w * D.descZ ℓ g y` |
+| 150 | theorem | `descJoint_const_eq_descP` | `theorem descJoint_const_eq_descP {ℓ : ℕ} (g : ℕ → ℝ) : ∀ (y : ℕ) (w : ℝ), D.descJoint ℓ (fun j _ => g j) y w = D.descP ℓ g y` |
+| 162 | theorem | `descJoint_id_eq_descOne` | `theorem descJoint_id_eq_descOne {ℓ : ℕ} (hℓ : 1 ≤ ℓ) (y : ℕ) : D.descJoint ℓ (fun _ v => v) y 1 = D.descOne ℓ y` |
+| 170 | theorem | `descJoint_sub` | `theorem descJoint_sub {ℓ : ℕ} (F G : ℕ → ℝ → ℝ) : ∀ (y : ℕ) (w : ℝ), D.descJoint ℓ (fun j v => F j v - G j v) y w = D.descJoint ℓ F y w - D.descJoint ℓ G y w` |
+| 187 | theorem | `abs_descJoint_le` | `theorem abs_descJoint_le {ℓ : ℕ} (hℓ : 1 ≤ ℓ) {F G : ℕ → ℝ → ℝ} {B : ℝ} (hFG : ∀ j v, \|F j v\| ≤ B * G j v) : ∀ (y : ℕ) (w : ℝ), \|D.descJoint ℓ F y w\| ≤ B * D.descJoint ℓ G y w` |
+| 212 | def | `descPaths` | `def descPaths (ℓ y : ℕ) : Finset (List ℕ)` |
+| 218 | theorem | `descPaths_of_lt` | `theorem descPaths_of_lt {ℓ y : ℕ} (h : y < 2 * ℓ) : descPaths ℓ y = {[y]}` |
+| 221 | theorem | `descPaths_of_ge` | `theorem descPaths_of_ge {ℓ y : ℕ} (h : ¬ y < 2 * ℓ) : descPaths ℓ y = (window y).biUnion fun j => (descPaths ℓ j).image (List.cons y)` |
+| 228 | def | `pathZ` | `noncomputable def pathZ (D : Decay) (l : List ℕ) : ℝ` |
+| 233 | def | `pathProb` | `noncomputable def pathProb (D : Decay) (l : List ℕ) : ℝ` |
+| 237 | def | `pathExit` | `def pathExit (l : List ℕ) : ℕ` |
+| 241 | def | `IsExitTraj` | `def IsExitTraj (ℓ y : ℕ) (l : List ℕ) : Prop` |
+| 246 | theorem | `pathZ_cons` | `theorem pathZ_cons (y : ℕ) {l : List ℕ} (hl : l ≠ []) : D.pathZ (y :: l) = D.R0 y * D.pathZ l` |
+| 253 | theorem | `pathProb_cons` | `theorem pathProb_cons (y : ℕ) {l : List ℕ} (hl : l ≠ []) : D.pathProb (y :: l) = D.kern y (l.getD 0 0) * D.pathProb l` |
+| 260 | theorem | `pathExit_cons` | `theorem pathExit_cons (y : ℕ) {l : List ℕ} (hl : l ≠ []) : pathExit (y :: l) = pathExit l` |
+| 264 | theorem | `head_of_mem_descPaths` | `theorem head_of_mem_descPaths {ℓ : ℕ} : ∀ (y : ℕ) {l : List ℕ}, l ∈ descPaths ℓ y → l ≠ [] ∧ l.getD 0 0 = y` |
+| 281 | theorem | `mem_descPaths_iff` | `theorem mem_descPaths_iff {ℓ : ℕ} : ∀ (y : ℕ) (l : List ℕ), l ∈ descPaths ℓ y ↔ IsExitTraj ℓ y l` |
+| 337 | theorem | `pathProb_pos` | `theorem pathProb_pos {ℓ : ℕ} (hℓ : 1 ≤ ℓ) {y : ℕ} {l : List ℕ} (hl : l ∈ descPaths ℓ y) : 0 < D.pathProb l` |
+| 348 | theorem | `descJoint_eq_sum_paths` | `theorem descJoint_eq_sum_paths {ℓ : ℕ} (G : ℕ → ℝ → ℝ) : ∀ (y : ℕ) (w : ℝ), D.descJoint ℓ G y w = ∑ l ∈ descPaths ℓ y, D.pathProb l * G (pathExit l) (w * D.pathZ l)` |
+| 384 | def | `trajOf` | `noncomputable def trajOf (ℓ : ℕ) (Y : ℕ → ℕ) : List ℕ` |
+| 386 | theorem | `length_trajOf` | `theorem length_trajOf (ℓ : ℕ) (Y : ℕ → ℕ) : (trajOf ℓ Y).length = exitTime ℓ Y + 1` |
+| 389 | theorem | `getD_trajOf` | `theorem getD_trajOf {ℓ : ℕ} {Y : ℕ → ℕ} {n : ℕ} (hn : n ≤ exitTime ℓ Y) : (trajOf ℓ Y).getD n 0 = Y n` |
+| 397 | theorem | `trajOf_mem_descPaths` | `theorem trajOf_mem_descPaths {ℓ m : ℕ} {Y : ℕ → ℕ} (hY : IsDescentPath ℓ Y) (h0 : Y 0 = m) (hm : 2 * ℓ ≤ m) : trajOf ℓ Y ∈ descPaths ℓ m ∧ D.pathZ (trajOf ℓ Y) = ∏ n ∈ Finset.range (exitTime ℓ Y), D.R0 (Y n) ∧ D.pathProb (trajOf ℓ Y) = ∏ n ∈ Finset.range (exitTime ℓ Y), D.kern (Y n) (Y (n + 1)) ∧ pathExit (trajOf ℓ Y) = Y (exitTime ℓ Y)` |
+| 424 | theorem | `exists_descentPath_of_mem` | `theorem exists_descentPath_of_mem {ℓ m : ℕ} {l : List ℕ} (hl : l ∈ descPaths ℓ m) : ∃ Y : ℕ → ℕ, IsDescentPath ℓ Y ∧ Y 0 = m ∧ trajOf ℓ Y = l` |
+| 467 | theorem | `sum_pathProb` | `theorem sum_pathProb {ℓ : ℕ} (hℓ : 1 ≤ ℓ) {y : ℕ} (hy : ℓ ≤ y) : ∑ l ∈ descPaths ℓ y, D.pathProb l = 1` |
+| 478 | def | `weightDev` | `noncomputable def weightDev (D : Decay) (ℓ m : ℕ) : ℝ` |
+| 482 | theorem | `weightDev_eq_sum_paths` | `theorem weightDev_eq_sum_paths (ℓ m : ℕ) : D.weightDev ℓ m = ∑ l ∈ descPaths ℓ m, D.pathProb l * \|D.pathZ l - 1\|` |
+| 490 | theorem | `descJoint_absDev_le_prodW` | `theorem descJoint_absDev_le_prodW {ℓ : ℕ} (hℓ : 1 ≤ ℓ) {b : ℕ → ℝ} (hbR : ∀ y : ℕ, 2 * ℓ ≤ y → \|D.R0 y - 1\| ≤ b y) : ∀ (y : ℕ) (w v : ℝ), \|w - 1\| ≤ v - 1 → D.descJoint ℓ (fun _ u => \|u - 1\|) y w ≤ v * D.prodW ℓ b y - 1` |
+| 534 | theorem | `abs_descW_sub_descP_le_weightDev` | `theorem abs_descW_sub_descP_le_weightDev {ℓ : ℕ} (hℓ : 1 ≤ ℓ) {B : ℝ} {g : ℕ → ℝ} (hg : ∀ j, \|g j\| ≤ B) (y : ℕ) : \|D.descW ℓ g y - D.descP ℓ g y\| ≤ B * D.weightDev ℓ y` |
+| 548 | theorem | `abs_descOne_sub_one_le_weightDev` | `theorem abs_descOne_sub_one_le_weightDev {ℓ : ℕ} (hℓ : 1 ≤ ℓ) {y : ℕ} (hy : ℓ ≤ y) : \|D.descOne ℓ y - 1\| ≤ D.weightDev ℓ y` |
+| 556 | theorem | `weightDev_le_prodW` | `theorem weightDev_le_prodW {ℓ : ℕ} (hℓ : 1 ≤ ℓ) {b : ℕ → ℝ} (hbR : ∀ y : ℕ, 2 * ℓ ≤ y → \|D.R0 y - 1\| ≤ b y) (m : ℕ) : D.weightDev ℓ m ≤ D.prodW ℓ b m - 1` |
+| 566 | theorem | `weightDev_le_of_level` | `theorem weightDev_le_of_level {ℓ : ℕ} (hℓ1 : 1 ≤ ℓ) (hthr : 32 * D.c * D.tau ≤ 2 * (ℓ : ℝ)) (hH : D.c4 ≤ D.gam ^ 2 * (ℓ : ℝ) / 6) (hx1 : D.c5 * D.c4 / (ℓ : ℝ) ≤ 1) (m : ℕ) : D.weightDev ℓ m ≤ 2 * D.c5 * D.c4 / (ℓ : ℝ)` |
+| 591 | def | `c3Paper` | `noncomputable def c3Paper (D : Decay) : ℝ` |
+| 594 | def | `ell3Paper` | `noncomputable def ell3Paper (D : Decay) (d : ℕ) : ℕ` |
+| 597 | theorem | `c3Paper_pos` | `theorem c3Paper_pos : 0 < D.c3Paper` |
+| 601 | theorem | `ell2_le_ell3Paper` | `theorem ell2_le_ell3Paper (d : ℕ) : D.ell2 d ≤ D.ell3Paper d` |
+| 604 | theorem | `ell1_le_ell3Paper` | `theorem ell1_le_ell3Paper (d : ℕ) : D.ell1 d ≤ D.ell3Paper d` |
+| 614 | theorem | `c3_le_c3Paper` | `theorem c3_le_c3Paper : D.c3 ≤ D.c3Paper` |
+| 622 | theorem | `twentyfour_c4_div_eq` | `theorem twentyfour_c4_div_eq : 24 * D.c4 / D.gam ^ 2 = 4 * D.c4 * D.c5` |
+| 628 | theorem | `ell3_le_of_ceils` | `theorem ell3_le_of_ceils {ℓ : ℕ} (h2 : ⌈2 * D.c4⌉₊ ≤ ℓ) (h24 : ⌈24 * D.c4 / D.gam ^ 2⌉₊ ≤ ℓ) : D.ell3 ≤ ℓ` |
+| 643 | theorem | `ell3_le_ell3Paper` | `theorem ell3_le_ell3Paper (d : ℕ) : D.ell3 ≤ D.ell3Paper d` |
+| 652 | theorem | `weightDev_le_c3` | `theorem weightDev_le_c3 {ℓ : ℕ} (hℓ : D.ell3 ≤ ℓ) (m : ℕ) : D.weightDev ℓ m ≤ D.c3 / (ℓ : ℝ)` |
+| 681 | theorem | `doubling_weight_of_ceils` | `theorem doubling_weight_of_ceils {ℓ : ℕ} (h2 : ⌈2 * D.c4⌉₊ ≤ ℓ) (h24 : ⌈24 * D.c4 / D.gam ^ 2⌉₊ ≤ ℓ) (m : ℕ) : D.weightDev ℓ m ≤ D.c3Paper / (ℓ : ℝ)` |
+| 694 | theorem | `doubling_weight` | `theorem doubling_weight (d : ℕ) {ℓ : ℕ} (hℓ : D.ell3Paper d ≤ ℓ) {m : ℕ} (_hm : 2 * ℓ ≤ m) : D.weightDev ℓ m ≤ D.c3Paper / (ℓ : ℝ)` |
+| 702 | theorem | `doubling_weight_paths` | `theorem doubling_weight_paths (d : ℕ) {ℓ : ℕ} (hℓ : D.ell3Paper d ≤ ℓ) {m : ℕ} (hm : 2 * ℓ ≤ m) : ∑ l ∈ descPaths ℓ m, D.pathProb l * \|D.pathZ l - 1\| ≤ D.c3Paper / (ℓ : ℝ)` |
+| 710 | theorem | `doubling_weight_transform` | `theorem doubling_weight_transform (d : ℕ) {ℓ : ℕ} (hℓ : D.ell3Paper d ≤ ℓ) {m : ℕ} (hm : 2 * ℓ ≤ m) {B : ℝ} {g : ℕ → ℝ} (hg : ∀ j, \|g j\| ≤ B) : \|D.descW ℓ g m - D.descP ℓ g m\| ≤ B * D.c3Paper / (ℓ : ℝ)` |
+
 ## Name index
 
 | name | module |
@@ -5847,6 +6460,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `A_one_eq` | `GFNBounds.Doubling.Expansion` |
 | `A_one_neg` | `GFNBounds.Doubling.Expansion` |
 | `A_zero_pos` | `GFNBounds.Doubling.Expansion` |
+| `Ad` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `Ad_eq` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `Adj` | `GFNBounds.Balance.L2Toolkit` |
 | `Adj_add` | `GFNBounds.Balance.WeightedL2` |
 | `Adj_apply` | `GFNBounds.Balance.L2Toolkit` |
@@ -5858,6 +6473,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `Aop` | `GFNBounds.Balance.L2Toolkit` |
 | `Aop_add` | `GFNBounds.Balance.WeightedL2` |
 | `Aop_apply` | `GFNBounds.Balance.L2Toolkit` |
+| `Aop_condFwdPair` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `Aop_const` | `GFNBounds.Balance.L2Toolkit` |
 | `Aop_eq` | `GFNBounds.Balance.L2Toolkit` |
 | `Aop_eq_ratio_sub_one` | `GFNBounds.Balance.RatioBridge` |
@@ -5884,9 +6500,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `C6_pos` | `GFNBounds.Balance.LocalConvergence` |
 | `C7` | `GFNBounds.Balance.LocalEnergy` |
 | `C7_nonneg` | `GFNBounds.Balance.LocalConvergence` |
+| `CC3` | `GFNBounds.Balance.C3Wrappers` |
 | `CVec` | `GFNBounds.Doubling.TruncationStat` |
 | `Cg` | `GFNBounds.Balance.Expansion` |
 | `Cinf` | `GFNBounds.Balance.LocalConvergence` |
+| `Cinf_mul_eps0At_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `Cinf_pos` | `GFNBounds.Balance.LocalConvergence` |
 | `CompatibleAcrossTop` | `GFNBounds.Core.StrongUniversality` |
 | `CrossingFloor` | `GFNBounds.Balance.BoundaryBlowup` |
@@ -5901,6 +6519,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `DescentStatement` | `GFNBounds.Doubling.DescentStatement` |
 | `DetailedBalance` | `GFNBounds.Balance.Lift` |
 | `Edge` | `GFNBounds.Graph.CycleExample` |
+| `EdgeSet` | `GFNBounds.Balance.C3Wrappers` |
 | `Fhat` | `GFNBounds.Graph.CycleDivergence` |
 | `Fhat_apply` | `GFNBounds.Graph.CycleDivergence` |
 | `Fhat_nonneg` | `GFNBounds.Graph.CycleDivergence` |
@@ -5914,10 +6533,18 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `Fk_snk_row` | `GFNBounds.Graph.CycleDivergence` |
 | `Fk_srcC` | `GFNBounds.Graph.CycleDivergence` |
 | `Fk_supp` | `GFNBounds.Graph.CycleDivergence` |
+| `FlowGenerator` | `GFNBounds.Balance.FlowExistence` |
+| `FlowGenerator.existsUnique_flow` | `GFNBounds.Balance.FlowExistence` |
+| `FlowGenerator.exists_flow` | `GFNBounds.Balance.FlowExistence` |
+| `FlowGenerator.floor` | `GFNBounds.Balance.FlowExistence` |
+| `FlowGenerator.ratio_le` | `GFNBounds.Balance.FlowExistence` |
 | `FreezingBands` | `GFNBounds.Balance.Freezing` |
 | `FreezingBands.pos_of_mem_bands` | `GFNBounds.Balance.FreezingGeneral` |
 | `FrozenBalance` | `GFNBounds.Graph.Universality` |
 | `Gam` | `GFNBounds.Doubling.Expansion` |
+| `Gamma3` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `Gamma3_logSq` | `GFNBounds.Balance.C3Wrappers` |
+| `Gamma3_nonneg` | `GFNBounds.Balance.C3Wrappers` |
 | `Gamma_lt_one` | `GFNBounds.Doubling.Expansion` |
 | `Gamma_pos` | `GFNBounds.Doubling.Expansion` |
 | `GrowthCond` | `GFNBounds.Doubling.Unbounded` |
@@ -5930,8 +6557,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `IsCirculation` | `GFNBounds.Graph.FrozenUnstable` |
 | `IsDescentPath` | `GFNBounds.Doubling.DescentStatement` |
 | `IsEdgeflow` | `GFNBounds.Graph.FrozenUnstableDB` |
+| `IsExitTraj` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `IsFlow` | `GFNBounds.Graph.FrozenUnstableDB` |
 | `IsGradientFlow` | `GFNBounds.Balance.Flow` |
+| `IsGradientFlow.isGradientFlowOn` | `GFNBounds.Balance.FlowExistence` |
+| `IsGradientFlowOn` | `GFNBounds.Balance.FlowExistence` |
 | `IsGreen` | `GFNBounds.Graph.Morozov` |
 | `IsGreen.flux` | `GFNBounds.Graph.Morozov` |
 | `IsGreen.snk` | `GFNBounds.Graph.Morozov` |
@@ -5971,6 +6601,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `IsReversalPair.eq_reversal` | `GFNBounds.Core.Adjoint` |
 | `IsReversalPair.isInvariant` | `GFNBounds.Core.Adjoint` |
 | `IsReversalPair.symm` | `GFNBounds.Core.Adjoint` |
+| `IsSubsolution` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `IsSupersolution` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `IsZeroFlow` | `GFNBounds.Graph.FrozenUnstableDB` |
 | `Jhigh` | `GFNBounds.Doubling.HarmonicWindow` |
 | `Jhigh_nonempty` | `GFNBounds.Doubling.HarmonicWindow` |
@@ -5981,6 +6613,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `Jlow_subset` | `GFNBounds.Doubling.HarmonicWindow` |
 | `Jlow_subset_window` | `GFNBounds.Doubling.HarmonicWindow` |
 | `K0Of` | `GFNBounds.Doubling.TruncationBhat` |
+| `K_sub_le` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `Kexp` | `GFNBounds.Balance.Expansion` |
 | `Kexp_mul_eps_mul_Bhat_le` | `GFNBounds.Balance.LocalEnergy` |
 | `Kexp_nonneg` | `GFNBounds.Balance.LocalEnergy` |
@@ -5995,6 +6628,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `MarkedCirculation.exists_ne_zero` | `GFNBounds.Graph.FrozenUnstable` |
 | `MarkedGraph` | `GFNBounds.Graph.Setting` |
 | `Mixing` | `GFNBounds.Core.Mixing` |
+| `Mp` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `Mp_nonneg` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `MprimeLe` | `GFNBounds.Silva.Basic` |
 | `OnChain` | `GFNBounds.Doubling.Setting` |
 | `OpBound` | `GFNBounds.Balance.Lift` |
@@ -6004,6 +6639,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `PathConnected.reach_src_snk` | `GFNBounds.Graph.Setting` |
 | `PathConnected.to_snk` | `GFNBounds.Graph.Setting` |
 | `Phi` | `GFNBounds.Doubling.DecayNotation` |
+| `Phi_zero_pos` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `PositiveOnEdges` | `GFNBounds.Graph.Setting` |
 | `PreStat` | `GFNBounds.Doubling.Irreducible` |
 | `PreStat.toStatNone` | `GFNBounds.Doubling.Irreducible` |
@@ -6012,12 +6648,20 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `R0_between` | `GFNBounds.Doubling.R0Bound` |
 | `R0_between_of_ell1` | `GFNBounds.Doubling.DescentStatement` |
 | `R0_eq` | `GFNBounds.Doubling.R0Bound` |
+| `R0_eq_Ralpha_zero` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `R0_gt_one_of_even` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `R0_le_two_of` | `GFNBounds.Doubling.Doeblin` |
+| `R0_lt_one_of_odd` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `R0_pos` | `GFNBounds.Doubling.DescentLaw` |
 | `R0_sub_one_le` | `GFNBounds.Doubling.R0Bound` |
 | `R0_sub_one_le_c4` | `GFNBounds.Doubling.DescentStatement` |
 | `Ralpha` | `GFNBounds.Doubling.DecayNotation` |
+| `Ralpha_eq` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `Ralpha_zero_gt_one_of_even` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `Ralpha_zero_lt_one_of_odd` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `Reach` | `GFNBounds.Graph.Setting` |
+| `Rexp` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `Rexp_isBigO` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `RowOnChain` | `GFNBounds.Doubling.LpLayer` |
 | `S` | `GFNBounds.Core.Mixing` |
 | `Setting` | `GFNBounds.Doubling.Setting` |
@@ -6066,6 +6710,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `StronglyUniversalAt.weaklyUniversalAt` | `GFNBounds.Core.Universality` |
 | `T0` | `GFNBounds.Balance.TrainingSpeed` |
 | `T0_eq` | `GFNBounds.Balance.TrainingSpeed` |
+| `T0_le` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `T_expansion` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `Theta` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `Tsum` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `UniqueInvariant` | `GFNBounds.Balance.FlowExistence` |
 | `Wdrift_core` | `GFNBounds.Doubling.Lyapunov` |
 | `Wdrift_family` | `GFNBounds.Doubling.Lyapunov` |
 | `WeaklyUniversal` | `GFNBounds.Core.Universality` |
@@ -6090,11 +6739,18 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `_` | `GFNBounds.Graph.MorozovConsume` |
 | `aC` | `GFNBounds.Graph.CycleDivergence` |
 | `abs_Aop_le_two_sup` | `GFNBounds.Balance.Expansion` |
+| `abs_Theta_le` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `abs_b_le_block` | `GFNBounds.Doubling.Product` |
 | `abs_deriv_mean_le` | `GFNBounds.Balance.LocalEnergy` |
+| `abs_descJoint_le` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `abs_descOne_sub_one_le_weightDev` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `abs_descP_le` | `GFNBounds.Doubling.Weight` |
 | `abs_descW_sub_descP_le` | `GFNBounds.Doubling.Weight` |
-| `abs_exp_sub_one_le` | `GFNBounds.Silva.NoUniform` |
+| `abs_descW_sub_descP_le_weightDev` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `abs_ePf_le` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `abs_exp_sub_one_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `abs_g2_sub_le` | `GFNBounds.Balance.C3Wrappers` |
+| `abs_g3_le_Gamma3` | `GFNBounds.Balance.C3Wrappers` |
 | `abs_g_le` | `GFNBounds.Balance.Freezing` |
 | `abs_g_le_growth` | `GFNBounds.Balance.Freezing` |
 | `abs_gd_le_Cg` | `GFNBounds.Balance.Expansion` |
@@ -6102,8 +6758,14 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `abs_le_Cinf_mean_add_perp` | `GFNBounds.Balance.LocalConvergence` |
 | `abs_le_Cinf_mul_nrmL2` | `GFNBounds.Balance.LocalConvergence` |
 | `abs_le_nrmL2_div_sqrt` | `GFNBounds.Balance.L2Toolkit` |
+| `abs_le_quadratic_of_deriv` | `GFNBounds.Balance.C3Wrappers` |
+| `abs_log_le_of_close` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `abs_log_ratio_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `abs_log_sub_le_two_sq` | `GFNBounds.Balance.LogSqTaylor` |
+| `abs_logdiff_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `abs_lossGrad_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `abs_mass_le_nrmL2` | `GFNBounds.Balance.Lojasiewicz` |
+| `abs_max_zero_max_le_iff` | `GFNBounds.Balance.FlowExistence` |
 | `abs_meanL2_le_nrmL2` | `GFNBounds.Balance.L2Toolkit` |
 | `abs_mean_sub_le_energy_integral` | `GFNBounds.Balance.LocalEnergy` |
 | `abs_pstar_le` | `GFNBounds.Doubling.Adjoint` |
@@ -6155,6 +6817,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `ar_minOver_lam` | `GFNBounds.Graph.MorozovConsume` |
 | `ar_minOver_visits` | `GFNBounds.Graph.MorozovConsume` |
 | `avg_of_cutBal` | `GFNBounds.Doubling.DecayNotation` |
+| `b1` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `b2` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `b3` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `b3_bracket_eq` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `b3_bracket_ge` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `bC` | `GFNBounds.Graph.CycleDivergence` |
 | `bSigma_eq` | `GFNBounds.Graph.CycleExample` |
 | `balanced_const` | `GFNBounds.Balance.MassAscent` |
@@ -6166,6 +6833,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `bands` | `GFNBounds.Balance.Freezing` |
 | `base_mul_epsCS` | `GFNBounds.Doubling.Drift` |
 | `base_pos` | `GFNBounds.Doubling.Range` |
+| `bddAbove_abs_g3` | `GFNBounds.Balance.C3Wrappers` |
 | `bddBelow_opBound₂` | `GFNBounds.Balance.Lift` |
 | `beta` | `GFNBounds.Core.Mixing` |
 | `betaHat` | `GFNBounds.Doubling.AdjointL2` |
@@ -6214,6 +6882,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `c2Of` | `GFNBounds.Doubling.MainPackaging` |
 | `c2Of_congr` | `GFNBounds.Doubling.MainPackaging` |
 | `c3` | `GFNBounds.Doubling.Weight` |
+| `c3Paper` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `c3Paper_pos` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `c3_le_c3Paper` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `c3_nonneg` | `GFNBounds.Doubling.Weight` |
 | `c4` | `GFNBounds.Doubling.DescentStatement` |
 | `c4_pos` | `GFNBounds.Doubling.DescentStatement` |
@@ -6228,6 +6899,10 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `c8Of_pos` | `GFNBounds.Doubling.TruncationBhat` |
 | `c9Of` | `GFNBounds.Doubling.TruncationBhat` |
 | `cDelta` | `GFNBounds.Balance.MassAscent` |
+| `cR` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `cR_congr` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `cR_zero` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `cT` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `c_mul_log_two_lt_one` | `GFNBounds.Doubling.Main` |
 | `c_mul_tau` | `GFNBounds.Doubling.Expansion` |
 | `card_chainFinset` | `GFNBounds.Doubling.MainPackaging` |
@@ -6246,6 +6921,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `chiSq_nonneg` | `GFNBounds.Silva.Basic` |
 | `chiSq_self` | `GFNBounds.Silva.Basic` |
 | `circ_eq_zero_of_not_hatEdge` | `GFNBounds.Graph.FrozenUnstableDB` |
+| `clampBox` | `GFNBounds.Balance.FlowExistence` |
+| `clampBox_eq` | `GFNBounds.Balance.FlowExistence` |
+| `clampBox_mem` | `GFNBounds.Balance.FlowExistence` |
 | `climit` | `GFNBounds.Doubling.ConstantFunctional` |
 | `climit_eq_sum` | `GFNBounds.Doubling.ConstantFunctional` |
 | `coTail_pos` | `GFNBounds.Doubling.Unbounded` |
@@ -6263,6 +6941,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `coeFn_pstarLp` | `GFNBounds.Doubling.LpLayer` |
 | `coeFn_sub_pstarL2_toLp` | `GFNBounds.Doubling.RayleighBridge` |
 | `coeFn_truncation` | `GFNBounds.Core.UniversalityLp` |
+| `coeff_identity` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `coer_edgeU` | `GFNBounds.Balance.C3Wrappers` |
 | `coercivity` | `GFNBounds.Core.Mixing` |
 | `coercivity_div` | `GFNBounds.Core.Mixing` |
 | `coercivity_lamMin` | `GFNBounds.Graph.Morozov` |
@@ -6270,12 +6950,19 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `comp_meanProj` | `GFNBounds.Core.Flow` |
 | `compatibleAcrossTop_densityActionCLM` | `GFNBounds.Core.StrongUniversality` |
 | `condBack` | `GFNBounds.Balance.Lift` |
+| `condBack_snd` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `condFwd` | `GFNBounds.Balance.Lift` |
+| `condFwdPair` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `constC3_bounds` | `GFNBounds.Balance.C3Wrappers` |
+| `constC3_congr` | `GFNBounds.Balance.C3Wrappers` |
 | `constOne` | `GFNBounds.Core.UniversalityLp` |
+| `const_combine` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `const_of_balanced_graph` | `GFNBounds.Balance.MassAscent` |
 | `const_on_band_of_deriv_zero` | `GFNBounds.Balance.FreezingGeneral` |
 | `constant_eq` | `GFNBounds.Doubling.ConstantFunctional` |
 | `constant_functional` | `GFNBounds.Doubling.ConstantFunctional` |
+| `contDiffAt_lossGrad` | `GFNBounds.Balance.FlowExistence` |
+| `contDiffAt_ratio` | `GFNBounds.Balance.FlowExistence` |
 | `contDiff_flatFactor` | `GFNBounds.Balance.Freezing` |
 | `contDiff_g` | `GFNBounds.Balance.Freezing` |
 | `contDiff_m` | `GFNBounds.Balance.Freezing` |
@@ -6291,6 +6978,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `continuous_perp_flow` | `GFNBounds.Balance.LocalEnergy` |
 | `continuous_psi` | `GFNBounds.Doubling.Cramer` |
 | `continuous_two_rpow` | `GFNBounds.Doubling.Cramer` |
+| `convex_densityBox` | `GFNBounds.Balance.FlowExistence` |
 | `coupling` | `GFNBounds.Doubling.Coupling` |
 | `coupling_above` | `GFNBounds.Doubling.Coupling` |
 | `cramer` | `GFNBounds.Doubling.DecayNotation` |
@@ -6332,6 +7020,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `cycGraph_src` | `GFNBounds.Graph.CycleDivergence` |
 | `cycV` | `GFNBounds.Graph.CycleDivergence` |
 | `cycV_cases` | `GFNBounds.Graph.CycleDivergence` |
+| `cycle_flow_converges_check` | `GFNBounds.Balance.FlowExistence` |
 | `cycle_minOver_lam` | `GFNBounds.Balance.TrainingSpeed` |
 | `cycle_morozov_consume_check` | `GFNBounds.Graph.MorozovConsume` |
 | `cycle_morozov_consume_check_half` | `GFNBounds.Graph.MorozovConsume` |
@@ -6380,10 +7069,13 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `delta0_le_eps0` | `GFNBounds.Balance.RatioBridge` |
 | `delta0_le_half` | `GFNBounds.Balance.RatioBridge` |
 | `delta0_pos` | `GFNBounds.Balance.RatioBridge` |
+| `delta1` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `delta1_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `deltaPB` | `GFNBounds.Silva.NoUniform` |
 | `deltaPB_nonneg` | `GFNBounds.Silva.NoUniform` |
 | `deltaPB_pos_iff` | `GFNBounds.Silva.NoUniform` |
 | `deltaPB_sum` | `GFNBounds.Silva.NoUniform` |
+| `delta_cases` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `delta_lt_two` | `GFNBounds.Doubling.DecayNotation` |
 | `den_ne` | `GFNBounds.Graph.CycleExample` |
 | `den_one_ne` | `GFNBounds.Graph.CycleExample` |
@@ -6393,9 +7085,12 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `densAct_apply` | `GFNBounds.Core.Adjoint` |
 | `densAct_const` | `GFNBounds.Balance.L2Toolkit` |
 | `densAct_eq_funAct_reversal` | `GFNBounds.Core.Adjoint` |
+| `densAct_pair` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `densAct_reversal_eq_funAct` | `GFNBounds.Balance.GradientFormulas` |
 | `densAct_smul` | `GFNBounds.Balance.Expansion` |
 | `densAct_sub` | `GFNBounds.Balance.L2Toolkit` |
+| `densDeviation` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `densDeviation_eq` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `densL2` | `GFNBounds.Doubling.AdjointL2` |
 | `densL2_apply` | `GFNBounds.Doubling.AdjointL2` |
 | `densL2_mul_piL2` | `GFNBounds.Doubling.AdjointL2` |
@@ -6428,11 +7123,23 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `densityAction_one` | `GFNBounds.Core.Kernel` |
 | `densityAction_smul` | `GFNBounds.Core.Kernel` |
 | `densityAction_smul_nonneg` | `GFNBounds.Core.Kernel` |
+| `densityBox` | `GFNBounds.Balance.FlowExistence` |
+| `densityBox_mono` | `GFNBounds.Balance.FlowExistence` |
 | `deriv_deriv_g_one` | `GFNBounds.Balance.Freezing` |
 | `deriv_g` | `GFNBounds.Balance.Freezing` |
 | `deriv_g_eq_zero_of_mem_bands` | `GFNBounds.Balance.Freezing` |
 | `deriv_g_eq_zero_of_mem_bands'` | `GFNBounds.Balance.Freezing` |
+| `deriv_logSq_eq` | `GFNBounds.Balance.C3Wrappers` |
 | `deriv_psi` | `GFNBounds.Doubling.Cramer` |
+| `descJoint` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `descJoint_absDev_le_prodW` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `descJoint_const_eq_descP` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `descJoint_eq_sum_paths` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `descJoint_id_eq_descOne` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `descJoint_mul_eq_descZ` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `descJoint_of_ge` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `descJoint_of_lt` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `descJoint_sub` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `descOne` | `GFNBounds.Doubling.Descent` |
 | `descOne_of_ge` | `GFNBounds.Doubling.Descent` |
 | `descOne_of_lt` | `GFNBounds.Doubling.Descent` |
@@ -6445,6 +7152,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `descP_of_lt` | `GFNBounds.Doubling.DescentLaw` |
 | `descP_one` | `GFNBounds.Doubling.DescentLaw` |
 | `descP_uu_diff_le` | `GFNBounds.Doubling.Sharp` |
+| `descPaths` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `descPaths_of_ge` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `descPaths_of_lt` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `descW` | `GFNBounds.Doubling.Descent` |
 | `descW_between` | `GFNBounds.Doubling.Descent` |
 | `descW_of_ge` | `GFNBounds.Doubling.Descent` |
@@ -6457,8 +7167,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `descent_Z_pos` | `GFNBounds.Doubling.DescentStatement` |
 | `descent_item1_path` | `GFNBounds.Doubling.DescentStatement` |
 | `descent_item2_path` | `GFNBounds.Doubling.DescentStatement` |
+| `descent_step` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `dev_eq_smul_perpL2` | `GFNBounds.Balance.RatioBridge` |
 | `deviation` | `GFNBounds.Balance.Lift` |
+| `deviation_eq` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `deviation_pair` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `diffOpK` | `GFNBounds.Doubling.TruncationBhat` |
 | `diffOpK_resolvent` | `GFNBounds.Doubling.TruncationBhat` |
 | `differentiable_g` | `GFNBounds.Balance.Freezing` |
@@ -6474,6 +7187,10 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `doeblin_low` | `GFNBounds.Doubling.Doeblin` |
 | `doubling_descent` | `GFNBounds.Doubling.DescentStatement` |
 | `doubling_unsolvable` | `GFNBounds.Doubling.Unsolvable` |
+| `doubling_weight` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `doubling_weight_of_ceils` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `doubling_weight_paths` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `doubling_weight_transform` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `drift_const_iff` | `GFNBounds.Doubling.Drift` |
 | `drift_const_of_eq_one` | `GFNBounds.Doubling.Drift` |
 | `drift_family` | `GFNBounds.Doubling.Drift` |
@@ -6488,11 +7205,13 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `eLpNorm_pstar_le` | `GFNBounds.Doubling.LpContraction` |
 | `eLpNorm_pstar_le_of_memLp` | `GFNBounds.Doubling.LpContraction` |
 | `eLpNorm_two_pstar_le` | `GFNBounds.Doubling.LpLayer` |
+| `ePf` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `edgeB` | `GFNBounds.Graph.CycleExample` |
 | `edgeDensAct_contraction` | `GFNBounds.Balance.Lift` |
 | `edgeDensAct_contraction_graph` | `GFNBounds.Balance.Lift` |
 | `edgeDensAct_contraction_norm` | `GFNBounds.Balance.Lift` |
 | `edgeDeviation` | `GFNBounds.Balance.Lift` |
+| `edgeDeviation_succ` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `edgeDrop` | `GFNBounds.Balance.BoundaryBlowup` |
 | `edgeDrop_le_one` | `GFNBounds.Balance.BoundaryBlowup` |
 | `edgeDrop_pos` | `GFNBounds.Balance.BoundaryBlowup` |
@@ -6520,17 +7239,26 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `edgeInflow_perturbedFlow_ge` | `GFNBounds.Graph.FrozenUnstable` |
 | `edgeInflow_unitEdge` | `GFNBounds.Graph.CycleDivergence` |
 | `edgeKernel` | `GFNBounds.Balance.Lift` |
+| `edgeKernelE` | `GFNBounds.Balance.C3Wrappers` |
+| `edgeKernelE_isMarkovOn` | `GFNBounds.Balance.C3Wrappers` |
 | `edgeKernelProd` | `GFNBounds.Balance.GradientFormulas` |
 | `edgeKernelProd_nonneg` | `GFNBounds.Balance.GradientFormulas` |
 | `edgeKernel_dual` | `GFNBounds.Balance.Lift` |
 | `edgeKernel_dual_graph` | `GFNBounds.Balance.Lift` |
+| `edgeKernel_eq_zero_of_not_mem` | `GFNBounds.Balance.C3Wrappers` |
+| `edgeKernel_mem_edgeSet` | `GFNBounds.Balance.C3Wrappers` |
 | `edgeKernel_nonneg` | `GFNBounds.Balance.Lift` |
 | `edgeKernel_total` | `GFNBounds.Balance.Lift` |
 | `edgeMean` | `GFNBounds.Balance.Lift` |
 | `edgeMean_eq_integral` | `GFNBounds.Balance.Lift` |
 | `edgeMeasure` | `GFNBounds.Balance.Lift` |
+| `edgeMeasureE` | `GFNBounds.Balance.C3Wrappers` |
+| `edgeMeasureE_isInvariant` | `GFNBounds.Balance.C3Wrappers` |
+| `edgeMeasureE_pos` | `GFNBounds.Balance.C3Wrappers` |
+| `edgeMeasureE_total` | `GFNBounds.Balance.C3Wrappers` |
 | `edgeMeasureProd` | `GFNBounds.Balance.GradientFormulas` |
 | `edgeMeasureProd_pos` | `GFNBounds.Balance.GradientFormulas` |
+| `edgeMeasure_eq_zero_of_not_mem` | `GFNBounds.Balance.C3Wrappers` |
 | `edgeMeasure_nonneg` | `GFNBounds.Balance.Lift` |
 | `edgeMeasure_pos_iff_hatEdge` | `GFNBounds.Graph.FrozenUnstableDB` |
 | `edgeMeasure_total` | `GFNBounds.Balance.Lift` |
@@ -6545,11 +7273,17 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `edgeOutflow_gammaC_x` | `GFNBounds.Graph.CycleDivergence` |
 | `edgeOutflow_unitEdge` | `GFNBounds.Graph.CycleDivergence` |
 | `edge_drop_of_loss_le` | `GFNBounds.Balance.BoundaryBlowup` |
+| `edge_drop_of_ratio_le` | `GFNBounds.Balance.FlowExistence` |
 | `edge_pstar_pos` | `GFNBounds.Doubling.Irreducible` |
 | `ell1` | `GFNBounds.Doubling.DescentStatement` |
+| `ell1_le_ell3Paper` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `ell2` | `GFNBounds.Doubling.Escape` |
+| `ell2_le_ell3Paper` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `ell2_le_m0` | `GFNBounds.Doubling.Product` |
 | `ell3` | `GFNBounds.Doubling.Weight` |
+| `ell3Paper` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `ell3_le_ell3Paper` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `ell3_le_of_ceils` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `energyH` | `GFNBounds.Balance.LocalEnergy` |
 | `energyH_abs_le` | `GFNBounds.Balance.LocalEnergy` |
 | `energy_deltaPB` | `GFNBounds.Silva.NoUniform` |
@@ -6562,9 +7296,19 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `entry_time` | `GFNBounds.Balance.MassAscent` |
 | `eps` | `GFNBounds.Doubling.DecayNotation` |
 | `eps0` | `GFNBounds.Balance.LocalConvergence` |
+| `eps0At` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `eps0At_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `eps0At_pos` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `eps0C3` | `GFNBounds.Balance.C3Wrappers` |
+| `eps0Gamma3` | `GFNBounds.Balance.C3Wrappers` |
+| `eps0Gamma3_eq` | `GFNBounds.Balance.C3Wrappers` |
+| `eps0Gamma3_le_eps0Sq` | `GFNBounds.Balance.C3Wrappers` |
+| `eps0Gamma3_le_sqrt` | `GFNBounds.Balance.C3Wrappers` |
+| `eps0Gamma3_pos` | `GFNBounds.Balance.C3Wrappers` |
 | `eps0Sq` | `GFNBounds.Balance.TrainingSpeed` |
 | `eps0Sq_le_half` | `GFNBounds.Balance.TrainingSpeed` |
 | `eps0Sq_pos` | `GFNBounds.Balance.TrainingSpeed` |
+| `eps0_antitone_M3` | `GFNBounds.Balance.C3Wrappers` |
 | `eps0_le_a_div` | `GFNBounds.Balance.LocalConvergenceClauses` |
 | `eps0_le_basin` | `GFNBounds.Balance.LocalConvergence` |
 | `eps0_le_drift` | `GFNBounds.Balance.LocalConvergence` |
@@ -6589,6 +7333,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `epsCirc_nonneg` | `GFNBounds.Graph.FrozenUnstable` |
 | `epsMax_pos` | `GFNBounds.Doubling.Setting` |
 | `epsW` | `GFNBounds.Balance.LocalConvergence` |
+| `epsW_eq_of_lt_one` | `GFNBounds.Balance.C3Wrappers` |
 | `epsW_le_eps1` | `GFNBounds.Balance.LocalConvergence` |
 | `epsW_le_window` | `GFNBounds.Balance.LocalConvergence` |
 | `epsW_nonneg` | `GFNBounds.Balance.LocalConvergence` |
@@ -6626,6 +7371,12 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `eventually_loss_eq_of` | `GFNBounds.Balance.FreezingGeneral` |
 | `eventually_mem_Ioo_zero_one` | `GFNBounds.Graph.CycleBlowup` |
 | `excursion_le` | `GFNBounds.Doubling.Excursion` |
+| `existsUnique_flow_logSq` | `GFNBounds.Balance.FlowExistence` |
+| `existsUnique_flow_logSq_graph` | `GFNBounds.Balance.FlowExistence` |
+| `existsUnique_flow_logSq_of_ergodic` | `GFNBounds.Balance.FlowExistence` |
+| `existsUnique_flow_sq` | `GFNBounds.Balance.FlowExistence` |
+| `existsUnique_flow_sq_graph` | `GFNBounds.Balance.FlowExistence` |
+| `existsUnique_flow_sq_of_ergodic` | `GFNBounds.Balance.FlowExistence` |
 | `exists_Fk_loss_le` | `GFNBounds.Graph.CycleDivergence` |
 | `exists_Wpow_drift_neg` | `GFNBounds.Doubling.Lyapunov` |
 | `exists_Wpow_one_drift_nonpos` | `GFNBounds.Doubling.Lyapunov` |
@@ -6636,10 +7387,13 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `exists_cross_of_reflTransGen` | `GFNBounds.Balance.BoundaryBlowup` |
 | `exists_cycle_of_size` | `GFNBounds.Graph.CycleDivergence` |
 | `exists_delta_for_radius` | `GFNBounds.Balance.RatioBridge` |
+| `exists_densityBox_of_continuousOn` | `GFNBounds.Balance.FlowExistence` |
 | `exists_descentPath` | `GFNBounds.Doubling.DescentStatement` |
+| `exists_descentPath_of_mem` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `exists_diffusionOp` | `GFNBounds.Doubling.OperatorL2` |
 | `exists_edgeFloor` | `GFNBounds.Balance.BoundaryBlowup` |
 | `exists_fixed` | `GFNBounds.Graph.Setting` |
+| `exists_forall_hasDerivAt_of_lipschitzWith` | `GFNBounds.Balance.FlowExistence` |
 | `exists_hatEdge_into` | `GFNBounds.Graph.Setting` |
 | `exists_height_drift_neg` | `GFNBounds.Doubling.Lyapunov` |
 | `exists_invProb` | `GFNBounds.Graph.Setting` |
@@ -6647,6 +7401,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `exists_isGreen` | `GFNBounds.Graph.Morozov` |
 | `exists_isHitExp` | `GFNBounds.Graph.Morozov` |
 | `exists_isPoisson` | `GFNBounds.Graph.Morozov` |
+| `exists_lipschitzOnWith_lossGrad` | `GFNBounds.Balance.FlowExistence` |
 | `exists_logHeight_drift_nonpos` | `GFNBounds.Doubling.Lyapunov` |
 | `exists_lower_bound_of_bijective` | `GFNBounds.Doubling.Unsolvable` |
 | `exists_outflow_memLp_of_top` | `GFNBounds.Core.StrongUniversality` |
@@ -6684,10 +7439,15 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `expH` | `GFNBounds.Balance.Expansion` |
 | `expH_abs_le` | `GFNBounds.Balance.Expansion` |
 | `expNegInvGlue_le_one` | `GFNBounds.Balance.Freezing` |
+| `exp_Mp` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `exp_neg_le_of_abs_log_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `exp_neg_two_mul_le_one_sub` | `GFNBounds.Doubling.Product` |
 | `exp_sub_one_le_two_mul` | `GFNBounds.Doubling.Weight` |
+| `exp_two_Mp` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `expo_nonneg` | `GFNBounds.Doubling.MainPackaging` |
 | `exponent_is_cramer_root` | `GFNBounds.Doubling.Exponent` |
+| `extE` | `GFNBounds.Balance.C3Wrappers` |
+| `extE_apply` | `GFNBounds.Balance.C3Wrappers` |
 | `extend` | `GFNBounds.Doubling.Constant` |
 | `extendCVec` | `GFNBounds.Doubling.TruncationStat` |
 | `extendCVec_of_mem` | `GFNBounds.Doubling.TruncationStat` |
@@ -6717,6 +7477,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `flatFactor_nonneg` | `GFNBounds.Balance.Freezing` |
 | `flatFactor_pos` | `GFNBounds.Balance.Freezing` |
 | `floor_lt_self` | `GFNBounds.Doubling.Escape` |
+| `floor_of_edge_drop` | `GFNBounds.Balance.FlowExistence` |
 | `flow_matching` | `GFNBounds.Graph.Universality` |
 | `flow_pos` | `GFNBounds.Balance.BoundaryBlowup` |
 | `flow_pos_graph` | `GFNBounds.Balance.BoundaryBlowup` |
@@ -6738,9 +7499,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `fmRatio` | `GFNBounds.Graph.CycleDivergence` |
 | `fmRatio_Fk` | `GFNBounds.Graph.CycleDivergence` |
 | `fmRatio_Fk_tendsto_one` | `GFNBounds.Graph.CycleDivergence` |
+| `foot_eq` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `foot_le` | `GFNBounds.Doubling.R0Bound` |
 | `foot_le_floor` | `GFNBounds.Doubling.Escape` |
 | `foot_le_self` | `GFNBounds.Doubling.R0Bound` |
+| `foot_rpow` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `foot_rpow_le` | `GFNBounds.Doubling.R0Bound` |
 | `foot_shift_ge` | `GFNBounds.Doubling.Escape` |
 | `four_rpow` | `GFNBounds.Doubling.Drift` |
@@ -6771,6 +7534,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `funAct_const` | `GFNBounds.Balance.L2Toolkit` |
 | `funAct_eq_densAct_reversal` | `GFNBounds.Core.Adjoint` |
 | `funAct_mul_self_le` | `GFNBounds.Core.Adjoint` |
+| `funAct_pairKernel` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `funAct_pairKernel_iterate` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `funAct_sub` | `GFNBounds.Balance.L2Toolkit` |
 | `fwdStar` | `GFNBounds.Graph.Universality` |
 | `g` | `GFNBounds.Balance.Freezing` |
@@ -6785,6 +7550,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `gam_pos` | `GFNBounds.Doubling.Escape` |
 | `gam_sq_lt_quarter` | `GFNBounds.Doubling.Product` |
 | `gamma0` | `GFNBounds.Balance.LocalConvergence` |
+| `gamma0At` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `gamma0At_pos` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `gamma0C3` | `GFNBounds.Balance.C3Wrappers` |
 | `gamma0_pos` | `GFNBounds.Balance.LocalConvergenceClauses` |
 | `gamma0_pos_of_weights` | `GFNBounds.Balance.LocalConvergenceClauses` |
 | `gamma0_pos_of_weights_mixing` | `GFNBounds.Balance.LocalConvergenceMixing` |
@@ -6794,6 +7562,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `gammaC_snkC` | `GFNBounds.Graph.CycleDivergence` |
 | `gammaC_srcC` | `GFNBounds.Graph.CycleDivergence` |
 | `gammaMC` | `GFNBounds.Graph.CycleDivergence` |
+| `gammaStar` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `gammaStar_pos` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `gamma_family` | `GFNBounds.Doubling.Ramp` |
 | `gamma_mul_Lsq_le` | `GFNBounds.Balance.LocalConvergence` |
 | `gamma_rho_le` | `GFNBounds.Balance.LocalConvergence` |
@@ -6804,6 +7574,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `geom_iterate` | `GFNBounds.Doubling.TotalVariation` |
 | `geom_sum_le_inv` | `GFNBounds.Doubling.Sojourn` |
 | `geometric_sum` | `GFNBounds.Doubling.Unbounded` |
+| `getD_trajOf` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `global_dichotomy_full_one` | `GFNBounds.Balance.MassIdentity` |
 | `global_dichotomy_full_one_converges` | `GFNBounds.Balance.GlobalConvergence` |
 | `global_lojasiewicz_flow` | `GFNBounds.Balance.Flow` |
@@ -6832,11 +7603,16 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `harmonic_window_ge` | `GFNBounds.Doubling.HarmonicWindow` |
 | `hasDerivAt_abs_sub_one` | `GFNBounds.Balance.GradientFormulas` |
 | `hasDerivAt_dbLoss_ipL2` | `GFNBounds.Balance.GradientFormulas` |
+| `hasDerivAt_deriv_of_C3` | `GFNBounds.Balance.C3Wrappers` |
+| `hasDerivAt_div_line` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `hasDerivAt_flowDev` | `GFNBounds.Balance.LocalEnergy` |
 | `hasDerivAt_fmLoss_abs_ipL2` | `GFNBounds.Balance.GradientFormulas` |
 | `hasDerivAt_fmLoss_ipL2` | `GFNBounds.Balance.GradientFormulas` |
 | `hasDerivAt_fmLoss_sq_ipL2` | `GFNBounds.Balance.GradientFormulas` |
+| `hasDerivAt_line` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `hasDerivAt_logSq` | `GFNBounds.Balance.Flow` |
+| `hasDerivAt_logSqDeriv` | `GFNBounds.Balance.C3Wrappers` |
+| `hasDerivAt_logSqDeriv2` | `GFNBounds.Balance.C3Wrappers` |
 | `hasDerivAt_loss` | `GFNBounds.Balance.FirstVariation` |
 | `hasDerivAt_loss_atStates` | `GFNBounds.Balance.GradientFormulas` |
 | `hasDerivAt_loss_comp` | `GFNBounds.Balance.Flow` |
@@ -6855,6 +7631,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `hasDerivAt_psi` | `GFNBounds.Doubling.Cramer` |
 | `hasDerivAt_ratio` | `GFNBounds.Balance.FirstVariation` |
 | `hasDerivAt_ratio_comp` | `GFNBounds.Balance.Flow` |
+| `hasDerivAt_sq_logdiff` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `hasDerivAt_sq_logdiff_deriv` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `hasDerivAt_two_rpow` | `GFNBounds.Doubling.Cramer` |
 | `hasDouble_mono` | `GFNBounds.Doubling.Setting` |
 | `hasDouble_none` | `GFNBounds.Doubling.Setting` |
@@ -6874,6 +7652,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `hatEdge_wrap` | `GFNBounds.Graph.Setting` |
 | `hcoer_of_graph` | `GFNBounds.Balance.TrainingSpeed` |
 | `hdom_deltaPB` | `GFNBounds.Silva.NoUniform` |
+| `head_of_mem_descPaths` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `head_shift_le` | `GFNBounds.Doubling.Escape` |
 | `height` | `GFNBounds.Doubling.Drift` |
 | `height_drift_le_neg_half` | `GFNBounds.Doubling.Lyapunov` |
@@ -6978,6 +7757,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `invProb_unique` | `GFNBounds.Graph.Setting` |
 | `inv_of_pointwise` | `GFNBounds.Doubling.PointwiseInv` |
 | `inv_one_sub_tendsto_atTop` | `GFNBounds.Graph.CycleBlowup` |
+| `inv_recursion` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `invariant_edgeInflow_of_pushEdge_eq` | `GFNBounds.Graph.FrozenUnstableDB` |
 | `invariant_edgeKernelProd` | `GFNBounds.Balance.GradientFormulas` |
 | `invariant_of_isInvProb` | `GFNBounds.Balance.MassIdentity` |
@@ -6993,6 +7773,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `ipL2_const_left` | `GFNBounds.Balance.WeightedL2` |
 | `ipL2_densAct_densAct` | `GFNBounds.Core.Adjoint` |
 | `ipL2_densAct_funAct` | `GFNBounds.Core.Adjoint` |
+| `ipL2_densAct_iterate` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `ipL2_densDeviation` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `ipL2_funAct_self_le` | `GFNBounds.Core.Adjoint` |
 | `ipL2_le_mul_nrmL2` | `GFNBounds.Graph.Morozov` |
 | `ipL2_linHess` | `GFNBounds.Balance.Expansion` |
@@ -7001,6 +7783,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `ipL2_perpL2_right` | `GFNBounds.Balance.LocalConvergence` |
 | `ipL2_self_nonneg` | `GFNBounds.Graph.Morozov` |
 | `ipL2_smul_right` | `GFNBounds.Balance.Expansion` |
+| `ipL2_sub_const_left` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `ipL2_sub_left` | `GFNBounds.Balance.L2Toolkit` |
 | `ipL2_sub_mean` | `GFNBounds.Balance.MassAscent` |
 | `ipL2_sub_right` | `GFNBounds.Balance.L2Toolkit` |
@@ -7008,12 +7791,15 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `isCirculation_epsCirc` | `GFNBounds.Graph.FrozenUnstable` |
 | `isCirculation_gammaC` | `GFNBounds.Graph.CycleDivergence` |
 | `isCirculation_perturbedFlow` | `GFNBounds.Graph.FrozenUnstable` |
+| `isCompact_densityBox` | `GFNBounds.Balance.FlowExistence` |
 | `isEmpty_stat_of_family_ge_one` | `GFNBounds.Doubling.PhaseEmpty` |
 | `isEmpty_stat_of_family_lt_one` | `GFNBounds.Doubling.PhaseEmpty` |
 | `isEmpty_stat_of_supercritical` | `GFNBounds.Doubling.PhaseEmpty` |
 | `isFiniteMeasure_bind_withDensity` | `GFNBounds.Core.Kernel` |
 | `isGLB_of_domination` | `GFNBounds.Core.ILBound` |
 | `isGradientFlow_iff` | `GFNBounds.Balance.Flow` |
+| `isGradientFlow_one` | `GFNBounds.Balance.C3Wrappers` |
+| `isGradientFlow_unique` | `GFNBounds.Balance.FlowExistence` |
 | `isGreen` | `GFNBounds.Graph.CycleExample` |
 | `isHitExp` | `GFNBounds.Graph.Morozov` |
 | `isInvProb` | `GFNBounds.Graph.CycleExample` |
@@ -7027,11 +7813,17 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `isOpen_upper` | `GFNBounds.Balance.Freezing` |
 | `isReversalPair_comm` | `GFNBounds.Core.Adjoint` |
 | `isReversalPair_edgeKernelProd` | `GFNBounds.Balance.GradientFormulas` |
+| `isSubsolution_inv_factorial_sq` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `isSupersolution_two_pow` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `isUnit_resolventOp` | `GFNBounds.Doubling.OperatorFiniteSum` |
 | `jbar` | `GFNBounds.Doubling.Setting` |
 | `jensen_gap_zero` | `GFNBounds.Doubling.FixedPoints` |
 | `jensen_gap_zero_memLp` | `GFNBounds.Doubling.LpLayer` |
+| `k0` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `k0real` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `k0real_eq` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `kac_identity` | `GFNBounds.Doubling.Kac` |
+| `kappa` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `kerPi` | `GFNBounds.Doubling.Unsolvable` |
 | `ker_eq_const` | `GFNBounds.Doubling.FixedPointsP` |
 | `kern` | `GFNBounds.Graph.CycleExample` |
@@ -7045,12 +7837,15 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `klD_nonneg` | `GFNBounds.Core.ILBound` |
 | `klD_normalized_nonneg` | `GFNBounds.Core.ILBound` |
 | `l2norm` | `GFNBounds.Balance.Lift` |
+| `l2norm_eq_nrmL2` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `l2norm_pair` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `l2norm₂` | `GFNBounds.Balance.Lift` |
 | `l2sq` | `GFNBounds.Balance.Lift` |
 | `l2sq_condBack_le` | `GFNBounds.Balance.Lift` |
 | `l2sq_condFwd_le` | `GFNBounds.Balance.Lift` |
 | `l2sq₂` | `GFNBounds.Balance.Lift` |
 | `l2sq₂_of_fst` | `GFNBounds.Balance.Lift` |
+| `l2sq₂_of_snd` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `ladHarmonic_eq_zero` | `GFNBounds.Doubling.Length` |
 | `ladId` | `GFNBounds.Doubling.Length` |
 | `ladId_apply` | `GFNBounds.Doubling.Length` |
@@ -7073,6 +7868,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `ladT_wLog_le` | `GFNBounds.Doubling.Length` |
 | `ladT_zero` | `GFNBounds.Doubling.Length` |
 | `lam` | `GFNBounds.Graph.CycleExample` |
+| `lamU` | `GFNBounds.Balance.C3Wrappers` |
 | `lam_chain_down` | `GFNBounds.Doubling.Truncation` |
 | `lam_chain_up` | `GFNBounds.Doubling.Truncation` |
 | `lam_eq_visits_div` | `GFNBounds.Graph.Morozov` |
@@ -7096,6 +7892,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `le_density_ratio` | `GFNBounds.Balance.Lojasiewicz` |
 | `le_foot` | `GFNBounds.Doubling.R0Bound` |
 | `le_foot_rpow` | `GFNBounds.Doubling.R0Bound` |
+| `le_gammaStar` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `le_incr` | `GFNBounds.Doubling.Tail` |
 | `le_incr'` | `GFNBounds.Doubling.WindowSum` |
 | `le_log_of_one_add_le` | `GFNBounds.Balance.Lojasiewicz` |
@@ -7110,14 +7907,20 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `le_sub_one_div_of_one_add_le` | `GFNBounds.Balance.Lojasiewicz` |
 | `le_supAbs` | `GFNBounds.Graph.Morozov` |
 | `le_term` | `GFNBounds.Doubling.R0Bound` |
+| `length_trajOf` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `levelL` | `GFNBounds.Doubling.SharpFull` |
+| `lift_coercivity_finite` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `lift_mixing` | `GFNBounds.Balance.Lift` |
+| `lift_mixing_dens` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `lift_mixing_ge` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `lift_mixing_graph` | `GFNBounds.Balance.Lift` |
 | `lift_mixing_opNorm` | `GFNBounds.Balance.Lift` |
+| `lift_mixing_opNorm_eq` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `lift_mixing_opNorm_le` | `GFNBounds.Balance.Lift` |
 | `liftedOutflow` | `GFNBounds.Core.Universality` |
 | `liftedOutflow_eq` | `GFNBounds.Core.Universality` |
 | `liftedOutflow_nonneg` | `GFNBounds.Core.Universality` |
+| `limit_arith` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `linHess` | `GFNBounds.Balance.Expansion` |
 | `linHess_add` | `GFNBounds.Balance.WeightedL2` |
 | `linHess_apply` | `GFNBounds.Balance.Expansion` |
@@ -7141,11 +7944,17 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `lintegral_ofReal_ne_top` | `GFNBounds.Core.Kernel` |
 | `lintegral_rpow_enorm` | `GFNBounds.Doubling.LpLayer` |
 | `lintegral_rpow_enorm_eq_mass` | `GFNBounds.Doubling.LpLayer` |
+| `lipschitzWith_clampBox` | `GFNBounds.Balance.FlowExistence` |
 | `local_convergence_full` | `GFNBounds.Balance.LocalConvergence` |
 | `local_convergence_full_C` | `GFNBounds.Balance.LocalConvergenceClauses` |
+| `local_convergence_full_C3` | `GFNBounds.Balance.C3Wrappers` |
 | `local_convergence_full_C_mixing` | `GFNBounds.Balance.LocalConvergenceMixing` |
+| `local_convergence_full_DB` | `GFNBounds.Balance.C3Wrappers` |
+| `local_convergence_full_DB_witness` | `GFNBounds.Balance.C3Wrappers` |
 | `local_convergence_full_mixing` | `GFNBounds.Balance.LocalConvergenceMixing` |
 | `local_convergence_gd` | `GFNBounds.Balance.LocalConvergence` |
+| `local_convergence_gd_C3` | `GFNBounds.Balance.C3Wrappers` |
+| `local_convergence_gd_DB` | `GFNBounds.Balance.C3Wrappers` |
 | `local_convergence_gd_mixing` | `GFNBounds.Balance.LocalConvergenceMixing` |
 | `local_convergence_gd_welldefined` | `GFNBounds.Balance.LocalConvergenceClauses` |
 | `local_convergence_gd_welldefined_mixing` | `GFNBounds.Balance.LocalConvergenceMixing` |
@@ -7161,13 +7970,22 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `logRatio` | `GFNBounds.Silva.Basic` |
 | `logSq` | `GFNBounds.Balance.Lojasiewicz` |
 | `logSqDeriv` | `GFNBounds.Balance.Lojasiewicz` |
+| `logSqDeriv2` | `GFNBounds.Balance.C3Wrappers` |
+| `logSqDeriv3` | `GFNBounds.Balance.C3Wrappers` |
 | `logSqDeriv_mul_one_sub_le` | `GFNBounds.Balance.Lojasiewicz` |
 | `logSqDeriv_mul_one_sub_le_logSq_div` | `GFNBounds.Balance.Lojasiewicz` |
 | `logSqDeriv_mul_one_sub_nonpos` | `GFNBounds.Balance.Lojasiewicz` |
 | `logSqDeriv_strictlyUnimodal` | `GFNBounds.Balance.Lojasiewicz` |
 | `logSqDeriv_taylor` | `GFNBounds.Balance.LogSqTaylor` |
+| `logSqDeriv_taylor_Gamma3` | `GFNBounds.Balance.C3Wrappers` |
 | `logSqDeriv_taylor_half` | `GFNBounds.Balance.TrainingSpeed` |
 | `logSqDeriv_taylor_twelve` | `GFNBounds.Balance.LogSqTaylor` |
+| `logSqFlowGenerator` | `GFNBounds.Balance.FlowExistence` |
+| `logSq_C3` | `GFNBounds.Balance.C3Wrappers` |
+| `logSq_C3_bundle` | `GFNBounds.Balance.C3Wrappers` |
+| `logSq_deriv2_one` | `GFNBounds.Balance.C3Wrappers` |
+| `logSq_deriv_one` | `GFNBounds.Balance.C3Wrappers` |
+| `logSq_div_eq` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `logSq_le_logSq_of_one_le` | `GFNBounds.Balance.BoundaryBlowup` |
 | `logSq_le_of_loss` | `GFNBounds.Balance.Lojasiewicz` |
 | `logSq_nonneg` | `GFNBounds.Balance.Lojasiewicz` |
@@ -7200,11 +8018,14 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `lossVal_eq_zero_iff_balanced` | `GFNBounds.Balance.MassAscent` |
 | `lossVal_nonneg` | `GFNBounds.Balance.Lojasiewicz` |
 | `loss_antitoneOn` | `GFNBounds.Balance.MassAscent` |
+| `loss_antitoneOn_of_on` | `GFNBounds.Balance.FlowExistence` |
 | `loss_antitone_flow` | `GFNBounds.Balance.MassAscent` |
+| `loss_edgeE_eq_db` | `GFNBounds.Balance.C3Wrappers` |
 | `loss_eq_lossVal` | `GFNBounds.Balance.Flow` |
 | `loss_eq_selfEntropy_of_domination_zero` | `GFNBounds.Core.ILBound` |
 | `loss_ge_selfEntropy` | `GFNBounds.Core.ILBound` |
 | `loss_le_of_domination` | `GFNBounds.Core.ILBound` |
+| `loss_le_perp_sq` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `loss_lower_of_small` | `GFNBounds.Balance.BoundaryBlowup` |
 | `loss_pos` | `GFNBounds.Balance.Freezing` |
 | `loss_pos_of` | `GFNBounds.Balance.FreezingGeneral` |
@@ -7227,6 +8048,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `m_one` | `GFNBounds.Balance.Freezing` |
 | `m_pos` | `GFNBounds.Balance.Freezing` |
 | `m_pos_of_mem_Ioo` | `GFNBounds.Balance.Freezing` |
+| `m_rpow_neg_nat` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `mact` | `GFNBounds.Doubling.Balance` |
 | `mact_lad` | `GFNBounds.Doubling.Balance` |
 | `mact_lam` | `GFNBounds.Doubling.Balance` |
@@ -7272,6 +8094,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `mass_le_of_leftInverse` | `GFNBounds.Doubling.RayleighBridge` |
 | `mass_le_of_rayleighL2` | `GFNBounds.Doubling.RayleighBridge` |
 | `mass_monotoneOn` | `GFNBounds.Balance.MassAscent` |
+| `mass_monotoneOn_of_on` | `GFNBounds.Balance.FlowExistence` |
 | `mass_monotone_flow` | `GFNBounds.Balance.MassAscent` |
 | `mass_nonneg` | `GFNBounds.Doubling.LpLayer` |
 | `mass_pstar_le` | `GFNBounds.Doubling.LpContraction` |
@@ -7290,6 +8113,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `meanL2_dev_eq_zero` | `GFNBounds.Balance.RatioBridge` |
 | `meanL2_funAct` | `GFNBounds.Balance.L2Toolkit` |
 | `meanL2_linHess` | `GFNBounds.Balance.Expansion` |
+| `meanL2_lossGrad_nonpos` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `meanL2_pair` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `meanL2_perpL2` | `GFNBounds.Balance.LocalEnergy` |
 | `meanL2_sub` | `GFNBounds.Balance.L2Toolkit` |
 | `meanL2_sub_smul` | `GFNBounds.Balance.LocalConvergence` |
@@ -7328,6 +8153,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `mem_Jlow` | `GFNBounds.Doubling.HarmonicWindow` |
 | `mem_block` | `GFNBounds.Doubling.DecayNotation` |
 | `mem_chainFinset` | `GFNBounds.Doubling.TruncationStat` |
+| `mem_densityBox` | `GFNBounds.Balance.FlowExistence` |
+| `mem_descPaths_iff` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `mem_farSet` | `GFNBounds.Balance.Lojasiewicz` |
 | `mem_internal` | `GFNBounds.Graph.Universality` |
 | `mem_internal_iff` | `GFNBounds.Graph.CycleDivergence` |
@@ -7347,6 +8174,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `mixing_of_massPreserving` | `GFNBounds.Core.Flow` |
 | `morozov_rate` | `GFNBounds.Graph.Morozov` |
 | `morozov_rate_three` | `GFNBounds.Graph.MorozovConsume` |
+| `mpow_foot` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `mpow_mul_rpow` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `mu` | `GFNBounds.Doubling.LpLayer` |
 | `mu_singleton` | `GFNBounds.Doubling.LpLayer` |
 | `mu_singleton_ne_zero_iff` | `GFNBounds.Doubling.LpLayer` |
@@ -7365,10 +8194,13 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `no_distant_equilibrium_three_converges` | `GFNBounds.Balance.GlobalConvergence` |
 | `no_distant_equilibrium_three_far` | `GFNBounds.Balance.Lojasiewicz` |
 | `no_distant_equilibrium_three_far_of` | `GFNBounds.Balance.SqGenerator` |
+| `no_distant_equilibrium_three_of_init` | `GFNBounds.Balance.FlowExistence` |
 | `no_distant_equilibrium_three_sq` | `GFNBounds.Balance.SqGenerator` |
 | `no_stalemate` | `GFNBounds.Graph.CycleExample` |
 | `no_state_space_free_bound` | `GFNBounds.Silva.NoUniform` |
 | `no_three_argument_bound` | `GFNBounds.Silva.NoUniform` |
+| `no_uniform_step` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `nonempty_decay` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `nonempty_of_total` | `GFNBounds.Balance.LocalConvergence` |
 | `nonneg_of_superharm_off_src` | `GFNBounds.Graph.Morozov` |
 | `norm_S_apply_le` | `GFNBounds.Core.Mixing` |
@@ -7398,6 +8230,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `not_growthCond_geometric` | `GFNBounds.Doubling.Unbounded` |
 | `not_inTail_of_lt` | `GFNBounds.Doubling.PerCutIdentity` |
 | `not_invariant_perturbedFlow` | `GFNBounds.Graph.FrozenUnstable` |
+| `not_isSubsolution_Phi_zero` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `not_isSupersolution_Phi_zero` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `not_mem_window_self` | `GFNBounds.Doubling.PerCutNorms` |
 | `not_stable_of_witness` | `GFNBounds.Graph.FrozenUnstableDB` |
 | `not_summable_betaHat` | `GFNBounds.Doubling.UnboundedL2` |
@@ -7407,11 +8241,14 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `nrmL2_Aop_le_of_ratio_close` | `GFNBounds.Balance.RatioBridge` |
 | `nrmL2_Aop_le_two` | `GFNBounds.Balance.L2Toolkit` |
 | `nrmL2_add_le` | `GFNBounds.Balance.L2Toolkit` |
+| `nrmL2_condFwdPair_le` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `nrmL2_congr` | `GFNBounds.Core.Adjoint` |
 | `nrmL2_const` | `GFNBounds.Balance.LocalConvergence` |
 | `nrmL2_const_of_flow` | `GFNBounds.Balance.Flow` |
 | `nrmL2_const_on_Ici` | `GFNBounds.Balance.Flow` |
 | `nrmL2_densAct_le` | `GFNBounds.Core.Adjoint` |
+| `nrmL2_eq_of_on` | `GFNBounds.Balance.FlowExistence` |
+| `nrmL2_funAct_iterate_le` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `nrmL2_funAct_le` | `GFNBounds.Core.Adjoint` |
 | `nrmL2_le_of_abs_le` | `GFNBounds.Balance.L2Toolkit` |
 | `nrmL2_le_supAbs` | `GFNBounds.Graph.Morozov` |
@@ -7419,10 +8256,12 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `nrmL2_neg` | `GFNBounds.Balance.L2Toolkit` |
 | `nrmL2_nonneg` | `GFNBounds.Graph.Morozov` |
 | `nrmL2_one_pos` | `GFNBounds.Core.Adjoint` |
+| `nrmL2_pair_snd` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `nrmL2_perpL2_le` | `GFNBounds.Balance.L2Toolkit` |
 | `nrmL2_perpL2_le_of_ratio_close` | `GFNBounds.Balance.RatioBridge` |
 | `nrmL2_smul` | `GFNBounds.Balance.L2Toolkit` |
 | `nrmL2_sq_eq_mean_sq_add_perp` | `GFNBounds.Balance.L2Toolkit` |
+| `nrmL2_sub_const_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `nrmL2_sub_le` | `GFNBounds.Balance.L2Toolkit` |
 | `nu` | `GFNBounds.Doubling.ConstantFunctional` |
 | `nu_eq_zero` | `GFNBounds.Doubling.ConstantFunctional` |
@@ -7472,6 +8311,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `one_le_sojMean` | `GFNBounds.Doubling.Product` |
 | `one_le_toReal` | `GFNBounds.Doubling.LpContraction` |
 | `one_le_truncQ` | `GFNBounds.Doubling.TruncationBhat` |
+| `one_le_ufoot` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `one_lt_ctau` | `GFNBounds.Doubling.Escape` |
 | `one_lt_sqTau` | `GFNBounds.Doubling.Escape` |
 | `one_lt_sqrt_two` | `GFNBounds.Doubling.Escape` |
@@ -7482,6 +8322,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `one_sub_epsCS_one_pos` | `GFNBounds.Doubling.Range` |
 | `one_sub_eps_le_pstar_dirac_pred` | `GFNBounds.Doubling.Ratios` |
 | `one_sub_eps_pos` | `GFNBounds.Doubling.Setting` |
+| `one_sub_le_rpow_neg` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `one_sub_meanOp_ne_zero` | `GFNBounds.Balance.WeightedL2Norm` |
 | `one_sub_mul_partialSum` | `GFNBounds.Doubling.Operator` |
 | `one_sub_ne_zero_iff` | `GFNBounds.Core.MixingBase` |
@@ -7489,7 +8330,13 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `one_sub_omeg_pos` | `GFNBounds.Doubling.SharpRate` |
 | `one_sub_orthoPi_ne_zero` | `GFNBounds.Core.MixingBase` |
 | `one_sub_rpow_neg_le` | `GFNBounds.Doubling.Lyapunov` |
+| `opBound_deviation_two` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `opBound_of_adjoint` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `opBound_opNorm` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `opNorm` | `GFNBounds.Balance.Lift` |
+| `opNorm_densDeviation` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `opNorm_eq_of_adjoint` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `opNorm_pair` | `GFNBoundsScaffold.Balance.LiftFinite` |
 | `opNorm₂` | `GFNBounds.Balance.Lift` |
 | `orthoMixing` | `GFNBounds.Core.MixingBase` |
 | `orthoPi` | `GFNBounds.Core.MixingBase` |
@@ -7501,17 +8348,37 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `outflowStar_mul_fwdStar` | `GFNBounds.Graph.Universality` |
 | `outflowStar_nonneg` | `GFNBounds.Graph.Universality` |
 | `p_add_one_pos` | `GFNBounds.Doubling.Expansion` |
+| `p_congr` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `p_gt_one` | `GFNBounds.Doubling.DecayNotation` |
 | `p_pos` | `GFNBounds.Doubling.DecayNotation` |
+| `pairKernel` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `pairKernel_isMarkov` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `pairMeasure` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `pairMeasure_eq_reversal` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `pairMeasure_isInvariant` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `pairMeasure_total` | `GFNBoundsScaffold.Balance.LiftFinite` |
+| `parity_thresholds_congr` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `partialSum` | `GFNBounds.Doubling.Operator` |
 | `partialSum_mul_one_sub` | `GFNBounds.Doubling.Operator` |
 | `partialSum_mul_pi` | `GFNBounds.Doubling.Operator` |
 | `partial_sum_le` | `GFNBounds.Doubling.Summable` |
 | `partial_sum_le_of_threshold` | `GFNBounds.Doubling.PhaseExists` |
 | `partial_sum_weighted_le` | `GFNBounds.Doubling.PhaseExists` |
+| `past_bound` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `pathConnected` | `GFNBounds.Graph.CycleExample` |
+| `pathExit` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `pathExit_cons` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `pathProb` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `pathProb_cons` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `pathProb_pos` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `pathZ` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `pathZ_cons` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `path_add_le` | `GFNBounds.Doubling.DescentStatement` |
 | `pbFun` | `GFNBounds.Graph.CycleExample` |
+| `pbU` | `GFNBounds.Balance.C3Wrappers` |
+| `pbU_invariant` | `GFNBounds.Balance.C3Wrappers` |
+| `pbU_markov` | `GFNBounds.Balance.C3Wrappers` |
+| `pbU_pos` | `GFNBounds.Balance.C3Wrappers` |
 | `pcut` | `GFNBounds.Graph.FrozenUnstable` |
 | `pcut_nonneg` | `GFNBounds.Graph.FrozenUnstable` |
 | `pcut_of_ne_src` | `GFNBounds.Graph.FrozenUnstable` |
@@ -7528,6 +8395,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `percut_leftInverse` | `GFNBounds.Doubling.TruncationBhat` |
 | `perpL2` | `GFNBounds.Balance.L2Toolkit` |
 | `perpL2_apply` | `GFNBounds.Balance.L2Toolkit` |
+| `perpL2_div_sub_one` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `perpL2_eq` | `GFNBounds.Balance.L2Toolkit` |
 | `perpL2_sub_smul` | `GFNBounds.Balance.LocalConvergence` |
 | `perp_decay_on` | `GFNBounds.Balance.LocalEnergy` |
@@ -7537,6 +8405,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `perturbedFlow_isEdgeflow` | `GFNBounds.Graph.FrozenUnstableDB` |
 | `perturbedFlow_isFlow` | `GFNBounds.Graph.FrozenUnstableDB` |
 | `perturbedFlow_pos_of_hatEdge` | `GFNBounds.Graph.FrozenUnstableDB` |
+| `pf_eq` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `phat` | `GFNBounds.Graph.Setting` |
 | `phat_eq` | `GFNBounds.Graph.CycleExample` |
 | `phat_eq_zero_of_not_hatEdge` | `GFNBounds.Graph.FrozenUnstableDB` |
@@ -7576,6 +8445,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `poisson_right_apply` | `GFNBounds.Core.Mixing` |
 | `poisson_solved` | `GFNBounds.Core.Mixing` |
 | `pol` | `GFNBounds.Graph.CycleExample` |
+| `poly_one` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `poly_two` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `posPart_mass` | `GFNBounds.Core.StableBound` |
 | `pos_of_irreducible` | `GFNBounds.Doubling.Irreducible` |
 | `pos_of_loss_le` | `GFNBounds.Balance.BoundaryBlowup` |
@@ -7653,7 +8524,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `pushEdge_eq_edgeMeasure_mul` | `GFNBounds.Balance.Lift` |
 | `pushEdge_perturbedFlow_ne` | `GFNBounds.Graph.FrozenUnstableDB` |
 | `pushMass` | `GFNBounds.Balance.MassIdentity` |
+| `pushMass_eq_densAct` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `pushMass_line` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `pushMass_mono` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `pushMass_perturb` | `GFNBounds.Balance.FirstVariation` |
+| `pushMass_smul` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `qact` | `GFNBounds.Graph.Morozov` |
 | `qact_apply` | `GFNBounds.Graph.Morozov` |
 | `qact_const` | `GFNBounds.Graph.Morozov` |
@@ -7663,6 +8538,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `qact_sub` | `GFNBounds.Graph.Morozov` |
 | `qm` | `GFNBounds.Doubling.DecayNotation` |
 | `qm_eq` | `GFNBounds.Doubling.DecayNotation` |
+| `qm_le_one` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `qm_pos` | `GFNBounds.Doubling.DecayNotation` |
 | `quarter_lt_gam` | `GFNBounds.Doubling.Escape` |
 | `rampFn` | `GFNBounds.Doubling.Ramp` |
@@ -7692,12 +8568,14 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `ratio_counting_ones` | `GFNBounds.Graph.CycleExample` |
 | `ratio_counting_src` | `GFNBounds.Graph.CycleExample` |
 | `ratio_counting_x3` | `GFNBounds.Graph.CycleExample` |
+| `ratio_edgeE_eq` | `GFNBounds.Balance.C3Wrappers` |
 | `ratio_edgeKernelProd` | `GFNBounds.Balance.GradientFormulas` |
 | `ratio_edgeKernelProd_db` | `GFNBounds.Balance.GradientFormulas` |
 | `ratio_eq_fmRatio` | `GFNBounds.Graph.CycleDivergence` |
 | `ratio_eq_one_iff_balanced` | `GFNBounds.Balance.MassIdentity` |
 | `ratio_expansion` | `GFNBounds.Balance.FirstVariation` |
 | `ratio_le_exp` | `GFNBounds.Balance.Lojasiewicz` |
+| `ratio_line` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `ratio_one_add_sub_one` | `GFNBounds.Balance.Expansion` |
 | `ratio_perturb` | `GFNBounds.Balance.FirstVariation` |
 | `ratio_perturb_paper` | `GFNBounds.Balance.FirstVariation` |
@@ -7718,9 +8596,12 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `reach_dec` | `GFNBounds.Doubling.Irreducible` |
 | `reach_dec_le` | `GFNBounds.Doubling.Irreducible` |
 | `reach_lad_none` | `GFNBounds.Doubling.Irreducible` |
+| `reach_of_uniqueInvariant` | `GFNBounds.Balance.FlowExistence` |
 | `reach_one` | `GFNBounds.Doubling.Irreducible` |
 | `reach_one_lad` | `GFNBounds.Doubling.Irreducible` |
 | `reach_pow_two` | `GFNBounds.Doubling.Irreducible` |
+| `region_step` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `rel_step_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `remC` | `GFNBounds.Doubling.Lyapunov` |
 | `remC_nonneg` | `GFNBounds.Doubling.Lyapunov` |
 | `remainder_abs_le` | `GFNBounds.Balance.FirstVariation` |
@@ -7769,6 +8650,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `rpow_div_self` | `GFNBounds.Doubling.Lyapunov` |
 | `rpow_div_sq` | `GFNBounds.Doubling.Lyapunov` |
 | `rpow_ge_tangent` | `GFNBounds.Doubling.Tail` |
+| `rpow_neg_le_one` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
+| `rpow_neg_le_quad` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `rpow_split` | `GFNBounds.Doubling.PerCutNorms` |
 | `rpow_sub_one_eq` | `GFNBounds.Doubling.R0Bound` |
 | `sbar` | `GFNBounds.Doubling.Kac` |
@@ -7816,9 +8699,12 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `sqDeriv_mul_one_sub_le` | `GFNBounds.Balance.SqGenerator` |
 | `sqDeriv_mul_one_sub_le_sharp` | `GFNBounds.Balance.SqGenerator` |
 | `sqDeriv_mul_one_sub_nonpos` | `GFNBounds.Balance.SqGenerator` |
+| `sqFlowGenerator` | `GFNBounds.Balance.FlowExistence` |
+| `sqGen` | `GFNBounds.Balance.FlowExistence` |
 | `sqTau` | `GFNBounds.Doubling.Escape` |
 | `sqTau_pos` | `GFNBounds.Doubling.Escape` |
 | `sqTau_sq` | `GFNBounds.Doubling.Escape` |
+| `sq_logdiff_deriv2_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `sq_nrmL2` | `GFNBounds.Graph.Morozov` |
 | `sq_nrmL2_sub_smul` | `GFNBounds.Balance.LocalConvergence` |
 | `sq_pstar_le` | `GFNBounds.Doubling.FixedPoints` |
@@ -7903,6 +8789,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `sub_mean_mem_kerPi` | `GFNBounds.Doubling.Unsolvable` |
 | `sub_one_le_mul_log` | `GFNBounds.Balance.Lojasiewicz` |
 | `sub_piL2_eq_tsum` | `GFNBounds.Doubling.OperatorFiniteSum` |
+| `sum_Ico_rpow_le` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `sum_Ico_rpow_sub_integral_le` | `GFNBounds.Doubling.Exponent` |
 | `sum_Jhigh_ge` | `GFNBounds.Doubling.HarmonicWindow` |
 | `sum_Jhigh_half` | `GFNBounds.Doubling.HarmonicWindow` |
@@ -7917,6 +8804,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `sum_edgeFlow_out` | `GFNBounds.Graph.Universality` |
 | `sum_edgeInflow_perturbedFlow` | `GFNBounds.Graph.FrozenUnstable` |
 | `sum_edgeInflow_pos` | `GFNBounds.Graph.FrozenUnstable` |
+| `sum_edgeSetU` | `GFNBounds.Balance.C3Wrappers` |
+| `sum_edgeSet_eq` | `GFNBounds.Balance.C3Wrappers` |
 | `sum_eps_dirac` | `GFNBounds.Doubling.PerCutIdentity` |
 | `sum_extendCVec` | `GFNBounds.Doubling.TruncationStat` |
 | `sum_fin_ite_two` | `GFNBounds.Graph.CycleDivergence` |
@@ -7929,7 +8818,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `sum_kern` | `GFNBounds.Doubling.TruncationStat` |
 | `sum_norm_pstarL2_pow_sub_piL2` | `GFNBounds.Doubling.OperatorFiniteSum` |
 | `sum_nu_pos` | `GFNBounds.Doubling.ConstantFunctional` |
+| `sum_pathProb` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `sum_pk` | `GFNBounds.Doubling.Sojourn` |
+| `sum_qm_Phi_zero` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `sum_reversal` | `GFNBounds.Graph.Universality` |
 | `sum_rotate` | `GFNBounds.Balance.Lift` |
 | `sum_rowTail_le` | `GFNBounds.Doubling.StatExists` |
@@ -8001,6 +8892,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `tau_gt_two` | `GFNBounds.Doubling.DecayNotation` |
 | `tau_pos` | `GFNBounds.Doubling.DecayNotation` |
 | `tau_sub_one_pos` | `GFNBounds.Doubling.Expansion` |
+| `taylor_of_C3` | `GFNBounds.Balance.C3Wrappers` |
+| `taylor_upper` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `telescope_Ico` | `GFNBounds.Doubling.WindowSum` |
 | `tendsto_affine_ratio` | `GFNBounds.Graph.CycleDivergence` |
 | `tendsto_atTop_of_deriv_dominated` | `GFNBounds.Balance.LocalConvergence` |
@@ -8051,8 +8944,19 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `toStat` | `GFNBounds.Doubling.Irreducible` |
 | `topologicalClosure_defectRange` | `GFNBounds.Doubling.Unsolvable` |
 | `training_speed_full` | `GFNBounds.Balance.TrainingSpeed` |
+| `training_speed_full_Gamma3` | `GFNBounds.Balance.C3Wrappers` |
 | `training_speed_full_of_init` | `GFNBounds.Balance.TrainingSpeed` |
 | `training_speed_full_of_pos` | `GFNBounds.Balance.TrainingSpeed` |
+| `trajOf` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `trajOf_mem_descPaths` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `traj_a` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `traj_b` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `traj_c` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `traj_d` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `traj_entry` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `traj_nrm_le` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `traj_region` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
+| `trap_unit` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `truncQ` | `GFNBounds.Doubling.TruncationBhat` |
 | `truncStat` | `GFNBounds.Doubling.TruncationStat` |
 | `truncation` | `GFNBounds.Core.Universality` |
@@ -8096,11 +9000,14 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `tv_le_sqrt_residual` | `GFNBounds.Silva.Explicit` |
 | `tv_le_sqrt_residual_max` | `GFNBounds.Silva.Explicit` |
 | `tv_le_two_fmL1` | `GFNBounds.Core.StableBound` |
+| `twentyfour_c4_div_eq` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `twentyfour_le_Gamma3` | `GFNBoundsScaffold.Balance.DiscreteGlobal` |
 | `twoStateBands` | `GFNBounds.Balance.Freezing` |
 | `twoStateEdgeU` | `GFNBounds.Balance.GradientFormulas` |
 | `twoStateEdge_hasDerivAt_dbLoss` | `GFNBounds.Balance.GradientFormulas` |
 | `twoStateK` | `GFNBounds.Balance.Freezing` |
 | `twoStateK_invariant` | `GFNBounds.Balance.Freezing` |
+| `twoStateK_row` | `GFNBounds.Balance.FlowExistence` |
 | `twoStateLam` | `GFNBounds.Balance.Freezing` |
 | `twoStateLam_pos` | `GFNBounds.Balance.Freezing` |
 | `twoStateLam_sum` | `GFNBounds.Balance.WeightedL2Norm` |
@@ -8135,6 +9042,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `twoState_expansion_check` | `GFNBounds.Balance.Expansion` |
 | `twoState_expansion_linHess` | `GFNBounds.Balance.Expansion` |
 | `twoState_expansion_lossGrad` | `GFNBounds.Balance.Expansion` |
+| `twoState_flow_exists_check` | `GFNBounds.Balance.FlowExistence` |
+| `twoState_flow_exists_check_sq` | `GFNBounds.Balance.FlowExistence` |
 | `twoState_freezing` | `GFNBounds.Balance.Freezing` |
 | `twoState_funAct_eq_mean` | `GFNBounds.Balance.Freezing` |
 | `twoState_gamma0` | `GFNBounds.Balance.LocalConvergence` |
@@ -8169,22 +9078,28 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `twoState_rho_freezing` | `GFNBounds.Balance.WeightedL2Norm` |
 | `twoState_step` | `GFNBounds.Balance.WeightedL2` |
 | `twoState_uMin` | `GFNBounds.Balance.BoundaryBlowup` |
+| `twoState_uniqueInvariant` | `GFNBounds.Balance.FlowExistence` |
 | `two_add_sigmaBar_eq` | `GFNBounds.Graph.CycleExample` |
 | `two_add_sigmaBar_pos` | `GFNBounds.Graph.Morozov` |
 | `two_eps_div_le_a` | `GFNBounds.Balance.Expansion` |
+| `two_foot` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `two_gam_eq` | `GFNBounds.Doubling.Escape` |
 | `two_log_two_gt_one` | `GFNBounds.Doubling.Cramer` |
 | `two_rpow_eq` | `GFNBounds.Doubling.Cramer` |
 | `two_rpow_gt_add_one` | `GFNBounds.Doubling.Cramer` |
 | `two_rpow_neg_alph` | `GFNBounds.Doubling.SharpRate` |
+| `two_rpow_p_add` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `two_rpow_pos` | `GFNBounds.Doubling.Cramer` |
 | `two_step` | `GFNBounds.Doubling.Sojourn` |
+| `uFloor` | `GFNBounds.Balance.FlowExistence` |
+| `uFloor_logSq_eq_uMin` | `GFNBounds.Balance.FlowExistence` |
 | `uInfl` | `GFNBounds.Graph.CycleExample` |
 | `uInfl_pos` | `GFNBounds.Graph.CycleExample` |
 | `uMin` | `GFNBounds.Balance.BoundaryBlowup` |
 | `uMin_pos` | `GFNBounds.Balance.BoundaryBlowup` |
 | `uavg_of_avg` | `GFNBounds.Doubling.DecayNotation` |
 | `uavg_of_cutBal` | `GFNBounds.Doubling.DecayNotation` |
+| `ufoot` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `unif` | `GFNBounds.Silva.Basic` |
 | `unitEdge` | `GFNBounds.Graph.CycleDivergence` |
 | `unitEdge_eq_zero_of_ne` | `GFNBounds.Graph.CycleDivergence` |
@@ -8243,6 +9158,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `weaklyUniversal_Lp` | `GFNBounds.Core.UniversalityLp` |
 | `weaklyUniversal_of_kernel` | `GFNBounds.Core.Kernel` |
 | `weaklyUniversal_of_massPreserving` | `GFNBounds.Core.Flow` |
+| `weightDev` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `weightDev_eq_sum_paths` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `weightDev_le_c3` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `weightDev_le_of_level` | `GFNBoundsScaffold.Doubling.WeightFull` |
+| `weightDev_le_prodW` | `GFNBoundsScaffold.Doubling.WeightFull` |
 | `weight_bound` | `GFNBounds.Doubling.Weight` |
 | `weight_step` | `GFNBounds.Doubling.Weight` |
 | `window` | `GFNBounds.Doubling.Setting` |
@@ -8255,13 +9175,16 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 | `window_lt` | `GFNBounds.Doubling.Setting` |
 | `window_nonempty` | `GFNBounds.Doubling.DescentLaw` |
 | `window_succ_sum` | `GFNBounds.Doubling.StatExists` |
+| `window_sum_second` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `window_swap` | `GFNBounds.Doubling.Summable` |
 | `window_swap_shift` | `GFNBounds.Doubling.PhaseEmpty` |
 | `withDensity_bindDensity` | `GFNBounds.Core.Kernel` |
 | `wklfmLoss` | `GFNBounds.Core.ILBound` |
 | `wklfmLoss_decomposition` | `GFNBounds.Core.ILBound` |
 | `wm` | `GFNBounds.Doubling.DecayNotation` |
+| `wm_foot_expansion` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `wm_ge_shift` | `GFNBounds.Doubling.Escape` |
+| `wm_le_foot` | `GFNBoundsScaffold.Doubling.ExpansionSecond` |
 | `wm_nonneg` | `GFNBounds.Doubling.DecayNotation` |
 | `wm_pos` | `GFNBounds.Doubling.DecayNotation` |
 | `wsup_pos` | `GFNBounds.Balance.LocalConvergence` |

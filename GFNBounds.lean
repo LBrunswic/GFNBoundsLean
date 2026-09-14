@@ -108,4 +108,6 @@ import GFNBounds.Doubling.TruncationBhat
 import GFNBounds.Doubling.MainPackaging
 import GFNBounds.Graph.FrozenUnstableDB
 import GFNBounds.Balance.GlobalConvergence
+import GFNBounds.Balance.FlowExistence
+import GFNBounds.Balance.C3Wrappers
 import GFNBounds.Audit

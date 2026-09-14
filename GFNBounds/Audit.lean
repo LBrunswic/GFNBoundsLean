@@ -74,6 +74,7 @@ import GFNBounds.Balance.TrainingSpeedAssembled
 import GFNBounds.Graph.CycleRemarks
 import GFNBounds.Core.FamilyUniversality
 import GFNBounds.Graph.MorozovDB
+import GFNBounds.Core.UniversalityBody
 
 /-!
 # Axiom audit
@@ -820,3 +821,15 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Graph.arEps0_pos
 #print axioms GFNBounds.Graph.ar_local_convergence_DB_witness
 #print axioms GFNBounds.Graph.tri_leveled_mixing_check
+
+-- `theo:universality_L2_body`, the EGF theorem with Stern's bound as a named hypothesis — GFNBounds/Core/UniversalityBody.lean
+#print axioms GFNBounds.Core.EGF.universality_L2_body
+#print axioms GFNBounds.Core.EGF.universality_L2_body_display
+#print axioms GFNBounds.Core.EGF.tendsto_residuals_L2_body
+#print axioms GFNBounds.Core.EGF.weaklyUniversalAt_L2_body
+#print axioms GFNBounds.Core.EGF.universality_L2_body_of_full
+#print axioms GFNBounds.Core.EGF.universality_L2_body_of_stern
+#print axioms GFNBounds.Core.EGF.sternBound_of_rnDeriv_le
+#print axioms GFNBounds.Core.EGF.IsEGFPolicy.isBoundedDensityAction
+#print axioms GFNBounds.Core.EGF.IsEGFPolicy.one_le_sum_stern
+#print axioms GFNBounds.Core.EGF.universality_L2_body_coin

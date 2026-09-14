@@ -1268,11 +1268,32 @@
         144
       ],
       "block_sha256": "af17ae1015eb5415187464e028d9f6c1379dc200dd217c5184c11acfac356303",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "D",
-      "scope_notes": "Needs manifolds, a volume form, EGF pushforwards by diffeomorphisms and the manifold L^p change-of-variables bound of Stern 2010 Thm 1 -- an external theorem the library would have to assume. Deferred behind theo:universality_L2_full."
+      "lean_files": [
+        "GFNBounds/Core/UniversalityBody.lean",
+        "GFNBounds/Core/Kernel.lean",
+        "GFNBounds/Core/Universality.lean",
+        "GFNBounds/Core/UniversalityKernelBound.lean"
+      ],
+      "decls": [
+        "GFNBounds.Core.EGF.universality_L2_body",
+        "GFNBounds.Core.EGF.universality_L2_body_of_full",
+        "GFNBounds.Core.EGF.universality_L2_body_of_stern",
+        "GFNBounds.Core.EGF.universality_L2_body_display",
+        "GFNBounds.Core.EGF.tendsto_residuals_L2_body",
+        "GFNBounds.Core.EGF.weaklyUniversalAt_L2_body",
+        "GFNBounds.Core.EGF.IsEGFPolicy",
+        "GFNBounds.Core.EGF.egfKernel",
+        "GFNBounds.Core.EGF.SternBound",
+        "GFNBounds.Core.EGF.sternBound_of_rnDeriv_le",
+        "GFNBounds.Core.EGF.IsEGFPolicy.eLpNorm_bindDensity_le",
+        "GFNBounds.Core.EGF.IsEGFPolicy.norm_densityActionCLM_le",
+        "GFNBounds.Core.EGF.IsEGFPolicy.isBoundedDensityAction",
+        "GFNBounds.Core.EGF.IsEGFPolicy.one_le_sum_stern",
+        "GFNBounds.Core.EGF.universality_L2_body_coin"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-14 (Phase 2A, GFNBounds/Core/UniversalityBody.lean, audited READY; ruling (vii)): CLOSED IN A. Read at p = 2 (ruling (vii); the text says 'same hypotheses', its p in (2, inf] readings are meaningful and not stated here, p < 2 readings can fail). The printed conclusion (infimum 0) is certified with NO external input by universality_L2_body_of_full, from theo:universality_L2_full's hypotheses at p = 2 -- manifold, volume form and EGF unused; bucket A rests on this. The proof's route is certified by universality_L2_body: EGF pi* = sum_i w_i delta_{Phi_i} with measurable maps (source's diffeomorphism and topological-ergodicity conditions dropped, disclosed); Stern's change of variables (Theorem 3 / Corollary 4 at p = q = 2; the paper cites Theorem 1, the function bound) enters as the named hypothesis SternBound with a finite constant -- Corollary 4's own bounded-Jacobian hypothesis -- proved in measure form from d(Phi#nu)/dnu <= c^2 (sternBound_of_rnDeriv_le); the manifold identity d(Phi#vol)/dvol = |J Phi^{-1}| is not formalized. Display 2 taken with the weight inside the push, same constant. Inhabited on Bool with a two-map coin EGF. PAPER FINDINGS (to /writer): the added hypotheses are redundant; 1 + sum c_i >= 2 >= 1 + ||P*|| (never an improvement); 'L^2 strengthening' is a restriction; p never stated; Stern theorem number; 'finiteness of the operator norm is a genuine hypothesis' (universality.tex:6-8, 29-31, proofs.tex:24) contradicts lem:adjoint(3) under invariance. Supersedes the D note below. || Needs manifolds, a volume form, EGF pushforwards by diffeomorphisms and the manifold L^p change-of-variables bound of Stern 2010 Thm 1 -- an external theorem the library would have to assume. Deferred behind theo:universality_L2_full."
     },
     {
       "label": "theo:RL_CV_bound_full",

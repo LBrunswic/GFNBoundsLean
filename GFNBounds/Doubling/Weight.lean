@@ -4,7 +4,7 @@ import GFNBounds.Doubling.DescentLaw
 /-!
 # `lem:doubling_weight`: the weight of a descent deviates from `1` by `O(1/ℓ)` in mean
 
-**`lem:doubling_weight`** — `app_doubling.tex:1343–1383`.
+**`lem:doubling_weight`** — `app_doubling.tex:1357–1397`.
 
 > In the setting of `def:doubling_setting` and `def:doubling_decay_notation`, with the constant
 > `c₄` of `lem:doubling_descent` and `γ`, `c₅`, `ℓ₂` of `lem:doubling_escape`, put `c₃ := 8c₅c₄`
@@ -17,8 +17,8 @@ import GFNBounds.Doubling.DescentLaw
 ## The modelling decision
 
 **No chain, and no absolute-deviation transform either.** `E(|Z_ℓ − 1|)` is not a recursion in the
-state — `|R₀(y)·Z' − 1|` does not decompose — so the paper's own statement is not the one to
-formalize. What `theo:doubling_sharp` consumes is its *consequence*, and that one **is** a
+state — `|R₀(y)·Z' − 1|` does not decompose — so the paper's own statement is not a recursion as it
+stands (`WeightFull.lean` makes it one by carrying the running product). What `theo:doubling_sharp` consumes is its *consequence*, and that one **is** a
 recursion: for a test function `g` bounded by `B`,
 
   `|descW ℓ g y − descP ℓ g y| = |E((Z_ℓ − 1) g(Y_{N_ℓ}) ∣ Y_0 = y)| ≤ B · E|Z_ℓ − 1|`,
@@ -49,8 +49,9 @@ and `ℓ₃ = max(1, ⌈16cτ⌉, ⌈96cτ/γ²⌉)`, the paper's four requireme
 
 ## SCOPE (disclosed)
 
-* **The paper's `eq:doubling_weight` is not stated**, because `Z_ℓ` is a random variable and this
-  library builds no chain. What is proved is the inequality on transforms displayed above, at
+* **The paper's `eq:doubling_weight` is not stated in this file**; it is stated and proved at the
+  paper's constants in `WeightFull.lean` (2026-09-14), on the finite law of the stopped trajectory.
+  This file predates it and builds no chain. What is proved is the inequality on transforms displayed above, at
   every bounded `g` and every state — which is what `Sharp.lean` and `SharpRate.lean` take as
   their hypothesis `hweight`, and the only use `lem:doubling_weight` has in the appendix.
 * The bound is proved at **every** starting state `y`, not only `y ≥ 2ℓ`: below `2ℓ` both
@@ -230,7 +231,7 @@ noncomputable def ell3 (D : Decay) : ℕ :=
 
 theorem one_le_ell3 : 1 ≤ D.ell3 := le_max_left _ _
 
-/-- **`c₃`, made effective.** `c₃ := 32c₅c₄/4 = 32c₅cτ = 192cτ/γ²`. -/
+/-- **`c₃`, made effective.** `c₃ := 2c₅c₄ = 32c₅cτ = 192cτ/γ²`. -/
 noncomputable def c3 (D : Decay) : ℝ := 32 * D.c5 * D.c * D.tau
 
 theorem c5_pos : 0 < D.c5 := by

@@ -65,6 +65,8 @@ import GFNBounds.Graph.FrozenUnstableDB
 import GFNBounds.Balance.GlobalConvergence
 import GFNBounds.Balance.FlowExistence
 import GFNBounds.Balance.C3Wrappers
+import GFNBounds.Doubling.ExpansionSecond
+import GFNBounds.Doubling.WeightFull
 
 /-!
 # Axiom audit
@@ -356,7 +358,7 @@ namespace GFNBounds.Doubling
 
 -- ── the 2026-09-07 second workflow round ───────────────────────────────────────
 
--- `lem:doubling_weight`, the last sorry — app_doubling.tex:1343
+-- `lem:doubling_weight`, Weight.lean's consequence form — app_doubling.tex:1357
 #print axioms Decay.c3
 #print axioms Decay.ell3
 #print axioms Decay.weight_bound
@@ -642,3 +644,33 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.training_speed_full_Gamma3
 #print axioms GFNBounds.Balance.coer_edgeU
 #print axioms GFNBounds.Balance.local_convergence_full_DB_witness
+
+-- `lem:doubling_expansion` (eq:doubling_Rexp) and `rem:doubling_parity` — GFNBounds/Doubling/ExpansionSecond.lean
+#print axioms GFNBounds.Doubling.Decay.Rexp
+#print axioms GFNBounds.Doubling.Decay.Rexp_isBigO
+#print axioms GFNBounds.Doubling.Decay.cR_congr
+#print axioms GFNBounds.Doubling.Decay.parity_thresholds_congr
+#print axioms GFNBounds.Doubling.Decay.wm_le_foot
+#print axioms GFNBounds.Doubling.Decay.wm_foot_expansion
+#print axioms GFNBounds.Doubling.Decay.R0_gt_one_of_even
+#print axioms GFNBounds.Doubling.Decay.R0_lt_one_of_odd
+#print axioms GFNBounds.Doubling.Decay.Ralpha_zero_gt_one_of_even
+#print axioms GFNBounds.Doubling.Decay.Ralpha_zero_lt_one_of_odd
+#print axioms GFNBounds.Doubling.Decay.not_isSupersolution_Phi_zero
+#print axioms GFNBounds.Doubling.Decay.not_isSubsolution_Phi_zero
+#print axioms GFNBounds.Doubling.Decay.isSupersolution_two_pow
+#print axioms GFNBounds.Doubling.Decay.isSubsolution_inv_factorial_sq
+#print axioms GFNBounds.Doubling.Decay.nonempty_decay
+
+-- `lem:doubling_weight` in the paper's form — GFNBounds/Doubling/WeightFull.lean
+#print axioms GFNBounds.Doubling.Decay.doubling_weight
+#print axioms GFNBounds.Doubling.Decay.doubling_weight_paths
+#print axioms GFNBounds.Doubling.Decay.doubling_weight_of_ceils
+#print axioms GFNBounds.Doubling.Decay.doubling_weight_transform
+#print axioms GFNBounds.Doubling.Decay.weightDev_eq_sum_paths
+#print axioms GFNBounds.Doubling.Decay.descJoint_eq_sum_paths
+#print axioms GFNBounds.Doubling.Decay.sum_pathProb
+#print axioms GFNBounds.Doubling.Decay.mem_descPaths_iff
+#print axioms GFNBounds.Doubling.Decay.trajOf_mem_descPaths
+#print axioms GFNBounds.Doubling.Decay.exists_descentPath_of_mem
+#print axioms GFNBounds.Doubling.Decay.weightDev_le_c3

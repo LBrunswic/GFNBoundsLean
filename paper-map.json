@@ -469,7 +469,8 @@
       ],
       "block_sha256": "7387301b3345f4927b0ec473806a2b03b944781b8c50b5150fff84df435e7b41",
       "lean_files": [
-        "GFNBounds/Doubling/Expansion.lean"
+        "GFNBounds/Doubling/Expansion.lean",
+        "GFNBounds/Doubling/ExpansionSecond.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Decay.A0",
@@ -479,11 +480,25 @@
         "GFNBounds.Doubling.Decay.Gamma_pos",
         "GFNBounds.Doubling.Decay.Gamma_lt_one",
         "GFNBounds.Doubling.Decay.A_zero_pos",
-        "GFNBounds.Doubling.Decay.A_one_neg"
+        "GFNBounds.Doubling.Decay.A_one_neg",
+        "GFNBounds.Doubling.Decay.Ad",
+        "GFNBounds.Doubling.Decay.Ad_eq",
+        "GFNBounds.Doubling.Decay.cR",
+        "GFNBounds.Doubling.Decay.Rexp",
+        "GFNBounds.Doubling.Decay.Rexp_isBigO",
+        "GFNBounds.Doubling.Decay.cR_congr",
+        "GFNBounds.Doubling.Decay.p_congr",
+        "GFNBounds.Doubling.Decay.coeff_identity",
+        "GFNBounds.Doubling.Decay.T_expansion",
+        "GFNBounds.Doubling.Decay.Ralpha_eq",
+        "GFNBounds.Doubling.Decay.pf_eq",
+        "GFNBounds.Doubling.Decay.abs_ePf_le",
+        "GFNBounds.Doubling.window_sum_second",
+        "GFNBounds.Doubling.trap_unit"
       ],
-      "status": "partial",
-      "bucket": "B",
-      "scope_notes": "",
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-14 (Phase 2B, GFNBounds/Doubling/ExpansionSecond.lean, audited READY): CLOSED. A_1's closed form and eq:doubling_signs in Expansion.lean. eq:doubling_Rexp is proved effectively: |R_alpha(m) - 1 - (A_{delta(m)} + Gamma alpha)/m| <= 16 tau (p+3)^2 (1+|alpha|)^2 / m^2 at every m >= 1 with 2|alpha| <= m, a range containing the paper's m > max(d, 2|alpha|); the O(m^-2) form is Rexp_isBigO, and cR_congr shows the constant depends on c and alpha alone. Step 2's route differs: Mathlib's trapezoidal rule on unit intervals replaces the complete-monotonicity Euler-Maclaurin remainder; the paper's eq:doubling_em, a proof step and not a statement clause, is not certified. A_{delta(m)} modelled as 'if delta(m) = 0 then A_0 else A_1'. Numerically (mpmath) the constant is crude (err m^2 <= 0.0024 cR).",
       "source": "app_doubling.tex"
     },
     {
@@ -494,16 +509,31 @@
       ],
       "block_sha256": "a3128a86ff568fe196c4e2ba271eb6be4bbc0c8c66cf92112cd77559c159230d",
       "lean_files": [
-        "GFNBounds/Doubling/Expansion.lean"
+        "GFNBounds/Doubling/Expansion.lean",
+        "GFNBounds/Doubling/ExpansionSecond.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Decay.A_gap",
         "GFNBounds.Doubling.Decay.A_zero_pos",
-        "GFNBounds.Doubling.Decay.A_one_neg"
+        "GFNBounds.Doubling.Decay.A_one_neg",
+        "GFNBounds.Doubling.Decay.wm_le_foot",
+        "GFNBounds.Doubling.Decay.wm_foot_expansion",
+        "GFNBounds.Doubling.Decay.R0_eq_Ralpha_zero",
+        "GFNBounds.Doubling.Decay.Ralpha_zero_gt_one_of_even",
+        "GFNBounds.Doubling.Decay.Ralpha_zero_lt_one_of_odd",
+        "GFNBounds.Doubling.Decay.R0_gt_one_of_even",
+        "GFNBounds.Doubling.Decay.R0_lt_one_of_odd",
+        "GFNBounds.Doubling.Decay.parity_thresholds_congr",
+        "GFNBounds.Doubling.Decay.IsSupersolution",
+        "GFNBounds.Doubling.Decay.IsSubsolution",
+        "GFNBounds.Doubling.Decay.not_isSupersolution_Phi_zero",
+        "GFNBounds.Doubling.Decay.not_isSubsolution_Phi_zero",
+        "GFNBounds.Doubling.Decay.isSupersolution_two_pow",
+        "GFNBounds.Doubling.Decay.isSubsolution_inv_factorial_sq"
       ],
-      "status": "partial",
-      "bucket": "B",
-      "scope_notes": "2026-09-14 (Phase 1 re-read against commit 3194054): the continuum sentence is heuristic; super/subsolutions defined; 'R0 > 1 at large even m, < 1 at large odd m' derived from eq:doubling_Rexp at alpha = 0. Proved: A_gap, A_zero_pos, A_one_neg; not proved: eq:doubling_Rexp, hence the parity of R0. || ",
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-14 (Phase 2B, GFNBounds/Doubling/ExpansionSecond.lean, audited READY): CLOSED. The gap (A_0 - A_1)/m = c tau/m (A_gap); the heaviest summand is at ceil(m/2) and equals 2 c tau/m within 2 tau (p+3)/m^2; R_0(m) > 1 at every even m > 16 tau (p+3)^2/A_0 and R_0(m) < 1 at every odd m > 16 tau (p+3)^2/(-A_1), thresholds depending on c alone. Super/subsolution are predicates on N -> R with 'for every large enough m' read as exists M forall m >= M; the word 'positive' is omitted: Phi_0 > 0 on j >= 1 makes the negative claims equivalent to the paper's, while positivity over all of N would have made them vacuous (Phi_0(0) = 0). Both predicates inhabited by positive sequences. The continuum sentence is heuristic in the paper and not a target. Supersedes 'not proved: eq:doubling_Rexp' below. || 2026-09-14 (Phase 1 re-read against commit 3194054): the continuum sentence is heuristic; super/subsolutions defined; 'R0 > 1 at large even m, < 1 at large odd m' derived from eq:doubling_Rexp at alpha = 0. Proved: A_gap, A_zero_pos, A_one_neg; not proved: eq:doubling_Rexp, hence the parity of R0. || ",
       "source": "app_doubling.tex"
     },
     {
@@ -702,16 +732,33 @@
       ],
       "block_sha256": "aa34bc0d4f7a368232ed6eca51d3eee5f0b1caf0c6cb450358ffc1d99d6874f8",
       "lean_files": [
-        "GFNBounds/Doubling/Weight.lean"
+        "GFNBounds/Doubling/Weight.lean",
+        "GFNBounds/Doubling/WeightFull.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.Decay.weight_bound",
         "GFNBounds.Doubling.Decay.c3",
-        "GFNBounds.Doubling.Decay.ell3"
+        "GFNBounds.Doubling.Decay.ell3",
+        "GFNBounds.Doubling.Decay.doubling_weight",
+        "GFNBounds.Doubling.Decay.doubling_weight_paths",
+        "GFNBounds.Doubling.Decay.doubling_weight_of_ceils",
+        "GFNBounds.Doubling.Decay.doubling_weight_transform",
+        "GFNBounds.Doubling.Decay.weightDev",
+        "GFNBounds.Doubling.Decay.descJoint",
+        "GFNBounds.Doubling.Decay.descPaths",
+        "GFNBounds.Doubling.Decay.pathProb",
+        "GFNBounds.Doubling.Decay.pathZ",
+        "GFNBounds.Doubling.Decay.weightDev_eq_sum_paths",
+        "GFNBounds.Doubling.Decay.sum_pathProb",
+        "GFNBounds.Doubling.Decay.mem_descPaths_iff",
+        "GFNBounds.Doubling.Decay.trajOf_mem_descPaths",
+        "GFNBounds.Doubling.Decay.exists_descentPath_of_mem",
+        "GFNBounds.Doubling.Decay.c3Paper",
+        "GFNBounds.Doubling.Decay.ell3Paper"
       ],
-      "status": "partial",
-      "bucket": "B",
-      "scope_notes": "",
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-14 (Phase 2B, GFNBounds/Doubling/WeightFull.lean, audited READY): CLOSED. eq:doubling_weight is stated in the paper's form at the paper's constants, c_3 = 8 c_5 c_4 and ell_3 = max(ell_2, ceil(2c_4), ceil(24 c_4/gamma^2), ceil(4 c_4 c_5)), over the library's c_4 = 16 c tau, gamma = sqrt(tau)/(2(sqrt(tau)+1)), c_5 = 6/gamma^2 and ell_2 = max(d+1, ceil(16 c tau)); the bound holds for every ell_2 (doubling_weight_of_ceils). E(.|Y_0 = m) is the expectation under the finite law of the stopped trajectory (trajectories from m stopped at the first entry below 2 ell, mass prod w_y(j)/R_0(y), positive, summing to 1, in bijection with IsDescentPath/exitTime); no probability space is constructed, the horizon being bounded (ruling R17, disclosed). m >= 2 ell carried, unused. c_4 certified at the library's value 16 c tau (the paper asserts only existence). The paper's ceil(24c_4/gamma^2) and ceil(4c_4c_5) coincide (twentyfour_c4_div_eq). A sharper c_3' = 2 c_5 c_4 is also proved (weightDev_le_c3). Weight.lean's weight_bound is the consequence form theo:doubling_sharp uses.",
       "source": "app_doubling.tex"
     },
     {

@@ -11922,6 +11922,20 @@
    "doc":
    "`j` lies in the window of `m` with `1 ≤ m ≤ N` exactly when `j + 1 ≤ m ≤ min(N, 2j)` and\n`1 ≤ j ≤ N`: the index swap behind `window_double_sum`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.window_sum_second":
+  {"uses_value":
+   ["GFNBounds.Doubling.telescope_Ico", "GFNBounds.Doubling.trap_unit"],
+   "uses_type": [],
+   "uses_external": 244,
+   "type":
+   "∀ {s : ℝ},\n  1 < s →\n    ∀ {a b : ℕ},\n      1 ≤ a →\n        a ≤ b →\n          |∑ j ∈ Finset.Ico a b, ↑j ^ (-s) - (↑a ^ (1 - s) - ↑b ^ (1 - s)) / (s - 1) - (↑a ^ (-s) - ↑b ^ (-s)) / 2| ≤\n            s * (s + 1) / 12 * ∑ j ∈ Finset.Ico a b, ↑j ^ (-s - 2)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 169,
+   "kind": "theorem",
+   "doc":
+   "**`eq:doubling_em`, effectively.** For `s > 1` and integers `1 ≤ a ≤ b`,\n`Σ_{j=a}^{b−1} j^{−s} = (a^{1−s} − b^{1−s})/(s−1) + (a^{−s} − b^{−s})/2 + E` with\n`|E| ≤ s(s+1)/12 · Σ_{j=a}^{b−1} j^{−s−2}`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.window_succ_sum":
   {"uses_value": ["GFNBounds.Doubling.window"],
    "uses_type": ["GFNBounds.Doubling.window"],
@@ -12009,7 +12023,7 @@
    "∀ {r beta B SW SP SQ : ℝ},\n  0 ≤ B →\n    0 ≤ r → |r - 1| ≤ beta → |SW - SP| ≤ B * (SQ - 1) → |SP| ≤ B → 1 ≤ SQ → |r * SW - SP| ≤ B * ((1 + beta) * SQ - 1)",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 90,
+   "line": 91,
    "kind": "theorem",
    "doc":
    "**The induction step of `lem:doubling_weight`, as arithmetic.** With `r` the total window\nweight, `β` a bound for `|r − 1|`, `SW`, `SP` the one-step averages of the two transforms and\n`SQ ≥ 1` the one-step average of the product transform, the step of the recursion propagates the\nbound `B·(SQ − 1)` to `B·((1+β)·SQ − 1)`.\n\nThe margin is exactly `B·(SQ − 1)·(1 + β − r) ≥ 0`. ",
@@ -12392,6 +12406,19 @@
    "kind": "def",
    "doc":
    "The invariant probability `λ^K` of the truncation at an even cap `K ≥ d`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.trap_unit":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 366,
+   "type":
+   "∀ {s t : ℝ},\n  0 < s →\n    s ≠ 1 →\n      0 < t →\n        |(t ^ (-s) + (t + 1) ^ (-s)) / 2 - (t ^ (1 - s) - (t + 1) ^ (1 - s)) / (s - 1)| ≤\n          s * (s + 1) * t ^ (-s - 2) / 12",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 109,
+   "kind": "theorem",
+   "doc":
+   "**One trapezoid.** For `s > 0`, `s ≠ 1`, `t > 0`, the trapezoidal rule on `[t, t+1]` for\n`x ↦ x^{−s}`, whose integral is `(t^{1−s} − (t+1)^{1−s})/(s−1)`, errs by at most\n`s(s+1) t^{−s−2}/12`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.tendsto_windowV":
   {"uses_value":
@@ -13163,6 +13190,19 @@
    "doc":
    "`Σ_{j=a}^{b−1} j^q` against `∫_a^b x^q dx`, within `|a^q − b^q|`, for every real `q`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.sum_Ico_rpow_le":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 157,
+   "type":
+   "∀ {q : ℝ}, 0 ≤ q → ∀ {a b : ℕ}, 1 ≤ a → a ≤ b → ∑ j ∈ Finset.Ico a b, ↑j ^ (-q) ≤ (↑b - ↑a) * ↑a ^ (-q)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 213,
+   "kind": "theorem",
+   "doc":
+   "Every term of the window lies below its first:\n`Σ_{j=a}^{b−1} j^{−q} ≤ (b−a) a^{−q}` for `q ≥ 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.stepCost_zero":
   {"uses_value": ["GFNBounds.Doubling.stepCost"],
    "uses_type": ["GFNBounds.Doubling.stepCost"],
@@ -13757,6 +13797,30 @@
    "line": 43,
    "kind": "theorem",
    "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.rpow_neg_le_quad":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 214,
+   "type":
+   "∀ {q y : ℝ}, 1 ≤ q → 0 ≤ y → (1 + y) ^ (-q) ≤ 1 - q * y + q ^ 2 * y ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 241,
+   "kind": "theorem",
+   "doc":
+   "`(1+y)^{−q} ≤ 1 − qy + q²y²` for `q ≥ 1`, `y ≥ 0`: Bernoulli gives `(1+y)^q ≥ 1 + qy`, and\n`(1+z)⁻¹ ≤ 1 − z + z²` for `z ≥ 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.rpow_neg_le_one":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 110,
+   "type": "∀ {q y : ℝ}, 0 ≤ q → 0 ≤ y → (1 + y) ^ (-q) ≤ 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 237,
+   "kind": "theorem",
+   "doc": "`(1+y)^{−q} ≤ 1` for `q, y ≥ 0`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.rpow_ge_tangent":
   {"uses_value": [],
@@ -15693,6 +15757,17 @@
    "kind": "theorem",
    "doc":
    "**The telescoping identity, on the left.** `(Id − P⋆) S_N = Id − P⋆^N`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.one_sub_le_rpow_neg":
+  {"uses_value": ["GFNBounds.Doubling.rpow_ge_tangent"],
+   "uses_type": [],
+   "uses_external": 130,
+   "type": "∀ {q y : ℝ}, 0 ≤ q → 0 ≤ y → 1 - q * y ≤ (1 + y) ^ (-q)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 231,
+   "kind": "theorem",
+   "doc": "`1 − qy ≤ (1+y)^{−q}` for `q, y ≥ 0`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.one_sub_eps_le_pstar_dirac_pred":
   {"uses_value":
@@ -19058,7 +19133,7 @@
    "type": "∀ {x : ℝ}, 0 ≤ x → x ≤ 1 → Real.exp x - 1 ≤ 2 * x",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 82,
+   "line": 83,
    "kind": "theorem",
    "doc":
    "**`e^x − 1 ≤ 2x` on `[0,1]`**, the paper's last inequality in the proof of\n`lem:doubling_weight`. ",
@@ -30514,6 +30589,35 @@
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.wm_le_foot":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c_pos",
+    "GFNBounds.Doubling.Decay.eps",
+    "GFNBounds.Doubling.Decay.one_le_foot",
+    "GFNBounds.Doubling.Decay.one_sub_eps_pos",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.p_pos",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.Decay.qm_eq",
+    "GFNBounds.Doubling.Decay.wm",
+    "GFNBounds.Doubling.mem_window",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.wm",
+    "GFNBounds.Doubling.window"],
+   "uses_external": 224,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m j : ℕ}, 1 ≤ m → j ∈ GFNBounds.Doubling.window m → D.wm m j ≤ D.wm m ((m + 1) / 2)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1027,
+   "kind": "theorem",
+   "doc":
+   "The summands `w_m(j) = q_m(j)Φ₀(j)/Φ₀(m)` of `eq:doubling_R` at `α = 0` decrease along the\nwindow, so the heaviest is the first, at `j = ⌈m/2⌉`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.wm_ge_shift":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -30542,6 +30646,50 @@
    "kind": "theorem",
    "doc":
    "`w_y(j) ≥ c y^{p}(j+1)^{−p−1}`, the paper's first inequality of Step 1. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.wm_foot_expansion":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.K_sub_le",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c_lt_one",
+    "GFNBounds.Doubling.Decay.c_pos",
+    "GFNBounds.Doubling.Decay.delta",
+    "GFNBounds.Doubling.Decay.delta_cases",
+    "GFNBounds.Doubling.Decay.eps",
+    "GFNBounds.Doubling.Decay.eps_pos",
+    "GFNBounds.Doubling.Decay.foot_le",
+    "GFNBounds.Doubling.Decay.le_foot",
+    "GFNBounds.Doubling.Decay.mpow_foot",
+    "GFNBounds.Doubling.Decay.one_le_foot",
+    "GFNBounds.Doubling.Decay.one_sub_eps_pos",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.p_gt_one",
+    "GFNBounds.Doubling.Decay.p_pos",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.Decay.qm_eq",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.tau_gt_two",
+    "GFNBounds.Doubling.Decay.tau_pos",
+    "GFNBounds.Doubling.Decay.ufoot",
+    "GFNBounds.Doubling.Decay.wm",
+    "GFNBounds.Doubling.one_sub_le_rpow_neg",
+    "GFNBounds.Doubling.rpow_neg_le_one"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.wm"],
+   "uses_external": 406,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m : ℕ},\n  1 ≤ m → |D.wm m ((m + 1) / 2) - 2 * D.c * D.tau / ↑m| ≤ 2 * D.tau * (D.p + 3) / ↑m ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1047,
+   "kind": "theorem",
+   "doc":
+   "**`rem:doubling_parity`, the heaviest summand.** `|w_m(⌈m/2⌉) − 2cτ/m| ≤ 2τ(p+3)/m²` for\nevery `m ≥ 1`; the parity gap `(A₀ − A₁)/m = cτ/m` (`A_gap`) is half of its leading term. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.wm":
   {"uses_value":
@@ -30652,10 +30800,134 @@
    "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  D.ell3 ≤ ℓ →\n    ∀ {B : ℝ} {g : ℕ → ℝ}, (∀ (j : ℕ), |g j| ≤ B) → ∀ (y : ℕ), |D.descW ℓ g y - D.descP ℓ g y| ≤ B * D.c3 / ↑ℓ",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 244,
+   "line": 245,
    "kind": "theorem",
    "doc":
    "**`lem:doubling_weight`**, with both constants explicit: at every level `ℓ ≥ ℓ₃`, every\nfunction `g` bounded by `B` and every state `y`,\n\n  `|descW ℓ g y − descP ℓ g y| ≤ B c₃/ℓ`,   `c₃ = 32c₅cτ`, `ℓ₃ = max(1, ⌈16cτ⌉, ⌈96cτ/γ²⌉)`.\n\nThis is `eq:doubling_weight` in the form `theo:doubling_sharp` consumes. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.weightDev_le_prodW":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_absDev_le_prodW",
+    "GFNBounds.Doubling.Decay.prodW"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.prodW",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_external": 48,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  1 ≤ ℓ → ∀ {b : ℕ → ℝ}, (∀ (y : ℕ), 2 * ℓ ≤ y → |D.R0 y - 1| ≤ b y) → ∀ (m : ℕ), D.weightDev ℓ m ≤ D.prodW ℓ b m - 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 556,
+   "kind": "theorem",
+   "doc":
+   "**`E(|Z_ℓ − 1|) ≤ E(∏(1 + b(Y_n))) − 1`**, the running-pair invariant started at `w = v = 1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.weightDev_le_of_level":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.R0_sub_one_le",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c4_pos",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.c5_pos",
+    "GFNBounds.Doubling.Decay.gam",
+    "GFNBounds.Doubling.Decay.prodW",
+    "GFNBounds.Doubling.Decay.prodW_two_sided",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.weightDev",
+    "GFNBounds.Doubling.Decay.weightDev_le_prodW",
+    "GFNBounds.Doubling.exp_sub_one_le_two_mul"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.gam",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_external": 212,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  1 ≤ ℓ →\n    32 * D.c * D.tau ≤ 2 * ↑ℓ →\n      D.c4 ≤ D.gam ^ 2 * ↑ℓ / 6 → D.c5 * D.c4 / ↑ℓ ≤ 1 → ∀ (m : ℕ), D.weightDev ℓ m ≤ 2 * D.c5 * D.c4 / ↑ℓ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 564,
+   "kind": "theorem",
+   "doc":
+   "**The bound at a level, from the three requirements it consumes.** With `c₄ = 16cτ`: if\n`32cτ ≤ 2ℓ`, `c₄ ≤ γ²ℓ/6` and `c₅c₄/ℓ ≤ 1`, then `E(|Z_ℓ − 1| | Y_0 = m) ≤ 2c₅c₄/ℓ` at every\n`m`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.weightDev_le_c3":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c3",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.ctau_pos",
+    "GFNBounds.Doubling.Decay.ell3",
+    "GFNBounds.Doubling.Decay.gam",
+    "GFNBounds.Doubling.Decay.gam_pos",
+    "GFNBounds.Doubling.Decay.one_le_ell3",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.weightDev",
+    "GFNBounds.Doubling.Decay.weightDev_le_of_level"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c3",
+    "GFNBounds.Doubling.Decay.ell3",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_external": 279,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ}, D.ell3 ≤ ℓ → ∀ (m : ℕ), D.weightDev ℓ m ≤ D.c3 / ↑ℓ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 650,
+   "kind": "theorem",
+   "doc":
+   "**`lem:doubling_weight`, at the library's sharper constants**, at every state:\n`E(|Z_ℓ − 1| | Y_0 = m) ≤ c₃/ℓ` for `ℓ ≥ ℓ₃`, with `c₃ = 32c₅cτ` and\n`ℓ₃ = max(1, ⌈16cτ⌉, ⌈96cτ/γ²⌉)` of `Weight.lean`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.weightDev_eq_sum_paths":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_eq_sum_paths",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_external": 36,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (ℓ m : ℕ),\n  D.weightDev ℓ m = ∑ l ∈ GFNBounds.Doubling.Decay.descPaths ℓ m, D.pathProb l * |D.pathZ l - 1|",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 482,
+   "kind": "theorem",
+   "doc": "**`E(|Z_ℓ − 1| | Y_0 = m)` is the finite sum over trajectories.** ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.weightDev":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.descJoint"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 11,
+   "type": "GFNBounds.Doubling.Decay → ℕ → ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 477,
+   "kind": "def",
+   "doc":
+   "**`E(|Z_ℓ − 1| | Y_0 = m)`**, the left side of `eq:doubling_weight`: the joint recursion at\nthe integrand `(j, v) ↦ |v − 1|`, started with running weight `1`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.vartheta_pos":
   {"uses_value":
@@ -30937,6 +31209,17 @@
    "doc":
    "The rescaled profile `u_m := λ_m m^p` of `def:doubling_decay_notation`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.ufoot":
+  {"uses_value": ["GFNBounds.Doubling.Decay.delta"],
+   "uses_type": [],
+   "uses_external": 14,
+   "type": "ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 276,
+   "kind": "def",
+   "doc": "`u(m) := 1 + δ(m)/m = 2⌈m/2⌉/m`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.uavg_of_cutBal":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -31020,6 +31303,24 @@
    "doc":
    "**The two-step estimate.** `P(Y₂ ∈ I | Y₀ = z) ≤ 1 − γ²` for every `z ∈ I = [L, 2L)`.\nThis is the display the paper reaches by conditioning first on `Y₀,…,Y₁` and then on `Y₀`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.two_rpow_p_add":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_external": 100,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (k : ℕ), 2 ^ (-(-D.p - ↑k)) = D.tau * 2 ^ k",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 308,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.two_rpow_neg_alph":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -31067,6 +31368,40 @@
    "doc":
    "**`2γ = c(τ−√τ)/p_*`**, the identity that turns the paper's window bound into `2γ`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.two_foot":
+  {"uses_value": ["GFNBounds.Doubling.Decay.delta"],
+   "uses_type": ["GFNBounds.Doubling.Decay.delta"],
+   "uses_external": 22,
+   "type":
+   "∀ (m : ℕ), 2 * ((m + 1) / 2) = m + GFNBounds.Doubling.Decay.delta m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 265,
+   "kind": "theorem",
+   "doc": "`2⌈m/2⌉ = m + δ(m)`. ",
+   "axioms": ["propext", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.twentyfour_c4_div_eq":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.gam",
+    "GFNBounds.Doubling.Decay.gam_pos"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.gam"],
+   "uses_external": 169,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay), 24 * D.c4 / D.gam ^ 2 = 4 * D.c4 * D.c5",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 621,
+   "kind": "theorem",
+   "doc":
+   "**The paper's two requirements `⌈24c₄/γ²⌉` and `⌈4c₄c₅⌉` on `ℓ₃` are one number**:\n`24c₄/γ² = 4c₄c₅`, since `c₅ = 6/γ²`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.truncQ":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -31081,6 +31416,57 @@
    "kind": "def",
    "doc":
    "The block-ratio constant `Q = (1 − c/2)^{−m₀} + ((c/(2m₀+1))^{m₀})^{−1}` of\n`cor:doubling_truncation` Step 4, with `ε_max = c/2` the family's supremum. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.trajOf_mem_descPaths":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentPath",
+    "GFNBounds.Doubling.Decay.IsExitTraj",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.exitTime",
+    "GFNBounds.Doubling.Decay.exitTime_spec",
+    "GFNBounds.Doubling.Decay.getD_trajOf",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Decay.length_trajOf",
+    "GFNBounds.Doubling.Decay.mem_descPaths_iff",
+    "GFNBounds.Doubling.Decay.pathExit",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.Decay.trajOf",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentPath",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.exitTime",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Decay.pathExit",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.Decay.trajOf"],
+   "uses_external": 54,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ m : ℕ} {Y : ℕ → ℕ},\n  GFNBounds.Doubling.Decay.IsDescentPath ℓ Y →\n    Y 0 = m →\n      2 * ℓ ≤ m →\n        GFNBounds.Doubling.Decay.trajOf ℓ Y ∈ GFNBounds.Doubling.Decay.descPaths ℓ m ∧\n          D.pathZ (GFNBounds.Doubling.Decay.trajOf ℓ Y) =\n              ∏ n ∈ Finset.range (GFNBounds.Doubling.Decay.exitTime ℓ Y), D.R0 (Y n) ∧\n            D.pathProb (GFNBounds.Doubling.Decay.trajOf ℓ Y) =\n                ∏ n ∈ Finset.range (GFNBounds.Doubling.Decay.exitTime ℓ Y), D.kern (Y n) (Y (n + 1)) ∧\n              GFNBounds.Doubling.Decay.pathExit (GFNBounds.Doubling.Decay.trajOf ℓ Y) =\n                Y (GFNBounds.Doubling.Decay.exitTime ℓ Y)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 395,
+   "kind": "theorem",
+   "doc":
+   "**Every allowed path from `m ≥ 2ℓ` is counted, with its own `Z_ℓ`, its own exit state and the\nproduct of its transition probabilities.** `Z_ℓ = ∏_{n<N_ℓ} R₀(Y_n)` is verbatim the product\n`DescentStatement.lean`'s `item3_Z_pos` speaks of. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.trajOf":
+  {"uses_value": ["GFNBounds.Doubling.Decay.exitTime"],
+   "uses_type": [],
+   "uses_external": 8,
+   "type": "ℕ → (ℕ → ℕ) → List ℕ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 384,
+   "kind": "def",
+   "doc":
+   "The trajectory `(Y_0, …, Y_{N_ℓ})` of a path `Y`, with `N_ℓ = exitTime ℓ Y`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.thr_of_two_level":
   {"uses_value":
@@ -31391,7 +31777,7 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay), 0 < D.tau - 1",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 56,
+   "line": 57,
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -31800,6 +32186,30 @@
    "doc":
    "**`eq:doubling_uavg`, second line.** The total weight of the window is `R_0(m)`, by definition\nof `R_0` — recorded so that the descent recursion may cite it. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.sum_qm_Phi_zero":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.Phi_zero_pos",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.window"],
+   "uses_external": 34,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m : ℕ},\n  1 ≤ m → ∑ j ∈ GFNBounds.Doubling.window m, D.qm m j * D.Phi 0 j = D.Ralpha 0 m * D.Phi 0 m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 984,
+   "kind": "theorem",
+   "doc":
+   "`R_0(m) = Σ_{j∈W(m)} q_m(j) Φ₀(j) / Φ₀(m)`, so `R₀(m) > 1` iff the average exceeds `Φ₀(m)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.sum_pk":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -31826,6 +32236,30 @@
    "kind": "theorem",
    "doc":
    "The transition law is a probability on `W(z)`: `Σ_{j ∈ W(z)} w_z(j)/R₀(z) = 1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.sum_pathProb":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_const_eq_descP",
+    "GFNBounds.Doubling.Decay.descJoint_eq_sum_paths",
+    "GFNBounds.Doubling.Decay.descP",
+    "GFNBounds.Doubling.Decay.descP_one",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathProb"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathProb"],
+   "uses_external": 28,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  1 ≤ ℓ → ∀ {y : ℕ}, ℓ ≤ y → ∑ l ∈ GFNBounds.Doubling.Decay.descPaths ℓ y, D.pathProb l = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 467,
+   "kind": "theorem",
+   "doc":
+   "The finite law is a probability: its masses sum to `1` from every state `y ≥ ℓ`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.sum_nu_pos":
   {"uses_value":
@@ -32540,6 +32974,25 @@
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.qm_le_one":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c_lt_one",
+    "GFNBounds.Doubling.Decay.eps",
+    "GFNBounds.Doubling.Decay.eps_le_half",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.Decay.qm_eq"],
+   "uses_type": ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.qm"],
+   "uses_external": 219,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m j : ℕ}, 1 ≤ m → 1 ≤ j → D.qm m j ≤ 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1173,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.qm_eq":
   {"uses_value": ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.qm"],
    "uses_type":
@@ -32924,6 +33377,28 @@
    "doc":
    "**The weighted product of a descent.**\n`prodW ℓ b z = E(∏_{n<N_ℓ}(1 + b(Y_n)) | Y₀ = z)`, as the recursion in the state that\ncharacterises it: the factor at the current state times the average of the same quantity after\none step of the transition law `Decay.pk`, and `1` once the descent has fallen below `2ℓ`.\n\nWell-founded because every `j ∈ W(z)` has `j < z` — `lem:doubling_descent`(1). ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.poly_two":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 195,
+   "type": "∀ {p : ℝ}, 1 < p → 8 + 2 * (p + 2) * (p + 3) / 3 ≤ (p + 3) ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 406,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.poly_one":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 214,
+   "type": "∀ {p : ℝ}, 1 < p → 2 * p + 1 + (p + 1) * (p + 2) / 3 ≤ (p + 3) ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 403,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.pk_nonneg":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -32966,6 +33441,28 @@
    "doc":
    "**The transition law of `lem:doubling_descent`.** `P(Y₁ = j | Y₀ = z) = w_z(j)/R₀(z)` for\n`j ∈ W(z)`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.pf_eq":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.ePf",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.rpow_sub_one_eq"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.ePf",
+    "GFNBounds.Doubling.Decay.p"],
+   "uses_external": 221,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (α : ℝ) {j : ℕ},\n  1 ≤ j → D.Phi α j / (↑j + 1) = ↑j ^ (-D.p - 1) + (α - 1) * ↑j ^ (-D.p - 2) + D.ePf α j",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 367,
+   "kind": "theorem",
+   "doc":
+   "**`eq:doubling_pf`.** `Φ_α(j)/(j+1) = j^{−p−1} + (α−1) j^{−p−2} + e_α(j)` for `j ≥ 1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.path_add_le":
   {"uses_value":
    ["GFNBounds.Doubling.Decay.IsDescentPath",
@@ -32981,6 +33478,144 @@
    "kind": "theorem",
    "doc":
    "Along a path that has not yet exited, each step loses at least one: `Y_n + n ≤ m`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.pathZ_cons":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.pathZ"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.pathZ"],
+   "uses_external": 59,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (y : ℕ) {l : List ℕ}, l ≠ [] → D.pathZ (y :: l) = D.R0 y * D.pathZ l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 247,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.pathZ":
+  {"uses_value": ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.R0"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 13,
+   "type": "GFNBounds.Doubling.Decay → List ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 228,
+   "kind": "def",
+   "doc": "`Z_ℓ = ∏_{n<N_ℓ} R₀(Y_n)` of a trajectory `(Y_0, …, Y_N)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.pathProb_pos":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsExitTraj",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.R0_pos",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Decay.mem_descPaths_iff",
+    "GFNBounds.Doubling.Decay.one_le_of_mem_window'",
+    "GFNBounds.Doubling.Decay.pathExit",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.wm",
+    "GFNBounds.Doubling.Decay.wm_pos",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathProb"],
+   "uses_external": 66,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  1 ≤ ℓ → ∀ {y : ℕ} {l : List ℕ}, l ∈ GFNBounds.Doubling.Decay.descPaths ℓ y → 0 < D.pathProb l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 337,
+   "kind": "theorem",
+   "doc":
+   "Every trajectory has positive probability: the finite law charges exactly `descPaths`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.pathProb_cons":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Decay.pathProb"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Decay.pathProb"],
+   "uses_external": 58,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (y : ℕ) {l : List ℕ},\n  l ≠ [] → D.pathProb (y :: l) = D.kern y (l.getD 0 0) * D.pathProb l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 254,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.pathProb":
+  {"uses_value": ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.kern"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 16,
+   "type": "GFNBounds.Doubling.Decay → List ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 232,
+   "kind": "def",
+   "doc":
+   "The probability `∏_{n<N} k_{Y_n}(Y_{n+1})` of a trajectory `(Y_0, …, Y_N)` under the transition\nlaw `k_y(j) = w_y(j)/R₀(y)` of `lem:doubling_descent`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.pathExit_cons":
+  {"uses_value": ["GFNBounds.Doubling.Decay.pathExit"],
+   "uses_type": ["GFNBounds.Doubling.Decay.pathExit"],
+   "uses_external": 30,
+   "type":
+   "∀ (y : ℕ) {l : List ℕ}, l ≠ [] → GFNBounds.Doubling.Decay.pathExit (y :: l) = GFNBounds.Doubling.Decay.pathExit l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 261,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext"]},
+  "GFNBounds.Doubling.Decay.pathExit":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 9,
+   "type": "List ℕ → ℕ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 237,
+   "kind": "def",
+   "doc": "The last state `Y_N` of a trajectory `(Y_0, …, Y_N)`. ",
+   "axioms": ["propext"]},
+  "GFNBounds.Doubling.Decay.parity_thresholds_congr":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.A1",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.cR_congr",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.p_congr",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.A1",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.cR"],
+   "uses_external": 32,
+   "type":
+   "∀ {D D' : GFNBounds.Doubling.Decay}, D.c = D'.c → D.cR 0 / D.A0 = D'.cR 0 / D'.A0 ∧ D.cR 0 / -D.A1 = D'.cR 0 / -D'.A1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1277,
+   "kind": "theorem",
+   "doc":
+   "The parity thresholds `16τ(p+3)²/A₀` and `16τ(p+3)²/(−A₁)` depend on `c` alone. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.p_pos":
   {"uses_value":
@@ -33026,6 +33661,29 @@
    "kind": "theorem",
    "doc": "`p_* > 1` at `0 < c < 1` (`lem:doubling_cramer_root`(1)). ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.p_congr":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c_pos",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.p_ne",
+    "GFNBounds.Doubling.Decay.root",
+    "GFNBounds.Doubling.cramer_root_unique",
+    "GFNBounds.Doubling.psi"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.p"],
+   "uses_external": 7,
+   "type": "∀ {D D' : GFNBounds.Doubling.Decay}, D.c = D'.c → D.p = D'.p",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1269,
+   "kind": "theorem",
+   "doc":
+   "`p = p_*(c)`: two decay bundles with the same `c` carry the same exponent. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.p_add_one_pos":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -33036,7 +33694,7 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay), 0 < D.p + 1",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 59,
+   "line": 60,
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -33131,6 +33789,18 @@
    "doc":
    "`cτ > 1`: indeed `cτ = p_* + c` and `p_* > 1`. Not in the paper; it is what makes the\nthreshold `32cτ` automatically larger than the absolute constants Step 1 needs. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.one_le_ufoot":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.delta", "GFNBounds.Doubling.Decay.ufoot"],
+   "uses_type": ["GFNBounds.Doubling.Decay.ufoot"],
+   "uses_external": 166,
+   "type": "∀ (m : ℕ), 1 ≤ GFNBounds.Doubling.Decay.ufoot m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 288,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.one_le_truncQ":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -33197,7 +33867,7 @@
    "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  32 * D.c * D.tau ≤ 2 * ↑ℓ → ∀ {b : ℕ → ℝ}, (∀ (y : ℕ), 2 * ℓ ≤ y → 0 ≤ b y) → ∀ (z : ℕ), 1 ≤ D.prodW ℓ b z",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 119,
+   "line": 120,
    "kind": "theorem",
    "doc":
    "The product transform is at least `1` when its factors are: `prodW ℓ b ≥ 1` for `b ≥ 0`\nabove `2ℓ`. ",
@@ -33269,7 +33939,7 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay), 1 ≤ D.ell3",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 231,
+   "line": 232,
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -33494,6 +34164,76 @@
    "doc":
    "**The coefficients of `eq:doubling_constant`:** `ν_j := C(1 + e_j) − C(1)`, a difference of two\nlimits that `theo:doubling_sharp` provides, both data being positive. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.not_isSupersolution_Phi_zero":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.IsSupersolution",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.Phi_zero_pos",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.Ralpha_zero_gt_one_of_even",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.delta",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.Decay.sum_qm_Phi_zero",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsSupersolution",
+    "GFNBounds.Doubling.Decay.Phi"],
+   "uses_external": 207,
+   "type": "∀ (D : GFNBounds.Doubling.Decay), ¬D.IsSupersolution (D.Phi 0)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 989,
+   "kind": "theorem",
+   "doc":
+   "**`rem:doubling_parity`.** The pure power `Φ₀(j) = j^{−p}` is not a supersolution of\n`eq:doubling_avg`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.not_isSubsolution_Phi_zero":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A1",
+    "GFNBounds.Doubling.Decay.IsSubsolution",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.Phi_zero_pos",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.Ralpha_zero_lt_one_of_odd",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.delta",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.Decay.sum_qm_Phi_zero",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsSubsolution",
+    "GFNBounds.Doubling.Decay.Phi"],
+   "uses_external": 223,
+   "type": "∀ (D : GFNBounds.Doubling.Decay), ¬D.IsSubsolution (D.Phi 0)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1007,
+   "kind": "theorem",
+   "doc":
+   "**`rem:doubling_parity`.** The pure power `Φ₀(j) = j^{−p}` is not a subsolution of\n`eq:doubling_avg`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.nonempty_decay":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.mk",
+    "GFNBounds.Doubling.cramer_root_exists",
+    "GFNBounds.Doubling.psi"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 214,
+   "type": "Nonempty GFNBounds.Doubling.Decay",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1287,
+   "kind": "theorem",
+   "doc":
+   "**Witness.** The bundle every statement here quantifies over is inhabited: at `c = 1/2` the\nCramér equation has a non-zero root. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.noConfusionType":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -33525,6 +34265,43 @@
    "line": 49,
    "kind": "def",
    "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.mpow_mul_rpow":
+  {"uses_value": ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.p"],
+   "uses_type": ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.p"],
+   "uses_external": 109,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m : ℕ}, 1 ≤ m → ∀ (k : ℝ), ↑m ^ D.p * ↑m ^ (-D.p - k) = ↑m ^ (-k)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 301,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.mpow_foot":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.foot_rpow",
+    "GFNBounds.Doubling.Decay.m_rpow_neg_nat",
+    "GFNBounds.Doubling.Decay.mpow_mul_rpow",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.two_rpow_p_add",
+    "GFNBounds.Doubling.Decay.ufoot"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.ufoot"],
+   "uses_external": 112,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m : ℕ},\n  1 ≤ m →\n    ∀ (k : ℕ),\n      ↑m ^ D.p * ↑((m + 1) / 2) ^ (-D.p - ↑k) =\n        D.tau * 2 ^ k * (↑m)⁻¹ ^ k * GFNBounds.Doubling.Decay.ufoot m ^ (-D.p - ↑k)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 317,
+   "kind": "theorem",
+   "doc":
+   "**The foot, rescaled.** `m^p ⌈m/2⌉^{−p−k} = τ 2^k m^{−k} u^{−p−k}`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.mk.sizeOf_spec":
   {"uses_value": ["GFNBounds.Doubling.psi"],
@@ -33610,6 +34387,29 @@
    "kind": "ctor",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.mem_descPaths_iff":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.IsExitTraj",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.descPaths_of_ge",
+    "GFNBounds.Doubling.Decay.descPaths_of_lt",
+    "GFNBounds.Doubling.Decay.pathExit",
+    "GFNBounds.Doubling.Decay.pathExit_cons",
+    "GFNBounds.Doubling.window",
+    "GFNBounds.Doubling.window_lt"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay.IsExitTraj",
+    "GFNBounds.Doubling.Decay.descPaths"],
+   "uses_external": 76,
+   "type":
+   "∀ {ℓ : ℕ} (y : ℕ) (l : List ℕ), l ∈ GFNBounds.Doubling.Decay.descPaths ℓ y ↔ GFNBounds.Doubling.Decay.IsExitTraj ℓ y l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 281,
+   "kind": "theorem",
+   "doc":
+   "**The finite set of lists is exactly the set of stopped trajectories.** ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.mem_block":
   {"uses_value": [],
    "uses_type": ["GFNBounds.Doubling.Decay.block"],
@@ -33619,6 +34419,17 @@
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.DecayNotation",
    "line": 138,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.m_rpow_neg_nat":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 66,
+   "type": "∀ {m : ℕ}, 1 ≤ m → ∀ (k : ℕ), ↑m ^ (-↑k) = (↑m)⁻¹ ^ k",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 312,
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -33701,6 +34512,20 @@
    "kind": "def",
    "doc":
    "**The level of the sharp block**, `L = max(ℓ₃, 20, d+1, m₀(d), ⌈32cτ⌉)`: past it every\nhypothesis of `Sharp.sharp_limit` and `Decay.weight_bound` holds. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.length_trajOf":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.exitTime", "GFNBounds.Doubling.Decay.trajOf"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay.exitTime", "GFNBounds.Doubling.Decay.trajOf"],
+   "uses_external": 17,
+   "type":
+   "∀ (ℓ : ℕ) (Y : ℕ → ℕ), (GFNBounds.Doubling.Decay.trajOf ℓ Y).length = GFNBounds.Doubling.Decay.exitTime ℓ Y + 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 387,
+   "kind": "theorem",
+   "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.le_term":
   {"uses_value":
@@ -33859,7 +34684,7 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay) (z j : ℕ), D.kern z j = D.pk z j",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 116,
+   "line": 117,
    "kind": "theorem",
    "doc":
    "The one-step law of `DescentLaw.lean` and the one of `Sojourn.lean` are the same function. ",
@@ -33878,6 +34703,51 @@
    "kind": "def",
    "doc":
    "The one-step transition law of the descent chain, `k_y(j) = w_y(j)/R₀(y)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.isSupersolution_two_pow":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.one_le_of_mem_window'",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.Decay.qm_le_one",
+    "GFNBounds.Doubling.mem_window",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.IsSupersolution"],
+   "uses_external": 206,
+   "type": "∀ (D : GFNBounds.Doubling.Decay), D.IsSupersolution fun j => 2 ^ j",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1181,
+   "kind": "theorem",
+   "doc":
+   "**Witness.** The positive sequence `2^j` is a supersolution of `eq:doubling_avg`\n(at every `m ≥ 1`). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.isSubsolution_inv_factorial_sq":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c_pos",
+    "GFNBounds.Doubling.Decay.eps",
+    "GFNBounds.Doubling.Decay.eps_pos",
+    "GFNBounds.Doubling.Decay.one_sub_eps_pos",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.Decay.qm_eq",
+    "GFNBounds.Doubling.Decay.qm_pos",
+    "GFNBounds.Doubling.base_pos",
+    "GFNBounds.Doubling.mem_window",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.IsSubsolution"],
+   "uses_external": 360,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay), D.IsSubsolution fun j => (↑j.factorial ^ 2)⁻¹",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1197,
+   "kind": "theorem",
+   "doc":
+   "**Witness.** The positive sequence `1/(j!)²` is a subsolution of `eq:doubling_avg`\n(at every `m ≥ max(2, 1/c)`). ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.inner_le":
   {"uses_value":
@@ -34002,6 +34872,22 @@
    "kind": "theorem",
    "doc":
    "**The head of the halving window.** Any `z ≥ y/√2` has `z^{−p} ≤ √τ y^{−p}`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.head_of_mem_descPaths":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.descPaths_of_ge",
+    "GFNBounds.Doubling.Decay.descPaths_of_lt",
+    "GFNBounds.Doubling.window"],
+   "uses_type": ["GFNBounds.Doubling.Decay.descPaths"],
+   "uses_external": 43,
+   "type":
+   "∀ {ℓ : ℕ} (y : ℕ) {l : List ℕ}, l ∈ GFNBounds.Doubling.Decay.descPaths ℓ y → l ≠ [] ∧ l.getD 0 0 = y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 265,
+   "kind": "theorem",
+   "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.halve_halve_lt":
   {"uses_value":
@@ -34158,6 +35044,22 @@
    "doc":
    "One greedy step: to the bottom `⌈y/2⌉ = (y+1)/2` of the window while `y ≥ 2ℓ`, else stay. ",
    "axioms": []},
+  "GFNBounds.Doubling.Decay.getD_trajOf":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.exitTime",
+    "GFNBounds.Doubling.Decay.length_trajOf",
+    "GFNBounds.Doubling.Decay.trajOf"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay.exitTime", "GFNBounds.Doubling.Decay.trajOf"],
+   "uses_external": 36,
+   "type":
+   "∀ {ℓ : ℕ} {Y : ℕ → ℕ} {n : ℕ},\n  n ≤ GFNBounds.Doubling.Decay.exitTime ℓ Y → (GFNBounds.Doubling.Decay.trajOf ℓ Y).getD n 0 = Y n",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 390,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.geom_sum_le_inv":
   {"uses_value": [],
    "uses_type": [],
@@ -34271,6 +35173,21 @@
    "kind": "theorem",
    "doc": "`a^{−p} ≤ τ m^{−p}`, since `a ≥ m/2`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.foot_rpow":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.foot_eq",
+    "GFNBounds.Doubling.Decay.one_le_ufoot",
+    "GFNBounds.Doubling.Decay.ufoot"],
+   "uses_type": ["GFNBounds.Doubling.Decay.ufoot"],
+   "uses_external": 121,
+   "type":
+   "∀ {m : ℕ}, 1 ≤ m → ∀ (e : ℝ), ↑((m + 1) / 2) ^ e = ↑m ^ e * 2 ^ (-e) * GFNBounds.Doubling.Decay.ufoot m ^ e",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 293,
+   "kind": "theorem",
+   "doc": "`(a)^e = m^e 2^{−e} u^e` for the foot `a = ⌈m/2⌉`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.foot_le_self":
   {"uses_value": [],
    "uses_type": [],
@@ -34312,6 +35229,21 @@
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.R0Bound",
    "line": 53,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.foot_eq":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.delta",
+    "GFNBounds.Doubling.Decay.two_foot",
+    "GFNBounds.Doubling.Decay.ufoot"],
+   "uses_type": ["GFNBounds.Doubling.Decay.ufoot"],
+   "uses_external": 260,
+   "type":
+   "∀ {m : ℕ}, 1 ≤ m → ↑((m + 1) / 2) = ↑m / 2 * GFNBounds.Doubling.Decay.ufoot m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 279,
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -34771,6 +35703,32 @@
    "kind": "def",
    "doc": "**The exit law** `π_y = P(Y_{N_ℓ} ∈ · | Y_0 = y)`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.exists_descentPath_of_mem":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.IsDescentPath",
+    "GFNBounds.Doubling.Decay.IsExitTraj",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.exitTime",
+    "GFNBounds.Doubling.Decay.getD_trajOf",
+    "GFNBounds.Doubling.Decay.length_trajOf",
+    "GFNBounds.Doubling.Decay.mem_descPaths_iff",
+    "GFNBounds.Doubling.Decay.pathExit",
+    "GFNBounds.Doubling.Decay.trajOf",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay.IsDescentPath",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.trajOf"],
+   "uses_external": 76,
+   "type":
+   "∀ {ℓ m : ℕ} {l : List ℕ},\n  l ∈ GFNBounds.Doubling.Decay.descPaths ℓ m →\n    ∃ Y, GFNBounds.Doubling.Decay.IsDescentPath ℓ Y ∧ Y 0 = m ∧ GFNBounds.Doubling.Decay.trajOf ℓ Y = l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 424,
+   "kind": "theorem",
+   "doc":
+   "**Every counted list is the trajectory of an allowed path.** Extend it by its exit state. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.exists_descentPath":
   {"uses_value":
    ["GFNBounds.Doubling.Decay.IsDescentPath",
@@ -34999,6 +35957,71 @@
    "kind": "def",
    "doc": "`ε(j) = c/(j+1)`, the family at `s = 1`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.ell3_le_of_ceils":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c4_pos",
+    "GFNBounds.Doubling.Decay.ctau_pos",
+    "GFNBounds.Doubling.Decay.ell3",
+    "GFNBounds.Doubling.Decay.gam",
+    "GFNBounds.Doubling.Decay.gam_pos",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.ell3",
+    "GFNBounds.Doubling.Decay.gam"],
+   "uses_external": 168,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ}, ⌈2 * D.c4⌉₊ ≤ ℓ → ⌈24 * D.c4 / D.gam ^ 2⌉₊ ≤ ℓ → D.ell3 ≤ ℓ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 627,
+   "kind": "theorem",
+   "doc":
+   "**The library's `ℓ₃` is reached by two of the paper's requirements alone**, `ℓ ≥ ⌈2c₄⌉` and\n`ℓ ≥ ⌈24c₄/γ²⌉`; no property of `ℓ₂` is used. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.ell3_le_ell3Paper":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.ell2",
+    "GFNBounds.Doubling.Decay.ell3Paper",
+    "GFNBounds.Doubling.Decay.ell3_le_of_ceils",
+    "GFNBounds.Doubling.Decay.gam"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.ell3",
+    "GFNBounds.Doubling.Decay.ell3Paper"],
+   "uses_external": 34,
+   "type": "∀ (D : GFNBounds.Doubling.Decay) (d : ℕ), D.ell3 ≤ D.ell3Paper d",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 643,
+   "kind": "theorem",
+   "doc":
+   "The library's sharper `ℓ₃ = max(1, ⌈16cτ⌉, ⌈96cτ/γ²⌉)` is at most the paper's. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.ell3Paper":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.ell2",
+    "GFNBounds.Doubling.Decay.gam"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 26,
+   "type": "GFNBounds.Doubling.Decay → ℕ → ℕ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 594,
+   "kind": "def",
+   "doc":
+   "**`ℓ₃`, as the paper puts it.** `ℓ₃ := max(ℓ₂, ⌈2c₄⌉, ⌈24c₄/γ²⌉, ⌈4c₄c₅⌉)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.ell3":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -35010,7 +36033,7 @@
    "type": "GFNBounds.Doubling.Decay → ℕ",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 224,
+   "line": 225,
    "kind": "def",
    "doc":
    "**`ℓ₃`, made effective.** `ℓ₃ := max(1, ⌈16cτ⌉, ⌈96cτ/γ²⌉)`: the first requirement is\n`32cτ ≤ 2ℓ`, under which `eq:doubling_R0` and the one-step law are available; the second is\n`c₄ ≤ γ²ℓ/6`, the hypothesis of `eq:doubling_product` at `H := c₄`, and simultaneously\n`c₅c₄/ℓ ≤ 1`, which is what `e^x − 1 ≤ 2x` needs. ",
@@ -35034,6 +36057,25 @@
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.ell2_le_ell3Paper":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.ell2",
+    "GFNBounds.Doubling.Decay.gam"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.ell2",
+    "GFNBounds.Doubling.Decay.ell3Paper"],
+   "uses_external": 28,
+   "type": "∀ (D : GFNBounds.Doubling.Decay) (d : ℕ), D.ell2 d ≤ D.ell3Paper d",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 602,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.ell2":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -35049,6 +36091,30 @@
    "doc":
    "**`ℓ₂`, made effective.** `ℓ₂ := max(d+1, ⌈16cτ⌉)`, so that `y ≥ 2ℓ ≥ 2ℓ₂` gives `y ≥ 32cτ`,\nwhich is all three of the paper's requirements at once. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.ell1_le_ell3Paper":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.ell1",
+    "GFNBounds.Doubling.Decay.ell2",
+    "GFNBounds.Doubling.Decay.ell3Paper",
+    "GFNBounds.Doubling.Decay.gam",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.ell1",
+    "GFNBounds.Doubling.Decay.ell3Paper"],
+   "uses_external": 83,
+   "type": "∀ (D : GFNBounds.Doubling.Decay) (d : ℕ), D.ell1 d ≤ D.ell3Paper d",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 604,
+   "kind": "theorem",
+   "doc":
+   "`ℓ₃ ≥ ℓ₁`: the descent chain of `lem:doubling_descent` is defined at every level `ℓ ≥ ℓ₃`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.ell1":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -35063,6 +36129,128 @@
    "kind": "def",
    "doc":
    "**`ℓ₁`, made effective.** `ℓ₁ := max(d + 1, ⌈32 c τ⌉)`: the first requirement is `ℓ₁ > d`, the\nsecond turns `|R₀ − 1| ≤ c₄/m` into `½ ≤ R₀ ≤ 2`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.ePf":
+  {"uses_value": ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.p"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 25,
+   "type": "GFNBounds.Doubling.Decay → ℝ → ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 363,
+   "kind": "def",
+   "doc":
+   "`e_α(j) := (1−α) j^{−p−2}/(j+1)` of `eq:doubling_pf`, written `(1−α) j^{−p−1}/(j(j+1))`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.doubling_weight_transform":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.abs_descW_sub_descP_le_weightDev",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.descP",
+    "GFNBounds.Doubling.Decay.descW",
+    "GFNBounds.Doubling.Decay.doubling_weight",
+    "GFNBounds.Doubling.Decay.ell3",
+    "GFNBounds.Doubling.Decay.ell3Paper",
+    "GFNBounds.Doubling.Decay.ell3_le_ell3Paper",
+    "GFNBounds.Doubling.Decay.one_le_ell3",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.descP",
+    "GFNBounds.Doubling.Decay.descW",
+    "GFNBounds.Doubling.Decay.ell3Paper"],
+   "uses_external": 111,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (d : ℕ) {ℓ : ℕ},\n  D.ell3Paper d ≤ ℓ →\n    ∀ {m : ℕ},\n      2 * ℓ ≤ m → ∀ {B : ℝ} {g : ℕ → ℝ}, (∀ (j : ℕ), |g j| ≤ B) → |D.descW ℓ g m - D.descP ℓ g m| ≤ B * D.c3Paper / ↑ℓ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 709,
+   "kind": "theorem",
+   "doc":
+   "**The paper's use of `lem:doubling_weight`**, derived from it: for `g` bounded by `B`,\n`|E(Z_ℓ g(Y_{N_ℓ})) − E(g(Y_{N_ℓ}))| ≤ B c₃/ℓ`, at the paper's constants. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.doubling_weight_paths":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.doubling_weight",
+    "GFNBounds.Doubling.Decay.ell3Paper",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.Decay.weightDev",
+    "GFNBounds.Doubling.Decay.weightDev_eq_sum_paths"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.ell3Paper",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathZ"],
+   "uses_external": 33,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (d : ℕ) {ℓ : ℕ},\n  D.ell3Paper d ≤ ℓ →\n    ∀ {m : ℕ}, 2 * ℓ ≤ m → ∑ l ∈ GFNBounds.Doubling.Decay.descPaths ℓ m, D.pathProb l * |D.pathZ l - 1| ≤ D.c3Paper / ↑ℓ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 700,
+   "kind": "theorem",
+   "doc":
+   "**`lem:doubling_weight`, as the finite sum it is.** Over the trajectories `(Y_0, …, Y_{N_ℓ})`\nof the descent chain from `m ≥ 2ℓ`, weighted by their probabilities,\n`Σ P(Y_0,…,Y_{N_ℓ}) · |∏_{n<N_ℓ} R₀(Y_n) − 1| ≤ c₃/ℓ`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.doubling_weight_of_ceils":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c3",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.c3_le_c3Paper",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.ell3",
+    "GFNBounds.Doubling.Decay.ell3_le_of_ceils",
+    "GFNBounds.Doubling.Decay.gam",
+    "GFNBounds.Doubling.Decay.one_le_ell3",
+    "GFNBounds.Doubling.Decay.weightDev",
+    "GFNBounds.Doubling.Decay.weightDev_le_c3"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.gam",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_external": 74,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  ⌈2 * D.c4⌉₊ ≤ ℓ → ⌈24 * D.c4 / D.gam ^ 2⌉₊ ≤ ℓ → ∀ (m : ℕ), D.weightDev ℓ m ≤ D.c3Paper / ↑ℓ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 679,
+   "kind": "theorem",
+   "doc":
+   "**`lem:doubling_weight`, whatever `ℓ₂` is.** The bound `E(|Z_ℓ − 1| | Y_0 = m) ≤ c₃/ℓ`, with\nthe paper's `c₃ = 8c₅c₄`, holds at every level `ℓ ≥ ⌈2c₄⌉` with `ℓ ≥ ⌈24c₄/γ²⌉`, and at every\nstate `m`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.doubling_weight":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.doubling_weight_of_ceils",
+    "GFNBounds.Doubling.Decay.ell2",
+    "GFNBounds.Doubling.Decay.ell3Paper",
+    "GFNBounds.Doubling.Decay.gam"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.ell3Paper",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_external": 37,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (d : ℕ) {ℓ : ℕ},\n  D.ell3Paper d ≤ ℓ → ∀ {m : ℕ}, 2 * ℓ ≤ m → D.weightDev ℓ m ≤ D.c3Paper / ↑ℓ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 692,
+   "kind": "theorem",
+   "doc":
+   "**`lem:doubling_weight`** (`eq:doubling_weight`), in the paper's shape and at the paper's\nconstants: with `c₃ := 8c₅c₄` and `ℓ₃ := max(ℓ₂, ⌈2c₄⌉, ⌈24c₄/γ²⌉, ⌈4c₄c₅⌉)`, for every integer\n`ℓ ≥ ℓ₃` and every integer `m ≥ 2ℓ`, `E(|Z_ℓ − 1| | Y_0 = m) ≤ c₃/ℓ`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.doubling_descent":
   {"uses_value":
@@ -35441,6 +36629,45 @@
    "doc":
    "**The descent transform.** `descW D ℓ g m = E(Z_ℓ · g(Y_{N_ℓ}) | Y_0 = m)`, written as an\nunnormalized recursion: the `R_0` of the transition law and the `R_0` of the weight `Z_ℓ` cancel.\n\nWell-founded because every `j ∈ W(m)` has `j < m` — which is `lem:doubling_descent`(1). ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descPaths_of_lt":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.descPaths", "GFNBounds.Doubling.window"],
+   "uses_type": ["GFNBounds.Doubling.Decay.descPaths"],
+   "uses_external": 32,
+   "type":
+   "∀ {ℓ y : ℕ}, y < 2 * ℓ → GFNBounds.Doubling.Decay.descPaths ℓ y = {[y]}",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 219,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descPaths_of_ge":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.descPaths", "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay.descPaths", "GFNBounds.Doubling.window"],
+   "uses_external": 49,
+   "type":
+   "∀ {ℓ y : ℕ},\n  ¬y < 2 * ℓ →\n    GFNBounds.Doubling.Decay.descPaths ℓ y =\n      (GFNBounds.Doubling.window y).biUnion fun j => Finset.image (List.cons y) (GFNBounds.Doubling.Decay.descPaths ℓ j)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 222,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descPaths":
+  {"uses_value": ["GFNBounds.Doubling.window"],
+   "uses_type": [],
+   "uses_external": 29,
+   "type": "ℕ → ℕ → Finset (List ℕ)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 210,
+   "kind": "def",
+   "doc":
+   "**The trajectories `(Y_0, …, Y_{N_ℓ})` of the descent chain at the level `ℓ` from `y`**, as a\nfinite set of lists: `[y]` below `2ℓ`, and `y` prepended to a trajectory from some `j ∈ W(y)`\nabove it. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.descP_uu_diff_le":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -35692,6 +36919,224 @@
    "kind": "def",
    "doc": "`E(Z_ℓ | Y_0 = m)`, the expected weight of a descent. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descJoint_sub":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_of_ge",
+    "GFNBounds.Doubling.Decay.descJoint_of_lt",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.window",
+    "GFNBounds.Doubling.window_lt"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.descJoint"],
+   "uses_external": 96,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ} (F G : ℕ → ℝ → ℝ) (y : ℕ) (w : ℝ),\n  D.descJoint ℓ (fun j v => F j v - G j v) y w = D.descJoint ℓ F y w - D.descJoint ℓ G y w",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 170,
+   "kind": "theorem",
+   "doc": "The joint recursion is additive in the integrand. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descJoint_of_lt":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.descJoint"],
+   "uses_external": 27,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ} (G : ℕ → ℝ → ℝ) {y : ℕ}, y < 2 * ℓ → ∀ (w : ℝ), D.descJoint ℓ G y w = G y w",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 125,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descJoint_of_ge":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.window"],
+   "uses_external": 28,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ} (G : ℕ → ℝ → ℝ) {y : ℕ},\n  ¬y < 2 * ℓ →\n    ∀ (w : ℝ), D.descJoint ℓ G y w = ∑ j ∈ GFNBounds.Doubling.window y, D.kern y j * D.descJoint ℓ G j (w * D.R0 y)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 129,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descJoint_mul_eq_descZ":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_of_ge",
+    "GFNBounds.Doubling.Decay.descJoint_of_lt",
+    "GFNBounds.Doubling.Decay.descZ",
+    "GFNBounds.Doubling.Decay.descZ_of_ge",
+    "GFNBounds.Doubling.Decay.descZ_of_lt",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.window",
+    "GFNBounds.Doubling.window_lt"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descZ"],
+   "uses_external": 69,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ} (g : ℕ → ℝ) (y : ℕ) (w : ℝ),\n  D.descJoint ℓ (fun j v => v * g j) y w = w * D.descZ ℓ g y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 136,
+   "kind": "theorem",
+   "doc":
+   "**The weighted marginal.** `E(w·Z_ℓ·g(Y_{N_ℓ}) | Y_0 = y) = w·E(Z_ℓ g(Y_{N_ℓ}) | Y_0 = y)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descJoint_id_eq_descOne":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_mul_eq_descZ",
+    "GFNBounds.Doubling.Decay.descOne",
+    "GFNBounds.Doubling.Decay.descW",
+    "GFNBounds.Doubling.Decay.descZ",
+    "GFNBounds.Doubling.Decay.descZ_eq_descW"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descOne"],
+   "uses_external": 28,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ}, 1 ≤ ℓ → ∀ (y : ℕ), D.descJoint ℓ (fun x v => v) y 1 = D.descOne ℓ y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 162,
+   "kind": "theorem",
+   "doc":
+   "**The expected weight.** `E(Z_ℓ | Y_0 = y)` read off the joint recursion is `descOne`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descJoint_eq_sum_paths":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_of_ge",
+    "GFNBounds.Doubling.Decay.descJoint_of_lt",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.descPaths_of_ge",
+    "GFNBounds.Doubling.Decay.descPaths_of_lt",
+    "GFNBounds.Doubling.Decay.head_of_mem_descPaths",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Decay.pathExit",
+    "GFNBounds.Doubling.Decay.pathExit_cons",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathProb_cons",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.Decay.pathZ_cons",
+    "GFNBounds.Doubling.window",
+    "GFNBounds.Doubling.window_lt"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathExit",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathZ"],
+   "uses_external": 134,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ} (G : ℕ → ℝ → ℝ) (y : ℕ) (w : ℝ),\n  D.descJoint ℓ G y w =\n    ∑ l ∈ GFNBounds.Doubling.Decay.descPaths ℓ y, D.pathProb l * G (GFNBounds.Doubling.Decay.pathExit l) (w * D.pathZ l)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 347,
+   "kind": "theorem",
+   "doc":
+   "**The recursion is the expectation against the finite law of the trajectory.**\n`descJoint ℓ G y w = Σ_{(Y_0,…,Y_N) ∈ descPaths ℓ y} P(Y_0,…,Y_N) · G(Y_N, w·∏_{n<N} R₀(Y_n))`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descJoint_const_eq_descP":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_of_ge",
+    "GFNBounds.Doubling.Decay.descJoint_of_lt",
+    "GFNBounds.Doubling.Decay.descP",
+    "GFNBounds.Doubling.Decay.descP_of_ge",
+    "GFNBounds.Doubling.Decay.descP_of_lt",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.window",
+    "GFNBounds.Doubling.window_lt"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descP"],
+   "uses_external": 27,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ} (g : ℕ → ℝ) (y : ℕ) (w : ℝ), D.descJoint ℓ (fun j x => g j) y w = D.descP ℓ g y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 150,
+   "kind": "theorem",
+   "doc":
+   "**The exit marginal.** `E(g(Y_{N_ℓ}) | Y_0 = y)` read off the joint recursion is `descP`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descJoint_absDev_le_prodW":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_of_ge",
+    "GFNBounds.Doubling.Decay.descJoint_of_lt",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Decay.kern_nonneg",
+    "GFNBounds.Doubling.Decay.pk",
+    "GFNBounds.Doubling.Decay.prodW",
+    "GFNBounds.Doubling.Decay.prodW_of_ge",
+    "GFNBounds.Doubling.Decay.prodW_of_lt",
+    "GFNBounds.Doubling.Decay.sum_kern",
+    "GFNBounds.Doubling.window",
+    "GFNBounds.Doubling.window_lt"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.prodW"],
+   "uses_external": 213,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  1 ≤ ℓ →\n    ∀ {b : ℕ → ℝ},\n      (∀ (y : ℕ), 2 * ℓ ≤ y → |D.R0 y - 1| ≤ b y) →\n        ∀ (y : ℕ) (w v : ℝ), |w - 1| ≤ v - 1 → D.descJoint ℓ (fun x u => |u - 1|) y w ≤ v * D.prodW ℓ b y - 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 488,
+   "kind": "theorem",
+   "doc":
+   "**The running-pair invariant.** If `|R₀ − 1| ≤ b` above `2ℓ`, then from a running weight `w`\nand a running product `v` with `|w − 1| ≤ v − 1`, the deviation at exit is at most\n`v · E(∏_{n<N_ℓ}(1 + b(Y_n)) | Y_0 = y) − 1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descJoint":
+  {"uses_value": ["GFNBounds.Doubling.Decay"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 3,
+   "type": "GFNBounds.Doubling.Decay → ℕ → (ℕ → ℝ → ℝ) → ℕ → ℝ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 113,
+   "kind": "def",
+   "doc":
+   "**`E(G(Y_{N_ℓ}, w·Z_ℓ) | Y_0 = y)`, with the running weight `w` as a second state variable.**\nBelow `2ℓ` the descent has exited and the weight is the empty product; above it, one step of the\ntransition law `k_y(j) = w_y(j)/R₀(y)` multiplies the running weight by `R₀(y)`.\n`descJoint_eq_sum_paths` identifies it with the finite sum over stopped trajectories.\n\nWell-founded because every `j ∈ W(y)` has `j < y` — `lem:doubling_descent`(1). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.delta_lt_two":
   {"uses_value": ["GFNBounds.Doubling.Decay.delta"],
    "uses_type": ["GFNBounds.Doubling.Decay.delta"],
@@ -35703,6 +37148,19 @@
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.delta_cases":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.delta", "GFNBounds.Doubling.Decay.delta_lt_two"],
+   "uses_type": ["GFNBounds.Doubling.Decay.delta"],
+   "uses_external": 36,
+   "type":
+   "∀ (m : ℕ), ↑(GFNBounds.Doubling.Decay.delta m) = 0 ∨ ↑(GFNBounds.Doubling.Decay.delta m) = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 269,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.delta":
   {"uses_value": [],
    "uses_type": [],
@@ -36124,6 +37582,50 @@
    "doc":
    "**`eq:doubling_constant`, in the paper's words:** the constant `C` of `theo:doubling_sharp` at\na positive solution is `Σ_{j=1}^{d} ν_j λ_j`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.const_combine":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 212,
+   "type":
+   "∀ {τ P s t Θa B La : ℝ},\n  2 ≤ τ →\n    16 ≤ P →\n      0 ≤ s →\n        t ≤ 1 + s →\n          Θa ≤ τ * (2 + t) →\n            B = τ * P * (1 + t) → La ≤ Θa + 1 + s → 2 * (τ + 2 * Θa + 3 * B + s * La) ≤ 16 * τ * P * (1 + s) ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 762,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.coeff_identity":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.Ad",
+    "GFNBounds.Doubling.Decay.Ad_eq",
+    "GFNBounds.Doubling.Decay.Gam",
+    "GFNBounds.Doubling.Decay.Theta",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.cramer",
+    "GFNBounds.Doubling.Decay.delta",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.p_add_one_pos",
+    "GFNBounds.Doubling.Decay.p_ne",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.tau_sub_one_pos"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Ad",
+    "GFNBounds.Doubling.Decay.Gam",
+    "GFNBounds.Doubling.Decay.Theta",
+    "GFNBounds.Doubling.Decay.c"],
+   "uses_external": 210,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (α : ℝ) (m : ℕ), D.c * D.Theta α m + D.c - α = D.Ad m + D.Gam * α",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 344,
+   "kind": "theorem",
+   "doc":
+   "**Step 3's coefficient identity.** `cΘ_α(δ) + c − α = A_δ + Γα`, by `c = p/(τ−1)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.climit_eq_sum":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -36221,7 +37723,7 @@
    "∀ (D : GFNBounds.Doubling.Decay), D.c * D.tau = D.p * D.tau / (D.tau - 1)",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 62,
+   "line": 63,
    "kind": "theorem",
    "doc": "`c τ = p τ/(τ−1)`, from `c(τ−1) = p`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -36235,6 +37737,76 @@
    "line": 55,
    "kind": "theorem",
    "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.cT":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 24,
+   "type": "GFNBounds.Doubling.Decay → ℝ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 414,
+   "kind": "def",
+   "doc": "The constant of `T_expansion`: `τ(p+3)²(1+|α−1|)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.cR_zero":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_external": 54,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay), D.cR 0 = 16 * D.tau * (D.p + 3) ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 929,
+   "kind": "theorem",
+   "doc": "`cR 0 = 16 τ (p+3)²`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.cR_congr":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.p_congr",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.cR"],
+   "uses_external": 27,
+   "type":
+   "∀ {D D' : GFNBounds.Doubling.Decay}, D.c = D'.c → ∀ (α : ℝ), D.cR α = D'.cR α",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1273,
+   "kind": "theorem",
+   "doc":
+   "**The implied constant of `eq:doubling_Rexp` depends on `c` and `α` alone.** ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.cR":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 21,
+   "type": "GFNBounds.Doubling.Decay → ℝ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 759,
+   "kind": "def",
+   "doc": "The constant of `eq:doubling_Rexp`: `16 τ (p+3)² (1+|α|)²`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.c9Of":
   {"uses_value":
@@ -36409,7 +37981,7 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay), 0 < D.c5",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 236,
+   "line": 237,
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -36468,9 +38040,66 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay), 0 ≤ D.c3",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 240,
+   "line": 241,
    "kind": "theorem",
    "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.c3_le_c3Paper":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c3",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c4_pos",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.c5_pos",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c3",
+    "GFNBounds.Doubling.Decay.c3Paper"],
+   "uses_external": 132,
+   "type": "∀ (D : GFNBounds.Doubling.Decay), D.c3 ≤ D.c3Paper",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 614,
+   "kind": "theorem",
+   "doc":
+   "The library's sharper `c₃ = 32c₅cτ = 2c₅c₄` is at most the paper's `8c₅c₄`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.c3Paper_pos":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c4_pos",
+    "GFNBounds.Doubling.Decay.c5",
+    "GFNBounds.Doubling.Decay.c5_pos"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.c3Paper"],
+   "uses_external": 36,
+   "type": "∀ (D : GFNBounds.Doubling.Decay), 0 < D.c3Paper",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 598,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.c3Paper":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c4",
+    "GFNBounds.Doubling.Decay.c5"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 7,
+   "type": "GFNBounds.Doubling.Decay → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 590,
+   "kind": "def",
+   "doc":
+   "**`c₃`, as the paper puts it.** `c₃ := 8c₅c₄`, with `c₄ = 16cτ` of `lem:doubling_descent` and\n`c₅ = 6/γ²` of `lem:doubling_escape`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.c3":
   {"uses_value":
@@ -36483,9 +38112,9 @@
    "type": "GFNBounds.Doubling.Decay → ℝ",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 233,
+   "line": 234,
    "kind": "def",
-   "doc": "**`c₃`, made effective.** `c₃ := 32c₅c₄/4 = 32c₅cτ = 192cτ/γ²`. ",
+   "doc": "**`c₃`, made effective.** `c₃ := 2c₅c₄ = 32c₅cτ = 192cτ/γ²`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.c2Of_congr":
   {"uses_value":
@@ -36746,6 +38375,52 @@
    "kind": "def",
    "doc": "`α := log₂(1/(1−ω))`, the paper's exponent parameter. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.abs_ePf_le":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.ePf",
+    "GFNBounds.Doubling.Decay.p"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.ePf",
+    "GFNBounds.Doubling.Decay.p"],
+   "uses_external": 215,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (α : ℝ) {j : ℕ}, 1 ≤ j → |D.ePf α j| ≤ |1 - α| * ↑j ^ (-D.p - 3)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 380,
+   "kind": "theorem",
+   "doc": "**`eq:doubling_pf`, the bound.** `|e_α(j)| ≤ |1−α| j^{−p−3}`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.abs_descW_sub_descP_le_weightDev":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.abs_descJoint_le",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_const_eq_descP",
+    "GFNBounds.Doubling.Decay.descJoint_mul_eq_descZ",
+    "GFNBounds.Doubling.Decay.descJoint_sub",
+    "GFNBounds.Doubling.Decay.descP",
+    "GFNBounds.Doubling.Decay.descW",
+    "GFNBounds.Doubling.Decay.descZ",
+    "GFNBounds.Doubling.Decay.descZ_eq_descW",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descP",
+    "GFNBounds.Doubling.Decay.descW",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_external": 130,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  1 ≤ ℓ →\n    ∀ {B : ℝ} {g : ℕ → ℝ}, (∀ (j : ℕ), |g j| ≤ B) → ∀ (y : ℕ), |D.descW ℓ g y - D.descP ℓ g y| ≤ B * D.weightDev ℓ y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 533,
+   "kind": "theorem",
+   "doc":
+   "**The paper's use of the lemma, as a consequence.** For `g` bounded by `B`,\n`|E(Z_ℓ g(Y_{N_ℓ})) − E(g(Y_{N_ℓ}))| = |E((Z_ℓ − 1) g(Y_{N_ℓ}))| ≤ B·E(|Z_ℓ − 1|)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.abs_descW_sub_descP_le":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -36786,7 +38461,7 @@
    "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  32 * D.c * D.tau ≤ 2 * ↑ℓ →\n    ∀ {b : ℕ → ℝ},\n      (∀ (y : ℕ), 2 * ℓ ≤ y → |D.R0 y - 1| ≤ b y) →\n        ∀ {B : ℝ} {g : ℕ → ℝ},\n          (∀ (j : ℕ), |g j| ≤ B) → ∀ (y : ℕ), |D.descW ℓ g y - D.descP ℓ g y| ≤ B * (D.prodW ℓ b y - 1)",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 156,
+   "line": 157,
    "kind": "theorem",
    "doc":
    "**`lem:doubling_weight`, in the form the sharp block consumes.** The unnormalised and the\nnormalised descent transforms of a function bounded by `B` differ by at most `B·(prodW − 1)`,\nwhere `prodW` is the product transform at any `b` dominating `|R₀ − 1|` above `2ℓ`.\n\nProved by strong induction on the state; the step is `Decay.weight_step`. This replaces the\npaper's pathwise `|Z_ℓ − 1| ≤ ∏_{n<N_ℓ}(1 + b̃(Y_n)) − 1`. ",
@@ -36816,10 +38491,54 @@
    "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  32 * D.c * D.tau ≤ 2 * ↑ℓ → ∀ {B : ℝ} {g : ℕ → ℝ}, (∀ (j : ℕ), |g j| ≤ B) → ∀ (y : ℕ), |D.descP ℓ g y| ≤ B",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Weight",
-   "line": 137,
+   "line": 138,
    "kind": "theorem",
    "doc":
    "The normalised transform of a function bounded by `B` is bounded by `B`: it is an average. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.abs_descOne_sub_one_le_weightDev":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.abs_descW_sub_descP_le_weightDev",
+    "GFNBounds.Doubling.Decay.descP",
+    "GFNBounds.Doubling.Decay.descP_one",
+    "GFNBounds.Doubling.Decay.descW",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descOne",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_external": 39,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ}, 1 ≤ ℓ → ∀ {y : ℕ}, ℓ ≤ y → |D.descOne ℓ y - 1| ≤ D.weightDev ℓ y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 548,
+   "kind": "theorem",
+   "doc": "**Jensen, as a consistency check.** `|E(Z_ℓ) − 1| ≤ E(|Z_ℓ − 1|)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.abs_descJoint_le":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descJoint",
+    "GFNBounds.Doubling.Decay.descJoint_of_ge",
+    "GFNBounds.Doubling.Decay.descJoint_of_lt",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Decay.kern_nonneg",
+    "GFNBounds.Doubling.window",
+    "GFNBounds.Doubling.window_lt"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.descJoint"],
+   "uses_external": 103,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  1 ≤ ℓ →\n    ∀ {F G : ℕ → ℝ → ℝ} {B : ℝ},\n      (∀ (j : ℕ) (v : ℝ), |F j v| ≤ B * G j v) → ∀ (y : ℕ) (w : ℝ), |D.descJoint ℓ F y w| ≤ B * D.descJoint ℓ G y w",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 186,
+   "kind": "theorem",
+   "doc":
+   "**The joint recursion is an average.** If `|F| ≤ B·G` pointwise then\n`|E(F(Y_{N_ℓ}, wZ_ℓ))| ≤ B·E(G(Y_{N_ℓ}, wZ_ℓ))`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.abs_b_le_block":
   {"uses_value": [],
@@ -36833,6 +38552,283 @@
    "kind": "theorem",
    "doc":
    "Above a block floor `L ≥ ℓ`, the bound `|b(y)| ≤ H/y` reads `|b(y)| ≤ H/L`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.abs_Theta_le":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Theta",
+    "GFNBounds.Doubling.Decay.delta",
+    "GFNBounds.Doubling.Decay.delta_cases",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.p_gt_one",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.tau_gt_two"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Theta",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_external": 249,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (α : ℝ) (m : ℕ), |D.Theta α m| ≤ D.tau * (2 + |α - 1|)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 712,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.Tsum":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.window"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 22,
+   "type": "GFNBounds.Doubling.Decay → ℝ → ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 410,
+   "kind": "def",
+   "doc":
+   "`T_α(m) := m^p Σ_{j∈W(m)} Φ_α(j)/(j+1)`, the rescaled window sum of Step 3. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.Theta":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.delta",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 21,
+   "type": "GFNBounds.Doubling.Decay → ℝ → ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 340,
+   "kind": "def",
+   "doc":
+   "`Θ_α(δ) := (2τ−1)/2 − τδ + (α−1)(2τ−1)/(p+1)`, the coefficient of `m^{−p−1}` in Step 3. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.T_expansion":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.Theta",
+    "GFNBounds.Doubling.Decay.Tsum",
+    "GFNBounds.Doubling.Decay.abs_ePf_le",
+    "GFNBounds.Doubling.Decay.cT",
+    "GFNBounds.Doubling.Decay.delta",
+    "GFNBounds.Doubling.Decay.delta_cases",
+    "GFNBounds.Doubling.Decay.ePf",
+    "GFNBounds.Doubling.Decay.foot_le",
+    "GFNBounds.Doubling.Decay.foot_le_self",
+    "GFNBounds.Doubling.Decay.m_rpow_neg_nat",
+    "GFNBounds.Doubling.Decay.mpow_foot",
+    "GFNBounds.Doubling.Decay.mpow_mul_rpow",
+    "GFNBounds.Doubling.Decay.one_le_foot",
+    "GFNBounds.Doubling.Decay.one_le_of_mem_window'",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.p_gt_one",
+    "GFNBounds.Doubling.Decay.p_pos",
+    "GFNBounds.Doubling.Decay.pf_eq",
+    "GFNBounds.Doubling.Decay.poly_one",
+    "GFNBounds.Doubling.Decay.poly_two",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.tau_gt_two",
+    "GFNBounds.Doubling.Decay.tau_pos",
+    "GFNBounds.Doubling.Decay.ufoot",
+    "GFNBounds.Doubling.one_sub_le_rpow_neg",
+    "GFNBounds.Doubling.rpow_neg_le_one",
+    "GFNBounds.Doubling.rpow_neg_le_quad",
+    "GFNBounds.Doubling.sum_Ico_rpow_le",
+    "GFNBounds.Doubling.window",
+    "GFNBounds.Doubling.window_sum_second"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Theta",
+    "GFNBounds.Doubling.Decay.Tsum",
+    "GFNBounds.Doubling.Decay.cT",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_external": 455,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (α : ℝ) {m : ℕ},\n  1 ≤ m → |D.Tsum α m - (D.tau - 1) / D.p - D.Theta α m / ↑m| ≤ D.cT α / ↑m ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 418,
+   "kind": "theorem",
+   "doc":
+   "**Step 3, the rescaled window sum.** For every `m ≥ 1`,\n`|T_α(m) − (τ−1)/p − Θ_α(δ(m))/m| ≤ τ(p+3)²(1+|α−1|)/m²`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.T0_le":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.p_gt_one",
+    "GFNBounds.Doubling.Decay.p_pos",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.tau_gt_two"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_external": 183,
+   "type": "∀ (D : GFNBounds.Doubling.Decay), (D.tau - 1) / D.p ≤ D.tau",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 728,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.Rexp_isBigO":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Ad",
+    "GFNBounds.Doubling.Decay.Gam",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.Rexp",
+    "GFNBounds.Doubling.Decay.cR"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Ad",
+    "GFNBounds.Doubling.Decay.Gam",
+    "GFNBounds.Doubling.Decay.Ralpha"],
+   "uses_external": 217,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (α : ℝ),\n  (fun m => D.Ralpha α m - 1 - (D.Ad m + D.Gam * α) / ↑m) =O[Filter.atTop] fun m => (↑m ^ 2)⁻¹",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 1248,
+   "kind": "theorem",
+   "doc":
+   "**`eq:doubling_Rexp`, in the paper's `O(m^{-2})` form**, with the constant `cR α` of `Rexp`\nas its implied constant. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.Rexp":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Ad",
+    "GFNBounds.Doubling.Decay.Gam",
+    "GFNBounds.Doubling.Decay.K_sub_le",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.Ralpha_eq",
+    "GFNBounds.Doubling.Decay.T0_le",
+    "GFNBounds.Doubling.Decay.T_expansion",
+    "GFNBounds.Doubling.Decay.Theta",
+    "GFNBounds.Doubling.Decay.Tsum",
+    "GFNBounds.Doubling.Decay.abs_Theta_le",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.cT",
+    "GFNBounds.Doubling.Decay.c_lt_one",
+    "GFNBounds.Doubling.Decay.c_pos",
+    "GFNBounds.Doubling.Decay.coeff_identity",
+    "GFNBounds.Doubling.Decay.const_combine",
+    "GFNBounds.Doubling.Decay.cramer",
+    "GFNBounds.Doubling.Decay.eps",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.p_gt_one",
+    "GFNBounds.Doubling.Decay.p_pos",
+    "GFNBounds.Doubling.Decay.tau",
+    "GFNBounds.Doubling.Decay.tau_gt_two"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Ad",
+    "GFNBounds.Doubling.Decay.Gam",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.cR"],
+   "uses_external": 390,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (α : ℝ) {m : ℕ},\n  1 ≤ m → 2 * |α| ≤ ↑m → |D.Ralpha α m - 1 - (D.Ad m + D.Gam * α) / ↑m| ≤ D.cR α / ↑m ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 787,
+   "kind": "theorem",
+   "doc":
+   "**`eq:doubling_Rexp`, effectively.** For every `α ∈ ℝ` and every integer `m ≥ 1` with\n`2|α| ≤ m`,\n`|R_α(m) − 1 − (A_{δ(m)} + Γα)/m| ≤ 16 τ (p+3)² (1+|α|)² / m²`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.Ralpha_zero_lt_one_of_odd":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.A1",
+    "GFNBounds.Doubling.Decay.A_one_neg",
+    "GFNBounds.Doubling.Decay.Ad",
+    "GFNBounds.Doubling.Decay.Gam",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.Rexp",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.delta"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A1",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.delta"],
+   "uses_external": 275,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m : ℕ},\n  1 ≤ m → GFNBounds.Doubling.Decay.delta m = 1 → D.cR 0 / -D.A1 < ↑m → D.Ralpha 0 m < 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 948,
+   "kind": "theorem",
+   "doc":
+   "**`rem:doubling_parity`, odd `m`.** `R₀(m) < 1` at every odd `m > 16τ(p+3)²/(−A₁)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.Ralpha_zero_gt_one_of_even":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.A1",
+    "GFNBounds.Doubling.Decay.A_zero_pos",
+    "GFNBounds.Doubling.Decay.Ad",
+    "GFNBounds.Doubling.Decay.Gam",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.Rexp",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.delta"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.delta"],
+   "uses_external": 272,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m : ℕ},\n  1 ≤ m → GFNBounds.Doubling.Decay.delta m = 0 → D.cR 0 / D.A0 < ↑m → 1 < D.Ralpha 0 m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 933,
+   "kind": "theorem",
+   "doc":
+   "**`rem:doubling_parity`, even `m`.** `R₀(m) > 1` at every even `m > 16τ(p+3)²/A₀`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.Ralpha_eq":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.Tsum",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.eps",
+    "GFNBounds.Doubling.Decay.one_sub_eps_pos",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.Decay.qm_eq",
+    "GFNBounds.Doubling.base_pos",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.Tsum",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.eps"],
+   "uses_external": 183,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (α : ℝ) {m : ℕ},\n  1 ≤ m → D.Ralpha α m = D.c / (1 - D.eps m) * D.Tsum α m / (1 + α * (↑m)⁻¹)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 693,
+   "kind": "theorem",
+   "doc": "`R_α(m) = c/(1−ε(m)) · T_α(m) / (1 + α/m)`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.Ralpha":
   {"uses_value":
@@ -36934,6 +38930,32 @@
    "doc":
    "`R₀(m) > 0` at `m ≥ 2`: it is a sum of positive terms over a non-empty window. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.R0_lt_one_of_odd":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A1",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.R0_eq_Ralpha_zero",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.Ralpha_zero_lt_one_of_odd",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.delta"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A1",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.delta"],
+   "uses_external": 24,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m : ℕ},\n  1 ≤ m → GFNBounds.Doubling.Decay.delta m = 1 → D.cR 0 / -D.A1 < ↑m → D.R0 m < 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 969,
+   "kind": "theorem",
+   "doc":
+   "`rem:doubling_parity`, odd `m`, on `R₀` as `R0Bound.lean` defines it. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.R0_le_two_of":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -36954,6 +38976,58 @@
    "line": 175,
    "kind": "theorem",
    "doc": "`R₀(z) ≤ 2` at every state of the two blocks in play. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.R0_gt_one_of_even":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.R0_eq_Ralpha_zero",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.Ralpha_zero_gt_one_of_even",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.delta"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.cR",
+    "GFNBounds.Doubling.Decay.delta"],
+   "uses_external": 22,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m : ℕ}, 1 ≤ m → GFNBounds.Doubling.Decay.delta m = 0 → D.cR 0 / D.A0 < ↑m → 1 < D.R0 m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 964,
+   "kind": "theorem",
+   "doc":
+   "`rem:doubling_parity`, even `m`, on `R₀` as `R0Bound.lean` defines it. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.R0_eq_Ralpha_zero":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.Phi_zero_pos",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.Ralpha",
+    "GFNBounds.Doubling.Decay.one_le_of_mem_window'",
+    "GFNBounds.Doubling.Decay.p",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.Decay.wm",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.Ralpha"],
+   "uses_external": 176,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m : ℕ}, 1 ≤ m → D.R0 m = D.Ralpha 0 m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 916,
+   "kind": "theorem",
+   "doc":
+   "`R₀(m)` of `R0Bound.lean` (the total window weight) is `eq:doubling_R` at `α = 0`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.R0_eq":
   {"uses_value":
@@ -37041,6 +39115,20 @@
    "doc":
    "`R_0(m) = Σ_{j ∈ W(m)} w_m(j)`, the total weight of the window — `eq:doubling_R` at `α = 0`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.Phi_zero_pos":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.Phi",
+    "GFNBounds.Doubling.Decay.p"],
+   "uses_type": ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.Phi"],
+   "uses_external": 91,
+   "type": "∀ (D : GFNBounds.Doubling.Decay) {j : ℕ}, 1 ≤ j → 0 < D.Phi 0 j",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 911,
+   "kind": "theorem",
+   "doc": "`Φ₀(j) = j^{−p}` is positive on `j ≥ 1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.Phi":
   {"uses_value": ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.p"],
    "uses_type": ["GFNBounds.Doubling.Decay"],
@@ -37052,6 +39140,27 @@
    "kind": "def",
    "doc": "`Φ_α(j) = j^{−p−1}(j+α)`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.K_sub_le":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.c_lt_one",
+    "GFNBounds.Doubling.Decay.c_pos",
+    "GFNBounds.Doubling.Decay.eps",
+    "GFNBounds.Doubling.Decay.eps_eq"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.eps"],
+   "uses_external": 348,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {m : ℕ}, 1 ≤ m → |D.c / (1 - D.eps m) - D.c - D.c ^ 2 * (↑m)⁻¹| ≤ (↑m)⁻¹ ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 734,
+   "kind": "theorem",
+   "doc": "`|K − c − c²/m| ≤ 1/m²` for `K = c/(1−ε(m))`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.K0Of":
   {"uses_value": ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.m0"],
    "uses_type": ["GFNBounds.Doubling.Decay"],
@@ -37062,6 +39171,49 @@
    "line": 179,
    "kind": "def",
    "doc": "**`K₀ := 8m₀ + 2`** of `cor:doubling_truncation`(2), Step 4. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.IsSupersolution":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.window"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 11,
+   "type": "GFNBounds.Doubling.Decay → (ℕ → ℝ) → Prop",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 974,
+   "kind": "def",
+   "doc":
+   "A positive sequence `(x_j)_{j≥1}` is a **supersolution** of `eq:doubling_avg` if\n`x_m ≥ Σ_{j∈W(m)} q_m(j) x_j` for every large enough integer `m`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.IsSubsolution":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.qm",
+    "GFNBounds.Doubling.window"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 11,
+   "type": "GFNBounds.Doubling.Decay → (ℕ → ℝ) → Prop",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 979,
+   "kind": "def",
+   "doc":
+   "A positive sequence `(x_j)_{j≥1}` is a **subsolution** of `eq:doubling_avg` if\n`x_m ≤ Σ_{j∈W(m)} q_m(j) x_j` for every large enough integer `m`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.IsExitTraj":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.pathExit", "GFNBounds.Doubling.window"],
+   "uses_type": [],
+   "uses_external": 24,
+   "type": "ℕ → ℕ → List ℕ → Prop",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightFull",
+   "line": 240,
+   "kind": "def",
+   "doc":
+   "**A trajectory from `y` stopped at its exit below `2ℓ`**: `Y_0 = y`, `Y_n ≥ 2ℓ` and\n`Y_{n+1} ∈ W(Y_n)` for every `n < N`, and `Y_N < 2ℓ`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.IsDescentPath":
   {"uses_value": ["GFNBounds.Doubling.window"],
@@ -37089,7 +39241,7 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay), 0 < D.Gam",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 81,
+   "line": 82,
    "kind": "theorem",
    "doc": "**`eq:doubling_signs`, `Γ > 0`.** ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -37112,7 +39264,7 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay), D.Gam < 1",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 90,
+   "line": 91,
    "kind": "theorem",
    "doc":
    "**`eq:doubling_signs`, `Γ < 1`.** The gap is `2τ − p − 2 > 0`, the third inequality of\n`eq:doubling_cramer_ineq`. ",
@@ -37127,7 +39279,7 @@
    "type": "GFNBounds.Doubling.Decay → ℝ",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 53,
+   "line": 54,
    "kind": "def",
    "doc": "`Γ` of `eq:doubling_AB`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -37528,6 +39680,47 @@
    "doc":
    "`eq:doubling_cut` as a predicate on a bare sequence, with `ε` the family at `s = 1`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.Ad_eq":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.A1",
+    "GFNBounds.Doubling.Decay.Ad",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.delta",
+    "GFNBounds.Doubling.Decay.delta_lt_two",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.Ad",
+    "GFNBounds.Doubling.Decay.c",
+    "GFNBounds.Doubling.Decay.delta",
+    "GFNBounds.Doubling.Decay.tau"],
+   "uses_external": 65,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) (m : ℕ), D.Ad m = D.A0 - D.c * D.tau * ↑(GFNBounds.Doubling.Decay.delta m)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 332,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.Ad":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.A0",
+    "GFNBounds.Doubling.Decay.A1",
+    "GFNBounds.Doubling.Decay.delta"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 7,
+   "type": "GFNBounds.Doubling.Decay → ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionSecond",
+   "line": 329,
+   "kind": "def",
+   "doc": "`A_{δ(m)}`: `A₀` at even `m`, `A₁` at odd `m`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.A_zero_pos":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -37542,7 +39735,7 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay), 0 < D.A0",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 102,
+   "line": 103,
    "kind": "theorem",
    "doc": "**`eq:doubling_signs`, `A₀ > 0`.** ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -37567,7 +39760,7 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay), D.A1 < 0",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 112,
+   "line": 113,
    "kind": "theorem",
    "doc":
    "**`eq:doubling_signs`, `A₁ < 0`.** The sign is `p + 3 − 4τ < 0`, the fourth inequality of\n`eq:doubling_cramer_ineq`. ",
@@ -37593,7 +39786,7 @@
    "∀ (D : GFNBounds.Doubling.Decay), D.A1 = D.p * (D.p + 3 - 4 * D.tau) / (2 * (D.p + 1) * (D.tau - 1))",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 70,
+   "line": 71,
    "kind": "theorem",
    "doc": "**The closed form of `A₁`.** `A₁ = p(p+3−4τ)/(2(p+1)(τ−1))`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -37614,7 +39807,7 @@
    "type": "∀ (D : GFNBounds.Doubling.Decay), D.A0 - D.A1 = D.c * D.tau",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 78,
+   "line": 79,
    "kind": "theorem",
    "doc":
    "**`rem:doubling_parity`.** The two parities differ at order `1/m` by `A₀ − A₁ = cτ`. ",
@@ -37630,7 +39823,7 @@
    "type": "GFNBounds.Doubling.Decay → ℝ",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 50,
+   "line": 51,
    "kind": "def",
    "doc": "`A₁ := A₀ − cτ` of `eq:doubling_AB`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -37644,7 +39837,7 @@
    "type": "GFNBounds.Doubling.Decay → ℝ",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.Expansion",
-   "line": 46,
+   "line": 47,
    "kind": "def",
    "doc": "`A₀` of `eq:doubling_AB`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},

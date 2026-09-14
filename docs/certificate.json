@@ -1,15 +1,18 @@
 {
   "schema": 1,
-  "source_date": "2026-09-14T20:08:43+01:00",
-  "commit": "47e2250971d3cddbfebd8dd3568180093c27d1c3",
-  "commit_short": "47e2250",
+  "source_date": "2026-09-14T21:32:33+01:00",
+  "commit": "da9c3b66789bab05c6fcc4b8aa6fc79250967f69",
+  "commit_short": "da9c3b6",
   "branch": "main",
   "dirty": true,
   "dirty_files": [
     "GFNBounds.lean",
     "GFNBounds/Audit.lean",
-    "GFNBounds/Balance/C3Wrappers.lean",
-    "GFNBounds/Balance/FlowExistence.lean",
+    "GFNBounds/Doubling/Expansion.lean",
+    "GFNBounds/Doubling/ExpansionSecond.lean",
+    "GFNBounds/Doubling/Sharp.lean",
+    "GFNBounds/Doubling/Weight.lean",
+    "GFNBounds/Doubling/WeightFull.lean",
     "docs/COVERAGE.md",
     "docs/REPO-INDEX.md",
     "docs/REPO-MAP.md",
@@ -48,21 +51,20 @@
     "scaffold/GFNBoundsScaffold.lean",
     "scaffold/GFNBoundsScaffold/Balance/DiscreteGlobal.lean",
     "scaffold/GFNBoundsScaffold/Balance/LiftFinite.lean",
-    "scaffold/GFNBoundsScaffold/Doubling/ExpansionSecond.lean",
-    "scaffold/GFNBoundsScaffold/Doubling/WeightFull.lean"
+    "scaffold/GFNBoundsScaffold/Doubling/Remarks.lean"
   ],
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 2865,
+    "declarations": 2971,
     "by_namespace": {
-      "GFNBounds.Doubling": 1199,
+      "GFNBounds.Doubling": 1305,
       "GFNBounds.Balance": 813,
       "GFNBounds.Graph": 512,
       "GFNBounds.Core": 290,
       "GFNBounds.Silva": 51
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "e5d6e6b9d7502b06be15d173e0a81f27934c8a129c7555983cdd1f040b9dc994"
+    "sha256": "37324b1fa2ae9546ea41b82e3695fbe32a463aca79b363ab6f770cc1bdce8e90"
   }
 }

@@ -3,8 +3,8 @@ import GFNBounds.Doubling.DecayNotation
 /-!
 # The coefficients of the expansion of `R_α`
 
-**`lem:doubling_expansion`** — `app_doubling.tex:848–953`
-and **`rem:doubling_parity`** — `app_doubling.tex:955–963`.
+**`lem:doubling_expansion`** — `app_doubling.tex:858–963`
+and **`rem:doubling_parity`** — `app_doubling.tex:965–978`.
 
 > Put `A₀ := p(p+3+2τ(p−1))/(2(p+1)(τ−1))`, `A₁ := A₀ − cτ`, `Γ := (τ(p−1)+1)/((τ−1)(p+1))`.
 > Then `A₁ = p(p+3−4τ)/(2(p+1)(τ−1))`, `0 < Γ < 1`, `A₀ > 0 > A₁`, and for every `α`, as
@@ -14,23 +14,24 @@ and **`rem:doubling_parity`** — `app_doubling.tex:955–963`.
 
 ## SCOPE (disclosed)
 
-**Step 4 of the proof is here; Steps 1–3 are not.** What is proved:
+**Step 4 of the proof is here; Steps 1–3 are in `ExpansionSecond.lean`.** What is proved here:
 
 * the closed form of `A₁` (`A_one_eq`), which needs `c(τ−1) = p`;
 * `eq:doubling_signs`, `0 < Γ < 1` and `A₀ > 0 > A₁` (`Gamma_pos`, `Gamma_lt_one`, `A_zero_pos`,
   `A_one_neg`), each from one of the four inequalities of `eq:doubling_cramer_ineq`;
 * the parity gap `A₀ − A₁ = cτ` of `rem:doubling_parity` (`A_gap`), which is the definition.
 
-What is **not** proved is `eq:doubling_Rexp` itself. Its Step 2 is Euler–Maclaurin for `t^{−r}`
-with the complete-monotonicity remainder bound, and mathlib v4.31.0 has neither. This is the one
-analytic wall of the appendix — and it has been routed around: the only consequence the descent
+`eq:doubling_Rexp` itself is proved in `ExpansionSecond.lean` (2026-09-14), with the explicit
+constant `16τ(p+3)²(1+|α|)²`: its Step 2 is done by Mathlib's trapezoidal rule on unit intervals
+in place of the complete-monotonicity Euler–Maclaurin remainder the paper uses. Before that it was
+routed around, and the routing stands: the only consequence the descent
 block consumes is `eq:doubling_R0`, the two inequalities `½ ≤ R₀(m) ≤ 2` and
 `|R₀(m) − 1| ≤ c₄/m`, and `R0Bound.lean` proves both by a first-order telescoping comparison
 with the explicit `c₄ = 16cτ`. So `lem:doubling_escape`, `lem:doubling_product` and
 `theo:doubling_decay` are unconditional without `eq:doubling_Rexp`.
 
-`rem:doubling_parity`'s second sentence — that `Φ₀` is neither a super- nor a sub-solution — reads
-off `eq:doubling_Rexp` and is not available.
+`rem:doubling_parity`'s parity claims and "neither a super- nor a sub-solution" read off
+`eq:doubling_Rexp` and are proved in `ExpansionSecond.lean`.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

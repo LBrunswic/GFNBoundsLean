@@ -26,7 +26,7 @@ Everything except the **rate** `eq:doubling_rate`. Precisely:
 * `cutBal_unique` — the fifth bullet: the cut balance determines the whole sequence, hence `C`,
   from `c`, `d` and `λ_1,…,λ_d`.
 
-The one input taken as a hypothesis here is `lem:doubling_weight` (`app_doubling.tex:1343–1383`),
+The one input taken as a hypothesis here is `lem:doubling_weight` (`app_doubling.tex:1357–1397`; stated in the paper's form in `WeightFull.lean`),
 proved in `Weight.lean` (`Decay.weight_bound`, from `lem:doubling_escape` and
 `lem:doubling_product`) and discharged in `SharpFull.lean`. It enters as the named hypothesis
 

@@ -73,6 +73,7 @@ import GFNBounds.Doubling.Remarks
 import GFNBounds.Balance.TrainingSpeedAssembled
 import GFNBounds.Graph.CycleRemarks
 import GFNBounds.Core.FamilyUniversality
+import GFNBounds.Core.SigmaMixing
 import GFNBounds.Graph.MorozovDB
 import GFNBounds.Core.UniversalityBody
 
@@ -465,6 +466,12 @@ end GFNBounds.Doubling
 Balance, Core, Graph and the new Doubling files graduated from the scaffold on 2026-09-13.
 Before this section `Audit.lean` checked Doubling only; these modules were covered solely by
 `scripts/AxiomSweep.lean`. Names are fully qualified. -/
+
+-- `lem:sigma_mixing` — GFNBounds/Core/SigmaMixing.lean
+#print axioms GFNBounds.Core.isBoundedDensityAction_two
+#print axioms GFNBounds.Core.norm_one_sub_meanProj_eq_one
+#print axioms GFNBounds.Core.lem_sigma_mixing
+#print axioms GFNBounds.Core.lem_sigma_mixing_polish
 
 -- `theo/lem:sigma_mixing + prop:nonlinear_freezing(2)` — GFNBounds/Balance/WeightedL2Norm.lean
 #print axioms GFNBounds.Balance.one_sub_meanOp_ne_zero

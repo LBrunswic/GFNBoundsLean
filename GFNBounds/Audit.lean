@@ -86,6 +86,7 @@ import GFNBounds.Graph.SamplerWiring
 import GFNBounds.Doubling.ExpansionTrapezoid
 import GFNBounds.Doubling.WeightChain
 import GFNBounds.Balance.TBGradient
+import GFNBounds.Core.NegativeControl
 
 /-!
 # Axiom audit
@@ -1076,3 +1077,48 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Graph.SamplerWiring.closing_sampler_check_triangle
 #print axioms GFNBounds.Graph.SamplerWiring.isSamplerLaw_subprob
 #print axioms GFNBounds.Graph.SamplerWiring.samplerTV_le_one_general
+#print axioms GFNBounds.Core.NegativeControl.defect
+#print axioms GFNBounds.Core.NegativeControl.dInit
+#print axioms GFNBounds.Core.NegativeControl.dTerm
+#print axioms GFNBounds.Core.NegativeControl.hatInit
+#print axioms GFNBounds.Core.NegativeControl.hatTerm
+#print axioms GFNBounds.Core.NegativeControl.sampler
+#print axioms GFNBounds.Core.NegativeControl.matched
+#print axioms GFNBounds.Core.NegativeControl.errFlow
+#print axioms GFNBounds.Core.NegativeControl.dInit_nonneg
+#print axioms GFNBounds.Core.NegativeControl.dTerm_nonneg
+#print axioms GFNBounds.Core.NegativeControl.defect_eq
+#print axioms GFNBounds.Core.NegativeControl.matched_flowMatching
+#print axioms GFNBounds.Core.NegativeControl.sampler_isGenFlow
+#print axioms GFNBounds.Core.NegativeControl.matched_isGenFlow
+#print axioms GFNBounds.Core.NegativeControl.errFlow_isGenFlow
+#print axioms GFNBounds.Core.NegativeControl.sum_mul_div_sum
+#print axioms GFNBounds.Core.NegativeControl.mixture
+#print axioms GFNBounds.Core.NegativeControl.law_true_mono
+#print axioms GFNBounds.Core.NegativeControl.sum_law_true_le_one
+#print axioms GFNBounds.Core.NegativeControl.law_true_le_one
+#print axioms GFNBounds.Core.NegativeControl.scaled_sum_law_true_le
+#print axioms GFNBounds.Core.NegativeControl.sum_pos_of_ne_zero
+#print axioms GFNBounds.Core.NegativeControl.negative_control
+#print axioms GFNBounds.Core.NegativeControl.emass
+#print axioms GFNBounds.Core.NegativeControl.inference
+#print axioms GFNBounds.Core.NegativeControl.inference_dInit
+#print axioms GFNBounds.Core.NegativeControl.inference_hatTerm
+#print axioms GFNBounds.Core.NegativeControl.sampler_inference
+#print axioms GFNBounds.Core.NegativeControl.sum_emass
+#print axioms GFNBounds.Core.NegativeControl.eDens
+#print axioms GFNBounds.Core.NegativeControl.mul_max_div
+#print axioms GFNBounds.Core.NegativeControl.integral_posPart_eDens
+#print axioms GFNBounds.Core.NegativeControl.integral_negPart_eDens
+#print axioms GFNBounds.Core.NegativeControl.integral_eDens
+#print axioms GFNBounds.Core.NegativeControl.tvD_count_form
+#print axioms GFNBounds.Core.NegativeControl.negative_control_hNC
+#print axioms GFNBounds.Core.NegativeControl.tv_le_two_fmL1_finite
+#print axioms GFNBounds.Core.NegativeControl.Tight.flow
+#print axioms GFNBounds.Core.NegativeControl.Tight.isGenFlow
+#print axioms GFNBounds.Core.NegativeControl.Tight.finit_ne
+#print axioms GFNBounds.Core.NegativeControl.Tight.hatTerm_eq
+#print axioms GFNBounds.Core.NegativeControl.Tight.dInit_eq
+#print axioms GFNBounds.Core.NegativeControl.Tight.law_succ_false
+#print axioms GFNBounds.Core.NegativeControl.Tight.law_true
+#print axioms GFNBounds.Core.NegativeControl.Tight.bound_attained

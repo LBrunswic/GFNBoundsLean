@@ -130,4 +130,5 @@ import GFNBounds.Graph.SamplerWiring
 import GFNBounds.Doubling.ExpansionTrapezoid
 import GFNBounds.Doubling.WeightChain
 import GFNBounds.Balance.TBGradient
+import GFNBounds.Core.NegativeControl
 import GFNBounds.Audit

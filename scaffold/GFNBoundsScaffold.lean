@@ -2,10 +2,10 @@
 # The scaffold holds no `sorry`
 
 Since 2026-09-18 it holds two sorry-free drafts written on the laptop on 2026-09-14, audited and
-held back: `Balance/ClosuresA.lean` (`theo:training_speed_full` whole, `theo:universality_graphs`'
-closing paragraph) must be rebased on `Core/FamilyUniversality.lean`, whose `fmDefectE`,
-`graphResidual`, `memberFlow`, `outStar` and `fwdStarE` it re-defines, and its item-3(b) branch
-must call `DiscreteGlobal.training_speed_gd_minPos_ennreal`; `Graph/LooseEnds.lean` cites no label
+held back: `Balance/ClosuresA.lean` was rebased on `Core/FamilyUniversality.lean` and split the
+same day — `theo:training_speed_full` whole went into the strict `Balance/DiscreteGlobal.lean`
+(`training_speed_full_complete`), and `theo:universality_graphs`' closing paragraph is
+`Graph/UniversalityClosing.lean`, a sorry-free strict candidate; `Graph/LooseEnds.lean` cites no label
 and graduates split three ways (the path law into `Doubling/Remarks.lean` for
 `rem:doubling_two_constants`, the induced flow into `Graph/CycleRemarks.lean` for
 `rem:cycle_no_stalemate`, the C³ flow-matching instance beside `Graph/MorozovDB.lean`), its

@@ -1,12 +1,16 @@
 import GFNBounds.Balance.TrainingSpeed
 import GFNBounds.Balance.LocalConvergenceClauses
 import GFNBounds.Balance.C3Wrappers
+import GFNBounds.Balance.TrainingSpeedAssembled
 
 /-!
 # The discrete global phase: gradient descent converges from every positive initialization, with a step chosen from it
 
 **`theo:training_speed_full`** — item *3* (gradient descent): statement `proofs.tex:1021–1033`,
-proof `proofs.tex:1048–1090`. Items *1*–*2* are `GFNBounds/Balance/TrainingSpeed.lean`'s.
+proof `proofs.tex:1048–1090`. Items *1*–*2* are `GFNBounds/Balance/TrainingSpeed.lean`'s, assembled
+from `u₀` alone in `TrainingSpeedAssembled.lean`; **the whole theorem** — preamble, items *1*–*3* —
+is `training_speed_full_complete`, at the end of this file, which imports
+`TrainingSpeedAssembled.lean` for it.
 **`theo:training_speed`** — the body twin, `cv_divergence.tex:69–82`, whose discrete sentence this
 file certifies through item *3*.
 (The bold-backtick form of the label is what `scripts/trace_check.py` and the paper-side ledger
@@ -97,6 +101,13 @@ limit; it gives the same inequality without the limit `‖ξ_j‖ → 0`.
 | **`training_speed_gd`** | **item *3*, assembled** on the loop closure of a finite path-connected marked graph, for every floor `p_min` |
 | **`training_speed_gd_minPos`**, `minPos`, `minPos_pos`, `minPos_le`, `minPos_le_one` | **item *3* at the paper's `p_min`**, the smallest positive transition probability |
 | `exists_descent_seq`, **`training_speed_gd_inhabited`**, **`cycle_training_speed_gd_nonvacuous`** | inhabitation (kb 0025): the sequence exists, `0 < γ ≤ γ_*` is satisfiable on every instance, and on `rem:cycle_no_stalemate`'s cycle from a non-balanced start |
+| **`training_speed_gd_minPos_ennreal`** | *(b)* in `[0,∞]` with `𝓛(μ₀)^{−1} := +∞`, and balanced `↔ 𝓛(μ₀)^{−1} = ∞` |
+| `Gamma3_logSq_eq_Gamma3Val`, `eps0At_Gamma3Val_eq`, `gamma0At_Gamma3Val_eq` | `Γ₃ = 48 + 32 ln 2` is `sup|g'''|`; `ε₀`, `γ₀` are `C3Wrappers.lean`'s |
+| **`gammaStar_ofReal`** | **`γ_*` is the printed three-term minimum in `[0,∞]`** with `𝓛(μ₀)^{−1} := +∞`: `gammaStar`'s case split is exactly the convention |
+| `gamma0W_logSq_eq_gamma0At`, `eps0W_logSq_eq_eps0At` | item *3*'s `γ₀`, `ε₀` are `TrainingSpeedAssembled`'s `gamma0W`, `eps0W` at `Γ₃ = sup|g'''|` — the `ε₀` of item *2* literally |
+| **`training_speed_gd_exact`** | **item *3* with the paper's quantifiers**, from `u₀` alone: `γ_* > 0`; `γ_*` in `[0,∞]`; balanced `↔ 𝓛(μ₀)^{−1} = ∞`; for every `0 < γ ≤ γ_*` the sequence exists, and every such sequence is positive and satisfies *(a)*, *(b)* in `[0,∞]`, `𝓛(u_k) = 0` for all `k` at a balanced start, *(c)*, *(d)*; the necessity sentence for every non-balanced `μ₀`. No new dynamics: it calls `training_speed_gd_minPos` and `training_speed_gd_minPos_ennreal` |
+| **`training_speed_full_complete`** | **`theo:training_speed_full` whole — the principal declaration of the label**: preamble and items *1*–*2* (`TrainingSpeedAssembled.training_speed_full_paper`, the flow constructed) and item *3* (`training_speed_gd_exact`) in one statement |
+| `cycle_training_speed_complete_check` | inhabitation of `training_speed_full_complete` on the five-cycle from a non-balanced start |
 
 ## Hypothesis checklist — `theo:training_speed_full`*(3)*
 
@@ -106,21 +117,21 @@ limit; it gives the same inequality without the limit `‖ξ_j‖ → 0`.
 | `σ_*` a maximal expected hitting time | ⚠ carried as `hhit : B.IsHitExp uH`, `Graph.Morozov`'s disclosed linear-system reading, as in `TrainingSpeed.lean` |
 | `g = (log x)²` | ✓ `logSq`, `logSqDeriv` (the latter a definition `2 log x/x`, inherited) |
 | `ν = wλ`, `w ≥ w_min > 0` | ✓ `fun z => lam z * wf z`, `hwmin`, `hw` |
-| `‖w‖_{L^∞}` | ⚠ a parameter `wsup` with `hwsup : ∀ x, wf x ≤ wsup`, as throughout the layer; at `wsup := max wf` the constants are the paper's |
+| `‖w‖_{L^∞}` | ⚠ a parameter `wsup` with `hwsup : ∀ x, wf x ≤ wsup`, as throughout the layer; at `wsup := max wf` the constants are the paper's. ✓ **exactly** `Graph.maxOver G wf` in `training_speed_gd_exact` and `training_speed_full_complete` |
 | `p_min` the smallest positive transition probability | ✓ `training_speed_gd_minPos` at `minPos B.phat`; `training_speed_gd` holds for every floor `0 < p_min ≤ 1` below the positive entries |
 | `λ_min := min λ` | ✓ `Graph.minOver G lam` |
 | `#𝒱` | ✓ `Fintype.card V` (in `BoundaryBlowup.uMin`) |
 | `D(u)` the density of `∇^λ𝓛_{g,ν}(uλ)` | ⚠ `Flow.lossGrad`, a definition; its being the gradient is `theo:first_variation_full` (`FirstVariation.lean`), as in `TrainingSpeed.lean` |
 | `μ₀ ∼ λ`, `u₀ = dμ₀/dλ` | ✓ `hu0 : ∀ x, 0 < uk 0 x` |
-| `u_{k+1} := u_k − γD(u_k)` | ⚠ hypothesised of a given sequence, `hstep`; **inhabited** by `exists_descent_seq` |
-| `0 < γ ≤ γ_*` | ✓ `hγ`, `hγs`, `γ_*` the printed formula (`gammaStar`); **satisfiable**, `gammaStar_pos` |
+| `u_{k+1} := u_k − γD(u_k)` | ⚠ hypothesised of a given sequence, `hstep`; **inhabited** by `exists_descent_seq`. ✓ in `training_speed_gd_exact`: **no sequence hypothesised** — the sequence exists, and every sequence with `u_0 = u₀` and the recursion satisfies *(a)*–*(d)* |
+| `0 < γ ≤ γ_*` | ✓ `hγ`, `hγs`, `γ_*` the printed formula (`gammaStar`); **satisfiable**, `gammaStar_pos`. ✓ in `training_speed_gd_exact` with the paper's quantifiers: `0 < γ_*` a conjunct, then `∀ γ, 0 < γ → γ ≤ γ_* → …` |
 | `𝓛(μ₀)^{−1} := +∞` at a balanced start | ✓ in `γ_*` the middle entry `‖u₀‖²/(2𝓛(μ₀))` is `+∞` and dropped from the `min` when `𝓛(μ₀) = 0` (`gammaStar`'s `if`); *(b)* **as printed** in `training_speed_gd_minPos_ennreal`, read in `[0,∞]` where `0⁻¹ = ∞`, with `(𝓛(μ₀))⁻¹ = ∞ ↔` balanced — `global_phase_exact`'s reading of item *1*. The real display of `training_speed_gd_minPos` keeps `0⁻¹ = 0` and is the weaker form at a balanced start |
-| `ε₀`, `γ₀` of `theo:local_convergence_full` at `a = 1/2`, `B̂_σ`, `C_∞ = λ_min^{−1/2}`, `Γ₃ = sup_{[1/2,3/2]}\|g'''\|` | ✓ `eps0At Gamma3Val …`, `gamma0At Gamma3Val …`, the printed formulas of `LocalConvergence.lean` at `Γ₃ = 48 + 32 ln 2`. ⚠ that `48 + 32 ln 2` **is** the supremum is not proved here: `Γ₃` enters as a valid Taylor constant, `LogSqTaylor`'s bound at `24 ≤ Γ₃` discharging `htaylor` |
+| `ε₀`, `γ₀` of `theo:local_convergence_full` at `a = 1/2`, `B̂_σ`, `C_∞ = λ_min^{−1/2}`, `Γ₃ = sup_{[1/2,3/2]}\|g'''\|` | ✓ `eps0At Gamma3Val …`, `gamma0At Gamma3Val …`, the printed formulas of `LocalConvergence.lean` at `Γ₃ = 48 + 32 ln 2`. ✓ that `48 + 32 ln 2` **is** `sup_{[1/2,3/2]}\|g'''\|`: `Gamma3_logSq_eq_Gamma3Val` (and `TrainingSpeedAssembled.Gamma3W_logSq`), with `eps0W_logSq_eq_eps0At`, `gamma0W_logSq_eq_gamma0At` identifying the radius and step cap with item *2*'s |
 | `ϱ_σ = g''(1)w_min λ_min/σ_*²` | ✓ `rhoSigma 2 wmin λ_min σ_*`, from `rhoL` at `B̂_σ` by `rhoL_eq_rhoSigma` |
 | "well defined" | ⚠ `lossGrad` is total in Lean; read as positivity of every iterate, `u_k ≥ u_min > 0` (*(a)* and `BoundaryBlowup.uMin_pos`) |
 | "converges to a balanced flow" | ✓ `‖u_k − m_∞‖_{L²(λ)} → 0` and `Balanced B.phat lam (fun _ => m_∞)`; no measure-level statement |
 | "Πu_k increases to some m_∞" | ✓ `Monotone` and `Tendsto … (nhds m_∞)` |
-| "Every constant's dependence … runs through `σ_*`, `σ̄`, `N_min` alone, except that `u_min` and `γ_*` depend in addition on `p_min` and on `#𝒱`" | ⚠ not a separate conjunct: every constant is an explicit formula (`uMin`, `b3`, `gammaStar`, `k0`, `eps0At`, `gamma0At`, `rhoSigma`) whose arguments show the dependence; `λ_min = N_min/(2+σ̄)` is `TrainingSpeed.minOver_lam_eq` |
+| "Every constant's dependence … runs through `σ_*`, `σ̄`, `N_min` alone, except that `u_min` and `γ_*` depend in addition on `p_min` and on `#𝒱`" | ⚠ not a separate conjunct; read off the explicit formulas. The graph and the backward policy enter every constant through `λ_min`, `B̂_σ` and `σ_*` only — `κ`, `M`, `ϱ_σ`, `k₀(γ)`, `ε₀`, `γ₀` are formulas (`kappa`, `ratioCap`, `rhoSigma`, `k0`, `eps0At`/`eps0W`, `gamma0At`/`gamma0W`) in `λ_min`, `B̂_σ`, `σ_*`, `w_min`, `‖w‖_{L^∞}`, `‖u₀‖`, `m₀`, `𝓛(μ₀)` — and `TrainingSpeed.minOver_lam_eq` gives `λ_min = N_min/(2+σ̄)`, `TrainingSpeed.BhatSigma_eq` gives `B̂_σ = σ_*/√λ_min`; so each is a function of `σ_*`, `σ̄`, `N_min`. `u_min` (`uMin`) takes in addition `p_min` (`minPos`) and `#𝒱` (`Fintype.card V`), and through `b₃` so does `γ_*` (`gammaStar`). Not stated as a congruence (kb 0028) |
 | "No mixing, spectral-gap or aperiodicity hypothesis is used" | ✓ literally true of the signatures: the coercivity is `TrainingSpeed.hcoer_of_graph` |
 
 ## SCOPE (disclosed)
@@ -128,26 +139,36 @@ limit; it gives the same inequality without the limit `‖ξ_j‖ → 0`.
 * **Finite state space**, as everywhere in `GFNBounds.Balance`; the paper's setting is finite.
 * **`D` is `Flow.lossGrad`, a definition** — see the checklist; nothing here re-derives the first
   variation.
-* **`‖w‖_{L^∞}` and `p_min` are parameters** (an upper bound, a floor); `training_speed_gd_minPos`
-  pins `p_min` to the paper's value, and `wsup := max wf` pins the other.
-* **`Γ₃ = 48 + 32 ln 2` is used, not proved to be `sup|g'''|`.** The Lean's Theorem 10 consumes a
-  Taylor bound, not a third derivative; any `M₃ ≥ 24` supplies it for `(log x)²` at `a = 1/2`, and
-  the paper's value is taken so that `ε₀` and `γ₀` are the paper's. (`TrainingSpeed.eps0Sq` is the
-  same radius at `M₃ = 24`, definitionally `eps0At 24`.) The identification is available in the
-  strict library since this file was written — `C3Wrappers.Gamma3_logSq` proves
-  `Gamma3 logSq (1/2) = 48 + 32 ln 2`, and `C3Wrappers.eps0Gamma3` is definitionally
-  `eps0At Gamma3Val` — but this file does not import `C3Wrappers.lean` (lane boundary); closing
-  the gap is a one-line lemma at graduation.
-* **The sequence and the flow are hypothesised, and the sequence is shown to exist**
+* **`‖w‖_{L^∞}` and `p_min` are parameters** (an upper bound, a floor) in `training_speed_gd` and
+  `training_speed_gd_minPos` only; `training_speed_gd_minPos` pins `p_min` to the paper's value, and
+  `training_speed_full_complete` pins both and hypothesises neither.
+* **`Γ₃ = 48 + 32 ln 2` is identified with `sup|g'''|`**: `Gamma3_logSq_eq_Gamma3Val`,
+  `gamma0W_logSq_eq_gamma0At`, `eps0W_logSq_eq_eps0At`. The Lean's Theorem 10 consumes a Taylor
+  bound, which any `M₃ ≥ 24` supplies for `(log x)²` at `a = 1/2`; the paper's value is taken so
+  that `ε₀` and `γ₀` are the paper's. (`TrainingSpeed.eps0Sq` is the same radius at `M₃ = 24`.)
+* **The sequence and the flow are hypothesised in `training_speed_gd`/`_minPos` only** —
+  `training_speed_full_complete` hypothesises neither — **and the sequence is shown to exist**
   (`exists_descent_seq`); the step bound is shown satisfiable (`training_speed_gd_inhabited`) and
   the whole hypothesis bundle inhabited from a non-balanced start on the five-vertex cycle
   (`cycle_training_speed_gd_nonvacuous`).
 * **The balanced-start convention** — see the checklist row; *(b)* at `𝓛(μ₀) = 0` is
-  `training_speed_gd_minPos_ennreal`, which carries the convention exactly.
+  `training_speed_gd_minPos_ennreal`, which carries the convention exactly, and `γ_*` at
+  `𝓛(μ₀) = 0` is `gammaStar_ofReal`.
+* **Item *3* with the paper's quantifiers, and the whole theorem** (`training_speed_gd_exact`,
+  `training_speed_full_complete`, section `Complete`) add quantifier structure and nothing about the
+  dynamics: every inequality is `training_speed_gd_minPos`'s or `training_speed_gd_minPos_ennreal`'s.
+  `‖w‖_{L^∞}` is `Graph.maxOver G wf` exactly and `p_min` is `minPos`, so no parameter is left
+  free. `D` stays `Flow.lossGrad`, and the flow of items *1*–*2* is `TrainingSpeedAssembled`'s,
+  constructed, not hypothesised. The necessity clause picks one state `y` for all small `s`, which
+  is slightly stronger than printed.
+* **"Every constant's dependence runs through `σ_*`, `σ̄`, `N_min` alone"** is read off the formulas
+  (checklist row), not stated as a separate conjunct.
 * **`sorry`-free and axiom-clean**: `#print axioms` on `training_speed_gd`,
   `training_speed_gd_minPos`, `no_uniform_step_graph`, `descent_step`, `traj_a`, `traj_b`,
   `traj_c`, `traj_d`, `k0real_eq`, `training_speed_gd_inhabited` and
-  `cycle_training_speed_gd_nonvacuous` and `training_speed_gd_minPos_ennreal` returns `[propext, Classical.choice, Quot.sound]`.
+  `cycle_training_speed_gd_nonvacuous`, `training_speed_gd_minPos_ennreal`, `gammaStar_ofReal`,
+  `training_speed_gd_exact`, `training_speed_full_complete` and
+  `cycle_training_speed_complete_check` returns `[propext, Classical.choice, Quot.sound]`.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/
@@ -2398,5 +2419,423 @@ theorem gamma0At_Gamma3Val_eq (wmin W Bhat : ℝ) :
     GFNBounds.Balance.Gamma3_logSq, Gamma3Val]
 
 end Identify
+
+
+/-! ### Item *3* with the paper's quantifiers, and the whole theorem
+
+`training_speed_gd_minPos` and `training_speed_gd_minPos_ennreal` take the sequence and the step as
+hypotheses. The paper states item *3* from `u₀` alone — *there is an explicit `γ_* > 0` such that,
+for every step `0 < γ ≤ γ_*`, … the gradient descent is well defined and satisfies (a)–(d)* — and
+states the whole theorem as one statement with items *1*–*2*. This section adds that quantifier
+structure and nothing about the dynamics: every inequality below is one of the two theorems above,
+`γ_*` is shown to be the printed three-term minimum in `[0,∞]`, and `ε₀`, `γ₀` are identified with
+item *2*'s (`TrainingSpeedAssembled.eps0W`, `gamma0W` at `Γ₃ = sup|g'''|`). -/
+
+section Complete
+
+variable {V : Type*} [Fintype V] [DecidableEq V]
+
+open Filter Topology
+
+/-- **`γ_* := min(1/b₃, (‖u₀‖²/2)𝓛(μ₀)^{−1}, γ₀m₀²)` with `𝓛(μ₀)^{−1} := +∞`, exactly**
+(`proofs.tex:1051`, convention `:1004`): `gammaStar`'s case split (the middle entry dropped at
+`𝓛(μ₀) = 0`) is the printed minimum read in `[0,∞]`, where `0⁻¹ = ∞` and `a · ∞ = ∞` for `a > 0`. -/
+theorem gammaStar_ofReal {b3v U0 L0 γ0 m0 : ℝ} (hU0 : 0 < U0) (hL0 : 0 ≤ L0) :
+    ENNReal.ofReal (gammaStar b3v U0 L0 γ0 m0)
+      = min (min (ENNReal.ofReal (1 / b3v))
+          (ENNReal.ofReal (U0 ^ 2 / 2) * (ENNReal.ofReal L0)⁻¹))
+        (ENNReal.ofReal (γ0 * m0 ^ 2)) := by
+  have hU : 0 < U0 ^ 2 / 2 := by positivity
+  unfold gammaStar
+  split_ifs with h
+  · rw [h, ENNReal.ofReal_zero, ENNReal.inv_zero,
+      ENNReal.mul_top (ENNReal.ofReal_pos.mpr hU).ne', min_top_right, ENNReal.ofReal_min]
+  · have hL : 0 < L0 := lt_of_le_of_ne hL0 (Ne.symm h)
+    rw [ENNReal.ofReal_min, ENNReal.ofReal_min, ENNReal.ofReal_mul hU.le,
+      ENNReal.ofReal_inv_of_pos hL]
+
+/-- **Item *3*'s `γ₀` is Theorem 10's** for `g = (log x)²` at `a = 1/2`, with `Γ₃` the supremum of
+`|g'''|` within the window (`TrainingSpeedAssembled.gamma0W`). -/
+theorem gamma0W_logSq_eq_gamma0At (wmin W Bhat : ℝ) :
+    gamma0W logSq (1/2) wmin W Bhat = gamma0At Gamma3Val wmin W Bhat := by
+  simp only [gamma0W, gamma0At, logSq_deriv2_one, Gamma3W_logSq, Gamma3Val]
+
+/-- **Item *3*'s `ε₀` is item *2*'s**, `TrainingSpeedAssembled.eps0W` at `g = (log x)²`,
+`a = 1/2`. -/
+theorem eps0W_logSq_eq_eps0At (wmin W Bhat lamMin : ℝ) :
+    eps0W logSq (1/2) wmin W Bhat lamMin = eps0At Gamma3Val wmin W Bhat lamMin := by
+  simp only [eps0W, eps0At, logSq_deriv2_one, Gamma3W_logSq, Gamma3Val]
+
+/-- **`theo:training_speed_full`, item *3*, as printed** (`proofs.tex:1021–1033`, proof
+`:1045–1090`), from `u₀` alone, with the paper's quantifiers: *there is an explicit `γ_* > 0` such
+that for every step `0 < γ ≤ γ_*` … the gradient descent `u_{k+1} := u_k − γD(u_k)` is well defined
+and satisfies (a)–(d)*, and the closing necessity sentence.
+
+Every constant is the printed formula at the paper's own values: `‖w‖_{L^∞} = max w`
+(`Graph.maxOver`), `λ_min = min λ`, `p_min` the smallest positive transition probability
+(`minPos`), `M = ratioCap`, `u_min`, `b₃`, `γ_*`, `κ`, `k₀(γ)`, `ϱ_σ = g''(1)w_min λ_min/σ_*²`, and
+`ε₀`, `γ₀` those of `theo:local_convergence_full` for `g = (log x)²` at `a = 1/2`, `B̂_σ`,
+`C_∞ = λ_min^{−1/2}`, with `Γ₃ = sup |g'''|` (`eps0W`, `gamma0W`: the same `ε₀` as item *2*).
+
+The convention `𝓛(μ₀)^{−1} := +∞` at a balanced start is honoured twice: `γ_*` is stated in `[0,∞]`
+as the printed three-term minimum, and *(b)* is stated in `[0,∞]`; `μ₀` balanced `↔`
+`𝓛(μ₀)^{−1} = ∞`, and at a balanced start `𝓛(u_k) = 0` for every `k`. The dynamics are
+`training_speed_gd_minPos`'s and *(b)* is `training_speed_gd_minPos_ennreal`'s. -/
+theorem training_speed_gd_exact {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}
+    {lam uH wf : V → ℝ} {wmin : ℝ} {u0 : V → ℝ}
+    (hpc : G.PathConnected) (hpos : B.PositiveOnEdges)
+    (hl : B.IsInvProb lam) (hhit : B.IsHitExp uH)
+    (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u0 x) :
+    0 < (gammaStar (b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam) (minPos B.phat) wmin
+        (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0)) (ratioCap
+        (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))) (Graph.nrmL2 lam
+        u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0W logSq (1/2) wmin (Graph.maxOver G
+        wf) (BhatSigma G uH lam)) (Graph.meanL2 lam u0))
+    ∧ ENNReal.ofReal (gammaStar (b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam) (minPos
+        B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0)) (ratioCap
+        (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))) (Graph.nrmL2 lam
+        u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0W logSq (1/2) wmin (Graph.maxOver G
+        wf) (BhatSigma G uH lam)) (Graph.meanL2 lam u0))
+        = min (min (ENNReal.ofReal (1 / b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam)
+            (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam
+            u0)) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam
+            u0)))))
+            (ENNReal.ofReal (Graph.nrmL2 lam u0 ^ 2 / 2) * (ENNReal.ofReal (lossVal lam wf logSq
+                (ratio B.phat lam u0)))⁻¹))
+          (ENNReal.ofReal (gamma0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH lam) *
+              Graph.meanL2 lam u0 ^ 2))
+    ∧ (Balanced B.phat lam u0 ↔ (ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam u0)))⁻¹ = ⊤)
+    ∧ (∀ γ : ℝ, 0 < γ → γ ≤ (gammaStar (b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam)
+        (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0))
+        (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0))))
+        (Graph.nrmL2 lam u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0W logSq (1/2) wmin
+        (Graph.maxOver G wf) (BhatSigma G uH lam)) (Graph.meanL2 lam u0)) →
+        (∃ uk : ℕ → V → ℝ, uk 0 = u0 ∧ ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat lam
+            (fun z => lam z * wf z) logSqDeriv (uk k) x)
+        ∧ ∀ uk : ℕ → V → ℝ, uk 0 = u0 →
+          (∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat lam (fun z => lam z * wf z)
+              logSqDeriv (uk k) x) →
+          -- well defined
+          0 < uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat
+              lam u0)) (Graph.meanL2 lam u0) ∧ (∀ k x, 0 < uk k x)
+          -- (a)
+          ∧ (∀ k, (∀ x, uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq
+              (ratio B.phat lam u0)) (Graph.meanL2 lam u0) ≤ uk k x)
+              ∧ (lossVal lam wf logSq (ratio B.phat lam (uk (k + 1)))) ≤ (lossVal lam wf logSq
+                  (ratio B.phat lam (uk k))) - γ / 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun z
+                  => lam z * wf z) logSqDeriv (uk k)) ^ 2
+              ∧ Graph.meanL2 lam (uk k) ≤ Graph.meanL2 lam (uk (k + 1))
+              ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2
+                  = Graph.nrmL2 lam (uk k) ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun
+                      z => lam z * wf z) logSqDeriv (uk k)) ^ 2
+              ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 ≤ 2 * Graph.nrmL2 lam u0 ^ 2)
+          -- (b), in `[0,∞]`
+          ∧ (∀ k : ℕ, ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam (uk k)))
+              ≤ ((ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam u0)))⁻¹ + ENNReal.ofReal
+                  (k * γ * (wmin * Real.sqrt (Graph.minOver G lam) / (Graph.nrmL2 lam u0 *
+                  (Graph.maxOver G wf) * max 1 (Real.sqrt ((lossVal lam wf logSq (ratio B.phat lam
+                  u0)) / (wmin * (Graph.minOver G lam)))))) ^ 2 / 4))⁻¹)
+          ∧ (Balanced B.phat lam u0 → ∀ k, (lossVal lam wf logSq (ratio B.phat lam (uk k))) = 0)
+          -- (c)
+          ∧ Graph.meanL2 lam u0 ≤ Graph.meanL2 lam (uk (k0 γ (Graph.nrmL2 lam u0) (Graph.maxOver G
+              wf) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam
+              u0))) (Graph.sigmaStar G uH) wmin (Graph.minOver G lam) (eps0W logSq (1/2) wmin
+              (Graph.maxOver G wf) (BhatSigma G uH lam) (Graph.minOver G lam)) (Graph.meanL2 lam
+              u0)))
+          ∧ Graph.meanL2 lam (uk (k0 γ (Graph.nrmL2 lam u0) (Graph.maxOver G wf) (ratioCap
+              (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))
+              (Graph.sigmaStar G uH) wmin (Graph.minOver G lam) (eps0W logSq (1/2) wmin
+              (Graph.maxOver G wf) (BhatSigma G uH lam) (Graph.minOver G lam)) (Graph.meanL2 lam
+              u0))) ≤ Real.sqrt 2 * Graph.nrmL2 lam u0
+          ∧ (∀ k : ℕ, (k0 γ (Graph.nrmL2 lam u0) (Graph.maxOver G wf) (ratioCap (Graph.minOver G
+              lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0))) (Graph.sigmaStar G uH) wmin
+              (Graph.minOver G lam) (eps0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH
+              lam) (Graph.minOver G lam)) (Graph.meanL2 lam u0)) ≤ k →
+              Graph.nrmL2 lam (fun x => uk k x / Graph.meanL2 lam (uk k) - 1) ≤ eps0W logSq (1/2)
+                  wmin (Graph.maxOver G wf) (BhatSigma G uH lam) (Graph.minOver G lam)
+              ∧ Graph.nrmL2 lam (perpL2 lam (uk (k + 1)))
+                ≤ (1 - γ * rhoSigma (deriv (deriv logSq) 1) wmin (Graph.minOver G lam)
+                    (Graph.sigmaStar G uH) / (4 * Graph.meanL2 lam (uk (k0 γ (Graph.nrmL2 lam u0)
+                    (Graph.maxOver G wf) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq
+                    (ratio B.phat lam u0))) (Graph.sigmaStar G uH) wmin (Graph.minOver G lam)
+                    (eps0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH lam)
+                    (Graph.minOver G lam)) (Graph.meanL2 lam u0))) ^ 2))
+                  * Graph.nrmL2 lam (perpL2 lam (uk k)))
+          -- (d)
+          ∧ Monotone (fun k => Graph.meanL2 lam (uk k))
+          ∧ ∃ minf : ℝ, Tendsto (fun k => Graph.meanL2 lam (uk k)) atTop (𝓝 minf)
+              ∧ minf ≤ Real.sqrt 2 * Graph.nrmL2 lam u0
+              ∧ Balanced B.phat lam (fun _ => minf)
+              ∧ (∀ k : ℕ, (k0 γ (Graph.nrmL2 lam u0) (Graph.maxOver G wf) (ratioCap (Graph.minOver
+                  G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0))) (Graph.sigmaStar G uH)
+                  wmin (Graph.minOver G lam) (eps0W logSq (1/2) wmin (Graph.maxOver G wf)
+                  (BhatSigma G uH lam) (Graph.minOver G lam)) (Graph.meanL2 lam u0)) ≤ k →
+                  minf - Graph.meanL2 lam (uk k)
+                      ≤ Graph.nrmL2 lam (perpL2 lam (uk k)) ^ 2 / Graph.meanL2 lam (uk (k0 γ
+                          (Graph.nrmL2 lam u0) (Graph.maxOver G wf) (ratioCap (Graph.minOver G lam)
+                          wmin (lossVal lam wf logSq (ratio B.phat lam u0))) (Graph.sigmaStar G uH)
+                          wmin (Graph.minOver G lam) (eps0W logSq (1/2) wmin (Graph.maxOver G wf)
+                          (BhatSigma G uH lam) (Graph.minOver G lam)) (Graph.meanL2 lam u0)))
+                  ∧ Graph.nrmL2 lam (fun x => uk k x - minf)
+                      ≤ 9 / 8 * Graph.nrmL2 lam (perpL2 lam (uk k)))
+              ∧ Tendsto (fun k => Graph.nrmL2 lam (fun x => uk k x - minf)) atTop (𝓝 0))
+    -- no step bound independent of the initialization
+    ∧ (∀ γ : ℝ, 0 < γ → ∀ v0 : V → ℝ, (∀ x, 0 < v0 x) → ¬ Balanced B.phat lam v0 →
+        ∃ y : V, ∃ s0 : ℝ, 0 < s0 ∧ ∀ s : ℝ, 0 < s → s < s0 →
+          s * v0 y - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (fun x => s * v0 x)
+              y < 0) := by
+  have hp : ∀ x, 0 < lam x := fun x => hl.pos hpc hpos x
+  have hnn : ∀ x, 0 ≤ lam x := fun x => (hp x).le
+  haveI := nonempty_of_total hl.total
+  obtain ⟨x0⟩ := ‹Nonempty V›
+  have hwsup : ∀ x, wf x ≤ Graph.maxOver G wf := fun x => Graph.le_maxOver wf x
+  have hWpos : 0 < Graph.maxOver G wf := lt_of_lt_of_le hwmin (le_trans (hw x0) (hwsup x0))
+  have hwpos : ∀ x, 0 < wf x := fun x => lt_of_lt_of_le hwmin (hw x)
+  have hlmin0 : 0 < Graph.minOver G lam := Graph.minOver_pos hp
+  have hm0 : 0 < Graph.meanL2 lam u0 :=
+    Finset.sum_pos (fun x _ => mul_pos (hp x) (hu0 x)) Finset.univ_nonempty
+  have hU0 : 0 < Graph.nrmL2 lam u0 :=
+    lt_of_lt_of_le hm0 (mean_le_nrmL2_iff_const hp hl.total (fun x => (hu0 x).le)).1
+  have hL0 : 0 ≤ lossVal lam wf logSq (ratio B.phat lam u0) :=
+    lossVal_nonneg hnn (fun x => (hwpos x).le)
+  have hum : 0 < uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio
+      B.phat lam u0)) (Graph.meanL2 lam u0) := uMin_pos hlmin0 (minPos_pos _) hm0
+  have hbr := (b3_bracket_ge (ratioCap_pos (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio
+      B.phat lam u0))).le).2.2
+  have hb3 : 0 < b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam) (minPos B.phat) wmin
+      (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0)) (ratioCap (Graph.minOver
+      G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0))) := by
+    rw [b3, mul_assoc]
+    have := lt_of_lt_of_le (by norm_num : (0:ℝ) < 8) hbr
+    positivity
+  have hB := lt_of_lt_of_le zero_lt_one (one_le_BhatSigma hpc hpos hl hhit)
+  rw [gamma0W_logSq_eq_gamma0At, eps0W_logSq_eq_eps0At, logSq_deriv2_one]
+  have hGpos := gammaStar_pos hb3 hU0 hL0
+    (gamma0At_pos (le_trans (by norm_num) twentyfour_le_Gamma3Val) hwmin hWpos hB) hm0
+  -- the balanced-start iff is `training_speed_gd_minPos_ennreal`'s, read on the sequence at `γ_*`
+  have hbal : Balanced B.phat lam u0 ↔ (ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam
+      u0)))⁻¹ = ⊤ := by
+    obtain ⟨uk, h0, hrec⟩ := exists_descent_seq B.phat lam wf u0 (gammaStar (b3 (Graph.maxOver G
+      wf) (uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat
+      lam u0)) (Graph.meanL2 lam u0)) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq
+      (ratio B.phat lam u0)))) (Graph.nrmL2 lam u0) (lossVal lam wf logSq (ratio B.phat lam u0))
+      (gamma0At Gamma3Val wmin (Graph.maxOver G wf) (BhatSigma G uH lam)) (Graph.meanL2 lam u0))
+    subst h0
+    exact (training_speed_gd_minPos_ennreal hpc hpos hl hhit hwmin hw hwsup hu0 hrec hGpos
+      le_rfl).2
+  refine ⟨hGpos, gammaStar_ofReal hU0 hL0, hbal, fun γ hγ hγs => ⟨exists_descent_seq _ _ _ _ _,
+    fun uk huk0 hstep => ?_⟩, fun γ hγ v0 hv0 hnb => no_uniform_step_graph hpc hpos hl hwmin hw
+      hv0 hnb hγ⟩
+  subst huk0
+  obtain ⟨ha, -, hc1, hc2, hc3, hd1, hd2⟩ :=
+    training_speed_gd_minPos hpc hpos hl hhit hwmin hw hwsup hu0 hstep hγ hγs
+  obtain ⟨hb, hbal'⟩ :=
+    training_speed_gd_minPos_ennreal hpc hpos hl hhit hwmin hw hwsup hu0 hstep hγ hγs
+  have hbal0 : Balanced B.phat lam (uk 0) →
+      ∀ k, lossVal lam wf logSq (ratio B.phat lam (uk k)) = 0 := by
+    intro h k
+    have hk := hb k
+    rw [hbal'.mp h, top_add, ENNReal.inv_top, nonpos_iff_eq_zero,
+      ENNReal.ofReal_eq_zero] at hk
+    exact le_antisymm hk (lossVal_nonneg hnn fun x => (hwpos x).le)
+  exact ⟨hum, fun k x => lt_of_lt_of_le hum ((ha k).1 x), ha, hb, hbal0, hc1, hc2, hc3, hd1, hd2⟩
+
+/-- **`theo:training_speed_full`, the whole statement** (`proofs.tex:999–1035`): the preamble and
+items *1*–*2* (`TrainingSpeedAssembled.training_speed_full_paper`, the flow constructed, no flow
+hypothesis) and item *3* (`training_speed_gd_exact`), from the paper's hypotheses and `u₀` alone,
+with `𝓛(μ₀)^{−1} := +∞` at a balanced start honoured in both the flow's and the descent's
+displays, and `ε₀` literally the same constant in items *2* and *3*. The principal declaration of
+the label. -/
+theorem training_speed_full_complete {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}
+    {lam gr uH wf : V → ℝ} {wmin : ℝ}
+    (hpc : G.PathConnected) (hpos : B.PositiveOnEdges)
+    (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH)
+    (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x)
+    {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) :
+    ((∀ x, lam x = Graph.visits G gr x / (2 + B.sigmaBar uH))
+        ∧ Graph.minOver G lam = Graph.minOver G (Graph.visits G gr) / (2 + B.sigmaBar uH)
+        ∧ rhoSigma (deriv (deriv logSq) 1) wmin (Graph.minOver G lam) (Graph.sigmaStar G uH)
+            = 2 * wmin * Graph.minOver G (Graph.visits G gr)
+                / (Graph.sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH))
+        ∧ ∃ u : ℝ → V → ℝ, u 0 = u0
+          ∧ IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u
+          ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x)
+          ∧ (∀ v : ℝ → V → ℝ, v 0 = u0 →
+              IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv v →
+              (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t)
+          ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam u0)
+          ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam u0)
+          -- item 1
+          ∧ (∀ t : ℝ, 0 ≤ t →
+              HasDerivAt (fun s => lossVal lam wf logSq (ratio B.phat lam (u s)))
+                (-(Graph.nrmL2 lam (lossGrad B.phat lam (fun x => lam x * wf x) logSqDeriv (u t))
+                  ^ 2)) t
+              ∧ (wmin * Real.sqrt (Graph.minOver G lam)
+                  / (Graph.nrmL2 lam u0 * Graph.maxOver G wf
+                      * max 1 (Real.sqrt (lossVal lam wf logSq (ratio B.phat lam u0)
+                          / (wmin * Graph.minOver G lam))))) ^ 2
+                  * lossVal lam wf logSq (ratio B.phat lam (u t)) ^ 2
+                ≤ Graph.nrmL2 lam (lossGrad B.phat lam (fun x => lam x * wf x) logSqDeriv (u t))
+                  ^ 2)
+          ∧ (∀ t : ℝ, 0 ≤ t →
+              ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam (u t)))
+                ≤ ((ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam u0)))⁻¹
+                    + ENNReal.ofReal ((wmin * Real.sqrt (Graph.minOver G lam)
+                        / (Graph.nrmL2 lam u0 * Graph.maxOver G wf
+                            * max 1 (Real.sqrt (lossVal lam wf logSq (ratio B.phat lam u0)
+                                / (wmin * Graph.minOver G lam))))) ^ 2 * t))⁻¹)
+          ∧ (Balanced B.phat lam u0
+              ↔ (ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam u0)))⁻¹ = ⊤)
+          -- item 2
+          ∧ ∃ t₁ ∈ Set.Icc (0:ℝ)
+              (4 * lossVal lam wf logSq (ratio B.phat lam u0) * Graph.nrmL2 lam u0 ^ 6
+                  * Graph.sigmaStar G uH ^ 4
+                / (wmin ^ 2
+                    * eps0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH lam)
+                        (Graph.minOver G lam) ^ 4
+                    * Graph.meanL2 lam u0 ^ 4 * Graph.minOver G lam ^ 5)),
+              Graph.meanL2 lam u0 ≤ Graph.meanL2 lam (u t₁)
+                ∧ Graph.meanL2 lam (u t₁) ≤ Graph.nrmL2 lam u0
+                ∧ Graph.nrmL2 lam (fun x => u t₁ x / Graph.meanL2 lam (u t₁) - 1)
+                    ≤ eps0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH lam)
+                        (Graph.minOver G lam)
+                ∧ ∃ cinf : ℝ, Balanced B.phat lam (fun _ => cinf) ∧ ∀ t : ℝ, t₁ ≤ t →
+                    Graph.nrmL2 lam (fun x => u t x / Graph.meanL2 lam (u t₁) - cinf)
+                      ≤ 2 * Real.exp (-(rhoSigma (deriv (deriv logSq) 1) wmin (Graph.minOver G lam)
+                              (Graph.sigmaStar G uH) * (t - t₁)
+                            / (2 * Graph.meanL2 lam (u t₁) ^ 2)))
+                        * Graph.nrmL2 lam
+                            (perpL2 lam (fun x => u t₁ x / Graph.meanL2 lam (u t₁) - 1)))
+    ∧ (0 < (gammaStar (b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam) (minPos B.phat) wmin
+        (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0)) (ratioCap
+        (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))) (Graph.nrmL2 lam
+        u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0W logSq (1/2) wmin (Graph.maxOver G
+        wf) (BhatSigma G uH lam)) (Graph.meanL2 lam u0))
+      ∧ ENNReal.ofReal (gammaStar (b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam) (minPos
+          B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0))
+          (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0))))
+          (Graph.nrmL2 lam u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0W logSq (1/2)
+          wmin (Graph.maxOver G wf) (BhatSigma G uH lam)) (Graph.meanL2 lam u0))
+          = min (min (ENNReal.ofReal (1 / b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam)
+              (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam
+              u0)) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam
+              u0)))))
+              (ENNReal.ofReal (Graph.nrmL2 lam u0 ^ 2 / 2) * (ENNReal.ofReal (lossVal lam wf logSq
+                  (ratio B.phat lam u0)))⁻¹))
+            (ENNReal.ofReal (gamma0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH lam) *
+                Graph.meanL2 lam u0 ^ 2))
+      ∧ (Balanced B.phat lam u0 ↔ (ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam u0)))⁻¹ =
+          ⊤)
+      ∧ (∀ γ : ℝ, 0 < γ → γ ≤ (gammaStar (b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam)
+          (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0))
+          (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0))))
+          (Graph.nrmL2 lam u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0W logSq (1/2)
+          wmin (Graph.maxOver G wf) (BhatSigma G uH lam)) (Graph.meanL2 lam u0)) →
+          (∃ uk : ℕ → V → ℝ, uk 0 = u0 ∧ ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat
+              lam (fun z => lam z * wf z) logSqDeriv (uk k) x)
+          ∧ ∀ uk : ℕ → V → ℝ, uk 0 = u0 →
+            (∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat lam (fun z => lam z * wf z)
+                logSqDeriv (uk k) x) →
+            -- well defined
+            0 < uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio
+                B.phat lam u0)) (Graph.meanL2 lam u0) ∧ (∀ k x, 0 < uk k x)
+            -- (a)
+            ∧ (∀ k, (∀ x, uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq
+                (ratio B.phat lam u0)) (Graph.meanL2 lam u0) ≤ uk k x)
+                ∧ (lossVal lam wf logSq (ratio B.phat lam (uk (k + 1)))) ≤ (lossVal lam wf logSq
+                    (ratio B.phat lam (uk k))) - γ / 2 * Graph.nrmL2 lam (lossGrad B.phat lam (fun
+                    z => lam z * wf z) logSqDeriv (uk k)) ^ 2
+                ∧ Graph.meanL2 lam (uk k) ≤ Graph.meanL2 lam (uk (k + 1))
+                ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2
+                    = Graph.nrmL2 lam (uk k) ^ 2 + γ ^ 2 * Graph.nrmL2 lam (lossGrad B.phat lam
+                        (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2
+                ∧ Graph.nrmL2 lam (uk (k + 1)) ^ 2 ≤ 2 * Graph.nrmL2 lam u0 ^ 2)
+            -- (b), in `[0,∞]`
+            ∧ (∀ k : ℕ, ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam (uk k)))
+                ≤ ((ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam u0)))⁻¹ + ENNReal.ofReal
+                    (k * γ * (wmin * Real.sqrt (Graph.minOver G lam) / (Graph.nrmL2 lam u0 *
+                    (Graph.maxOver G wf) * max 1 (Real.sqrt ((lossVal lam wf logSq (ratio B.phat
+                    lam u0)) / (wmin * (Graph.minOver G lam)))))) ^ 2 / 4))⁻¹)
+            ∧ (Balanced B.phat lam u0 → ∀ k, (lossVal lam wf logSq (ratio B.phat lam (uk k))) = 0)
+            -- (c)
+            ∧ Graph.meanL2 lam u0 ≤ Graph.meanL2 lam (uk (k0 γ (Graph.nrmL2 lam u0) (Graph.maxOver
+                G wf) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam
+                u0))) (Graph.sigmaStar G uH) wmin (Graph.minOver G lam) (eps0W logSq (1/2) wmin
+                (Graph.maxOver G wf) (BhatSigma G uH lam) (Graph.minOver G lam)) (Graph.meanL2 lam
+                u0)))
+            ∧ Graph.meanL2 lam (uk (k0 γ (Graph.nrmL2 lam u0) (Graph.maxOver G wf) (ratioCap
+                (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))
+                (Graph.sigmaStar G uH) wmin (Graph.minOver G lam) (eps0W logSq (1/2) wmin
+                (Graph.maxOver G wf) (BhatSigma G uH lam) (Graph.minOver G lam)) (Graph.meanL2 lam
+                u0))) ≤ Real.sqrt 2 * Graph.nrmL2 lam u0
+            ∧ (∀ k : ℕ, (k0 γ (Graph.nrmL2 lam u0) (Graph.maxOver G wf) (ratioCap (Graph.minOver G
+                lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0))) (Graph.sigmaStar G uH) wmin
+                (Graph.minOver G lam) (eps0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH
+                lam) (Graph.minOver G lam)) (Graph.meanL2 lam u0)) ≤ k →
+                Graph.nrmL2 lam (fun x => uk k x / Graph.meanL2 lam (uk k) - 1) ≤ eps0W logSq (1/2)
+                    wmin (Graph.maxOver G wf) (BhatSigma G uH lam) (Graph.minOver G lam)
+                ∧ Graph.nrmL2 lam (perpL2 lam (uk (k + 1)))
+                  ≤ (1 - γ * rhoSigma (deriv (deriv logSq) 1) wmin (Graph.minOver G lam)
+                      (Graph.sigmaStar G uH) / (4 * Graph.meanL2 lam (uk (k0 γ (Graph.nrmL2 lam u0)
+                      (Graph.maxOver G wf) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf
+                      logSq (ratio B.phat lam u0))) (Graph.sigmaStar G uH) wmin (Graph.minOver G
+                      lam) (eps0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH lam)
+                      (Graph.minOver G lam)) (Graph.meanL2 lam u0))) ^ 2))
+                    * Graph.nrmL2 lam (perpL2 lam (uk k)))
+            -- (d)
+            ∧ Monotone (fun k => Graph.meanL2 lam (uk k))
+            ∧ ∃ minf : ℝ, Tendsto (fun k => Graph.meanL2 lam (uk k)) atTop (𝓝 minf)
+                ∧ minf ≤ Real.sqrt 2 * Graph.nrmL2 lam u0
+                ∧ Balanced B.phat lam (fun _ => minf)
+                ∧ (∀ k : ℕ, (k0 γ (Graph.nrmL2 lam u0) (Graph.maxOver G wf) (ratioCap
+                    (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))
+                    (Graph.sigmaStar G uH) wmin (Graph.minOver G lam) (eps0W logSq (1/2) wmin
+                    (Graph.maxOver G wf) (BhatSigma G uH lam) (Graph.minOver G lam)) (Graph.meanL2
+                    lam u0)) ≤ k →
+                    minf - Graph.meanL2 lam (uk k)
+                        ≤ Graph.nrmL2 lam (perpL2 lam (uk k)) ^ 2 / Graph.meanL2 lam (uk (k0 γ
+                            (Graph.nrmL2 lam u0) (Graph.maxOver G wf) (ratioCap (Graph.minOver G
+                            lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))
+                            (Graph.sigmaStar G uH) wmin (Graph.minOver G lam) (eps0W logSq (1/2)
+                            wmin (Graph.maxOver G wf) (BhatSigma G uH lam) (Graph.minOver G lam))
+                            (Graph.meanL2 lam u0)))
+                    ∧ Graph.nrmL2 lam (fun x => uk k x - minf)
+                        ≤ 9 / 8 * Graph.nrmL2 lam (perpL2 lam (uk k)))
+                ∧ Tendsto (fun k => Graph.nrmL2 lam (fun x => uk k x - minf)) atTop (𝓝 0))
+      -- no step bound independent of the initialization
+      ∧ (∀ γ : ℝ, 0 < γ → ∀ v0 : V → ℝ, (∀ x, 0 < v0 x) → ¬ Balanced B.phat lam v0 →
+          ∃ y : V, ∃ s0 : ℝ, 0 < s0 ∧ ∀ s : ℝ, 0 < s → s < s0 →
+            s * v0 y - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (fun x => s * v0
+                x) y < 0)) :=
+  ⟨training_speed_full_paper hpc hpos hl hg hhit hwmin hw hu0,
+    training_speed_gd_exact hpc hpos hl hhit hwmin hw hu0⟩
+
+open Graph.CycleExample in
+/-- **Non-vacuity of `training_speed_full_complete`** (kb 0025) on the five-vertex cycle of
+`rem:cycle_no_stalemate` at `p = 1/2`, `w ≡ 1`, from the over-inflated `uInfl 2`, which is **not**
+balanced: the theorem applies with nothing hypothesised beyond the setting, `γ_* > 0`, and at
+`γ = γ_*` the descent sequence exists and every iterate is positive. -/
+theorem cycle_training_speed_complete_check :
+    ¬ Balanced (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (uInfl 2)
+    ∧ ∃ γ : ℝ, 0 < γ ∧ ∃ uk : ℕ → Fin 5 → ℝ, uk 0 = uInfl 2
+        ∧ (∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad
+            (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2))
+            (fun z => lam (1 / 2) z * 1) logSqDeriv (uk k) x)
+        ∧ ∀ k x, 0 < uk k x := by
+  obtain ⟨-, hGS, -, -, hγ, -⟩ :=
+    training_speed_full_complete (G := cyc) (B := pol (p := 1 / 2) (by norm_num) (by norm_num))
+      (wf := fun _ => (1 : ℝ)) (wmin := 1) pathConnected (positiveOnEdges _ _) (isInvProb _ _)
+      (isGreen _ _) (isHitExp _ _) one_pos (fun _ => le_rfl) (uInfl_pos (M := 2) (by norm_num))
+  obtain ⟨⟨uk, h0, hrec⟩, hall⟩ := hγ _ hGS le_rfl
+  obtain ⟨-, hpos, -⟩ := hall uk h0 hrec
+  refine ⟨?_, _, hGS, uk, h0, hrec, hpos⟩
+  rw [← ratio_eq_one_iff_balanced
+    (fun y => mul_pos (lam_pos (p := 1 / 2) (by norm_num) y) (uInfl_pos (M := 2) (by norm_num) y))]
+  intro h
+  have h0' := h 0
+  rw [ratio_src (by norm_num) (by norm_num) (by norm_num)] at h0'
+  norm_num at h0'
+
+end Complete
 
 end GFNBounds.Balance.DiscreteGlobal

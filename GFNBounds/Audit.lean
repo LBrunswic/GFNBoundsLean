@@ -78,6 +78,7 @@ import GFNBounds.Graph.MorozovDB
 import GFNBounds.Core.UniversalityBody
 import GFNBounds.Balance.RemarksA
 import GFNBounds.Silva.Remarks
+import GFNBounds.Graph.UniversalityClosing
 
 /-!
 # Axiom audit
@@ -726,6 +727,13 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.DiscreteGlobal.Gamma3_logSq_eq_Gamma3Val
 #print axioms GFNBounds.Balance.DiscreteGlobal.eps0At_Gamma3Val_eq
 #print axioms GFNBounds.Balance.DiscreteGlobal.gamma0At_Gamma3Val_eq
+-- `theo:training_speed_full` whole: item 3 with the paper's quantifiers, and items 1–3 conjoined
+#print axioms GFNBounds.Balance.DiscreteGlobal.gammaStar_ofReal
+#print axioms GFNBounds.Balance.DiscreteGlobal.gamma0W_logSq_eq_gamma0At
+#print axioms GFNBounds.Balance.DiscreteGlobal.eps0W_logSq_eq_eps0At
+#print axioms GFNBounds.Balance.DiscreteGlobal.training_speed_gd_exact
+#print axioms GFNBounds.Balance.DiscreteGlobal.training_speed_full_complete
+#print axioms GFNBounds.Balance.DiscreteGlobal.cycle_training_speed_complete_check
 
 -- `rem:doubling_renewal` and `rem:doubling_two_constants` — GFNBounds/Doubling/Remarks.lean
 #print axioms GFNBounds.Doubling.Remarks.renewal_limit
@@ -935,3 +943,16 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Silva.Remarks.inhabit_cycle_walks
 #print axioms GFNBounds.Silva.Remarks.inhabit_cycle_ratio
 #print axioms GFNBounds.Silva.Remarks.inhabit_geometric
+#print axioms GFNBounds.Graph.UniversalityClosing.universality_graphs_closing
+#print axioms GFNBounds.Graph.UniversalityClosing.universality_graphs_strongly_universal
+#print axioms GFNBounds.Graph.UniversalityClosing.freezeSink
+#print axioms GFNBounds.Graph.UniversalityClosing.IsFullTarget
+#print axioms GFNBounds.Graph.UniversalityClosing.IsFullTarget.isTarget
+#print axioms GFNBounds.Graph.UniversalityClosing.freezeSink_positiveOnEdges_iff
+#print axioms GFNBounds.Graph.UniversalityClosing.frozenBalance_eq_off
+#print axioms GFNBounds.Graph.UniversalityClosing.invProb_unique_off
+#print axioms GFNBounds.Graph.UniversalityClosing.breach_all_off
+#print axioms GFNBounds.Graph.UniversalityClosing.graphResidual_eq_zero_of_defect
+#print axioms GFNBounds.Graph.UniversalityClosing.frozenUnion_eq_iUnion
+#print axioms GFNBounds.Graph.UniversalityClosing.item_three_masses_on_internal
+#print axioms GFNBounds.Graph.UniversalityClosing.triSrcSnk_check

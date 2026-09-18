@@ -4,8 +4,25 @@
   "commit": "69f77fec6259ef1e4ebb920ee08b404c4bc1c634",
   "commit_short": "69f77fe",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "GFNBounds.lean",
+    "GFNBounds/Audit.lean",
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json",
+    "kb/INDEX.md",
+    "paper-map.json",
+    "GFNBounds/Balance/LocalConvergenceClose.lean",
+    "GFNBounds/Core/ILBoundFull.lean",
+    "GFNBounds/Core/RLBound.lean",
+    "GFNBounds/Doubling/RenewalClose.lean",
+    "GFNBounds/Graph/PartialSupportClose.lean",
+    "GFNBounds/Silva/PathSpaceMarkov.lean",
+    "kb/entries/0042-an-infimum-of-a-loss-that-can-be-inf-must-be-tak.md"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -38,15 +55,15 @@
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 4373,
+    "declarations": 4583,
     "by_namespace": {
-      "GFNBounds.Doubling": 1442,
-      "GFNBounds.Balance": 1242,
-      "GFNBounds.Graph": 920,
-      "GFNBounds.Core": 578,
-      "GFNBounds.Silva": 191
+      "GFNBounds.Doubling": 1451,
+      "GFNBounds.Balance": 1253,
+      "GFNBounds.Graph": 992,
+      "GFNBounds.Core": 662,
+      "GFNBounds.Silva": 225
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "c57251cc959e5bef736985b250d52ff82688df5e913b9fb00fd64340f89e3102"
+    "sha256": "0d692cd5e5039aa0c93f724061a087abdfd6d20ab078d8256d968ac16a8ca581"
   }
 }

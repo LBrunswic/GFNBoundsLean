@@ -140,10 +140,16 @@
     "GFNBounds.Balance.TBGradient",
     "GFNBounds.Core.NegativeControl",
     "GFNBounds.Balance.GlobalConvergenceFinite",
+    "GFNBounds.Core.RLBound",
+    "GFNBounds.Core.ILBoundFull",
+    "GFNBounds.Graph.PartialSupportClose",
+    "GFNBounds.Silva.PathSpaceMarkov",
+    "GFNBounds.Doubling.RenewalClose",
+    "GFNBounds.Balance.LocalConvergenceClose",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 135,
+   "lines": 141,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -244,10 +250,16 @@
     "GFNBounds.Doubling.WeightChain",
     "GFNBounds.Balance.TBGradient",
     "GFNBounds.Core.NegativeControl",
-    "GFNBounds.Balance.GlobalConvergenceFinite"
+    "GFNBounds.Balance.GlobalConvergenceFinite",
+    "GFNBounds.Core.RLBound",
+    "GFNBounds.Core.ILBoundFull",
+    "GFNBounds.Graph.PartialSupportClose",
+    "GFNBounds.Silva.PathSpaceMarkov",
+    "GFNBounds.Doubling.RenewalClose",
+    "GFNBounds.Balance.LocalConvergenceClose"
    ],
    "variables": [],
-   "lines": 1153,
+   "lines": 1334,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -7496,6 +7508,136 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/LocalConvergenceClose.lean",
+   "title": "Theorem 10 as one statement: the flow is the gradient flow, it converges, at the actual `λ_min`",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.TrainingSpeedAssembled"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V]",
+    "variable {V : Type*} [Fintype V] [DecidableEq V]"
+   ],
+   "lines": 367,
+   "decls": [
+    {
+     "name": "lamMinOf",
+     "full": "GFNBounds.Balance.lamMinOf",
+     "kind": "def",
+     "line": 99,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def lamMinOf (lam : V → ℝ) : ℝ",
+     "doc": "**`λ_min := min_{x∈𝒮} λ(x)`**, the actual minimum (`1` on an empty space, never used there)."
+    },
+    {
+     "name": "supAbsOf",
+     "full": "GFNBounds.Balance.supAbsOf",
+     "kind": "def",
+     "line": 103,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def supAbsOf (w : V → ℝ) : ℝ",
+     "doc": "**`‖w‖_{L^∞} := max_{x∈𝒮} |w(x)|`**, the actual maximum (`0` on an empty space)."
+    },
+    {
+     "name": "lamMinOf_le",
+     "full": "GFNBounds.Balance.lamMinOf_le",
+     "kind": "theorem",
+     "line": 106,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lamMinOf_le (lam : V → ℝ) (x : V) : lamMinOf lam ≤ lam x",
+     "doc": ""
+    },
+    {
+     "name": "exists_lamMinOf_eq",
+     "full": "GFNBounds.Balance.exists_lamMinOf_eq",
+     "kind": "theorem",
+     "line": 111,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_lamMinOf_eq [Nonempty V] (lam : V → ℝ) : ∃ x, lam x = lamMinOf lam",
+     "doc": ""
+    },
+    {
+     "name": "lamMinOf_pos",
+     "full": "GFNBounds.Balance.lamMinOf_pos",
+     "kind": "theorem",
+     "line": 116,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lamMinOf_pos [Nonempty V] {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) : 0 < lamMinOf lam",
+     "doc": ""
+    },
+    {
+     "name": "abs_le_supAbsOf",
+     "full": "GFNBounds.Balance.abs_le_supAbsOf",
+     "kind": "theorem",
+     "line": 121,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_le_supAbsOf (w : V → ℝ) (x : V) : |w x| ≤ supAbsOf w",
+     "doc": ""
+    },
+    {
+     "name": "exists_supAbsOf_eq",
+     "full": "GFNBounds.Balance.exists_supAbsOf_eq",
+     "kind": "theorem",
+     "line": 126,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_supAbsOf_eq [Nonempty V] (w : V → ℝ) : ∃ x, |w x| = supAbsOf w",
+     "doc": ""
+    },
+    {
+     "name": "tendsto_of_exp_decay",
+     "full": "GFNBounds.Balance.tendsto_of_exp_decay",
+     "kind": "theorem",
+     "line": 134,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tendsto_of_exp_decay {f : ℝ → ℝ} {rho c : ℝ} (hrho : 0 < rho) (hnn : ∀ t, 0 ≤ f t) (hle : ∀ t : ℝ, 0 ≤ t → f t ≤ 2 * Real.exp (-(rho * t / 2)) * c) : Tendsto f atTop (𝓝 0)",
+     "doc": "A nonnegative quantity bounded by `c·e^{−ϱt/2}` on `[0,∞)`, `ϱ > 0`, tends to `0`."
+    },
+    {
+     "name": "local_convergence_full_paper",
+     "full": "GFNBounds.Balance.local_convergence_full_paper",
+     "kind": "theorem",
+     "line": 162,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_full_paper {K : V → V → ℝ} {lam w : V → ℝ} {g gd : ℝ → ℝ} {a wmin Bhat : ℝ} (hK : Core.IsMarkovOn lam K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Bhat * Graph.nrmL2 lam (Aop K lam f)) : ((∃ x, lam x = lamMinOf lam) ∧ (∀ x, lamMinOf lam ≤ lam x) ∧ 1 ≤ Cinf (lamMinOf lam)) ∧ (eps0W g a wmin (supAbsOf w) Bhat (lamMinOf lam) ∈ Set.Ioc 0 (a / (16 * Cinf (lamMinOf lam))) ∧ 1 ≤ CW g a wmin (supAbsOf w) ∧ 0 < gamma0W g a wmin (supAbsOf w) Bhat) ∧ ∀ h0 : V → ℝ, Graph.nrmL2 lam h0 ≤ eps0W g a wmin (supAbsOf w) Bhat (lamMinOf lam) → (∃ h : ℝ → V → ℝ, h 0 = h0 ∧ IsGradientFlow K lam (fun z => lam z * w z) gd (fun s x => 1 + h s x) ∧ (∀ t : ℝ, 0 ≤ t → ∀ d : V → ℝ, HasDerivAt (fun s : ℝ => loss K lam (fun z => lam z * w z) (fun x => 1 + h t x + s * d x) g) (Graph.ipL2 lam (lossGrad K lam (fun z => lam z * w z) gd fun z => 1 + h t z) d) 0) ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < 1 + h t x ∧ |ratio K lam (fun z => 1 + h t z) x - 1| ≤ 2 * a / 3) ∧ (∀ h' : ℝ → V → ℝ, h' 0 = h0 → IsGradientFlow K lam (fun z => lam z * w z) gd (fun s x => 1 + h' s x) → ∀ t : ℝ, 0 ≤ t → h' t = h t) ∧ ∃ cinf : ℝ, Balanced K lam (fun _ => cinf) ∧ |cinf - 1 - Graph.meanL2 lam h0| ≤ CW g a wmin (supAbsOf w) * Graph.nrmL2 lam (perpL2 lam h0) ^ 2 ∧ (∀ t : ℝ, 0 ≤ t → Graph.nrmL2 lam (fun x => h t x - (cinf - 1))",
+     "doc": "**`theo:local_convergence_full`, the FM loss, as printed** (`proofs.tex:666–672`): for any Markov kernel `T` on a finite space with invariant probability `λ > 0`, a generator `C³` on `[1−a,1+a]` with `g'(1) = 0 < g''(1)`, `ν = wλ` with `w ≥ w_min > 0`, and a coercivity constant `B̂ ≥ 1`: with `λ_min := min λ`, `‖w‖_{L^∞} := max |w|`, `C_∞ := λ_min^{−1/2} ≥ 1`, the explicit `ε₀ ∈ (0, a/(16C_∞)]`, `C ≥ 1`, `γ₀ > 0` are such that from every `‖h₀‖ ≤ ε₀` * the gradient flow of `𝓛_{g,ν}` from `(1+h₀)λ` **exists**, its field **is** the `L²(λ)` gradient of `𝓛_{g,ν}` at every `t ≥ 0`, it is positive with ratios within `2a/3` of `1`, **unique** among all solutions from `μ₀`, and converges to a balanced `c_∞λ` with the two printed bounds; * for every `0 < γ ≤ γ₀`, the gradient descent from `h₀` is well defined (`1 + h_k > 0`, `D_k` the gradient) and contracts `‖h_k − Πh_k‖` by `1 − γϱ/4` at every step."
+    },
+    {
+     "name": "local_convergence_full_DB_paper",
+     "full": "GFNBounds.Balance.local_convergence_full_DB_paper",
+     "kind": "theorem",
+     "line": 246,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_full_DB_paper {pb : V → V → ℝ} {lam : V → ℝ} {w : EdgeSet pb → ℝ} {g gd : ℝ → ℝ} {a wmin Bhat : ℝ} (hpb : Core.IsMarkovOn lam pb) (hinvpb : Core.IsInvariant lam pb) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : EdgeSet pb → ℝ, Graph.nrmL2 (edgeMeasureE pb lam) (perpL2 (edgeMeasureE pb lam) f) ≤ Bhat * Graph.nrmL2 (edgeMeasureE pb lam) (Aop (edgeKernelE pb) (edgeMeasureE pb lam) f)) : ((∃ e, edgeMeasureE pb lam e = lamMinOf (edgeMeasureE pb lam)) ∧ (∀ e, lamMinOf (edgeMeasureE pb lam) ≤ edgeMeasureE pb lam e) ∧ 1 ≤ Cinf (lamMinOf (edgeMeasureE pb lam))) ∧ (eps0W g a wmin (supAbsOf w) Bhat (lamMinOf (edgeMeasureE pb lam)) ∈ Set.Ioc 0 (a / (16 * Cinf (lamMinOf (edgeMeasureE pb lam)))) ∧ 1 ≤ CW g a wmin (supAbsOf w) ∧ 0 < gamma0W g a wmin (supAbsOf w) Bhat) ∧ ∀ h0 : EdgeSet pb → ℝ, Graph.nrmL2 (edgeMeasureE pb lam) h0 ≤ eps0W g a wmin (supAbsOf w) Bhat (lamMinOf (edgeMeasureE pb lam)) → (∃ h : ℝ → EdgeSet pb → ℝ, h 0 = h0 ∧ IsGradientFlow (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => edgeMeasureE pb lam z * w z) gd (fun s x => 1 + h s x) ∧ (∀ t : ℝ, 0 ≤ t → ∀ d : EdgeSet pb → ℝ, HasDerivAt (fun s : ℝ => loss (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => edgeMeasureE pb lam z * w z) (fun x => 1 + h t x + s * d x) g) (Graph.ipL2 (edgeMeasureE pb lam) (lossGrad (edgeKernelE pb) (edgeMeasureE pb lam) (fun z => edgeMeasureE pb lam z * w z) gd fun z => 1 + h t z) d) 0)",
+     "doc": "**`theo:local_convergence_full`, the DB loss, as printed**: `local_convergence_full_paper` on `E = {(s,s') : π_←(s'→s) > 0}` with `T = K₂` and `λ₂` in place of `λ`, `λ_min := min_{e∈E} λ₂(e)`, `‖w‖_{L^∞} := max_E |w|`."
+    },
+    {
+     "name": "twoState_DB_exists_check",
+     "full": "GFNBounds.Balance.twoState_DB_exists_check",
+     "kind": "theorem",
+     "line": 324,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem twoState_DB_exists_check : ∃ h : ℝ → EdgeSet pbU → ℝ, IsGradientFlow (edgeKernelE pbU) (edgeMeasureE pbU lamU) (fun z => edgeMeasureE pbU lamU z * 1) logSqDeriv (fun s e => 1 + h s e) ∧ ¬ Balanced (edgeKernelE pbU) (edgeMeasureE pbU lamU) (fun e => 1 + h 0 e)",
+     "doc": "**The DB clause is inhabited off balance** (kb 0025): on the uniform two-state policy (`E = 𝒮²`, `λ₂ ≡ 1/4`, `B̂ = 2` by `C3Wrappers.coer_edgeU`), `g = (log x)²` at `a = 1/2`, `w ≡ 1`, `local_convergence_full_DB_paper` produces a gradient flow from the **non-balanced** start `h₀ = ε₀·(1_{(0,0)} − 1_{(0,1)})`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -14967,6 +15109,442 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Core/ILBoundFull.lean",
+   "title": "The KL-weak-FM loss, closed: Pinsker, Hölder at every `q`, the family `Θ`, and the paper's `+∞`",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Core.ILBound",
+    "GFNBounds.Core.FamilyUniversality",
+    "GFNBounds.Core.NegativeControl"
+   ],
+   "variables": [
+    "variable {α : Type*} [MeasurableSpace α]",
+    "variable {ν νT : Measure α} {k e : α → ℝ}",
+    "variable {ν νT : Measure α} {k e : α → ℝ}",
+    "variable {ν νT : Measure α}",
+    "variable {ν νT : Measure α}",
+    "variable {ν νT : Measure α}",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] [MeasurableSpace V] [MeasurableSingletonClass V]"
+   ],
+   "lines": 1048,
+   "decls": [
+    {
+     "name": "padeAux_mono",
+     "full": "GFNBounds.Core.ILBoundFull.padeAux_mono",
+     "kind": "theorem",
+     "line": 125,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem padeAux_mono : MonotoneOn (fun x : ℝ => (x + 1) * Real.log x - 2 * (x - 1)) (Ioi 0)",
+     "doc": "`u(x) = (x+1) log x − 2(x−1)` is monotone on `(0,∞)`: `u' = log x + 1/x − 1 ≥ 0`."
+    },
+    {
+     "name": "padeAux_sign",
+     "full": "GFNBounds.Core.ILBoundFull.padeAux_sign",
+     "kind": "theorem",
+     "line": 150,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem padeAux_sign {x : ℝ} (hx : 0 < x) : 0 ≤ (x - 1) * ((x + 1) * Real.log x - 2 * (x - 1))",
+     "doc": "The sign of `u(x) = (x+1) log x − 2(x−1)` is that of `x − 1`."
+    },
+    {
+     "name": "pollardAux",
+     "full": "GFNBounds.Core.ILBoundFull.pollardAux",
+     "kind": "def",
+     "line": 165,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def pollardAux (x : ℝ) : ℝ",
+     "doc": "The function `h(x) = (2x+4)(x log x − x + 1) − 3(x−1)²`, whose derivative is `4u(x)`."
+    },
+    {
+     "name": "pollardAux_hasDerivAt",
+     "full": "GFNBounds.Core.ILBoundFull.pollardAux_hasDerivAt",
+     "kind": "theorem",
+     "line": 168,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pollardAux_hasDerivAt {x : ℝ} (hx : 0 < x) : HasDerivAt pollardAux (4 * ((x + 1) * Real.log x - 2 * (x - 1))) x",
+     "doc": ""
+    },
+    {
+     "name": "continuous_pollardAux",
+     "full": "GFNBounds.Core.ILBoundFull.continuous_pollardAux",
+     "kind": "theorem",
+     "line": 184,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem continuous_pollardAux : Continuous pollardAux",
+     "doc": ""
+    },
+    {
+     "name": "pollard_ineq",
+     "full": "GFNBounds.Core.ILBoundFull.pollard_ineq",
+     "kind": "theorem",
+     "line": 191,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pollard_ineq {x : ℝ} (hx : 0 ≤ x) : 3 * (x - 1) ^ 2 ≤ (2 * x + 4) * (x * Real.log x - x + 1)",
+     "doc": "**The pointwise inequality behind Pinsker** (the form of Pollard's proof): `3(x−1)² ≤ (2x+4)(x log x − x + 1)` for `x ≥ 0`."
+    },
+    {
+     "name": "pollard_two",
+     "full": "GFNBounds.Core.ILBoundFull.pollard_two",
+     "kind": "theorem",
+     "line": 237,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pollard_two {k g : ℝ} (hk : 0 ≤ k) (hg : 0 ≤ g) (hac : g = 0 → k = 0) : 3 * (k - g) ^ 2 ≤ (2 * k + 4 * g) * (k * Real.log (k / g) - k + g)",
+     "doc": "Pollard's inequality at `x = k/g`, multiplied through by `g²`: `3(k−g)² ≤ (2k+4g)(k log(k/g) − k + g)` for `k, g ≥ 0` with `g = 0 ⇒ k = 0`."
+    },
+    {
+     "name": "pinsker_pointwise",
+     "full": "GFNBounds.Core.ILBoundFull.pinsker_pointwise",
+     "kind": "theorem",
+     "line": 257,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pinsker_pointwise {k g t : ℝ} (hk : 0 ≤ k) (hg : 0 ≤ g) (hac : g = 0 → k = 0) (ht : 0 < t) : |k - g| ≤ (2 * t / 3 - 1 / t) / 2 * k + (4 * t / 3 + 1 / t) / 2 * g + 1 / (2 * t) * (k * Real.log (k / g))",
+     "doc": "The pointwise form integrated in `pinsker`: for every `t > 0`, `|k − g| ≤ c₁(t) k + c₂(t) g + (1/(2t)) k log(k/g)`, `c₁ = (2t/3 − 1/t)/2`, `c₂ = (4t/3 + 1/t)/2`."
+    },
+    {
+     "name": "pinsker",
+     "full": "GFNBounds.Core.ILBoundFull.pinsker",
+     "kind": "theorem",
+     "line": 291,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pinsker {ν : Measure α} {k g : α → ℝ} (hk : Integrable k ν) (hg : Integrable g ν) (hk0 : 0 ≤ᵐ[ν] k) (hg0 : 0 ≤ᵐ[ν] g) (hac : ∀ᵐ x ∂ν, g x = 0 → k x = 0) (hint : Integrable (fun x => k x * Real.log (k x / g x)) ν) (hk1 : ∫ x, k x ∂ν = 1) (hg1 : ∫ x, g x ∂ν = 1) : GFNBounds.Core.tvD ν k g ≤ 1 / Real.sqrt 2 * Real.sqrt (GFNBounds.Core.klD ν k g)",
+     "doc": "**Pinsker's inequality, on densities** (the step of `proofs.tex` in the proof of `theo:IL_CV_bound` that cites it): for probability densities `k, g` against `ν` with `k ≪ g` (`hac`) and `k log(k/g)` integrable, `tvD ν k g ≤ (1/√2) √(klD ν k g)` ."
+    },
+    {
+     "name": "lqNormE",
+     "full": "GFNBounds.Core.ILBoundFull.lqNormE",
+     "kind": "def",
+     "line": 352,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def lqNormE (νT : Measure α) (q : ℝ≥0∞) (f : α → ℝ) : ℝ",
+     "doc": "The `L^q(ν_T)` norm of a density at an extended exponent `q ∈ [1, +∞]`, as a real."
+    },
+    {
+     "name": "lqNormE_nonneg",
+     "full": "GFNBounds.Core.ILBoundFull.lqNormE_nonneg",
+     "kind": "theorem",
+     "line": 354,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lqNormE_nonneg (νT : Measure α) (q : ℝ≥0∞) (f : α → ℝ) : 0 ≤ lqNormE νT q f",
+     "doc": ""
+    },
+    {
+     "name": "lqNormE_eq_lqNormD",
+     "full": "GFNBounds.Core.ILBoundFull.lqNormE_eq_lqNormD",
+     "kind": "theorem",
+     "line": 358,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lqNormE_eq_lqNormD {νT : Measure α} {q : ℝ} (hq : 0 < q) {f : α → ℝ} (hf : MemLp f (ENNReal.ofReal q) νT) : lqNormE νT (ENNReal.ofReal q) f = GFNBounds.Core.lqNormD νT q f",
+     "doc": "At a finite positive exponent and on `L^q`, `lqNormE` is `ILBound`'s `lqNormD`."
+    },
+    {
+     "name": "wklfmLossE",
+     "full": "GFNBounds.Core.ILBoundFull.wklfmLossE",
+     "kind": "def",
+     "line": 369,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def wklfmLossE (ν νT : Measure α) (q : ℝ≥0∞) (b : ℝ) (k e : α → ℝ) : ℝ",
+     "doc": "**The KL-weak-FM loss `equ:weakFM` at an extended exponent `q ∈ [1, +∞]`**, in densities: `b‖δf_init‖_{L^q(ν_T)} − ∫ k log f̂_term dν_B`, `δf_init = e⁻`, `f̂_term = e⁺`."
+    },
+    {
+     "name": "wklfmLossE_eq_wklfmLoss",
+     "full": "GFNBounds.Core.ILBoundFull.wklfmLossE_eq_wklfmLoss",
+     "kind": "theorem",
+     "line": 373,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem wklfmLossE_eq_wklfmLoss {ν νT : Measure α} {q : ℝ} (hq : 0 < q) {b : ℝ} {k e : α → ℝ} (hf : MemLp (fun x => max (-e x) 0) (ENNReal.ofReal q) νT) : wklfmLossE ν νT (ENNReal.ofReal q) b k e = GFNBounds.Core.wklfmLoss ν νT q b k e",
+     "doc": "At a finite exponent on `L^q`, `wklfmLossE` is `ILBound`'s `wklfmLoss`."
+    },
+    {
+     "name": "il_holderE",
+     "full": "GFNBounds.Core.ILBoundFull.il_holderE",
+     "kind": "theorem",
+     "line": 382,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem il_holderE {ν νT : Measure α} [SigmaFinite ν] [SigmaFinite νT] {f : α → ℝ} {q qstar : ℝ≥0∞} [ENNReal.HolderConjugate qstar q] (hac : ν ≪ νT) (hr : MemLp (fun x => (ν.rnDeriv νT x).toReal) qstar νT) (hf : MemLp f q νT) : ∫ x, f x ∂ν ≤ lqNormE νT qstar (fun x => (ν.rnDeriv νT x).toReal) * lqNormE νT q f",
+     "doc": "**`equ:il_holder` at every conjugate pair `(q*, q)`, the endpoints `q ∈ {1, ∞}` included**: `ν ≪ ν_T` gives `∫ f dν = ∫ (dν/dν_T) f dν_T ≤ ‖dν/dν_T‖_{L^{q*}(ν_T)} ‖f‖_{L^q(ν_T)}`."
+    },
+    {
+     "name": "crossEntropy_decomposition",
+     "full": "GFNBounds.Core.ILBoundFull.crossEntropy_decomposition",
+     "kind": "theorem",
+     "line": 411,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem crossEntropy_decomposition {zhat : ℝ} (hk : Integrable k ν) (hk1 : ∫ x, k x ∂ν = 1) (hk0 : 0 ≤ᵐ[ν] k) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (helog : Integrable (fun x => k x * Real.log (max (e x) 0)) ν) (hac : ∀ᵐ x ∂ν, max (e x) 0 = 0 → k x = 0) (hzh0 : 0 < zhat) : -∫ x, k x * Real.log (max (e x) 0) ∂ν = GFNBounds.Core.klD ν k (fun x => max (e x) 0 / zhat) - Real.log zhat + GFNBounds.Core.selfEntropy ν k",
+     "doc": "The cross-entropy decomposition, penalty-free: `−∫ k log e⁺ = KL(κ ‖ κ̂/ẑ) − log ẑ + 𝓗`."
+    },
+    {
+     "name": "lossE_sub_selfEntropy_ge",
+     "full": "GFNBounds.Core.ILBoundFull.lossE_sub_selfEntropy_ge",
+     "kind": "theorem",
+     "line": 426,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lossE_sub_selfEntropy_ge {q : ℝ≥0∞} {b N δ zhat : ℝ} (hk : Integrable k ν) (hk1 : ∫ x, k x ∂ν = 1) (hk0 : 0 ≤ᵐ[ν] k) (he : Integrable e ν) (he1 : ∫ x, e x ∂ν = 1) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (helog : Integrable (fun x => k x * Real.log (max (e x) 0)) ν) (hac : ∀ᵐ x ∂ν, max (e x) 0 = 0 → k x = 0) (hδ : δ = ∫ x, max (-e x) 0 ∂ν) (hzh : zhat = 1 + δ) (hb : 1 + N ≤ b) (hHolder : δ ≤ N * lqNormE νT q (fun x => max (-e x) 0)) : 0 ≤ GFNBounds.Core.klD ν k (fun x => max (e x) 0 / zhat) ∧ GFNBounds.Core.klD ν k (fun x => max (e x) 0 / zhat) + lqNormE νT q (fun x => max (-e x) 0) ≤ wklfmLossE ν νT q b k e - GFNBounds.Core.selfEntropy ν k",
+     "doc": "**`proofs.tex`, `eq:wFM_strong_bound` composed with `eq:lp_delta`, at any `q ∈ [1,∞]`**: `KL(κ ‖ κ̂/κ̂(𝒮)) + ‖δf_init‖_{L^q(ν_T)} ≤ 𝓛^q − 𝓗`, and `KL ≥ 0`."
+    },
+    {
+     "name": "il_bullet_one_dens",
+     "full": "GFNBounds.Core.ILBoundFull.il_bullet_one_dens",
+     "kind": "theorem",
+     "line": 453,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem il_bullet_one_dens {q : ℝ≥0∞} {b N δ zhat tv tvNC : ℝ} (hk : Integrable k ν) (hk1 : ∫ x, k x ∂ν = 1) (hk0 : 0 ≤ᵐ[ν] k) (he : Integrable e ν) (he1 : ∫ x, e x ∂ν = 1) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (helog : Integrable (fun x => k x * Real.log (max (e x) 0)) ν) (hac : ∀ᵐ x ∂ν, max (e x) 0 = 0 → k x = 0) (hδ : δ = ∫ x, max (-e x) 0 ∂ν) (hzh : zhat = 1 + δ) (hN0 : 0 ≤ N) (hb : 1 + N ≤ b) (hHolder : δ ≤ N * lqNormE νT q (fun x => max (-e x) 0)) (hNC : tvNC ≤ δ / zhat) (htri : tv ≤ tvNC + GFNBounds.Core.tvD ν k (fun x => max (e x) 0 / zhat)) : GFNBounds.Core.selfEntropy ν k ≤ wklfmLossE ν νT q b k e ∧ tv ≤ 1 / Real.sqrt 2 * Real.sqrt (wklfmLossE ν νT q b k e - GFNBounds.Core.selfEntropy ν k) + min 1 (N * (wklfmLossE ν νT q b k e - GFNBounds.Core.selfEntropy ν k))",
+     "doc": "**The first bullet of `theo:IL_CV_bound` on densities, at any `q ∈ [1,∞]`, Pinsker proved**: `𝓛^q ≥ 𝓗` and `equ:il_tv_explicit`."
+    },
+    {
+     "name": "LossFinite",
+     "full": "GFNBounds.Core.ILBoundFull.LossFinite",
+     "kind": "structure",
+     "line": 508,
+     "attrs": "",
+     "private": false,
+     "statement": "structure LossFinite (ν νT : Measure α) (q : ℝ≥0∞) (k e : α → ℝ) : Prop",
+     "doc": "**The loss is finite.** The paper's `𝓛^q` takes values in `(−∞, +∞]`, and it is finite exactly when the three conditions hold: `κ ≪ κ̂` (else `−k log e⁺ = +∞` on a `ν_B`-positive set), integrability of `k log e⁺` (its positive part always is, `crossEntropy_posPart_integrable`, so failure means `∫ k log e⁺ = −∞`), and `δf_init ∈ L^q(ν_T)` (else the penalty is `+∞`, `b ≥ 1`)."
+    },
+    {
+     "name": "ilLoss",
+     "full": "GFNBounds.Core.ILBoundFull.ilLoss",
+     "kind": "def",
+     "line": 516,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ilLoss (ν νT : Measure α) (q : ℝ≥0∞) (b : ℝ) (k e : α → ℝ) : EReal",
+     "doc": "**The KL-weak-FM loss with the paper's `+∞`**: `wklfmLossE` where the loss is finite, `⊤` elsewhere."
+    },
+    {
+     "name": "ilLoss_of_finite",
+     "full": "GFNBounds.Core.ILBoundFull.ilLoss_of_finite",
+     "kind": "theorem",
+     "line": 519,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ilLoss_of_finite {q : ℝ≥0∞} {b : ℝ} (h : LossFinite ν νT q k e) : ilLoss ν νT q b k e = ((wklfmLossE ν νT q b k e : ℝ) : EReal)",
+     "doc": ""
+    },
+    {
+     "name": "finite_of_ilLoss_ne_top",
+     "full": "GFNBounds.Core.ILBoundFull.finite_of_ilLoss_ne_top",
+     "kind": "theorem",
+     "line": 523,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem finite_of_ilLoss_ne_top {q : ℝ≥0∞} {b : ℝ} (h : ilLoss ν νT q b k e ≠ ⊤) : LossFinite ν νT q k e",
+     "doc": ""
+    },
+    {
+     "name": "crossEntropy_posPart_integrable",
+     "full": "GFNBounds.Core.ILBoundFull.crossEntropy_posPart_integrable",
+     "kind": "theorem",
+     "line": 531,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem crossEntropy_posPart_integrable (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) (he : Integrable e ν) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (hac : ∀ᵐ x ∂ν, max (e x) 0 = 0 → k x = 0) : Integrable (fun x => max (k x * Real.log (max (e x) 0)) 0) ν",
+     "doc": "**Why `⊤` is the paper's value when `k log e⁺` is not integrable**: under `κ ≪ κ̂` its positive part is integrable, dominated by `|k log k| + |e|`, so non-integrability means the cross-entropy integral is `−∞` and the loss `+∞`."
+    },
+    {
+     "name": "InflowAC",
+     "full": "GFNBounds.Core.ILBoundFull.InflowAC",
+     "kind": "def",
+     "line": 569,
+     "attrs": "",
+     "private": false,
+     "statement": "def InflowAC (ν : Measure α) (θ : ProbabilityTheory.Kernel α α × (α → ℝ)) : Prop",
+     "doc": "The paper's standing hypothesis on a flow, `F⋆_← = F⋆_out π⋆ ≪ ν_B`."
+    },
+    {
+     "name": "eFlow",
+     "full": "GFNBounds.Core.ILBoundFull.eFlow",
+     "kind": "def",
+     "line": 574,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def eFlow (ν : Measure α) (θ : ProbabilityTheory.Kernel α α × (α → ℝ)) (f_init : α → ℝ) : α → ℝ",
+     "doc": "The density `e = f_init + f⋆_← − f⋆_out` of `E = F_init + F⋆_← − F⋆_out`: `Family.defectFn` with `F_term = 0`."
+    },
+    {
+     "name": "inflowAC_of_bind_ac",
+     "full": "GFNBounds.Core.ILBoundFull.inflowAC_of_bind_ac",
+     "kind": "theorem",
+     "line": 579,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inflowAC_of_bind_ac {θ : ProbabilityTheory.Kernel α α × (α → ℝ)} (h : ν.bind ⇑θ.1 ≪ ν) : InflowAC ν θ",
+     "doc": "`ν π⋆ ≪ ν` (the boundedness clause of `def:universality`) gives the flow's `InflowAC`."
+    },
+    {
+     "name": "densityAction_of_inflowAC",
+     "full": "GFNBounds.Core.ILBoundFull.densityAction_of_inflowAC",
+     "kind": "theorem",
+     "line": 584,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densityAction_of_inflowAC [SigmaFinite ν] {θ : ProbabilityTheory.Kernel α α × (α → ℝ)} (hθ : IsGenerativeFlow ν θ) (hin : InflowAC ν θ) : Integrable (densityAction θ.1 ν θ.2) ν ∧ ∫ x, densityAction θ.1 ν θ.2 x ∂ν = ∫ x, θ.2 x ∂ν",
+     "doc": "**Step 0 of the proof**: `F⋆_←(𝒮) = F⋆_out(𝒮)`, stochasticity of `π⋆` and `F⋆_← ≪ ν_B`."
+    },
+    {
+     "name": "eFlow_integral",
+     "full": "GFNBounds.Core.ILBoundFull.eFlow_integral",
+     "kind": "theorem",
+     "line": 617,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eFlow_integral [SigmaFinite ν] {θ : ProbabilityTheory.Kernel α α × (α → ℝ)} {f_init : α → ℝ} (hθ : IsGenerativeFlow ν θ) (hin : InflowAC ν θ) (hfi : Integrable f_init ν) : Integrable (eFlow ν θ f_init) ν ∧ ∫ x, eFlow ν θ f_init x ∂ν = ∫ x, f_init x ∂ν",
+     "doc": "**`E(𝒮) = F_init(𝒮)`** (`proofs.tex`, first lines of the proof of `theo:IL_CV_bound`), derived, where `ILBound` assumed it as `he1`."
+    },
+    {
+     "name": "rnNorm",
+     "full": "GFNBounds.Core.ILBoundFull.rnNorm",
+     "kind": "def",
+     "line": 644,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def rnNorm (ν νT : Measure α) (qstar : ℝ≥0∞) : ℝ",
+     "doc": "The paper's constant `‖dν_B/dν_T‖_{L^{q*}(ν_T)}`."
+    },
+    {
+     "name": "il_first_bullet_dens",
+     "full": "GFNBounds.Core.ILBoundFull.il_first_bullet_dens",
+     "kind": "theorem",
+     "line": 650,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem il_first_bullet_dens [SigmaFinite ν] [SigmaFinite νT] {q qstar : ℝ≥0∞} [ENNReal.HolderConjugate qstar q] (hνT : ν ≪ νT) (hr : MemLp (fun x => (ν.rnDeriv νT x).toReal) qstar νT) {b : ℝ} (hb : 1 + rnNorm ν νT qstar ≤ b) {k e : α → ℝ} (hk : Integrable k ν) (hk1 : ∫ x, k x ∂ν = 1) (hk0 : 0 ≤ᵐ[ν] k) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (he : Integrable e ν) (he1 : ∫ x, e x ∂ν = 1) : ((GFNBounds.Core.selfEntropy ν k : ℝ) : EReal) ≤ ilLoss ν νT q b k e ∧ ∀ tv tvNC : ℝ, ilLoss ν νT q b k e ≠ ⊤ → tvNC ≤ (∫ x, max (-e x) 0 ∂ν) / ∫ x, max (e x) 0 ∂ν → tv ≤ tvNC + GFNBounds.Core.tvD ν k (fun x => max (e x) 0 / ∫ x, max (e x) 0 ∂ν) → tv ≤ 1 / Real.sqrt 2 * Real.sqrt (wklfmLossE ν νT q b k e - GFNBounds.Core.selfEntropy ν k) + min 1 (rnNorm ν νT qstar * (wklfmLossE ν νT q b k e - GFNBounds.Core.selfEntropy ν k))",
+     "doc": "**`theo:IL_CV_bound`, first bullet, on densities**: `il_first_bullet` for any density `e` of `E = F_init + F⋆_← − F⋆_out` with `E(𝒮) = 1`."
+    },
+    {
+     "name": "il_first_bullet",
+     "full": "GFNBounds.Core.ILBoundFull.il_first_bullet",
+     "kind": "theorem",
+     "line": 701,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem il_first_bullet [SigmaFinite ν] [SigmaFinite νT] {q qstar : ℝ≥0∞} [ENNReal.HolderConjugate qstar q] (hνT : ν ≪ νT) (hr : MemLp (fun x => (ν.rnDeriv νT x).toReal) qstar νT) {b : ℝ} (hb : 1 + rnNorm ν νT qstar ≤ b) {k f_init : α → ℝ} (hk : Integrable k ν) (hk1 : ∫ x, k x ∂ν = 1) (hk0 : 0 ≤ᵐ[ν] k) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (hfi : Integrable f_init ν) (hfi1 : ∫ x, f_init x ∂ν = 1) {θ : ProbabilityTheory.Kernel α α × (α → ℝ)} (hθ : IsGenerativeFlow ν θ) (hin : InflowAC ν θ) : ((GFNBounds.Core.selfEntropy ν k : ℝ) : EReal) ≤ ilLoss ν νT q b k (eFlow ν θ f_init) ∧ ∀ tv tvNC : ℝ, ilLoss ν νT q b k (eFlow ν θ f_init) ≠ ⊤ → tvNC ≤ (∫ x, max (-eFlow ν θ f_init x) 0 ∂ν) / ∫ x, max (eFlow ν θ f_init x) 0 ∂ν → tv ≤ tvNC + GFNBounds.Core.tvD ν k (fun x => max (eFlow ν θ f_init x) 0 / ∫ x, max (eFlow ν θ f_init x) 0 ∂ν) → tv ≤ 1 / Real.sqrt 2 * Real.sqrt (wklfmLossE ν νT q b k (eFlow ν θ f_init) - GFNBounds.Core.selfEntropy ν k) + min 1 (rnNorm ν νT qstar * (wklfmLossE ν νT q b k (eFlow ν θ f_init) - GFNBounds.Core.selfEntropy ν k))",
+     "doc": "**`theo:IL_CV_bound`, first bullet**, for a generative flow `θ = (π⋆, f⋆_out)` on any measurable space, at any `q ∈ [1, +∞]` (with `q*` its conjugate): * `𝓛^q_{KL-wFM}(θ) ≥ 𝓗`, in `(−∞, +∞]` with the paper's `+∞` (`ilLoss`), unconditionally; * where the loss is finite, `equ:il_tv_explicit` `TV(s_τ ‖ κ) ≤ (1/√2)√(𝓛 − 𝓗) + min(1, ‖dν_B/dν_T‖_{L^{q*}(ν_T)}(𝓛 − 𝓗))`."
+    },
+    {
+     "name": "il_tv_le_sqrt",
+     "full": "GFNBounds.Core.ILBoundFull.il_tv_le_sqrt",
+     "kind": "theorem",
+     "line": 724,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem il_tv_le_sqrt {L H N tv : ℝ} (hN0 : 0 ≤ N) (hLH : 0 ≤ L - H) (hsmall : L - H ≤ 1) (h : tv ≤ 1 / Real.sqrt 2 * Real.sqrt (L - H) + min 1 (N * (L - H))) : tv ≤ (1 / Real.sqrt 2 + N) * Real.sqrt (L - H)",
+     "doc": "**The body's `O(√(𝓛 − 𝓗))`** (`theo:IL_CV_bound_body`): where `𝓛 − 𝓗 ≤ 1`, the right side of `equ:il_tv_explicit` is at most `(1/√2 + ‖dν_B/dν_T‖_{L^{q*}(ν_T)}) √(𝓛 − 𝓗)`."
+    },
+    {
+     "name": "crossEntropy_integrable_of_domination",
+     "full": "GFNBounds.Core.ILBoundFull.crossEntropy_integrable_of_domination",
+     "kind": "theorem",
+     "line": 747,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem crossEntropy_integrable_of_domination {k e : α → ℝ} {ε : ℝ} (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) (he : Integrable e ν) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (hε1 : ε < 1) (hdom : ∀ᵐ x ∂ν, (1 - ε) * k x ≤ e x) : Integrable (fun x => k x * Real.log (max (e x) 0)) ν",
+     "doc": "Under `equ:il_domination` the cross-entropy integrand is integrable: sandwiched between `k log((1−ε)k)` and `k log k + e⁺ − k`."
+    },
+    {
+     "name": "il_member_le",
+     "full": "GFNBounds.Core.ILBoundFull.il_member_le",
+     "kind": "theorem",
+     "line": 796,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem il_member_le [SigmaFinite ν] (hTν : νT ≪ ν) {q : ℝ≥0∞} {b ε : ℝ} (hε1 : ε < 1) {k f_init : α → ℝ} (hk : Integrable k ν) (hk1 : ∫ x, k x ∂ν = 1) (hk0 : 0 ≤ᵐ[ν] k) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (hfi : Integrable f_init ν) {θ : ProbabilityTheory.Kernel α α × (α → ℝ)} (hθ : IsGenerativeFlow ν θ) (hin : InflowAC ν θ) (hdom : ∀ᵐ x ∂ν, (1 - ε) * k x ≤ eFlow ν θ f_init x) : LossFinite ν νT q k (eFlow ν θ f_init) ∧ ilLoss ν νT q b k (eFlow ν θ f_init) ≤ ((GFNBounds.Core.selfEntropy ν k + Real.log (1 / (1 - ε)) : ℝ) : EReal)",
+     "doc": "**`equ:il_domination` bounds the loss**, for a member of `Θ` (`proofs.tex`, second half of the proof of `theo:IL_CV_bound`): if `F_init + F⋆_out π⋆ − F⋆_out ≥ (1−ε)κ`, read on `ν_B`-densities, then the loss is finite and `𝓛^q ≤ 𝓗 + log(1/(1−ε))`, at every `q`."
+    },
+    {
+     "name": "ereal_le_of_forall_pos",
+     "full": "GFNBounds.Core.ILBoundFull.ereal_le_of_forall_pos",
+     "kind": "theorem",
+     "line": 844,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ereal_le_of_forall_pos {x : EReal} {a : ℝ} (h : ∀ η : ℝ, 0 < η → x ≤ ((a + η : ℝ) : EReal)) : x ≤ (a : EReal)",
+     "doc": "An `EReal` bounded above by `a + η` for every `η > 0` is at most `a`."
+    },
+    {
+     "name": "il_iInf_eq",
+     "full": "GFNBounds.Core.ILBoundFull.il_iInf_eq",
+     "kind": "theorem",
+     "line": 859,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem il_iInf_eq [SigmaFinite ν] [SigmaFinite νT] {q qstar : ℝ≥0∞} [ENNReal.HolderConjugate qstar q] (hνT : ν ≪ νT) (hTν : νT ≪ ν) (hr : MemLp (fun x => (ν.rnDeriv νT x).toReal) qstar νT) {b : ℝ} (hb : 1 + rnNorm ν νT qstar ≤ b) {k f_init : α → ℝ} (hk : Integrable k ν) (hk1 : ∫ x, k x ∂ν = 1) (hk0 : 0 ≤ᵐ[ν] k) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (hfi : Integrable f_init ν) (hfi1 : ∫ x, f_init x ∂ν = 1) {Θ : Set (ProbabilityTheory.Kernel α α × (α → ℝ))} (hΘ : ∀ θ ∈ Θ, IsGenerativeFlow ν θ ∧ InflowAC ν θ) (hdomΘ : ∀ ε : ℝ, 0 < ε → ε < 1 → ∃ θ ∈ Θ, ∀ᵐ x ∂ν, (1 - ε) * k x ≤ eFlow ν θ f_init x) : ⨅ θ ∈ Θ, ilLoss ν νT q b k (eFlow ν θ f_init) = ((GFNBounds.Core.selfEntropy ν k : ℝ) : EReal)",
+     "doc": "**`theo:IL_CV_bound`, second bullet, the infimum**: if every member of `Θ` is a generative flow with `F⋆_← ≪ ν_B`, and for every `ε ∈ (0,1)` some member satisfies `equ:il_domination`, then `inf_{θ ∈ Θ} 𝓛^q_{KL-wFM}(θ) = 𝓗` , the infimum taken in `(−∞, +∞]` with the paper's `+∞`."
+    },
+    {
+     "name": "il_attained",
+     "full": "GFNBounds.Core.ILBoundFull.il_attained",
+     "kind": "theorem",
+     "line": 893,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem il_attained [SigmaFinite ν] [SigmaFinite νT] {q qstar : ℝ≥0∞} [ENNReal.HolderConjugate qstar q] (hνT : ν ≪ νT) (hTν : νT ≪ ν) (hr : MemLp (fun x => (ν.rnDeriv νT x).toReal) qstar νT) {b : ℝ} (hb : 1 + rnNorm ν νT qstar ≤ b) {k f_init : α → ℝ} (hk : Integrable k ν) (hk1 : ∫ x, k x ∂ν = 1) (hk0 : 0 ≤ᵐ[ν] k) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (hfi : Integrable f_init ν) (hfi1 : ∫ x, f_init x ∂ν = 1) {Θ : Set (ProbabilityTheory.Kernel α α × (α → ℝ))} (hΘ : ∀ θ ∈ Θ, IsGenerativeFlow ν θ ∧ InflowAC ν θ) {θ₀ : ProbabilityTheory.Kernel α α × (α → ℝ)} (hθ₀ : θ₀ ∈ Θ) (hdom : ∀ᵐ x ∂ν, k x ≤ eFlow ν θ₀ f_init x) : ilLoss ν νT q b k (eFlow ν θ₀ f_init) = ((GFNBounds.Core.selfEntropy ν k : ℝ) : EReal) ∧ ⨅ θ ∈ Θ, ilLoss ν νT q b k (eFlow ν θ f_init) = ((GFNBounds.Core.selfEntropy ν k : ℝ) : EReal)",
+     "doc": "**`theo:IL_CV_bound`, second bullet, attainment at `ε = 0`**: a member with `F_init + F⋆_out π⋆ − F⋆_out ≥ κ` has `𝓛^q = 𝓗`, which is then the infimum over `Θ`, attained."
+    },
+    {
+     "name": "il_attained_of_stronglyUniversal",
+     "full": "GFNBounds.Core.ILBoundFull.il_attained_of_stronglyUniversal",
+     "kind": "theorem",
+     "line": 924,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem il_attained_of_stronglyUniversal [SigmaFinite ν] [SigmaFinite νT] {q qstar : ℝ≥0∞} [ENNReal.HolderConjugate qstar q] (hνT : ν ≪ νT) (hTν : νT ≪ ν) (hr : MemLp (fun x => (ν.rnDeriv νT x).toReal) qstar νT) {b : ℝ} (hb : 1 + rnNorm ν νT qstar ≤ b) {k f_init : α → ℝ} (hk1 : ∫ x, k x ∂ν = 1) (hk0 : 0 ≤ᵐ[ν] k) (hklog : Integrable (fun x => k x * Real.log (k x)) ν) (hfi1 : ∫ x, f_init x ∂ν = 1) (hfi0 : 0 ≤ᵐ[ν] f_init) {p : ℝ≥0∞} (hp : 1 ≤ p) (hfiLp : MemLp f_init p ν) (hkLp : MemLp k p ν) (hk : Integrable k ν) (hfi : Integrable f_init ν) {Θ : Set (ProbabilityTheory.Kernel α α × (α → ℝ))} (hU : GFNBounds.Core.Family.StronglyUniversal ν p Θ) : ∃ θ₀ ∈ Θ, ilLoss ν νT q b k (eFlow ν θ₀ f_init) = ((GFNBounds.Core.selfEntropy ν k : ℝ) : EReal) ∧ ⨅ θ ∈ Θ, ilLoss ν νT q b k (eFlow ν θ f_init) = ((GFNBounds.Core.selfEntropy ν k : ℝ) : EReal)",
+     "doc": "**`theo:IL_CV_bound`, second bullet, \"in particular\"**: if `f_init, k ∈ L^p(ν_B)`, `p ≥ 1`, and `Θ` is strongly `L^p`-universal (`Family.StronglyUniversal`, `def:universality` for an arbitrary family), some member realizes the pair `(F_init, κ)` exactly, so the infimum `𝓗` is attained there."
+    },
+    {
+     "name": "il_first_bullet_finite",
+     "full": "GFNBounds.Core.ILBoundFull.il_first_bullet_finite",
+     "kind": "theorem",
+     "line": 979,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem il_first_bullet_finite (ν νT : Measure V) [IsFiniteMeasure ν] [IsFiniteMeasure νT] (hν : ∀ x, 0 < ν.real {x}) (hνT : ν ≪ νT) {q qstar : ℝ≥0∞} [ENNReal.HolderConjugate qstar q] {b : ℝ} (hb : 1 + rnNorm ν νT qstar ≤ b) (F : FlowData V) (hfi : ∀ x, 0 ≤ F.finit x) (hfo : ∀ x, 0 ≤ F.fout x) (hP0 : ∀ x y, 0 ≤ F.P x y) (hP1 : ∀ x, ∑ y, F.P x y = 1) (hfi1 : ∑ x, F.finit x = 1) {k : V → ℝ} (hk0 : ∀ x, 0 ≤ k x) (hk1 : ∫ x, k x ∂ν = 1) : ((GFNBounds.Core.selfEntropy ν k : ℝ) : EReal) ≤ ilLoss ν νT q b k (eDens ν F) ∧ ∃ p : V → ℝ, (∀ y, Tendsto (fun n => (inference F).law n (y, true)) atTop (𝓝 (p y))) ∧ ∑ y, p y = 1 ∧ (ilLoss ν νT q b k (eDens ν F) ≠ ⊤ → GFNBounds.Core.tvD ν (fun y => p y / ν.real {y}) k ≤ 1 / Real.sqrt 2 * Real.sqrt (wklfmLossE ν νT q b k (eDens ν F) - GFNBounds.Core.selfEntropy ν k) + min 1 (rnNorm ν νT qstar * (wklfmLossE ν νT q b k (eDens ν F) - GFNBounds.Core.selfEntropy ν k)))",
+     "doc": "**`theo:IL_CV_bound`, first bullet, on a finite state space, with `theo:negative_control` and the triangle inequality discharged**."
+    },
+    {
+     "name": "flow",
+     "full": "GFNBounds.Core.ILBoundFull.Example.flow",
+     "kind": "def",
+     "line": 1021,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def flow : FlowData Unit",
+     "doc": "One state, `F_init = 1`, no outflow, `P⋆ = 1`: `E = F_init = κ`."
+    },
+    {
+     "name": "ilLoss_ne_top",
+     "full": "GFNBounds.Core.ILBoundFull.Example.ilLoss_ne_top",
+     "kind": "theorem",
+     "line": 1030,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ilLoss_ne_top (q : ℝ≥0∞) (b : ℝ) : ilLoss (Measure.dirac ()) (Measure.dirac ()) q b (fun _ => 1) (eDens (Measure.dirac ()) flow) ≠ ⊤",
+     "doc": "**The loss is finite on `flow`** against `κ = ν_B = δ_()`, at every `q` and `b`: the hypothesis `ilLoss ≠ ⊤` of `il_first_bullet_finite`'s TV clause is met by a flow satisfying all its other hypotheses (kb `0025`)."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Core/Kernel.lean",
    "title": "The density action of a Markov kernel, and the two conditions `Core.Flow` assumes",
    "labels": [],
@@ -16378,6 +16956,391 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Core/RLBound.lean",
+   "title": "The stable-loss bound completed: `q = ∞`, Step 0, the two external inputs, and items (2)–(3)",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Core.StableBound",
+    "GFNBounds.Core.NegativeControl",
+    "GFNBounds.Core.FamilyUniversality"
+   ],
+   "variables": [
+    "variable {α : Type*} [MeasurableSpace α]",
+    "variable {ν νT : Measure α} {e k : α → ℝ}",
+    "variable {ν νT : Measure α} {θ : ProbabilityTheory.Kernel α α × (α → ℝ)} {f_init k : α → ℝ}",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] [MeasurableSpace V] [MeasurableSingletonClass V]",
+    "variable {ν νT : Measure α}",
+    "variable {ν νT : Measure α} {θ : ProbabilityTheory.Kernel α α × (α → ℝ)} {f_init k : α → ℝ}"
+   ],
+   "lines": 694,
+   "decls": [
+    {
+     "name": "holderConst_nonneg",
+     "full": "GFNBounds.Core.RLBound.holderConst_nonneg",
+     "kind": "theorem",
+     "line": 118,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem holderConst_nonneg (ν : Measure α) (M : ℝ≥0) (q : ℝ) : 0 ≤ holderConst ν M q",
+     "doc": ""
+    },
+    {
+     "name": "holderConst_top",
+     "full": "GFNBounds.Core.RLBound.holderConst_top",
+     "kind": "theorem",
+     "line": 124,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem holderConst_top (ν : Measure α) (M : ℝ≥0) : holderConst ν M (⊤ : ℝ≥0∞).toReal = ν.real Set.univ",
+     "doc": "At `q = ∞` the constant `C₀` of `equ:stable_constants` is `ν_B(𝒮)`: the real exponents `1 − 1/q` and `1/q` read `1` and `0` at `q.toReal = 0`."
+    },
+    {
+     "name": "one_sub_inv_nonneg",
+     "full": "GFNBounds.Core.RLBound.one_sub_inv_nonneg",
+     "kind": "theorem",
+     "line": 128,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_sub_inv_nonneg {q : ℝ≥0∞} (hq : 1 ≤ q) : 0 ≤ 1 - 1 / q.toReal",
+     "doc": ""
+    },
+    {
+     "name": "lintegral_enorm_le_holderConst",
+     "full": "GFNBounds.Core.RLBound.lintegral_enorm_le_holderConst",
+     "kind": "theorem",
+     "line": 141,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lintegral_enorm_le_holderConst {ν νT : Measure α} [IsFiniteMeasure ν] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {q : ℝ≥0∞} (hq : 1 ≤ q) {f : α → ℝ} (hf : AEStronglyMeasurable f ν) : ∫⁻ x, ‖f x‖ₑ ∂ν ≤ ENNReal.ofReal (holderConst ν M q.toReal) * eLpNorm f q νT",
+     "doc": "**`theo:RL_CV_bound_full`, Step 3 at every `q ∈ [1, ∞]`, in `[0, ∞]`**: `∫ |f| dν_B ≤ C₀ ‖f‖_{L^q(ν_T)}`, `C₀ = ν_B(𝒮)^{1−1/q} M^{1/q}` with `ν_B ≤ M ν_T`."
+    },
+    {
+     "name": "integral_abs_le_holderConst",
+     "full": "GFNBounds.Core.RLBound.integral_abs_le_holderConst",
+     "kind": "theorem",
+     "line": 171,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_abs_le_holderConst {ν νT : Measure α} [IsFiniteMeasure ν] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {q : ℝ≥0∞} (hq : 1 ≤ q) {f : α → ℝ} (hf : AEStronglyMeasurable f ν) (hmem : MemLp f q νT) : ∫ x, |f x| ∂ν ≤ holderConst ν M q.toReal * (eLpNorm f q νT).toReal",
+     "doc": "**`theo:RL_CV_bound_full`, Step 3 in real form at every `q ∈ [1, ∞]`**: `Δ ≤ C₀ 𝓛`, with the loss `𝓛 = ‖e − k‖_{L^q(ν_T)}` read as `(eLpNorm (e − k) q ν_T).toReal`."
+    },
+    {
+     "name": "stableLoss_eq_toReal_eLpNorm",
+     "full": "GFNBounds.Core.RLBound.stableLoss_eq_toReal_eLpNorm",
+     "kind": "theorem",
+     "line": 184,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stableLoss_eq_toReal_eLpNorm {νT : Measure α} {q : ℝ} (hq : 1 ≤ q) {e k : α → ℝ} (hmem : MemLp (fun x => e x - k x) (ENNReal.ofReal q) νT) : stableLoss νT q e k = (eLpNorm (fun x => e x - k x) (ENNReal.ofReal q) νT).toReal",
+     "doc": "The real form of the loss agrees with `Core.stableLoss` at finite `q`."
+    },
+    {
+     "name": "mass_floorE",
+     "full": "GFNBounds.Core.RLBound.mass_floorE",
+     "kind": "theorem",
+     "line": 202,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_floorE [IsFiniteMeasure ν] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {q : ℝ≥0∞} (hq : 1 ≤ q) (hmem : MemLp (fun x => e x - k x) q νT) (he : Integrable e ν) (hk : Integrable k ν) {z t : ℝ} (hz : z = ∫ x, e x ∂ν) (ht : t = ∫ x, k x ∂ν) : |z - t| ≤ holderConst ν M q.toReal * (eLpNorm (fun x => e x - k x) q νT).toReal",
+     "doc": "**`equ:mass_floor` at every `q ∈ [1, ∞]`**: `|F_init(𝒮) − κ(𝒮)| ≤ C₀ 𝓛`, `z` being `F_init(𝒮)` through Step 0's `hz` (discharged in `mass_floor_kernel` and `stable_bound_finite`)."
+    },
+    {
+     "name": "stable_boundE",
+     "full": "GFNBounds.Core.RLBound.stable_boundE",
+     "kind": "theorem",
+     "line": 214,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stable_boundE [IsFiniteMeasure ν] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {q : ℝ≥0∞} (hq : 1 ≤ q) (hmem : MemLp (fun x => e x - k x) q νT) (he : Integrable e ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) {z t zhat tv tvNC : ℝ} (hz : z = ∫ x, e x ∂ν) (ht : t = ∫ x, k x ∂ν) (hzh : zhat = ∫ x, max (e x) 0 ∂ν) (hz0 : 0 < z) (ht0 : 0 < t) (hNC : tvNC ≤ (∫ x, max (-e x) 0 ∂ν) / zhat) (htri : tv ≤ tvNC + tvD ν (fun x => max (e x) 0 / zhat) (fun x => k x / t)) : tv ≤ stableConst ν M q.toReal t * (eLpNorm (fun x => e x - k x) q νT).toReal",
+     "doc": "**`equ:stable_bound` at every `q ∈ [1, ∞]`**: `TV(s_τ ‖ κ/t) ≤ C 𝓛`, `C = 2C₀/t`."
+    },
+    {
+     "name": "eFn",
+     "full": "GFNBounds.Core.RLBound.eFn",
+     "kind": "def",
+     "line": 244,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def eFn (ν : Measure α) (θ : ProbabilityTheory.Kernel α α × (α → ℝ)) (f_init : α → ℝ) : α → ℝ",
+     "doc": "`E = F_init + F⋆_out π⋆ − F⋆_out` as a `ν`-density: `densityAction` is the `ν`-density of `(f⋆_out ν) π⋆` (`Family.defectFn` with `F_term = 0`)."
+    },
+    {
+     "name": "defectFn_eq_eFn_sub",
+     "full": "GFNBounds.Core.RLBound.defectFn_eq_eFn_sub",
+     "kind": "theorem",
+     "line": 248,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem defectFn_eq_eFn_sub (x : α) : defectFn ν θ f_init k x = eFn ν θ f_init x - k x",
+     "doc": ""
+    },
+    {
+     "name": "integrable_eFn",
+     "full": "GFNBounds.Core.RLBound.integrable_eFn",
+     "kind": "theorem",
+     "line": 250,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integrable_eFn [SigmaFinite ν] (hθ : IsGenerativeFlow ν θ) (hac : ν.bind ⇑θ.1 ≪ ν) (hi : Integrable f_init ν) : Integrable (eFn ν θ f_init) ν",
+     "doc": ""
+    },
+    {
+     "name": "integral_eFn",
+     "full": "GFNBounds.Core.RLBound.integral_eFn",
+     "kind": "theorem",
+     "line": 258,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_eFn [SigmaFinite ν] (hθ : IsGenerativeFlow ν θ) (hac : ν.bind ⇑θ.1 ≪ ν) (hi : Integrable f_init ν) : ∫ x, eFn ν θ f_init x ∂ν = ∫ x, f_init x ∂ν",
+     "doc": "**`equ:mass_identity`, Step 0's first half**, for a Markov kernel `π⋆` with `ν π⋆ ≪ ν`: `E(𝒮) = F_init(𝒮)`, because `F⋆_←(𝒮) = F⋆_out(𝒮)`."
+    },
+    {
+     "name": "mass_floor_kernel",
+     "full": "GFNBounds.Core.RLBound.mass_floor_kernel",
+     "kind": "theorem",
+     "line": 266,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_floor_kernel [IsFiniteMeasure ν] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {q : ℝ≥0∞} (hq : 1 ≤ q) (hθ : IsGenerativeFlow ν θ) (hac : ν.bind ⇑θ.1 ≪ ν) (hi : Integrable f_init ν) (hk : Integrable k ν) (hmem : MemLp (defectFn ν θ f_init k) q νT) : |(∫ x, f_init x ∂ν) - ∫ x, k x ∂ν| ≤ holderConst ν M q.toReal * (eLpNorm (defectFn ν θ f_init k) q νT).toReal",
+     "doc": "**`equ:mass_floor` for a kernel flow, nothing assumed beyond the paper**: on any measurable space, for a generative flow `(π⋆, f⋆_out)` with `ν_B π⋆ ≪ ν_B`, at every `q ∈ [1, ∞]`, `|F_init(𝒮) − κ(𝒮)| ≤ C₀ ‖e − k‖_{L^q(ν_T)}`."
+    },
+    {
+     "name": "stable_bound_kernel",
+     "full": "GFNBounds.Core.RLBound.stable_bound_kernel",
+     "kind": "theorem",
+     "line": 279,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stable_bound_kernel [IsFiniteMeasure ν] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {q : ℝ≥0∞} (hq : 1 ≤ q) (hθ : IsGenerativeFlow ν θ) (hac : ν.bind ⇑θ.1 ≪ ν) (hi : Integrable f_init ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k) (hmem : MemLp (defectFn ν θ f_init k) q νT) (hz0 : 0 < ∫ x, f_init x ∂ν) (ht0 : 0 < ∫ x, k x ∂ν) {tv tvNC : ℝ} (hNC : tvNC ≤ (∫ x, max (-eFn ν θ f_init x) 0 ∂ν) / ∫ x, max (eFn ν θ f_init x) 0 ∂ν) (htri : tv ≤ tvNC + tvD ν (fun x => max (eFn ν θ f_init x) 0 / ∫ x, max (eFn ν θ f_init x) 0 ∂ν) (fun x => k x / ∫ x, k x ∂ν)) : tv ≤ stableConst ν M q.toReal (∫ x, k x ∂ν) * (eLpNorm (defectFn ν θ f_init k) q νT).toReal",
+     "doc": "**`equ:stable_bound` for a kernel flow**: Step 0 (`hz`) discharged; `hNC` (`theo:negative_control`, proved in this library only on a finite space) and `htri` (the triangle inequality for a sampler this library does not build on a general space) remain hypotheses."
+    },
+    {
+     "name": "stable_bound_finite",
+     "full": "GFNBounds.Core.RLBound.stable_bound_finite",
+     "kind": "theorem",
+     "line": 310,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stable_bound_finite (ν : Measure V) [IsFiniteMeasure ν] (hν : ∀ x, 0 < ν.real {x}) {νT : Measure V} [IsFiniteMeasure νT] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) (F : FlowData V) (hfi : ∀ x, 0 ≤ F.finit x) (hfo : ∀ x, 0 ≤ F.fout x) (hP0 : ∀ x y, 0 ≤ F.P x y) (hP1 : ∀ x, ∑ y, F.P x y = 1) (hinit : F.finit ≠ 0) {k : V → ℝ} (hk0 : ∀ x, 0 ≤ k x) (ht0 : 0 < ∫ x, k x ∂ν) {q : ℝ≥0∞} (hq : 1 ≤ q) : ∃ p : V → ℝ, (∀ y, Tendsto (fun n => (inference F).law n (y, true)) atTop (𝓝 (p y))) ∧ ∑ y, p y = 1 ∧ tvD ν (fun y => p y / ν.real {y}) (fun x => k x / ∫ x, k x ∂ν) ≤ stableConst ν M q.toReal (∫ x, k x ∂ν) * (eLpNorm (fun x => eDens ν F x - k x) q νT).toReal ∧ |(∑ x, F.finit x) - ∫ x, k x ∂ν| ≤ holderConst ν M q.toReal * (eLpNorm (fun x => eDens ν F x - k x) q νT).toReal",
+     "doc": "**`theo:RL_CV_bound_full`, item (1), both displays, with `hNC`, `htri` and `hz` all discharged**, on a finite state space with a background measure `ν` charging every atom: the sampler inferring at `κ̂ = E⁺` from `F_init` has a limit law `p` (`∑ p = 1`), and at every `q ∈ [1, ∞]` `TV(s_τ ‖ κ/t) ≤ C 𝓛`, `|F_init(𝒮) − κ(𝒮)| ≤ C₀ 𝓛`, with `𝓛 = ‖e − k‖_{L^q(ν_T)}`, `e = dE/dν`, `C₀ = holderConst`, `C = stableConst`."
+    },
+    {
+     "name": "conjExp",
+     "full": "GFNBounds.Core.RLBound.conjExp",
+     "kind": "def",
+     "line": 342,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def conjExp (p q : ℝ≥0∞) : ℝ≥0∞",
+     "doc": "**The exponent `q'` of item (2)**: `q' = p/(p − q)`, and `q' = 1` when `p = ∞` (`proofs.tex`, `theo:RL_CV_bound_full`(2))."
+    },
+    {
+     "name": "holderConjugate_conjExp",
+     "full": "GFNBounds.Core.RLBound.holderConjugate_conjExp",
+     "kind": "theorem",
+     "line": 345,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem holderConjugate_conjExp {p q : ℝ≥0∞} (hq : 1 ≤ q) (hqt : q ≠ ⊤) (hqp : q ≤ p) : ENNReal.HolderTriple (conjExp p q) (p / q) 1",
+     "doc": "`q'` and `p/q` are Hölder conjugate: `1/q' + q/p = 1`, for `1 ≤ q < ∞`, `q ≤ p`."
+    },
+    {
+     "name": "rho",
+     "full": "GFNBounds.Core.RLBound.rho",
+     "kind": "def",
+     "line": 358,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def rho (νT ν : Measure α) (x : α) : ℝ",
+     "doc": "`dν_T/dν_B`, as a real function."
+    },
+    {
+     "name": "transferConst",
+     "full": "GFNBounds.Core.RLBound.transferConst",
+     "kind": "def",
+     "line": 362,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def transferConst (νT ν : Measure α) (p q : ℝ≥0∞) : ℝ≥0∞",
+     "doc": "**The constant of the second Hölder transfer**: `‖dν_T/dν_B‖_{L^{q'}(ν_B)}^{1/q}` at `q < ∞`, and `1` at `q = ∞` (where only the domination `ν_T ≪ ν_B` is used)."
+    },
+    {
+     "name": "transferConst_ne_top",
+     "full": "GFNBounds.Core.RLBound.transferConst_ne_top",
+     "kind": "theorem",
+     "line": 365,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem transferConst_ne_top {p q : ℝ≥0∞} (hρ : MemLp (rho νT ν) (conjExp p q) ν) : transferConst νT ν p q ≠ ⊤",
+     "doc": ""
+    },
+    {
+     "name": "memLp_rho_top",
+     "full": "GFNBounds.Core.RLBound.memLp_rho_top",
+     "kind": "theorem",
+     "line": 376,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem memLp_rho_top [IsFiniteMeasure νT] (q : ℝ≥0∞) : MemLp (rho νT ν) (conjExp ⊤ q) ν",
+     "doc": "At `p = ∞` the integrability hypothesis on `dν_T/dν_B` is automatic: `q' = 1`, and a Radon–Nikodym derivative of a finite measure is integrable."
+    },
+    {
+     "name": "eLpNorm_le_transferConst",
+     "full": "GFNBounds.Core.RLBound.eLpNorm_le_transferConst",
+     "kind": "theorem",
+     "line": 387,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eLpNorm_le_transferConst [SigmaFinite ν] [SigmaFinite νT] (hac : νT ≪ ν) {p q : ℝ≥0∞} (hq : 1 ≤ q) (hqp : q ≤ p) {f : α → ℝ} (hf : AEStronglyMeasurable f ν) : eLpNorm f q νT ≤ transferConst νT ν p q * eLpNorm f p ν",
+     "doc": "**`theo:RL_CV_bound_full`, Step 4's Hölder transfer**: for `ν_T ≪ ν_B`, `1 ≤ q ≤ p`, `‖f‖_{L^q(ν_T)} ≤ ‖dν_T/dν_B‖^{1/q}_{L^{q'}(ν_B)} ‖f‖_{L^p(ν_B)}`, by Hölder with the exponents `p/q` and `q'`; at `q = p = ∞`, `‖f‖_{L^∞(ν_T)} ≤ ‖f‖_{L^∞(ν_B)}`."
+    },
+    {
+     "name": "eLpNorm_defectFn_le_residual",
+     "full": "GFNBounds.Core.RLBound.eLpNorm_defectFn_le_residual",
+     "kind": "theorem",
+     "line": 439,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eLpNorm_defectFn_le_residual {p : ℝ≥0∞} (hp : 1 ≤ p) {f_term : α → ℝ} (hθ : AEStronglyMeasurable θ.2 ν) (hi : AEStronglyMeasurable f_init ν) (ht : AEStronglyMeasurable f_term ν) : eLpNorm (defectFn ν θ f_init f_term) p ν ≤ residual ν p θ f_init f_term",
+     "doc": "**`equ:defect_equivalence`, lower half, for a kernel flow**: `‖D‖_{L^p} ≤ ‖δf_init‖_{L^p} + ‖δf_term‖_{L^p}`."
+    },
+    {
+     "name": "loss_le_transferConst_mul_residual",
+     "full": "GFNBounds.Core.RLBound.loss_le_transferConst_mul_residual",
+     "kind": "theorem",
+     "line": 454,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem loss_le_transferConst_mul_residual [SigmaFinite ν] [SigmaFinite νT] (hac : νT ≪ ν) {p q : ℝ≥0∞} (hq : 1 ≤ q) (hqp : q ≤ p) (hθ : AEStronglyMeasurable θ.2 ν) (hi : AEStronglyMeasurable f_init ν) (hk : AEStronglyMeasurable k ν) : eLpNorm (defectFn ν θ f_init k) q νT ≤ transferConst νT ν p q * residual ν p θ f_init k",
+     "doc": "The training loss of a member, `𝓛 = ‖e − k‖_{L^q(ν_T)}`, is at most the transfer constant times its `L^p(ν_B)` residuals for the pair `(F_init, κ)`."
+    },
+    {
+     "name": "inf_loss_eq_zero",
+     "full": "GFNBounds.Core.RLBound.inf_loss_eq_zero",
+     "kind": "theorem",
+     "line": 469,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inf_loss_eq_zero [IsFiniteMeasure ν] [IsFiniteMeasure νT] {p q : ℝ≥0∞} (hq : 1 ≤ q) (hqp : q ≤ p) {Θ : Set (ProbabilityTheory.Kernel α α × (α → ℝ))} (hΘ : Family.WeaklyUniversal ν p Θ) (hpair : Family.IsAdmissiblePair ν p f_init k) (hac : νT ≪ ν) (hρ : MemLp (rho νT ν) (conjExp p q) ν) : ⨅ θ ∈ Θ, eLpNorm (defectFn ν θ f_init k) q νT = 0",
+     "doc": "**`theo:RL_CV_bound_full`, item (2)**: over a weakly `L^p`-universal family `Θ` (`def:universality`, arbitrary `Θ`), with `1 ≤ q ≤ p`, `f_init` and `dκ/dν_B` in `L^p(ν_B)` of equal mass (`IsAdmissiblePair`), `ν_T ≪ ν_B` and `dν_T/dν_B ∈ L^{q'}(ν_B)`, `inf_{(π⋆, f⋆_out) ∈ Θ} ‖e − k‖_{L^q(ν_T)} = 0`, every `q ∈ [1, ∞]` included."
+    },
+    {
+     "name": "inf_loss_eq_zero_top",
+     "full": "GFNBounds.Core.RLBound.inf_loss_eq_zero_top",
+     "kind": "theorem",
+     "line": 497,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inf_loss_eq_zero_top [IsFiniteMeasure ν] [IsFiniteMeasure νT] {q : ℝ≥0∞} (hq : 1 ≤ q) {Θ : Set (ProbabilityTheory.Kernel α α × (α → ℝ))} (hΘ : Family.WeaklyUniversal ν ⊤ Θ) (hpair : Family.IsAdmissiblePair ν ⊤ f_init k) (hac : νT ≪ ν) : ⨅ θ ∈ Θ, eLpNorm (defectFn ν θ f_init k) q νT = 0",
+     "doc": "**`theo:RL_CV_bound_full`, item (2) at `p = ∞`, no hypothesis on `dν_T/dν_B` beyond `ν_T ≪ ν_B`**: the paper's \"`q' = 1` when `p = ∞`, only the domination being required when `q = p = ∞`\"."
+    },
+    {
+     "name": "IsInitialFamily",
+     "full": "GFNBounds.Core.RLBound.IsInitialFamily",
+     "kind": "def",
+     "line": 507,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsInitialFamily (ν : Measure α) (I : Set (α → ℝ)) : Prop",
+     "doc": "**An initial family** (`theo:RL_CV_bound_full`(3)): non-zero initial flows `F_init ≪ ν_B`, carried by their densities — a.e."
+    },
+    {
+     "name": "massSet",
+     "full": "GFNBounds.Core.RLBound.massSet",
+     "kind": "def",
+     "line": 511,
+     "attrs": "",
+     "private": false,
+     "statement": "def massSet (ν : Measure α) (I : Set (α → ℝ)) : Set ℝ",
+     "doc": "`Z(𝓘) = {F_init(𝒮) : F_init ∈ 𝓘}` (`equ:initial_masses`)."
+    },
+    {
+     "name": "massSetLp",
+     "full": "GFNBounds.Core.RLBound.massSetLp",
+     "kind": "def",
+     "line": 514,
+     "attrs": "",
+     "private": false,
+     "statement": "def massSetLp (ν : Measure α) (p : ℝ≥0∞) (I : Set (α → ℝ)) : Set ℝ",
+     "doc": "`Z^p(𝓘) = {F_init(𝒮) : F_init ∈ 𝓘, f_init ∈ L^p(ν_B)}` (`equ:initial_masses`)."
+    },
+    {
+     "name": "massSetLp_eq_massSet",
+     "full": "GFNBounds.Core.RLBound.massSetLp_eq_massSet",
+     "kind": "theorem",
+     "line": 518,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem massSetLp_eq_massSet {p : ℝ≥0∞} {I : Set (α → ℝ)} (h : ∀ f ∈ I, MemLp f p ν) : massSetLp ν p I = massSet ν I",
+     "doc": "\"The two conditions coinciding when every member of `𝓘` has its density in `L^p(ν_B)`\"."
+    },
+    {
+     "name": "ofReal_mass_gap_le",
+     "full": "GFNBounds.Core.RLBound.ofReal_mass_gap_le",
+     "kind": "theorem",
+     "line": 527,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ofReal_mass_gap_le [IsFiniteMeasure ν] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {q : ℝ≥0∞} (hq : 1 ≤ q) (hθ : IsGenerativeFlow ν θ) (hac : ν.bind ⇑θ.1 ≪ ν) (hi : Integrable f_init ν) (hk : Integrable k ν) : ENNReal.ofReal |(∫ x, f_init x ∂ν) - ∫ x, k x ∂ν| ≤ ENNReal.ofReal (holderConst ν M q.toReal) * eLpNorm (defectFn ν θ f_init k) q νT",
+     "doc": "**The mass floor in `[0, ∞]`**, for any member and any loss value (finite or not): `|F_init(𝒮) − κ(𝒮)| ≤ C₀ ‖e − k‖_{L^q(ν_T)}`."
+    },
+    {
+     "name": "joint_inf_eq_zero",
+     "full": "GFNBounds.Core.RLBound.joint_inf_eq_zero",
+     "kind": "theorem",
+     "line": 540,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem joint_inf_eq_zero [IsFiniteMeasure ν] [IsFiniteMeasure νT] {p q : ℝ≥0∞} (hq : 1 ≤ q) (hqp : q ≤ p) {Θ : Set (ProbabilityTheory.Kernel α α × (α → ℝ))} (hΘ : Family.WeaklyUniversal ν p Θ) {I : Set (α → ℝ)} (hI : IsInitialFamily ν I) (hk0 : 0 ≤ᵐ[ν] k) (hkp : MemLp k p ν) (ht0 : 0 < ∫ x, k x ∂ν) (hac : νT ≪ ν) (hρ : MemLp (rho νT ν) (conjExp p q) ν) (hZ : (∫ x, k x ∂ν) ∈ closure (massSetLp ν p I)) : ⨅ f ∈ I, ⨅ θ ∈ Θ, eLpNorm (defectFn ν θ f k) q νT = 0",
+     "doc": "**`equ:joint_infimum`, left implication** (`theo:RL_CV_bound_full`, item (3)): `t ∈ closure Z^p(𝓘) ⟹ inf_{𝓘 × Θ} 𝓛 = 0`, under the hypotheses of (2) on `Θ`, `dκ/dν_B` and `ν_T`."
+    },
+    {
+     "name": "mem_closure_of_joint_inf",
+     "full": "GFNBounds.Core.RLBound.mem_closure_of_joint_inf",
+     "kind": "theorem",
+     "line": 624,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mem_closure_of_joint_inf [IsFiniteMeasure ν] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {p q : ℝ≥0∞} (hq : 1 ≤ q) {Θ : Set (ProbabilityTheory.Kernel α α × (α → ℝ))} (hΘ : Family.WeaklyUniversal ν p Θ) {I : Set (α → ℝ)} (hI : IsInitialFamily ν I) (hk : Integrable k ν) (h0 : ⨅ f ∈ I, ⨅ θ ∈ Θ, eLpNorm (defectFn ν θ f k) q νT = 0) : (∫ x, k x ∂ν) ∈ closure (massSet ν I)",
+     "doc": "**`equ:joint_infimum`, right implication** (`theo:RL_CV_bound_full`, item (3)): `inf_{𝓘 × Θ} 𝓛 = 0 ⟹ t ∈ closure Z(𝓘)`, by `equ:mass_floor` along a minimizing sequence."
+    },
+    {
+     "name": "joint_infimum",
+     "full": "GFNBounds.Core.RLBound.joint_infimum",
+     "kind": "theorem",
+     "line": 654,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem joint_infimum [IsFiniteMeasure ν] [IsFiniteMeasure νT] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT) {p q : ℝ≥0∞} (hq : 1 ≤ q) (hqp : q ≤ p) {Θ : Set (ProbabilityTheory.Kernel α α × (α → ℝ))} (hΘ : Family.WeaklyUniversal ν p Θ) {I : Set (α → ℝ)} (hI : IsInitialFamily ν I) (hk0 : 0 ≤ᵐ[ν] k) (hkp : MemLp k p ν) (ht0 : 0 < ∫ x, k x ∂ν) (hac : νT ≪ ν) (hρ : MemLp (rho νT ν) (conjExp p q) ν) : ((∫ x, k x ∂ν) ∈ closure (massSetLp ν p I) → ⨅ f ∈ I, ⨅ θ ∈ Θ, eLpNorm (defectFn ν θ f k) q νT = 0) ∧ ((⨅ f ∈ I, ⨅ θ ∈ Θ, eLpNorm (defectFn ν θ f k) q νT = 0) → (∫ x, k x ∂ν) ∈ closure (massSet ν I))",
+     "doc": "**`equ:joint_infimum` in full, item (3) of `theo:RL_CV_bound_full`**: `t ∈ closure Z^p(𝓘) ⟹ inf_{𝓘 × Θ} 𝓛 = 0 ⟹ t ∈ closure Z(𝓘)`, under the hypotheses of (2) on `Θ`, `dκ/dν_B` and `ν_T`, and the standing domination `ν_B ≤ M ν_T` of the theorem."
+    },
+    {
+     "name": "memLp_rho_self",
+     "full": "GFNBounds.Core.RLBound.memLp_rho_self",
+     "kind": "theorem",
+     "line": 675,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem memLp_rho_self (ν : Measure α) [IsFiniteMeasure ν] (r : ℝ≥0∞) : MemLp (rho ν ν) r ν",
+     "doc": ""
+    },
+    {
+     "name": "inf_loss_eq_zero_const_kernel",
+     "full": "GFNBounds.Core.RLBound.inf_loss_eq_zero_const_kernel",
+     "kind": "theorem",
+     "line": 684,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inf_loss_eq_zero_const_kernel (ν : Measure α) [IsProbabilityMeasure ν] {p q : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p ≠ ⊤) (hq : 1 ≤ q) (hqp : q ≤ p) {f_init k : α → ℝ} (hpair : Family.IsAdmissiblePair ν p f_init k) : ⨅ θ ∈ fixedPolicyFamily ν p (ProbabilityTheory.Kernel.const α ν), eLpNorm (defectFn ν θ f_init k) q ν = 0",
+     "doc": "**`theo:RL_CV_bound_full`, item (2) inhabited**: on any probability space, training against `ν_T = ν_B` over the family of the i.i.d."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -29034,6 +29997,116 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Doubling/RenewalClose.lean",
+   "title": "Every bounded solution of the renewal limit equation on `ℝ` is constant",
+   "labels": [
+    "rem:doubling_renewal"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.Remarks"
+   ],
+   "variables": [
+    "variable {c p : ℝ} {V : ℝ → ℝ} {M : ℝ}"
+   ],
+   "lines": 212,
+   "decls": [
+    {
+     "name": "kernInf",
+     "full": "GFNBounds.Doubling.RenewalClose.kernInf",
+     "kind": "def",
+     "line": 57,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def kernInf (c p : ℝ) : ℝ",
+     "doc": "The lower bound of the kernel on `[0,1]`: `k₀ := c ln 2 · 2^{−|p|}`."
+    },
+    {
+     "name": "kernInf_pos",
+     "full": "GFNBounds.Doubling.RenewalClose.kernInf_pos",
+     "kind": "theorem",
+     "line": 59,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem kernInf_pos (hc : 0 < c) (p : ℝ) : 0 < kernInf c p",
+     "doc": ""
+    },
+    {
+     "name": "kern_ge",
+     "full": "GFNBounds.Doubling.RenewalClose.kern_ge",
+     "kind": "theorem",
+     "line": 66,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem kern_ge (hc : 0 < c) (p : ℝ) {v : ℝ} (hv : v ∈ Icc (0 : ℝ) 1) : kernInf c p ≤ kern c p v",
+     "doc": "`k(v) ≥ c ln 2 · 2^{−|p|}` for `v ∈ [0,1]`."
+    },
+    {
+     "name": "kbar_le_one",
+     "full": "GFNBounds.Doubling.RenewalClose.kbar_le_one",
+     "kind": "theorem",
+     "line": 79,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem kbar_le_one (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) {v : ℝ} (hv : v ∈ Icc (0 : ℝ) 1) : kbar c p v ≤ 1",
+     "doc": "`k̄(v) ≤ 1` for `v ∈ [0,1]`."
+    },
+    {
+     "name": "sup_mul_sub_G_le",
+     "full": "GFNBounds.Doubling.RenewalClose.sup_mul_sub_G_le",
+     "kind": "theorem",
+     "line": 92,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sup_mul_sub_G_le (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V) (hM : ∀ x, |V x| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) {S : ℝ} (hS : ∀ x, V x ≤ S) (x : ℝ) : S * (∫ v in (0 : ℝ)..1, kbar c p v) - Gfun c p V x ≤ (S - V x) / kernInf c p",
+     "doc": "**The key estimate.** If `V ≤ S` everywhere, then `S ∫₀¹ k̄ − G(x) ≤ (S − V(x)) / k₀` at every `x`."
+    },
+    {
+     "name": "neg_solution",
+     "full": "GFNBounds.Doubling.RenewalClose.neg_solution",
+     "kind": "theorem",
+     "line": 148,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem neg_solution (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) (x : ℝ) : (-V) x = ∫ v in (0 : ℝ)..1, kern c p v * (-V) (x - v)",
+     "doc": "`−V` solves the limit equation when `V` does."
+    },
+    {
+     "name": "Gfun_neg",
+     "full": "GFNBounds.Doubling.RenewalClose.Gfun_neg",
+     "kind": "theorem",
+     "line": 153,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Gfun_neg (x : ℝ) : Gfun c p (-V) x = -Gfun c p V x",
+     "doc": ""
+    },
+    {
+     "name": "renewal_solution_const",
+     "full": "GFNBounds.Doubling.RenewalClose.renewal_solution_const",
+     "kind": "theorem",
+     "line": 158,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem renewal_solution_const (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V) (hM : ∀ x, |V x| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) (x y : ℝ) : V x = V y",
+     "doc": "**`rem:doubling_renewal`, the finding certified: every bounded measurable solution of the limit equation `V(x) = ∫₀¹ k(v)V(x−v)dv` on `ℝ` is constant.**"
+    },
+    {
+     "name": "renewal_limit_trivial",
+     "full": "GFNBounds.Doubling.RenewalClose.renewal_limit_trivial",
+     "kind": "theorem",
+     "line": 200,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem renewal_limit_trivial (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V) (hM : ∀ x, |V x| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) {ℓ : ℝ} (hlim : Tendsto V atTop (𝓝 ℓ)) : V = (fun _ => ℓ) ∧ ∀ x, Gfun c p V x = ℓ * ∫ v in (0 : ℝ)..1, kbar c p v",
+     "doc": "**`rem:doubling_renewal`, the limit clause is `ℓ = ℓ`**: under the remark's hypotheses, the limit `ℓ` at `+∞` is the value of `V` at every point, and `G ≡ ℓ ∫₀¹ k̄`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Doubling/Setting.lean",
    "title": "The doubling graph: state space, backward policy, and invariant sequences",
    "labels": [
@@ -39096,6 +40169,466 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Graph/PartialSupportClose.lean",
+   "title": "`rem:partial_support` on the paper's terminating states, with or without an edge `s₀ → s_f`",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Core.FamilyUniversality"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V}",
+    "variable {R : V → ℝ}",
+    "variable [MeasurableSpace V] [MeasurableSingletonClass V]"
+   ],
+   "lines": 707,
+   "decls": [
+    {
+     "name": "IsTargetI",
+     "full": "GFNBounds.Graph.PartialSupportClose.IsTargetI",
+     "kind": "structure",
+     "line": 81,
+     "attrs": "",
+     "private": false,
+     "statement": "structure IsTargetI (G : MarkedGraph V) (R : V → ℝ) : Prop",
+     "doc": "A **target on the terminating states** (internal states with an edge to `s_f`)."
+    },
+    {
+     "name": "IsTargetI.isTarget",
+     "full": "GFNBounds.Graph.PartialSupportClose.IsTargetI.isTarget",
+     "kind": "theorem",
+     "line": 85,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsTargetI.isTarget {R : V → ℝ} (h : IsTargetI G R) : IsTarget G R",
+     "doc": ""
+    },
+    {
+     "name": "Deleted",
+     "full": "GFNBounds.Graph.PartialSupportClose.Deleted",
+     "kind": "def",
+     "line": 90,
+     "attrs": "",
+     "private": false,
+     "statement": "def Deleted (G : MarkedGraph V) (R : V → ℝ) (y : V) : Prop",
+     "doc": "The terminating edge `y → s_f` is **deleted** from `G′`: `y` is a terminating state (internal) where `R` vanishes."
+    },
+    {
+     "name": "subGraphI",
+     "full": "GFNBounds.Graph.PartialSupportClose.subGraphI",
+     "kind": "def",
+     "line": 94,
+     "attrs": "",
+     "private": false,
+     "statement": "def subGraphI (G : MarkedGraph V) (R : V → ℝ) : MarkedGraph {v // v ∈ subVerts G R}",
+     "doc": "**`G′`** on the paper's reading: induced on `subVerts G R`, with the terminating edges `y → s_f`, `y ∈ 𝒮`, `R(y) = 0`, deleted."
+    },
+    {
+     "name": "subGraphI_edge_iff_of_not_edge",
+     "full": "GFNBounds.Graph.PartialSupportClose.subGraphI_edge_iff_of_not_edge",
+     "kind": "theorem",
+     "line": 103,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem subGraphI_edge_iff_of_not_edge (hsrc : ¬ G.Edge G.src G.snk) {R : V → ℝ} (x y : {v // v ∈ subVerts G R}) : (subGraphI G R).Edge x y ↔ (subGraph G R).Edge x y",
+     "doc": "**Without an edge `s₀ → s_f`, `subGraphI` is the strict file's `subGraph`.**"
+    },
+    {
+     "name": "subGraph_edge_imp",
+     "full": "GFNBounds.Graph.PartialSupportClose.subGraph_edge_imp",
+     "kind": "theorem",
+     "line": 113,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem subGraph_edge_imp {R : V → ℝ} {x y : {v // v ∈ subVerts G R}} (h : (subGraph G R).Edge x y) : (subGraphI G R).Edge x y",
+     "doc": ""
+    },
+    {
+     "name": "subGraphI_pathConnected",
+     "full": "GFNBounds.Graph.PartialSupportClose.subGraphI_pathConnected",
+     "kind": "theorem",
+     "line": 118,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem subGraphI_pathConnected (hpc : G.PathConnected) {R : V → ℝ} (hR : IsTargetI G R) (hne : ∃ y, R y ≠ 0) : (subGraphI G R).PathConnected",
+     "doc": "**`G′` is again path-connected** (`rem:partial_support`), as soon as `R ≠ 0`."
+    },
+    {
+     "name": "mem_subVerts_of_not_deleted",
+     "full": "GFNBounds.Graph.PartialSupportClose.mem_subVerts_of_not_deleted",
+     "kind": "theorem",
+     "line": 126,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mem_subVerts_of_not_deleted {R : V → ℝ} {y : V} (he : G.Edge y G.snk) (hd : ¬ Deleted G R y) : y ∈ subVerts G R",
+     "doc": "A state with a surviving terminating edge is a state of `G′`."
+    },
+    {
+     "name": "IsSinkRowI",
+     "full": "GFNBounds.Graph.PartialSupportClose.IsSinkRowI",
+     "kind": "structure",
+     "line": 139,
+     "attrs": "",
+     "private": false,
+     "statement": "structure IsSinkRowI (G : MarkedGraph V) (R : V → ℝ) (q : V → ℝ) : Prop",
+     "doc": "A **sink row for `G′`**: a probability on the in-neighbours of `s_f` in `G′`, positive on each of them."
+    },
+    {
+     "name": "restrictWithI",
+     "full": "GFNBounds.Graph.PartialSupportClose.restrictWithI",
+     "kind": "def",
+     "line": 146,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def restrictWithI (B : BackwardPolicy G) {R : V → ℝ} (q : V → ℝ) (hq : IsSinkRowI G R q) : BackwardPolicy (subGraphI G R)",
+     "doc": "**The restriction of `π_←` to `G′`**, with sink row `q`."
+    },
+    {
+     "name": "restrictWithI_pb_of_ne_snk",
+     "full": "GFNBounds.Graph.PartialSupportClose.restrictWithI_pb_of_ne_snk",
+     "kind": "theorem",
+     "line": 176,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem restrictWithI_pb_of_ne_snk (B : BackwardPolicy G) {R q : V → ℝ} (hq : IsSinkRowI G R q) {s s' : {v // v ∈ subVerts G R}} (hs : s ≠ (subGraphI G R).snk) : (restrictWithI B q hq).pb s s' = B.pb s.1 s'.1",
+     "doc": ""
+    },
+    {
+     "name": "restrictWithI_pb_snk",
+     "full": "GFNBounds.Graph.PartialSupportClose.restrictWithI_pb_snk",
+     "kind": "theorem",
+     "line": 182,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem restrictWithI_pb_snk (B : BackwardPolicy G) {R q : V → ℝ} (hq : IsSinkRowI G R q) (s' : {v // v ∈ subVerts G R}) : (restrictWithI B q hq).pb (subGraphI G R).snk s' = q s'.1",
+     "doc": ""
+    },
+    {
+     "name": "restrictWithI_positiveOnEdges",
+     "full": "GFNBounds.Graph.PartialSupportClose.restrictWithI_positiveOnEdges",
+     "kind": "theorem",
+     "line": 188,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem restrictWithI_positiveOnEdges (B : BackwardPolicy G) (hB : B.PositiveOnEdges) {R q : V → ℝ} (hq : IsSinkRowI G R q) : (restrictWithI B q hq).PositiveOnEdges",
+     "doc": "The restriction is positive on every edge of `G′`."
+    },
+    {
+     "name": "sinkMassI",
+     "full": "GFNBounds.Graph.PartialSupportClose.sinkMassI",
+     "kind": "def",
+     "line": 198,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def sinkMassI (B : BackwardPolicy G) (R : V → ℝ) : ℝ",
+     "doc": "The normalizer of the renormalized sink row."
+    },
+    {
+     "name": "renormRowI",
+     "full": "GFNBounds.Graph.PartialSupportClose.renormRowI",
+     "kind": "def",
+     "line": 202,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def renormRowI (B : BackwardPolicy G) (R : V → ℝ) (y : V) : ℝ",
+     "doc": "**`π_←`'s sink row, restricted to the in-neighbours of `s_f` in `G′` and renormalized.**"
+    },
+    {
+     "name": "sinkMassI_pos",
+     "full": "GFNBounds.Graph.PartialSupportClose.sinkMassI_pos",
+     "kind": "theorem",
+     "line": 205,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sinkMassI_pos (B : BackwardPolicy G) (hB : B.PositiveOnEdges) {R : V → ℝ} (hR : IsTargetI G R) (hne : ∃ y, R y ≠ 0) : 0 < sinkMassI B R",
+     "doc": ""
+    },
+    {
+     "name": "isSinkRowI_renormRowI",
+     "full": "GFNBounds.Graph.PartialSupportClose.isSinkRowI_renormRowI",
+     "kind": "theorem",
+     "line": 217,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isSinkRowI_renormRowI (B : BackwardPolicy G) (hB : B.PositiveOnEdges) {R : V → ℝ} (hR : IsTargetI G R) (hne : ∃ y, R y ≠ 0) : IsSinkRowI G R (renormRowI B R)",
+     "doc": ""
+    },
+    {
+     "name": "restrict_policyI",
+     "full": "GFNBounds.Graph.PartialSupportClose.restrict_policyI",
+     "kind": "theorem",
+     "line": 246,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem restrict_policyI (B : BackwardPolicy G) (hB : B.PositiveOnEdges) {R : V → ℝ} (hR : IsTargetI G R) (hne : ∃ y, R y ≠ 0) : ∃ B' : BackwardPolicy (subGraphI G R), B'.PositiveOnEdges ∧ (∀ s s', s ≠ (subGraphI G R).snk → B'.pb s s' = B.pb s.1 s'.1) ∧ (∀ s', B'.pb (subGraphI G R).snk s' = renormRowI B R s'.1)",
+     "doc": "**`rem:partial_support`, the restriction claim**, on the paper's `G′`: a backward policy on `G` positive on its edges restricts to one on `G′` positive on the edges of `G′`, with only its sink row renormalized."
+    },
+    {
+     "name": "frozenRow",
+     "full": "GFNBounds.Graph.PartialSupportClose.frozenRow",
+     "kind": "def",
+     "line": 262,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def frozenRow (G : MarkedGraph V) (R : V → ℝ) (α : ℝ) (y : V) : ℝ",
+     "doc": "**The frozen sink row** `q_α = (1−α) R/Z + α δ_{s₀}`."
+    },
+    {
+     "name": "IsSrcWeight",
+     "full": "GFNBounds.Graph.PartialSupportClose.IsSrcWeight",
+     "kind": "structure",
+     "line": 266,
+     "attrs": "",
+     "private": false,
+     "statement": "structure IsSrcWeight (G : MarkedGraph V) (α : ℝ) : Prop",
+     "doc": "The admissible weights on `s₀`: `α ∈ [0, 1)`, positive iff `s₀ → s_f` is an edge."
+    },
+    {
+     "name": "exists_srcWeight",
+     "full": "GFNBounds.Graph.PartialSupportClose.exists_srcWeight",
+     "kind": "theorem",
+     "line": 274,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_srcWeight (G : MarkedGraph V) : ∃ α, IsSrcWeight G α",
+     "doc": "Such a weight exists."
+    },
+    {
+     "name": "frozenRow_of_ne_src",
+     "full": "GFNBounds.Graph.PartialSupportClose.frozenRow_of_ne_src",
+     "kind": "theorem",
+     "line": 280,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem frozenRow_of_ne_src {α : ℝ} {y : V} (hy : y ≠ G.src) : frozenRow G R α y = (1 - α) * (R y / ∑ z, R z)",
+     "doc": ""
+    },
+    {
+     "name": "isSinkRowI_frozenRow",
+     "full": "GFNBounds.Graph.PartialSupportClose.isSinkRowI_frozenRow",
+     "kind": "theorem",
+     "line": 284,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isSinkRowI_frozenRow (hR : IsTargetI G R) (hZ : 0 < ∑ y, R y) {α : ℝ} (hα : IsSrcWeight G α) : IsSinkRowI G R (frozenRow G R α)",
+     "doc": ""
+    },
+    {
+     "name": "partial_support_exactI",
+     "full": "GFNBounds.Graph.PartialSupportClose.partial_support_exactI",
+     "kind": "theorem",
+     "line": 327,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem partial_support_exactI (hpc : G.PathConnected) (B : BackwardPolicy G) (hB : B.PositiveOnEdges) (hR : IsTargetI G R) (hZ : 0 < ∑ y, R y) {α : ℝ} (hα : IsSrcWeight G α) : ∃ hq : IsSinkRowI G R (frozenRow G R α), (restrictWithI B _ hq).PositiveOnEdges ∧ (subGraphI G R).PathConnected ∧ (∃ lam, (restrictWithI B _ hq).IsInvProb lam) ∧ ∀ lam : {v // v ∈ subVerts G R} → ℝ, (restrictWithI B _ hq).IsInvProb lam → let c",
+     "doc": "**`rem:partial_support`, claim (a), on the paper's `G′`.** Let `G` be path-connected, `π_←` a backward policy on `G` positive on its edges, `R` a target of mass `Z > 0` on the terminating states, and `α` a source weight (`0` without an edge `s₀ → s_f`)."
+    },
+    {
+     "name": "partial_support_not_in_GI",
+     "full": "GFNBounds.Graph.PartialSupportClose.partial_support_not_in_GI",
+     "kind": "theorem",
+     "line": 413,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem partial_support_not_in_GI (hpc : G.PathConnected) (B : BackwardPolicy G) (hB : B.PositiveOnEdges) (hR : IsTargetI G R) (hZ : 0 < ∑ y, R y) {α : ℝ} (hα : IsSrcWeight G α) (hvan : ∃ y ∈ G.internal, G.Edge y G.snk ∧ R y = 0) : ∃ hq : IsSinkRowI G R (frozenRow G R α), ∀ lam : {v // v ∈ subVerts G R} → ℝ, (restrictWithI B _ hq).IsInvProb lam → ∀ θ ∈ FrozenUnion G, memberFlow θ ≠ extend ((restrictWithI B _ hq).edgeFlow lam ((∑ y, R y) / ((1 - α) * lam (subGraphI G R).src)))",
+     "doc": "**`rem:partial_support`, claim (a), \"not to that of `G`\"**, on the paper's `G′`: when `R` vanishes on a terminating state, the extended flow of `partial_support_exactI` is the edge flow of no element of the union of the frozen-backward families of `G`."
+    },
+    {
+     "name": "unifI",
+     "full": "GFNBounds.Graph.PartialSupportClose.unifI",
+     "kind": "def",
+     "line": 442,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def unifI (G : MarkedGraph V) (y : V) : ℝ",
+     "doc": "`unif`: the uniform probability on the terminating states, the internal `y` with `y → s_f`."
+    },
+    {
+     "name": "epsTargetI",
+     "full": "GFNBounds.Graph.PartialSupportClose.epsTargetI",
+     "kind": "def",
+     "line": 448,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def epsTargetI (G : MarkedGraph V) (R : V → ℝ) (ε : ℝ) (y : V) : ℝ",
+     "doc": "**The full-support targets** `R_ε := (1 − ε) R + ε Z unif`."
+    },
+    {
+     "name": "unifI_nonneg",
+     "full": "GFNBounds.Graph.PartialSupportClose.unifI_nonneg",
+     "kind": "theorem",
+     "line": 451,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unifI_nonneg (y : V) : 0 ≤ unifI G y",
+     "doc": ""
+    },
+    {
+     "name": "card_terminating_pos",
+     "full": "GFNBounds.Graph.PartialSupportClose.card_terminating_pos",
+     "kind": "theorem",
+     "line": 457,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem card_terminating_pos {y : V} (hy : y ∈ G.internal ∧ G.Edge y G.snk) : 0 < (univ.filter fun z => z ∈ G.internal ∧ G.Edge z G.snk).card",
+     "doc": ""
+    },
+    {
+     "name": "unifI_le_one",
+     "full": "GFNBounds.Graph.PartialSupportClose.unifI_le_one",
+     "kind": "theorem",
+     "line": 462,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unifI_le_one (y : V) : unifI G y ≤ 1",
+     "doc": ""
+    },
+    {
+     "name": "unifI_pos",
+     "full": "GFNBounds.Graph.PartialSupportClose.unifI_pos",
+     "kind": "theorem",
+     "line": 471,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unifI_pos {y : V} (hy : y ∈ G.internal ∧ G.Edge y G.snk) : 0 < unifI G y",
+     "doc": ""
+    },
+    {
+     "name": "unifI_eq_zero",
+     "full": "GFNBounds.Graph.PartialSupportClose.unifI_eq_zero",
+     "kind": "theorem",
+     "line": 477,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unifI_eq_zero {y : V} (hy : ¬ (y ∈ G.internal ∧ G.Edge y G.snk)) : unifI G y = 0",
+     "doc": ""
+    },
+    {
+     "name": "sum_unifI",
+     "full": "GFNBounds.Graph.PartialSupportClose.sum_unifI",
+     "kind": "theorem",
+     "line": 482,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_unifI {y₀ : V} (hy₀ : y₀ ∈ G.internal ∧ G.Edge y₀ G.snk) : ∑ y, unifI G y = 1",
+     "doc": "`unif` is a probability, as soon as there is a terminating state."
+    },
+    {
+     "name": "exists_terminatingI",
+     "full": "GFNBounds.Graph.PartialSupportClose.exists_terminatingI",
+     "kind": "theorem",
+     "line": 490,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_terminatingI {R : V → ℝ} (hR : IsTargetI G R) (hZ : 0 < ∑ z, R z) : ∃ y, y ∈ G.internal ∧ G.Edge y G.snk",
+     "doc": ""
+    },
+    {
+     "name": "isTargetI_epsTargetI",
+     "full": "GFNBounds.Graph.PartialSupportClose.isTargetI_epsTargetI",
+     "kind": "theorem",
+     "line": 499,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isTargetI_epsTargetI {R : V → ℝ} (hR : IsTargetI G R) {ε : ℝ} (hε0 : 0 ≤ ε) (hε1 : ε ≤ 1) : IsTargetI G (epsTargetI G R ε)",
+     "doc": "`R_ε` is a target on the terminating states."
+    },
+    {
+     "name": "epsTargetI_pos",
+     "full": "GFNBounds.Graph.PartialSupportClose.epsTargetI_pos",
+     "kind": "theorem",
+     "line": 512,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem epsTargetI_pos {R : V → ℝ} (hR : IsTargetI G R) (hZ : 0 < ∑ z, R z) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε ≤ 1) {y : V} (hy : y ∈ G.internal ∧ G.Edge y G.snk) : 0 < epsTargetI G R ε y",
+     "doc": "`R_ε` has full support on the terminating states, for `ε ∈ (0, 1]` and `Z > 0`."
+    },
+    {
+     "name": "sum_epsTargetI",
+     "full": "GFNBounds.Graph.PartialSupportClose.sum_epsTargetI",
+     "kind": "theorem",
+     "line": 522,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_epsTargetI {R : V → ℝ} (hR : IsTargetI G R) (hZ : 0 < ∑ z, R z) (ε : ℝ) : ∑ y, epsTargetI G R ε y = ∑ y, R y",
+     "doc": "`R_ε` has the mass `Z` of `R`."
+    },
+    {
+     "name": "member_epsTargetI",
+     "full": "GFNBounds.Graph.PartialSupportClose.member_epsTargetI",
+     "kind": "theorem",
+     "line": 533,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem member_epsTargetI (hpc : G.PathConnected) {R : V → ℝ} (hR : IsTargetI G R) (hZ : 0 < ∑ y, R y) {ε : ℝ} (hε0 : 0 < ε) (hε1 : ε ≤ 1) : ∃ θ ∈ FrozenUnion G, (∀ v ∈ G.internal, fmDefectE G (memberFlow θ) (epsTargetI G R ε) v = 0) ∧ ∀ v ∈ G.internal, |fmDefectE G (memberFlow θ) R v| ≤ ε * ∑ y, R y",
+     "doc": "**`rem:partial_support`, claim (b), on the paper's `unif`: `R_ε` is exactly matched in the union, within `εZ` of `R`.** For `ε ∈ (0, 1]` some element of the union of the frozen-backward families of `G` is exactly matched to `R_ε` at every internal state, and its defect against `R` is at most `εZ` there — with or without an edge `s₀ → s_f`."
+    },
+    {
+     "name": "iInf_graphResidual_eq_zeroI",
+     "full": "GFNBounds.Graph.PartialSupportClose.iInf_graphResidual_eq_zeroI",
+     "kind": "theorem",
+     "line": 610,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem iInf_graphResidual_eq_zeroI (hpc : G.PathConnected) {R : V → ℝ} (hR : IsTargetI G R) (hZ : 0 < ∑ y, R y) (p : ℝ≥0∞) : ⨅ θ ∈ FrozenUnion G, graphResidual G p (memberFlow θ) R = 0",
+     "doc": "**`rem:partial_support`, claim (b), in `L^p`, on the paper's targets**: the infimum over the union vanishes, at every `p` (the strict `iInf_graphResidual_eq_zero`, applied to `IsTargetI`)."
+    },
+    {
+     "name": "graphResidual_ne_zeroI",
+     "full": "GFNBounds.Graph.PartialSupportClose.graphResidual_ne_zeroI",
+     "kind": "theorem",
+     "line": 617,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem graphResidual_ne_zeroI (hpc : G.PathConnected) {R : V → ℝ} (hR : IsTargetI G R) (hZ : 0 < ∑ y, R y) (hvan : ∃ y ∈ G.internal, G.Edge y G.snk ∧ R y = 0) {p : ℝ≥0∞} (hp : p ≠ 0) {θ : (V → V → ℝ) × (V → ℝ)} (hθ : θ ∈ FrozenUnion G) : graphResidual G p (memberFlow θ) R ≠ 0",
+     "doc": "**`rem:partial_support`, claim (b), in `L^p`, on the paper's targets**: not attained, at any `p ≠ 0`, when `R` vanishes on some terminating state."
+    },
+    {
+     "name": "diamondE",
+     "full": "GFNBounds.Graph.PartialSupportClose.diamondE",
+     "kind": "def",
+     "line": 638,
+     "attrs": "",
+     "private": false,
+     "statement": "def diamondE : MarkedGraph (Fin 4)",
+     "doc": "The graph `s₀ = 0 → 1, 2`, `1, 2 → 3 = s_f`, **and `s₀ → s_f`**."
+    },
+    {
+     "name": "diamondETarget",
+     "full": "GFNBounds.Graph.PartialSupportClose.diamondETarget",
+     "kind": "def",
+     "line": 649,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def diamondETarget : Fin 4 → ℝ",
+     "doc": "The target `δ₁`, which vanishes on the terminating state `2`."
+    },
+    {
+     "name": "diamondE_check",
+     "full": "GFNBounds.Graph.PartialSupportClose.diamondE_check",
+     "kind": "theorem",
+     "line": 655,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem diamondE_check : diamondE.PathConnected ∧ diamondE.Edge diamondE.src diamondE.snk ∧ IsTargetI diamondE diamondETarget ∧ 0 < ∑ y, diamondETarget y ∧ (∃ y ∈ diamondE.internal, diamondE.Edge y diamondE.snk ∧ diamondETarget y = 0)",
+     "doc": "**The edge case is inhabited** (kb 0025): `diamondE` is path-connected, has the edge `s₀ → s_f`, `δ₁` is a target of positive mass on its terminating states vanishing on the terminating state `2`, so the hypotheses of `partial_support_exactI` and `partial_support_not_in_GI` hold; they are applied in `diamondE_partial_support`."
+    },
+    {
+     "name": "diamondE_partial_support",
+     "full": "GFNBounds.Graph.PartialSupportClose.diamondE_partial_support",
+     "kind": "theorem",
+     "line": 686,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem diamondE_partial_support : ∃ B : BackwardPolicy diamondE, B.PositiveOnEdges ∧ ∃ α, IsSrcWeight diamondE α ∧ 0 < α ∧ ∃ hq : IsSinkRowI diamondE diamondETarget (frozenRow diamondE diamondETarget α), ∃ lam, (restrictWithI B _ hq).IsInvProb lam ∧ let c",
+     "doc": "On `diamondE`, with the edge `s₀ → s_f`, claim (a) on the paper's `G′` holds non-vacuously: for some backward policy positive on the edges, the extended flow matches `δ₁` exactly on `𝒮` and is not the edge flow of any element of the union."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Graph/SamplerWiring.lean",
    "title": "The sampler, wired into the rows that cite `theo:sampling_theorem`",
    "labels": [],
@@ -41485,6 +43018,364 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Silva/PathSpaceMarkov.lean",
+   "title": "`rem:path_space` on `𝒞_N`: `sup_{p_F} M' = +∞` over full-support Markov forward policies",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Silva.Remarks"
+   ],
+   "variables": [
+    "variable {M : ℕ}"
+   ],
+   "lines": 468,
+   "decls": [
+    {
+     "name": "cycTail",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycTail",
+     "kind": "def",
+     "line": 80,
+     "attrs": "",
+     "private": false,
+     "statement": "def cycTail (M : ℕ) : ℕ → ℕ → List (cycV M)",
+     "doc": "The tail `x_{j+1}, x_{j+2}, …, x_{j+n+1}, s_f` (indices mod `N`) of a trajectory: `n` cycle steps from `x_{j+1}`, then the terminating edge."
+    },
+    {
+     "name": "cycTraj",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycTraj",
+     "kind": "def",
+     "line": 85,
+     "attrs": "",
+     "private": false,
+     "statement": "def cycTraj (M : ℕ) (n : ℕ) : List (cycV M)",
+     "doc": "**The trajectory `cycTraj M n` of `𝒞_N`**: `s₀ → x₁ → ⋯ → x_{n+1 mod N} → s_f`."
+    },
+    {
+     "name": "cycTail_succ",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycTail_succ",
+     "kind": "theorem",
+     "line": 87,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycTail_succ (j n : ℕ) : cycTail M j (n + 1) = xC M (j : Fin (M + 2)) :: cycTail M (j + 1) n",
+     "doc": ""
+    },
+    {
+     "name": "cycTail_eq_cons",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycTail_eq_cons",
+     "kind": "theorem",
+     "line": 91,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycTail_eq_cons (j n : ℕ) : ∃ r, cycTail M j n = xC M (j : Fin (M + 2)) :: r",
+     "doc": ""
+    },
+    {
+     "name": "length_cycTail",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.length_cycTail",
+     "kind": "theorem",
+     "line": 96,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem length_cycTail (j n : ℕ) : (cycTail M j n).length = n + 2",
+     "doc": ""
+    },
+    {
+     "name": "cycTail_eq_append",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycTail_eq_append",
+     "kind": "theorem",
+     "line": 102,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycTail_eq_append (j n : ℕ) : ∃ l, cycTail M j n = l ++ [xC M ((j + n : ℕ) : Fin (M + 2)), snkC M]",
+     "doc": "The tail ends `x_{j+n+1}, s_f`."
+    },
+    {
+     "name": "cycTraj_eq_append",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycTraj_eq_append",
+     "kind": "theorem",
+     "line": 112,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycTraj_eq_append (n : ℕ) : ∃ l, cycTraj M n = l ++ [xC M (n : Fin (M + 2)), snkC M]",
+     "doc": "**`cycTraj M n` is a trajectory into `x_{n+1 mod N}`**: it ends `x_{n+1}, s_f`."
+    },
+    {
+     "name": "cycTraj_injective",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycTraj_injective",
+     "kind": "theorem",
+     "line": 118,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycTraj_injective (M : ℕ) : Function.Injective (cycTraj M)",
+     "doc": ""
+    },
+    {
+     "name": "edge_xC_iff",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.edge_xC_iff",
+     "kind": "theorem",
+     "line": 124,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edge_xC_iff {i : Fin (M + 2)} {v : cycV M} : (cycGraph M).Edge (xC M i) v ↔ v = snkC M ∨ v = xC M (i + 1)",
+     "doc": ""
+    },
+    {
+     "name": "edge_srcC_iff",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.edge_srcC_iff",
+     "kind": "theorem",
+     "line": 138,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edge_srcC_iff {v : cycV M} : (cycGraph M).Edge (srcC M) v ↔ v = xC M 0",
+     "doc": ""
+    },
+    {
+     "name": "natCast_succ_fin",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.natCast_succ_fin",
+     "kind": "theorem",
+     "line": 148,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem natCast_succ_fin (j : ℕ) : ((j + 1 : ℕ) : Fin (M + 2)) = (j : Fin (M + 2)) + 1",
+     "doc": ""
+    },
+    {
+     "name": "isChain_cycTail",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.isChain_cycTail",
+     "kind": "theorem",
+     "line": 152,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isChain_cycTail (j n : ℕ) : (cycTail M j n).IsChain (cycGraph M).Edge",
+     "doc": ""
+    },
+    {
+     "name": "isChain_cycTraj",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.isChain_cycTraj",
+     "kind": "theorem",
+     "line": 165,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isChain_cycTraj (n : ℕ) : (cycTraj M n).IsChain (cycGraph M).Edge",
+     "doc": "**Every `cycTraj M n` is a walk of `𝒞_N`.**"
+    },
+    {
+     "name": "eq_cycTail_of_walk",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.eq_cycTail_of_walk",
+     "kind": "theorem",
+     "line": 172,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_cycTail_of_walk : ∀ (l : List (cycV M)) (j : ℕ), (xC M (j : Fin (M + 2)) :: l).IsChain (cycGraph M).Edge → (xC M (j : Fin (M + 2)) :: l).getLast? = some (snkC M) → ∃ n, xC M (j : Fin (M + 2)) :: l = cycTail M j n | [], j, _, hlast => by simp only [List.getLast?_singleton, Option.some.injEq] at hlast exact absurd hlast (xC_ne_snkC _) | b :: l, j, hch, hlast => by rw [List.isChain_cons_cons] at hch rcases edge_xC_iff.1 hch.1 with hb | hb · subst hb cases l with | nil => exact ⟨0, rfl⟩ | cons c l => rw [List.isChain_cons_cons] at hch exact absurd hch.2.1 (by simpa only [cycGraph_snk] using (cycGraph M).no_edge_out_of_snk c) · rw [← natCast_succ_fin] at hb subst hb have hlast' : (xC M ((j + 1 : ℕ) : Fin (M + 2)) :: l).getLast? = some (snkC M)",
+     "doc": ""
+    },
+    {
+     "name": "eq_cycTraj",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.eq_cycTraj",
+     "kind": "theorem",
+     "line": 199,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_cycTraj {l : List (cycV M)} (hch : l.IsChain (cycGraph M).Edge) (hhead : l.head? = some (srcC M)) (hlast : l.getLast? = some (snkC M)) : ∃ n, l = cycTraj M n",
+     "doc": "**The trajectories of `𝒞_N` are exactly the `cycTraj M n`**: every walk from `s₀` to `s_f` is one of them."
+    },
+    {
+     "name": "cycPol",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycPol",
+     "kind": "def",
+     "line": 225,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def cycPol (M : ℕ) (a : ℝ) : cycV M → cycV M → ℝ",
+     "doc": "**The Markov forward policy `cycPol M a`**: `s₀ → x₁` with probability `1`; from every `xᵢ`, continue to `x_{i+1}` with probability `a`, terminate with probability `1 − a`."
+    },
+    {
+     "name": "cycPol_src",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycPol_src",
+     "kind": "theorem",
+     "line": 232,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycPol_src (a : ℝ) (v : cycV M) : cycPol M a (srcC M) v = if v = xC M 0 then 1 else 0",
+     "doc": ""
+    },
+    {
+     "name": "cycPol_x_snk",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycPol_x_snk",
+     "kind": "theorem",
+     "line": 235,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycPol_x_snk (a : ℝ) (i : Fin (M + 2)) : cycPol M a (xC M i) (snkC M) = 1 - a",
+     "doc": ""
+    },
+    {
+     "name": "cycPol_x_x",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycPol_x_x",
+     "kind": "theorem",
+     "line": 237,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycPol_x_x (a : ℝ) (i j : Fin (M + 2)) : cycPol M a (xC M i) (xC M j) = if j = i + 1 then a else 0",
+     "doc": ""
+    },
+    {
+     "name": "cycPol_x_src",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycPol_x_src",
+     "kind": "theorem",
+     "line": 240,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycPol_x_src (a : ℝ) (i : Fin (M + 2)) : cycPol M a (xC M i) (srcC M) = 0",
+     "doc": ""
+    },
+    {
+     "name": "cycPol_snk",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycPol_snk",
+     "kind": "theorem",
+     "line": 242,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycPol_snk (a : ℝ) (v : cycV M) : cycPol M a (snkC M) v = 0",
+     "doc": ""
+    },
+    {
+     "name": "cycPol_nonneg",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycPol_nonneg",
+     "kind": "theorem",
+     "line": 244,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycPol_nonneg {a : ℝ} (ha0 : 0 ≤ a) (ha1 : a ≤ 1) (u v : cycV M) : 0 ≤ cycPol M a u v",
+     "doc": ""
+    },
+    {
+     "name": "cycPol_pos_of_edge",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycPol_pos_of_edge",
+     "kind": "theorem",
+     "line": 256,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycPol_pos_of_edge {a : ℝ} (ha0 : 0 < a) (ha1 : a < 1) {u v : cycV M} (h : (cycGraph M).Edge u v) : 0 < cycPol M a u v",
+     "doc": "**Full support**: `cycPol M a` is positive on every edge of `𝒞_N`."
+    },
+    {
+     "name": "cycPol_supp",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycPol_supp",
+     "kind": "theorem",
+     "line": 264,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycPol_supp {a : ℝ} {u v : cycV M} (h : cycPol M a u v ≠ 0) : (cycGraph M).Edge u v",
+     "doc": "`cycPol M a` is carried by the edges of `𝒞_N`."
+    },
+    {
+     "name": "cycPol_row_sum",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycPol_row_sum",
+     "kind": "theorem",
+     "line": 282,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycPol_row_sum (a : ℝ) {u : cycV M} (hu : u ≠ snkC M) : ∑ v, cycPol M a u v = 1",
+     "doc": "`cycPol M a` is a probability at every state but the sink."
+    },
+    {
+     "name": "pathProb_cycTail",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.pathProb_cycTail",
+     "kind": "theorem",
+     "line": 299,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathProb_cycTail (a : ℝ) (j n : ℕ) : pathProb (cycPol M a) (cycTail M j n) = a ^ n * (1 - a)",
+     "doc": ""
+    },
+    {
+     "name": "pathProb_cycTraj",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.pathProb_cycTraj",
+     "kind": "theorem",
+     "line": 313,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathProb_cycTraj (a : ℝ) (n : ℕ) : pathProb (cycPol M a) (cycTraj M n) = a ^ n * (1 - a)",
+     "doc": "**The trajectory law of `cycPol M a`**: `p_F(cycTraj n) = aⁿ(1 − a)`."
+    },
+    {
+     "name": "hasSum_cycTraj",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.hasSum_cycTraj",
+     "kind": "theorem",
+     "line": 321,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasSum_cycTraj {a : ℝ} (ha0 : 0 ≤ a) (ha1 : a < 1) : HasSum (fun n => pathProb (cycPol M a) (cycTraj M n)) 1",
+     "doc": "**It is a probability on the trajectories**, for `0 ≤ a < 1`."
+    },
+    {
+     "name": "pathProb_cycTraj_ge",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.pathProb_cycTraj_ge",
+     "kind": "theorem",
+     "line": 329,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathProb_cycTraj_ge (n : ℕ) : 1 / (3 * ((n : ℝ) + 2)) < pathProb (cycPol M (((n : ℝ) + 1) / ((n : ℝ) + 2))) (cycTraj M n)",
+     "doc": "With `a = (n+1)/(n+2)` the trajectory of length index `n` has `p_F ≥ e^{−1}/(n+2) > 1/(3(n+2))`."
+    },
+    {
+     "name": "natCast_fin_add_mul",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.natCast_fin_add_mul",
+     "kind": "theorem",
+     "line": 361,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem natCast_fin_add_mul (i : Fin (M + 2)) (k : ℕ) : ((i.val + k * (M + 2) : ℕ) : Fin (M + 2)) = i",
+     "doc": ""
+    },
+    {
+     "name": "exists_mul_lt",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.exists_mul_lt",
+     "kind": "theorem",
+     "line": 367,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_mul_lt (i : Fin (M + 2)) {pB : ℕ → ℝ} (hB0 : ∀ n, 0 ≤ pB n) (hBs : Summable pB) {δ : ℝ} (hδ : 0 < δ) : ∃ n : ℕ, (n : Fin (M + 2)) = i ∧ ((n : ℝ) + 2) * pB n < δ",
+     "doc": "**Summability forces `liminf (n+2) p_B(τ_n|x) = 0` along the trajectories into `x`.**"
+    },
+    {
+     "name": "cycle_exists_ratio_gt_markov",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycle_exists_ratio_gt_markov",
+     "kind": "theorem",
+     "line": 406,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_exists_ratio_gt_markov (i : Fin (M + 2)) {pB : ℕ → ℝ} (hB0 : ∀ n, 0 ≤ pB n) (hBs : Summable pB) (hBpos : ∀ n : ℕ, (n : Fin (M + 2)) = i → 0 < pB n) (R : ℝ) : ∃ a : ℝ, 0 < a ∧ a < 1 ∧ ∃ n : ℕ, (n : Fin (M + 2)) = i ∧ 0 < pB n ∧ R < pathProb (cycPol M a) (cycTraj M n) / pB n",
+     "doc": "**`rem:path_space`, `sup_{p_F} M' = +∞` on `𝒞_N`, over full-support Markov forward policies.** Let `x = x_{i+1}` and let `p_B(·|x)`, a function of the trajectory index, be non-negative, summable and positive on every trajectory into `x`."
+    },
+    {
+     "name": "cycle_ratio_not_bddAbove_markov",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.cycle_ratio_not_bddAbove_markov",
+     "kind": "theorem",
+     "line": 430,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_ratio_not_bddAbove_markov (i : Fin (M + 2)) {pB : ℕ → ℝ} (hB0 : ∀ n, 0 ≤ pB n) (hBs : Summable pB) (hBpos : ∀ n : ℕ, (n : Fin (M + 2)) = i → 0 < pB n) : ¬ BddAbove {r : ℝ | ∃ a : ℝ, 0 < a ∧ a < 1 ∧ ∃ n : ℕ, (n : Fin (M + 2)) = i ∧ 0 < pB n ∧ r = pathProb (cycPol M a) (cycTraj M n) / pB n}",
+     "doc": "**The same, as unboundedness**: the ratios `p_F(τ)/p_B(τ|x)` over full-support Markov policies `cycPol M a` and trajectories `τ` into `x` charged by `p_B` are not bounded above."
+    },
+    {
+     "name": "inhabit_markov_cycle",
+     "full": "GFNBounds.Silva.PathSpaceMarkov.inhabit_markov_cycle",
+     "kind": "theorem",
+     "line": 444,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabit_markov_cycle (i : Fin (M + 2)) : ∃ pB : ℕ → ℝ, (∀ n, 0 ≤ pB n) ∧ Summable pB ∧ (∀ n : ℕ, (n : Fin (M + 2)) = i → 0 < pB n) ∧ (∀ n : ℕ, (n : Fin (M + 2)) ≠ i → pB n = 0) ∧ (∀ u v, (cycGraph M).Edge u v → 0 < cycPol M (1 / 2) u v) ∧ HasSum (fun n => pathProb (cycPol M (1 / 2)) (cycTraj M n)) 1",
+     "doc": "**The hypotheses are inhabited** (kb 0025): for every `x = x_{i+1}`, the law `p_B(cycTraj n|x) = 2^{-(n+1)} / Z` on the trajectories into `x` (and `0` elsewhere), with `Z` its mass, is a probability charging each trajectory into `x`, and `cycPol M ½` is a full-support Markov policy whose trajectory law is a probability."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {

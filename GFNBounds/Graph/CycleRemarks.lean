@@ -102,6 +102,10 @@ integers, on the same `cycGraph`, `Fhat`, `gammaC`, `Fk`, `fmRatio`, `fmLossTarg
 | the constant `κ` of `cor:global_lojasiewicz` tends to `0` | **`kappa_cycle_tendsto`** (fixed `u₀`), `kappa_cycle_tendsto_fixed_measure` (fixed `μ₀`), `kappa_cycle_tendsto_gen` |
 | the closing sentence in one statement | **`cycle_no_stalemate_limits`** |
 | `betaCyc` is the paper's `β̂ₙ` of the remark's chain | `betaCyc_eq` (`kern p = (pol p).phat`), `CycleExample.invProb_eq` |
+| the consequence drawn from Proposition 3.12 (the citation is not a target): an invariant measure `F` of the loop closure carries `F(s_f)·σ̄` on `𝒮` | **`internal_flow_eq`** (any finite path-connected marked graph, policy positive on edges), with `sum_univ_eq_internal_add` |
+| "total flow through the internal states `F(s_f)·3/(1−p)`" | **`cycle_internal_flow`** (`∑_{x∈𝒮} F x = F(s_f)·3/(1−p)`, and `F(x₁)+F(x₂)+F(x₃) = F(s_f)·3/(1−p)`), `cycle_flow_values` (each cycle state carries `F(s_f)/(1−p)`, `F(s₀) = F(s_f)`), `internal_cyc` |
+| "`F(s_f)` its flow into the sink" | `snk_inflow` (`∑_s F(s_f)π_←(s_f→s) = F(s_f)`) |
+| "so the balanced flow carries no exploding circulation" | **`flow_eq_of_snk_eq`**: two invariant measures with the same `F(s_f)` coincide |
 
 Already certified elsewhere and not restated: the backward-trajectory length `3/(1−p)`
 (`CycleExample.sigmaBar_eq`), the invariant measure (`CycleExample.invProb_paper`), the five ratios
@@ -177,11 +181,20 @@ geometric bound. No eigenvalue appears.
   **That the over-inflated `uInfl M` has a transient of order `M²` is not certified**: `uInfl M` is
   `M` on the cycle and `1` at the marks, not `M` times a fixed flow, and its normalization
   degenerates as `M → ∞`; the paper marks that sentence "Numerically", and `0.720` is not a target.
-* **Not certified**: the example identity inside the Proposition 3.12 sentence, "total flow
-  through the internal states `F(s_f)·3/(1−p)`" (a few lines from `invProb_paper`), and its reading
-  "no exploding circulation" — claims, left open (no ruling exempts them). **Not certification
-  targets**: the citation of Proposition 3.12 of `morozov2025revisiting` itself, the numbers `0.720` and `1.62`, and the heuristic "persistent leak
-  ratio". **Not stated here**: "after which the exponential phase of Theorem
+* **The Proposition 3.12 sentence, certified on a reading.** "The flow induced by the frozen
+  backward policy" is read as any real function `F` on the vertices invariant under the loop-closed
+  backward chain, `∑_x F(x) π̂_←(x→y) = F(y)` — the state flows of the flows balanced for that
+  policy, whose edge flows are `B.edgeFlow` (`theo:universality_graphs`); no sign is asked.
+  "Total flow through the internal states" is `∑_{x ∈ 𝒮} F(x)`, `𝒮 = MarkedGraph.internal`, the
+  state flow summed over `𝒱 ∖ {s₀, s_f}`. "No exploding circulation" is read as **uniqueness at
+  fixed sink flow** (`flow_eq_of_snk_eq`): no circulation can be added to an induced flow without
+  changing `F(s_f)`, and the internal mass is pinned to `F(s_f)·σ̄` (`internal_flow_eq`). The
+  proposition is **proved here, not cited**: `internal_flow_eq` is `prop:morozov_rate`*(1)*
+  (`λ(s₀) = λ(s_f) = 1/(2+σ̄)`) and un-normalized uniqueness (`eq_smul_lam_of_invariant`), on every
+  finite path-connected marked graph with a policy positive on its edges; the example is its
+  instance at `σ̄ = 3/(1−p)` (`CycleExample.sigmaBar_eq`). **Not certification targets**: the
+  citation of `morozov2025revisiting` itself, the numbers `0.720` and `1.62`, and the heuristic
+  "persistent leak ratio". **Not stated here**: "after which the exponential phase of Theorem
   `theo:local_convergence` takes over", which sits in the numerical sentence (the two-phase
   structure is `theo:training_speed_full`'s, certified on marked graphs in `TrainingSpeed.lean`).
 * **Inherited**: `IsGradientFlow` asks a two-sided derivative at `t = 0` (`FlowExistence.lean`);
@@ -219,6 +232,7 @@ geometric bound. No eigenvalue appears.
 | `ϱ = g''(1)w_min/B̂²` | ✓ `Balance.rhoL`, `g''(1) ≥ 0` a constant, `w_min` eventually in `[0,W]` |
 | `ϱ_σ` | ✓ `Balance.rhoL … (BhatSigma …)` and `Balance.rhoSigma` |
 | `κ` of `cor:global_lojasiewicz` | ✓ the printed formula; see SCOPE for what is held fixed |
+| "the flow induced by the frozen backward policy", `F(s_f)` | ✓ `hF : ∀ y, ∑ x, F x * B.phat x y = F y`, any real `F`; see SCOPE |
 
 ## Inhabitation (kb 0025)
 
@@ -230,6 +244,8 @@ inhabits `Core.Mixing` at every `p ∈ (0,1)` on a density action that is not a 
 `kappa_cycle_tendsto` and `kappa_cycle_tendsto_fixed_measure` discharge the lower-bound hypothesis of
 `kappa_cycle_tendsto_gen`; constant weights discharge the family hypotheses of
 `rho_mixing_tendsto` and `rhoSigma_cycle_tendsto` (`cycle_no_stalemate_limits`).
+`cycle_internal_flow_check` meets the hypothesis of `cycle_internal_flow` with the invariant
+probability `lam p`, at every `p ∈ (0,1)`.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/
@@ -1864,6 +1880,122 @@ theorem cycle_no_stalemate_limits :
     fun _ _ hwmin hws _ hu0 L0 => kappa_cycle_tendsto hwmin hws hu0 L0⟩
 
 end AssembledRemark
+
+/-! ## `rem:cycle_no_stalemate`, the Proposition 3.12 sentence
+
+"By their Proposition 3.12 the flow induced by the frozen backward policy has total flow through
+the internal states `F(s_f)·3/(1−p)`, `F(s_f)` its flow into the sink, so the balanced flow carries
+no exploding circulation." The consequence the remark draws from Proposition 3.12 — internal mass
+`F(s_f)·σ̄` — is proved here from `prop:morozov_rate`*(1)* (`lam_src_eq`, `lam_snk_eq`); the
+citation itself is not a target. -/
+
+section InducedFlow
+
+open Finset
+
+variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}
+
+/-- The vertex set splits as `𝒮 ⊔ {s₀} ⊔ {s_f}`, `𝒮 = G.internal`. -/
+theorem sum_univ_eq_internal_add (G : MarkedGraph V) (F : V → ℝ) :
+    ∑ x, F x = (∑ x ∈ G.internal, F x) + F G.src + F G.snk := by
+  have hsnk : G.snk ∈ univ.erase G.src := mem_erase.2 ⟨G.src_ne_snk.symm, mem_univ _⟩
+  rw [← add_sum_erase _ _ (mem_univ G.src), ← add_sum_erase _ _ hsnk, MarkedGraph.internal]
+  ring
+
+omit [DecidableEq V] in
+/-- **`F(s_f)` is its flow into the sink**: along the edges of `G`, the flow of an invariant
+measure `F` into `s_f`, `∑_s F(s_f) π_←(s_f → s)`, is `F(s_f)`. -/
+theorem snk_inflow (B : BackwardPolicy G) (F : V → ℝ) :
+    ∑ s, F G.snk * B.pb G.snk s = F G.snk := by
+  rw [← mul_sum, B.row_sum (Ne.symm G.src_ne_snk), mul_one]
+
+/-- **`rem:cycle_no_stalemate`, the consequence the remark draws from Proposition 3.12 of
+`morozov2025revisiting`** (the citation itself is not a target): an invariant measure `F` of the loop-closed backward chain — the flow induced by the
+frozen backward policy — carries total mass `F(s_f)·σ̄` on the internal states `𝒮 = 𝒱 ∖ {s₀,s_f}`.
+No sign is asked of `F`. -/
+theorem internal_flow_eq (hpc : G.PathConnected) (hpos : B.PositiveOnEdges)
+    {lam gr uH F : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH)
+    (hF : ∀ y, ∑ x, F x * B.phat x y = F y) :
+    ∑ x ∈ G.internal, F x = F G.snk * B.sigmaBar uH := by
+  have hsum := sum_univ_eq_internal_add G F
+  have hsm : ∀ x, F x = (∑ z, F z) * lam x :=
+    BackwardPolicy.eq_smul_lam_of_invariant hpc hpos hl hF
+  have hsrc : lam G.src = 1 / (2 + B.sigmaBar uH) := BackwardPolicy.lam_src_eq hpc hpos hl hg hhit
+  have hsnk : lam G.snk = 1 / (2 + B.sigmaBar uH) := BackwardPolicy.lam_snk_eq hpc hpos hl hg hhit
+  have hd : 0 < 2 + B.sigmaBar uH := BackwardPolicy.two_add_sigmaBar_pos hhit
+  set c := ∑ z, F z with hc
+  have hFs : F G.src = c / (2 + B.sigmaBar uH) := by rw [hsm, hsrc]; ring
+  have hFf : F G.snk = c / (2 + B.sigmaBar uH) := by rw [hsm, hsnk]; ring
+  have hint : ∑ x ∈ G.internal, F x = c - F G.src - F G.snk := by linarith
+  rw [hint, hFs, hFf]
+  field_simp
+  ring
+
+/-- **`rem:cycle_no_stalemate`, "no exploding circulation"**: two invariant measures of the
+loop-closed backward chain with the same flow `F(s_f)` into the sink coincide, so no circulation
+can be added to the induced flow at fixed sink flow. -/
+theorem flow_eq_of_snk_eq (hpc : G.PathConnected) (hpos : B.PositiveOnEdges)
+    {lam F F' : V → ℝ} (hl : B.IsInvProb lam)
+    (hF : ∀ y, ∑ x, F x * B.phat x y = F y) (hF' : ∀ y, ∑ x, F' x * B.phat x y = F' y)
+    (hsnk : F G.snk = F' G.snk) : F = F' := by
+  have h1 := BackwardPolicy.eq_smul_lam_of_invariant hpc hpos hl hF
+  have h2 := BackwardPolicy.eq_smul_lam_of_invariant hpc hpos hl hF'
+  have hp : 0 < lam G.snk := hl.pos hpc hpos G.snk
+  have hs : (∑ z, F z) = ∑ z, F' z := by
+    have := hsnk
+    rw [h1 G.snk, h2 G.snk] at this
+    exact mul_right_cancel₀ (ne_of_gt hp) this
+  funext x
+  rw [h1 x, h2 x, hs]
+
+end InducedFlow
+
+section InducedFlowCycle
+
+open Finset CycleExample
+
+/-- The internal states of the five-vertex cycle are `x₁, x₂, x₃`. -/
+theorem internal_cyc : cyc.internal = {1, 2, 3} := by decide
+
+/-- **`rem:cycle_no_stalemate`, the example identity**: every flow `F` invariant for the frozen
+loop-closed backward policy has total flow `F(s_f)·3/(1−p)` through the internal states. -/
+theorem cycle_internal_flow {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) {F : Fin 5 → ℝ}
+    (hF : ∀ y, ∑ x, F x * (pol hp0 hp1).phat x y = F y) :
+    ∑ x ∈ cyc.internal, F x = F cyc.snk * (3 / (1 - p))
+      ∧ F 1 + F 2 + F 3 = F 4 * (3 / (1 - p)) := by
+  have h := internal_flow_eq pathConnected (positiveOnEdges hp0 hp1) (isInvProb hp0 hp1)
+    (isGreen hp0 hp1) (isHitExp hp0 hp1) hF
+  rw [sigmaBar_eq] at h
+  refine ⟨h, ?_⟩
+  rw [internal_cyc] at h
+  have e : ∑ x ∈ ({1, 2, 3} : Finset (Fin 5)), F x = F 1 + F 2 + F 3 := by
+    rw [sum_insert (by decide), sum_insert (by decide), sum_singleton, add_assoc]
+  rw [← e]
+  exact h
+
+/-- The flow of each cycle state, and the flow at the source, of such an `F`. -/
+theorem cycle_flow_values {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) {F : Fin 5 → ℝ}
+    (hF : ∀ y, ∑ x, F x * (pol hp0 hp1).phat x y = F y) :
+    F 1 = F 4 / (1 - p) ∧ F 2 = F 4 / (1 - p) ∧ F 3 = F 4 / (1 - p) ∧ F 0 = F 4 := by
+  have hne : (1 : ℝ) - p ≠ 0 := ne_of_gt (by linarith)
+  have e0 := hF 0
+  have e1 := hF 1
+  have e2 := hF 2
+  have e4 := hF 4
+  simp only [Fin.sum_univ_five, phat_eq hp0 hp1, kern] at e0 e1 e2 e4
+  simp only [Fin.isValue, mul_zero, zero_add, add_zero, mul_one] at e0 e1 e2 e4
+  refine ⟨?_, ?_, ?_, by linarith⟩
+  · field_simp; linarith
+  · field_simp; rw [e1, ← e4, ← e0]
+  · field_simp; rw [e2, e1, ← e4, ← e0]
+
+/-- **Inhabitation**: the invariant probability `lam p` is such a flow, and it carries
+`λ(s_f)·3/(1−p)` through the internal states. -/
+theorem cycle_internal_flow_check {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) :
+    ∑ x ∈ cyc.internal, lam p x = lam p cyc.snk * (3 / (1 - p)) :=
+  (cycle_internal_flow hp0 hp1 (isInvProb hp0 hp1).inv).1
+
+end InducedFlowCycle
 
 end CycleRemarks
 end GFNBounds.Graph

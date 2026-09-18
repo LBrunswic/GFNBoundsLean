@@ -1,20 +1,14 @@
 {
   "schema": 1,
-  "source_date": "2026-09-18T09:33:10Z",
-  "commit": "8542f9c70621a5be625a74976b2a6a69c4e6a4d8",
-  "commit_short": "8542f9c",
+  "source_date": "2026-09-18T10:11:03Z",
+  "commit": "66901ca26c28c7de25fe2143bc25e205830d9494",
+  "commit_short": "66901ca",
   "branch": "main",
   "dirty": true,
   "dirty_files": [
-    "docs/COVERAGE.md",
-    "docs/REPO-INDEX.md",
     "docs/REPO-MAP.md",
     "docs/repo-map.json",
-    "paper-map.json",
-    "scaffold/GFNBoundsScaffold.lean",
-    "scaffold/GFNBoundsScaffold/Balance/",
-    "scaffold/GFNBoundsScaffold/Graph/",
-    "scaffold/GFNBoundsScaffold/Silva/"
+    "paper-map.json"
   ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {

@@ -1,15 +1,11 @@
 {
   "schema": 1,
-  "source_date": "2026-09-18T10:11:03Z",
-  "commit": "66901ca26c28c7de25fe2143bc25e205830d9494",
-  "commit_short": "66901ca",
+  "source_date": "2026-09-18T10:13:00Z",
+  "commit": "29f20bd0f768f341070849f2dab8d7d44a09b2da",
+  "commit_short": "29f20bd",
   "branch": "main",
-  "dirty": true,
-  "dirty_files": [
-    "docs/REPO-MAP.md",
-    "docs/repo-map.json",
-    "paper-map.json"
-  ],
+  "dirty": false,
+  "dirty_files": [],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",

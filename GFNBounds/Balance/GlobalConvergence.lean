@@ -77,7 +77,10 @@ the norm put the limit on the sphere, `|m₁c_∞| = ‖u₀‖`, and positivity
 * **Only `g = (log x)²`.** Both clauses also name `g = (x−1)²`. Its convergence needs the positivity
   of the trajectory, which `BoundaryBlowup.lean` proves for `logSq` only (the blow-up there is
   hard-wired to `(log x)²`), and the entry and local phases at `(x−1)²`'s constants. Scheduled as a
-  separate target; nothing here speaks to it, and the map rows must keep the `(x−1)²` instance open.
+  separate target; nothing here speaks to it, and it certifies no `(x−1)²` instance.
+  Superseded 2026-09-18 by
+  `GlobalConvergenceFinite.no_distant_equilibrium_three_{logSq,sq}_of_ergodic` (both generators,
+  general finite ergodic chain, by a different route); this file's statements are unchanged.
 * **Marked-graph loop closures only, not a general finite ergodic chain.** The route spends the
   coercivity constant `B̂_σ = σ_*/λ_min^{1/2}` from hitting times at `s₀`
   (`TrainingSpeed.hcoer_of_graph`, `prop:morozov_rate`), where the paper's proof spends `B̂` of
@@ -86,7 +89,9 @@ the norm put the limit on the sphere, `|m₁c_∞| = ‖u₀‖`, and positivity
   stated on a marked graph. An abstract finite ergodic kernel is closer than that suggests:
   `flow_pos` and `MassAscent.entry_time` already hold for any invariant kernel, and
   `LocalConvergenceMixing.lean` states the local phase at summable mixing; what is missing is the
-  assembly, and the uniqueness of the balanced point off a marked graph.
+  assembly, and the uniqueness of the balanced point off a marked graph. Superseded 2026-09-18 by
+  `GlobalConvergenceFinite.no_distant_equilibrium_three_{logSq,sq}_of_ergodic` (both generators,
+  general finite ergodic chain, by a different route); this file's statements are unchanged.
 * **LaSalle is not proved and not used.** The convergence is the quantitative route of the same
   proof, which the paper gives beside the LaSalle sentence. Logically the Lean consumes
   `theo:local_convergence_full`, `MassAscent.entry_time`, `flow_pos_graph`, the invariant sphere and

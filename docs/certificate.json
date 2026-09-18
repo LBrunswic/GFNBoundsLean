@@ -1,22 +1,11 @@
 {
   "schema": 1,
-  "source_date": "2026-09-15T09:57:56+01:00",
-  "commit": "5a70736cb7ec07370afae5d5e357ec69bacea791",
-  "commit_short": "5a70736",
+  "source_date": "2026-09-18T09:33:10Z",
+  "commit": "8542f9c70621a5be625a74976b2a6a69c4e6a4d8",
+  "commit_short": "8542f9c",
   "branch": "main",
-  "dirty": true,
-  "dirty_files": [
-    "GFNBounds/Audit.lean",
-    "GFNBounds/Balance/DiscreteGlobal.lean",
-    "GFNBounds/Core/SigmaMixing.lean",
-    "docs/COVERAGE.md",
-    "docs/REPO-INDEX.md",
-    "docs/REPO-MAP.md",
-    "docs/lean-facts.json",
-    "docs/repo-map.json",
-    "paper-map.json",
-    "scaffold/GFNBoundsScaffold/"
-  ],
+  "dirty": false,
+  "dirty_files": [],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",

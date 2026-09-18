@@ -21,10 +21,10 @@ Files the build compiles (the lakefile globs `GFNBounds.*`, so **every** `.lean`
 
 | file | in git | imported by root | what it is |
 |---|---|---|---|
-| `scaffold/GFNBoundsScaffold/Balance/ClosuresA.lean` | **no** | **no** | Closures to bucket A: the training-speed theorem whole, and the closing paragraph of the finite-graph universality theorem |
-| `scaffold/GFNBoundsScaffold/Balance/RemarksA.lean` | **no** | **no** | Three remarks of Appendix A: freezing, visit ratios, and periodic loop closures |
-| `scaffold/GFNBoundsScaffold/Graph/LooseEnds.lean` | **no** | **no** | Loose ends (draft header) |
-| `scaffold/GFNBoundsScaffold/Silva/Remarks.lean` | **no** | **no** | The hypotheses, the constant and the path space of the Silva bound: three remarks of Appendix B |
+| `scaffold/GFNBoundsScaffold/Balance/ClosuresA.lean` | yes | **no** | Closures to bucket A: the training-speed theorem whole, and the closing paragraph of the finite-graph universality theorem |
+| `scaffold/GFNBoundsScaffold/Balance/RemarksA.lean` | yes | **no** | Three remarks of Appendix A: freezing, visit ratios, and periodic loop closures |
+| `scaffold/GFNBoundsScaffold/Graph/LooseEnds.lean` | yes | **no** | Loose ends (draft header) |
+| `scaffold/GFNBoundsScaffold/Silva/Remarks.lean` | yes | **no** | The hypotheses, the constant and the path space of the Silva bound: three remarks of Appendix B |
 
 
 ## Layer order

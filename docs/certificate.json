@@ -1,11 +1,18 @@
 {
   "schema": 1,
-  "source_date": "2026-09-18T10:31:50Z",
-  "commit": "a9d30215fef203805bf9ca76a114f6d9d161235b",
-  "commit_short": "a9d3021",
+  "source_date": "2026-09-18T11:04:21Z",
+  "commit": "333630809081cb16c7a4acadf230faf096d40d61",
+  "commit_short": "3336308",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json",
+    "paper-map.json"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -33,22 +40,20 @@
   "strict_library": "GFNBounds",
   "scaffold_library": "GFNBoundsScaffold",
   "scaffold_modules": [
-    "scaffold/GFNBoundsScaffold.lean",
-    "scaffold/GFNBoundsScaffold/Balance/ClosuresA.lean",
-    "scaffold/GFNBoundsScaffold/Graph/LooseEnds.lean"
+    "scaffold/GFNBoundsScaffold.lean"
   ],
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 3976,
+    "declarations": 4052,
     "by_namespace": {
-      "GFNBounds.Doubling": 1383,
-      "GFNBounds.Balance": 1141,
-      "GFNBounds.Graph": 803,
+      "GFNBounds.Doubling": 1399,
+      "GFNBounds.Balance": 1147,
+      "GFNBounds.Graph": 857,
       "GFNBounds.Core": 458,
       "GFNBounds.Silva": 191
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "8829df177b045952ffe971e9f009aa7bf61066e64e003b37a94f891897ff50cf"
+    "sha256": "9a28f8750a72acbe3426c2fbdaaa5e5d4ef0bef3b918046da946135b7670992e"
   }
 }

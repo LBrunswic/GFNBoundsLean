@@ -14,8 +14,9 @@ drift (kb `0036`); the label is the anchor.
 `theo:no_bound_divergence` (`GFNBounds.Graph.CycleDivergence`), `lem:cycle_counterexample`
 (`GFNBounds.Graph.CycleRemarks`) and `rem:silva_model_constant` (`GFNBounds.Silva.Remarks`) all
 measure total variation against `CycleDivergence.termLaw G F = F(·→s_f)/F(𝒱→s_f)`, the
-**normalized terminal flow** of an edgeflow, and each records in its SCOPE that identifying it
-with the law of `s_τ` is this theorem, cited and not certified. This file certifies it.
+**normalized terminal flow** of an edgeflow, and each recorded in its SCOPE that identifying it
+with the law of `s_τ` was this theorem, cited and not certified. This file certifies it;
+`GFNBounds.Graph.SamplerWiring` applies it to those rows.
 
 ## The generative flow of an edgeflow
 

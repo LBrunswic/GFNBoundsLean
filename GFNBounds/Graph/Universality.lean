@@ -84,15 +84,18 @@ in the statement rather than a witness produced by the proof.
 
 ## SCOPE (disclosed)
 
-* **The sampler is not formalized, and `theo:sampling_theorem` is not assumed.** The last clause
-  of item *(3)* — "in particular its sampler satisfies `s_τ ∼ κ/Z` by Theorem
-  `theo:sampling_theorem`" — and the last sentence of the proof rest on a theorem the paper
-  **quotes from `bengio2021flow` and does not prove**. There is no trajectory space, no stopping
-  time and no `s_τ` anywhere in this file, and nothing here is stated conditionally on that
-  theorem either: the honest boundary is the flow-matching identity, which is finite algebra,
-  and this file stops at it. A conditional statement was considered and rejected as empty — with
-  `theo:sampling_theorem` as a hypothesis and no model of the sampler, the conclusion would be a
-  rewriting of the hypothesis.
+* **The sampler clause is certified downstream, not here.** The last clause of item *(3)* — "in
+  particular its sampler satisfies `s_τ ∼ κ/Z` by Theorem `theo:sampling_theorem`" — and the last
+  sentence of the proof rest on a theorem the paper quotes from `bengio2021flow` without proof.
+  It is certified on a finite state space in `GFNBounds.Core.Sampling` (2026-09-18) and applied
+  to this item in `GFNBounds.Graph.SamplerWiring`, which sits downstream of this file:
+  `universality_graphs_sampler` (the sampler of this generative flow terminates and emits
+  `κ|_𝒮/κ(𝒮) = π_←(s_f → ·)/(1 − π_←(s_f → s₀))` on `𝒮`, which is `s_τ ∼ κ/Z` in `app:notation`'s
+  normalized sense) and `universality_graphs_sampler_iff` (read literally, *the law of `s_τ` is
+  `κ/Z`* holds **iff** `G` has no edge `s₀ → s_f` — the finding recorded in
+  `Graph/UniversalityClosing.lean`); `graphFlow_edgeFlow_*` identify that sampler's data with
+  `initFlow`, `termFlow`, `outflowStar` and `fwdStar` below. This file stops at the flow-matching
+  identity, which is finite algebra, and nothing here is stated conditionally on the sampler.
 * **The bridge to `GFNBounds.Core.StronglyUniversalAt` is not built.** `Core`'s predicate lives
   on a Banach lattice (`[NormedAddCommGroup] [Lattice] [HasSolidNorm] [IsOrderedAddMonoid]`), and
   Mathlib `v4.31.0` carries **no `HasSolidNorm` instance for a `Pi` type** — the only instances
@@ -134,7 +137,7 @@ in the statement rather than a witness produced by the proof.
 | `π_→` a Markov kernel | ⚠ **weakened**: only `∑_v π_→(u → v) = 1` is assumed in the forward half; the converse proves both halves for the reversal |
 | `f_out ≥ 0` | ✓ carried (`hnn`), and `f_out ≠ 0` is the paper's "apart from the trivial element" |
 | the counting measure `μ` | ✓ `Finset.sum`; no measure-theoretic layer |
-| `theo:sampling_theorem` | ✗ **not used and not assumed**; see SCOPE |
+| `theo:sampling_theorem` | not used here; the sampler clause is `SamplerWiring.universality_graphs_sampler(_iff)`; see SCOPE |
 | `equ:FM_const` at every `v ∈ 𝒮` | ✓ `fmDefect_eq_zero`, exactly (pointwise `= 0`, not a norm bound) |
 
 ## What items (2) and (3) claim and this file delivers
@@ -520,8 +523,9 @@ flow on `G`: the wrap edge carried `Z`, the initial flow has total mass `Z`, the
 `κ = Z π_←(s_f → ·)` and is positive on every terminating state, the star outflow is
 non-negative, and the flow-matching constraint holds **exactly** at every internal state.
 
-The sampler clause of item *(3)* is not here; it rests on `theo:sampling_theorem`, which the
-paper cites and does not prove. See the module SCOPE. -/
+The sampler clause of item *(3)* is not here: it is
+`GFNBounds.Graph.SamplerWiring.universality_graphs_sampler` and `…_sampler_iff`, downstream. See
+the module SCOPE. -/
 theorem universality_graphs_three (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges)
     {lam : V → ℝ} (h : B.IsInvProb lam) {Z c : ℝ} (hZ : 0 < Z) (hc : c = Z / lam G.src) :
     0 < c ∧ c * lam G.src = Z ∧

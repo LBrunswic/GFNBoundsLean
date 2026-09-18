@@ -82,7 +82,7 @@ integers, on the same `cycGraph`, `Fhat`, `gammaC`, `Fk`, `fmRatio`, `fmLossTarg
 | `den_pos_and_ratio_pos` | "defined for `k ≥ 1`": the denominator is positive and `ρ ∈ (0,∞)` |
 | `abs_fmRatio_Fk_sub_one` | the proof's display, `= |aᵢ−bᵢ|/(bᵢ+k) ≤ max_j|a_j−b_j|/k`, and further `≤ 1/k` |
 | `fmLossTarget_Fk_tendsto_zero_gen` | `𝓛(F_k) → 0` along the integers, every target, every weight |
-| **`cycle_counterexample`** | **items *(1)* and *(2)* assembled** (sampler clause excepted) |
+| **`cycle_counterexample`** | **items *(1)* and *(2)* assembled** (sampler clause in `GFNBounds.Graph.SamplerWiring.cycle_counterexample_full`) |
 | `cycle_counterexample_check` | inhabitation at `N = 2`, uniform target, `g = (x−1)²` |
 
 ### `rem:cycle_no_stalemate` — the clauses `CycleExample.lean` and `CycleBlowup.lean` did not have
@@ -127,9 +127,12 @@ geometric bound. No eigenvalue appears.
 
 ### `lem:cycle_counterexample`
 
-* **The sampler clause `s_τ(F_k) ∼ δ_{x₂}` is not certified.** It is `theo:sampling_theorem`
-  (Phase 3); as in `CycleDivergence.lean`, the total variation is measured against the normalized
-  terminal flow `termLaw`, which that theorem identifies with the law of `s_τ`. "Hence `TV = 1 −
+* **The sampler clause `s_τ(F_k) ∼ δ_{x₂}` is certified downstream**, in
+  `GFNBounds.Graph.SamplerWiring` (which imports this file): `Fk_sampler` (the sampler of `F_k`
+  terminates and emits `δ_{x₂}`, through `GFNBounds.Graph.Sampling.sampler_Fk`'s route),
+  `Fk_sampler_tv`, and **`cycle_counterexample_full`**, the lemma whole. Here, as in
+  `CycleDivergence.lean`, the total variation is measured against the normalized terminal flow
+  `termLaw`, which `theo:sampling_theorem` identifies with the law of `s_τ`. "Hence `TV = 1 −
   target(x₂)`" is certified for `termLaw` (`tvFin_termLaw_Fk_gen`), and `termLaw_Fk` shows it is
   `δ_{x₂}`.
 * **Stronger than printed, in the safe direction.** `g : ℝ → ℝ` needs only `g(1) = 0` and continuity
@@ -213,7 +216,7 @@ geometric bound. No eigenvalue appears.
 | `g : ℝ₊ → ℝ₊` vanishing exactly at `1` | ⚠ weakened: `g : ℝ → ℝ`, `g 1 = 0` only |
 | `g` continuous at `1` | ✓ `ContinuousAt g 1` |
 | `equ:FM_const` with terminal flow `δ_{x₂}` | ✓ `Fk_FM_const`, `Fk_x_snk`, `Fk_src_x` |
-| `s_τ(F_k) ∼ δ_{x₂}` (by `theo:sampling_theorem`) | ✗ **not certified** — Phase 3; `termLaw_Fk` in its place |
+| `s_τ(F_k) ∼ δ_{x₂}` (by `theo:sampling_theorem`) | ✓ downstream: `SamplerWiring.Fk_sampler`, `cycle_counterexample_full`; `termLaw_Fk` here |
 | "`𝓛(F_k)` defined for `k ≥ 1`" | ✓ read as positivity of the denominator and of `ρ` |
 
 ## Hypothesis checklist — `rem:cycle_no_stalemate` (the clauses of this file)
@@ -1785,7 +1788,8 @@ open CycleDivergence
 
 /-- **`lem:cycle_counterexample`** (`proofs.tex:385–404`), items *(1)* and *(2)* on `𝒞_N`,
 `N = M + 2`, for every integer `k ≥ 0`, every probability target `t` on `{x₁,…,x_N}` and every
-training weight `ν`, the sampler clause excepted (SCOPE).
+training weight `ν`, the sampler clause excepted here — it is added in
+`GFNBounds.Graph.SamplerWiring.cycle_counterexample_full`.
 
 *(1)* `F_k` is non-negative, rides on the edges, satisfies `equ:FM_const` at every internal state
 with initial flow `δ_{x₁}` and terminal flow `δ_{x₂}`, its normalized terminal flow is `δ_{x₂}`,

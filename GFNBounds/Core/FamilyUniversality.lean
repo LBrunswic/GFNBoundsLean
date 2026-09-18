@@ -166,6 +166,10 @@ The notation `δF_term = (F_init + F⋆_in − F⋆_out − F_term)⁺`, `δF_in
   "target" means (`theo:universality_graphs`(3)).
 * **Everything `Graph/Setting.lean` and `Graph/Universality.lean` disclose is inherited**: no
   chain, no sampler, `theo:sampling_theorem` not assumed; nothing here certifies `s_τ ∼ R/Z`.
+  The sampler clause is certified downstream, in `GFNBounds.Graph.SamplerWiring`
+  (`universality_graphs_sampler_iff`: the law of `s_τ` is `R/Z` iff no edge `s₀ → s_f`;
+  `universality_graphs_sampler`: it is `R|_𝒮/R(𝒮)` in every case;
+  `universality_graphs_closing_sampler`: the balanced flow of a frozen family samples `R/Z`).
 
 ## Hypothesis checklist
 

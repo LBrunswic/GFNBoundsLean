@@ -267,8 +267,9 @@ Every hypothesis bundle a main theorem assumes is met on an explicit instance, i
 walks into `x₂` of `𝒞₂`), `inhabit_cycle_ratio` (a full-support `p_B` on those walks, with
 `inf p_B = 0` and unbounded ratios), `inhabit_geometric` (infinite support on `ℕ`), and
 `inhabit_cycle_no_bound` (`g(r) = (r−1)²`, `ν ≡ 1`, `κ` uniform on `{x₁,…,x_N}`, both readings).
-`residual_not_divergence_FM_loss` carries no hypothesis. Item (5),
-the ladder family and the ladder witnesses carry no hypothesis beyond `K ≥ 3`, `ε > 0`.
+`residual_not_divergence_FM_loss` carries no hypothesis. Item (5) takes `K ≥ 3`, a probability
+`π` and a child with `π(x₀) = ½`, inhabited by `inhabit_star` (`K = 3`, `π = (½, ¼, ¼)`); the
+ladder family and the ladder witnesses carry no hypothesis beyond `ε > 0`.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/
@@ -608,6 +609,23 @@ theorem star_mVal_lt_piInf {K : ℕ} (hK : 3 ≤ K) {π : Fin K → ℝ} (hπ0 :
   have hK' : (3 : ℝ) ≤ K := by exact_mod_cast hK
   rw [inv_lt_comm₀ (by linarith) (by norm_num)]
   linarith
+
+/-- **Inhabitation of `star_mVal_lt_piInf`** (kb 0025): `K = 3` children, `π = (½, ¼, ¼)`, so
+`M = 1/3 < ½ = ‖π‖_∞`. -/
+theorem inhabit_star :
+    ∃ (π : Fin 3 → ℝ) (hs : (wSupport (deltaPB (Fin 3))).Nonempty)
+      (hX : (univ : Finset (Fin 3)).Nonempty),
+      (∀ x, 0 ≤ π x) ∧ ∑ x, π x = 1 ∧ π 0 = 1 / 2 ∧
+        mVal (deltaPB (Fin 3)) (fun _ => ((3 : ℕ) : ℝ)⁻¹) hs < piInf π hX := by
+  refine ⟨![1/2, 1/4, 1/4], ⟨(0, 0), mem_wSupport (by rw [deltaPB, if_pos rfl]; exact one_pos)⟩,
+    univ_nonempty, ?_, ?_, rfl, ?_⟩
+  · intro x; fin_cases x <;> norm_num
+  · simp only [Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
+      Matrix.head_cons, Matrix.tail_cons]; norm_num
+  · refine (star_mVal_lt_piInf le_rfl ?_ ?_ (x₀ := 0) rfl _ _).2.2
+    · intro x; fin_cases x <;> norm_num
+    · simp only [Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
+      Matrix.head_cons, Matrix.tail_cons]; norm_num
 
 end Star
 

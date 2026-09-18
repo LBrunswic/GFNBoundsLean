@@ -1,7 +1,7 @@
 {
   "paper": {
     "path": "/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex",
-    "git_commit": "4ef833a",
+    "git_commit": "f34b01a",
     "appendix": "H"
   },
   "statements": [
@@ -2001,11 +2001,39 @@
         872
       ],
       "block_sha256": "32ddf175a84735fe4f9ea812143a3418bcc882143aabe738ffbd827958680690",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
+      "lean_files": [
+        "GFNBounds/Balance/RemarksA.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.RemarksA.convex_no_flat_band",
+        "GFNBounds.Balance.RemarksA.convex_small_deriv",
+        "GFNBounds.Balance.RemarksA.analytic_const_of_flat",
+        "GFNBounds.Balance.RemarksA.analytic_admissible_no_flat",
+        "GFNBounds.Balance.RemarksA.deriv_deriv_logSq",
+        "GFNBounds.Balance.RemarksA.deriv_deriv_logSq_neg",
+        "GFNBounds.Balance.RemarksA.logSq_not_convexOn",
+        "GFNBounds.Balance.RemarksA.tendsto_logSqDeriv_atTop",
+        "GFNBounds.Balance.RemarksA.tendsto_abs_logSqDeriv_nhdsGT_zero",
+        "GFNBounds.Balance.RemarksA.logSq_critical_balanced",
+        "GFNBounds.Balance.RemarksA.freezing_two_frozen",
+        "GFNBounds.Balance.RemarksA.freezing_two_example",
+        "GFNBounds.Balance.RemarksA.third_deriv_bound",
+        "GFNBounds.Balance.RemarksA.third_deriv_sSup",
+        "GFNBounds.Balance.RemarksA.radius_not_uniform_in_generator",
+        "GFNBounds.Balance.RemarksA.eps0C3_deltaBands_small",
+        "GFNBounds.Balance.RemarksA.freezing_three_multiplier",
+        "GFNBounds.Balance.RemarksA.freezing_three_generator",
+        "GFNBounds.Balance.RemarksA.freezing_three_item_one",
+        "GFNBounds.Balance.RemarksA.freezing_three_invisible",
+        "GFNBounds.Balance.RemarksA.freezing_g_ne_sq_near_one",
+        "GFNBounds.Balance.RemarksA.freezing_four_critical",
+        "GFNBounds.Balance.RemarksA.freezing_four_logSq_converges",
+        "GFNBounds.Balance.RemarksA.thetaOK_twoStateBands",
+        "GFNBounds.Balance.RemarksA.deltaBands_third_deriv"
+      ],
+      "status": "partial",
       "bucket": "B",
-      "scope_notes": "A remark."
+      "scope_notes": "2026-09-18 (Balance/RemarksA.lean, audited by a session that did not write it; graduated): (i) convex_no_flat_band, convex_small_deriv, analytic_const_of_flat, analytic_admissible_no_flat, deriv_deriv_logSq(_neg), logSq_not_convexOn, tendsto_logSqDeriv_atTop, tendsto_abs_logSqDeriv_nhdsGT_zero, logSq_critical_balanced; (ii) freezing_two_frozen (distance sqrt2*eta to 2*1 in L^2(lambda)), freezing_two_example, third_deriv_bound/third_deriv_sSup (C^3 as a derivative chain; the sup form assumes |g'''| bounded), radius_not_uniform_in_generator, eps0C3_deltaBands_small (via the rescaled frozen flow (1+h)lambda, which the remark leaves implicit); (iii) freezing_three_multiplier, freezing_three_generator, freezing_three_item_one, freezing_three_invisible ('invisible' read as agreement with (x-1)^2 wherever all ratios are in [1-theta,1+theta]), freezing_g_ne_sq_near_one; (iv) freezing_four_critical. Admissible narrowed to g(1)=0, g>0 off 1 (safe direction). Inhabited: (x-1)^2, thetaOK_twoStateBands, deltaBands_third_deriv, freezing_two_example. OPEN: (iv)'s global convergence is certified for (log x)^2 on marked-graph loop closures only (freezing_four_logSq_converges: exists, unique among positive solutions, converges), not on a general finite ergodic (S,lambda,T); the (x-1)^2 half is Phase 2F and in no Lean. The pointer sentence of (iv) is a claim about prop:no_distant_equilibrium's row and cannot close above it."
     },
     {
       "label": "prop:no_distant_equilibrium",
@@ -2414,11 +2442,20 @@
         1101
       ],
       "block_sha256": "97557511113283a843d57da893257c199554c5906b02b4d9ef6a5615f5c84ec7",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
+      "lean_files": [
+        "GFNBounds/Balance/RemarksA.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.RemarksA.visit_ratio_mass_lower",
+        "GFNBounds.Balance.RemarksA.visit_ratio_norm_S_le",
+        "GFNBounds.Balance.RemarksA.leveled_bsigma_finite_mixing_infinite",
+        "GFNBounds.Balance.RemarksA.path_witness",
+        "GFNBounds.Balance.RemarksA.triangle_witness",
+        "GFNBounds.Balance.RemarksA.freezing_four_logSq_converges"
+      ],
+      "status": "closed",
       "bucket": "B",
-      "scope_notes": "A remark that interprets; nothing to certify."
+      "scope_notes": "2026-09-18 (Balance/RemarksA.lean, audited; graduated): the display, visit_ratio_mass_lower, at every mu ~ lambda (w_min >= 0, safe direction), with its bound by the whole gradient mass, in theo:training_speed_full's setting (N/(2+sigma-bar) through lam_eq_visits_div); B-hat_sigma >= ||S|| under summable mixing, visit_ratio_norm_S_le; the leveled separation, leveled_bsigma_finite_mixing_infinite (sum beta_n = top in ENNReal, no tsum junk value), inhabited by path_witness and triangle_witness; 'convergence uses no mixing constant' carried by freezing_four_logSq_converges. Heuristic clauses not formalized. Bucket B, not A: the rho and rho/2 sentence and the cor:global_lojasiewicz sentence are pointers to other rows, and the rho/2 target theo:local_convergence_full is closed in B; A on the author's ruling that a pointer is carried by its target row. || A remark that interprets; nothing to certify."
     },
     {
       "label": "def:path_connected",
@@ -2522,11 +2559,25 @@
         1179
       ],
       "block_sha256": "40ed9f4b4c1a03e6a87de77a26be40e5661e91addc072e0941155cb726f221ef",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "B",
-      "scope_notes": "A remark."
+      "lean_files": [
+        "GFNBounds/Balance/RemarksA.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.RemarksA.graphs_vs_L2_periodic",
+        "GFNBounds.Balance.RemarksA.pathPolicy_phat",
+        "GFNBounds.Balance.RemarksA.path_witness",
+        "GFNBounds.Balance.RemarksA.mixing_of_aperiodic",
+        "GFNBounds.Balance.RemarksA.graphs_vs_L2_aperiodic",
+        "GFNBounds.Balance.RemarksA.graphs_vs_L2_rate",
+        "GFNBounds.Balance.RemarksA.graphs_vs_L2_rate_sigma",
+        "GFNBounds.Balance.RemarksA.graphs_vs_L2_balanced_ray",
+        "GFNBounds.Balance.RemarksA.graphs_vs_L2_mass_monotone",
+        "GFNBounds.Balance.RemarksA.periodicAt_iff_setGcd",
+        "GFNBounds.Balance.RemarksA.triangle_witness"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-18 (Balance/RemarksA.lean, audited; graduated): CLOSED IN A. periodic loop closure => not Mixing, graphs_vs_L2_periodic (beta-hat_{dk} >= 1); the loop closure of a path is a cycle, pathPolicy_phat/path_witness; aperiodic => geometric L^2 decay and Mixing, mixing_of_aperiodic/graphs_vs_L2_aperiodic (N from Schur, not effective; 'geometrically ergodic' delivered as beta-hat_n <= (2/r^{N-1}) r^n); the rate g''(1)w_min/B-hat^2, graphs_vs_L2_rate, and without aperiodicity at B-hat_sigma, graphs_vs_L2_rate_sigma; the heuristic sentence's facts certified anyway, graphs_vs_L2_balanced_ray and graphs_vs_L2_mass_monotone (non-strict). Periodicity is PeriodicAt at one state, equivalent to return-time gcd != 1 (periodicAt_iff_setGcd). The comparison with theo:universality_L2 is not formalized; its content is theo:universality_graphs' row. Inhabited: path (periodic), triangle (aperiodic)."
     },
     {
       "label": "rem:partial_support",
@@ -2603,11 +2654,31 @@
         62
       ],
       "block_sha256": "a613408ccfbd33eb55550919cbb03db117597cbc607ca0638fdb41ca1e0a13a6",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
-      "bucket": "B",
-      "scope_notes": "A remark."
+      "lean_files": [
+        "GFNBounds/Silva/Remarks.lean"
+      ],
+      "decls": [
+        "GFNBounds.Silva.Remarks.chiSqE_unif_eq_top",
+        "GFNBounds.Silva.Remarks.rhsE_eq_top_of_not_full_support",
+        "GFNBounds.Silva.Remarks.one_add_chiSqE_eq_top",
+        "GFNBounds.Silva.Remarks.tv_le_rhsE",
+        "GFNBounds.Silva.Remarks.chiSqE_eq_ofReal",
+        "GFNBounds.Silva.Remarks.residualE_eq_ofReal",
+        "GFNBounds.Silva.Remarks.residualE_eq_top_of_pF_zero",
+        "GFNBounds.Silva.Remarks.tv_le_rhsE_of_pF_zero",
+        "GFNBounds.Silva.Remarks.identity_iff_domination",
+        "GFNBounds.Silva.Remarks.identity_of_uniformBackward",
+        "GFNBounds.Silva.Remarks.identity_fails_without_domination",
+        "GFNBounds.Silva.Remarks.mPrime_le_fixedGraph",
+        "GFNBounds.Silva.Remarks.star_mVal_lt_piInf",
+        "GFNBounds.Silva.Remarks.inhabit_star",
+        "GFNBounds.Silva.Remarks.inhabit_not_full_support",
+        "GFNBounds.Silva.Remarks.inhabit_pF_zero",
+        "GFNBounds.Silva.Remarks.inhabit_uniformBackward"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-18 (Silva/Remarks.lean, audited; graduated): CLOSED IN A. chi^2, E and the right side of prop:silva_explicit in [0,inf] (R19), the bridges chiSqE_eq_ofReal, residualE_eq_ofReal and tv_le_rhsE showing the extended bound is the proposition on full support: (1) chiSqE_unif_eq_top, rhsE_eq_top_of_not_full_support, one_add_chiSqE_eq_top (inf*0 left unvalued, as in the paper); (2) residualE_eq_top_of_pF_zero, tv_le_rhsE_of_pF_zero; (3) identity_iff_domination, identity_of_uniformBackward (positivity of the uniform p_B only; its normalization is not used), identity_fails_without_domination; (4) mPrime_le_fixedGraph; (5) star_mVal_lt_piInf with the strict logLipschitz, inhabited by inhabit_star (K = 3, pi = (1/2,1/4,1/4)). (log 0/0)^2 := +inf is a convention, unreachable. The heuristic and the attributions (Lemma B.1, Lemma D.1, item 6) are not targets. The Silva objects are the library's (GFNBounds/Silva), not redefinitions."
     },
     {
       "label": "rem:silva_model_constant",
@@ -2617,11 +2688,34 @@
         78
       ],
       "block_sha256": "af690a04498172dedaf43b30b5996390c5032daea6109a9010f92a9d1df88acd",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
+      "lean_files": [
+        "GFNBounds/Silva/Remarks.lean"
+      ],
+      "decls": [
+        "GFNBounds.Silva.Remarks.mPrime_le_fixedGraph",
+        "GFNBounds.Silva.Remarks.mPrime_le_fixedGraph_of_prob",
+        "GFNBounds.Silva.Remarks.tree_pB_eq_one",
+        "GFNBounds.Silva.Remarks.tree_mVal_le_one",
+        "GFNBounds.Silva.Remarks.ladder_mVal_exceeds_one",
+        "GFNBounds.Silva.Remarks.card_ladderTraj",
+        "GFNBounds.Silva.Remarks.ladderPB_eq",
+        "GFNBounds.Silva.Remarks.ladder_mPrime_le",
+        "GFNBounds.Silva.Remarks.ladder_balanced",
+        "GFNBounds.Silva.Remarks.ladder_mVal_ge",
+        "GFNBounds.Silva.Remarks.tendsto_ladder_term",
+        "GFNBounds.Silva.Remarks.tendsto_ladder_residual_eps",
+        "GFNBounds.Silva.Remarks.ladder_sSup_ge",
+        "GFNBounds.Silva.Remarks.ladder_pF_ne_zero_of_residualE_ne_top",
+        "GFNBounds.Silva.Remarks.ladder_no_uniform_constant",
+        "GFNBounds.Silva.Remarks.cycle_no_model_free_bound",
+        "GFNBounds.Silva.Remarks.cycle_no_bound_along_Fk",
+        "GFNBounds.Silva.Remarks.residual_not_divergence_FM_loss",
+        "GFNBounds.Silva.Remarks.inhabit_cycle_no_bound",
+        "GFNBounds.Silva.Remarks.inhabit_tree"
+      ],
+      "status": "closed",
       "bucket": "B",
-      "scope_notes": "A remark."
+      "scope_notes": "2026-09-18 (Silva/Remarks.lean, audited; graduated): CLOSED in B. Fixed-graph bound mPrime_le_fixedGraph(_of_prob) for every p_F <= 1; tree tree_pB_eq_one, tree_mVal_le_one; M > 1 ladder_mVal_exceeds_one; ladder card_ladderTraj, ladderPB_eq, ladder_mPrime_le, ladder_balanced, ladder_mVal_ge, tendsto_ladder_term, tendsto_ladder_residual_eps, ladder_sSup_ge (sup over full-support trajectory laws, no loss on {E <= eps} by ladder_pF_ne_zero_of_residualE_ne_top), ladder_no_uniform_constant. The ladder is its trajectory space Fin n -> Bool with backward factor 1/2 per stage; its multigraph is not a MarkedGraph (Edge is a Prop, no parallel edges). Cycle: cycle_no_model_free_bound/cycle_no_bound_along_Fk, for every nu >= 0 and every g >= 0 continuous at 1 with g(1) = 0 (wider than the class), TV taken of the normalized terminal flow; its identification with s_tau (theo:sampling_theorem, Phase 3) is NOT certified, which is why the row is B, as for theo:no_bound_divergence. 'Not in the class': residual_not_divergence_FM_loss (diamond DAG)."
     },
     {
       "label": "prop:silva_no_uniform",
@@ -2665,11 +2759,35 @@
         116
       ],
       "block_sha256": "dcdd0d774e41070ffab41e164a29e5f9dbe601c7e3d7fed7f189cefd05f76b3a",
-      "lean_files": [],
-      "decls": [],
-      "status": "open",
+      "lean_files": [
+        "GFNBounds/Silva/Remarks.lean",
+        "GFNBounds/Graph/CycleDivergence.lean"
+      ],
+      "decls": [
+        "GFNBounds.Silva.Remarks.exists_pB_le_inv_pathCount",
+        "GFNBounds.Silva.Remarks.sup_pathCount_div_le_inv_wMin",
+        "GFNBounds.Silva.Remarks.sup_pathCount_le_sSup_mPrime_markov",
+        "GFNBounds.Silva.Remarks.sup_pathCount_le_sSup_mPrime",
+        "GFNBounds.Silva.Remarks.walksInto_infinite",
+        "GFNBounds.Silva.Remarks.iInf_pB_walksInto_eq_zero",
+        "GFNBounds.Silva.Remarks.doubling_terminal_infinite",
+        "GFNBounds.Silva.Remarks.not_hasSum_const_one",
+        "GFNBounds.Silva.Remarks.cycle_flows_target",
+        "GFNBounds.Silva.Remarks.cycle_no_model_free_bound",
+        "GFNBounds.Silva.Remarks.cycle_no_bound_punctured",
+        "GFNBounds.Silva.Remarks.residual_not_divergence_FM_loss",
+        "GFNBounds.Silva.Remarks.exists_ratio_gt_walksInto",
+        "GFNBounds.Silva.Remarks.ladder_sSup_mPrime_eq",
+        "GFNBounds.Silva.Remarks.inhabit_markov_diamond",
+        "GFNBounds.Silva.Remarks.inhabit_cycle_walks",
+        "GFNBounds.Silva.Remarks.inhabit_cycle_ratio",
+        "GFNBounds.Silva.Remarks.inhabit_geometric",
+        "GFNBounds.Silva.Remarks.inhabit_cycle_no_bound",
+        "GFNBounds.Graph.CycleDivergence.card_internal"
+      ],
+      "status": "partial",
       "bucket": "B",
-      "scope_notes": "A remark."
+      "scope_notes": "2026-09-18 (Silva/Remarks.lean, audited; graduated): PARTIAL. Certified: exists_pB_le_inv_pathCount, sup_pathCount_div_le_inv_wMin (p_ET of full support), sup_pathCount_le_sSup_mPrime_markov (full-support Markov policies on paths visiting each state once, a hypothesis in place of acyclicity; the trajectory-law form is sup_pathCount_le_sSup_mPrime), walksInto_infinite, iInf_pB_walksInto_eq_zero, |X| = N (GFNBounds.Graph.CycleDivergence.card_internal), doubling_terminal_infinite (terminal set read from the figure), not_hasSum_const_one, cycle_flows_target, cycle_no_model_free_bound, cycle_no_bound_punctured, residual_not_divergence_FM_loss. NOT certified: sup_{p_F} M' = +inf over Markov forward policies (only over full-support trajectory laws, exists_ratio_gt_walksInto); TV is of the normalized terminal flow, its identification with s_tau being theo:sampling_theorem (Phase 3)."
     },
     {
       "label": "rem:silva_vs_ours",
@@ -2999,7 +3117,7 @@
       ],
       "status": "closed",
       "bucket": "B",
-      "scope_notes": "2026-09-14: follows its twin theo:training_speed_full (closed, bucket B; TrainingSpeedAssembled.lean). || 2026-09-14: the discrete-descent sentence and 'no step size fixed in advance works from every initialization' are certified through item 3 of the twin (DiscreteGlobal.lean, audited). 'The DB instance inherits a local rate through the edge lift' still has no Lean. || 2026-09-14 (Phase 1 re-read against commit 3194054): 'the DB instance inherits a local rate through the edge lift' has no Lean (no K_2 instance). || BODY RESTATEMENT of theo:training_speed_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13: W2 written in; body Theorem 6 now states both phases for flow and descent with a step chosen from the initialization, faithful to theo:training_speed_full (proof-checker).. The twin's row carries the disclosures."
+      "scope_notes": "2026-09-18: the twin theo:training_speed_full is closed in A (training_speed_gd_minPos_ennreal, 8542f9c); this body row keeps its own bucket on its edge-lift gap. || 2026-09-14: follows its twin theo:training_speed_full (closed, bucket B; TrainingSpeedAssembled.lean). || 2026-09-14: the discrete-descent sentence and 'no step size fixed in advance works from every initialization' are certified through item 3 of the twin (DiscreteGlobal.lean, audited). 'The DB instance inherits a local rate through the edge lift' still has no Lean. || 2026-09-14 (Phase 1 re-read against commit 3194054): 'the DB instance inherits a local rate through the edge lift' has no Lean (no K_2 instance). || BODY RESTATEMENT of theo:training_speed_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13: W2 written in; body Theorem 6 now states both phases for flow and descent with a step chosen from the initialization, faithful to theo:training_speed_full (proof-checker).. The twin's row carries the disclosures."
     },
     {
       "label": "theo:first_variation",

@@ -1,12 +1,16 @@
 /-!
 # The scaffold holds no `sorry`
 
-Since 2026-09-18 it holds four sorry-free drafts written on the laptop on 2026-09-14 and never
-audited: `Balance/ClosuresA.lean` (`theo:training_speed_full` whole, `theo:universality_graphs`'
-closing paragraph), `Balance/RemarksA.lean` (`rem:freezing`, `rem:visit_ratio`,
-`rem:graphs_vs_L2`), `Silva/Remarks.lean` (`rem:silva_hypotheses`, `rem:silva_model_constant`,
-`rem:path_space`) and `Graph/LooseEnds.lean`. They graduate the usual way, after a reading by an
-agent that did not write them.
+Since 2026-09-18 it holds two sorry-free drafts written on the laptop on 2026-09-14, audited and
+held back: `Balance/ClosuresA.lean` (`theo:training_speed_full` whole, `theo:universality_graphs`'
+closing paragraph) must be rebased on `Core/FamilyUniversality.lean`, whose `fmDefectE`,
+`graphResidual`, `memberFlow`, `outStar` and `fwdStarE` it re-defines, and its item-3(b) branch
+must call `DiscreteGlobal.training_speed_gd_minPos_ennreal`; `Graph/LooseEnds.lean` cites no label
+and graduates split three ways (the path law into `Doubling/Remarks.lean` for
+`rem:doubling_two_constants`, the induced flow into `Graph/CycleRemarks.lean` for
+`rem:cycle_no_stalemate`, the C³ flow-matching instance beside `Graph/MorozovDB.lean`), its
+`internal` replaced by `MarkedGraph.internal`. Their companions `Balance/RemarksA.lean` and
+`Silva/Remarks.lean` graduated the same day.
 
 
 This library exists to hold statements the strict library `GFNBounds` states but does not yet

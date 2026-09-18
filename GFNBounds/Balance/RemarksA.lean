@@ -4,6 +4,7 @@ import GFNBounds.Balance.FlowExistence
 import GFNBounds.Graph.Universality
 import GFNBounds.Graph.MorozovConsume
 import GFNBounds.Balance.C3Wrappers
+import GFNBounds.Graph.CycleRemarks
 import Mathlib.NumberTheory.FrobeniusNumber
 
 /-!
@@ -1173,11 +1174,14 @@ theorem freezing_four_logSq_converges {V : Type*} [Fintype V] [DecidableEq V]
     (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) :
     ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u
       ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x)
+      ∧ (∀ v : ℝ → V → ℝ, v 0 = u0 →
+          IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv v →
+          (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t)
       ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam u0)
       ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam u0) := by
-  obtain ⟨u, h0, hflow, hpos', -, hconv, hbal, -⟩ :=
+  obtain ⟨u, h0, hflow, hpos', huniq, hconv, hbal, -⟩ :=
     no_distant_equilibrium_three_of_init hpc hpos hl hwmin hw hu0
-  exact ⟨u, h0, hflow, hpos', hconv, hbal⟩
+  exact ⟨u, h0, hflow, hpos', huniq, hconv, hbal⟩
 
 end FreezingFour
 
@@ -1270,13 +1274,6 @@ theorem densOp_pow_mul_meanOp' (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 
   | zero => rw [pow_zero, one_mul]
   | succ n ih => rw [pow_succ, mul_assoc, densOp_mul_meanOp hinv hlam, ih]
 
-/-- A fixed point of `P^m` is a fixed point of every `P^{mk}`. -/
-theorem pow_mul_apply_eq_self' {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    {P : E →L[ℝ] E} {m : ℕ} {v : E} (h : (P ^ m) v = v) (k : ℕ) : (P ^ (m * k)) v = v := by
-  induction k with
-  | zero => rw [mul_zero, pow_zero, one_apply_eq_self]
-  | succ k ih => rw [mul_add, mul_one, pow_add, mul_apply_eq_comp, h, ih]
-
 /-- **A non-zero vector killed by `Π` and fixed by `Pⁿ` forces `β̂ₙ ≥ 1`.** -/
 theorem one_le_beta_of_fixed' {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {P Pi : E →L[ℝ] E} {v : E} (hv : v ≠ 0) (hPi : Pi v = 0) {n : ℕ} (hfix : (P ^ n) v = v) :
@@ -1339,45 +1336,7 @@ theorem beta_mul_ge_one_of_cyclic (hK : Core.IsMarkov K) (hinv : Core.IsInvarian
     have e1 := hconst y
     simp only [classInd, if_pos hi₀.symm, if_neg hyx] at e0 e1
     linarith
-  exact one_le_beta_of_fixed' hvne hPi (pow_mul_apply_eq_self' hfix k)
-
-/-- A non-negative sequence at least `1` along the multiples of `m > 0` is not summable. -/
-theorem not_summable_of_one_le' {β : ℕ → ℝ} {m : ℕ} (hm : 0 < m) (h : ∀ k, 1 ≤ β (m * k)) :
-    ¬ Summable β := by
-  intro hs
-  have h0 := hs.tendsto_atTop_zero
-  obtain ⟨N, hN⟩ := eventually_atTop.mp (h0.eventually (gt_mem_nhds one_pos))
-  have := hN (m * N) (Nat.le_mul_of_pos_left N hm)
-  linarith [h N]
-
-/-- Along the multiples of `m`, a sub-sum bounds the partial sum of a non-negative sequence. -/
-theorem sum_range_mul_le' {β : ℕ → ℝ} (hβ : ∀ n, 0 ≤ β n) {m : ℕ} (hm : 0 < m) (K : ℕ) :
-    ∑ k ∈ Finset.range K, β (m * k) ≤ ∑ n ∈ Finset.range (m * K), β n := by
-  induction K with
-  | zero => rw [Finset.range_zero, Finset.sum_empty, mul_zero, Finset.range_zero, Finset.sum_empty]
-  | succ K ih =>
-    rw [Finset.sum_range_succ, mul_add, mul_one, Finset.sum_range_add]
-    have hsingle : β (m * K) ≤ ∑ j ∈ Finset.range m, β (m * K + j) := by
-      have := Finset.single_le_sum (f := fun j => β (m * K + j)) (fun j _ => hβ _)
-        (Finset.mem_range.mpr hm)
-      simpa only [add_zero] using this
-    linarith
-
-theorem tsum_ofReal_eq_top_of_one_le' {β : ℕ → ℝ} (hβ : ∀ n, 0 ≤ β n) {m : ℕ} (hm : 0 < m)
-    (h : ∀ k, 1 ≤ β (m * k)) : ∑' n, ENNReal.ofReal (β n) = ⊤ := by
-  refine ENNReal.eq_top_of_forall_nnreal_le fun r => ?_
-  set N := ⌈(r : ℝ)⌉₊ with hN
-  have h1 : ∑ k ∈ Finset.range N, (1 : ℝ) ≤ ∑ k ∈ Finset.range N, β (m * k) :=
-    Finset.sum_le_sum fun k _ => h k
-  have h2 := sum_range_mul_le' hβ hm N
-  rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul, mul_one] at h1
-  have hr : (r : ℝ) ≤ ∑ n ∈ Finset.range (m * N), β n :=
-    (Nat.le_ceil (r : ℝ)).trans (h1.trans h2)
-  calc (r : ENNReal) = ENNReal.ofReal (r : ℝ) := (ENNReal.ofReal_coe_nnreal).symm
-    _ ≤ ENNReal.ofReal (∑ n ∈ Finset.range (m * N), β n) := ENNReal.ofReal_le_ofReal hr
-    _ = ∑ n ∈ Finset.range (m * N), ENNReal.ofReal (β n) :=
-        ENNReal.ofReal_sum_of_nonneg fun n _ => hβ n
-    _ ≤ ∑' n, ENNReal.ofReal (β n) := ENNReal.sum_le_tsum _
+  exact one_le_beta_of_fixed' hvne hPi (GFNBounds.Graph.CycleRemarks.pow_mul_apply_eq_self hfix k)
 
 /-- **Summable `L²` mixing fails on a chain with `d ≥ 2` cyclic classes**: `β̂_{dk} ≥ 1` for all
 `k`, so `∑ₙ β̂ₙ = +∞` (as an extended real), the sequence is not summable, and
@@ -1391,8 +1350,8 @@ theorem mixing_fails_of_cyclic (hK : Core.IsMarkov K) (hinv : Core.IsInvariant l
       ∧ ¬ Core.Mixing (densOp lam K) (meanOp lam) := by
   have hge := beta_mul_ge_one_of_cyclic hK hinv hlam htot hd hc
   have hd0 : 0 < d := by omega
-  have hns := not_summable_of_one_le' hd0 hge
-  exact ⟨hge, tsum_ofReal_eq_top_of_one_le' (Core.Mixing.beta_nonneg _ _) hd0 hge, hns,
+  have hns := GFNBounds.Graph.CycleRemarks.not_summable_of_one_le hd0 hge
+  exact ⟨hge, GFNBounds.Graph.CycleRemarks.tsum_ofReal_eq_top_of_one_le (Core.Mixing.beta_nonneg _ _) hd0 hge, hns,
     fun hmx => hns hmx.summable⟩
 
 /-- **The same, from the period**: on an irreducible chain periodic at some state, summable

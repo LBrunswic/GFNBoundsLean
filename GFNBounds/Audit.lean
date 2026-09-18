@@ -82,6 +82,7 @@ import GFNBounds.Graph.MorozovFM
 import GFNBounds.Graph.UniversalityClosing
 import GFNBounds.Core.Sampling
 import GFNBounds.Graph.Sampling
+import GFNBounds.Graph.SamplerWiring
 import GFNBounds.Doubling.ExpansionTrapezoid
 import GFNBounds.Doubling.WeightChain
 import GFNBounds.Balance.TBGradient
@@ -1023,3 +1024,55 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.TBGradient.psi_one
 #print axioms GFNBounds.Balance.TBGradient.grad_one
 #print axioms GFNBounds.Balance.TBGradient.witness
+#print axioms GFNBounds.Graph.SamplerWiring.IsSamplerLaw
+#print axioms GFNBounds.Graph.SamplerWiring.Terminates
+#print axioms GFNBounds.Graph.SamplerWiring.IsSamplerLaw.unique
+#print axioms GFNBounds.Graph.SamplerWiring.samplerLaw
+#print axioms GFNBounds.Graph.SamplerWiring.sampler_general
+#print axioms GFNBounds.Graph.SamplerWiring.samplerLaw_nonneg
+#print axioms GFNBounds.Graph.SamplerWiring.sum_samplerLaw
+#print axioms GFNBounds.Graph.SamplerWiring.isSamplerLaw_prob
+#print axioms GFNBounds.Graph.SamplerWiring.isSamplerLaw_termLaw
+#print axioms GFNBounds.Graph.SamplerWiring.tvFin_le_one
+#print axioms GFNBounds.Graph.SamplerWiring.samplerTV_le_one
+#print axioms GFNBounds.Graph.SamplerWiring.sum_internal_snk
+#print axioms GFNBounds.Graph.SamplerWiring.cyc_no_edge_src_snk
+#print axioms GFNBounds.Graph.SamplerWiring.cyc_hss
+#print axioms GFNBounds.Graph.SamplerWiring.cycle_sampler
+#print axioms GFNBounds.Graph.SamplerWiring.Fk_termMass_pos
+#print axioms GFNBounds.Graph.SamplerWiring.Fk_sampler
+#print axioms GFNBounds.Graph.SamplerWiring.Fk_sampler_tv
+#print axioms GFNBounds.Graph.SamplerWiring.cycle_counterexample_full
+#print axioms GFNBounds.Graph.SamplerWiring.cycle_counterexample_full_check
+#print axioms GFNBounds.Graph.SamplerWiring.no_bound_divergence_sampler
+#print axioms GFNBounds.Graph.SamplerWiring.targetC_eq_extT
+#print axioms GFNBounds.Graph.SamplerWiring.tvSet
+#print axioms GFNBounds.Graph.SamplerWiring.extT_nonneg
+#print axioms GFNBounds.Graph.SamplerWiring.sum_extT
+#print axioms GFNBounds.Graph.SamplerWiring.sSup_tvSet
+#print axioms GFNBounds.Graph.SamplerWiring.no_bound_divergence_minimax
+#print axioms GFNBounds.Graph.SamplerWiring.cycle_flows_target_sampler
+#print axioms GFNBounds.Graph.SamplerWiring.cycle_no_model_free_bound_sampler
+#print axioms GFNBounds.Graph.SamplerWiring.cycle_no_bound_along_Fk_sampler
+#print axioms GFNBounds.Graph.SamplerWiring.cycle_no_bound_punctured_sampler
+#print axioms GFNBounds.Graph.SamplerWiring.cutFlow
+#print axioms GFNBounds.Graph.SamplerWiring.cutFlow_nonneg
+#print axioms GFNBounds.Graph.SamplerWiring.cutFlow_supp
+#print axioms GFNBounds.Graph.SamplerWiring.cutFlow_cons
+#print axioms GFNBounds.Graph.SamplerWiring.graphFlow_cutFlow
+#print axioms GFNBounds.Graph.SamplerWiring.graphFlow_edgeFlow_finit
+#print axioms GFNBounds.Graph.SamplerWiring.graphFlow_edgeFlow_fterm
+#print axioms GFNBounds.Graph.SamplerWiring.outflowStar_eq_sum_internal
+#print axioms GFNBounds.Graph.SamplerWiring.graphFlow_edgeFlow_fout
+#print axioms GFNBounds.Graph.SamplerWiring.graphFlow_edgeFlow_P
+#print axioms GFNBounds.Graph.SamplerWiring.sum_internal_termFlow
+#print axioms GFNBounds.Graph.SamplerWiring.reach_src_eq
+#print axioms GFNBounds.Graph.SamplerWiring.pb_snk_src_lt_one
+#print axioms GFNBounds.Graph.SamplerWiring.edgeFlow_sampler
+#print axioms GFNBounds.Graph.SamplerWiring.universality_graphs_sampler
+#print axioms GFNBounds.Graph.SamplerWiring.universality_graphs_sampler_iff
+#print axioms GFNBounds.Graph.SamplerWiring.universality_graphs_closing_sampler
+#print axioms GFNBounds.Graph.SamplerWiring.sampler_check_triangle
+#print axioms GFNBounds.Graph.SamplerWiring.closing_sampler_check_triangle
+#print axioms GFNBounds.Graph.SamplerWiring.isSamplerLaw_subprob
+#print axioms GFNBounds.Graph.SamplerWiring.samplerTV_le_one_general

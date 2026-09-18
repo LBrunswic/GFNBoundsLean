@@ -6,7 +6,8 @@ import GFNBounds.Core.FamilyUniversality
 **`theo:universality_graphs`** — statement `proofs.tex:1125–1141`, **the closing paragraph at
 `:1140`**, its proof at `:1170`; also a finding on item *(3)* (`:1136–1138`) when `G` has an edge
 `s₀ → s_f`. Items *(1)*–*(3)* are `GFNBounds/Graph/Setting.lean`'s and
-`GFNBounds/Graph/Universality.lean`'s; the sampler clause of item *(3)* is not here.
+`GFNBounds/Graph/Universality.lean`'s; the sampler clause of item *(3)* and "samples `R` exactly"
+are `GFNBounds/Graph/SamplerWiring.lean`'s, downstream of this file.
 
 (Line citations to `proofs.tex` drift, `kb/entries/0036`.)
 
@@ -44,7 +45,10 @@ import GFNBounds.Core.FamilyUniversality
    hypotheses, *(3)*'s flow has initial and terminal mass `Z(1 − π_←(s_f → s₀))` on `𝒮`, and
    `R := Zπ_←(s_f → ·)` charges `s₀ ∉ 𝒮` by `Zπ_←(s_f → s₀) > 0` (`item_three_masses_on_internal`;
    instance `triSrcSnk_check`). So "initial flow of total mass `Z`" and "`F_term = R`", as
-   distributions on `𝒮`, and with them `s_τ ∼ R/Z`, fail exactly when the edge is present. This is
+   distributions on `𝒮`, and with them `s_τ ∼ R/Z`, fail exactly when the edge is present — for the
+   sampler, read literally as "the law of `s_τ` is `R/Z`" (`SamplerWiring.universality_graphs_sampler_iff`);
+   in `app:notation`'s normalized sense, `R` read on `𝒮`, the sampler clause holds with the edge too,
+   `s_τ` having law `R|_𝒮/R(𝒮)` (`SamplerWiring.universality_graphs_sampler`). This is
    the pointer `Core/FamilyUniversality.lean`'s SCOPE records for this row.
 3. **A notation point, not an error: the letter `R`.** In item *(3)* `R := Zπ_←(s_f → ·)` carries
    mass `Z`; two lines later `R` is a "target distribution" and the sink row is frozen to `R`. A
@@ -86,7 +90,7 @@ import GFNBounds.Core.FamilyUniversality
 | (implicit in `:1170`) the frozen policy is positive on every edge | ✗ **false with an edge `s₀ → s_f`** (finding 1); replaced by `PositiveOffDirect`, which freezing provides, so **no hypothesis on that edge is added** |
 | "frozen-backward family" | ✓ `frozenFamily`: `π_→` Markov, `f_out ≥ 0`, `FrozenBalance` |
 | "unique balanced flow" | ✓ the balanced member of initial mass `Z` is in the family, non-trivial, and the only non-trivial member of initial mass `Z` |
-| "samples `R` exactly" | ⚠ **not the sampler**: its terminal flow is `R`, its initial flow a distribution on `𝒮` of mass `Z`, and flow matching is exact on `𝒮`; `s_τ ∼ R/Z` is `theo:sampling_theorem`'s, not certified |
+| "samples `R` exactly" | ✓ downstream: `SamplerWiring.universality_graphs_closing_sampler` — the balanced flow's sampler terminates with `s_τ ∼ R/Z`, no hypothesis on `s₀ → s_f`; here, its terminal flow is `R`, its initial flow a distribution on `𝒮` of mass `Z`, and flow matching is exact on `𝒮` |
 | "the universality infimum vanishes and is attained, simultaneously for every `p ∈ [1,+∞]`" | ✓ the balanced member's residual `graphResidual` is `0` for every `p : ℝ≥0∞` (one member for all `p`), and `⨅_{θ ∈ Θ} graphResidual = 0` for every `p` |
 | "strongly universal over terminal targets" | ✓ `universality_graphs_strongly_universal` |
 
@@ -114,9 +118,14 @@ import GFNBounds.Core.FamilyUniversality
   `B.PositiveOnEdges` is kept (it is the paper's), and the frozen policy is shown to satisfy only
   `PositiveOffDirect`; items *(1)*–*(2)*'s lemmas are re-proved under that hypothesis here rather
   than widened in the strict `Graph/Setting.lean` and `Graph/Universality.lean`.
-* **Not certified: "samples `R` exactly" and `s_τ ∼ R/Z`.** Both are statements about the
-  sampler, which needs `theo:sampling_theorem` (quoted by the paper, not proved); it is neither
-  used nor assumed, and no sampler is modelled.
+* **"Samples `R` exactly" and `s_τ ∼ R/Z` are certified downstream**, in
+  `GFNBounds/Graph/SamplerWiring.lean`, which imports this file and the finite sampling theorem
+  (`GFNBounds.Core.Sampling`): `universality_graphs_closing_sampler` (the balanced flow of the
+  family frozen at `R` samples `R/Z`, no hypothesis on `s₀ → s_f`, since the frozen sink row
+  vanishes at `s₀`) and, for finding 2, `universality_graphs_sampler_iff` (item *(3)*'s
+  "the law of `s_τ` is `R/Z`" iff no edge `s₀ → s_f`; `universality_graphs_sampler` gives the law
+  `R|_𝒮/R(𝒮)` in every case), inhabited in the edge case by `sampler_check_triangle`. No
+  sampler is modelled in this file.
 * **"Terminating state" is read as internal** (finding 4, an author question), as
   `Core/FamilyUniversality.lean`'s SCOPE reads it. The paper does not define the term: flows and
   targets live on `𝒮 = 𝒱 ∖ {s₀, s_f}` (`introduction.tex:84–86`, `proofs.tex:1162`), but the proof

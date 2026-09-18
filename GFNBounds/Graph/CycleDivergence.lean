@@ -8,14 +8,10 @@ import GFNBounds.Core.StableBound
 **`theo:no_bound_divergence`** — statement `cv_divergence.tex:7–19`, proof `proofs.tex:385–400`.
 
 (The bold-backtick form of the label, alone on its line, is what the paper-side ledger
-machine-reads. **This label has no `paper-map.json` row and none can be added here**: its
-`\label` lives in `cv_divergence.tex`, which is not among `scripts/paper.py`'s `SOURCES`
-(`proofs.tex`, `silva_comparison.tex`, `app_doubling.tex`), so `scripts/trace_check.py`'s
-invariant *(c)* does not fire on it and citing it is safe — `GFNBounds/Graph/CycleExample.lean:24`
-already does. Widening the charter is the author's decision, not this file's; the paper-side
-`FORMALIZATION-LEDGER.md` is where `theo:no_bound_divergence` should record that it is
-formalized, in the strict library, under this module. The exposure that follows from having
-no map row -- no `block_sha256`, hence no stale-digest detection -- is recorded in `CLAUDE.md`.)
+machine-reads. Since 2026-09-14 `cv_divergence.tex` is among `scripts/paper.py`'s `SOURCES`
+(author's ruling R2), so this label has a `paper-map.json` row with a digest; the parenthesis that
+stood here said otherwise and was stale. The theorem on the sampler, and its `= 1` as a supremum
+and infimum, are `GFNBounds/Graph/SamplerWiring.lean`'s.)
 
 > (`theo:no_bound_divergence`) Let `𝓛(F)` be a divergence-based FM-loss on a directed graph
 > `𝒢`, depending on a target `target` and on a training distribution `ν_train`; the supremum
@@ -115,12 +111,16 @@ receives nothing, its two sides are the total inflow `∑_u F(u→v)` and the to
 
 ## SCOPE (disclosed)
 
-* **The sampler is not formalized, and `s_τ` is not what is measured here.** `tvFin_termLaw_Fk`
-  measures the target against the **normalized terminal flow** `F(·→s_f)/F(𝒮→s_f)`. Identifying
-  that with the law of `s_τ` is `theo:sampling_theorem`, which the paper restates from
-  `bengio2021flow, brunswic2024theory` and does **not** prove; no Markov chain, no sampling time
-  and no `τ` appears below. That step is cited, never discharged — and, per `CLAUDE.md` rule 1,
-  not smuggled in as an axiom either.
+* **The sampler lives downstream; this file measures the normalized terminal flow.**
+  `tvFin_termLaw_Fk` measures the target against the **normalized terminal flow**
+  `F(·→s_f)/F(𝒮→s_f)`. Identifying that with the law of `s_τ` is `theo:sampling_theorem`, which
+  the paper restates from `bengio2021flow, brunswic2024theory` without proof; it is **certified**
+  on a finite state space in `GFNBounds.Core.Sampling` (2026-09-18), specialized to marked graphs
+  in `GFNBounds.Graph.Sampling` (`sampler_termLaw`, `sampler_Fk`), and applied to this theorem in
+  `GFNBounds.Graph.SamplerWiring`: `no_bound_divergence_sampler` is `no_bound_divergence` with
+  `TV(s_τ ‖ target)` taken of the sampler, and `sSup_tvSet`, `no_bound_divergence_minimax`,
+  `samplerTV_le_one_general` deliver `= 1` with its upper half `TV ≤ 1`. Those files import this one, so
+  no sampler appears below.
 * **The DB and TB variants are not stated.** The proof's last sentence covers them by citing
   Theorem 3 of `brunswic2024theory`; nothing here mentions a DB or a TB loss.
 * **`sup_{#𝒢 = N}` is read as "on `𝒞_N`".** A supremum over graphs is bounded below by its value
@@ -176,10 +176,10 @@ receives nothing, its two sides are the total inflow `∑_u F(u→v)` and the to
 | `g > 0` elsewhere | ✗ **not carried** — unused in this direction; see SCOPE |
 | `𝓛(F) = ∫ g(ρ) dν_train` | ✓ `fmLossTarget`, identified with `Balance.loss` by `fmLossTarget_eq_loss` |
 | `ρ = (F_init + f_←)/(target + f_→)` | ✓ `fmRatio`, with the **target** in the denominator; see the modelling decisions |
-| `s_τ ∼ μ` by `theo:sampling_theorem` | ✗ **not certified** — TV is measured against the normalized terminal flow; see SCOPE |
+| `s_τ ∼ μ` by `theo:sampling_theorem` | ✓ downstream: `SamplerWiring.no_bound_divergence_sampler` (here TV is of the normalized terminal flow; see SCOPE) |
 | `TV` the `½`-convention total variation | ✓ `tvFin`, bridged to `GFNBounds.Core.tvD` by `tvFin_eq_tvD_count` |
 | the DB and TB variants | ✗ **not stated** — they rest on a cited theorem; see SCOPE |
-| the conclusion `= 1` | ⚠ delivered as `∀ η < 1, ∃ δ, TV > η` (`no_bound_divergence_sup`) |
+| the conclusion `= 1` | ⚠ delivered as `∀ η < 1, ∃ δ, TV > η` (`no_bound_divergence_sup`); as a real `sSup`/`iInf` on `s_τ` downstream, `SamplerWiring.sSup_tvSet` / `no_bound_divergence_minimax` |
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/
@@ -713,8 +713,9 @@ theorem exists_Fk_loss_le (g : ℝ → ℝ) (hg1 : g 1 = 0) (hgc : ContinuousAt 
 /-! ### The terminal law, and its distance to the target -/
 
 /-- The **normalized terminal flow** of an edgeflow, `F(·→s_f)/F(𝒮→s_f)`. This is the law
-`theo:sampling_theorem` identifies with `s_τ`; that identification is cited, not proved — see the
-module SCOPE. -/
+`theo:sampling_theorem` identifies with `s_τ` when `s₀ → s_f` carries nothing — certified
+downstream as `GFNBounds.Graph.Sampling.sampler_termLaw` and
+`GFNBounds.Graph.SamplerWiring.isSamplerLaw_termLaw`. -/
 noncomputable def termLaw (G : MarkedGraph V) (F : V → V → ℝ) : V → ℝ :=
   fun x => F x G.snk / ∑ y, F y G.snk
 

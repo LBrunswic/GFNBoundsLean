@@ -191,8 +191,11 @@ visibly heuristic; attributions to Silva et al. are marked and are not targets.
   relation, so the terminal edges themselves are not a Lean object.
 * **`𝒞_N` and its loss are `GFNBounds.Graph.CycleDivergence`'s**, with its disclosures inherited:
   the ratio `ρ = (F_init + f_←)/(κ + f_→)` carries the target in the denominator; the total
-  variation is taken against the **normalized terminal flow**, its identification with the
-  sampler `s_τ` being `theo:sampling_theorem`, cited and not certified; `N ≥ 2` is `N = M + 2`;
+  variation is taken here against the **normalized terminal flow**; its identification with the
+  sampler `s_τ` (`theo:sampling_theorem`) is certified downstream, and the sampler forms of the
+  cycle sentence are `GFNBounds.Graph.SamplerWiring`'s `cycle_flows_target_sampler`,
+  `cycle_no_model_free_bound_sampler`, `cycle_no_bound_along_Fk_sampler` and
+  `cycle_no_bound_punctured_sampler`, each quantifying over the law `μ` of `s_τ`; `N ≥ 2` is `N = M + 2`;
   `g : ℝ₊ → ℝ₊` is `g : ℝ → ℝ` with `g ≥ 0` on `(0,∞)`. The target is the paper's: a probability
   `t` on `{x₁,…,x_N}`, extended by `0` at the marks (`CycleRemarks.extT`), and the closed forms
   at that target are the strict `GFNBounds.Graph.CycleRemarks` lemmas.
@@ -254,7 +257,7 @@ visibly heuristic; attributions to Silva et al. are marked and are not targets.
 | training distribution `ν` | ✓ any `ν ≥ 0` (`hnu`); punctured form also `ν(x₂) > 0` |
 | `g : ℝ₊ → ℝ₊`, continuous at `1`, zero exactly at `1` | ✓ `hg0` (on `(0,∞)`), `hgc`, `hg1`; `g > 0` off `1` (`hgpos`) only where used |
 | "does not contain `𝓔`": the FM class | ✓ any `g` with `g(1) = 0`, any `ν` (wider than the class) |
-| `s_τ(F_k) ∼ δ_{x₂}` (`theo:sampling_theorem`) | ✗ not certified — normalized terminal flow, as in `CycleDivergence` |
+| `s_τ(F_k) ∼ δ_{x₂}` (`theo:sampling_theorem`) | ✓ downstream: `SamplerWiring.cycle_flows_target_sampler` and the three `…_sampler` forms; here, the normalized terminal flow |
 
 ## Inhabitation (kb 0025)
 

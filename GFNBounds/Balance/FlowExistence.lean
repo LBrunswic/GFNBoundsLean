@@ -83,16 +83,17 @@ therefore packages the same mathematics differently:
 | "from any `μ₀ ∼ λ`" | ✓ `hu0 : ∀ x, 0 < u0 x` |
 | "has a solution `(μ_t)_{t≥0}` with `μ_t ∼ λ`" | ✓ `∃ u, u 0 = u0 ∧ IsGradientFlow … u ∧ ∀ t ≥ 0, ∀ x, 0 < u t x` |
 | "unique" | ✓ `∀ v, v 0 = u0 → IsGradientFlow … v → (∀ t ≥ 0, ∀ x, 0 < v t x) → ∀ t ≥ 0, v t = u t`. ⚠ the competitor is asked `IsGradientFlow`, i.e. a two-sided derivative at `0`; a solution with only a right derivative there becomes one by extending it linearly to `t < 0`, which changes nothing on `[0,∞)` (not formalized) |
-| "which converges to the balanced flow of the sphere" | ✓ for `(log x)²` on marked-graph loop closures: `no_distant_equilibrium_three_of_init`. ✗ otherwise — see SCOPE |
+| "which converges to the balanced flow of the sphere" | ✓ for `(log x)²` on marked-graph loop closures: `no_distant_equilibrium_three_of_init`. ✗ otherwise in this file; both generators on every finite ergodic chain: `GlobalConvergenceFinite.no_distant_equilibrium_three_{logSq,sq}_of_ergodic` |
 | `R_max`, `u_min` | ✓ `capR` of the two instances **is** the paper's `R_max` at `C = 𝓛₀/(w_min λ_min)`, `uFloor` **is** `u_min`, and `FlowGenerator.exists_flow` delivers `u_t ≥ u_min` |
 
 ## SCOPE (disclosed)
 
-* **Convergence is certified only where `GlobalConvergence.lean` certifies it**: `g = (log x)²`
+* **This file certifies convergence only where `GlobalConvergence.lean` does**: `g = (log x)²`
   on the loop closure of a finite path-connected marked graph. This file removes that theorem's
   flow hypothesis (`no_distant_equilibrium_three_of_init`) and nothing else. The convergence of
-  the `(x−1)²` flow and on a general finite ergodic kernel remain open, as `GlobalConvergence`'s
-  SCOPE says; **existence and uniqueness** are proved at the full generality of item *(3)*: a
+  the `(x−1)²` flow and on a general finite ergodic kernel are closed in
+  `GlobalConvergenceFinite.lean` (2026-09-18); **existence and uniqueness** are proved at the full
+  generality of item *(3)*: a
   finite ergodic chain, both generators.
 * **The route is not the paper's word for word** (see *The route*): no maximal solution and no
   escape-from-compacts theorem, which Mathlib v4.31.0 lacks; a clamped field, a global solution

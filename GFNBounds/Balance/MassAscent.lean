@@ -145,7 +145,7 @@ is `lossGrad_smul` and `flow_rescale`. Assembling those into the theorem needs
 | `d/dt μ_t(𝒮̂) = −∫ D dλ` | ✓ `hasDerivAt_mass_flow` |
 | the mass **strictly increases** off balance | ✓ `mass_deriv_pos_off_balance` (the derivative), `mass_monotone_flow` (the ascent) |
 | Cauchy–Schwarz: `∫u dλ ≤ ‖u‖`, equality iff `u` constant | ⚠ `mean_le_nrmL2_iff_const`, **with `u ≥ 0` added**. See SCOPE |
-| the unique maximizer is **the balanced flow** | ⚠ **split**: `balanced_const` on any invariant `K`; the converse only on a marked graph (`const_of_balanced_graph`). See SCOPE |
+| the unique maximizer is **the balanced flow** | ⚠ **split**: `balanced_const` on any invariant `K`; the converse only on a marked graph (`const_of_balanced_graph`), and under UniqueInvariant: `GlobalConvergenceFinite.eq_const_of_balanced_of_uniqueInvariant`. See SCOPE |
 | "no stalemate with the frozen-policy constraint" | ✗ not stated — it is the reading of the identity, and `rem:cycle_no_stalemate` is its instance |
 
 ## Hypothesis checklist — `prop:no_distant_equilibrium`*(3)*, the entry time only

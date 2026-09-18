@@ -87,6 +87,7 @@ import GFNBounds.Doubling.ExpansionTrapezoid
 import GFNBounds.Doubling.WeightChain
 import GFNBounds.Balance.TBGradient
 import GFNBounds.Core.NegativeControl
+import GFNBounds.Balance.GlobalConvergenceFinite
 
 /-!
 # Axiom audit
@@ -1122,3 +1123,31 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Core.NegativeControl.Tight.law_succ_false
 #print axioms GFNBounds.Core.NegativeControl.Tight.law_true
 #print axioms GFNBounds.Core.NegativeControl.Tight.bound_attained
+#print axioms GFNBounds.Balance.const_of_balanced_of_uniqueInvariant
+#print axioms GFNBounds.Balance.eq_const_of_balanced_of_uniqueInvariant
+#print axioms GFNBounds.Balance.continuous_meanL2
+#print axioms GFNBounds.Balance.continuousAt_massVel
+#print axioms GFNBounds.Balance.FlowGenerator.tendsto_of_flow
+#print axioms GFNBounds.Balance.FlowGenerator.flow_floor
+#print axioms GFNBounds.Balance.FlowGenerator.flow_pos
+#print axioms GFNBounds.Balance.FlowGenerator.converges
+#print axioms GFNBounds.Balance.FlowGenerator.existsUnique_converges
+#print axioms GFNBounds.Balance.no_distant_equilibrium_three_logSq_of_ergodic
+#print axioms GFNBounds.Balance.no_distant_equilibrium_three_sq_of_ergodic
+#print axioms GFNBounds.Balance.no_distant_equilibrium_three_converges_logSq_of_ergodic
+#print axioms GFNBounds.Balance.no_distant_equilibrium_three_converges_sq_of_ergodic
+#print axioms GFNBounds.Balance.global_dichotomy_full_one_converges_of_ergodic
+#print axioms GFNBounds.Balance.lossVal_sq_eq_zero_iff_balanced
+#print axioms GFNBounds.Balance.entry_time_sq
+#print axioms GFNBounds.Balance.twoState_sq_converges_check
+#print axioms GFNBounds.Balance.lazyRotK
+#print axioms GFNBounds.Balance.lazyRotLam
+#print axioms GFNBounds.Balance.lazyRotU
+#print axioms GFNBounds.Balance.lazyRotK_nonneg
+#print axioms GFNBounds.Balance.lazyRotK_row
+#print axioms GFNBounds.Balance.lazyRotK_invariant
+#print axioms GFNBounds.Balance.lazyRotLam_pos
+#print axioms GFNBounds.Balance.lazyRotU_pos
+#print axioms GFNBounds.Balance.lazyRot_not_reversible
+#print axioms GFNBounds.Balance.lazyRot_uniqueInvariant
+#print axioms GFNBounds.Balance.lazyRot_converges_check

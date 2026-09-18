@@ -101,7 +101,7 @@ claim; the table below says where each lands.
 | *(iii)* invisible to the linearization at balance | `freezing_three_invisible`: where every ratio is in `[1−θ,1+θ]`, loss and gradient density are those of `(x−1)²` |
 | *(iii)* the proposition's generator is `(x−1)²` on no neighbourhood of `1` | `freezing_g_ne_sq_near_one` |
 | *(iv)* critical ⇒ balanced | `freezing_four_critical` |
-| *(iv)* global convergence for `(log x)²` | `freezing_four_logSq_converges` (marked-graph loop closures; see SCOPE) |
+| *(iv)* global convergence for `(log x)²` | `freezing_four_logSq_converges` (marked-graph loop closures; see SCOPE); both halves on every finite ergodic chain: `GlobalConvergenceFinite.no_distant_equilibrium_three_{logSq,sq}_of_ergodic` |
 | visit_ratio: convergence uses no mixing constant | `freezing_four_logSq_converges` carries no mixing hypothesis |
 | visit_ratio: the displayed lower bound, and that it is a part of the gradient mass | `visit_ratio_mass_lower` |
 | visit_ratio: `B̂_σ ≥ ‖S‖` wherever `S` is defined | `visit_ratio_norm_S_le`, via `norm_S_le_of_coercive`, `coercivity_morozov_op` |
@@ -151,7 +151,9 @@ Witnesses: `sq_convexOn`, `sq_convex_small_deriv`, `sq_analyticOnNhd`, `sq_no_fl
 * ***(iv)*, the `(x−1)²` half of global convergence is not here** (Phase 2F), and the `(log x)²`
   half is certified on loop closures of finite path-connected marked graphs, the setting of
   `FlowExistence.no_distant_equilibrium_three_of_init`, not on every finite ergodic
-  `(𝒮̂, λ, T)`. "A bounded strictly unimodal generator not being covered; infinite state spaces
+  `(𝒮̂, λ, T)`. Both halves on every finite ergodic chain are
+  `GlobalConvergenceFinite.no_distant_equilibrium_three_{logSq,sq}_of_ergodic`. "A bounded strictly
+  unimodal generator not being covered; infinite state spaces
   are not addressed" are statements about the scope of the paper and carry nothing to certify.
   "The generators admitted by Brunswic et al. are not required to be convex" is a statement about
   a source and is not formalized.

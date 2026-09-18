@@ -131,4 +131,5 @@ import GFNBounds.Doubling.ExpansionTrapezoid
 import GFNBounds.Doubling.WeightChain
 import GFNBounds.Balance.TBGradient
 import GFNBounds.Core.NegativeControl
+import GFNBounds.Balance.GlobalConvergenceFinite
 import GFNBounds.Audit

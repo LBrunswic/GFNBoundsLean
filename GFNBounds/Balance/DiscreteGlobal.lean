@@ -114,7 +114,7 @@ limit; it gives the same inequality without the limit `‖ξ_j‖ → 0`.
 | `μ₀ ∼ λ`, `u₀ = dμ₀/dλ` | ✓ `hu0 : ∀ x, 0 < uk 0 x` |
 | `u_{k+1} := u_k − γD(u_k)` | ⚠ hypothesised of a given sequence, `hstep`; **inhabited** by `exists_descent_seq` |
 | `0 < γ ≤ γ_*` | ✓ `hγ`, `hγs`, `γ_*` the printed formula (`gammaStar`); **satisfiable**, `gammaStar_pos` |
-| `𝓛(μ₀)^{−1} := +∞` at a balanced start | ⚠ in `γ_*` the middle entry is dropped when `𝓛(μ₀) = 0` (`gammaStar`'s `if`); in *(b)* Lean's `0^{−1} = 0` is kept, so at a balanced start *(b)* reads `𝓛(u_k) ≤ (kγκ²/4)^{−1}` — weaker than the convention's `≤ 0`, which *(a)* delivers anyway (`𝓛` non-increasing from `0`) |
+| `𝓛(μ₀)^{−1} := +∞` at a balanced start | ✓ in `γ_*` the middle entry `‖u₀‖²/(2𝓛(μ₀))` is `+∞` and dropped from the `min` when `𝓛(μ₀) = 0` (`gammaStar`'s `if`); *(b)* **as printed** in `training_speed_gd_minPos_ennreal`, read in `[0,∞]` where `0⁻¹ = ∞`, with `(𝓛(μ₀))⁻¹ = ∞ ↔` balanced — `global_phase_exact`'s reading of item *1*. The real display of `training_speed_gd_minPos` keeps `0⁻¹ = 0` and is the weaker form at a balanced start |
 | `ε₀`, `γ₀` of `theo:local_convergence_full` at `a = 1/2`, `B̂_σ`, `C_∞ = λ_min^{−1/2}`, `Γ₃ = sup_{[1/2,3/2]}\|g'''\|` | ✓ `eps0At Gamma3Val …`, `gamma0At Gamma3Val …`, the printed formulas of `LocalConvergence.lean` at `Γ₃ = 48 + 32 ln 2`. ⚠ that `48 + 32 ln 2` **is** the supremum is not proved here: `Γ₃` enters as a valid Taylor constant, `LogSqTaylor`'s bound at `24 ≤ Γ₃` discharging `htaylor` |
 | `ϱ_σ = g''(1)w_min λ_min/σ_*²` | ✓ `rhoSigma 2 wmin λ_min σ_*`, from `rhoL` at `B̂_σ` by `rhoL_eq_rhoSigma` |
 | "well defined" | ⚠ `lossGrad` is total in Lean; read as positivity of every iterate, `u_k ≥ u_min > 0` (*(a)* and `BoundaryBlowup.uMin_pos`) |
@@ -142,12 +142,12 @@ limit; it gives the same inequality without the limit `‖ξ_j‖ → 0`.
   (`exists_descent_seq`); the step bound is shown satisfiable (`training_speed_gd_inhabited`) and
   the whole hypothesis bundle inhabited from a non-balanced start on the five-vertex cycle
   (`cycle_training_speed_gd_nonvacuous`).
-* **The balanced-start convention** — see the checklist row; the only place the Lean reading is
-  weaker than the paper's is *(b)* at `𝓛(μ₀) = 0`, where *(a)* supplies the stronger bound.
+* **The balanced-start convention** — see the checklist row; *(b)* at `𝓛(μ₀) = 0` is
+  `training_speed_gd_minPos_ennreal`, which carries the convention exactly.
 * **`sorry`-free and axiom-clean**: `#print axioms` on `training_speed_gd`,
   `training_speed_gd_minPos`, `no_uniform_step_graph`, `descent_step`, `traj_a`, `traj_b`,
   `traj_c`, `traj_d`, `k0real_eq`, `training_speed_gd_inhabited` and
-  `cycle_training_speed_gd_nonvacuous` returns `[propext, Classical.choice, Quot.sound]`.
+  `cycle_training_speed_gd_nonvacuous` and `training_speed_gd_minPos_ennreal` returns `[propext, Classical.choice, Quot.sound]`.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/
@@ -2310,6 +2310,65 @@ theorem training_speed_gd_minPos {G : Graph.MarkedGraph V} {B : Graph.BackwardPo
   haveI := nonempty_of_total hl.total
   training_speed_gd hpc hpos hl hhit hwmin hw hwsup (minPos_pos _)
     (minPos_le_one ⟨B.phat_nonneg, B.phat_row_sum⟩) (fun _ _ h => minPos_le h) hu0 hstep hγ hγs
+
+/-- **`theo:training_speed_full`, assertion *3(b)*, as printed** (`proofs.tex:1024`), with the
+convention `𝓛(μ₀)^{−1} := +∞` at a balanced start (`proofs.tex:1004`): the envelope read in
+`[0,∞]`, where `0⁻¹ = ∞` and `∞⁻¹ = 0`, together with `(𝓛(μ₀))⁻¹ = ∞ ↔ μ₀` balanced. At a
+balanced start it says `𝓛(u_kλ) = 0`, which *(a)* delivers (`𝓛` non-increasing from `0`);
+otherwise it is `training_speed_gd_minPos`'s real display. This is `global_phase_exact`'s
+reading of item *1*, carried to item *3*. -/
+theorem training_speed_gd_minPos_ennreal {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G}
+    {lam uH wf : V → ℝ} {wmin wsup γ : ℝ} {uk : ℕ → V → ℝ}
+    (hpc : G.PathConnected) (hpos : B.PositiveOnEdges)
+    (hl : B.IsInvProb lam) (hhit : B.IsHitExp uH)
+    (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hwsup : ∀ x, wf x ≤ wsup)
+    (hu0 : ∀ x, 0 < uk 0 x)
+    (hstep : ∀ k, uk (k + 1) = fun x =>
+      uk k x - γ * lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k) x)
+    (hγ : 0 < γ)
+    (hγs : γ ≤ gammaStar
+      (b3 wsup (uMin V (Graph.minOver G lam) (minPos B.phat) wmin
+          (lossVal lam wf logSq (ratio B.phat lam (uk 0))) (Graph.meanL2 lam (uk 0)))
+        (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam (uk 0)))))
+      (Graph.nrmL2 lam (uk 0)) (lossVal lam wf logSq (ratio B.phat lam (uk 0)))
+      (gamma0At Gamma3Val wmin wsup (BhatSigma G uH lam)) (Graph.meanL2 lam (uk 0))) :
+    (∀ k : ℕ, ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam (uk k)))
+      ≤ ((ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam (uk 0))))⁻¹
+          + ENNReal.ofReal (k * γ * (wmin * Real.sqrt (Graph.minOver G lam)
+              / (Graph.nrmL2 lam (uk 0) * wsup
+                * max 1 (Real.sqrt (lossVal lam wf logSq (ratio B.phat lam (uk 0))
+                    / (wmin * Graph.minOver G lam))))) ^ 2 / 4))⁻¹)
+    ∧ (Balanced B.phat lam (uk 0)
+        ↔ (ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam (uk 0))))⁻¹ = ⊤) := by
+  have hp : ∀ x, 0 < lam x := fun x => hl.pos hpc hpos x
+  have hwpos : ∀ x, 0 < wf x := fun x => lt_of_lt_of_le hwmin (hw x)
+  have hLnn : ∀ k, 0 ≤ lossVal lam wf logSq (ratio B.phat lam (uk k)) := fun k =>
+    lossVal_nonneg (fun x => (hp x).le) fun x => (hwpos x).le
+  obtain ⟨ha, hb, -⟩ :=
+    training_speed_gd_minPos hpc hpos hl hhit hwmin hw hwsup hu0 hstep hγ hγs
+  have hanti : Antitone fun k => lossVal lam wf logSq (ratio B.phat lam (uk k)) :=
+    antitone_nat_of_succ_le fun k => by
+      have := (ha k).2.1
+      have hsq : 0 ≤ γ / 2 * Graph.nrmL2 lam
+          (lossGrad B.phat lam (fun z => lam z * wf z) logSqDeriv (uk k)) ^ 2 :=
+        mul_nonneg (div_nonneg hγ.le two_pos.le) (sq_nonneg _)
+      linarith
+  refine ⟨fun k => ?_, ?_⟩
+  · have hc : 0 ≤ (k : ℝ) * γ * (wmin * Real.sqrt (Graph.minOver G lam)
+          / (Graph.nrmL2 lam (uk 0) * wsup
+            * max 1 (Real.sqrt (lossVal lam wf logSq (ratio B.phat lam (uk 0))
+                / (wmin * Graph.minOver G lam))))) ^ 2 / 4 := by positivity
+    rcases (hLnn 0).lt_or_eq with hpos0 | hzero
+    · rw [← ENNReal.ofReal_inv_of_pos hpos0, ← ENNReal.ofReal_add (inv_pos.mpr hpos0).le hc,
+        ← ENNReal.ofReal_inv_of_pos (add_pos_of_pos_of_nonneg (inv_pos.mpr hpos0) hc)]
+      exact ENNReal.ofReal_le_ofReal (hb k)
+    · have hLk : lossVal lam wf logSq (ratio B.phat lam (uk k)) ≤ 0 := by
+        rw [hzero]; exact hanti (Nat.zero_le k)
+      rw [ENNReal.ofReal_of_nonpos hLk]
+      exact zero_le
+  · rw [ENNReal.inv_eq_top, ENNReal.ofReal_eq_zero,
+      ← lossVal_eq_zero_iff_balanced hl.inv B.phat_nonneg hp hu0 hwpos]
+    exact ⟨fun h => h.le, fun h => le_antisymm h (hLnn 0)⟩
 
 end Inhabit
 

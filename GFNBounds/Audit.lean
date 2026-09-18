@@ -472,6 +472,7 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Core.norm_one_sub_meanProj_eq_one
 #print axioms GFNBounds.Core.lem_sigma_mixing
 #print axioms GFNBounds.Core.lem_sigma_mixing_polish
+#print axioms GFNBounds.Core.sigma_mixing_witness
 
 -- `theo/lem:sigma_mixing + prop:nonlinear_freezing(2)` — GFNBounds/Balance/WeightedL2Norm.lean
 #print axioms GFNBounds.Balance.one_sub_meanOp_ne_zero
@@ -706,6 +707,7 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 -- `theo:training_speed_full` item 3, the discrete global phase — GFNBounds/Balance/DiscreteGlobal.lean
 #print axioms GFNBounds.Balance.DiscreteGlobal.training_speed_gd
 #print axioms GFNBounds.Balance.DiscreteGlobal.training_speed_gd_minPos
+#print axioms GFNBounds.Balance.DiscreteGlobal.training_speed_gd_minPos_ennreal
 #print axioms GFNBounds.Balance.DiscreteGlobal.no_uniform_step
 #print axioms GFNBounds.Balance.DiscreteGlobal.no_uniform_step_graph
 #print axioms GFNBounds.Balance.DiscreteGlobal.descent_step

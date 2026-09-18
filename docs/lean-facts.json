@@ -48237,6 +48237,34 @@
    "doc":
    "**`theo:universality_L2_full`, its conclusion at `p < +∞`**: the family\n`Θ = {P} × L^p_+(ν)` is weakly `L^p`-universal.\n\nSteps 1 and 2 are `Core.Mixing` and `Core.Universality`; Step 3 is\n`tendsto_truncation_norm` above, and this is their composition. The hypotheses are the two the\nconstruction consumes — `P` fixes the constants and `Π θ = 0` — together with summable\nmixing. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.two_mul_lintegral_bindDensity_mul_le":
+  {"uses_value":
+   ["GFNBounds.Core.bindDensity",
+    "GFNBounds.Core.lintegral_bindDensity_mul",
+    "GFNBounds.Core.two_mul_le_sq_add_sq_ennreal"],
+   "uses_type": ["GFNBounds.Core.bindDensity"],
+   "uses_external": 98,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α) [ProbabilityTheory.IsMarkovKernel κ]\n  {ν : MeasureTheory.Measure α} [MeasureTheory.SigmaFinite ν],\n  ν.bind ⇑κ = ν →\n    ∀ {f : α → ENNReal},\n      AEMeasurable f ν →\n        ∀ {h : α → ENNReal},\n          Measurable h →\n            2 * ∫⁻ (x : α), GFNBounds.Core.bindDensity κ ν f x * h x ∂ν ≤\n              ∫⁻ (x : α), f x ^ 2 ∂ν + ∫⁻ (x : α), h x ^ 2 ∂ν",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 153,
+   "kind": "theorem",
+   "doc":
+   "`2 ∫ (Tf)·h dλ ≤ ∫ f² dλ + ∫ h² dλ`: `2f(x)h(y) ≤ f(x)² + h(y)²` integrated against\n`λ(dx) T(x,dy)`, whose first marginal is `λ` (`T` Markov) and second `λT = λ` (invariance). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.two_mul_le_sq_add_sq_ennreal":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 105,
+   "type": "∀ (a b : ENNReal), 2 * a * b ≤ a ^ 2 + b ^ 2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 126,
+   "kind": "theorem",
+   "doc":
+   "`2ab ≤ a² + b²` in `ℝ≥0∞` — including at `∞`, where both sides are `∞` unless a factor on\nthe left vanishes. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.tv_le_two_fmL1":
   {"uses_value":
    ["GFNBounds.Core.mass_defect_le",
@@ -48674,6 +48702,163 @@
    "doc":
    "**`equ:stable_constants`, `C`** (`proofs.tex:152–156`): `C = 2C₀/κ(𝒮)`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.sigma_mixing_witness":
+  {"uses_value":
+   ["GFNBounds.Core.Family.bind_const_kernel",
+    "GFNBounds.Core.Family.densityActionCLM_const_kernel",
+    "GFNBounds.Core.Family.summable_const_kernel",
+    "GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.B_of_idem",
+    "GFNBounds.Core.Mixing.S",
+    "GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.Mixing.beta_zero",
+    "GFNBounds.Core.boolUniform",
+    "GFNBounds.Core.boolUniform_singleton_pos",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.instIsProbabilityMeasureBoolBoolUniform",
+    "GFNBounds.Core.lem_sigma_mixing",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.meanProj_idem",
+    "GFNBounds.Core.ne_smul_dirac_of_two_pos",
+    "GFNBounds.Doubling.partialSum"],
+   "uses_type":
+   ["GFNBounds.Core.Family.bind_const_kernel",
+    "GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.boolUniform",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.instIsProbabilityMeasureBoolBoolUniform",
+    "GFNBounds.Core.meanProj"],
+   "uses_external": 142,
+   "type":
+   "GFNBounds.Core.boolUniform.bind ⇑(ProbabilityTheory.Kernel.const Bool GFNBounds.Core.boolUniform) =\n    GFNBounds.Core.boolUniform ∧\n  (∀ (c : ENNReal) (x : Bool), GFNBounds.Core.boolUniform ≠ c • MeasureTheory.Measure.dirac x) ∧\n    (Summable fun n =>\n        ‖GFNBounds.Core.densityActionL2 (ProbabilityTheory.Kernel.const Bool GFNBounds.Core.boolUniform)\n                GFNBounds.Core.boolUniform ⋯ ^\n              n -\n            GFNBounds.Core.meanProj GFNBounds.Core.boolUniform 2‖) ∧\n      GFNBounds.Core.Mixing.beta\n            (GFNBounds.Core.densityActionL2 (ProbabilityTheory.Kernel.const Bool GFNBounds.Core.boolUniform)\n              GFNBounds.Core.boolUniform ⋯)\n            (GFNBounds.Core.meanProj GFNBounds.Core.boolUniform 2) 0 =\n          1 ∧\n        GFNBounds.Core.Mixing.B\n            (GFNBounds.Core.densityActionL2 (ProbabilityTheory.Kernel.const Bool GFNBounds.Core.boolUniform)\n              GFNBounds.Core.boolUniform ⋯)\n            (GFNBounds.Core.meanProj GFNBounds.Core.boolUniform 2) =\n          1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 586,
+   "kind": "theorem",
+   "doc":
+   "**Inhabitation of `lem_sigma_mixing`'s whole hypothesis bundle** (`kb/entries/0025`), on the\ntwo-state chain `T(i → j) = 1/2`, `λ = (1/2, 1/2)` of `prop:nonlinear_freezing`(2), realised as\n`Kernel.const Bool λ` on the standard Borel space `Bool`: `λ` is invariant, non-zero and not a\nmultiple of a Dirac mass, the mixing coefficients are summable, the lemma applies, and `B̂ = 1`\nexactly — so `B̂ ≥ 1` is sharp. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.sigma_mixing_two_states":
+  {"uses_value":
+   ["GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.exists_measurableSet_of_two_pos",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.ne_smul_dirac_of_two_pos",
+    "GFNBounds.Core.sigma_mixing_beta_zero_of_set",
+    "GFNBounds.Core.sigma_mixing_one_le_B_of_set"],
+   "uses_type":
+   ["GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj"],
+   "uses_external": 113,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α)\n  [inst_1 : ProbabilityTheory.IsMarkovKernel κ] (ν : MeasureTheory.Measure α) [inst_2 : MeasureTheory.IsFiniteMeasure ν]\n  [MeasurableSingletonClass α] (hinv : ν.bind ⇑κ = ν),\n  (Summable fun n => ‖GFNBounds.Core.densityActionL2 κ ν hinv ^ n - GFNBounds.Core.meanProj ν 2‖) →\n    ∀ {x y : α},\n      x ≠ y →\n        0 < ν {x} →\n          0 < ν {y} →\n            (∀ (c : ENNReal) (z : α), ν ≠ c • MeasureTheory.Measure.dirac z) ∧\n              GFNBounds.Core.Mixing.beta (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) 0 = 1 ∧\n                1 ≤ GFNBounds.Core.Mixing.B (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 544,
+   "kind": "theorem",
+   "doc":
+   "The \"in particular\" of `lem:sigma_mixing`, in the weaker form its proof uses: two distinct\npoints of positive mass make `λ` not a multiple of a Dirac mass, and give `β̂₀ = 1`, `B̂ ≥ 1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.sigma_mixing_one_le_B_of_set":
+  {"uses_value":
+   ["GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.Mixing.beta_nonneg",
+    "GFNBounds.Core.Mixing.summable_beta",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.mixing_densityActionL2",
+    "GFNBounds.Core.sigma_mixing_beta_zero_of_set"],
+   "uses_type":
+   ["GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj"],
+   "uses_external": 106,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α)\n  [inst_1 : ProbabilityTheory.IsMarkovKernel κ] (ν : MeasureTheory.Measure α) [inst_2 : MeasureTheory.IsFiniteMeasure ν]\n  (hinv : ν.bind ⇑κ = ν),\n  (Summable fun n => ‖GFNBounds.Core.densityActionL2 κ ν hinv ^ n - GFNBounds.Core.meanProj ν 2‖) →\n    ∀ {X : Set α},\n      MeasurableSet X →\n        0 < ν X →\n          ν X < ν Set.univ →\n            1 ≤ GFNBounds.Core.Mixing.B (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 496,
+   "kind": "theorem",
+   "doc":
+   "**`lem:sigma_mixing`, `B̂ ≥ 1`**, from summability and the same `X`: `B̂ ≥ β̂₀ = 1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.sigma_mixing_finite":
+  {"uses_value":
+   ["GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.sigma_mixing_two_states"],
+   "uses_type":
+   ["GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj"],
+   "uses_external": 112,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α)\n  [inst_1 : ProbabilityTheory.IsMarkovKernel κ] (ν : MeasureTheory.Measure α) [inst_2 : MeasureTheory.IsFiniteMeasure ν]\n  [Finite α] [MeasurableSingletonClass α] [Nontrivial α],\n  (∀ (x : α), 0 < ν {x}) →\n    ∀ (hinv : ν.bind ⇑κ = ν),\n      (Summable fun n => ‖GFNBounds.Core.densityActionL2 κ ν hinv ^ n - GFNBounds.Core.meanProj ν 2‖) →\n        (∀ (c : ENNReal) (z : α), ν ≠ c • MeasureTheory.Measure.dirac z) ∧\n          GFNBounds.Core.Mixing.beta (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) 0 = 1 ∧\n            1 ≤ GFNBounds.Core.Mixing.B (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 556,
+   "kind": "theorem",
+   "doc":
+   "**`lem:sigma_mixing`, \"in particular if `𝒮` is finite with `#𝒮 ≥ 2` and `λ > 0`\neverywhere\"**: then `λ` is not a multiple of a Dirac mass, `β̂₀ = 1` and `B̂ ≥ 1`. `[Finite α]`\nis the paper's and is not consumed (`sigma_mixing_two_states`). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.sigma_mixing_beta_zero_of_set":
+  {"uses_value":
+   ["GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.Mixing.beta_zero",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.norm_one_sub_meanProj_eq_one"],
+   "uses_type":
+   ["GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj"],
+   "uses_external": 86,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α)\n  [inst_1 : ProbabilityTheory.IsMarkovKernel κ] (ν : MeasureTheory.Measure α) [inst_2 : MeasureTheory.IsFiniteMeasure ν]\n  (hinv : ν.bind ⇑κ = ν) {X : Set α},\n  MeasurableSet X →\n    0 < ν X →\n      ν X < ν Set.univ →\n        GFNBounds.Core.Mixing.beta (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) 0 = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 490,
+   "kind": "theorem",
+   "doc":
+   "**`lem:sigma_mixing`, `β̂₀ = 1`**, from a measurable `X` with `0 < λ(X) < λ(𝒮)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.sigma_mixing":
+  {"uses_value":
+   ["GFNBounds.Core.Mixing",
+    "GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.S",
+    "GFNBounds.Core.Mixing.coercivity",
+    "GFNBounds.Core.Mixing.poisson_right",
+    "GFNBounds.Core.Mixing.tendsto_partialSum",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.mixing_densityActionL2",
+    "GFNBounds.Doubling.partialSum"],
+   "uses_type":
+   ["GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.S",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Doubling.partialSum"],
+   "uses_external": 100,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α)\n  [inst_1 : ProbabilityTheory.IsMarkovKernel κ] (ν : MeasureTheory.Measure α) [inst_2 : MeasureTheory.IsFiniteMeasure ν]\n  (hinv : ν.bind ⇑κ = ν),\n  (Summable fun n => ‖GFNBounds.Core.densityActionL2 κ ν hinv ^ n - GFNBounds.Core.meanProj ν 2‖) →\n    Filter.Tendsto\n        (GFNBounds.Doubling.partialSum (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2))\n        Filter.atTop\n        (nhds (GFNBounds.Core.Mixing.S (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2))) ∧\n      GFNBounds.Core.Mixing.S (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) *\n            (1 - GFNBounds.Core.densityActionL2 κ ν hinv) =\n          1 - GFNBounds.Core.meanProj ν 2 ∧\n        ∀ (h : ↥(MeasureTheory.Lp ℝ 2 ν)),\n          ‖h - (GFNBounds.Core.meanProj ν 2) h‖ ≤\n            GFNBounds.Core.Mixing.B (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) *\n              ‖(1 - GFNBounds.Core.densityActionL2 κ ν hinv) h‖",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 475,
+   "kind": "theorem",
+   "doc":
+   "**`lem:sigma_mixing`, first sentence**, at the kernel level: for `T` Markov and `λ` finite\nand invariant, summable `L²`-mixing makes `S = ∑(Pⁿ − Π)` converge in operator norm, with\n`S(I−P) = I − Π` and `‖h − Πh‖ ≤ B̂ ‖(I−P)h‖`. No Polish structure and no `λ ≠ 0` is used. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.selfEntropy":
   {"uses_value": [],
    "uses_type": [],
@@ -49099,6 +49284,17 @@
    "kind": "theorem",
    "doc": "`one_le_B` evaluated on that witness: `1 ≤ B̂` with `B̂ = 1`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.ofReal_add_ofReal_neg":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 144,
+   "type": "∀ (r : ℝ), ENNReal.ofReal r + ENNReal.ofReal (-r) = ‖r‖ₑ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 227,
+   "kind": "theorem",
+   "doc": "`r⁺ + r⁻ = |r|`, in `ℝ≥0∞`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.ofReal_add_aux":
   {"uses_value": ["GFNBounds.Core.max_add_aux"],
    "uses_type": [],
@@ -49277,6 +49473,25 @@
    "doc":
    "**Term (ii) of Step 2** (`proofs.tex:217–221`): `TV(κ/t ‖ κ̂/κ̂(𝒮)) ≤ Δ/t`, by\n`equ:normalization_lemma` at `α = κ`, `β = κ̂` and `equ:two_dominations`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.norm_sub_meanProj_le":
+  {"uses_value":
+   ["GFNBounds.Core.constOne",
+    "GFNBounds.Core.inner_constOne_two",
+    "GFNBounds.Core.integralCLM",
+    "GFNBounds.Core.integral_constOne",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.meanProj_apply"],
+   "uses_type": ["GFNBounds.Core.meanProj"],
+   "uses_external": 276,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] {ν : MeasureTheory.Measure α} [inst_1 : MeasureTheory.IsFiniteMeasure ν]\n  (f : ↥(MeasureTheory.Lp ℝ 2 ν)), ‖f - (GFNBounds.Core.meanProj ν 2) f‖ ≤ ‖f‖",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 300,
+   "kind": "theorem",
+   "doc":
+   "**`Π` is an orthogonal projection**, read as `‖h − Πh‖ ≤ ‖h‖`: `h − Πh` has mean zero, hence\nis orthogonal to the constant `Πh`, and Pythagoras concludes. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.norm_posPart_le":
   {"uses_value": [],
    "uses_type": [],
@@ -49316,6 +49531,38 @@
    "kind": "theorem",
    "doc":
    "`‖1 − obliquePi‖ = 2`: the complement `(a,b) ↦ (a+b,0)` doubles `(1,1)`. Hence a `Mixing`\npair with `β̂₀ = 2`, and the paper's `β̂₀ = 1` is not implied by summable mixing. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.norm_one_sub_meanProj_le":
+  {"uses_value":
+   ["GFNBounds.Core.meanProj", "GFNBounds.Core.norm_sub_meanProj_le"],
+   "uses_type": ["GFNBounds.Core.meanProj"],
+   "uses_external": 91,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] {ν : MeasureTheory.Measure α} [inst_1 : MeasureTheory.IsFiniteMeasure ν],\n  ‖1 - GFNBounds.Core.meanProj ν 2‖ ≤ 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 331,
+   "kind": "theorem",
+   "doc": "`‖I − Π‖ ≤ 1` on `L²(λ)`, for every finite `λ`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.norm_one_sub_meanProj_eq_one":
+  {"uses_value":
+   ["GFNBounds.Core.Mixing.one_le_norm_one_sub_proj",
+    "GFNBounds.Core.Mixing.one_sub_ne_zero_iff",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.meanProj_idem",
+    "GFNBounds.Core.meanProj_indicator_ne",
+    "GFNBounds.Core.norm_one_sub_meanProj_le"],
+   "uses_type": ["GFNBounds.Core.meanProj"],
+   "uses_external": 89,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] {ν : MeasureTheory.Measure α} [inst_1 : MeasureTheory.IsFiniteMeasure ν]\n  {X : Set α}, MeasurableSet X → 0 < ν X → ν X < ν Set.univ → ‖1 - GFNBounds.Core.meanProj ν 2‖ = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 376,
+   "kind": "theorem",
+   "doc":
+   "**`‖I − Π‖_{L²(λ)} = 1`** as soon as `λ` charges a measurable `X` with\n`0 < λ(X) < λ(𝒮)`: `≤ 1` by orthogonality, `≥ 1` because `I − Π` is a non-zero idempotent\n(`Mixing.one_le_norm_one_sub_proj`). ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.norm_negPart_le":
   {"uses_value": [],
@@ -49367,6 +49614,20 @@
    "kind": "theorem",
    "doc":
    "`‖∫ · dν‖ ≤ ν(𝒮)^{1 − 1/p}`: the constant of `norm_integral_le_holder` bounds the operator\nnorm, which is rule 3's explicit formula rather than a bare existential. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.norm_densityActionL2_le":
+  {"uses_value":
+   ["GFNBounds.Core.isBoundedDensityAction_two",
+    "GFNBounds.Core.norm_densityActionCLM_le"],
+   "uses_type": ["GFNBounds.Core.densityActionL2"],
+   "uses_external": 23,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α)\n  [inst_1 : ProbabilityTheory.IsMarkovKernel κ] (ν : MeasureTheory.Measure α) [inst_2 : MeasureTheory.IsFiniteMeasure ν]\n  (hinv : ν.bind ⇑κ = ν), ‖GFNBounds.Core.densityActionL2 κ ν hinv‖ ≤ 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 464,
+   "kind": "theorem",
+   "doc": "`‖P‖_{L²(λ) → L²(λ)} ≤ 1`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.norm_densityActionCLM_le":
   {"uses_value":
@@ -49442,6 +49703,19 @@
    "doc":
    "**`equ:two_dominations`, first half** (`proofs.tex:205–207`): `δF_init(𝒮) = E⁻(𝒮) ≤ Δ`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.ne_smul_dirac_of_two_pos":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 62,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] [MeasurableSingletonClass α] {ν : MeasureTheory.Measure α} {x y : α},\n  x ≠ y → 0 < ν {x} → 0 < ν {y} → ∀ (c : ENNReal) (z : α), ν ≠ c • MeasureTheory.Measure.dirac z",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 425,
+   "kind": "theorem",
+   "doc":
+   "Two distinct points of positive mass: `λ` is not a multiple of a Dirac mass. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.mixing_of_massPreserving":
   {"uses_value":
    ["GFNBounds.Core.Mixing.mk",
@@ -49462,6 +49736,28 @@
    "kind": "theorem",
    "doc":
    "**The `Mixing` bundle, with only its summability half assumed.** `Core.Mixing` hypothesizes\n`Pi * P = Pi` and `P * Pi = Pi`; here they are the two theorems above, and `Pi` is pinned to the\npaper's mean projection rather than left arbitrary. What remains a hypothesis is the summability\nof `β_n = ‖P^n − Π‖`, which the paper hypothesizes too. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.mixing_densityActionL2":
+  {"uses_value":
+   ["GFNBounds.Core.densityActionCLM_constOne",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.integral_densityActionCLM",
+    "GFNBounds.Core.isBoundedDensityAction_two",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.mixing_of_massPreserving"],
+   "uses_type":
+   ["GFNBounds.Core.Mixing",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj"],
+   "uses_external": 80,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α)\n  [inst_1 : ProbabilityTheory.IsMarkovKernel κ] (ν : MeasureTheory.Measure α) [inst_2 : MeasureTheory.IsFiniteMeasure ν]\n  (hinv : ν.bind ⇑κ = ν),\n  (Summable fun n => ‖GFNBounds.Core.densityActionL2 κ ν hinv ^ n - GFNBounds.Core.meanProj ν 2‖) →\n    GFNBounds.Core.Mixing (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 468,
+   "kind": "theorem",
+   "doc":
+   "The `Mixing` bundle at `(P, Π)`, with only summability assumed: `ΠP = PΠ = Π` is derived. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.memLp_of_top":
   {"uses_value": [],
@@ -49518,6 +49814,23 @@
    "kind": "theorem",
    "doc":
    "**`Π θ = 0` for a pair of equal total mass** — the paper's \"`F_init` and `F_term` are both\nprobability distributions, so `∫ θ dν_B = 0`, that is `Π θ = 0`\" (`proofs.tex:95`).\n\nOnly the equality of the two integrals is used; non-negativity of the densities is not. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.meanProj_indicator_ne":
+  {"uses_value":
+   ["GFNBounds.Core.coeFn_constOne",
+    "GFNBounds.Core.constOne",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.meanProj_apply"],
+   "uses_type": ["GFNBounds.Core.meanProj"],
+   "uses_external": 170,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] {ν : MeasureTheory.Measure α} [inst_1 : MeasureTheory.IsFiniteMeasure ν]\n  {X : Set α} (hX : MeasurableSet X),\n  0 < ν X →\n    ν X < ν Set.univ →\n      (GFNBounds.Core.meanProj ν 2) (MeasureTheory.indicatorConstLp 2 hX ⋯ 1) ≠ MeasureTheory.indicatorConstLp 2 hX ⋯ 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 338,
+   "kind": "theorem",
+   "doc":
+   "**`𝟏_X − Π𝟏_X ≠ 0`** — the paper's \"`𝟏_X` is not `λ`-a.e. constant\" — for a measurable `X`\nwith `0 < λ(X) < λ(𝒮)`. If `𝟏_X = r` a.e., then `r = 1` on the non-null `X`, and\n`r = λ(X)/λ(𝒮) = 1` contradicts `λ(X) < λ(𝒮)`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.meanProj_idem":
   {"uses_value":
@@ -49793,6 +50106,38 @@
    "doc":
    "The positive part of an integrable function has finite `ν`-integral. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.lintegral_bindDensity_sq_le":
+  {"uses_value":
+   ["GFNBounds.Core.bindDensity",
+    "GFNBounds.Core.measurable_bindDensity",
+    "GFNBounds.Core.two_mul_lintegral_bindDensity_mul_le"],
+   "uses_type": ["GFNBounds.Core.bindDensity"],
+   "uses_external": 152,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α) [ProbabilityTheory.IsMarkovKernel κ]\n  {ν : MeasureTheory.Measure α} [MeasureTheory.IsFiniteMeasure ν],\n  ν.bind ⇑κ = ν →\n    ∀ {f : α → ENNReal},\n      AEMeasurable f ν → ∫⁻ (x : α), GFNBounds.Core.bindDensity κ ν f x ^ 2 ∂ν ≤ ∫⁻ (x : α), f x ^ 2 ∂ν",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 174,
+   "kind": "theorem",
+   "doc":
+   "**`∫ (Tf)² dλ ≤ ∫ f² dλ`** for every non-negative density `f`, with no integrability\nassumed. The truncations `min(Tf, n)` have finite square integral, which is what lets the\nduality bound be cancelled; monotone convergence removes the truncation. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.lintegral_bindDensity_mul":
+  {"uses_value":
+   ["GFNBounds.Core.bindDensity",
+    "GFNBounds.Core.measurable_bindDensity",
+    "GFNBounds.Core.withDensity_bindDensity"],
+   "uses_type": ["GFNBounds.Core.bindDensity"],
+   "uses_external": 31,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α) [ProbabilityTheory.IsMarkovKernel κ]\n  {ν : MeasureTheory.Measure α} [MeasureTheory.SigmaFinite ν],\n  ν.bind ⇑κ = ν →\n    ∀ {f : α → ENNReal},\n      AEMeasurable f ν →\n        ∀ {h : α → ENNReal},\n          Measurable h →\n            ∫⁻ (x : α), GFNBounds.Core.bindDensity κ ν f x * h x ∂ν = ∫⁻ (x : α), f x * ∫⁻ (y : α), h y ∂κ x ∂ν",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 139,
+   "kind": "theorem",
+   "doc":
+   "**Duality for the density action**: `∫ (Tf)·h dλ = ∫ f(x) (∫ h dT(x)) dλ(x)`, for a\nnon-negative density `f` and a measurable test function `h`. It is `(Tf)λ = (fλ)T`\n(`withDensity_bindDensity`) integrated against `h`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.lintegral_bindDensity":
   {"uses_value":
    ["GFNBounds.Core.bindDensity",
@@ -49864,6 +50209,57 @@
    "kind": "def",
    "doc":
    "The **lifted outflow** `f_out^η := (η • 1 - Sθ)⁺` of `theo:universality_L2_full`'s Step 2. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.lem_sigma_mixing_polish":
+  {"uses_value":
+   ["GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.lem_sigma_mixing",
+    "GFNBounds.Core.meanProj"],
+   "uses_type":
+   ["GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.S",
+    "GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Doubling.partialSum"],
+   "uses_external": 84,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α)\n  [inst_1 : ProbabilityTheory.IsMarkovKernel κ] (ν : MeasureTheory.Measure α) [inst_2 : MeasureTheory.IsFiniteMeasure ν]\n  [inst_3 : TopologicalSpace α] [PolishSpace α] [BorelSpace α] [NeZero ν] (hinv : ν.bind ⇑κ = ν),\n  (Summable fun n => ‖GFNBounds.Core.densityActionL2 κ ν hinv ^ n - GFNBounds.Core.meanProj ν 2‖) →\n    (Filter.Tendsto\n          (GFNBounds.Doubling.partialSum (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2))\n          Filter.atTop\n          (nhds (GFNBounds.Core.Mixing.S (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2))) ∧\n        GFNBounds.Core.Mixing.S (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) *\n              (1 - GFNBounds.Core.densityActionL2 κ ν hinv) =\n            1 - GFNBounds.Core.meanProj ν 2 ∧\n          ∀ (h : ↥(MeasureTheory.Lp ℝ 2 ν)),\n            ‖h - (GFNBounds.Core.meanProj ν 2) h‖ ≤\n              GFNBounds.Core.Mixing.B (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) *\n                ‖(1 - GFNBounds.Core.densityActionL2 κ ν hinv) h‖) ∧\n      ((∀ (c : ENNReal) (x : α), ν ≠ c • MeasureTheory.Measure.dirac x) →\n        GFNBounds.Core.Mixing.beta (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) 0 = 1 ∧\n          1 ≤ GFNBounds.Core.Mixing.B (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 527,
+   "kind": "theorem",
+   "doc":
+   "**`lem:sigma_mixing`, whole, on a Polish space with its Borel σ-algebra** — the paper's\nliteral hypothesis; `lem_sigma_mixing` through `standardBorel_of_polish`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.lem_sigma_mixing":
+  {"uses_value":
+   ["GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.S",
+    "GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.exists_measurableSet_of_ne_smul_dirac",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Core.sigma_mixing",
+    "GFNBounds.Core.sigma_mixing_beta_zero_of_set",
+    "GFNBounds.Core.sigma_mixing_one_le_B_of_set",
+    "GFNBounds.Doubling.partialSum"],
+   "uses_type":
+   ["GFNBounds.Core.Mixing.B",
+    "GFNBounds.Core.Mixing.S",
+    "GFNBounds.Core.Mixing.beta",
+    "GFNBounds.Core.densityActionL2",
+    "GFNBounds.Core.meanProj",
+    "GFNBounds.Doubling.partialSum"],
+   "uses_external": 127,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α)\n  [inst_1 : ProbabilityTheory.IsMarkovKernel κ] (ν : MeasureTheory.Measure α) [inst_2 : MeasureTheory.IsFiniteMeasure ν]\n  [StandardBorelSpace α] [NeZero ν] (hinv : ν.bind ⇑κ = ν),\n  (Summable fun n => ‖GFNBounds.Core.densityActionL2 κ ν hinv ^ n - GFNBounds.Core.meanProj ν 2‖) →\n    (Filter.Tendsto\n          (GFNBounds.Doubling.partialSum (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2))\n          Filter.atTop\n          (nhds (GFNBounds.Core.Mixing.S (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2))) ∧\n        GFNBounds.Core.Mixing.S (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) *\n              (1 - GFNBounds.Core.densityActionL2 κ ν hinv) =\n            1 - GFNBounds.Core.meanProj ν 2 ∧\n          ∀ (h : ↥(MeasureTheory.Lp ℝ 2 ν)),\n            ‖h - (GFNBounds.Core.meanProj ν 2) h‖ ≤\n              GFNBounds.Core.Mixing.B (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) *\n                ‖(1 - GFNBounds.Core.densityActionL2 κ ν hinv) h‖) ∧\n      ((∀ (c : ENNReal) (x : α), ν ≠ c • MeasureTheory.Measure.dirac x) →\n        GFNBounds.Core.Mixing.beta (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2) 0 = 1 ∧\n          1 ≤ GFNBounds.Core.Mixing.B (GFNBounds.Core.densityActionL2 κ ν hinv) (GFNBounds.Core.meanProj ν 2))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 505,
+   "kind": "theorem",
+   "doc":
+   "**`lem:sigma_mixing`, whole.** `T` a Markov kernel on a standard Borel space leaving a\nnon-zero finite `λ` invariant, `P` its density action on `L²(λ)`, `Π` the `λ`-mean projection,\n`B̂ = ∑‖Pⁿ − Π‖ < ∞`: then `S` converges in operator norm, `S(I−P) = I − Π`,\n`‖h − Πh‖ ≤ B̂ ‖(I−P)h‖` for every `h ∈ L²(λ)`; and if moreover `λ` is not a multiple of a\nDirac mass, `β̂₀ = 1` and `B̂ ≥ 1`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.le_norm_smul_constOne":
   {"uses_value":
@@ -50092,6 +50488,25 @@
    "kind": "theorem",
    "doc":
    "`(f ν) π⋆` is a finite measure as soon as `f` has finite `ν`-integral. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.isBoundedDensityAction_two":
+  {"uses_value":
+   ["GFNBounds.Core.IsBoundedDensityAction.mk",
+    "GFNBounds.Core.bindDensity",
+    "GFNBounds.Core.densityAction",
+    "GFNBounds.Core.eLpNorm_bindDensity_two_le",
+    "GFNBounds.Core.enorm_densityAction_le",
+    "GFNBounds.Core.measurable_densityAction"],
+   "uses_type": ["GFNBounds.Core.IsBoundedDensityAction"],
+   "uses_external": 104,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α) [ProbabilityTheory.IsMarkovKernel κ]\n  {ν : MeasureTheory.Measure α} [MeasureTheory.IsFiniteMeasure ν],\n  ν.bind ⇑κ = ν → GFNBounds.Core.IsBoundedDensityAction κ ν 2 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 264,
+   "kind": "theorem",
+   "doc":
+   "**The density action of a Markov kernel is a contraction of `L²(λ)`** whenever `λ` is finite\nand invariant: `IsBoundedDensityAction κ λ 2 1`. This is the `‖P‖ ≤ 1` that `lem:sigma_mixing`\npresupposes in calling `P` an operator on `L²(λ)` (the paper's `eq:reversal_contraction`), and it\ndischarges the hypothesis `Core.Kernel` carries at `p = 2`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.isBoundedDensityAction_id":
   {"uses_value":
@@ -50375,6 +50790,29 @@
    "doc":
    "An element of `L^p(ν)` is `ν`-integrable: `ν` is finite and `1 ≤ p`, so `L^p(ν) ⊆ L^1(ν)`.\nThis is what lets the appendix write `∫ θ dν_B` for `θ ∈ L^p(ν_B)` at all. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.instIsProbabilityMeasureBoolBoolUniform":
+  {"uses_value": ["GFNBounds.Core.boolUniform"],
+   "uses_type": ["GFNBounds.Core.boolUniform"],
+   "uses_external": 11,
+   "type": "MeasureTheory.IsProbabilityMeasure GFNBounds.Core.boolUniform",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 577,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.inner_constOne_two":
+  {"uses_value": ["GFNBounds.Core.coeFn_constOne", "GFNBounds.Core.constOne"],
+   "uses_type": ["GFNBounds.Core.constOne"],
+   "uses_external": 89,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] {ν : MeasureTheory.Measure α} [inst_1 : MeasureTheory.IsFiniteMeasure ν]\n  (u : ↥(MeasureTheory.Lp ℝ 2 ν)), inner ℝ u (GFNBounds.Core.constOne ν 2) = ∫ (x : α), ↑↑u x ∂ν",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 291,
+   "kind": "theorem",
+   "doc": "`⟪u, 𝟏⟫_{L²(λ)} = ∫ u dλ`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.inclTop_nonneg":
   {"uses_value": ["GFNBounds.Core.coeFn_inclTop", "GFNBounds.Core.inclTop"],
    "uses_type": ["GFNBounds.Core.inclTop"],
@@ -50643,6 +51081,32 @@
    "doc":
    "**The transfer, in the form that assumes nothing at `r`.** The `p = +∞` construction produces\na non-negative outflow that lies in *every* `L^r(ν)` and satisfies the flow-matching constraint\nas an a.e. identity of functions, `P f_out = f_out + θ`.\n\nThis is the whole mathematical content of `proofs.tex:114`'s last sentence. Nothing is said here\ninside `defect`, and so nothing is needed about how — or whether — `P` acts on `L^r(ν)`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.exists_measurableSet_of_two_pos":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 59,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] [MeasurableSingletonClass α] {ν : MeasureTheory.Measure α}\n  [MeasureTheory.IsFiniteMeasure ν] {x y : α},\n  x ≠ y → 0 < ν {x} → 0 < ν {y} → ∃ X, MeasurableSet X ∧ 0 < ν X ∧ ν X < ν Set.univ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 439,
+   "kind": "theorem",
+   "doc":
+   "Two distinct points of positive mass: `X := {x}` has `0 < λ(X) < λ(𝒮)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.exists_measurableSet_of_ne_smul_dirac":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 112,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] [StandardBorelSpace α] {ν : MeasureTheory.Measure α}\n  [MeasureTheory.IsFiniteMeasure ν] [NeZero ν],\n  (∀ (c : ENNReal) (x : α), ν ≠ c • MeasureTheory.Measure.dirac x) → ∃ X, MeasurableSet X ∧ 0 < ν X ∧ ν X < ν Set.univ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 393,
+   "kind": "theorem",
+   "doc":
+   "**The paper's Polish step**: a non-zero finite measure on a standard Borel space that is not a\nmultiple of a Dirac mass charges a measurable `X` with `0 < λ(X) < λ(𝒮)`. Otherwise\n`λ(𝒮)⁻¹ λ` is a zero-one measure, hence a Dirac mass (`IsZeroOneMeasure.exists_eq_dirac`).\nStandard Borel is what that step consumes: on `ℝ` with the countable–cocountable σ-algebra the\ncountable–cocountable measure is zero-one and not a Dirac mass. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.eq_of_domination_zero":
   {"uses_value": [],
    "uses_type": [],
@@ -50676,6 +51140,40 @@
    "kind": "theorem",
    "doc":
    "**Summable mixing against the mean projection is an ergodicity hypothesis.**\n\nThe paper's `Π` is the projection onto the invariant densities and coincides with the mean\nprojection because `π⋆` is ergodic. `meanProj` is the mean projection by construction, so nothing\nabove proves it projects onto `ker (Id − P)` — but nothing above needs to: as soon as\n`n ↦ ‖P^n − Π‖` is summable with `Π` the *mean* projection, every `P`-invariant element of\n`L^p(ν)` is its own mean, hence a multiple of `𝟏`. The ergodicity has moved into the summability\nhypothesis rather than disappeared, which is what this file's SCOPE records. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.enorm_densityAction_le":
+  {"uses_value":
+   ["GFNBounds.Core.aemeasurable_ofReal",
+    "GFNBounds.Core.bindDensity",
+    "GFNBounds.Core.bindDensity_add",
+    "GFNBounds.Core.bindDensity_ofReal_lt_top",
+    "GFNBounds.Core.densityAction",
+    "GFNBounds.Core.lintegral_ofReal_ne_top",
+    "GFNBounds.Core.ofReal_add_ofReal_neg"],
+   "uses_type": ["GFNBounds.Core.bindDensity", "GFNBounds.Core.densityAction"],
+   "uses_external": 207,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α) [ProbabilityTheory.IsMarkovKernel κ]\n  {ν : MeasureTheory.Measure α} [MeasureTheory.SigmaFinite ν],\n  ν.bind ⇑κ = ν →\n    ∀ {f : α → ℝ},\n      MeasureTheory.Integrable f ν →\n        ∀ᵐ (x : α) ∂ν, ‖GFNBounds.Core.densityAction κ ν f x‖ₑ ≤ GFNBounds.Core.bindDensity κ ν (fun y => ‖f y‖ₑ) x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 234,
+   "kind": "theorem",
+   "doc":
+   "`|P f| ≤ T |f|`, `λ`-a.e., for an integrable signed density: `|Tf⁺ − Tf⁻| ≤ Tf⁺ + Tf⁻`, and\n`T` is additive. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.eLpNorm_bindDensity_two_le":
+  {"uses_value":
+   ["GFNBounds.Core.bindDensity", "GFNBounds.Core.lintegral_bindDensity_sq_le"],
+   "uses_type": ["GFNBounds.Core.bindDensity"],
+   "uses_external": 102,
+   "type":
+   "∀ {α : Type u_1} [inst : MeasurableSpace α] (κ : ProbabilityTheory.Kernel α α) [ProbabilityTheory.IsMarkovKernel κ]\n  {ν : MeasureTheory.Measure α} [MeasureTheory.IsFiniteMeasure ν],\n  ν.bind ⇑κ = ν →\n    ∀ {f : α → ENNReal},\n      AEMeasurable f ν → MeasureTheory.eLpNorm (GFNBounds.Core.bindDensity κ ν f) 2 ν ≤ MeasureTheory.eLpNorm f 2 ν",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 218,
+   "kind": "theorem",
+   "doc":
+   "`‖Tf‖_{L²(λ)} ≤ ‖f‖_{L²(λ)}` for a non-negative density, in `eLpNorm` form. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.densityAction_smul_nonneg":
   {"uses_value":
@@ -50803,6 +51301,21 @@
    "kind": "def",
    "doc":
    "`P⋆` as a linear map on `L^p(ν)`. Linearity is `densityAction_add` and `densityAction_smul`\nread on the `L^p` quotient, which is where the two a.e. identities become equalities. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.densityActionL2":
+  {"uses_value":
+   ["GFNBounds.Core.densityActionCLM",
+    "GFNBounds.Core.isBoundedDensityAction_two"],
+   "uses_type": [],
+   "uses_external": 19,
+   "type":
+   "{α : Type u_1} →\n  [inst : MeasurableSpace α] →\n    (κ : ProbabilityTheory.Kernel α α) →\n      [ProbabilityTheory.IsMarkovKernel κ] →\n        (ν : MeasureTheory.Measure α) →\n          [MeasureTheory.IsFiniteMeasure ν] → ν.bind ⇑κ = ν → ↥(MeasureTheory.Lp ℝ 2 ν) →L[ℝ] ↥(MeasureTheory.Lp ℝ 2 ν)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 455,
+   "kind": "def",
+   "doc":
+   "**The paper's `P` of `lem:sigma_mixing`**: the density action `h ↦ d((hλ)T)/dλ` of a Markov\nkernel on `L²(λ)`, a bounded operator by `isBoundedDensityAction_two` rather than by\nhypothesis. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.densityActionCLM_constOne":
   {"uses_value":
@@ -51183,6 +51696,28 @@
    "line": 95,
    "kind": "theorem",
    "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.boolUniform_singleton_pos":
+  {"uses_value": ["GFNBounds.Core.boolUniform"],
+   "uses_type": ["GFNBounds.Core.boolUniform"],
+   "uses_external": 44,
+   "type": "∀ (b : Bool), 0 < GFNBounds.Core.boolUniform {b}",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 581,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.boolUniform":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 7,
+   "type": "MeasureTheory.Measure Bool",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.SigmaMixing",
+   "line": 574,
+   "kind": "def",
+   "doc": "The uniform law `λ = (1/2, 1/2)` on the two-point space. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.bind_withDensity_univ":
   {"uses_value": [],
@@ -73646,6 +74181,78 @@
    "doc":
    "**`theo:training_speed_full`, assertion *3(a)*** (`proofs.tex:1023`): for every `k`, `u_k ≥ u_min`, the loss descends by\n`(γ/2)‖D(u_k)‖²`, the mass does not decrease, and `‖u_{k+1}‖² = ‖u_k‖² + γ²‖D(u_k)‖² ≤ 2‖u₀‖²`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.DiscreteGlobal.training_speed_gd_minPos_ennreal":
+  {"uses_value":
+   ["GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.BhatSigma",
+    "GFNBounds.Balance.DiscreteGlobal.Gamma3Val",
+    "GFNBounds.Balance.DiscreteGlobal.b3",
+    "GFNBounds.Balance.DiscreteGlobal.eps0At",
+    "GFNBounds.Balance.DiscreteGlobal.gamma0At",
+    "GFNBounds.Balance.DiscreteGlobal.gammaStar",
+    "GFNBounds.Balance.DiscreteGlobal.k0",
+    "GFNBounds.Balance.DiscreteGlobal.minPos",
+    "GFNBounds.Balance.DiscreteGlobal.training_speed_gd_minPos",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.lossVal",
+    "GFNBounds.Balance.lossVal_eq_zero_iff_balanced",
+    "GFNBounds.Balance.lossVal_nonneg",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.ratioCap",
+    "GFNBounds.Balance.rhoSigma",
+    "GFNBounds.Balance.uMin",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsHitExp",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb.inv",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb.pos",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.BackwardPolicy.phat_nonneg",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.minOver",
+    "GFNBounds.Graph.nrmL2",
+    "GFNBounds.Graph.sigmaStar"],
+   "uses_type":
+   ["GFNBounds.Balance.Balanced",
+    "GFNBounds.Balance.BhatSigma",
+    "GFNBounds.Balance.DiscreteGlobal.Gamma3Val",
+    "GFNBounds.Balance.DiscreteGlobal.b3",
+    "GFNBounds.Balance.DiscreteGlobal.gamma0At",
+    "GFNBounds.Balance.DiscreteGlobal.gammaStar",
+    "GFNBounds.Balance.DiscreteGlobal.minPos",
+    "GFNBounds.Balance.logSq",
+    "GFNBounds.Balance.logSqDeriv",
+    "GFNBounds.Balance.lossGrad",
+    "GFNBounds.Balance.lossVal",
+    "GFNBounds.Balance.ratio",
+    "GFNBounds.Balance.ratioCap",
+    "GFNBounds.Balance.uMin",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsHitExp",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.minOver",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 284,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V}\n  {B : GFNBounds.Graph.BackwardPolicy G} {lam uH wf : V → ℝ} {wmin wsup γ : ℝ} {uk : ℕ → V → ℝ},\n  G.PathConnected →\n    B.PositiveOnEdges →\n      B.IsInvProb lam →\n        B.IsHitExp uH →\n          0 < wmin →\n            (∀ (x : V), wmin ≤ wf x) →\n              (∀ (x : V), wf x ≤ wsup) →\n                (∀ (x : V), 0 < uk 0 x) →\n                  (∀ (k : ℕ),\n                      uk (k + 1) = fun x =>\n                        uk k x -\n                          γ *\n                            GFNBounds.Balance.lossGrad B.phat lam (fun z => lam z * wf z) GFNBounds.Balance.logSqDeriv\n                              (uk k) x) →\n                    0 < γ →\n                      γ ≤\n                          GFNBounds.Balance.DiscreteGlobal.gammaStar\n                            (GFNBounds.Balance.DiscreteGlobal.b3 wsup\n                              (GFNBounds.Balance.uMin V (GFNBounds.Graph.minOver G lam)\n                                (GFNBounds.Balance.DiscreteGlobal.minPos B.phat) wmin\n                                (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                  (GFNBounds.Balance.ratio B.phat lam (uk 0)))\n                                (GFNBounds.Graph.meanL2 lam (uk 0)))\n                              (GFNBounds.Balance.ratioCap (GFNBounds.Graph.minOver G lam) wmin\n                                (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                  (GFNBounds.Balance.ratio B.phat lam (uk 0)))))\n                            (GFNBounds.Graph.nrmL2 lam (uk 0))\n                            (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                              (GFNBounds.Balance.ratio B.phat lam (uk 0)))\n                            (GFNBounds.Balance.DiscreteGlobal.gamma0At GFNBounds.Balance.DiscreteGlobal.Gamma3Val wmin\n                              wsup (GFNBounds.Balance.BhatSigma G uH lam))\n                            (GFNBounds.Graph.meanL2 lam (uk 0)) →\n                        (∀ (k : ℕ),\n                            ENNReal.ofReal\n                                (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                  (GFNBounds.Balance.ratio B.phat lam (uk k))) ≤\n                              ((ENNReal.ofReal\n                                      (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                        (GFNBounds.Balance.ratio B.phat lam (uk 0))))⁻¹ +\n                                  ENNReal.ofReal\n                                    (↑k * γ *\n                                        (wmin * √(GFNBounds.Graph.minOver G lam) /\n                                            (GFNBounds.Graph.nrmL2 lam (uk 0) * wsup *\n                                              max 1\n                                                √(GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                                      (GFNBounds.Balance.ratio B.phat lam (uk 0)) /\n                                                    (wmin * GFNBounds.Graph.minOver G lam)))) ^\n                                          2 /\n                                      4))⁻¹) ∧\n                          (GFNBounds.Balance.Balanced B.phat lam (uk 0) ↔\n                            (ENNReal.ofReal\n                                  (GFNBounds.Balance.lossVal lam wf GFNBounds.Balance.logSq\n                                    (GFNBounds.Balance.ratio B.phat lam (uk 0))))⁻¹ =\n                              ⊤)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.DiscreteGlobal",
+   "line": 2314,
+   "kind": "theorem",
+   "doc":
+   "**`theo:training_speed_full`, assertion *3(b)*, as printed** (`proofs.tex:1024`), with the\nconvention `𝓛(μ₀)^{−1} := +∞` at a balanced start (`proofs.tex:1004`): the envelope read in\n`[0,∞]`, where `0⁻¹ = ∞` and `∞⁻¹ = 0`, together with `(𝓛(μ₀))⁻¹ = ∞ ↔ μ₀` balanced. At a\nbalanced start it says `𝓛(u_kλ) = 0`, which *(a)* delivers (`𝓛` non-increasing from `0`);\notherwise it is `training_speed_gd_minPos`'s real display. This is `global_phase_exact`'s\nreading of item *1*, carried to item *3*. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.DiscreteGlobal.training_speed_gd_minPos":
   {"uses_value":
    ["GFNBounds.Balance.BhatSigma",
@@ -74549,7 +75156,7 @@
    "∀ (wmin W Bhat : ℝ),\n  GFNBounds.Balance.DiscreteGlobal.gamma0At GFNBounds.Balance.DiscreteGlobal.Gamma3Val wmin W Bhat =\n    GFNBounds.Balance.gamma0C3 GFNBounds.Balance.logSq (1 / 2) wmin W Bhat",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Balance.DiscreteGlobal",
-   "line": 2334,
+   "line": 2393,
    "kind": "theorem",
    "doc":
    "**The step cap `γ₀` of item *3* is Theorem 10's** for `g = (log x)²` at `a = 1/2`. ",
@@ -74676,7 +75283,7 @@
    "∀ (wmin W Bhat lamMin : ℝ),\n  GFNBounds.Balance.DiscreteGlobal.eps0At GFNBounds.Balance.DiscreteGlobal.Gamma3Val wmin W Bhat lamMin =\n    GFNBounds.Balance.eps0Gamma3 wmin W Bhat lamMin",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Balance.DiscreteGlobal",
-   "line": 2330,
+   "line": 2389,
    "kind": "theorem",
    "doc": "**The entry radius of item *3* is item *2*'s**, `eps0Gamma3`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -75055,7 +75662,7 @@
    "GFNBounds.Balance.Gamma3 GFNBounds.Balance.logSq (1 / 2) = GFNBounds.Balance.DiscreteGlobal.Gamma3Val",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Balance.DiscreteGlobal",
-   "line": 2325,
+   "line": 2384,
    "kind": "theorem",
    "doc":
    "**`Γ₃ = sup_{[1/2,3/2]}|g'''|` for `g = (log x)²`** is `Gamma3Val` (`Gamma3_logSq`). ",

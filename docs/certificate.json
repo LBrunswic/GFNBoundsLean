@@ -1,14 +1,14 @@
 {
   "schema": 1,
-  "source_date": "2026-09-14T22:55:55+01:00",
-  "commit": "55d38ab96bec334e257865c50912a4f7cb1cab79",
-  "commit_short": "55d38ab",
+  "source_date": "2026-09-15T09:57:56+01:00",
+  "commit": "5a70736cb7ec07370afae5d5e357ec69bacea791",
+  "commit_short": "5a70736",
   "branch": "main",
   "dirty": true,
   "dirty_files": [
-    "GFNBounds.lean",
     "GFNBounds/Audit.lean",
-    "GFNBounds/Core/UniversalityBody.lean",
+    "GFNBounds/Balance/DiscreteGlobal.lean",
+    "GFNBounds/Core/SigmaMixing.lean",
     "docs/COVERAGE.md",
     "docs/REPO-INDEX.md",
     "docs/REPO-MAP.md",
@@ -44,24 +44,20 @@
   "strict_library": "GFNBounds",
   "scaffold_library": "GFNBoundsScaffold",
   "scaffold_modules": [
-    "scaffold/GFNBoundsScaffold.lean",
-    "scaffold/GFNBoundsScaffold/Balance/ClosuresA.lean",
-    "scaffold/GFNBoundsScaffold/Balance/RemarksA.lean",
-    "scaffold/GFNBoundsScaffold/Core/SigmaMixingAssembled.lean",
-    "scaffold/GFNBoundsScaffold/Silva/Remarks.lean"
+    "scaffold/GFNBoundsScaffold.lean"
   ],
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 3663,
+    "declarations": 3694,
     "by_namespace": {
       "GFNBounds.Doubling": 1383,
-      "GFNBounds.Balance": 998,
+      "GFNBounds.Balance": 999,
       "GFNBounds.Graph": 803,
-      "GFNBounds.Core": 428,
+      "GFNBounds.Core": 458,
       "GFNBounds.Silva": 51
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "f782f169105b75a7b0050cfd341f845272e091d12fb7a3a34b9e92c0538fcba1"
+    "sha256": "fb579c385a962efcf8a9566774524c0fdd329865d0006407a98973ba202b1b92"
   }
 }

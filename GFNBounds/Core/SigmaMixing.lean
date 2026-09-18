@@ -608,9 +608,11 @@ theorem sigma_mixing_witness :
   have hP : densityActionL2 (Kernel.const Bool boolUniform) boolUniform Family.bind_const_kernel
       = meanProj boolUniform 2 := Family.densityActionCLM_const_kernel
   have hν : boolUniform Set.univ ≠ 0 := by rw [measure_univ]; exact one_ne_zero
+  have h1 := hlem.1
+  rw [Mixing.beta_zero] at h1
   refine ⟨Family.bind_const_kernel, hnd, hsum, hlem.1, ?_⟩
-  rw [hP, Mixing.B_of_idem (meanProj_idem hν), ← Mixing.beta_zero, ← hP]
-  exact hlem.1
+  rw [hP, Mixing.B_of_idem (meanProj_idem hν)]
+  exact h1
 
 end Witness
 

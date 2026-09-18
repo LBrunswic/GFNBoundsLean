@@ -123,4 +123,5 @@ import GFNBounds.Core.UniversalityBody
 import GFNBounds.Balance.RemarksA
 import GFNBounds.Silva.Remarks
 import GFNBounds.Graph.MorozovFM
+import GFNBounds.Graph.UniversalityClosing
 import GFNBounds.Audit

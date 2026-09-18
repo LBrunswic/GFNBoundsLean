@@ -78,6 +78,7 @@ import GFNBounds.Graph.MorozovDB
 import GFNBounds.Core.UniversalityBody
 import GFNBounds.Balance.RemarksA
 import GFNBounds.Silva.Remarks
+import GFNBounds.Graph.MorozovFM
 
 /-!
 # Axiom audit
@@ -745,6 +746,21 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.Remarks.two_constants_flip_half
 #print axioms GFNBounds.Doubling.Remarks.bhat_le_mixing_sum_check
 #print axioms GFNBounds.Doubling.Remarks.diffusion_series_converges_check
+#print axioms GFNBounds.Doubling.Remarks.paths
+#print axioms GFNBounds.Doubling.Remarks.trajMass
+#print axioms GFNBounds.Doubling.Remarks.condExp
+#print axioms GFNBounds.Doubling.Remarks.paths_eq_map
+#print axioms GFNBounds.Doubling.Remarks.condExp_eq_sum_cons
+#print axioms GFNBounds.Doubling.Remarks.trajMass_cons_cons
+#print axioms GFNBounds.Doubling.Remarks.condExp_succ
+#print axioms GFNBounds.Doubling.Remarks.condExp_zero
+#print axioms GFNBounds.Doubling.Remarks.condExp_eq_iterate
+#print axioms GFNBounds.Doubling.Remarks.trajMass_nonneg
+#print axioms GFNBounds.Doubling.Remarks.sum_trajMass
+#print axioms GFNBounds.Doubling.Remarks.condExp_one_eq_funAct
+#print axioms GFNBounds.Doubling.Remarks.unwtL2_funOp_pow_wtL2
+#print axioms GFNBounds.Doubling.Remarks.diffusion_apply_eq_series_condExp
+#print axioms GFNBounds.Doubling.Remarks.flip_condExp_series_check
 
 -- `theo:local_convergence_full` (one-sided C^3, existence) and `theo:training_speed_full` items 1-2 as printed — GFNBounds/Balance/TrainingSpeedAssembled.lean
 #print axioms GFNBounds.Balance.taylor_of_C3On
@@ -789,6 +805,14 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Graph.CycleRemarks.kappa_cycle_tendsto_fixed_measure
 #print axioms GFNBounds.Graph.CycleRemarks.cycle_no_stalemate_limits
 #print axioms GFNBounds.Graph.CycleRemarks.betaCyc_eq
+#print axioms GFNBounds.Graph.CycleRemarks.sum_univ_eq_internal_add
+#print axioms GFNBounds.Graph.CycleRemarks.snk_inflow
+#print axioms GFNBounds.Graph.CycleRemarks.internal_flow_eq
+#print axioms GFNBounds.Graph.CycleRemarks.flow_eq_of_snk_eq
+#print axioms GFNBounds.Graph.CycleRemarks.internal_cyc
+#print axioms GFNBounds.Graph.CycleRemarks.cycle_internal_flow
+#print axioms GFNBounds.Graph.CycleRemarks.cycle_flow_values
+#print axioms GFNBounds.Graph.CycleRemarks.cycle_internal_flow_check
 
 -- `def:universality` for an arbitrary family, and `rem:partial_support` — GFNBounds/Core/FamilyUniversality.lean
 #print axioms GFNBounds.Core.Family.realizes_of_le
@@ -935,3 +959,9 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Silva.Remarks.inhabit_cycle_walks
 #print axioms GFNBounds.Silva.Remarks.inhabit_cycle_ratio
 #print axioms GFNBounds.Silva.Remarks.inhabit_geometric
+#print axioms GFNBounds.Graph.local_convergence_sigma_C3On
+#print axioms GFNBounds.Graph.local_convergence_gd_sigma_C3On
+#print axioms GFNBounds.Graph.arEps0FM
+#print axioms GFNBounds.Graph.arEps0FM_pos
+#print axioms GFNBounds.Graph.arSnkInd
+#print axioms GFNBounds.Graph.ar_local_convergence_FM_witness

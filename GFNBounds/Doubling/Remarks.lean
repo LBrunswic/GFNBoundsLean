@@ -82,6 +82,8 @@ Both read against draft commit `3194054`.
 | they need not coincide | last conjunct of `two_constants_flip_three_quarters` |
 | flip `1/2`: both equal `1` | `two_constants_flip_half`; the chain is `Freezing.lean`'s `twoStateK` (`flipK_half_eq_twoStateK`) |
 | wherever the series converges, `(Sθ)(x) = Σ_{n≥0}((P⋆ⁿθ)(x) − λ(θ))` | `diffusion_apply_eq_series` (the series as the limit of its partial sums), with `S = U` from `inverse_sub_eq_of_tendsto` |
+| `(P⋆ⁿθ)(x) = E(θ(Xₙ) | X₀ = x)`, in particular `(P⋆f)(x) = E(f(X₁) | X₀ = x)` | `condExp_eq_iterate`, `condExp_one_eq_funAct` (`E` the finite path law `condExp`: `paths`, `trajMass`; a probability, `sum_trajMass`) |
+| the series in the remark's form, `(Sθ)(x) = Σ_{n≥0}(E(θ(Xₙ) | X₀ = x) − λ(θ))` | `diffusion_apply_eq_series_condExp`; inhabited on the flip chain at `3/4` by `flip_condExp_series_check` |
 
 ## SCOPE (disclosed)
 
@@ -147,12 +149,18 @@ Both read against draft commit `3194054`.
 * **The numerical sentence is not a target** (author's ruling R18): "Numerically they also differ
   on the truncation at which §`sec:doubling_measured` measures both" reports a measurement
   (`exp20`), and nothing here states it.
-* **The trajectory reading is certified as a pointwise series, not as an expectation.** The
-  `n`-th term is `(Core.funAct K)^[n] θ x`, the `n`-fold function action `∑_y Tⁿ(x→y)θ(y)`; the
-  remark's display writes it as `E(θ(Xₙ) | X₀ = x)`, and that identification is **not stated
-  here**. On a finite chain it is a finite path-law identity (routine, as `lem:doubling_descent`
-  closed it), not obstruction 1. "The series" is read as the limit of its partial sums (operator-norm convergence of
-  item (3)'s series, `hconv`), not as an unconditional `HasSum`.
+* **The trajectory reading: `E` is the finite path law.** `E(θ(Xₙ) | X₀ = x)` is `condExp K θ n x
+  = Σ_γ (∏_{i<n} T(γᵢ → γᵢ₊₁)) θ(γₙ)`, the sum over the trajectories `γ : Fin (n+1) → V` with
+  `γ₀ = x` (`paths`, `trajMass`). That product law **is** the definition of the Markov chain with
+  kernel `T` started at `x`, and this is the reading disclosed here: no `Kernel.traj`
+  (Ionescu–Tulcea) measure is built and no measure-theoretic conditional expectation is taken, so
+  obstruction 1 is not touched. On `Core.IsMarkov` kernels the path law is a probability
+  (`sum_trajMass`). `condExp_eq_iterate` identifies it with the `n`-fold function action
+  `(Core.funAct K)^[n] θ x = ∑_y Tⁿ(x→y)θ(y)`, the `n`-th term of `diffusion_apply_eq_series`, and
+  `condExp_one_eq_funAct` is `(P⋆f)(x) = E(f(X₁) | X₀ = x)` pointwise, on `V → ℝ` rather than on
+  `L²(λ)` (the two agree through `wtL2`, `unwtL2_funOp_pow_wtL2`). "The series" is read as the
+  limit of its partial sums (operator-norm convergence of item (3)'s series, `hconv`), not as an
+  unconditional `HasSum`.
 * **The eigenvalue sentence is certified for the function action `P⋆`** — the paper's "transition
   operator" — on `V → ℝ`; on the flip chain `P = P⋆` anyway (`densOp_flipK`, `funOp_flipK`).
 * **`β̂ₙ = 2^{−n}` is stated as `((2 : ℝ)^n)⁻¹`.**
@@ -182,7 +190,9 @@ Both read against draft commit `3194054`.
 * The finite-chain hypotheses: the flip chain meets them (`flipK_isMarkov`, `flipK_isInvariant`,
   `twoStateLam_pos`, `twoStateLam_sum`); `bhat_le_mixing_sum_check` applies `bhat_le_mixing_sum`
   there; `diffusion_series_converges_check` exhibits the operator-norm convergence
-  `diffusion_apply_eq_series` hypothesises; `mixing_flipK` exhibits `Core.Mixing`.
+  `diffusion_apply_eq_series` hypothesises; `mixing_flipK` exhibits `Core.Mixing`;
+  `flip_condExp_series_check` exhibits the path law as a probability and the series in its
+  expectation form on the same chain.
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/
@@ -970,8 +980,9 @@ theorem bhat_le_mixing_sum (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K
 /-- **`rem:doubling_two_constants`, the trajectory reading, as a pointwise series**: on a finite
 chain, wherever `Σ(P⋆ⁿ − Π)` converges in operator norm,
 `(Sθ)(x) = Σ_{n≥0}((P⋆ⁿθ)(x) − λ(θ))`, with `(P⋆ⁿθ)(x) = ∑_y Tⁿ(x→y)θ(y)` the `n`-fold function
-action, which the paper reads as `E(θ(Xₙ) | X₀ = x)` (not identified here). The series is the
-limit of its partial sums. -/
+action. That term is `E(θ(Xₙ) | X₀ = x)` against the finite path law (`condExp_eq_iterate`);
+the series in that form is `diffusion_apply_eq_series_condExp`. The series is the limit of its
+partial sums. -/
 theorem diffusion_apply_eq_series (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K)
     (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1)
     {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V}
@@ -1245,5 +1256,135 @@ theorem diffusion_series_converges_check :
   exact ⟨_, (Summable.of_norm hs).hasSum.tendsto_sum_nat⟩
 
 end Witness
+
+/-! ### The path law behind the trajectory reading
+
+`E(θ(Xₙ) | X₀ = x)` is read against the **finite path law**: a trajectory `(X₀, …, Xₙ)` started at
+`x` carries mass `∏_{i<n} T(Xᵢ → Xᵢ₊₁)`, which is the definition of the Markov chain with
+transition kernel `T` started at `x`. On that reading `condExp_eq_iterate` identifies the `n`-th
+term of `diffusion_apply_eq_series` with `E(θ(Xₙ) | X₀ = x)`, and
+`diffusion_apply_eq_series_condExp` restates the series in the remark's own form. -/
+
+section PathLaw
+
+variable {V : Type*} [Fintype V] [DecidableEq V]
+
+/-- The trajectories `(X₀, …, Xₙ)` of length `n` started at `x`. -/
+def paths (x : V) (n : ℕ) : Finset (Fin (n + 1) → V) :=
+  Finset.univ.filter fun γ => γ 0 = x
+
+/-- The mass `∏_{i<n} T(Xᵢ → Xᵢ₊₁)` of a trajectory. -/
+noncomputable def trajMass (K : V → V → ℝ) {n : ℕ} (γ : Fin (n + 1) → V) : ℝ :=
+  ∏ i : Fin n, K (γ i.castSucc) (γ i.succ)
+
+/-- `E(θ(Xₙ) | X₀ = x)`, against the finite path law. -/
+noncomputable def condExp (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) : ℝ :=
+  ∑ γ ∈ paths x n, trajMass K γ * θ (γ (Fin.last n))
+
+theorem paths_eq_map (x : V) (n : ℕ) :
+    paths x n = Finset.univ.map ⟨Fin.cons x, Fin.cons_right_injective (α := fun _ => V) x⟩ := by
+  ext γ
+  simp only [paths, Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_map,
+    Function.Embedding.coeFn_mk]
+  constructor
+  · intro h
+    exact ⟨Fin.tail γ, by rw [← h, Fin.cons_self_tail]⟩
+  · rintro ⟨ω, rfl⟩
+    exact Fin.cons_zero (α := fun _ => V) x ω
+
+theorem condExp_eq_sum_cons (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) :
+    condExp K θ n x
+      = ∑ ω : Fin n → V, trajMass K (Fin.cons x ω : Fin (n + 1) → V)
+          * θ ((Fin.cons x ω : Fin (n + 1) → V) (Fin.last n)) := by
+  rw [condExp, paths_eq_map, Finset.sum_map]
+  rfl
+
+omit [Fintype V] [DecidableEq V] in
+theorem trajMass_cons_cons (K : V → V → ℝ) {n : ℕ} (x y : V) (ω : Fin n → V) :
+    trajMass K (Fin.cons x (Fin.cons y ω : Fin (n + 1) → V) : Fin (n + 2) → V)
+      = K x y * trajMass K (Fin.cons y ω : Fin (n + 1) → V) := by
+  simp only [trajMass]
+  rw [Fin.prod_univ_succ]
+  simp only [Fin.castSucc_zero, Fin.cons_zero, Fin.cons_succ]
+  rfl
+
+theorem condExp_succ (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) :
+    condExp K θ (n + 1) x = ∑ y, K x y * condExp K θ n y := by
+  rw [condExp_eq_sum_cons, ← (Fin.consEquiv fun _ : Fin (n + 1) => V).sum_comp,
+    Fintype.sum_prod_type]
+  refine Finset.sum_congr rfl fun y _ => ?_
+  rw [condExp_eq_sum_cons, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun ω _ => ?_
+  change trajMass K (Fin.cons x (Fin.cons y ω : Fin (n + 1) → V) : Fin (n + 2) → V)
+      * θ ((Fin.cons x (Fin.cons y ω : Fin (n + 1) → V) : Fin (n + 2) → V) (Fin.last (n + 1))) = _
+  rw [trajMass_cons_cons, ← Fin.succ_last, Fin.cons_succ, mul_assoc]
+
+theorem condExp_zero (K : V → V → ℝ) (θ : V → ℝ) (x : V) : condExp K θ 0 x = θ x := by
+  rw [condExp_eq_sum_cons, Fintype.sum_unique]
+  simp only [trajMass, Finset.univ_eq_empty, Finset.prod_empty, one_mul]
+  rfl
+
+theorem condExp_eq_iterate (K : V → V → ℝ) (θ : V → ℝ) :
+    ∀ n x, condExp K θ n x = (Core.funAct K)^[n] θ x := by
+  intro n
+  induction n with
+  | zero => intro x; rw [condExp_zero]; rfl
+  | succ n ih =>
+    intro x
+    rw [condExp_succ, Function.iterate_succ_apply', Core.funAct_apply]
+    exact Finset.sum_congr rfl fun y _ => by rw [ih]
+
+omit [Fintype V] [DecidableEq V] in
+theorem trajMass_nonneg {K : V → V → ℝ} (hK : ∀ x y, 0 ≤ K x y) {n : ℕ} (γ : Fin (n + 1) → V) :
+    0 ≤ trajMass K γ :=
+  Finset.prod_nonneg fun _ _ => hK _ _
+
+
+theorem sum_trajMass {K : V → V → ℝ} (hK : Core.IsMarkov K) (n : ℕ) (x : V) :
+    ∑ γ ∈ paths x n, trajMass K γ = 1 := by
+  have h := condExp_eq_iterate K (fun _ => (1 : ℝ)) n x
+  -- `Balance.funAct` and `Core.funAct` are the same formula, definitionally
+  have h1 : Core.funAct K (fun _ => (1 : ℝ)) = fun _ => 1 :=
+    funext fun y => Balance.funAct_const hK.row_sum 1 y
+  rw [Function.iterate_fixed h1] at h
+  simpa only [condExp, mul_one] using h
+
+theorem condExp_one_eq_funAct (K : V → V → ℝ) (f : V → ℝ) (x : V) :
+    condExp K f 1 x = Core.funAct K f x := by
+  rw [condExp_eq_iterate]
+  rfl
+
+theorem unwtL2_funOp_pow_wtL2 {K : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x)
+    (θ : V → ℝ) (n : ℕ) (x : V) :
+    Balance.unwtL2 lam ((funOp lam K ^ n) (Balance.wtL2 lam θ)) x = condExp K θ n x := by
+  rw [funOp_pow_wtL2 hlam, Balance.unwtL2_wtL2 hlam, condExp_eq_iterate]
+
+theorem diffusion_apply_eq_series_condExp {K : V → V → ℝ} {lam : V → ℝ}
+    (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K)
+    (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1)
+    {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V}
+    (hconv : Tendsto (partialSum (funOp lam K) (Balance.meanOp lam)) atTop (𝓝 U))
+    (θ : V → ℝ) (x : V) :
+    Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N, (condExp K θ n x - Graph.meanL2 lam θ)) atTop
+      (𝓝 (Balance.unwtL2 lam ((Ring.inverse (1 - funOp lam K + Balance.meanOp lam) - Balance.meanOp lam)
+        (Balance.wtL2 lam θ)) x)) := by
+  simpa only [condExp_eq_iterate] using diffusion_apply_eq_series hK hinv hlam htot hconv θ x
+
+/-- Inhabitation of the path law and of the restated series, on the flip chain at `3/4`. -/
+theorem flip_condExp_series_check :
+    (∀ n x, ∑ γ ∈ paths x n, trajMass (flipK (3 / 4)) γ = 1)
+      ∧ ∀ (θ : Fin 2 → ℝ) (x : Fin 2),
+        Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N,
+            (condExp (flipK (3 / 4)) θ n x - Graph.meanL2 Balance.twoStateLam θ)) atTop
+          (𝓝 (Balance.unwtL2 Balance.twoStateLam
+            ((Ring.inverse (1 - funOp Balance.twoStateLam (flipK (3 / 4))
+                + Balance.meanOp Balance.twoStateLam) - Balance.meanOp Balance.twoStateLam)
+              (Balance.wtL2 Balance.twoStateLam θ)) x)) := by
+  have hK := flipK_isMarkov (q := 3 / 4) (by norm_num) (by norm_num)
+  obtain ⟨U, hU⟩ := diffusion_series_converges_check
+  exact ⟨sum_trajMass hK, fun θ x => diffusion_apply_eq_series_condExp hK (flipK_isInvariant _)
+    Balance.twoStateLam_pos Balance.twoStateLam_sum hU θ x⟩
+
+end PathLaw
 
 end GFNBounds.Doubling.Remarks

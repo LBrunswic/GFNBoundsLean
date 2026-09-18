@@ -1,28 +1,13 @@
 {
   "schema": 1,
-  "source_date": "2026-09-18T11:07:26Z",
-  "commit": "c0659bbb1eabbd698aa6e275a1c4bec1245c3740",
-  "commit_short": "c0659bb",
+  "source_date": "2026-09-18T11:17:34Z",
+  "commit": "915a02a03b5d8511c0c0096b29d9ac8a71f5d675",
+  "commit_short": "915a02a",
   "branch": "main",
   "dirty": true,
   "dirty_files": [
-    "GFNBounds.lean",
-    "GFNBounds/Audit.lean",
-    "GFNBounds/Balance/GradientFormulas.lean",
-    "docs/COVERAGE.md",
-    "docs/REPO-INDEX.md",
     "docs/REPO-MAP.md",
-    "docs/lean-facts.json",
-    "docs/repo-map.json",
-    "kb/INDEX.md",
-    "paper-map.json",
-    "GFNBounds/Balance/TBGradient.lean",
-    "GFNBounds/Core/Sampling.lean",
-    "GFNBounds/Doubling/ExpansionTrapezoid.lean",
-    "GFNBounds/Doubling/WeightChain.lean",
-    "GFNBounds/Graph/Sampling.lean",
-    "kb/entries/0038-an-absorbing-sampler-on-a-finite-space-needs-no-.md",
-    "kb/entries/0039-a-big-operator-swallows-everything-to-its-right-.md"
+    "docs/repo-map.json"
   ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {

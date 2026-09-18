@@ -4138,6 +4138,9 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 367 lines; 11 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
+Certifies: ✅ `theo:local_convergence_full` (bucket A), ✅ `theo:local_convergence` (bucket A)
+
+
 In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`
 
 
@@ -5111,7 +5114,7 @@ In scope: `variable {α : Type*} [MeasurableSpace α] {ν : Measure α} [IsFinit
 *strict library; 621 lines; 25 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:IL_CV_bound` (bucket B), 🟡 `theo:IL_CV_bound_body` (bucket B)
+Certifies: ✅ `theo:IL_CV_bound` (bucket B), ✅ `theo:IL_CV_bound_body` (bucket B)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α]`
@@ -5150,6 +5153,9 @@ In scope: `variable {α : Type*} [MeasurableSpace α]`
 **The KL-weak-FM loss, closed: Pinsker, Hölder at every `q`, the family `Θ`, and the paper's `+∞`**  
 
 *strict library; 1048 lines; 41 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `theo:IL_CV_bound` (bucket B), ✅ `theo:IL_CV_bound_body` (bucket B)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α]`, `variable {ν νT : Measure α} {k e : α → ℝ}`, `variable {ν νT : Measure α} {k e : α → ℝ}`, `variable {ν νT : Measure α}`, `variable {ν νT : Measure α}`, `variable {ν νT : Measure α}`, `variable {V : Type*} [Fintype V] [DecidableEq V] [MeasurableSpace V] [MeasurableSingletonClass V]`
@@ -5343,7 +5349,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi
 *strict library; 576 lines; 45 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:negative_control` (bucket B)
+Certifies: ✅ `theo:negative_control` (bucket B), ✅ `theo:RL_CV_bound_full` (bucket B), ✅ `theo:RL_CV_bound` (bucket B)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable [MeasurableSpace V] [MeasurableSingletonClass V]`
@@ -5402,6 +5408,9 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable [Measura
 **The stable-loss bound completed: `q = ∞`, Step 0, the two external inputs, and items (2)–(3)**  
 
 *strict library; 694 lines; 36 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `theo:RL_CV_bound_full` (bucket B), ✅ `theo:RL_CV_bound` (bucket B)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α]`, `variable {ν νT : Measure α} {e k : α → ℝ}`, `variable {ν νT : Measure α} {θ : ProbabilityTheory.Kernel α α × (α → ℝ)} {f_init k : α → ℝ}`, `variable {V : Type*} [Fintype V] [DecidableEq V] [MeasurableSpace V] [MeasurableSingletonClass V]`, `variable {ν νT : Measure α}`, `variable {ν νT : Measure α} {θ : ProbabilityTheory.Kernel α α × (α → ℝ)} {f_init k : α → ℝ}`
@@ -5562,7 +5571,7 @@ In scope: `variable {α : Type*} [MeasurableSpace α]`, `variable {ν : Measure 
 *strict library; 474 lines; 22 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `theo:RL_CV_bound_full` (bucket B), 🟡 `theo:RL_CV_bound` (bucket B)
+Certifies: ✅ `theo:RL_CV_bound_full` (bucket B), ✅ `theo:IL_CV_bound` (bucket B), ✅ `theo:RL_CV_bound` (bucket B), ✅ `theo:IL_CV_bound_body` (bucket B)
 
 
 In scope: `variable {α : Type*} [MeasurableSpace α]`, `variable {ν : Measure α} {e k : α → ℝ}`
@@ -8913,6 +8922,9 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : Mar
 *strict library; 707 lines; 44 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
+Certifies: ✅ `rem:partial_support` (bucket A)
+
+
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V}`, `variable {R : V → ℝ}`, `variable [MeasurableSpace V] [MeasurableSingletonClass V]`
 
 
@@ -9313,6 +9325,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X : Type*
 **`rem:path_space` on `𝒞_N`: `sup_{p_F} M' = +∞` over full-support Markov forward policies**  
 
 *strict library; 468 lines; 34 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: 🟡 `rem:path_space` (bucket B)
 
 
 In scope: `variable {M : ℕ}`

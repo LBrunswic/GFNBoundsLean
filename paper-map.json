@@ -1424,7 +1424,8 @@
       "block_sha256": "43eeab852812f3f1227acbf36c15e842327d30712fb7117b8191ddccfdcf12e0",
       "lean_files": [
         "GFNBounds/Core/ILBound.lean",
-        "GFNBounds/Core/ILBoundFull.lean"
+        "GFNBounds/Core/ILBoundFull.lean",
+        "GFNBounds/Core/StableBound.lean"
       ],
       "decls": [
         "GFNBounds.Core.klD",
@@ -3246,7 +3247,8 @@
       "block_sha256": "c9eb2a0f1cc20cdddbecc65c1397a74b3011c37b4d18bed7053dda5aef5a85ce",
       "lean_files": [
         "GFNBounds/Core/ILBound.lean",
-        "GFNBounds/Core/ILBoundFull.lean"
+        "GFNBounds/Core/ILBoundFull.lean",
+        "GFNBounds/Core/StableBound.lean"
       ],
       "decls": [
         "GFNBounds.Core.klD",

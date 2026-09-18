@@ -4,8 +4,26 @@
   "commit": "c0659bbb1eabbd698aa6e275a1c4bec1245c3740",
   "commit_short": "c0659bb",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "GFNBounds.lean",
+    "GFNBounds/Audit.lean",
+    "GFNBounds/Balance/GradientFormulas.lean",
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json",
+    "kb/INDEX.md",
+    "paper-map.json",
+    "GFNBounds/Balance/TBGradient.lean",
+    "GFNBounds/Core/Sampling.lean",
+    "GFNBounds/Doubling/ExpansionTrapezoid.lean",
+    "GFNBounds/Doubling/WeightChain.lean",
+    "GFNBounds/Graph/Sampling.lean",
+    "kb/entries/0038-an-absorbing-sampler-on-a-finite-space-needs-no-.md",
+    "kb/entries/0039-a-big-operator-swallows-everything-to-its-right-.md"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -38,15 +56,15 @@
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 4052,
+    "declarations": 4245,
     "by_namespace": {
-      "GFNBounds.Doubling": 1399,
-      "GFNBounds.Balance": 1147,
-      "GFNBounds.Graph": 857,
-      "GFNBounds.Core": 458,
+      "GFNBounds.Doubling": 1442,
+      "GFNBounds.Balance": 1214,
+      "GFNBounds.Graph": 867,
+      "GFNBounds.Core": 531,
       "GFNBounds.Silva": 191
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "9a28f8750a72acbe3426c2fbdaaa5e5d4ef0bef3b918046da946135b7670992e"
+    "sha256": "ca228453ae188cf88b6b7d6f3b72f50e79f914fc793070210b514929c2706705"
   }
 }

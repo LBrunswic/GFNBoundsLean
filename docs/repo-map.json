@@ -132,10 +132,15 @@
     "GFNBounds.Silva.Remarks",
     "GFNBounds.Graph.MorozovFM",
     "GFNBounds.Graph.UniversalityClosing",
+    "GFNBounds.Core.Sampling",
+    "GFNBounds.Graph.Sampling",
+    "GFNBounds.Doubling.ExpansionTrapezoid",
+    "GFNBounds.Doubling.WeightChain",
+    "GFNBounds.Balance.TBGradient",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 127,
+   "lines": 132,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -228,10 +233,15 @@
     "GFNBounds.Balance.RemarksA",
     "GFNBounds.Silva.Remarks",
     "GFNBounds.Graph.MorozovFM",
-    "GFNBounds.Graph.UniversalityClosing"
+    "GFNBounds.Graph.UniversalityClosing",
+    "GFNBounds.Core.Sampling",
+    "GFNBounds.Graph.Sampling",
+    "GFNBounds.Doubling.ExpansionTrapezoid",
+    "GFNBounds.Doubling.WeightChain",
+    "GFNBounds.Balance.TBGradient"
    ],
    "variables": [],
-   "lines": 988,
+   "lines": 1025,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -10191,6 +10201,590 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Balance/TBGradient.lean",
+   "title": "The trajectory-balance gradient, on a finite state space",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.GradientFormulas",
+    "GFNBounds.Balance.C3Wrappers"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable (pb : V → V → ℝ)",
+    "variable {ℓ : ℕ}",
+    "variable {pb}",
+    "variable (pb) in",
+    "variable (pb) in"
+   ],
+   "lines": 688,
+   "decls": [
+    {
+     "name": "marg",
+     "full": "GFNBounds.Balance.TBGradient.marg",
+     "kind": "def",
+     "line": 133,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def marg (μ : EdgeSet pb → ℝ) (s : V) : ℝ",
+     "doc": "The first marginal `F(s) = ∑_{s' : (s,s') ∈ E} μ(s,s')` of an edge flow `μ` on `E`."
+    },
+    {
+     "name": "measAct",
+     "full": "GFNBounds.Balance.TBGradient.measAct",
+     "kind": "def",
+     "line": 137,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def measAct (A : EdgeSet pb → EdgeSet pb → ℝ) (m : EdgeSet pb → ℝ) (e : EdgeSet pb) : ℝ",
+     "doc": "The action of a kernel `A` on measures on `E`: `(mA)(e) = ∑_{e'} m(e') A(e' → e)`."
+    },
+    {
+     "name": "push",
+     "full": "GFNBounds.Balance.TBGradient.push",
+     "kind": "def",
+     "line": 141,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def push (μ : EdgeSet pb → ℝ) : EdgeSet pb → ℝ",
+     "doc": "`μK₂` on `E`."
+    },
+    {
+     "name": "ratio",
+     "full": "GFNBounds.Balance.TBGradient.ratio",
+     "kind": "def",
+     "line": 144,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ratio (μ : EdgeSet pb → ℝ) (e : EdgeSet pb) : ℝ",
+     "doc": "`r̂(e) := (μK₂)(e)/μ(e)`."
+    },
+    {
+     "name": "fwd",
+     "full": "GFNBounds.Balance.TBGradient.fwd",
+     "kind": "def",
+     "line": 147,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def fwd (μ : EdgeSet pb → ℝ) (s s' : V) : ℝ",
+     "doc": "`π_→^μ(s → s') := μ(s,s')/F(s)` on `E`, and `0` off `E`."
+    },
+    {
+     "name": "ratioAt",
+     "full": "GFNBounds.Balance.TBGradient.ratioAt",
+     "kind": "def",
+     "line": 151,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ratioAt (μ : EdgeSet pb → ℝ) (s s' : V) : ℝ",
+     "doc": "`r̂` read at a pair of states: `r̂(s,s')` on `E`, and the junk value `1` off `E`."
+    },
+    {
+     "name": "AlongE",
+     "full": "GFNBounds.Balance.TBGradient.AlongE",
+     "kind": "def",
+     "line": 158,
+     "attrs": "",
+     "private": false,
+     "statement": "def AlongE (τ : Fin (ℓ + 1) → V) : Prop",
+     "doc": "A trajectory `τ = (x_0, …, x_ℓ)` runs along `E`: every edge `e_k = (x_{k−1}, x_k)` is in `E`."
+    },
+    {
+     "name": "rho",
+     "full": "GFNBounds.Balance.TBGradient.rho",
+     "kind": "def",
+     "line": 161,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def rho (μ : EdgeSet pb → ℝ) (τ : Fin (ℓ + 1) → V) : ℝ",
+     "doc": "`ρ(τ) := ∏_{k=1}^{ℓ} r̂(e_k)`."
+    },
+    {
+     "name": "loss",
+     "full": "GFNBounds.Balance.TBGradient.loss",
+     "kind": "def",
+     "line": 166,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def loss (nu : (Fin (ℓ + 1) → V) → ℝ) (g : ℝ → ℝ) (μ : EdgeSet pb → ℝ) : ℝ",
+     "doc": "**The TB loss with frozen backward policy**, `𝓛_{TB,g,ν̂}(μ) = ∫ g(ρ(τ)) dν̂(τ)`, with `ν̂` a finite measure on `𝒮^{ℓ+1}` given by its weights."
+    },
+    {
+     "name": "edgeMarg",
+     "full": "GFNBounds.Balance.TBGradient.edgeMarg",
+     "kind": "def",
+     "line": 170,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def edgeMarg (nu : (Fin (ℓ + 1) → V) → ℝ) (k : Fin ℓ) (e : EdgeSet pb) : ℝ",
+     "doc": "The edge marginal `ν̂_k(e)`: the law of `e_k` under `ν̂`."
+    },
+    {
+     "name": "weight",
+     "full": "GFNBounds.Balance.TBGradient.weight",
+     "kind": "def",
+     "line": 174,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def weight (nu : (Fin (ℓ + 1) → V) → ℝ) (g : ℝ → ℝ) (μ : EdgeSet pb → ℝ) (k : Fin ℓ) (e : EdgeSet pb) : ℝ",
+     "doc": "`a_k(e) := ∑_{τ : e_k = e} ν̂(τ) g'(ρ(τ)) ρ(τ)` (the paper's proof)."
+    },
+    {
+     "name": "condExp",
+     "full": "GFNBounds.Balance.TBGradient.condExp",
+     "kind": "def",
+     "line": 179,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def condExp (nu : (Fin (ℓ + 1) → V) → ℝ) (g : ℝ → ℝ) (μ : EdgeSet pb → ℝ) (k : Fin ℓ) (e : EdgeSet pb) : ℝ",
+     "doc": "`𝔼_{τ∼ν̂}(g'(ρ)ρ ∣ e_k = e) = a_k(e)/ν̂_k(e)`, read where `ν̂_k(e) > 0`."
+    },
+    {
+     "name": "psi",
+     "full": "GFNBounds.Balance.TBGradient.psi",
+     "kind": "def",
+     "line": 185,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def psi (nu : (Fin (ℓ + 1) → V) → ℝ) (g : ℝ → ℝ) (μ : EdgeSet pb → ℝ) (k : Fin ℓ) (e : EdgeSet pb) : ℝ",
+     "doc": "**`ψ_k`, as printed**: `(1/r̂) 𝔼(g'(ρ)ρ ∣ e_k) dν̂_k/dμ` where `ν̂_k > 0`, and `0` where `ν̂_k = 0`."
+    },
+    {
+     "name": "ip",
+     "full": "GFNBounds.Balance.TBGradient.ip",
+     "kind": "def",
+     "line": 192,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ip (w m d : EdgeSet pb → ℝ) : ℝ",
+     "doc": "The inner product `⟨m ∣ δ⟩_{λ₂} = ∑_{e ∈ E} m(e) δ(e)/λ₂(e)` on measures on `E`."
+    },
+    {
+     "name": "grad",
+     "full": "GFNBounds.Balance.TBGradient.grad",
+     "kind": "def",
+     "line": 197,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def grad (lam : V → ℝ) (nu : (Fin (ℓ + 1) → V) → ℝ) (g : ℝ → ℝ) (μ : EdgeSet pb → ℝ) (e : EdgeSet pb) : ℝ",
+     "doc": "**The right-hand side of `eq:tb_gradient`**: `∑_{k=1}^{ℓ} (K₂^{λ₂} − r̂)[ψ_k λ₂]`, with `K₂^{λ₂}` the `λ₂`-reversal of `K₂` on `E` (`Core.reversal`) acting on measures."
+    },
+    {
+     "name": "K2_apply",
+     "full": "GFNBounds.Balance.TBGradient.K2_apply",
+     "kind": "theorem",
+     "line": 209,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem K2_apply (e e' : EdgeSet pb) : edgeKernelE pb e e' = if e'.1.2 = e.1.1 then pb e.1.1 e'.1.1 else 0",
+     "doc": "`K₂(e → e') = [e'.2 = e.1] π_←(e.1 → e'.1)`."
+    },
+    {
+     "name": "push_apply",
+     "full": "GFNBounds.Balance.TBGradient.push_apply",
+     "kind": "theorem",
+     "line": 213,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem push_apply (μ : EdgeSet pb → ℝ) (e : EdgeSet pb) : push pb μ e = pb e.1.2 e.1.1 * marg pb μ e.1.2",
+     "doc": "**`eq:muK2_density` on `E`**: `(μK₂)(s,s') = π_←(s' → s) F(s')`."
+    },
+    {
+     "name": "push_add_smul",
+     "full": "GFNBounds.Balance.TBGradient.push_add_smul",
+     "kind": "theorem",
+     "line": 222,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem push_add_smul (μ d : EdgeSet pb → ℝ) (t : ℝ) (e : EdgeSet pb) : push pb (μ + t • d) e = push pb μ e + t * push pb d e",
+     "doc": "`μ ↦ μK₂` is linear along a line."
+    },
+    {
+     "name": "marg_pos",
+     "full": "GFNBounds.Balance.TBGradient.marg_pos",
+     "kind": "theorem",
+     "line": 230,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem marg_pos {lam : V → ℝ} (hinv : Invariant pb lam) (hlam : ∀ x, 0 < lam x) {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) (s : V) : 0 < marg pb μ s",
+     "doc": "**`prop:tb_gradient`, `F > 0` on `𝒮̂`**: every state has an outgoing edge in `E`, because `λ(s) > 0` is `∑_z λ(z) π_←(z → s)`."
+    },
+    {
+     "name": "lam2_pos",
+     "full": "GFNBounds.Balance.TBGradient.lam2_pos",
+     "kind": "theorem",
+     "line": 250,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lam2_pos {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (e : EdgeSet pb) : 0 < edgeMeasureE pb lam e",
+     "doc": "**`prop:tb_gradient`, \"on which `λ₂` is positive\"**: `λ₂ > 0` on `E` when `λ > 0`; `C3Wrappers.edgeMeasureE_pos`."
+    },
+    {
+     "name": "push_pos",
+     "full": "GFNBounds.Balance.TBGradient.push_pos",
+     "kind": "theorem",
+     "line": 255,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem push_pos {μ : EdgeSet pb → ℝ} (hF : ∀ s, 0 < marg pb μ s) (e : EdgeSet pb) : 0 < push pb μ e",
+     "doc": "`(μK₂) > 0` on `E` when `F > 0`."
+    },
+    {
+     "name": "ratio_pos",
+     "full": "GFNBounds.Balance.TBGradient.ratio_pos",
+     "kind": "theorem",
+     "line": 260,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_pos {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) (hF : ∀ s, 0 < marg pb μ s) (e : EdgeSet pb) : 0 < ratio pb μ e",
+     "doc": "**`prop:tb_gradient`, `r̂` takes its values in `(0,+∞)`** on `E`."
+    },
+    {
+     "name": "ratioAt_of_along",
+     "full": "GFNBounds.Balance.TBGradient.ratioAt_of_along",
+     "kind": "theorem",
+     "line": 264,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratioAt_of_along {μ : EdgeSet pb → ℝ} {τ : Fin (ℓ + 1) → V} (hτ : AlongE pb τ) (k : Fin ℓ) : ratioAt pb μ (τ k.castSucc) (τ k.succ) = ratio pb μ ⟨(τ k.castSucc, τ k.succ), hτ k⟩",
+     "doc": ""
+    },
+    {
+     "name": "rho_of_along",
+     "full": "GFNBounds.Balance.TBGradient.rho_of_along",
+     "kind": "theorem",
+     "line": 268,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rho_of_along (μ : EdgeSet pb → ℝ) {τ : Fin (ℓ + 1) → V} (hτ : AlongE pb τ) : rho pb μ τ = ∏ k : Fin ℓ, ratio pb μ ⟨(τ k.castSucc, τ k.succ), hτ k⟩",
+     "doc": ""
+    },
+    {
+     "name": "rho_pos",
+     "full": "GFNBounds.Balance.TBGradient.rho_pos",
+     "kind": "theorem",
+     "line": 273,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rho_pos {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) (hF : ∀ s, 0 < marg pb μ s) {τ : Fin (ℓ + 1) → V} (hτ : AlongE pb τ) : 0 < rho pb μ τ",
+     "doc": ""
+    },
+    {
+     "name": "prod_succ_div_castSucc",
+     "full": "GFNBounds.Balance.TBGradient.prod_succ_div_castSucc",
+     "kind": "theorem",
+     "line": 282,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem prod_succ_div_castSucc : ∀ {n : ℕ} (f : Fin (n + 1) → ℝ), (∀ i, f i ≠ 0) → ∏ k : Fin n, f k.succ / f k.castSucc = f (Fin.last n) / f 0 | 0, f, hf => by simp [div_self (hf 0)] | n + 1, f, hf => by rw [Fin.prod_univ_castSucc] have ih",
+     "doc": "`∏_{k=1}^{n} f(k)/f(k−1) = f(n)/f(0)`."
+    },
+    {
+     "name": "rho_telescope",
+     "full": "GFNBounds.Balance.TBGradient.rho_telescope",
+     "kind": "theorem",
+     "line": 297,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rho_telescope {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) (hF : ∀ s, 0 < marg pb μ s) {τ : Fin (ℓ + 1) → V} (hτ : AlongE pb τ) : rho pb μ τ = marg pb μ (τ (Fin.last ℓ)) * (∏ k : Fin ℓ, pb (τ k.succ) (τ k.castSucc)) / (marg pb μ (τ 0) * ∏ k : Fin ℓ, fwd pb μ (τ k.castSucc) (τ k.succ))",
+     "doc": "**`prop:tb_gradient`, the telescoping identity**: along a trajectory in `E`, `ρ(τ) = F(x_ℓ) ∏ π_←(x_k → x_{k−1}) / (F(x_0) ∏ π_→^μ(x_{k−1} → x_k))`."
+    },
+    {
+     "name": "dir",
+     "full": "GFNBounds.Balance.TBGradient.dir",
+     "kind": "def",
+     "line": 317,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def dir (μ d : EdgeSet pb → ℝ) (e : EdgeSet pb) : ℝ",
+     "doc": "`d log r̂(e)` along `d`: `(dK₂)(e)/(μK₂)(e) − d(e)/μ(e)`."
+    },
+    {
+     "name": "dirAt",
+     "full": "GFNBounds.Balance.TBGradient.dirAt",
+     "kind": "def",
+     "line": 321,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def dirAt (μ d : EdgeSet pb → ℝ) (s s' : V) : ℝ",
+     "doc": "`dir` read at a pair of states, `0` off `E`."
+    },
+    {
+     "name": "hasDerivAt_ratio",
+     "full": "GFNBounds.Balance.TBGradient.hasDerivAt_ratio",
+     "kind": "theorem",
+     "line": 324,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_ratio {μ : EdgeSet pb → ℝ} (d : EdgeSet pb → ℝ) {e : EdgeSet pb} (hμ : 0 < μ e) (hp : 0 < push pb μ e) : HasDerivAt (fun t : ℝ => ratio pb (μ + t • d) e) (ratio pb μ e * dir μ d e) 0",
+     "doc": ""
+    },
+    {
+     "name": "hasDerivAt_rho",
+     "full": "GFNBounds.Balance.TBGradient.hasDerivAt_rho",
+     "kind": "theorem",
+     "line": 340,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_rho {μ : EdgeSet pb → ℝ} (d : EdgeSet pb → ℝ) (hμ : ∀ e, 0 < μ e) (hF : ∀ s, 0 < marg pb μ s) {τ : Fin (ℓ + 1) → V} (hτ : AlongE pb τ) : HasDerivAt (fun t : ℝ => rho pb (μ + t • d) τ) (rho pb μ τ * ∑ k : Fin ℓ, dirAt μ d (τ k.castSucc) (τ k.succ)) 0",
+     "doc": ""
+    },
+    {
+     "name": "hasDerivAt_g",
+     "full": "GFNBounds.Balance.TBGradient.hasDerivAt_g",
+     "kind": "theorem",
+     "line": 360,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_g {g : ℝ → ℝ} (hg : ContDiffOn ℝ 1 g (Set.Ioi 0)) {y : ℝ} (hy : 0 < y) : HasDerivAt g (deriv g y) y",
+     "doc": ""
+    },
+    {
+     "name": "hasDerivAt_loss",
+     "full": "GFNBounds.Balance.TBGradient.hasDerivAt_loss",
+     "kind": "theorem",
+     "line": 365,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_loss {lam : V → ℝ} (hinv : Invariant pb lam) (hlam : ∀ x, 0 < lam x) {nu : (Fin (ℓ + 1) → V) → ℝ} (hnuE : ∀ τ, nu τ ≠ 0 → AlongE pb τ) {g : ℝ → ℝ} (hg : ContDiffOn ℝ 1 g (Set.Ioi 0)) {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) (d : EdgeSet pb → ℝ) : HasDerivAt (fun t : ℝ => loss pb nu g (μ + t • d)) (∑ τ, nu τ * (deriv g (rho pb μ τ) * (rho pb μ τ * ∑ k : Fin ℓ, dirAt μ d (τ k.castSucc) (τ k.succ)))) 0",
+     "doc": "The derivative of `t ↦ 𝓛_{TB}(μ + t d)` at `0`, before regrouping."
+    },
+    {
+     "name": "sum_ite_edge",
+     "full": "GFNBounds.Balance.TBGradient.sum_ite_edge",
+     "kind": "theorem",
+     "line": 386,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_ite_edge (c : ℝ) (f : EdgeSet pb → ℝ) (s s' : V) : ∑ e : EdgeSet pb, (if (s, s') = e.1 then c * f e else 0) = c * (if h : 0 < pb s' s then f ⟨(s, s'), h⟩ else 0)",
+     "doc": "Summing over `E` against the indicator of a pair picks the edge, or nothing off `E`."
+    },
+    {
+     "name": "psi_eq",
+     "full": "GFNBounds.Balance.TBGradient.psi_eq",
+     "kind": "theorem",
+     "line": 406,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem psi_eq {nu : (Fin (ℓ + 1) → V) → ℝ} (hnu : ∀ τ, 0 ≤ nu τ) (g : ℝ → ℝ) {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) (hF : ∀ s, 0 < marg pb μ s) (k : Fin ℓ) (e : EdgeSet pb) : psi pb nu g μ k e = weight pb nu g μ k e / push pb μ e",
+     "doc": "**The step `ψ_k = a_k/(r̂μ) = a_k/(μK₂)`** of the paper's proof, from the printed `ψ_k`."
+    },
+    {
+     "name": "sum_eq_ip_grad",
+     "full": "GFNBounds.Balance.TBGradient.sum_eq_ip_grad",
+     "kind": "theorem",
+     "line": 431,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_eq_ip_grad {lam : V → ℝ} (hinv : Invariant pb lam) (hlam : ∀ x, 0 < lam x) {nu : (Fin (ℓ + 1) → V) → ℝ} (hnu : ∀ τ, 0 ≤ nu τ) (g : ℝ → ℝ) {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) (d : EdgeSet pb → ℝ) : ∑ τ, nu τ * (deriv g (rho pb μ τ) * (rho pb μ τ * ∑ k : Fin ℓ, dirAt μ d (τ k.castSucc) (τ k.succ))) = ip pb (edgeMeasureE pb lam) (grad pb lam nu g μ) d",
+     "doc": "**The regrouping** of the paper's proof: the derivative along `d`, summed over trajectories, is `⟨∑_k (K₂^{λ₂} − r̂)[ψ_k λ₂] ∣ d⟩_{λ₂}`."
+    },
+    {
+     "name": "posOrthant",
+     "full": "GFNBounds.Balance.TBGradient.posOrthant",
+     "kind": "def",
+     "line": 497,
+     "attrs": "",
+     "private": false,
+     "statement": "def posOrthant : Set (EdgeSet pb → ℝ)",
+     "doc": "The open orthant `(0,+∞)^E`."
+    },
+    {
+     "name": "isOpen_posOrthant",
+     "full": "GFNBounds.Balance.TBGradient.isOpen_posOrthant",
+     "kind": "theorem",
+     "line": 501,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isOpen_posOrthant : IsOpen (posOrthant pb)",
+     "doc": ""
+    },
+    {
+     "name": "contDiff_push",
+     "full": "GFNBounds.Balance.TBGradient.contDiff_push",
+     "kind": "theorem",
+     "line": 507,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem contDiff_push (e : EdgeSet pb) : ContDiff ℝ 1 (fun μ : EdgeSet pb → ℝ => push pb μ e)",
+     "doc": ""
+    },
+    {
+     "name": "loss_contDiffOn",
+     "full": "GFNBounds.Balance.TBGradient.loss_contDiffOn",
+     "kind": "theorem",
+     "line": 512,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem loss_contDiffOn {lam : V → ℝ} (hinv : Invariant pb lam) (hlam : ∀ x, 0 < lam x) {nu : (Fin (ℓ + 1) → V) → ℝ} (hnuE : ∀ τ, nu τ ≠ 0 → AlongE pb τ) {g : ℝ → ℝ} (hg : ContDiffOn ℝ 1 g (Set.Ioi 0)) : ContDiffOn ℝ 1 (loss pb nu g) (posOrthant pb)",
+     "doc": "**`prop:tb_gradient`, regularity**: `𝓛_{TB,g,ν̂}` is `C¹` on `(0,+∞)^E`."
+    },
+    {
+     "name": "hasFDerivAt_loss",
+     "full": "GFNBounds.Balance.TBGradient.hasFDerivAt_loss",
+     "kind": "theorem",
+     "line": 537,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasFDerivAt_loss {lam : V → ℝ} (hinv : Invariant pb lam) (hlam : ∀ x, 0 < lam x) {nu : (Fin (ℓ + 1) → V) → ℝ} (hnu : ∀ τ, 0 ≤ nu τ) (hnuE : ∀ τ, nu τ ≠ 0 → AlongE pb τ) {g : ℝ → ℝ} (hg : ContDiffOn ℝ 1 g (Set.Ioi 0)) {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) : HasFDerivAt (loss pb nu g) (fderiv ℝ (loss pb nu g) μ) μ ∧ ∀ d, fderiv ℝ (loss pb nu g) μ d = ip pb (edgeMeasureE pb lam) (grad pb lam nu g μ) d",
+     "doc": "**`prop:tb_gradient`, `eq:tb_gradient`**: at every `μ ∈ (0,+∞)^E`, `𝓛_{TB,g,ν̂}` is Fréchet differentiable, and its derivative is `δ ↦ ⟨∑_k (K₂^{λ₂} − r̂)[ψ_k λ₂] ∣ δ⟩_{λ₂}`: the right-hand side of `eq:tb_gradient` is the gradient in `⟨·∣·⟩_{λ₂}`."
+    },
+    {
+     "name": "ip_single",
+     "full": "GFNBounds.Balance.TBGradient.ip_single",
+     "kind": "theorem",
+     "line": 555,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ip_single (w m : EdgeSet pb → ℝ) (e : EdgeSet pb) : ip pb w m (Pi.single e 1) = m e / w e",
+     "doc": "`⟨m ∣ 𝟙_e⟩_w = m(e)/w(e)`."
+    },
+    {
+     "name": "grad_unique",
+     "full": "GFNBounds.Balance.TBGradient.grad_unique",
+     "kind": "theorem",
+     "line": 564,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem grad_unique {lam : V → ℝ} (hinv : Invariant pb lam) (hlam : ∀ x, 0 < lam x) {nu : (Fin (ℓ + 1) → V) → ℝ} (hnu : ∀ τ, 0 ≤ nu τ) (hnuE : ∀ τ, nu τ ≠ 0 → AlongE pb τ) {g : ℝ → ℝ} (hg : ContDiffOn ℝ 1 g (Set.Ioi 0)) {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) {G : EdgeSet pb → ℝ} (hG : ∀ d, fderiv ℝ (loss pb nu g) μ d = ip pb (edgeMeasureE pb lam) G d) : G = grad pb lam nu g μ",
+     "doc": "**`prop:tb_gradient`, the gradient is unique**: `⟨·∣·⟩_{λ₂}` is non-degenerate on `E`, so the right-hand side of `eq:tb_gradient` is the *only* measure representing the derivative."
+    },
+    {
+     "name": "K2_row_sum",
+     "full": "GFNBounds.Balance.TBGradient.K2_row_sum",
+     "kind": "theorem",
+     "line": 582,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem K2_row_sum (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (e : EdgeSet pb) : ∑ e' : EdgeSet pb, edgeKernelE pb e e' = 1",
+     "doc": "**`prop:tb_gradient`, \"`K₂` maps `E` into itself\"**: from an edge, `K₂` puts all its mass on `E`."
+    },
+    {
+     "name": "lam2_invariant",
+     "full": "GFNBounds.Balance.TBGradient.lam2_invariant",
+     "kind": "theorem",
+     "line": 589,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lam2_invariant {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hlam : ∀ x, 0 ≤ lam x) (hinv : Invariant pb lam) (e : EdgeSet pb) : ∑ e' : EdgeSet pb, edgeMeasureE pb lam e' * edgeKernelE pb e' e = edgeMeasureE pb lam e",
+     "doc": "**`λ₂` is `K₂`-invariant on `E`** (`lem:lift_wellposed`, read on `E`): `C3Wrappers.edgeMeasureE_isInvariant`."
+    },
+    {
+     "name": "reversal_row_sum",
+     "full": "GFNBounds.Balance.TBGradient.reversal_row_sum",
+     "kind": "theorem",
+     "line": 595,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem reversal_row_sum {lam : V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hinv : Invariant pb lam) (hlam : ∀ x, 0 < lam x) (e : EdgeSet pb) : ∑ e' : EdgeSet pb, Core.reversal (edgeMeasureE pb lam) (edgeKernelE pb) e e' = 1",
+     "doc": "**`K₂^{λ₂}` is a Markov kernel on `E`**: its rows sum to `1`."
+    },
+    {
+     "name": "ratioAt_of_eq",
+     "full": "GFNBounds.Balance.TBGradient.ratioAt_of_eq",
+     "kind": "theorem",
+     "line": 604,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratioAt_of_eq (μ : EdgeSet pb → ℝ) {a b : V} {e : EdgeSet pb} (h : (a, b) = e.1) : ratioAt pb μ a b = ratio pb μ e",
+     "doc": ""
+    },
+    {
+     "name": "psi_one",
+     "full": "GFNBounds.Balance.TBGradient.psi_one",
+     "kind": "theorem",
+     "line": 612,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem psi_one {lam : V → ℝ} (hinv : Invariant pb lam) (hlam : ∀ x, 0 < lam x) {nu : (Fin (1 + 1) → V) → ℝ} (hnu : ∀ τ, 0 ≤ nu τ) (g : ℝ → ℝ) {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) (e : EdgeSet pb) : psi pb nu g μ 0 e = deriv g (ratio pb μ e) * (edgeMarg pb nu 0 e / μ e)",
+     "doc": "**`prop:tb_gradient`, at `ℓ = 1`: `ψ_1 = g'(r̂) dν̂_1/dμ`** (the proof's last bullet)."
+    },
+    {
+     "name": "grad_one",
+     "full": "GFNBounds.Balance.TBGradient.grad_one",
+     "kind": "theorem",
+     "line": 636,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem grad_one {lam : V → ℝ} (hinv : Invariant pb lam) (hlam : ∀ x, 0 < lam x) {nu : (Fin (1 + 1) → V) → ℝ} (hnu : ∀ τ, 0 ≤ nu τ) (g : ℝ → ℝ) {μ : EdgeSet pb → ℝ} (hμ : ∀ e, 0 < μ e) (e : EdgeSet pb) : grad pb lam nu g μ e = measAct pb (Core.reversal (edgeMeasureE pb lam) (edgeKernelE pb)) (fun e' => deriv g (ratio pb μ e') * (edgeMarg pb nu 0 e' / μ e') * edgeMeasureE pb lam e') e - ratio pb μ e * (deriv g (ratio pb μ e) * (edgeMarg pb nu 0 e / μ e) * edgeMeasureE pb lam e)",
+     "doc": "**`prop:tb_gradient`, last sentence**: at `ℓ = 1` the right-hand side of `eq:tb_gradient` is `(K₂^{λ₂} − r̂)[g'(r̂)(dν̂_1/dμ)λ₂]`, the display of `cor:db_gradient` for the training distribution `ν̂_1`."
+    },
+    {
+     "name": "swapPb",
+     "full": "GFNBounds.Balance.TBGradient.swapPb",
+     "kind": "def",
+     "line": 650,
+     "attrs": "",
+     "private": false,
+     "statement": "def swapPb : Fin 2 → Fin 2 → ℝ",
+     "doc": "The swap on two states, `π_←(i → j) = [i ≠ j]`: `E = {(0,1), (1,0)}` is a proper subset of `𝒮²`, so the witness exercises the edge-set restriction."
+    },
+    {
+     "name": "halfLam",
+     "full": "GFNBounds.Balance.TBGradient.halfLam",
+     "kind": "def",
+     "line": 653,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def halfLam : Fin 2 → ℝ",
+     "doc": "The uniform law, invariant under the swap."
+    },
+    {
+     "name": "pathNu",
+     "full": "GFNBounds.Balance.TBGradient.pathNu",
+     "kind": "def",
+     "line": 656,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def pathNu : (Fin (2 + 1) → Fin 2) → ℝ",
+     "doc": "`ν̂ = δ_{(0,1,0)}`, a single trajectory of length `ℓ = 2` along `E`."
+    },
+    {
+     "name": "swapPb_not_full",
+     "full": "GFNBounds.Balance.TBGradient.swapPb_not_full",
+     "kind": "theorem",
+     "line": 658,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem swapPb_not_full : ¬ 0 < swapPb 0 0",
+     "doc": ""
+    },
+    {
+     "name": "halfLam_invariant",
+     "full": "GFNBounds.Balance.TBGradient.halfLam_invariant",
+     "kind": "theorem",
+     "line": 660,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem halfLam_invariant : Invariant swapPb halfLam",
+     "doc": ""
+    },
+    {
+     "name": "pathNu_along",
+     "full": "GFNBounds.Balance.TBGradient.pathNu_along",
+     "kind": "theorem",
+     "line": 664,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathNu_along : ∀ τ, pathNu τ ≠ 0 → AlongE swapPb τ",
+     "doc": ""
+    },
+    {
+     "name": "witness",
+     "full": "GFNBounds.Balance.TBGradient.witness",
+     "kind": "theorem",
+     "line": 676,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem witness : pathNu ![0, 1, 0] = 1 ∧ ¬ 0 < swapPb 0 0 ∧ HasFDerivAt (loss swapPb pathNu fun x => (x - 1) ^ 2) (fderiv ℝ (loss swapPb pathNu fun x => (x - 1) ^ 2) fun _ => 1) (fun _ => 1) ∧ ∀ d, fderiv ℝ (loss swapPb pathNu fun x => (x - 1) ^ 2) (fun _ => 1) d = ip swapPb (edgeMeasureE swapPb halfLam) (grad swapPb halfLam pathNu (fun x => (x - 1) ^ 2) fun _ => 1) d",
+     "doc": "**`prop:tb_gradient`, inhabitation**: every hypothesis of `hasFDerivAt_loss` holds on the swap chain with a sparse `E`, `ℓ = 2`, `ν̂ = δ_{(0,1,0)}` (charging a trajectory), `g(x) = (x−1)²` and `μ ≡ 1`, and the conclusion is therefore delivered there."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Balance/TrainingSpeed.lean",
    "title": "The training-speed theorem, assembled: two phases, and every constant in `σ_*`, `σ̄`, `N_min`",
    "labels": [],
@@ -15005,6 +15599,495 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Core/Sampling.lean",
+   "title": "The sampling theorem for generative flows, on a finite state space",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "Mathlib"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V] (F : FlowData V)",
+    "variable {F}"
+   ],
+   "lines": 574,
+   "decls": [
+    {
+     "name": "FlowData",
+     "full": "GFNBounds.Core.Sampling.FlowData",
+     "kind": "structure",
+     "line": 131,
+     "attrs": "",
+     "private": false,
+     "statement": "structure FlowData (V : Type*)",
+     "doc": "The data of `theo:sampling_theorem` on a finite state space: initial and terminal distributions `F_init`, `F_term`, the star outflow `F⋆_out` and the star forward policy `P⋆`."
+    },
+    {
+     "name": "IsGenFlow",
+     "full": "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+     "kind": "structure",
+     "line": 143,
+     "attrs": "",
+     "private": false,
+     "statement": "structure IsGenFlow : Prop",
+     "doc": "`(P⋆, F⋆_out)` is a generative flow and `F_init`, `F_term` are unnormalized distributions: all four are non-negative and `P⋆` is stochastic."
+    },
+    {
+     "name": "FlowMatching",
+     "full": "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+     "kind": "def",
+     "line": 151,
+     "attrs": "",
+     "private": false,
+     "statement": "def FlowMatching : Prop",
+     "doc": "The flow-matching constraint `equ:FM_const`, `F_init + F⋆_out P⋆ = F_term + F⋆_out`."
+    },
+    {
+     "name": "cont",
+     "full": "GFNBounds.Core.Sampling.FlowData.cont",
+     "kind": "def",
+     "line": 155,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def cont (x : V) : ℝ",
+     "doc": "The probability of moving on from `x`, `F⋆_out(x)/(F_term(x) + F⋆_out(x))`."
+    },
+    {
+     "name": "stop",
+     "full": "GFNBounds.Core.Sampling.FlowData.stop",
+     "kind": "def",
+     "line": 158,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def stop (x : V) : ℝ",
+     "doc": "The probability of stopping at `x`, the paper's `dF_term/d(F_term + F⋆_out)(x)`."
+    },
+    {
+     "name": "K",
+     "full": "GFNBounds.Core.Sampling.FlowData.K",
+     "kind": "def",
+     "line": 161,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def K : V × Bool → V × Bool → ℝ",
+     "doc": "The sampler's transition matrix on `V × Bool`; `true` flags a stopped sampler."
+    },
+    {
+     "name": "init",
+     "full": "GFNBounds.Core.Sampling.FlowData.init",
+     "kind": "def",
+     "line": 167,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def init : V × Bool → ℝ",
+     "doc": "The sampler's initial law: `s₁ ∼ F_init/F_init(𝒮)`, not stopped."
+    },
+    {
+     "name": "law",
+     "full": "GFNBounds.Core.Sampling.FlowData.law",
+     "kind": "def",
+     "line": 172,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def law : ℕ → V × Bool → ℝ",
+     "doc": "The law of the sampler's chain at time `n`."
+    },
+    {
+     "name": "tailProb",
+     "full": "GFNBounds.Core.Sampling.FlowData.tailProb",
+     "kind": "def",
+     "line": 177,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def tailProb (n : ℕ) : ℝ",
+     "doc": "`P(τ > n)`: the mass not yet stopped at time `n`."
+    },
+    {
+     "name": "expectedTau",
+     "full": "GFNBounds.Core.Sampling.FlowData.expectedTau",
+     "kind": "def",
+     "line": 180,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def expectedTau : ℝ",
+     "doc": "`𝔼(τ) = ∑_{n ≥ 0} P(τ > n)`."
+    },
+    {
+     "name": "law_succ",
+     "full": "GFNBounds.Core.Sampling.FlowData.law_succ",
+     "kind": "theorem",
+     "line": 182,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem law_succ (n : ℕ) (z : V × Bool) : F.law (n + 1) z = ∑ w, F.law n w * F.K w z",
+     "doc": ""
+    },
+    {
+     "name": "law_succ_false",
+     "full": "GFNBounds.Core.Sampling.FlowData.law_succ_false",
+     "kind": "theorem",
+     "line": 184,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem law_succ_false (n : ℕ) (y : V) : F.law (n + 1) (y, false) = ∑ x, F.cont x * F.law n (x, false) * F.P x y",
+     "doc": ""
+    },
+    {
+     "name": "law_succ_true",
+     "full": "GFNBounds.Core.Sampling.FlowData.law_succ_true",
+     "kind": "theorem",
+     "line": 192,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem law_succ_true (n : ℕ) (y : V) : F.law (n + 1) (y, true) = F.law n (y, true) + F.law n (y, false) * F.stop y",
+     "doc": ""
+    },
+    {
+     "name": "law_zero_false",
+     "full": "GFNBounds.Core.Sampling.FlowData.law_zero_false",
+     "kind": "theorem",
+     "line": 198,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem law_zero_false (y : V) : F.law 0 (y, false) = F.finit y / ∑ x, F.finit x",
+     "doc": ""
+    },
+    {
+     "name": "law_zero_true",
+     "full": "GFNBounds.Core.Sampling.FlowData.law_zero_true",
+     "kind": "theorem",
+     "line": 200,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem law_zero_true (y : V) : F.law 0 (y, true) = 0",
+     "doc": ""
+    },
+    {
+     "name": "cont_nonneg",
+     "full": "GFNBounds.Core.Sampling.FlowData.cont_nonneg",
+     "kind": "theorem",
+     "line": 205,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cont_nonneg (hF : F.IsGenFlow) (x : V) : 0 ≤ F.cont x",
+     "doc": ""
+    },
+    {
+     "name": "cont_le_one",
+     "full": "GFNBounds.Core.Sampling.FlowData.cont_le_one",
+     "kind": "theorem",
+     "line": 209,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cont_le_one (hF : F.IsGenFlow) (x : V) : F.cont x ≤ 1",
+     "doc": ""
+    },
+    {
+     "name": "stop_nonneg",
+     "full": "GFNBounds.Core.Sampling.FlowData.stop_nonneg",
+     "kind": "theorem",
+     "line": 216,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stop_nonneg (hF : F.IsGenFlow) (x : V) : 0 ≤ F.stop x",
+     "doc": ""
+    },
+    {
+     "name": "cont_mul",
+     "full": "GFNBounds.Core.Sampling.FlowData.cont_mul",
+     "kind": "theorem",
+     "line": 220,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cont_mul (hF : F.IsGenFlow) (x : V) : F.cont x * (F.fterm x + F.fout x) = F.fout x",
+     "doc": ""
+    },
+    {
+     "name": "stop_mul",
+     "full": "GFNBounds.Core.Sampling.FlowData.stop_mul",
+     "kind": "theorem",
+     "line": 229,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stop_mul (hF : F.IsGenFlow) (x : V) : F.stop x * (F.fterm x + F.fout x) = F.fterm x",
+     "doc": ""
+    },
+    {
+     "name": "K_nonneg",
+     "full": "GFNBounds.Core.Sampling.FlowData.K_nonneg",
+     "kind": "theorem",
+     "line": 235,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem K_nonneg (hF : F.IsGenFlow) (w z : V × Bool) : 0 ≤ F.K w z",
+     "doc": ""
+    },
+    {
+     "name": "K_row",
+     "full": "GFNBounds.Core.Sampling.FlowData.K_row",
+     "kind": "theorem",
+     "line": 248,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem K_row (hF : F.IsGenFlow) (w : V × Bool) : ∑ z, F.K w z = 1",
+     "doc": "The augmented kernel is stochastic: each row sums to `1`."
+    },
+    {
+     "name": "law_nonneg",
+     "full": "GFNBounds.Core.Sampling.FlowData.law_nonneg",
+     "kind": "theorem",
+     "line": 259,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem law_nonneg (hF : F.IsGenFlow) : ∀ (n : ℕ) (z : V × Bool), 0 ≤ F.law n z | 0, (y, false) => div_nonneg (hF.finit_nonneg y) (Finset.sum_nonneg fun x _ => hF.finit_nonneg x) | 0, (_, true) => le_rfl | n + 1, z => by rw [law_succ] exact Finset.sum_nonneg fun w _ => mul_nonneg (law_nonneg hF n w) (K_nonneg hF w z) /",
+     "doc": ""
+    },
+    {
+     "name": "law_sum",
+     "full": "GFNBounds.Core.Sampling.FlowData.law_sum",
+     "kind": "theorem",
+     "line": 267,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem law_sum (hF : F.IsGenFlow) (hZ : 0 < ∑ x, F.finit x) : ∀ n : ℕ, ∑ z, F.law n z = 1 | 0 => by rw [Fintype.sum_prod_type] simp only [Fintype.sum_bool, law_zero_true, law_zero_false, zero_add] rw [← Finset.sum_div, div_self hZ.ne'] | n + 1 => by simp only [law_succ] rw [Finset.sum_comm] simp only [← Finset.mul_sum, K_row hF, mul_one] exact law_sum hF hZ n omit [DecidableEq V] in /",
+     "doc": "The sampler's time-`n` law is a probability distribution on `V × Bool`."
+    },
+    {
+     "name": "mass_eq",
+     "full": "GFNBounds.Core.Sampling.FlowData.mass_eq",
+     "kind": "theorem",
+     "line": 281,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_eq (hF : F.IsGenFlow) (hFM : F.FlowMatching) : ∑ x, F.finit x = ∑ x, F.fterm x",
+     "doc": "**Mass conservation**: flow matching forces `F_init(𝒮) = F_term(𝒮)`."
+    },
+    {
+     "name": "G_recursion",
+     "full": "GFNBounds.Core.Sampling.FlowData.G_recursion",
+     "kind": "theorem",
+     "line": 291,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem G_recursion (hF : F.IsGenFlow) (hFM : F.FlowMatching) (y : V) : F.fterm y + F.fout y = F.finit y + ∑ x, F.cont x * (F.fterm x + F.fout x) * F.P x y",
+     "doc": "Flow matching read through the stopping rule: `G = F_init + ((cont · G) P⋆)` with `G := F_term + F⋆_out`."
+    },
+    {
+     "name": "partial_le",
+     "full": "GFNBounds.Core.Sampling.FlowData.partial_le",
+     "kind": "theorem",
+     "line": 301,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem partial_le (hF : F.IsGenFlow) (hFM : F.FlowMatching) (hZ : 0 < ∑ x, F.finit x) : ∀ (N : ℕ) (y : V), ∑ n ∈ Finset.range N, F.law n (y, false) ≤ (F.fterm y + F.fout y) / ∑ x, F.finit x | 0, y => by simp only [Finset.range_zero, Finset.sum_empty] exact div_nonneg (add_nonneg (hF.fterm_nonneg y) (hF.fout_nonneg y)) hZ.le | N + 1, y => by rw [Finset.sum_range_succ'] simp only [law_succ_false] rw [Finset.sum_comm, law_zero_false] have hstep : ∀ x : V, ∑ n ∈ Finset.range N, F.cont x * F.law n (x, false) * F.P x y ≤ F.cont x * ((F.fterm x + F.fout x) / ∑ z, F.finit z) * F.P x y",
+     "doc": "**The occupation measure is dominated by `(F_term + F⋆_out)/F_init(𝒮)`**: every partial sum of the unstopped laws `P(τ > n, s_{n+1} = y)` is at most `G(y)/Z`."
+    },
+    {
+     "name": "summable_unstopped",
+     "full": "GFNBounds.Core.Sampling.FlowData.summable_unstopped",
+     "kind": "theorem",
+     "line": 331,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem summable_unstopped (hF : F.IsGenFlow) (hFM : F.FlowMatching) (hZ : 0 < ∑ x, F.finit x) (y : V) : Summable fun n => F.law n (y, false)",
+     "doc": ""
+    },
+    {
+     "name": "unstopped_eq_zero_of_G_zero",
+     "full": "GFNBounds.Core.Sampling.FlowData.unstopped_eq_zero_of_G_zero",
+     "kind": "theorem",
+     "line": 337,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unstopped_eq_zero_of_G_zero (hF : F.IsGenFlow) (hFM : F.FlowMatching) (hZ : 0 < ∑ x, F.finit x) {y : V} (hy : F.fterm y + F.fout y = 0) (n : ℕ) : F.law n (y, false) = 0",
+     "doc": "The sampler never stands at a state with `F_term + F⋆_out = 0`: the stopping convention there is immaterial."
+    },
+    {
+     "name": "law_true_eq",
+     "full": "GFNBounds.Core.Sampling.FlowData.law_true_eq",
+     "kind": "theorem",
+     "line": 347,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem law_true_eq (n : ℕ) (y : V) : F.law n (y, true) = F.stop y * ∑ k ∈ Finset.range n, F.law k (y, false)",
+     "doc": "`P(τ ≤ n, s_τ = y) = stop(y) · ∑_{k<n} P(τ > k, s_{k+1} = y)`."
+    },
+    {
+     "name": "summable_tailProb",
+     "full": "GFNBounds.Core.Sampling.FlowData.summable_tailProb",
+     "kind": "theorem",
+     "line": 355,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem summable_tailProb (hF : F.IsGenFlow) (hFM : F.FlowMatching) (hZ : 0 < ∑ x, F.finit x) : Summable F.tailProb",
+     "doc": "**`E(τ)` is finite and bounded** — `∑_n P(τ > n)` converges, with partial sums at most `(F_term(𝒮) + F⋆_out(𝒮))/F_init(𝒮)`."
+    },
+    {
+     "name": "expectedTau_le",
+     "full": "GFNBounds.Core.Sampling.FlowData.expectedTau_le",
+     "kind": "theorem",
+     "line": 359,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem expectedTau_le (hF : F.IsGenFlow) (hFM : F.FlowMatching) (hZ : 0 < ∑ x, F.finit x) : F.expectedTau ≤ (∑ x, F.fout x) / (∑ x, F.finit x) + 1",
+     "doc": ""
+    },
+    {
+     "name": "tailProb_tendsto_zero",
+     "full": "GFNBounds.Core.Sampling.FlowData.tailProb_tendsto_zero",
+     "kind": "theorem",
+     "line": 376,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tailProb_tendsto_zero (hF : F.IsGenFlow) (hFM : F.FlowMatching) (hZ : 0 < ∑ x, F.finit x) : Tendsto F.tailProb atTop (𝓝 0)",
+     "doc": "**Termination**: `P(τ > n) → 0`."
+    },
+    {
+     "name": "occ_recursion",
+     "full": "GFNBounds.Core.Sampling.FlowData.occ_recursion",
+     "kind": "theorem",
+     "line": 382,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem occ_recursion (hF : F.IsGenFlow) (hFM : F.FlowMatching) (hZ : 0 < ∑ x, F.finit x) (y : V) : ∑' n, F.law n (y, false) = F.finit y / (∑ x, F.finit x) + ∑ x, F.cont x * (∑' n, F.law n (x, false)) * F.P x y",
+     "doc": "The total occupation `Q(y) = ∑_n P(τ > n, s_{n+1} = y)` solves the occupation recursion `Q = F_init/Z + (cont · Q) P⋆`."
+    },
+    {
+     "name": "stop_mul_occ",
+     "full": "GFNBounds.Core.Sampling.FlowData.stop_mul_occ",
+     "kind": "theorem",
+     "line": 407,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stop_mul_occ (hF : F.IsGenFlow) (hFM : F.FlowMatching) (hZ : 0 < ∑ x, F.finit x) (y : V) : F.stop y * ∑' n, F.law n (y, false) = F.fterm y / ∑ x, F.finit x",
+     "doc": "**The key step.** The gap `ν := G/Z − Q` between the dominating solution and the occupation is invariant under the sub-stochastic kernel `cont · P⋆`, hence carried where `stop = 0`; so `stop(y) Q(y) = stop(y) G(y)/Z = F_term(y)/Z` at every `y`."
+    },
+    {
+     "name": "law_true_tendsto",
+     "full": "GFNBounds.Core.Sampling.FlowData.law_true_tendsto",
+     "kind": "theorem",
+     "line": 449,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem law_true_tendsto (hF : F.IsGenFlow) (hFM : F.FlowMatching) (hZ : 0 < ∑ x, F.finit x) (y : V) : Tendsto (fun n => F.law n (y, true)) atTop (𝓝 (F.fterm y / ∑ x, F.fterm x))",
+     "doc": "**The law of the stopped state**: `P(τ ≤ n, s_τ = y) → F_term(y)/F_term(𝒮)`."
+    },
+    {
+     "name": "tailProb_succ",
+     "full": "GFNBounds.Core.Sampling.FlowData.tailProb_succ",
+     "kind": "theorem",
+     "line": 459,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tailProb_succ (hF : F.IsGenFlow) (n : ℕ) : F.tailProb (n + 1) = F.tailProb n - ∑ y, F.law n (y, false) * F.stop y",
+     "doc": "The tail recursion: `P(τ > n+1) = P(τ > n) − P(τ = n+1)`, with `P(τ = n+1) = ∑_y P(τ > n, s_{n+1} = y) stop(y)`: the tail probabilities decrease by exactly the mass the stopping rule removes."
+    },
+    {
+     "name": "stopped_sum",
+     "full": "GFNBounds.Core.Sampling.FlowData.stopped_sum",
+     "kind": "theorem",
+     "line": 469,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stopped_sum (hF : F.IsGenFlow) (hZ : 0 < ∑ x, F.finit x) (n : ℕ) : ∑ y, F.law n (y, true) = 1 - F.tailProb n",
+     "doc": "`P(τ ≤ n) = 1 − P(τ > n)`: at every time the sampler has either stopped or not."
+    },
+    {
+     "name": "sampling_theorem",
+     "full": "GFNBounds.Core.Sampling.FlowData.sampling_theorem",
+     "kind": "theorem",
+     "line": 487,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sampling_theorem (hF : F.IsGenFlow) (hterm : F.fterm ≠ 0) (hFM : F.FlowMatching) : (∑ x, F.finit x = ∑ x, F.fterm x) ∧ Summable F.tailProb ∧ F.expectedTau ≤ (∑ x, F.fout x) / (∑ x, F.finit x) + 1 ∧ Tendsto F.tailProb atTop (𝓝 0) ∧ Tendsto (fun n => ∑ y, F.law n (y, true)) atTop (𝓝 1) ∧ ∀ y, Tendsto (fun n => F.law n (y, true)) atTop (𝓝 (F.fterm y / ∑ x, F.fterm x))",
+     "doc": "**`theo:sampling_theorem`, finite state space.** Let `F_init, F_term` be non-negative with `F_term ≠ 0` and `(P⋆, F⋆_out)` a generative flow on a finite `V`."
+    },
+    {
+     "name": "flow",
+     "full": "GFNBounds.Core.Sampling.Parked.flow",
+     "kind": "def",
+     "line": 518,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def flow : FlowData Bool",
+     "doc": "The retraction register's instance, two states: the answer `true` receives and emits unit mass, and the parked state `false` carries outflow `40` on a self-loop that no initial mass ever reaches."
+    },
+    {
+     "name": "isGenFlow",
+     "full": "GFNBounds.Core.Sampling.Parked.isGenFlow",
+     "kind": "theorem",
+     "line": 524,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isGenFlow : flow.IsGenFlow",
+     "doc": ""
+    },
+    {
+     "name": "flowMatching",
+     "full": "GFNBounds.Core.Sampling.Parked.flowMatching",
+     "kind": "theorem",
+     "line": 531,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flowMatching : flow.FlowMatching",
+     "doc": ""
+    },
+    {
+     "name": "fterm_ne",
+     "full": "GFNBounds.Core.Sampling.Parked.fterm_ne",
+     "kind": "theorem",
+     "line": 536,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fterm_ne : flow.fterm ≠ 0",
+     "doc": ""
+    },
+    {
+     "name": "law_false_succ",
+     "full": "GFNBounds.Core.Sampling.Parked.law_false_succ",
+     "kind": "theorem",
+     "line": 539,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem law_false_succ : ∀ (n : ℕ) (y : Bool), flow.law (n + 1) (y, false) = 0 | 0, y => by rw [FlowData.law_succ_false] cases y <;> norm_num [FlowData.law_zero_false, FlowData.cont, flow] | n + 1, y => by rw [FlowData.law_succ_false] simp [law_false_succ n]",
+     "doc": ""
+    },
+    {
+     "name": "tailProb_eq",
+     "full": "GFNBounds.Core.Sampling.Parked.tailProb_eq",
+     "kind": "theorem",
+     "line": 547,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tailProb_eq (n : ℕ) : flow.tailProb n = if n = 0 then 1 else 0",
+     "doc": ""
+    },
+    {
+     "name": "strict",
+     "full": "GFNBounds.Core.Sampling.Parked.strict",
+     "kind": "theorem",
+     "line": 555,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem strict : flow.expectedTau = 1 ∧ (∑ x, flow.fout x) / (∑ x, flow.finit x) + 1 = 41",
+     "doc": "**The bound of `theo:sampling_theorem` can be strict**: here `E(τ) = 1` while `F⋆_out(𝒮)/F_init(𝒮) + 1 = 41`."
+    },
+    {
+     "name": "inhabited",
+     "full": "GFNBounds.Core.Sampling.Parked.inhabited",
+     "kind": "theorem",
+     "line": 564,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabited : (∑ x, flow.finit x = ∑ x, flow.fterm x) ∧ Summable flow.tailProb ∧ flow.expectedTau ≤ (∑ x, flow.fout x) / (∑ x, flow.finit x) + 1 ∧ Tendsto flow.tailProb atTop (𝓝 0) ∧ Tendsto (fun n => ∑ y, flow.law n (y, true)) atTop (𝓝 1) ∧ ∀ y, Tendsto (fun n => flow.law n (y, true)) atTop (𝓝 (flow.fterm y / ∑ x, flow.fterm x))",
+     "doc": "**`theo:sampling_theorem` is inhabited** (kb `0025`): the parked flow meets every hypothesis, so the theorem applies to it, with a strict bound (`strict`)."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -20714,6 +21797,117 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/ExpansionTrapezoid.lean",
+   "title": "The paper's own Step 2: `eq:doubling_em` with the Euler–Maclaurin remainder bound",
+   "labels": [
+    "lem:doubling_expansion",
+    "rem:doubling_parity"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.ExpansionSecond"
+   ],
+   "variables": [
+    "variable {F f f1 f2 f3 f4 : ℝ → ℝ} {t : ℝ}"
+   ],
+   "lines": 360,
+   "decls": [
+    {
+     "name": "le_zero_of_hasDerivAt",
+     "full": "GFNBounds.Doubling.EMTrap.le_zero_of_hasDerivAt",
+     "kind": "theorem",
+     "line": 72,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_zero_of_hasDerivAt {g g' : ℝ → ℝ} (hd : ∀ h ∈ Icc (0 : ℝ) 1, HasDerivAt g (g' h) h) (hneg : ∀ h ∈ Icc (0 : ℝ) 1, g' h ≤ 0) (h0 : g 0 = 0) : ∀ h ∈ Icc (0 : ℝ) 1, g h ≤ 0",
+     "doc": ""
+    },
+    {
+     "name": "zero_le_of_hasDerivAt",
+     "full": "GFNBounds.Doubling.EMTrap.zero_le_of_hasDerivAt",
+     "kind": "theorem",
+     "line": 89,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem zero_le_of_hasDerivAt {g g' : ℝ → ℝ} (hd : ∀ h ∈ Icc (0 : ℝ) 1, HasDerivAt g (g' h) h) (hpos : ∀ h ∈ Icc (0 : ℝ) 1, 0 ≤ g' h) (h0 : g 0 = 0) : ∀ h ∈ Icc (0 : ℝ) 1, 0 ≤ g h",
+     "doc": ""
+    },
+    {
+     "name": "shift_mem",
+     "full": "GFNBounds.Doubling.EMTrap.shift_mem",
+     "kind": "theorem",
+     "line": 106,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem shift_mem {t h : ℝ} (hh : h ∈ Icc (0 : ℝ) 1) : t + h ∈ Icc t (t + 1)",
+     "doc": ""
+    },
+    {
+     "name": "trap_unit_lower",
+     "full": "GFNBounds.Doubling.EMTrap.trap_unit_lower",
+     "kind": "theorem",
+     "line": 117,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem trap_unit_lower (hF : ∀ x ∈ Icc t (t + 1), HasDerivAt F (f x) x) (hf : ∀ x ∈ Icc t (t + 1), HasDerivAt f (f1 x) x) (hf1 : ∀ x ∈ Icc t (t + 1), HasDerivAt f1 (f2 x) x) (h2 : ∀ x ∈ Icc t (t + 1), 0 ≤ f2 x) : 0 ≤ (f t + f (t + 1)) / 2 - (F (t + 1) - F t)",
+     "doc": "**The trapezoid error is non-negative for a convex `f`.** If `F′ = f`, `f′ = f₁`, `f₁′ = f₂` on `[t, t+1]` and `f₂ ≥ 0` there, then `(f(t) + f(t+1))/2 − (F(t+1) − F(t)) ≥ 0`."
+    },
+    {
+     "name": "trap_unit_upper",
+     "full": "GFNBounds.Doubling.EMTrap.trap_unit_upper",
+     "kind": "theorem",
+     "line": 154,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem trap_unit_upper (hF : ∀ x ∈ Icc t (t + 1), HasDerivAt F (f x) x) (hf : ∀ x ∈ Icc t (t + 1), HasDerivAt f (f1 x) x) (hf1 : ∀ x ∈ Icc t (t + 1), HasDerivAt f1 (f2 x) x) (hf2 : ∀ x ∈ Icc t (t + 1), HasDerivAt f2 (f3 x) x) (hf3 : ∀ x ∈ Icc t (t + 1), HasDerivAt f3 (f4 x) x) (h4 : ∀ x ∈ Icc t (t + 1), 0 ≤ f4 x) : (f t + f (t + 1)) / 2 - (F (t + 1) - F t) ≤ (f1 (t + 1) - f1 t) / 12",
+     "doc": "**The trapezoid error is at most the first Euler–Maclaurin correction when `f⁗ ≥ 0`.** If `F′ = f`, `f′ = f₁`, `f₁′ = f₂`, `f₂′ = f₃`, `f₃′ = f₄` on `[t, t+1]` and `f₄ ≥ 0` there, then `(f(t) + f(t+1))/2 − (F(t+1) − F(t)) ≤ (f₁(t+1) − f₁(t))/12`."
+    },
+    {
+     "name": "hasDerivAt_mul_rpow",
+     "full": "GFNBounds.Doubling.EMTrap.hasDerivAt_mul_rpow",
+     "kind": "theorem",
+     "line": 217,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_mul_rpow (k q q' : ℝ) (hq : q - 1 = q') {x : ℝ} (hx : 0 < x) : HasDerivAt (fun y : ℝ => k * y ^ q) (k * q * x ^ q') x",
+     "doc": ""
+    },
+    {
+     "name": "trap_unit_rpow",
+     "full": "GFNBounds.Doubling.EMTrap.trap_unit_rpow",
+     "kind": "theorem",
+     "line": 225,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem trap_unit_rpow {r t : ℝ} (hr : 1 < r) (ht : 0 < t) : 0 ≤ (t ^ (-r) + (t + 1) ^ (-r)) / 2 - (t ^ (1 - r) - (t + 1) ^ (1 - r)) / (r - 1) ∧ (t ^ (-r) + (t + 1) ^ (-r)) / 2 - (t ^ (1 - r) - (t + 1) ^ (1 - r)) / (r - 1) ≤ r / 12 * (t ^ (-r - 1) - (t + 1) ^ (-r - 1))",
+     "doc": "**One unit interval for `t^{−r}`.** For `r > 1` and `t > 0`, the trapezoid error of `x ↦ x^{−r}` on `[t, t+1]` lies in `[0, (r/12)(t^{−r−1} − (t+1)^{−r−1})]`."
+    },
+    {
+     "name": "em_window_bounds",
+     "full": "GFNBounds.Doubling.EMTrap.em_window_bounds",
+     "kind": "theorem",
+     "line": 298,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem em_window_bounds {r : ℝ} (hr : 1 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : 0 ≤ ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r) - ((a : ℝ) ^ (1 - r) - (b : ℝ) ^ (1 - r)) / (r - 1) - ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / 2 ∧ ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r) - ((a : ℝ) ^ (1 - r) - (b : ℝ) ^ (1 - r)) / (r - 1) - ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / 2 ≤ r / 12 * ((a : ℝ) ^ (-r - 1) - (b : ℝ) ^ (-r - 1))",
+     "doc": "**`eq:doubling_em`, the paper's Step 2, with the first-omitted-term bound.** For `r > 1` and integers `1 ≤ a ≤ b`, the remainder `E := Σ_{j=a}^{b−1} j^{−r} − (a^{1−r} − b^{1−r})/(r−1) − (a^{−r} − b^{−r})/2` satisfies `0 ≤ E ≤ (r/12)(a^{−r−1} − b^{−r−1})`."
+    },
+    {
+     "name": "em_window",
+     "full": "GFNBounds.Doubling.EMTrap.em_window",
+     "kind": "theorem",
+     "line": 347,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem em_window {r : ℝ} (hr : 1 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : |∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r) - ((a : ℝ) ^ (1 - r) - (b : ℝ) ^ (1 - r)) / (r - 1) - ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / 2| ≤ r / 12 * ((a : ℝ) ^ (-r - 1) + (b : ℝ) ^ (-r - 1))",
+     "doc": "**`eq:doubling_em` as printed.** For `r > 1` and integers `1 ≤ a ≤ b`, `|E| ≤ (r/12)(a^{−r−1} + b^{−r−1})`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {
@@ -30435,6 +31629,309 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Doubling/WeightChain.lean",
+   "title": "`lem:doubling_weight` on a Markov chain: `E(|Z_ℓ − 1| | Y_0 = m) ≤ c₃/ℓ` as an integral",
+   "labels": [
+    "lem:doubling_weight",
+    "lem:doubling_descent"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.WeightFull"
+   ],
+   "variables": [
+    "variable (D : Decay)",
+    "variable (D : Decay)",
+    "variable {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P] {ℓ m : ℕ}"
+   ],
+   "lines": 479,
+   "decls": [
+    {
+     "name": "descStep",
+     "full": "GFNBounds.Doubling.Decay.descStep",
+     "kind": "def",
+     "line": 99,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def descStep (ℓ y j : ℕ) : ℝ",
+     "doc": "**The transition law of the descent chain at the level `ℓ`** (`lem:doubling_descent`): `P(Y_{n+1} = j | Y_n = y) = w_y(j)/R₀(y)` on `W(y)` when `y ≥ 2ℓ`, and `Y_{n+1} = y` when `y < 2ℓ`."
+    },
+    {
+     "name": "chainProb",
+     "full": "GFNBounds.Doubling.Decay.chainProb",
+     "kind": "def",
+     "line": 104,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def chainProb (ℓ : ℕ) : ℕ → List ℕ → ℝ",
+     "doc": "`chainProb ℓ y [a_1, …, a_n] = ∏_{i<n} descStep ℓ a_i a_{i+1}` with `a_0 = y`: the probability, from `Y_0 = y`, that `Y_1 = a_1, …, Y_n = a_n`."
+    },
+    {
+     "name": "cylProb",
+     "full": "GFNBounds.Doubling.Decay.cylProb",
+     "kind": "def",
+     "line": 110,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def cylProb (ℓ m : ℕ) : List ℕ → ℝ",
+     "doc": "**The finite-dimensional law of the chain from `δ_m`**: `cylProb ℓ m [a_0, …, a_n] = 1[a_0 = m] · ∏_{i<n} descStep ℓ a_i a_{i+1}`."
+    },
+    {
+     "name": "Matches",
+     "full": "GFNBounds.Doubling.Matches",
+     "kind": "def",
+     "line": 117,
+     "attrs": "",
+     "private": false,
+     "statement": "def Matches : (ℕ → ℕ) → List ℕ → Prop",
+     "doc": "`Matches f [a_0, …, a_n]`: the path `f` starts `f 0 = a_0, …, f n = a_n`."
+    },
+    {
+     "name": "matches_iff",
+     "full": "GFNBounds.Doubling.matches_iff",
+     "kind": "theorem",
+     "line": 121,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem matches_iff : ∀ (c : List ℕ) (f : ℕ → ℕ), Matches f c ↔ ∀ i < c.length, f i = c.getD i 0 | [], f => by simp only [Matches, List.length_nil, Nat.not_lt_zero, false_imp_iff, imp_true_iff] | a :: t, f => by rw [Matches, matches_iff t] constructor · rintro ⟨h0, ht⟩ i hi rcases i with _ | i · simpa only [List.getD_cons_zero] using h0 · simp only [List.getD_cons_succ] exact ht i (by simp only [List.length_cons] at hi; omega) · intro h refine ⟨by simpa only [List.getD_cons_zero] using h 0 (by simp), fun i hi => ?_⟩ have",
+     "doc": ""
+    },
+    {
+     "name": "cyl",
+     "full": "GFNBounds.Doubling.cyl",
+     "kind": "def",
+     "line": 137,
+     "attrs": "",
+     "private": false,
+     "statement": "def cyl {Ω : Type*} (Y : ℕ → Ω → ℕ) (c : List ℕ) : Set Ω",
+     "doc": "The cylinder `{Y_0 = a_0, …, Y_n = a_n}`."
+    },
+    {
+     "name": "measurableSet_cyl",
+     "full": "GFNBounds.Doubling.measurableSet_cyl",
+     "kind": "theorem",
+     "line": 139,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem measurableSet_cyl {Ω : Type*} [MeasurableSpace Ω] : ∀ (c : List ℕ) (Y : ℕ → Ω → ℕ), (∀ n, Measurable (Y n)) → MeasurableSet (cyl Y c) | [], _, _ => by simp only [cyl, Matches, Set.setOf_true, MeasurableSet.univ] | a :: t, Y, hY => by have h : cyl Y (a :: t) = Y 0 ⁻¹' {a} ∩ cyl (fun n => Y (n + 1)) t",
+     "doc": ""
+    },
+    {
+     "name": "IsDescentChain",
+     "full": "GFNBounds.Doubling.Decay.IsDescentChain",
+     "kind": "structure",
+     "line": 159,
+     "attrs": "",
+     "private": false,
+     "statement": "structure IsDescentChain {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (ℓ m : ℕ) (Y : ℕ → Ω → ℕ) : Prop",
+     "doc": "**`Y` is the descent chain at the level `ℓ` started at `m`**: each `Y_n` is measurable and the finite-dimensional laws are `cylProb ℓ m`, those of the transition law of `lem:doubling_descent` from `δ_m`."
+    },
+    {
+     "name": "chainZ",
+     "full": "GFNBounds.Doubling.Decay.chainZ",
+     "kind": "def",
+     "line": 165,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def chainZ {Ω : Type*} (ℓ : ℕ) (Y : ℕ → Ω → ℕ) (ω : Ω) : ℝ",
+     "doc": "**`Z_ℓ(ω) = ∏_{n<N_ℓ(ω)} R₀(Y_n(ω))`**, `N_ℓ = exitTime ℓ`."
+    },
+    {
+     "name": "chainProb_of_mem_descPaths",
+     "full": "GFNBounds.Doubling.Decay.chainProb_of_mem_descPaths",
+     "kind": "theorem",
+     "line": 171,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem chainProb_of_mem_descPaths {ℓ : ℕ} : ∀ (y : ℕ) {l : List ℕ}, l ∈ descPaths ℓ y → D.chainProb ℓ y l.tail = D.pathProb l",
+     "doc": "On a stopped trajectory the chain's transition law is `k`: `chainProb` is `pathProb`."
+    },
+    {
+     "name": "cylProb_of_mem_descPaths",
+     "full": "GFNBounds.Doubling.Decay.cylProb_of_mem_descPaths",
+     "kind": "theorem",
+     "line": 194,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cylProb_of_mem_descPaths {ℓ m : ℕ} {l : List ℕ} (hl : l ∈ descPaths ℓ m) : D.cylProb ℓ m l = D.pathProb l",
+     "doc": "**The cylinder of a stopped trajectory has probability `pathProb`.**"
+    },
+    {
+     "name": "exitTime_of_matches",
+     "full": "GFNBounds.Doubling.Decay.exitTime_of_matches",
+     "kind": "theorem",
+     "line": 205,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exitTime_of_matches {ℓ m : ℕ} {l : List ℕ} (hl : l ∈ descPaths ℓ m) {f : ℕ → ℕ} (hf : Matches f l) : exitTime ℓ f = l.length - 1",
+     "doc": "A path matching a stopped trajectory `l` exits at `N = |l| − 1`."
+    },
+    {
+     "name": "prod_R0_of_matches",
+     "full": "GFNBounds.Doubling.Decay.prod_R0_of_matches",
+     "kind": "theorem",
+     "line": 221,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem prod_R0_of_matches {ℓ m : ℕ} {l : List ℕ} (hl : l ∈ descPaths ℓ m) {f : ℕ → ℕ} (hf : Matches f l) : ∏ n ∈ Finset.range (exitTime ℓ f), D.R0 (f n) = D.pathZ l",
+     "doc": "On the cylinder of a stopped trajectory `l`, `Z_ℓ = pathZ l`."
+    },
+    {
+     "name": "matches_descPaths_unique",
+     "full": "GFNBounds.Doubling.Decay.matches_descPaths_unique",
+     "kind": "theorem",
+     "line": 232,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem matches_descPaths_unique {ℓ m : ℕ} {l l' : List ℕ} (hl : l ∈ descPaths ℓ m) (hl' : l' ∈ descPaths ℓ m) {f : ℕ → ℕ} (hf : Matches f l) (hf' : Matches f l') : l = l'",
+     "doc": "**A path determines its stopped trajectory**: two stopped trajectories from `m` matched by the same path are equal."
+    },
+    {
+     "name": "chainZ_of_matches",
+     "full": "GFNBounds.Doubling.Decay.chainZ_of_matches",
+     "kind": "theorem",
+     "line": 254,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem chainZ_of_matches {l : List ℕ} (hl : l ∈ descPaths ℓ m) {ω : Ω} (hω : ω ∈ cyl Y l) : D.chainZ ℓ Y ω = D.pathZ l",
+     "doc": "On the cylinder of a stopped trajectory `l`, `Z_ℓ = pathZ l`."
+    },
+    {
+     "name": "pairwiseDisjoint_cyl",
+     "full": "GFNBounds.Doubling.Decay.pairwiseDisjoint_cyl",
+     "kind": "theorem",
+     "line": 260,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pairwiseDisjoint_cyl : (↑(descPaths ℓ m) : Set (List ℕ)).PairwiseDisjoint fun l => cyl Y l",
+     "doc": "The cylinders of the stopped trajectories are pairwise disjoint."
+    },
+    {
+     "name": "ae_mem_iUnion_cyl",
+     "full": "GFNBounds.Doubling.Decay.ae_mem_iUnion_cyl",
+     "kind": "theorem",
+     "line": 269,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ae_mem_iUnion_cyl (hY : D.IsDescentChain P ℓ m Y) (hℓ : 1 ≤ ℓ) (hm : ℓ ≤ m) : ∀ᵐ ω ∂P, ω ∈ ⋃ l ∈ descPaths ℓ m, cyl Y l",
+     "doc": "**The stopped trajectories exhaust the chain**: their cylinders cover `Ω` up to a `P`-null set."
+    },
+    {
+     "name": "chainDev_ae_eq",
+     "full": "GFNBounds.Doubling.Decay.chainDev_ae_eq",
+     "kind": "theorem",
+     "line": 286,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem chainDev_ae_eq (hY : D.IsDescentChain P ℓ m Y) (hℓ : 1 ≤ ℓ) (hm : ℓ ≤ m) : (fun ω => |D.chainZ ℓ Y ω - 1|) =ᵐ[P] fun ω => ∑ l ∈ descPaths ℓ m, (cyl Y l).indicator (fun _ => |D.pathZ l - 1|) ω",
+     "doc": "`|Z_ℓ − 1|` agrees `P`-a.e."
+    },
+    {
+     "name": "integrable_chainDev",
+     "full": "GFNBounds.Doubling.Decay.integrable_chainDev",
+     "kind": "theorem",
+     "line": 298,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integrable_chainDev (hY : D.IsDescentChain P ℓ m Y) (hℓ : 1 ≤ ℓ) (hm : ℓ ≤ m) : Integrable (fun ω => |D.chainZ ℓ Y ω - 1|) P",
+     "doc": "**`|Z_ℓ − 1|` is integrable** under the chain."
+    },
+    {
+     "name": "integral_chainDev",
+     "full": "GFNBounds.Doubling.Decay.integral_chainDev",
+     "kind": "theorem",
+     "line": 305,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_chainDev (hY : D.IsDescentChain P ℓ m Y) (hℓ : 1 ≤ ℓ) (hm : ℓ ≤ m) : ∫ ω, |D.chainZ ℓ Y ω - 1| ∂P = D.weightDev ℓ m",
+     "doc": "**`E(|Z_ℓ − 1| | Y_0 = m)` over the chain is `weightDev ℓ m`.**"
+    },
+    {
+     "name": "doubling_weight_chain",
+     "full": "GFNBounds.Doubling.Decay.doubling_weight_chain",
+     "kind": "theorem",
+     "line": 320,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem doubling_weight_chain (d : ℕ) (hℓ : D.ell3Paper d ≤ ℓ) (hm : 2 * ℓ ≤ m) (hY : D.IsDescentChain P ℓ m Y) : Integrable (fun ω => |D.chainZ ℓ Y ω - 1|) P ∧ ∫ ω, |D.chainZ ℓ Y ω - 1| ∂P ≤ D.c3Paper / (ℓ : ℝ)",
+     "doc": "**`lem:doubling_weight`** (`eq:doubling_weight`) **on the descent chain**: for every probability space carrying the descent chain `(Y_n)` of `lem:doubling_descent` at the level `ℓ` from `Y_0 = m`, with `c₃ := 8c₅c₄` and `ℓ₃ := max(ℓ₂, ⌈2c₄⌉, ⌈24c₄/γ²⌉, ⌈4c₄c₅⌉)`, every integer `ℓ ≥ ℓ₃` and every integer `m ≥ 2ℓ`, `|Z_ℓ − 1|` is integrable and `E(|Z_ℓ − 1| | Y_0 = m) = ∫ |Z_ℓ − 1| dP ≤ c₃/ℓ`."
+    },
+    {
+     "name": "extPath",
+     "full": "GFNBounds.Doubling.Decay.extPath",
+     "kind": "def",
+     "line": 335,
+     "attrs": "",
+     "private": false,
+     "statement": "def extPath (l : List ℕ) : ℕ → ℕ",
+     "doc": "A stopped trajectory `(Y_0, …, Y_N)` extended by its exit state, as a path `ℕ → ℕ`."
+    },
+    {
+     "name": "extPath_zero",
+     "full": "GFNBounds.Doubling.Decay.extPath_zero",
+     "kind": "theorem",
+     "line": 337,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem extPath_zero (l : List ℕ) : extPath l 0 = l.getD 0 0",
+     "doc": ""
+    },
+    {
+     "name": "extPath_single",
+     "full": "GFNBounds.Doubling.Decay.extPath_single",
+     "kind": "theorem",
+     "line": 340,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem extPath_single (y : ℕ) : extPath [y] = fun _ => y",
+     "doc": ""
+    },
+    {
+     "name": "extPath_cons_succ",
+     "full": "GFNBounds.Doubling.Decay.extPath_cons_succ",
+     "kind": "theorem",
+     "line": 345,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem extPath_cons_succ (y : ℕ) {l : List ℕ} (hl : l ≠ []) : (fun n => extPath (y :: l) (n + 1)) = extPath l",
+     "doc": ""
+    },
+    {
+     "name": "chainProb_of_lt",
+     "full": "GFNBounds.Doubling.Decay.chainProb_of_lt",
+     "kind": "theorem",
+     "line": 355,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem chainProb_of_lt {ℓ y : ℕ} (hy : y < 2 * ℓ) : ∀ t : List ℕ, D.chainProb ℓ y t = if Matches (fun _ => y) t then 1 else 0",
+     "doc": "Below `2ℓ` the chain stays put: `chainProb ℓ y t = 1` if `t` is constantly `y`, else `0`."
+    },
+    {
+     "name": "sum_pathProb_matches",
+     "full": "GFNBounds.Doubling.Decay.sum_pathProb_matches",
+     "kind": "theorem",
+     "line": 373,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_pathProb_matches {ℓ : ℕ} (hℓ : 1 ≤ ℓ) : ∀ (y : ℕ), ℓ ≤ y → ∀ c : List ℕ, ∑ l ∈ descPaths ℓ y, D.pathProb l * (if Matches (extPath l) c then 1 else 0) = D.cylProb ℓ y c",
+     "doc": "**Every finite-dimensional law of the mixture is the chain's.** For the finite law on the stopped trajectories from `y ≥ ℓ`, each extended by its exit state, the probability that the path starts `a_0, …, a_n` is `1[a_0 = y] ∏_{i<n} descStep ℓ a_i a_{i+1}`."
+    },
+    {
+     "name": "exists_descentChain",
+     "full": "GFNBounds.Doubling.Decay.exists_descentChain",
+     "kind": "theorem",
+     "line": 452,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_descentChain {ℓ m : ℕ} (hℓ : 1 ≤ ℓ) (hm : ℓ ≤ m) : ∃ P : Measure (ℕ → ℕ), IsProbabilityMeasure P ∧ D.IsDescentChain P ℓ m (fun n ω => ω n)",
+     "doc": "**The descent chain exists** (so `IsDescentChain` is not vacuous): for every `ℓ ≥ 1` and `m ≥ ℓ`, the mixture `Σ_{l ∈ descPaths ℓ m} pathProb l · δ_{extPath l}` is a probability on the path space `ℕ → ℕ` under which the coordinate process is the descent chain at the level `ℓ` from `m`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Doubling/WeightFull.lean",
    "title": "`lem:doubling_weight` in the paper's form: `E(|Z_ℓ − 1| | Y_0 = m) ≤ c₃/ℓ`",
    "labels": [
@@ -36817,6 +38314,126 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Graph/Sampling.lean",
+   "title": "The sampler of a flow-matching marked-graph flow emits its normalized terminal flow",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Core.Sampling",
+    "GFNBounds.Graph.CycleDivergence"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable {G : MarkedGraph V} {F : V → V → ℝ}"
+   ],
+   "lines": 201,
+   "decls": [
+    {
+     "name": "sum_split",
+     "full": "GFNBounds.Graph.Sampling.sum_split",
+     "kind": "theorem",
+     "line": 72,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_split (G : MarkedGraph V) (f : V → ℝ) : ∑ u, f u = f G.src + f G.snk + ∑ u : G.internal, f u",
+     "doc": "A sum over the vertices splits into the two marks and the internal states."
+    },
+    {
+     "name": "outInt",
+     "full": "GFNBounds.Graph.Sampling.outInt",
+     "kind": "def",
+     "line": 82,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def outInt (G : MarkedGraph V) (F : V → V → ℝ) (v : G.internal) : ℝ",
+     "doc": "The internal outflow of an edgeflow at `v`, `F⋆_out(v) = ∑_{w ∈ 𝒮} F(v → w)`."
+    },
+    {
+     "name": "graphFlow",
+     "full": "GFNBounds.Graph.Sampling.graphFlow",
+     "kind": "def",
+     "line": 89,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def graphFlow (G : MarkedGraph V) (F : V → V → ℝ) : FlowData G.internal",
+     "doc": "**The generative flow of an edgeflow on a marked graph**, on the internal states `𝒮`: `F_init(v) = F(s₀ → v)`, `F_term(v) = F(v → s_f)`, `F⋆_out(v) = ∑_{w ∈ 𝒮} F(v → w)` and `P⋆(v → w) = F(v → w)/F⋆_out(v)` (a Dirac mass at `v` where `F⋆_out(v) = 0`, a state the sampler leaves with probability `0` whatever the row says)."
+    },
+    {
+     "name": "outInt_nonneg",
+     "full": "GFNBounds.Graph.Sampling.outInt_nonneg",
+     "kind": "theorem",
+     "line": 97,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem outInt_nonneg (hnn : ∀ u v, 0 ≤ F u v) (v : G.internal) : 0 ≤ outInt G F v",
+     "doc": ""
+    },
+    {
+     "name": "fout_mul_P",
+     "full": "GFNBounds.Graph.Sampling.fout_mul_P",
+     "kind": "theorem",
+     "line": 100,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fout_mul_P (hnn : ∀ u v, 0 ≤ F u v) (v w : G.internal) : (graphFlow G F).fout v * (graphFlow G F).P v w = F v w",
+     "doc": ""
+    },
+    {
+     "name": "isGenFlow",
+     "full": "GFNBounds.Graph.Sampling.isGenFlow",
+     "kind": "theorem",
+     "line": 111,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isGenFlow (hnn : ∀ u v, 0 ≤ F u v) : (graphFlow G F).IsGenFlow",
+     "doc": ""
+    },
+    {
+     "name": "flowMatching",
+     "full": "GFNBounds.Graph.Sampling.flowMatching",
+     "kind": "theorem",
+     "line": 129,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flowMatching (hnn : ∀ u v, 0 ≤ F u v) (hsupp : ∀ u v, F u v ≠ 0 → G.Edge u v) (hcons : ∀ x ∈ G.internal, edgeInflow F x = edgeOutflow F x) : (graphFlow G F).FlowMatching",
+     "doc": "**Conservation at the internal states is the flow-matching constraint** `equ:FM_const` of the graph's generative flow."
+    },
+    {
+     "name": "sampler_law",
+     "full": "GFNBounds.Graph.Sampling.sampler_law",
+     "kind": "theorem",
+     "line": 146,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sampler_law (hnn : ∀ u v, 0 ≤ F u v) (hsupp : ∀ u v, F u v ≠ 0 → G.Edge u v) (hcons : ∀ x ∈ G.internal, edgeInflow F x = edgeOutflow F x) (hpos : 0 < ∑ y : G.internal, F y G.snk) (x : G.internal) : Tendsto (fun n => (graphFlow G F).law n (x, true)) atTop (𝓝 (F x G.snk / ∑ y : G.internal, F y G.snk))",
+     "doc": "**`theo:sampling_theorem`, on a marked graph, with no hypothesis on `s₀ → s_f`**: the sampler emits `F(x → s_f)/∑_{y ∈ 𝒮} F(y → s_f)` on `𝒮`."
+    },
+    {
+     "name": "sampler_termLaw",
+     "full": "GFNBounds.Graph.Sampling.sampler_termLaw",
+     "kind": "theorem",
+     "line": 163,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sampler_termLaw (hnn : ∀ u v, 0 ≤ F u v) (hsupp : ∀ u v, F u v ≠ 0 → G.Edge u v) (hcons : ∀ x ∈ G.internal, edgeInflow F x = edgeOutflow F x) (hss : F G.src G.snk = 0) (hpos : 0 < ∑ y, F y G.snk) : Summable (graphFlow G F).tailProb ∧ (graphFlow G F).expectedTau ≤ (∑ x, (graphFlow G F).fout x) / (∑ x, (graphFlow G F).finit x) + 1 ∧ Tendsto (graphFlow G F).tailProb atTop (𝓝 0) ∧ ∀ x : G.internal, Tendsto (fun n => (graphFlow G F).law n (x, true)) atTop (𝓝 (termLaw G F x))",
+     "doc": "**`theo:sampling_theorem`, on a marked graph**: the sampler of a flow-matching edgeflow terminates, obeys the `𝔼(τ)` bound, and emits its normalized terminal flow."
+    },
+    {
+     "name": "sampler_Fk",
+     "full": "GFNBounds.Graph.Sampling.sampler_Fk",
+     "kind": "theorem",
+     "line": 193,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sampler_Fk (M : ℕ) {k : ℝ} (hk : 0 ≤ k) (x : (cycGraph M).internal) : Tendsto (fun n => (graphFlow (cycGraph M) (Fk M k)).law n (x, true)) atTop (𝓝 (if (x : cycV M) = xC M 1 then 1 else 0))",
+     "doc": "**`theo:sampling_theorem`, inhabited on the cyclic counter-example**: the sampler of `F_k` emits `δ_{x₂}` for every `k ≥ 0` — the sampler clause `s_τ(F_k) ∼ δ_{x₂}` of `theo:no_bound_divergence` and `lem:cycle_counterexample`, now certified."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {

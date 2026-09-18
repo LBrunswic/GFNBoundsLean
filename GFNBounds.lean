@@ -124,4 +124,9 @@ import GFNBounds.Balance.RemarksA
 import GFNBounds.Silva.Remarks
 import GFNBounds.Graph.MorozovFM
 import GFNBounds.Graph.UniversalityClosing
+import GFNBounds.Core.Sampling
+import GFNBounds.Graph.Sampling
+import GFNBounds.Doubling.ExpansionTrapezoid
+import GFNBounds.Doubling.WeightChain
+import GFNBounds.Balance.TBGradient
 import GFNBounds.Audit

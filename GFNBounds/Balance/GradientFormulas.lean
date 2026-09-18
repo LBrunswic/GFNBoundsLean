@@ -119,8 +119,8 @@ the `Prod`/curried bridge for `𝒮²` — and each is isolated in its own decla
   on `𝒮`. That instantiation is *not* done here; it is the one substantive gap this file leaves,
   and it is arithmetic on `Finset.sum_subtype`, not new mathematics.
 * **The window lift `K_ℓ`, `ℓ ≥ 3`, is untouched**, as `Lift.lean`'s SCOPE records: `λ_ℓ` needs a
-  path-measure construction on `𝒮^ℓ`. Accordingly `prop:tb_gradient` and `prop:tb_hessian` are
-  **not** attempted and are not mentioned outside this sentence.
+  path-measure construction on `𝒮^ℓ`. `prop:tb_gradient` does not need `K_ℓ` and is certified on
+  the edge set `E` in `Balance/TBGradient.lean`; `prop:tb_hessian` is not attempted.
 * **`g` is carried by a derivative only**, as in `FirstVariation.lean`: the hypothesis is
   `∀ y, 0 < y → HasDerivAt g (gd y) y`, or its pointwise weakening. Continuity of `g'` and the
   local Lipschitz bound of the paper are not carried; see `FirstVariation.lean`'s SCOPE for why

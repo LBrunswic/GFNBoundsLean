@@ -80,6 +80,11 @@ import GFNBounds.Balance.RemarksA
 import GFNBounds.Silva.Remarks
 import GFNBounds.Graph.MorozovFM
 import GFNBounds.Graph.UniversalityClosing
+import GFNBounds.Core.Sampling
+import GFNBounds.Graph.Sampling
+import GFNBounds.Doubling.ExpansionTrapezoid
+import GFNBounds.Doubling.WeightChain
+import GFNBounds.Balance.TBGradient
 
 /-!
 # Axiom audit
@@ -986,3 +991,35 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Graph.UniversalityClosing.frozenUnion_eq_iUnion
 #print axioms GFNBounds.Graph.UniversalityClosing.item_three_masses_on_internal
 #print axioms GFNBounds.Graph.UniversalityClosing.triSrcSnk_check
+#print axioms GFNBounds.Core.Sampling.FlowData.sampling_theorem
+#print axioms GFNBounds.Core.Sampling.FlowData.expectedTau_le
+#print axioms GFNBounds.Core.Sampling.FlowData.mass_eq
+#print axioms GFNBounds.Core.Sampling.FlowData.law_true_tendsto
+#print axioms GFNBounds.Core.Sampling.Parked.strict
+#print axioms GFNBounds.Core.Sampling.Parked.inhabited
+#print axioms GFNBounds.Graph.Sampling.sampler_law
+#print axioms GFNBounds.Graph.Sampling.sampler_termLaw
+#print axioms GFNBounds.Graph.Sampling.sampler_Fk
+#print axioms GFNBounds.Doubling.EMTrap.em_window
+#print axioms GFNBounds.Doubling.EMTrap.em_window_bounds
+#print axioms GFNBounds.Doubling.EMTrap.trap_unit_lower
+#print axioms GFNBounds.Doubling.EMTrap.trap_unit_upper
+#print axioms GFNBounds.Doubling.Decay.doubling_weight_chain
+#print axioms GFNBounds.Doubling.Decay.integral_chainDev
+#print axioms GFNBounds.Doubling.Decay.integrable_chainDev
+#print axioms GFNBounds.Doubling.Decay.exists_descentChain
+#print axioms GFNBounds.Doubling.Decay.sum_pathProb_matches
+#print axioms GFNBounds.Balance.TBGradient.hasFDerivAt_loss
+#print axioms GFNBounds.Balance.TBGradient.loss_contDiffOn
+#print axioms GFNBounds.Balance.TBGradient.grad_unique
+#print axioms GFNBounds.Balance.TBGradient.rho_telescope
+#print axioms GFNBounds.Balance.TBGradient.marg_pos
+#print axioms GFNBounds.Balance.TBGradient.ratio_pos
+#print axioms GFNBounds.Balance.TBGradient.K2_row_sum
+#print axioms GFNBounds.Balance.TBGradient.lam2_pos
+#print axioms GFNBounds.Balance.TBGradient.lam2_invariant
+#print axioms GFNBounds.Balance.TBGradient.reversal_row_sum
+#print axioms GFNBounds.Balance.TBGradient.psi_eq
+#print axioms GFNBounds.Balance.TBGradient.psi_one
+#print axioms GFNBounds.Balance.TBGradient.grad_one
+#print axioms GFNBounds.Balance.TBGradient.witness

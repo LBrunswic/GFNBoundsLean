@@ -7126,6 +7126,297 @@
    "doc":
    "**`eq:def_stability`** (`cv_divergence.tex:183–185`), Definition 3 of `brunswic2024theory` at\n`p = 1`: a loss `𝓛` on edgeflows is *stable* when `𝓛(F + F₀) ≥ 𝓛(F)` for every flow `F` and\nevery `0`-flow `F₀` that is a subflow of `F` (`F₀ ≤ F` edgewise). `IsZeroFlow` forbids mass on a\npossible edge `s₀ → s_f`, which Definition 2 allows; fewer `F₀` are checked, so the source's\nstability implies `Stable` and `¬ Stable` implies the source's instability, but a *positive*\n`Stable` result certifies less than the source's stability. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Sampling.sum_split":
+  {"uses_value":
+   ["GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.MarkedGraph.src",
+    "GFNBounds.Graph.MarkedGraph.src_ne_snk"],
+   "uses_type":
+   ["GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.MarkedGraph.src"],
+   "uses_external": 63,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] (G : GFNBounds.Graph.MarkedGraph V) (f : V → ℝ),\n  ∑ u, f u = f G.src + f G.snk + ∑ u, f ↑u",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Sampling",
+   "line": 71,
+   "kind": "theorem",
+   "doc":
+   "A sum over the vertices splits into the two marks and the internal states. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Sampling.sampler_termLaw":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.expectedTau",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.sampling_theorem",
+    "GFNBounds.Core.Sampling.FlowData.tailProb",
+    "GFNBounds.Graph.CycleDivergence.termLaw",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.Edge",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.MarkedGraph.no_edge_out_of_snk",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.MarkedGraph.src",
+    "GFNBounds.Graph.Sampling.flowMatching",
+    "GFNBounds.Graph.Sampling.graphFlow",
+    "GFNBounds.Graph.Sampling.isGenFlow",
+    "GFNBounds.Graph.Sampling.sum_split",
+    "GFNBounds.Graph.edgeInflow",
+    "GFNBounds.Graph.edgeOutflow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.expectedTau",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.tailProb",
+    "GFNBounds.Graph.CycleDivergence.termLaw",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.Edge",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.MarkedGraph.src",
+    "GFNBounds.Graph.Sampling.graphFlow",
+    "GFNBounds.Graph.edgeInflow",
+    "GFNBounds.Graph.edgeOutflow"],
+   "uses_external": 147,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V} {F : V → V → ℝ},\n  (∀ (u v : V), 0 ≤ F u v) →\n    (∀ (u v : V), F u v ≠ 0 → G.Edge u v) →\n      (∀ x ∈ G.internal, GFNBounds.Graph.edgeInflow F x = GFNBounds.Graph.edgeOutflow F x) →\n        F G.src G.snk = 0 →\n          0 < ∑ y, F y G.snk →\n            Summable (GFNBounds.Graph.Sampling.graphFlow G F).tailProb ∧\n              (GFNBounds.Graph.Sampling.graphFlow G F).expectedTau ≤\n                  (∑ x, (GFNBounds.Graph.Sampling.graphFlow G F).fout x) /\n                      ∑ x, (GFNBounds.Graph.Sampling.graphFlow G F).finit x +\n                    1 ∧\n                Filter.Tendsto (GFNBounds.Graph.Sampling.graphFlow G F).tailProb Filter.atTop (nhds 0) ∧\n                  ∀ (x : ↥G.internal),\n                    Filter.Tendsto (fun n => (GFNBounds.Graph.Sampling.graphFlow G F).law n (x, true)) Filter.atTop\n                      (nhds (GFNBounds.Graph.CycleDivergence.termLaw G F ↑x))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Sampling",
+   "line": 159,
+   "kind": "theorem",
+   "doc":
+   "**`theo:sampling_theorem`, on a marked graph**: the sampler of a flow-matching edgeflow\nterminates, obeys the `𝔼(τ)` bound, and emits its normalized terminal flow.\nIts terminal law is `termLaw G F` of `GFNBounds.Graph.CycleDivergence`, the object\n`theo:no_bound_divergence`, `lem:cycle_counterexample` and the Silva remarks measure TV against. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Sampling.sampler_law":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.expectedTau",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.sampling_theorem",
+    "GFNBounds.Core.Sampling.FlowData.tailProb",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.Edge",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.Sampling.flowMatching",
+    "GFNBounds.Graph.Sampling.graphFlow",
+    "GFNBounds.Graph.Sampling.isGenFlow",
+    "GFNBounds.Graph.edgeInflow",
+    "GFNBounds.Graph.edgeOutflow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.Edge",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.Sampling.graphFlow",
+    "GFNBounds.Graph.edgeInflow",
+    "GFNBounds.Graph.edgeOutflow"],
+   "uses_external": 136,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V} {F : V → V → ℝ},\n  (∀ (u v : V), 0 ≤ F u v) →\n    (∀ (u v : V), F u v ≠ 0 → G.Edge u v) →\n      (∀ x ∈ G.internal, GFNBounds.Graph.edgeInflow F x = GFNBounds.Graph.edgeOutflow F x) →\n        0 < ∑ y, F (↑y) G.snk →\n          ∀ (x : ↥G.internal),\n            Filter.Tendsto (fun n => (GFNBounds.Graph.Sampling.graphFlow G F).law n (x, true)) Filter.atTop\n              (nhds (F (↑x) G.snk / ∑ y, F (↑y) G.snk))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Sampling",
+   "line": 144,
+   "kind": "theorem",
+   "doc":
+   "**`theo:sampling_theorem`, on a marked graph, with no hypothesis on `s₀ → s_f`**: the\nsampler emits `F(x → s_f)/∑_{y ∈ 𝒮} F(y → s_f)` on `𝒮`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Sampling.sampler_Fk":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.expectedTau",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.tailProb",
+    "GFNBounds.Graph.CycleDivergence.Fk",
+    "GFNBounds.Graph.CycleDivergence.Fk_flowMatching",
+    "GFNBounds.Graph.CycleDivergence.Fk_nonneg",
+    "GFNBounds.Graph.CycleDivergence.Fk_snkC",
+    "GFNBounds.Graph.CycleDivergence.Fk_supp",
+    "GFNBounds.Graph.CycleDivergence.cycGraph",
+    "GFNBounds.Graph.CycleDivergence.cycGraph_snk",
+    "GFNBounds.Graph.CycleDivergence.cycV",
+    "GFNBounds.Graph.CycleDivergence.snkC",
+    "GFNBounds.Graph.CycleDivergence.srcC",
+    "GFNBounds.Graph.CycleDivergence.srcC_ne_xC",
+    "GFNBounds.Graph.CycleDivergence.sum_termFlow_Fk",
+    "GFNBounds.Graph.CycleDivergence.termLaw",
+    "GFNBounds.Graph.CycleDivergence.termLaw_Fk",
+    "GFNBounds.Graph.CycleDivergence.xC",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.MarkedGraph.src",
+    "GFNBounds.Graph.Sampling.graphFlow",
+    "GFNBounds.Graph.Sampling.sampler_termLaw"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Graph.CycleDivergence.Fk",
+    "GFNBounds.Graph.CycleDivergence.cycGraph",
+    "GFNBounds.Graph.CycleDivergence.cycV",
+    "GFNBounds.Graph.CycleDivergence.xC",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.Sampling.graphFlow"],
+   "uses_external": 78,
+   "type":
+   "∀ (M : ℕ) {k : ℝ},\n  0 ≤ k →\n    ∀ (x : ↥(GFNBounds.Graph.CycleDivergence.cycGraph M).internal),\n      Filter.Tendsto\n        (fun n =>\n          (GFNBounds.Graph.Sampling.graphFlow (GFNBounds.Graph.CycleDivergence.cycGraph M)\n                (GFNBounds.Graph.CycleDivergence.Fk M k)).law\n            n (x, true))\n        Filter.atTop (nhds (if ↑x = GFNBounds.Graph.CycleDivergence.xC M 1 then 1 else 0))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Sampling",
+   "line": 190,
+   "kind": "theorem",
+   "doc":
+   "**`theo:sampling_theorem`, inhabited on the cyclic counter-example**: the sampler of `F_k`\nemits `δ_{x₂}` for every `k ≥ 0` — the sampler clause\n`s_τ(F_k) ∼ δ_{x₂}` of `theo:no_bound_divergence` and `lem:cycle_counterexample`, now certified. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Sampling.outInt_nonneg":
+  {"uses_value":
+   ["GFNBounds.Graph.MarkedGraph", "GFNBounds.Graph.MarkedGraph.internal"],
+   "uses_type":
+   ["GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.Sampling.outInt"],
+   "uses_external": 21,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V} {F : V → V → ℝ},\n  (∀ (u v : V), 0 ≤ F u v) → ∀ (v : ↥G.internal), 0 ≤ GFNBounds.Graph.Sampling.outInt G F v",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Sampling",
+   "line": 97,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Sampling.outInt":
+  {"uses_value":
+   ["GFNBounds.Graph.MarkedGraph", "GFNBounds.Graph.MarkedGraph.internal"],
+   "uses_type":
+   ["GFNBounds.Graph.MarkedGraph", "GFNBounds.Graph.MarkedGraph.internal"],
+   "uses_external": 13,
+   "type":
+   "{V : Type u_1} →\n  [inst : Fintype V] → [inst_1 : DecidableEq V] → (G : GFNBounds.Graph.MarkedGraph V) → (V → V → ℝ) → ↥G.internal → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Sampling",
+   "line": 81,
+   "kind": "def",
+   "doc":
+   "The internal outflow of an edgeflow at `v`, `F⋆_out(v) = ∑_{w ∈ 𝒮} F(v → w)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Sampling.isGenFlow":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.IsGenFlow.mk",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.MarkedGraph.src",
+    "GFNBounds.Graph.Sampling.graphFlow",
+    "GFNBounds.Graph.Sampling.outInt",
+    "GFNBounds.Graph.Sampling.outInt_nonneg"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.Sampling.graphFlow"],
+   "uses_external": 76,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V} {F : V → V → ℝ},\n  (∀ (u v : V), 0 ≤ F u v) → (GFNBounds.Graph.Sampling.graphFlow G F).IsGenFlow",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Sampling",
+   "line": 111,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Sampling.graphFlow":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.mk",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.MarkedGraph.src",
+    "GFNBounds.Graph.Sampling.outInt"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.internal"],
+   "uses_external": 22,
+   "type":
+   "{V : Type u_1} →\n  [inst : Fintype V] →\n    [inst_1 : DecidableEq V] →\n      (G : GFNBounds.Graph.MarkedGraph V) → (V → V → ℝ) → GFNBounds.Core.Sampling.FlowData ↥G.internal",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Sampling",
+   "line": 85,
+   "kind": "def",
+   "doc":
+   "**The generative flow of an edgeflow on a marked graph**, on the internal states `𝒮`:\n`F_init(v) = F(s₀ → v)`, `F_term(v) = F(v → s_f)`, `F⋆_out(v) = ∑_{w ∈ 𝒮} F(v → w)` and\n`P⋆(v → w) = F(v → w)/F⋆_out(v)` (a Dirac mass at `v` where `F⋆_out(v) = 0`, a state the sampler\nleaves with probability `0` whatever the row says). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Sampling.fout_mul_P":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.Sampling.graphFlow",
+    "GFNBounds.Graph.Sampling.outInt"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.Sampling.graphFlow"],
+   "uses_external": 119,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V} {F : V → V → ℝ},\n  (∀ (u v : V), 0 ≤ F u v) →\n    ∀ (v w : ↥G.internal),\n      (GFNBounds.Graph.Sampling.graphFlow G F).fout v * (GFNBounds.Graph.Sampling.graphFlow G F).P v w = F ↑v ↑w",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Sampling",
+   "line": 100,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Sampling.flowMatching":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.mk",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.Edge",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.MarkedGraph.no_edge_into_src",
+    "GFNBounds.Graph.MarkedGraph.no_edge_out_of_snk",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.MarkedGraph.src",
+    "GFNBounds.Graph.Sampling.fout_mul_P",
+    "GFNBounds.Graph.Sampling.graphFlow",
+    "GFNBounds.Graph.Sampling.outInt",
+    "GFNBounds.Graph.Sampling.sum_split",
+    "GFNBounds.Graph.edgeInflow",
+    "GFNBounds.Graph.edgeOutflow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.Edge",
+    "GFNBounds.Graph.MarkedGraph.internal",
+    "GFNBounds.Graph.Sampling.graphFlow",
+    "GFNBounds.Graph.edgeInflow",
+    "GFNBounds.Graph.edgeOutflow"],
+   "uses_external": 144,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V} {F : V → V → ℝ},\n  (∀ (u v : V), 0 ≤ F u v) →\n    (∀ (u v : V), F u v ≠ 0 → G.Edge u v) →\n      (∀ x ∈ G.internal, GFNBounds.Graph.edgeInflow F x = GFNBounds.Graph.edgeOutflow F x) →\n        (GFNBounds.Graph.Sampling.graphFlow G F).FlowMatching",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Sampling",
+   "line": 127,
+   "kind": "theorem",
+   "doc":
+   "**Conservation at the internal states is the flow-matching constraint** `equ:FM_const` of\nthe graph's generative flow. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.PartialSupport.withSinkRow":
   {"uses_value":
    ["GFNBounds.Graph.BackwardPolicy",
@@ -26801,6 +27092,30 @@
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.measurableSet_cyl":
+  {"uses_value": ["GFNBounds.Doubling.cyl"],
+   "uses_type": ["GFNBounds.Doubling.cyl"],
+   "uses_external": 7,
+   "type":
+   "∀ {Ω : Type u_1} [inst : MeasurableSpace Ω] (c : List ℕ) (Y : ℕ → Ω → ℕ),\n  (∀ (n : ℕ), Measurable (Y n)) → MeasurableSet (GFNBounds.Doubling.cyl Y c)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 139,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.matches_iff":
+  {"uses_value": ["GFNBounds.Doubling.Matches"],
+   "uses_type": ["GFNBounds.Doubling.Matches"],
+   "uses_external": 11,
+   "type":
+   "∀ (c : List ℕ) (f : ℕ → ℕ), GFNBounds.Doubling.Matches f c ↔ ∀ i < c.length, f i = c.getD i 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 121,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.mass_cutFn_le_two":
   {"uses_value":
    ["GFNBounds.Doubling.HasDouble",
@@ -30938,6 +31253,17 @@
    "doc":
    "The doubling weight out of the ladder state `j ≥ 1`: `ε(j)` when the edge `j → 2j` survives\nthe truncation, `0` when it has been deleted. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.cyl":
+  {"uses_value": ["GFNBounds.Doubling.Matches"],
+   "uses_type": [],
+   "uses_external": 3,
+   "type": "{Ω : Type u_1} → (ℕ → Ω → ℕ) → List ℕ → Set Ω",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 136,
+   "kind": "def",
+   "doc": "The cylinder `{Y_0 = a_0, …, Y_n = a_n}`. ",
+   "axioms": []},
   "GFNBounds.Doubling.cut_tail_ge":
   {"uses_value":
    ["GFNBounds.Doubling.Icc_succ_eq_Ioc",
@@ -42673,6 +42999,18 @@
    "doc":
    "The states of the chain in play.\n\nOn the loop closure (`cap = none`) every state of `St`. On the truncation at `K` the `K + 2`\nstates `{s₀, 1, …, K, s_f}` of `lem:doubling_truncation_irreducible`: the ladder states above `K`\ncarry no incoming edge from within the chain — a decrement from `j ≤ K` lands at most at `K − 1`\nand a doubling that survives lands at `2j ≤ K` — so they are unreachable, and the invariant\nprobability vanishes on them.\n\nThis is why `Stat` below carries positivity only **on chain** and vanishing off it, rather than\nglobal positivity: `St` is one type serving two chains, and the truncation genuinely does not live\non all of it. ",
    "axioms": []},
+  "GFNBounds.Doubling.Matches":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 3,
+   "type": "(ℕ → ℕ) → List ℕ → Prop",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 116,
+   "kind": "def",
+   "doc":
+   "`Matches f [a_0, …, a_n]`: the path `f` starts `f 0 = a_0, …, f n = a_n`. ",
+   "axioms": []},
   "GFNBounds.Doubling.LadderStep.le_succ_add_one":
   {"uses_value":
    ["GFNBounds.Doubling.HasDouble", "GFNBounds.Doubling.LadderStep"],
@@ -43022,6 +43360,127 @@
    "kind": "inductive",
    "doc":
    "The positive transitions of `eq:doubling_policy`: the wrap `s₀ → s_f`, the decrement\n`j+1 → j`, the doubling `j+1 → 2(j+1)` where that edge survives the cap, and the target row\n`s_f → k` at every `k` the row charges. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.EMTrap.zero_le_of_hasDerivAt":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 206,
+   "type":
+   "∀ {g g' : ℝ → ℝ},\n  (∀ h ∈ Set.Icc 0 1, HasDerivAt g (g' h) h) → (∀ h ∈ Set.Icc 0 1, 0 ≤ g' h) → g 0 = 0 → ∀ h ∈ Set.Icc 0 1, 0 ≤ g h",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionTrapezoid",
+   "line": 89,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.EMTrap.trap_unit_upper":
+  {"uses_value":
+   ["GFNBounds.Doubling.EMTrap.le_zero_of_hasDerivAt",
+    "GFNBounds.Doubling.EMTrap.shift_mem"],
+   "uses_type": [],
+   "uses_external": 299,
+   "type":
+   "∀ {F f f1 f2 f3 f4 : ℝ → ℝ} {t : ℝ},\n  (∀ x ∈ Set.Icc t (t + 1), HasDerivAt F (f x) x) →\n    (∀ x ∈ Set.Icc t (t + 1), HasDerivAt f (f1 x) x) →\n      (∀ x ∈ Set.Icc t (t + 1), HasDerivAt f1 (f2 x) x) →\n        (∀ x ∈ Set.Icc t (t + 1), HasDerivAt f2 (f3 x) x) →\n          (∀ x ∈ Set.Icc t (t + 1), HasDerivAt f3 (f4 x) x) →\n            (∀ x ∈ Set.Icc t (t + 1), 0 ≤ f4 x) → (f t + f (t + 1)) / 2 - (F (t + 1) - F t) ≤ (f1 (t + 1) - f1 t) / 12",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionTrapezoid",
+   "line": 151,
+   "kind": "theorem",
+   "doc":
+   "**The trapezoid error is at most the first Euler–Maclaurin correction when `f⁗ ≥ 0`.** If\n`F′ = f`, `f′ = f₁`, `f₁′ = f₂`, `f₂′ = f₃`, `f₃′ = f₄` on `[t, t+1]` and `f₄ ≥ 0` there, then\n`(f(t) + f(t+1))/2 − (F(t+1) − F(t)) ≤ (f₁(t+1) − f₁(t))/12`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.EMTrap.trap_unit_rpow":
+  {"uses_value":
+   ["GFNBounds.Doubling.EMTrap.hasDerivAt_mul_rpow",
+    "GFNBounds.Doubling.EMTrap.trap_unit_lower",
+    "GFNBounds.Doubling.EMTrap.trap_unit_upper"],
+   "uses_type": [],
+   "uses_external": 310,
+   "type":
+   "∀ {r t : ℝ},\n  1 < r →\n    0 < t →\n      0 ≤ (t ^ (-r) + (t + 1) ^ (-r)) / 2 - (t ^ (1 - r) - (t + 1) ^ (1 - r)) / (r - 1) ∧\n        (t ^ (-r) + (t + 1) ^ (-r)) / 2 - (t ^ (1 - r) - (t + 1) ^ (1 - r)) / (r - 1) ≤\n          r / 12 * (t ^ (-r - 1) - (t + 1) ^ (-r - 1))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionTrapezoid",
+   "line": 223,
+   "kind": "theorem",
+   "doc":
+   "**One unit interval for `t^{−r}`.** For `r > 1` and `t > 0`, the trapezoid error of\n`x ↦ x^{−r}` on `[t, t+1]` lies in `[0, (r/12)(t^{−r−1} − (t+1)^{−r−1})]`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.EMTrap.trap_unit_lower":
+  {"uses_value":
+   ["GFNBounds.Doubling.EMTrap.shift_mem",
+    "GFNBounds.Doubling.EMTrap.zero_le_of_hasDerivAt"],
+   "uses_type": [],
+   "uses_external": 281,
+   "type":
+   "∀ {F f f1 f2 : ℝ → ℝ} {t : ℝ},\n  (∀ x ∈ Set.Icc t (t + 1), HasDerivAt F (f x) x) →\n    (∀ x ∈ Set.Icc t (t + 1), HasDerivAt f (f1 x) x) →\n      (∀ x ∈ Set.Icc t (t + 1), HasDerivAt f1 (f2 x) x) →\n        (∀ x ∈ Set.Icc t (t + 1), 0 ≤ f2 x) → 0 ≤ (f t + f (t + 1)) / 2 - (F (t + 1) - F t)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionTrapezoid",
+   "line": 115,
+   "kind": "theorem",
+   "doc":
+   "**The trapezoid error is non-negative for a convex `f`.** If `F′ = f`, `f′ = f₁`, `f₁′ = f₂`\non `[t, t+1]` and `f₂ ≥ 0` there, then `(f(t) + f(t+1))/2 − (F(t+1) − F(t)) ≥ 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.EMTrap.shift_mem":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 113,
+   "type": "∀ {t h : ℝ}, h ∈ Set.Icc 0 1 → t + h ∈ Set.Icc t (t + 1)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionTrapezoid",
+   "line": 106,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.EMTrap.le_zero_of_hasDerivAt":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 203,
+   "type":
+   "∀ {g g' : ℝ → ℝ},\n  (∀ h ∈ Set.Icc 0 1, HasDerivAt g (g' h) h) → (∀ h ∈ Set.Icc 0 1, g' h ≤ 0) → g 0 = 0 → ∀ h ∈ Set.Icc 0 1, g h ≤ 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionTrapezoid",
+   "line": 72,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.EMTrap.hasDerivAt_mul_rpow":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 120,
+   "type":
+   "∀ (k q q' : ℝ), q - 1 = q' → ∀ {x : ℝ}, 0 < x → HasDerivAt (fun y => k * y ^ q) (k * q * x ^ q') x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionTrapezoid",
+   "line": 217,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.EMTrap.em_window_bounds":
+  {"uses_value":
+   ["GFNBounds.Doubling.EMTrap.trap_unit_rpow",
+    "GFNBounds.Doubling.telescope_Ico"],
+   "uses_type": [],
+   "uses_external": 242,
+   "type":
+   "∀ {r : ℝ},\n  1 < r →\n    ∀ {a b : ℕ},\n      1 ≤ a →\n        a ≤ b →\n          0 ≤ ∑ j ∈ Finset.Ico a b, ↑j ^ (-r) - (↑a ^ (1 - r) - ↑b ^ (1 - r)) / (r - 1) - (↑a ^ (-r) - ↑b ^ (-r)) / 2 ∧\n            ∑ j ∈ Finset.Ico a b, ↑j ^ (-r) - (↑a ^ (1 - r) - ↑b ^ (1 - r)) / (r - 1) - (↑a ^ (-r) - ↑b ^ (-r)) / 2 ≤\n              r / 12 * (↑a ^ (-r - 1) - ↑b ^ (-r - 1))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionTrapezoid",
+   "line": 294,
+   "kind": "theorem",
+   "doc":
+   "**`eq:doubling_em`, the paper's Step 2, with the first-omitted-term bound.** For `r > 1` and\nintegers `1 ≤ a ≤ b`, the remainder\n`E := Σ_{j=a}^{b−1} j^{−r} − (a^{1−r} − b^{1−r})/(r−1) − (a^{−r} − b^{−r})/2`\nsatisfies `0 ≤ E ≤ (r/12)(a^{−r−1} − b^{−r−1})`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.EMTrap.em_window":
+  {"uses_value": ["GFNBounds.Doubling.EMTrap.em_window_bounds"],
+   "uses_type": [],
+   "uses_external": 229,
+   "type":
+   "∀ {r : ℝ},\n  1 < r →\n    ∀ {a b : ℕ},\n      1 ≤ a →\n        a ≤ b →\n          |∑ j ∈ Finset.Ico a b, ↑j ^ (-r) - (↑a ^ (1 - r) - ↑b ^ (1 - r)) / (r - 1) - (↑a ^ (-r) - ↑b ^ (-r)) / 2| ≤\n            r / 12 * (↑a ^ (-r - 1) + ↑b ^ (-r - 1))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.ExpansionTrapezoid",
+   "line": 345,
+   "kind": "theorem",
+   "doc":
+   "**`eq:doubling_em` as printed.** For `r > 1` and integers `1 ≤ a ≤ b`,\n`|E| ≤ (r/12)(a^{−r−1} + b^{−r−1})`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.wm_pos":
   {"uses_value":
@@ -44702,6 +45161,47 @@
    "doc":
    "The transition law is a probability on `W(z)`: `Σ_{j ∈ W(z)} w_z(j)/R₀(z) = 1`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.sum_pathProb_matches":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.chainProb",
+    "GFNBounds.Doubling.Decay.chainProb_of_lt",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.descPaths_of_ge",
+    "GFNBounds.Doubling.Decay.descPaths_of_lt",
+    "GFNBounds.Doubling.Decay.descStep",
+    "GFNBounds.Doubling.Decay.extPath",
+    "GFNBounds.Doubling.Decay.extPath_cons_succ",
+    "GFNBounds.Doubling.Decay.extPath_single",
+    "GFNBounds.Doubling.Decay.extPath_zero",
+    "GFNBounds.Doubling.Decay.head_of_mem_descPaths",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Decay.le_of_mem_window_of_ge",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathProb_cons",
+    "GFNBounds.Doubling.Decay.sum_kern",
+    "GFNBounds.Doubling.Decay.sum_pathProb",
+    "GFNBounds.Doubling.Matches",
+    "GFNBounds.Doubling.window",
+    "GFNBounds.Doubling.window_lt"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.extPath",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Matches"],
+   "uses_external": 165,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ},\n  1 ≤ ℓ →\n    ∀ (y : ℕ),\n      ℓ ≤ y →\n        ∀ (c : List ℕ),\n          (∑ l ∈ GFNBounds.Doubling.Decay.descPaths ℓ y,\n              D.pathProb l * if GFNBounds.Doubling.Matches (GFNBounds.Doubling.Decay.extPath l) c then 1 else 0) =\n            D.cylProb ℓ y c",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 370,
+   "kind": "theorem",
+   "doc":
+   "**Every finite-dimensional law of the mixture is the chain's.** For the finite law on the\nstopped trajectories from `y ≥ ℓ`, each extended by its exit state, the probability that the path\nstarts `a_0, …, a_n` is `1[a_0 = y] ∏_{i<n} descStep ℓ a_i a_{i+1}`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.sum_pathProb":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -45489,6 +45989,32 @@
    "doc":
    "`q_m(j) = c/((j+1)(1−ε(m)))`, the cut weights of `eq:doubling_window`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.prod_R0_of_matches":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.exitTime",
+    "GFNBounds.Doubling.Decay.exitTime_of_matches",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.Matches",
+    "GFNBounds.Doubling.matches_iff"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.exitTime",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.Matches"],
+   "uses_external": 32,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ m : ℕ} {l : List ℕ},\n  l ∈ GFNBounds.Doubling.Decay.descPaths ℓ m →\n    ∀ {f : ℕ → ℕ},\n      GFNBounds.Doubling.Matches f l →\n        ∏ n ∈ Finset.range (GFNBounds.Doubling.Decay.exitTime ℓ f), D.R0 (f n) = D.pathZ l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 220,
+   "kind": "theorem",
+   "doc": "On the cylinder of a stopped trajectory `l`, `Z_ℓ = pathZ l`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.prodW_two_sided_paper":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -46081,6 +46607,22 @@
    "kind": "theorem",
    "doc":
    "The parity thresholds `16τ(p+3)²/A₀` and `16τ(p+3)²/(−A₁)` depend on `c` alone. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.pairwiseDisjoint_cyl":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.matches_descPaths_unique",
+    "GFNBounds.Doubling.cyl"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay.descPaths", "GFNBounds.Doubling.cyl"],
+   "uses_external": 33,
+   "type":
+   "∀ {Ω : Type u_1} {ℓ m : ℕ} {Y : ℕ → Ω → ℕ},\n  (↑(GFNBounds.Doubling.Decay.descPaths ℓ m)).PairwiseDisjoint fun l => GFNBounds.Doubling.cyl Y l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 259,
+   "kind": "theorem",
+   "doc": "The cylinders of the stopped trajectories are pairwise disjoint. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.p_pos":
   {"uses_value":
@@ -46887,6 +47429,26 @@
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.matches_descPaths_unique":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.exitTime",
+    "GFNBounds.Doubling.Decay.exitTime_of_matches",
+    "GFNBounds.Doubling.Decay.head_of_mem_descPaths",
+    "GFNBounds.Doubling.Matches",
+    "GFNBounds.Doubling.matches_iff"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay.descPaths", "GFNBounds.Doubling.Matches"],
+   "uses_external": 37,
+   "type":
+   "∀ {ℓ m : ℕ} {l l' : List ℕ},\n  l ∈ GFNBounds.Doubling.Decay.descPaths ℓ m →\n    l' ∈ GFNBounds.Doubling.Decay.descPaths ℓ m →\n      ∀ {f : ℕ → ℕ}, GFNBounds.Doubling.Matches f l → GFNBounds.Doubling.Matches f l' → l = l'",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 230,
+   "kind": "theorem",
+   "doc":
+   "**A path determines its stopped trajectory**: two stopped trajectories from `m` matched by the\nsame path are equal. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.m_rpow_neg_nat":
   {"uses_value": [],
    "uses_type": [],
@@ -47213,6 +47775,62 @@
    "kind": "theorem",
    "doc":
    "**Witness.** The positive sequence `1/(j!)²` is a subsolution of `eq:doubling_avg`\n(at every `m ≥ max(2, 1/c)`). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.integral_chainDev":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.IsDescentChain.fdd",
+    "GFNBounds.Doubling.Decay.IsDescentChain.measurable",
+    "GFNBounds.Doubling.Decay.chainDev_ae_eq",
+    "GFNBounds.Doubling.Decay.chainZ",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.Decay.cylProb_of_mem_descPaths",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathProb_pos",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.Decay.weightDev",
+    "GFNBounds.Doubling.Decay.weightDev_eq_sum_paths",
+    "GFNBounds.Doubling.cyl",
+    "GFNBounds.Doubling.measurableSet_cyl"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.chainZ",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_external": 93,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {Ω : Type u_1} [inst : MeasurableSpace Ω] {P : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure P] {ℓ m : ℕ} {Y : ℕ → Ω → ℕ},\n  D.IsDescentChain P ℓ m Y → 1 ≤ ℓ → ℓ ≤ m → ∫ (ω : Ω), |D.chainZ ℓ Y ω - 1| ∂P = D.weightDev ℓ m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 304,
+   "kind": "theorem",
+   "doc": "**`E(|Z_ℓ − 1| | Y_0 = m)` over the chain is `weightDev ℓ m`.** ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.integrable_chainDev":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.IsDescentChain.measurable",
+    "GFNBounds.Doubling.Decay.chainDev_ae_eq",
+    "GFNBounds.Doubling.Decay.chainZ",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.cyl",
+    "GFNBounds.Doubling.measurableSet_cyl"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.chainZ"],
+   "uses_external": 57,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {Ω : Type u_1} [inst : MeasurableSpace Ω] {P : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure P] {ℓ m : ℕ} {Y : ℕ → Ω → ℕ},\n  D.IsDescentChain P ℓ m Y → 1 ≤ ℓ → ℓ ≤ m → MeasureTheory.Integrable (fun ω => |D.chainZ ℓ Y ω - 1|) P",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 297,
+   "kind": "theorem",
+   "doc": "**`|Z_ℓ − 1|` is integrable** under the chain. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.inner_le":
   {"uses_value":
@@ -47992,6 +48610,52 @@
    "doc":
    "The solution of `eq:doubling_avg` with boundary data `b` on `{0,…,d}`. Well-founded because\nevery `j ∈ W(m)` is below `m`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.extPath_zero":
+  {"uses_value": ["GFNBounds.Doubling.Decay.extPath"],
+   "uses_type": ["GFNBounds.Doubling.Decay.extPath"],
+   "uses_external": 19,
+   "type": "∀ (l : List ℕ), GFNBounds.Doubling.Decay.extPath l 0 = l.getD 0 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 337,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext"]},
+  "GFNBounds.Doubling.Decay.extPath_single":
+  {"uses_value": ["GFNBounds.Doubling.Decay.extPath"],
+   "uses_type": ["GFNBounds.Doubling.Decay.extPath"],
+   "uses_external": 26,
+   "type": "∀ (y : ℕ), GFNBounds.Doubling.Decay.extPath [y] = fun x => y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 340,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.extPath_cons_succ":
+  {"uses_value": ["GFNBounds.Doubling.Decay.extPath"],
+   "uses_type": ["GFNBounds.Doubling.Decay.extPath"],
+   "uses_external": 35,
+   "type":
+   "∀ (y : ℕ) {l : List ℕ},\n  l ≠ [] → (fun n => GFNBounds.Doubling.Decay.extPath (y :: l) (n + 1)) = GFNBounds.Doubling.Decay.extPath l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 345,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.extPath":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 11,
+   "type": "List ℕ → ℕ → ℕ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 334,
+   "kind": "def",
+   "doc":
+   "A stopped trajectory `(Y_0, …, Y_N)` extended by its exit state, as a path `ℕ → ℕ`. ",
+   "axioms": ["propext"]},
   "GFNBounds.Doubling.Decay.expo_nonneg":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -48033,6 +48697,29 @@
    "line": 182,
    "kind": "theorem",
    "doc": "**`N_ℓ` is attained, `N_ℓ ≤ m`, and `N_ℓ ≥ 1`.** ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.exitTime_of_matches":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay.IsExitTraj",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.exitTime",
+    "GFNBounds.Doubling.Decay.mem_descPaths_iff",
+    "GFNBounds.Doubling.Decay.pathExit",
+    "GFNBounds.Doubling.Matches",
+    "GFNBounds.Doubling.matches_iff",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.exitTime",
+    "GFNBounds.Doubling.Matches"],
+   "uses_external": 57,
+   "type":
+   "∀ {ℓ m : ℕ} {l : List ℕ},\n  l ∈ GFNBounds.Doubling.Decay.descPaths ℓ m →\n    ∀ {f : ℕ → ℕ}, GFNBounds.Doubling.Matches f l → GFNBounds.Doubling.Decay.exitTime ℓ f = l.length - 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 204,
+   "kind": "theorem",
+   "doc": "A path matching a stopped trajectory `l` exits at `N = |l| − 1`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.exitTime":
   {"uses_value": [],
@@ -48210,6 +48897,32 @@
    "kind": "theorem",
    "doc":
    "**The pathwise fields are not vacuous.** From every start `m` there is a path of the descent\nchain at the level `ℓ ≥ 1`: the greedy path `n ↦ greedyStep ℓ^[n] m`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.exists_descentChain":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.IsDescentChain.mk",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.extPath",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathProb_pos",
+    "GFNBounds.Doubling.Decay.sum_pathProb_matches",
+    "GFNBounds.Doubling.Matches",
+    "GFNBounds.Doubling.cyl",
+    "GFNBounds.Doubling.measurableSet_cyl"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.IsDescentChain"],
+   "uses_external": 114,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ m : ℕ},\n  1 ≤ ℓ → ℓ ≤ m → ∃ P, MeasureTheory.IsProbabilityMeasure P ∧ D.IsDescentChain P ℓ m fun n ω => ω n",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 448,
+   "kind": "theorem",
+   "doc":
+   "**The descent chain exists** (so `IsDescentChain` is not vacuous): for every `ℓ ≥ 1` and\n`m ≥ ℓ`, the mixture `Σ_{l ∈ descPaths ℓ m} pathProb l · δ_{extPath l}` is a probability on the\npath space `ℕ → ℕ` under which the coordinate process is the descent chain at the level `ℓ` from\n`m`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.escape_sum":
   {"uses_value":
@@ -48693,6 +49406,36 @@
    "doc":
    "**`lem:doubling_weight`, whatever `ℓ₂` is.** The bound `E(|Z_ℓ − 1| | Y_0 = m) ≤ c₃/ℓ`, with\nthe paper's `c₃ = 8c₅c₄`, holds at every level `ℓ ≥ ⌈2c₄⌉` with `ℓ ≥ ⌈24c₄/γ²⌉`, and at every\nstate `m`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.doubling_weight_chain":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.chainZ",
+    "GFNBounds.Doubling.Decay.doubling_weight",
+    "GFNBounds.Doubling.Decay.ell3",
+    "GFNBounds.Doubling.Decay.ell3Paper",
+    "GFNBounds.Doubling.Decay.ell3_le_ell3Paper",
+    "GFNBounds.Doubling.Decay.integrable_chainDev",
+    "GFNBounds.Doubling.Decay.integral_chainDev",
+    "GFNBounds.Doubling.Decay.one_le_ell3",
+    "GFNBounds.Doubling.Decay.weightDev"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.c3Paper",
+    "GFNBounds.Doubling.Decay.chainZ",
+    "GFNBounds.Doubling.Decay.ell3Paper"],
+   "uses_external": 54,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {Ω : Type u_1} [inst : MeasurableSpace Ω] {P : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure P] {ℓ m : ℕ} {Y : ℕ → Ω → ℕ} (d : ℕ),\n  D.ell3Paper d ≤ ℓ →\n    2 * ℓ ≤ m →\n      D.IsDescentChain P ℓ m Y →\n        MeasureTheory.Integrable (fun ω => |D.chainZ ℓ Y ω - 1|) P ∧ ∫ (ω : Ω), |D.chainZ ℓ Y ω - 1| ∂P ≤ D.c3Paper / ↑ℓ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 315,
+   "kind": "theorem",
+   "doc":
+   "**`lem:doubling_weight`** (`eq:doubling_weight`) **on the descent chain**: for every\nprobability space carrying the descent chain `(Y_n)` of `lem:doubling_descent` at the level `ℓ`\nfrom `Y_0 = m`, with `c₃ := 8c₅c₄` and `ℓ₃ := max(ℓ₂, ⌈2c₄⌉, ⌈24c₄/γ²⌉, ⌈4c₄c₅⌉)`, every integer\n`ℓ ≥ ℓ₃` and every integer `m ≥ 2ℓ`, `|Z_ℓ − 1|` is integrable and\n`E(|Z_ℓ − 1| | Y_0 = m) = ∫ |Z_ℓ − 1| dP ≤ c₃/ℓ`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.doubling_weight":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -49093,6 +49836,21 @@
    "kind": "def",
    "doc":
    "**The descent transform.** `descW D ℓ g m = E(Z_ℓ · g(Y_{N_ℓ}) | Y_0 = m)`, written as an\nunnormalized recursion: the `R_0` of the transition law and the `R_0` of the weight `Z_ℓ` cancel.\n\nWell-founded because every `j ∈ W(m)` has `j < m` — which is `lem:doubling_descent`(1). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.descStep":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.window"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 22,
+   "type": "GFNBounds.Doubling.Decay → ℕ → ℕ → ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 96,
+   "kind": "def",
+   "doc":
+   "**The transition law of the descent chain at the level `ℓ`** (`lem:doubling_descent`):\n`P(Y_{n+1} = j | Y_n = y) = w_y(j)/R₀(y)` on `W(y)` when `y ≥ 2ℓ`, and `Y_{n+1} = y` when\n`y < 2ℓ`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.descPaths_of_lt":
   {"uses_value":
@@ -49808,6 +50566,43 @@
    "doc":
    "**`eq:doubling_block`.** One block of the profile bounds every index above it, within the\ntwo-sided bound on `E(Z_ℓ)` that `lem:doubling_product` supplies.\n\n`hlo` and `hhi` are `eq:doubling_product` at `b := R_0 − 1`, `H := c₄`; they are the block's only\nunproved input, and are hypotheses here rather than hidden. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.cylProb_of_mem_descPaths":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.chainProb",
+    "GFNBounds.Doubling.Decay.chainProb_of_mem_descPaths",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.head_of_mem_descPaths",
+    "GFNBounds.Doubling.Decay.pathProb"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathProb"],
+   "uses_external": 47,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ m : ℕ} {l : List ℕ},\n  l ∈ GFNBounds.Doubling.Decay.descPaths ℓ m → D.cylProb ℓ m l = D.pathProb l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 193,
+   "kind": "theorem",
+   "doc":
+   "**The cylinder of a stopped trajectory has probability `pathProb`.** ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.cylProb":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.chainProb"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 15,
+   "type": "GFNBounds.Doubling.Decay → ℕ → ℕ → List ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 108,
+   "kind": "def",
+   "doc":
+   "**The finite-dimensional law of the chain from `δ_m`**:\n`cylProb ℓ m [a_0, …, a_n] = 1[a_0 = m] · ∏_{i<n} descStep ℓ a_i a_{i+1}`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.cutBal_unique":
   {"uses_value":
    ["GFNBounds.Doubling.Decay",
@@ -50126,6 +50921,133 @@
    "kind": "def",
    "doc":
    "`C(b) := lim_m (extend d b)_m m^{p_*}`, the constant `theo:doubling_sharp` attaches to the\nsolution of the cut balance with boundary data `b`. Stated as a `limUnder`; it is the actual limit\nwhenever `b` is positive on `1..d` (`tendsto_climit_of_pos`), and in fact for every `b`\n(`climit_eq_sum`). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.chainZ_of_matches":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.prod_R0_of_matches",
+    "GFNBounds.Doubling.cyl"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.chainZ",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.cyl"],
+   "uses_external": 8,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {Ω : Type u_1} {ℓ m : ℕ} {Y : ℕ → Ω → ℕ} {l : List ℕ},\n  l ∈ GFNBounds.Doubling.Decay.descPaths ℓ m → ∀ {ω : Ω}, ω ∈ GFNBounds.Doubling.cyl Y l → D.chainZ ℓ Y ω = D.pathZ l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 253,
+   "kind": "theorem",
+   "doc": "On the cylinder of a stopped trajectory `l`, `Z_ℓ = pathZ l`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.chainZ":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.R0",
+    "GFNBounds.Doubling.Decay.exitTime"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 5,
+   "type":
+   "GFNBounds.Doubling.Decay → {Ω : Type u_1} → ℕ → (ℕ → Ω → ℕ) → Ω → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 164,
+   "kind": "def",
+   "doc": "**`Z_ℓ(ω) = ∏_{n<N_ℓ(ω)} R₀(Y_n(ω))`**, `N_ℓ = exitTime ℓ`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.chainProb_of_mem_descPaths":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.chainProb",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.descPaths_of_ge",
+    "GFNBounds.Doubling.Decay.descPaths_of_lt",
+    "GFNBounds.Doubling.Decay.descStep",
+    "GFNBounds.Doubling.Decay.head_of_mem_descPaths",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathProb_cons",
+    "GFNBounds.Doubling.window",
+    "GFNBounds.Doubling.window_lt"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.chainProb",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathProb"],
+   "uses_external": 79,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ : ℕ} (y : ℕ) {l : List ℕ},\n  l ∈ GFNBounds.Doubling.Decay.descPaths ℓ y → D.chainProb ℓ y l.tail = D.pathProb l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 170,
+   "kind": "theorem",
+   "doc":
+   "On a stopped trajectory the chain's transition law is `k`: `chainProb` is `pathProb`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.chainProb_of_lt":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.chainProb",
+    "GFNBounds.Doubling.Decay.descStep",
+    "GFNBounds.Doubling.Decay.kern",
+    "GFNBounds.Doubling.Matches",
+    "GFNBounds.Doubling.window"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.chainProb",
+    "GFNBounds.Doubling.Matches"],
+   "uses_external": 60,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {ℓ y : ℕ},\n  y < 2 * ℓ → ∀ (t : List ℕ), D.chainProb ℓ y t = if GFNBounds.Doubling.Matches (fun x => y) t then 1 else 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 354,
+   "kind": "theorem",
+   "doc":
+   "Below `2ℓ` the chain stays put: `chainProb ℓ y t = 1` if `t` is constantly `y`, else `0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.chainProb":
+  {"uses_value": ["GFNBounds.Doubling.Decay"],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 4,
+   "type": "GFNBounds.Doubling.Decay → ℕ → ℕ → List ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 102,
+   "kind": "def",
+   "doc":
+   "`chainProb ℓ y [a_1, …, a_n] = ∏_{i<n} descStep ℓ a_i a_{i+1}` with `a_0 = y`: the probability,\nfrom `Y_0 = y`, that `Y_1 = a_1, …, Y_n = a_n`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.chainDev_ae_eq":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.ae_mem_iUnion_cyl",
+    "GFNBounds.Doubling.Decay.chainZ",
+    "GFNBounds.Doubling.Decay.chainZ_of_matches",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.matches_descPaths_unique",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.cyl"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.chainZ",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pathZ",
+    "GFNBounds.Doubling.cyl"],
+   "uses_external": 49,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {Ω : Type u_1} [inst : MeasurableSpace Ω] {P : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure P] {ℓ m : ℕ} {Y : ℕ → Ω → ℕ},\n  D.IsDescentChain P ℓ m Y →\n    1 ≤ ℓ →\n      ℓ ≤ m →\n        (fun ω => |D.chainZ ℓ Y ω - 1|) =ᵐ[P] fun ω =>\n          ∑ l ∈ GFNBounds.Doubling.Decay.descPaths ℓ m,\n            (GFNBounds.Doubling.cyl Y l).indicator (fun x => |D.pathZ l - 1|) ω",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 285,
+   "kind": "theorem",
+   "doc":
+   "`|Z_ℓ − 1|` agrees `P`-a.e. with the simple function `Σ_l 1_{C_l} |pathZ l − 1|`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.ceil_le_of_mem_window":
   {"uses_value": ["GFNBounds.Doubling.mem_window", "GFNBounds.Doubling.window"],
@@ -50839,6 +51761,36 @@
    "line": 66,
    "kind": "def",
    "doc": "`α := log₂(1/(1−ω))`, the paper's exponent parameter. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.ae_mem_iUnion_cyl":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.IsDescentChain.fdd",
+    "GFNBounds.Doubling.Decay.IsDescentChain.measurable",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.Decay.cylProb_of_mem_descPaths",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.Decay.pairwiseDisjoint_cyl",
+    "GFNBounds.Doubling.Decay.pathProb",
+    "GFNBounds.Doubling.Decay.pathProb_pos",
+    "GFNBounds.Doubling.Decay.sum_pathProb",
+    "GFNBounds.Doubling.cyl",
+    "GFNBounds.Doubling.measurableSet_cyl"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.descPaths",
+    "GFNBounds.Doubling.cyl"],
+   "uses_external": 55,
+   "type":
+   "∀ (D : GFNBounds.Doubling.Decay) {Ω : Type u_1} [inst : MeasurableSpace Ω] {P : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure P] {ℓ m : ℕ} {Y : ℕ → Ω → ℕ},\n  D.IsDescentChain P ℓ m Y →\n    1 ≤ ℓ → ℓ ≤ m → ∀ᵐ (ω : Ω) ∂P, ω ∈ ⋃ l ∈ GFNBounds.Doubling.Decay.descPaths ℓ m, GFNBounds.Doubling.cyl Y l",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 267,
+   "kind": "theorem",
+   "doc":
+   "**The stopped trajectories exhaust the chain**: their cylinders cover `Ω` up to a `P`-null\nset. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.abs_ePf_le":
   {"uses_value":
@@ -51691,6 +52643,129 @@
    "kind": "def",
    "doc":
    "**A path of the descent chain at the level `ℓ`**: `Y_{n+1} ∈ W(Y_n)` when `Y_n ≥ 2ℓ`, and\n`Y_{n+1} = Y_n` when `Y_n < 2ℓ` — the support of the transition law of `lem:doubling_descent`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.IsDescentChain.recOn":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.IsDescentChain.mk",
+    "GFNBounds.Doubling.Decay.IsDescentChain.rec",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.cyl"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.IsDescentChain.mk",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.cyl"],
+   "uses_external": 12,
+   "type":
+   "{D : GFNBounds.Doubling.Decay} →\n  {Ω : Type u_1} →\n    [inst : MeasurableSpace Ω] →\n      {P : MeasureTheory.Measure Ω} →\n        {ℓ m : ℕ} →\n          {Y : ℕ → Ω → ℕ} →\n            {motive : D.IsDescentChain P ℓ m Y → Sort u} →\n              (t : D.IsDescentChain P ℓ m Y) →\n                ((measurable : ∀ (n : ℕ), Measurable (Y n)) →\n                    (fdd : ∀ (c : List ℕ), P (GFNBounds.Doubling.cyl Y c) = ENNReal.ofReal (D.cylProb ℓ m c)) →\n                      motive ⋯) →\n                  motive t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 156,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.IsDescentChain.rec":
+  {"uses_value": [],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.IsDescentChain.mk",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.cyl"],
+   "uses_external": 0,
+   "type":
+   "{D : GFNBounds.Doubling.Decay} →\n  {Ω : Type u_1} →\n    [inst : MeasurableSpace Ω] →\n      {P : MeasureTheory.Measure Ω} →\n        {ℓ m : ℕ} →\n          {Y : ℕ → Ω → ℕ} →\n            {motive : D.IsDescentChain P ℓ m Y → Sort u} →\n              ((measurable : ∀ (n : ℕ), Measurable (Y n)) →\n                  (fdd : ∀ (c : List ℕ), P (GFNBounds.Doubling.cyl Y c) = ENNReal.ofReal (D.cylProb ℓ m c)) →\n                    motive ⋯) →\n                (t : D.IsDescentChain P ℓ m Y) → motive t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 156,
+   "kind": "rec",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.IsDescentChain.mk":
+  {"uses_value": [],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.cyl"],
+   "uses_external": 0,
+   "type":
+   "∀ {D : GFNBounds.Doubling.Decay} {Ω : Type u_1} [inst : MeasurableSpace Ω] {P : MeasureTheory.Measure Ω} {ℓ m : ℕ}\n  {Y : ℕ → Ω → ℕ},\n  (∀ (n : ℕ), Measurable (Y n)) →\n    (∀ (c : List ℕ), P (GFNBounds.Doubling.cyl Y c) = ENNReal.ofReal (D.cylProb ℓ m c)) → D.IsDescentChain P ℓ m Y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 159,
+   "kind": "ctor",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.IsDescentChain.measurable":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.IsDescentChain"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.IsDescentChain"],
+   "uses_external": 3,
+   "type":
+   "∀ {D : GFNBounds.Doubling.Decay} {Ω : Type u_1} [inst : MeasurableSpace Ω] {P : MeasureTheory.Measure Ω} {ℓ m : ℕ}\n  {Y : ℕ → Ω → ℕ}, D.IsDescentChain P ℓ m Y → ∀ (n : ℕ), Measurable (Y n)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 161,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.IsDescentChain.fdd":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay", "GFNBounds.Doubling.Decay.IsDescentChain"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.cyl"],
+   "uses_external": 3,
+   "type":
+   "∀ {D : GFNBounds.Doubling.Decay} {Ω : Type u_1} [inst : MeasurableSpace Ω] {P : MeasureTheory.Measure Ω} {ℓ m : ℕ}\n  {Y : ℕ → Ω → ℕ},\n  D.IsDescentChain P ℓ m Y → ∀ (c : List ℕ), P (GFNBounds.Doubling.cyl Y c) = ENNReal.ofReal (D.cylProb ℓ m c)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 162,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.IsDescentChain.casesOn":
+  {"uses_value":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.IsDescentChain.mk",
+    "GFNBounds.Doubling.Decay.IsDescentChain.rec",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.cyl"],
+   "uses_type":
+   ["GFNBounds.Doubling.Decay",
+    "GFNBounds.Doubling.Decay.IsDescentChain",
+    "GFNBounds.Doubling.Decay.IsDescentChain.mk",
+    "GFNBounds.Doubling.Decay.cylProb",
+    "GFNBounds.Doubling.cyl"],
+   "uses_external": 12,
+   "type":
+   "{D : GFNBounds.Doubling.Decay} →\n  {Ω : Type u_1} →\n    [inst : MeasurableSpace Ω] →\n      {P : MeasureTheory.Measure Ω} →\n        {ℓ m : ℕ} →\n          {Y : ℕ → Ω → ℕ} →\n            {motive : D.IsDescentChain P ℓ m Y → Sort u} →\n              (t : D.IsDescentChain P ℓ m Y) →\n                ((measurable : ∀ (n : ℕ), Measurable (Y n)) →\n                    (fdd : ∀ (c : List ℕ), P (GFNBounds.Doubling.cyl Y c) = ENNReal.ofReal (D.cylProb ℓ m c)) →\n                      motive ⋯) →\n                  motive t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 156,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Decay.IsDescentChain":
+  {"uses_value": [],
+   "uses_type": ["GFNBounds.Doubling.Decay"],
+   "uses_external": 0,
+   "type":
+   "GFNBounds.Doubling.Decay →\n  {Ω : Type u_1} → [inst : MeasurableSpace Ω] → MeasureTheory.Measure Ω → ℕ → ℕ → (ℕ → Ω → ℕ) → Prop",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.WeightChain",
+   "line": 156,
+   "kind": "inductive",
+   "doc":
+   "**`Y` is the descent chain at the level `ℓ` started at `m`**: each `Y_n` is measurable and the\nfinite-dimensional laws are `cylProb ℓ m`, those of the transition law of `lem:doubling_descent`\nfrom `δ_m`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Decay.Gamma_pos":
   {"uses_value":
@@ -56376,6 +57451,1412 @@
    "kind": "def",
    "doc":
    "**`def:universality`, strong form, with its pair quantifier closed**: the family\n`Θ = {P} × E⁺` is strongly universal when *every* admissible pair is realized exactly — not\nmerely approached. This is `WeaklyUniversal`'s twin in `Core/Universality.lean`, with\n`WeaklyUniversalAt` replaced by `StronglyUniversalAt`.\n\nAs there, `Pi θ = 0` is the paper's \"distributions of equal total mass\". ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.Parked.tailProb_eq":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.mk",
+    "GFNBounds.Core.Sampling.FlowData.tailProb",
+    "GFNBounds.Core.Sampling.Parked.flow",
+    "GFNBounds.Core.Sampling.Parked.law_false_succ"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.tailProb",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_external": 78,
+   "type":
+   "∀ (n : ℕ), GFNBounds.Core.Sampling.Parked.flow.tailProb n = if n = 0 then 1 else 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 547,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.Parked.strict":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.expectedTau",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.tailProb",
+    "GFNBounds.Core.Sampling.Parked.flow",
+    "GFNBounds.Core.Sampling.Parked.tailProb_eq"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.expectedTau",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_external": 102,
+   "type":
+   "GFNBounds.Core.Sampling.Parked.flow.expectedTau = 1 ∧\n  (∑ x, GFNBounds.Core.Sampling.Parked.flow.fout x) / ∑ x, GFNBounds.Core.Sampling.Parked.flow.finit x + 1 = 41",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 552,
+   "kind": "theorem",
+   "doc":
+   "**The bound of `theo:sampling_theorem` can be strict**: here `E(τ) = 1` while\n`F⋆_out(𝒮)/F_init(𝒮) + 1 = 41`. The occupation measure is the *minimal* solution of its\nrecursion, and `F_term + F⋆_out` is merely *a* solution. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.Parked.law_false_succ":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_external": 16,
+   "type":
+   "∀ (n : ℕ) (y : Bool), GFNBounds.Core.Sampling.Parked.flow.law (n + 1) (y, false) = 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 539,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.Parked.isGenFlow":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.IsGenFlow.mk",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.mk",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_external": 86,
+   "type": "GFNBounds.Core.Sampling.Parked.flow.IsGenFlow",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 524,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.Parked.inhabited":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.sampling_theorem",
+    "GFNBounds.Core.Sampling.Parked.flow",
+    "GFNBounds.Core.Sampling.Parked.flowMatching",
+    "GFNBounds.Core.Sampling.Parked.fterm_ne",
+    "GFNBounds.Core.Sampling.Parked.isGenFlow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.expectedTau",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.tailProb",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_external": 3,
+   "type":
+   "∑ x, GFNBounds.Core.Sampling.Parked.flow.finit x = ∑ x, GFNBounds.Core.Sampling.Parked.flow.fterm x ∧\n  Summable GFNBounds.Core.Sampling.Parked.flow.tailProb ∧\n    GFNBounds.Core.Sampling.Parked.flow.expectedTau ≤\n        (∑ x, GFNBounds.Core.Sampling.Parked.flow.fout x) / ∑ x, GFNBounds.Core.Sampling.Parked.flow.finit x + 1 ∧\n      Filter.Tendsto GFNBounds.Core.Sampling.Parked.flow.tailProb Filter.atTop (nhds 0) ∧\n        Filter.Tendsto (fun n => ∑ y, GFNBounds.Core.Sampling.Parked.flow.law n (y, true)) Filter.atTop (nhds 1) ∧\n          ∀ (y : Bool),\n            Filter.Tendsto (fun n => GFNBounds.Core.Sampling.Parked.flow.law n (y, true)) Filter.atTop\n              (nhds (GFNBounds.Core.Sampling.Parked.flow.fterm y / ∑ x, GFNBounds.Core.Sampling.Parked.flow.fterm x))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 562,
+   "kind": "theorem",
+   "doc":
+   "**`theo:sampling_theorem` is inhabited** (kb `0025`): the parked flow meets every hypothesis,\nso the theorem applies to it, with a strict bound (`strict`). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.Parked.fterm_ne":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_external": 31,
+   "type": "GFNBounds.Core.Sampling.Parked.flow.fterm ≠ 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 536,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.Parked.flowMatching":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.Parked.flow"],
+   "uses_external": 78,
+   "type": "GFNBounds.Core.Sampling.Parked.flow.FlowMatching",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 531,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.Parked.flow":
+  {"uses_value": ["GFNBounds.Core.Sampling.FlowData.mk"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 13,
+   "type": "GFNBounds.Core.Sampling.FlowData Bool",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 515,
+   "kind": "def",
+   "doc":
+   "The retraction register's instance, two states: the answer `true` receives and emits unit\nmass, and the parked state `false` carries outflow `40` on a self-loop that no initial mass ever\nreaches. Flow matching is exact. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.unstopped_eq_zero_of_G_zero":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.partial_le"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 139,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow →\n    F.FlowMatching → 0 < ∑ x, F.finit x → ∀ {y : V}, F.fterm y + F.fout y = 0 → ∀ (n : ℕ), F.law n (y, false) = 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 335,
+   "kind": "theorem",
+   "doc":
+   "The sampler never stands at a state with `F_term + F⋆_out = 0`: the stopping convention\nthere is immaterial. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.tailProb_tendsto_zero":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.summable_tailProb",
+    "GFNBounds.Core.Sampling.FlowData.tailProb"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.tailProb"],
+   "uses_external": 17,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → F.FlowMatching → 0 < ∑ x, F.finit x → Filter.Tendsto F.tailProb Filter.atTop (nhds 0)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 375,
+   "kind": "theorem",
+   "doc": "**Termination**: `P(τ > n) → 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.tailProb_succ":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.P_row",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_succ_false",
+    "GFNBounds.Core.Sampling.FlowData.stop",
+    "GFNBounds.Core.Sampling.FlowData.tailProb"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.stop",
+    "GFNBounds.Core.Sampling.FlowData.tailProb"],
+   "uses_external": 125,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → ∀ (n : ℕ), F.tailProb (n + 1) = F.tailProb n - ∑ y, F.law n (y, false) * F.stop y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 456,
+   "kind": "theorem",
+   "doc":
+   "The tail recursion: `P(τ > n+1) = P(τ > n) − P(τ = n+1)`, with\n`P(τ = n+1) = ∑_y P(τ > n, s_{n+1} = y) stop(y)`: the tail probabilities decrease by exactly\nthe mass the stopping rule removes. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.tailProb":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 10,
+   "type":
+   "{V : Type u_1} → [Fintype V] → [DecidableEq V] → GFNBounds.Core.Sampling.FlowData V → ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 176,
+   "kind": "def",
+   "doc": "`P(τ > n)`: the mass not yet stopped at time `n`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.summable_unstopped":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.partial_le"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 23,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → F.FlowMatching → 0 < ∑ x, F.finit x → ∀ (y : V), Summable fun n => F.law n (y, false)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 331,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.summable_tailProb":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.summable_unstopped"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.tailProb"],
+   "uses_external": 34,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → F.FlowMatching → 0 < ∑ x, F.finit x → Summable F.tailProb",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 353,
+   "kind": "theorem",
+   "doc":
+   "**`E(τ)` is finite and bounded** — `∑_n P(τ > n)` converges, with partial sums at most\n`(F_term(𝒮) + F⋆_out(𝒮))/F_init(𝒮)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.stopped_sum":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_sum",
+    "GFNBounds.Core.Sampling.FlowData.tailProb"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.tailProb"],
+   "uses_external": 141,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → 0 < ∑ x, F.finit x → ∀ (n : ℕ), ∑ y, F.law n (y, true) = 1 - F.tailProb n",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 468,
+   "kind": "theorem",
+   "doc":
+   "`P(τ ≤ n) = 1 − P(τ > n)`: at every time the sampler has either stopped or not. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.stop_nonneg":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.cont_le_one",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_external": 107,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V}, F.IsGenFlow → ∀ (x : V), 0 ≤ F.stop x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 216,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.stop_mul_occ":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.G_recursion",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.P_row",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.occ_recursion",
+    "GFNBounds.Core.Sampling.FlowData.partial_le",
+    "GFNBounds.Core.Sampling.FlowData.stop",
+    "GFNBounds.Core.Sampling.FlowData.stop_mul",
+    "GFNBounds.Core.Sampling.FlowData.stop_nonneg"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_external": 242,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow →\n    F.FlowMatching →\n      0 < ∑ x, F.finit x → ∀ (y : V), F.stop y * ∑' (n : ℕ), F.law n (y, false) = F.fterm y / ∑ x, F.finit x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 404,
+   "kind": "theorem",
+   "doc":
+   "**The key step.** The gap `ν := G/Z − Q` between the dominating solution and the occupation\nis invariant under the sub-stochastic kernel `cont · P⋆`, hence carried where `stop = 0`; so\n`stop(y) Q(y) = stop(y) G(y)/Z = F_term(y)/Z` at every `y`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.stop_mul":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.cont_mul",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_external": 127,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → ∀ (x : V), F.stop x * (F.fterm x + F.fout x) = F.fterm x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 229,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.stop":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.cont"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 7,
+   "type": "{V : Type u_1} → GFNBounds.Core.Sampling.FlowData V → V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 157,
+   "kind": "def",
+   "doc":
+   "The probability of stopping at `x`, the paper's `dF_term/d(F_term + F⋆_out)(x)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.sampling_theorem":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.fterm_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.expectedTau",
+    "GFNBounds.Core.Sampling.FlowData.expectedTau_le",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_true_tendsto",
+    "GFNBounds.Core.Sampling.FlowData.mass_eq",
+    "GFNBounds.Core.Sampling.FlowData.stopped_sum",
+    "GFNBounds.Core.Sampling.FlowData.summable_tailProb",
+    "GFNBounds.Core.Sampling.FlowData.tailProb",
+    "GFNBounds.Core.Sampling.FlowData.tailProb_tendsto_zero"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.expectedTau",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.tailProb"],
+   "uses_external": 99,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow →\n    F.fterm ≠ 0 →\n      F.FlowMatching →\n        ∑ x, F.finit x = ∑ x, F.fterm x ∧\n          Summable F.tailProb ∧\n            F.expectedTau ≤ (∑ x, F.fout x) / ∑ x, F.finit x + 1 ∧\n              Filter.Tendsto F.tailProb Filter.atTop (nhds 0) ∧\n                Filter.Tendsto (fun n => ∑ y, F.law n (y, true)) Filter.atTop (nhds 1) ∧\n                  ∀ (y : V),\n                    Filter.Tendsto (fun n => F.law n (y, true)) Filter.atTop (nhds (F.fterm y / ∑ x, F.fterm x))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 477,
+   "kind": "theorem",
+   "doc":
+   "**`theo:sampling_theorem`, finite state space.** Let `F_init, F_term` be non-negative with\n`F_term ≠ 0` and `(P⋆, F⋆_out)` a generative flow on a finite `V`. If the flow-matching constraint\n`F_init + F⋆_out P⋆ = F_term + F⋆_out` holds, then\n\n1. `F_init(𝒮) = F_term(𝒮)`;\n2. `E(τ) = ∑_{n ≥ 0} P(τ > n)` converges;\n3. `E(τ) ≤ F⋆_out(𝒮)/F_init(𝒮) + 1`;\n4. the sampler terminates: `P(τ > n) → 0`;\n5. equivalently, `P(τ ≤ n) → 1`;\n6. `s_τ ∼ F_term`: `P(τ ≤ n, s_τ = y) → F_term(y)/F_term(𝒮)` at every `y`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.recOn":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.mk",
+    "GFNBounds.Core.Sampling.FlowData.rec"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.mk"],
+   "uses_external": 1,
+   "type":
+   "{V : Type u_1} →\n  {motive : GFNBounds.Core.Sampling.FlowData V → Sort u} →\n    (t : GFNBounds.Core.Sampling.FlowData V) →\n      ((finit fterm fout : V → ℝ) → (P : V → V → ℝ) → motive { finit := finit, fterm := fterm, fout := fout, P := P }) →\n        motive t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 129,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.rec":
+  {"uses_value": [],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.mk"],
+   "uses_external": 0,
+   "type":
+   "{V : Type u_1} →\n  {motive : GFNBounds.Core.Sampling.FlowData V → Sort u} →\n    ((finit fterm fout : V → ℝ) → (P : V → V → ℝ) → motive { finit := finit, fterm := fterm, fout := fout, P := P }) →\n      (t : GFNBounds.Core.Sampling.FlowData V) → motive t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 129,
+   "kind": "rec",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.partial_le":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 26,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow →\n    F.FlowMatching →\n      0 < ∑ x, F.finit x →\n        ∀ (N : ℕ) (y : V), ∑ n ∈ Finset.range N, F.law n (y, false) ≤ (F.fterm y + F.fout y) / ∑ x, F.finit x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 299,
+   "kind": "theorem",
+   "doc":
+   "**The occupation measure is dominated by `(F_term + F⋆_out)/F_init(𝒮)`**: every partial sum\nof the unstopped laws `P(τ > n, s_{n+1} = y)` is at most `G(y)/Z`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.occ_recursion":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_succ_false",
+    "GFNBounds.Core.Sampling.FlowData.law_zero_false",
+    "GFNBounds.Core.Sampling.FlowData.summable_unstopped"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 104,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow →\n    F.FlowMatching →\n      0 < ∑ x, F.finit x →\n        ∀ (y : V),\n          ∑' (n : ℕ), F.law n (y, false) =\n            F.finit y / ∑ x, F.finit x + ∑ x, (F.cont x * ∑' (n : ℕ), F.law n (x, false)) * F.P x y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 380,
+   "kind": "theorem",
+   "doc":
+   "The total occupation `Q(y) = ∑_n P(τ > n, s_{n+1} = y)` solves the occupation recursion\n`Q = F_init/Z + (cont · Q) P⋆`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.noConfusionType":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.casesOn"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 2,
+   "type":
+   "Sort u →\n  {V : Type u_1} → GFNBounds.Core.Sampling.FlowData V → {V' : Type u_1} → GFNBounds.Core.Sampling.FlowData V' → Sort u",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 0,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.noConfusion":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.casesOn",
+    "GFNBounds.Core.Sampling.FlowData.noConfusionType"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.noConfusionType"],
+   "uses_external": 6,
+   "type":
+   "{P : Sort u} →\n  {V : Type u_1} →\n    {t : GFNBounds.Core.Sampling.FlowData V} →\n      {V' : Type u_1} →\n        {t' : GFNBounds.Core.Sampling.FlowData V'} →\n          V = V' → t ≍ t' → GFNBounds.Core.Sampling.FlowData.noConfusionType P t t'",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 129,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.mk.sizeOf_spec":
+  {"uses_value": [],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.mk"],
+   "uses_external": 6,
+   "type":
+   "∀ {V : Type u_1} [inst : SizeOf V] (finit fterm fout : V → ℝ) (P : V → V → ℝ),\n  sizeOf { finit := finit, fterm := fterm, fout := fout, P := P } = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.mk.noConfusion":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.mk",
+    "GFNBounds.Core.Sampling.FlowData.noConfusion"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.mk"],
+   "uses_external": 6,
+   "type":
+   "{V : Type u_1} →\n  {P : Sort u} →\n    {finit fterm fout : V → ℝ} →\n      {P_1 : V → V → ℝ} →\n        {finit' fterm' fout' : V → ℝ} →\n          {P' : V → V → ℝ} →\n            { finit := finit, fterm := fterm, fout := fout, P := P_1 } =\n                { finit := finit', fterm := fterm', fout := fout', P := P' } →\n              (finit ≍ finit' → fterm ≍ fterm' → fout ≍ fout' → P_1 ≍ P' → P) → P",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 131,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.mk.injEq":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.mk",
+    "GFNBounds.Core.Sampling.FlowData.mk.inj"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.mk"],
+   "uses_external": 7,
+   "type":
+   "∀ {V : Type u_1} (finit fterm fout : V → ℝ) (P : V → V → ℝ) (finit_1 fterm_1 fout_1 : V → ℝ) (P_1 : V → V → ℝ),\n  ({ finit := finit, fterm := fterm, fout := fout, P := P } =\n      { finit := finit_1, fterm := fterm_1, fout := fout_1, P := P_1 }) =\n    (finit = finit_1 ∧ fterm = fterm_1 ∧ fout = fout_1 ∧ P = P_1)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.mk.inj":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.mk",
+    "GFNBounds.Core.Sampling.FlowData.mk.noConfusion"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.mk"],
+   "uses_external": 6,
+   "type":
+   "∀ {V : Type u_1} {finit fterm fout : V → ℝ} {P : V → V → ℝ} {finit_1 fterm_1 fout_1 : V → ℝ} {P_1 : V → V → ℝ},\n  { finit := finit, fterm := fterm, fout := fout, P := P } =\n      { finit := finit_1, fterm := fterm_1, fout := fout_1, P := P_1 } →\n    finit = finit_1 ∧ fterm = fterm_1 ∧ fout = fout_1 ∧ P = P_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.mk":
+  {"uses_value": [],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 0,
+   "type":
+   "{V : Type u_1} → (V → ℝ) → (V → ℝ) → (V → ℝ) → (V → V → ℝ) → GFNBounds.Core.Sampling.FlowData V",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 131,
+   "kind": "ctor",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.mass_eq":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.P_row",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_external": 141,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → F.FlowMatching → ∑ x, F.finit x = ∑ x, F.fterm x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 280,
+   "kind": "theorem",
+   "doc":
+   "**Mass conservation**: flow matching forces `F_init(𝒮) = F_term(𝒮)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law_zero_true":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 10,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] (F : GFNBounds.Core.Sampling.FlowData V) (y : V),\n  F.law 0 (y, true) = 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 200,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law_zero_false":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 10,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] (F : GFNBounds.Core.Sampling.FlowData V) (y : V),\n  F.law 0 (y, false) = F.finit y / ∑ x, F.finit x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 198,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law_true_tendsto":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_true_eq",
+    "GFNBounds.Core.Sampling.FlowData.mass_eq",
+    "GFNBounds.Core.Sampling.FlowData.stop",
+    "GFNBounds.Core.Sampling.FlowData.stop_mul_occ",
+    "GFNBounds.Core.Sampling.FlowData.summable_unstopped"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 54,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow →\n    F.FlowMatching →\n      0 < ∑ x, F.finit x →\n        ∀ (y : V), Filter.Tendsto (fun n => F.law n (y, true)) Filter.atTop (nhds (F.fterm y / ∑ x, F.fterm x))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 448,
+   "kind": "theorem",
+   "doc":
+   "**The law of the stopped state**: `P(τ ≤ n, s_τ = y) → F_term(y)/F_term(𝒮)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law_true_eq":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_succ_true",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_external": 73,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V} (n : ℕ) (y : V),\n  F.law n (y, true) = F.stop y * ∑ k ∈ Finset.range n, F.law k (y, false)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 346,
+   "kind": "theorem",
+   "doc": "`P(τ ≤ n, s_τ = y) = stop(y) · ∑_{k<n} P(τ > k, s_{k+1} = y)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law_sum":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 20,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → 0 < ∑ x, F.finit x → ∀ (n : ℕ), ∑ z, F.law n z = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 266,
+   "kind": "theorem",
+   "doc":
+   "The sampler's time-`n` law is a probability distribution on `V × Bool`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law_succ_true":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.K",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_succ",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_external": 70,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] (F : GFNBounds.Core.Sampling.FlowData V) (n : ℕ) (y : V),\n  F.law (n + 1) (y, true) = F.law n (y, true) + F.law n (y, false) * F.stop y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 192,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law_succ_false":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.K",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_succ",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 90,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] (F : GFNBounds.Core.Sampling.FlowData V) (n : ℕ) (y : V),\n  F.law (n + 1) (y, false) = ∑ x, F.cont x * F.law n (x, false) * F.P x y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 184,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law_succ":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.K",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 12,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] (F : GFNBounds.Core.Sampling.FlowData V) (n : ℕ)\n  (z : V × Bool), F.law (n + 1) z = ∑ w, F.law n w * F.K w z",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 182,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law_nonneg":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 12,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → ∀ (n : ℕ) (z : V × Bool), 0 ≤ F.law n z",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 259,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.law"],
+   "uses_external": 14,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V]\n  (F F_1 : GFNBounds.Core.Sampling.FlowData V),\n  F = F_1 → ∀ (a a_1 : ℕ), a = a_1 → ∀ (a_2 a_3 : V × Bool), a_2 = a_3 → F.law a a_2 = F_1.law a_1 a_3",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.law":
+  {"uses_value": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 7,
+   "type":
+   "{V : Type u_1} → [Fintype V] → [DecidableEq V] → GFNBounds.Core.Sampling.FlowData V → ℕ → V × Bool → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 171,
+   "kind": "def",
+   "doc": "The law of the sampler's chain at time `n`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.init":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.finit"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 14,
+   "type":
+   "{V : Type u_1} → [Fintype V] → GFNBounds.Core.Sampling.FlowData V → V × Bool → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 166,
+   "kind": "def",
+   "doc": "The sampler's initial law: `s₁ ∼ F_init/F_init(𝒮)`, not stopped. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.fterm":
+  {"uses_value": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 0,
+   "type": "{V : Type u_1} → GFNBounds.Core.Sampling.FlowData V → V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 133,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.fout":
+  {"uses_value": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 0,
+   "type": "{V : Type u_1} → GFNBounds.Core.Sampling.FlowData V → V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 134,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.finit":
+  {"uses_value": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 0,
+   "type": "{V : Type u_1} → GFNBounds.Core.Sampling.FlowData V → V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 132,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.expectedTau_le":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm",
+    "GFNBounds.Core.Sampling.FlowData.law",
+    "GFNBounds.Core.Sampling.FlowData.law_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.mass_eq",
+    "GFNBounds.Core.Sampling.FlowData.partial_le",
+    "GFNBounds.Core.Sampling.FlowData.tailProb"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.expectedTau",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout"],
+   "uses_external": 72,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → F.FlowMatching → 0 < ∑ x, F.finit x → F.expectedTau ≤ (∑ x, F.fout x) / ∑ x, F.finit x + 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 359,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.expectedTau":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.tailProb"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 10,
+   "type":
+   "{V : Type u_1} → [Fintype V] → [DecidableEq V] → GFNBounds.Core.Sampling.FlowData V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 179,
+   "kind": "def",
+   "doc": "`𝔼(τ) = ∑_{n ≥ 0} P(τ > n)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.ctorIdx":
+  {"uses_value": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 0,
+   "type": "{V : Type u_1} → GFNBounds.Core.Sampling.FlowData V → ℕ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 0,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.cont_nonneg":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.fout_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.fterm_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.cont"],
+   "uses_external": 27,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V}, F.IsGenFlow → ∀ (x : V), 0 ≤ F.cont x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 205,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.cont_mul":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.fout_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.fterm_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_external": 181,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → ∀ (x : V), F.cont x * (F.fterm x + F.fout x) = F.fout x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 220,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.cont_le_one":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.fout_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.fterm_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.cont"],
+   "uses_external": 138,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V}, F.IsGenFlow → ∀ (x : V), F.cont x ≤ 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 209,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.cont":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 8,
+   "type": "{V : Type u_1} → GFNBounds.Core.Sampling.FlowData V → V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 154,
+   "kind": "def",
+   "doc":
+   "The probability of moving on from `x`, `F⋆_out(x)/(F_term(x) + F⋆_out(x))`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.casesOn":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.mk",
+    "GFNBounds.Core.Sampling.FlowData.rec"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.mk"],
+   "uses_external": 1,
+   "type":
+   "{V : Type u_1} →\n  {motive : GFNBounds.Core.Sampling.FlowData V → Sort u} →\n    (t : GFNBounds.Core.Sampling.FlowData V) →\n      ((finit fterm fout : V → ℝ) → (P : V → V → ℝ) → motive { finit := finit, fterm := fterm, fout := fout, P := P }) →\n        motive t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 129,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.P":
+  {"uses_value": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 0,
+   "type": "{V : Type u_1} → GFNBounds.Core.Sampling.FlowData V → V → V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 135,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.K_row":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.P_row",
+    "GFNBounds.Core.Sampling.FlowData.K",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.K"],
+   "uses_external": 147,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → ∀ (w : V × Bool), ∑ z, F.K w z = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 247,
+   "kind": "theorem",
+   "doc": "The augmented kernel is stochastic: each row sums to `1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.K_nonneg":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.P_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.K",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.cont_nonneg",
+    "GFNBounds.Core.Sampling.FlowData.stop",
+    "GFNBounds.Core.Sampling.FlowData.stop_nonneg"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.K"],
+   "uses_external": 52,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow → ∀ (w z : V × Bool), 0 ≤ F.K w z",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 235,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.K.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.K"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData", "GFNBounds.Core.Sampling.FlowData.K"],
+   "uses_external": 12,
+   "type":
+   "∀ {V : Type u_1} {inst : DecidableEq V} [inst_1 : DecidableEq V] (F F_1 : GFNBounds.Core.Sampling.FlowData V),\n  F = F_1 → ∀ (a a_1 : V × Bool), a = a_1 → ∀ (a_2 a_3 : V × Bool), a_2 = a_3 → F.K a a_2 = F_1.K a_1 a_3",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.K":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.stop"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 18,
+   "type":
+   "{V : Type u_1} → [DecidableEq V] → GFNBounds.Core.Sampling.FlowData V → V × Bool → V × Bool → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 160,
+   "kind": "def",
+   "doc":
+   "The sampler's transition matrix on `V × Bool`; `true` flags a stopped sampler. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.IsGenFlow.recOn":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.mk",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.rec",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.mk",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_external": 13,
+   "type":
+   "{V : Type u_1} →\n  [inst : Fintype V] →\n    {F : GFNBounds.Core.Sampling.FlowData V} →\n      {motive : F.IsGenFlow → Sort u} →\n        (t : F.IsGenFlow) →\n          ((finit_nonneg : ∀ (x : V), 0 ≤ F.finit x) →\n              (fterm_nonneg : ∀ (x : V), 0 ≤ F.fterm x) →\n                (fout_nonneg : ∀ (x : V), 0 ≤ F.fout x) →\n                  (P_nonneg : ∀ (x y : V), 0 ≤ F.P x y) → (P_row : ∀ (x : V), ∑ y, F.P x y = 1) → motive ⋯) →\n            motive t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 141,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.IsGenFlow.rec":
+  {"uses_value": [],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.mk",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_external": 0,
+   "type":
+   "{V : Type u_1} →\n  [inst : Fintype V] →\n    {F : GFNBounds.Core.Sampling.FlowData V} →\n      {motive : F.IsGenFlow → Sort u} →\n        ((finit_nonneg : ∀ (x : V), 0 ≤ F.finit x) →\n            (fterm_nonneg : ∀ (x : V), 0 ≤ F.fterm x) →\n              (fout_nonneg : ∀ (x : V), 0 ≤ F.fout x) →\n                (P_nonneg : ∀ (x y : V), 0 ≤ F.P x y) → (P_row : ∀ (x : V), ∑ y, F.P x y = 1) → motive ⋯) →\n          (t : F.IsGenFlow) → motive t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 141,
+   "kind": "rec",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.IsGenFlow.mk":
+  {"uses_value": [],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_external": 0,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V},\n  (∀ (x : V), 0 ≤ F.finit x) →\n    (∀ (x : V), 0 ≤ F.fterm x) →\n      (∀ (x : V), 0 ≤ F.fout x) → (∀ (x y : V), 0 ≤ F.P x y) → (∀ (x : V), ∑ y, F.P x y = 1) → F.IsGenFlow",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 143,
+   "kind": "ctor",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.IsGenFlow.fterm_nonneg":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_external": 1,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V}, F.IsGenFlow → ∀ (x : V), 0 ≤ F.fterm x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 145,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.IsGenFlow.fout_nonneg":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.fout"],
+   "uses_external": 1,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V}, F.IsGenFlow → ∀ (x : V), 0 ≤ F.fout x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 146,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.IsGenFlow.finit_nonneg":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.finit"],
+   "uses_external": 1,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V}, F.IsGenFlow → ∀ (x : V), 0 ≤ F.finit x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 144,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.IsGenFlow.casesOn":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.mk",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.rec",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow.mk",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_external": 13,
+   "type":
+   "{V : Type u_1} →\n  [inst : Fintype V] →\n    {F : GFNBounds.Core.Sampling.FlowData V} →\n      {motive : F.IsGenFlow → Sort u} →\n        (t : F.IsGenFlow) →\n          ((finit_nonneg : ∀ (x : V), 0 ≤ F.finit x) →\n              (fterm_nonneg : ∀ (x : V), 0 ≤ F.fterm x) →\n                (fout_nonneg : ∀ (x : V), 0 ≤ F.fout x) →\n                  (P_nonneg : ∀ (x y : V), 0 ≤ F.P x y) → (P_row : ∀ (x : V), ∑ y, F.P x y = 1) → motive ⋯) →\n            motive t",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 141,
+   "kind": "def",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.IsGenFlow.P_row":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.P"],
+   "uses_external": 1,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V}, F.IsGenFlow → ∀ (x : V), ∑ y, F.P x y = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 148,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.IsGenFlow.P_nonneg":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.P"],
+   "uses_external": 1,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V}, F.IsGenFlow → ∀ (x y : V), 0 ≤ F.P x y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 147,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.IsGenFlow":
+  {"uses_value": [],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 0,
+   "type":
+   "{V : Type u_1} → [Fintype V] → GFNBounds.Core.Sampling.FlowData V → Prop",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 141,
+   "kind": "inductive",
+   "doc":
+   "`(P⋆, F⋆_out)` is a generative flow and `F_init`, `F_term` are unnormalized distributions:\nall four are non-negative and `P⋆` is stochastic. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.G_recursion":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.cont_mul",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_type":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.FlowMatching",
+    "GFNBounds.Core.Sampling.FlowData.IsGenFlow",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.cont",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_external": 25,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {F : GFNBounds.Core.Sampling.FlowData V},\n  F.IsGenFlow →\n    F.FlowMatching → ∀ (y : V), F.fterm y + F.fout y = F.finit y + ∑ x, F.cont x * (F.fterm x + F.fout x) * F.P x y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 289,
+   "kind": "theorem",
+   "doc":
+   "Flow matching read through the stopping rule: `G = F_init + ((cont · G) P⋆)` with\n`G := F_term + F⋆_out`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData.FlowMatching":
+  {"uses_value":
+   ["GFNBounds.Core.Sampling.FlowData",
+    "GFNBounds.Core.Sampling.FlowData.P",
+    "GFNBounds.Core.Sampling.FlowData.finit",
+    "GFNBounds.Core.Sampling.FlowData.fout",
+    "GFNBounds.Core.Sampling.FlowData.fterm"],
+   "uses_type": ["GFNBounds.Core.Sampling.FlowData"],
+   "uses_external": 12,
+   "type":
+   "{V : Type u_1} → [Fintype V] → GFNBounds.Core.Sampling.FlowData V → Prop",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 150,
+   "kind": "def",
+   "doc":
+   "The flow-matching constraint `equ:FM_const`, `F_init + F⋆_out P⋆ = F_term + F⋆_out`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Core.Sampling.FlowData":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 0,
+   "type": "Type u_1 → Type u_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Core.Sampling",
+   "line": 129,
+   "kind": "inductive",
+   "doc":
+   "The data of `theo:sampling_theorem` on a finite state space: initial and terminal\ndistributions `F_init`, `F_term`, the star outflow `F⋆_out` and the star forward policy `P⋆`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Core.Mixing.tendsto_pow":
   {"uses_value":
@@ -76174,6 +78655,1202 @@
    "kind": "def",
    "doc":
    "**Ergodicity, in the reading the paper's proof uses**: every non-negative `K`-invariant\nvector is a scalar multiple of `λ`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.witness":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.grad",
+    "GFNBounds.Balance.TBGradient.halfLam",
+    "GFNBounds.Balance.TBGradient.halfLam_invariant",
+    "GFNBounds.Balance.TBGradient.hasFDerivAt_loss",
+    "GFNBounds.Balance.TBGradient.ip",
+    "GFNBounds.Balance.TBGradient.loss",
+    "GFNBounds.Balance.TBGradient.pathNu",
+    "GFNBounds.Balance.TBGradient.pathNu_along",
+    "GFNBounds.Balance.TBGradient.swapPb",
+    "GFNBounds.Balance.TBGradient.swapPb_not_full",
+    "GFNBounds.Balance.edgeMeasureE"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.grad",
+    "GFNBounds.Balance.TBGradient.halfLam",
+    "GFNBounds.Balance.TBGradient.ip",
+    "GFNBounds.Balance.TBGradient.loss",
+    "GFNBounds.Balance.TBGradient.pathNu",
+    "GFNBounds.Balance.TBGradient.swapPb",
+    "GFNBounds.Balance.edgeMeasureE"],
+   "uses_external": 160,
+   "type":
+   "GFNBounds.Balance.TBGradient.pathNu ![0, 1, 0] = 1 ∧\n  ¬0 < GFNBounds.Balance.TBGradient.swapPb 0 0 ∧\n    (HasFDerivAt\n        (GFNBounds.Balance.TBGradient.loss GFNBounds.Balance.TBGradient.swapPb GFNBounds.Balance.TBGradient.pathNu\n          fun x => (x - 1) ^ 2)\n        (fderiv ℝ\n          (GFNBounds.Balance.TBGradient.loss GFNBounds.Balance.TBGradient.swapPb GFNBounds.Balance.TBGradient.pathNu\n            fun x => (x - 1) ^ 2)\n          fun x => 1)\n        fun x => 1) ∧\n      ∀ (d : GFNBounds.Balance.EdgeSet GFNBounds.Balance.TBGradient.swapPb → ℝ),\n        (fderiv ℝ\n              (GFNBounds.Balance.TBGradient.loss GFNBounds.Balance.TBGradient.swapPb GFNBounds.Balance.TBGradient.pathNu\n                fun x => (x - 1) ^ 2)\n              fun x => 1)\n            d =\n          GFNBounds.Balance.TBGradient.ip GFNBounds.Balance.TBGradient.swapPb\n            (GFNBounds.Balance.edgeMeasureE GFNBounds.Balance.TBGradient.swapPb GFNBounds.Balance.TBGradient.halfLam)\n            (GFNBounds.Balance.TBGradient.grad GFNBounds.Balance.TBGradient.swapPb GFNBounds.Balance.TBGradient.halfLam\n              GFNBounds.Balance.TBGradient.pathNu (fun x => (x - 1) ^ 2) fun x => 1)\n            d",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 673,
+   "kind": "theorem",
+   "doc":
+   "**`prop:tb_gradient`, inhabitation**: every hypothesis of `hasFDerivAt_loss` holds on the swap chain with a sparse\n`E`, `ℓ = 2`, `ν̂ = δ_{(0,1,0)}` (charging a trajectory), `g(x) = (x−1)²` and `μ ≡ 1`, and the\nconclusion is therefore delivered there. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.weight.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.weight"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.weight"],
+   "uses_external": 18,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] (pb : V → V → ℝ) {ℓ : ℕ}\n  (nu nu_1 : (Fin (ℓ + 1) → V) → ℝ),\n  nu = nu_1 →\n    ∀ (g g_1 : ℝ → ℝ),\n      g = g_1 →\n        ∀ (μ μ_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n          μ = μ_1 →\n            ∀ (k k_1 : Fin ℓ),\n              k = k_1 →\n                ∀ (e e_1 : GFNBounds.Balance.EdgeSet pb),\n                  e = e_1 →\n                    GFNBounds.Balance.TBGradient.weight pb nu g μ k e =\n                      GFNBounds.Balance.TBGradient.weight pb nu_1 g_1 μ_1 k_1 e_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.weight":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.rho"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 47,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] →\n      (pb : V → V → ℝ) →\n        {ℓ : ℕ} →\n          ((Fin (ℓ + 1) → V) → ℝ) →\n            (ℝ → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → Fin ℓ → GFNBounds.Balance.EdgeSet pb → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 173,
+   "kind": "def",
+   "doc":
+   "`a_k(e) := ∑_{τ : e_k = e} ν̂(τ) g'(ρ(τ)) ρ(τ)` (the paper's proof). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.swapPb_not_full":
+  {"uses_value": ["GFNBounds.Balance.TBGradient.swapPb"],
+   "uses_type": ["GFNBounds.Balance.TBGradient.swapPb"],
+   "uses_external": 26,
+   "type": "¬0 < GFNBounds.Balance.TBGradient.swapPb 0 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 658,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.swapPb":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 12,
+   "type": "Fin 2 → Fin 2 → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 648,
+   "kind": "def",
+   "doc":
+   "The swap on two states, `π_←(i → j) = [i ≠ j]`: `E = {(0,1), (1,0)}` is a proper subset of\n`𝒮²`, so the witness exercises the edge-set restriction. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.sum_ite_edge":
+  {"uses_value": ["GFNBounds.Balance.EdgeSet"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 75,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} (c : ℝ)\n  (f : GFNBounds.Balance.EdgeSet pb → ℝ) (s s' : V),\n  (∑ e, if (s, s') = ↑e then c * f e else 0) = c * if h : 0 < pb s' s then f ⟨(s, s'), h⟩ else 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 385,
+   "kind": "theorem",
+   "doc":
+   "Summing over `E` against the indicator of a pair picks the edge, or nothing off `E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.sum_eq_ip_grad":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.dir",
+    "GFNBounds.Balance.TBGradient.dirAt",
+    "GFNBounds.Balance.TBGradient.grad",
+    "GFNBounds.Balance.TBGradient.ip",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.marg_pos",
+    "GFNBounds.Balance.TBGradient.measAct",
+    "GFNBounds.Balance.TBGradient.psi",
+    "GFNBounds.Balance.TBGradient.psi_eq",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.TBGradient.push_pos",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.rho",
+    "GFNBounds.Balance.TBGradient.sum_ite_edge",
+    "GFNBounds.Balance.TBGradient.weight",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Core.reversal"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.dirAt",
+    "GFNBounds.Balance.TBGradient.grad",
+    "GFNBounds.Balance.TBGradient.ip",
+    "GFNBounds.Balance.TBGradient.rho",
+    "GFNBounds.Balance.edgeMeasureE"],
+   "uses_external": 246,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ} {lam : V → ℝ},\n  GFNBounds.Balance.Invariant pb lam →\n    (∀ (x : V), 0 < lam x) →\n      ∀ {nu : (Fin (ℓ + 1) → V) → ℝ},\n        (∀ (τ : Fin (ℓ + 1) → V), 0 ≤ nu τ) →\n          ∀ (g : ℝ → ℝ) {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n            (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n              ∀ (d : GFNBounds.Balance.EdgeSet pb → ℝ),\n                ∑ τ,\n                    nu τ *\n                      (deriv g (GFNBounds.Balance.TBGradient.rho pb μ τ) *\n                        (GFNBounds.Balance.TBGradient.rho pb μ τ *\n                          ∑ k, GFNBounds.Balance.TBGradient.dirAt μ d (τ k.castSucc) (τ k.succ))) =\n                  GFNBounds.Balance.TBGradient.ip pb (GFNBounds.Balance.edgeMeasureE pb lam)\n                    (GFNBounds.Balance.TBGradient.grad pb lam nu g μ) d",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 428,
+   "kind": "theorem",
+   "doc":
+   "**The regrouping** of the paper's proof: the derivative along `d`, summed over trajectories,\nis `⟨∑_k (K₂^{λ₂} − r̂)[ψ_k λ₂] ∣ d⟩_{λ₂}`. The second equality of the paper's display is\n`lem:adjoint`*(3)* for the `λ₂`-reversal on `E`, done here by expanding `Core.reversal`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.rho_telescope":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.fwd",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.prod_succ_div_castSucc",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.TBGradient.push_apply",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.rho",
+    "GFNBounds.Balance.TBGradient.rho_of_along"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.fwd",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.rho"],
+   "uses_external": 132,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ}\n  {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n  (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n    (∀ (s : V), 0 < GFNBounds.Balance.TBGradient.marg pb μ s) →\n      ∀ {τ : Fin (ℓ + 1) → V},\n        GFNBounds.Balance.TBGradient.AlongE pb τ →\n          GFNBounds.Balance.TBGradient.rho pb μ τ =\n            (GFNBounds.Balance.TBGradient.marg pb μ (τ (Fin.last ℓ)) * ∏ k, pb (τ k.succ) (τ k.castSucc)) /\n              (GFNBounds.Balance.TBGradient.marg pb μ (τ 0) *\n                ∏ k, GFNBounds.Balance.TBGradient.fwd pb μ (τ k.castSucc) (τ k.succ))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 295,
+   "kind": "theorem",
+   "doc":
+   "**`prop:tb_gradient`, the telescoping identity**: along a trajectory in `E`,\n`ρ(τ) = F(x_ℓ) ∏ π_←(x_k → x_{k−1}) / (F(x_0) ∏ π_→^μ(x_{k−1} → x_k))`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.rho_pos":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.ratio_pos",
+    "GFNBounds.Balance.TBGradient.rho",
+    "GFNBounds.Balance.TBGradient.rho_of_along"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.rho"],
+   "uses_external": 41,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ}\n  {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n  (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n    (∀ (s : V), 0 < GFNBounds.Balance.TBGradient.marg pb μ s) →\n      ∀ {τ : Fin (ℓ + 1) → V}, GFNBounds.Balance.TBGradient.AlongE pb τ → 0 < GFNBounds.Balance.TBGradient.rho pb μ τ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 273,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.rho_of_along":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.ratioAt",
+    "GFNBounds.Balance.TBGradient.ratioAt_of_along",
+    "GFNBounds.Balance.TBGradient.rho"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.rho"],
+   "uses_external": 33,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ}\n  (μ : GFNBounds.Balance.EdgeSet pb → ℝ) {τ : Fin (ℓ + 1) → V} (hτ : GFNBounds.Balance.TBGradient.AlongE pb τ),\n  GFNBounds.Balance.TBGradient.rho pb μ τ = ∏ k, GFNBounds.Balance.TBGradient.ratio pb μ ⟨(τ k.castSucc, τ k.succ), ⋯⟩",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 268,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.rho.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.rho"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.rho"],
+   "uses_external": 18,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] (pb : V → V → ℝ) {ℓ : ℕ}\n  (μ μ_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n  μ = μ_1 →\n    ∀ (τ τ_1 : Fin (ℓ + 1) → V),\n      τ = τ_1 → GFNBounds.Balance.TBGradient.rho pb μ τ = GFNBounds.Balance.TBGradient.rho pb μ_1 τ_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.rho":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.ratioAt"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 16,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] → (pb : V → V → ℝ) → {ℓ : ℕ} → (GFNBounds.Balance.EdgeSet pb → ℝ) → (Fin (ℓ + 1) → V) → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 160,
+   "kind": "def",
+   "doc": "`ρ(τ) := ∏_{k=1}^{ℓ} r̂(e_k)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.reversal_row_sum":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.lam2_invariant",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Core.reversal"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Core.reversal"],
+   "uses_external": 62,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {lam : V → ℝ},\n  (∀ (x y : V), 0 ≤ pb x y) →\n    GFNBounds.Balance.Invariant pb lam →\n      (∀ (x : V), 0 < lam x) →\n        ∀ (e : GFNBounds.Balance.EdgeSet pb),\n          ∑ e',\n              GFNBounds.Core.reversal (GFNBounds.Balance.edgeMeasureE pb lam) (GFNBounds.Balance.edgeKernelE pb) e e' =\n            1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 594,
+   "kind": "theorem",
+   "doc": "**`K₂^{λ₂}` is a Markov kernel on `E`**: its rows sum to `1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.ratio_pos":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.TBGradient.push_pos"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.ratio"],
+   "uses_external": 23,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n  (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n    (∀ (s : V), 0 < GFNBounds.Balance.TBGradient.marg pb μ s) →\n      ∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < GFNBounds.Balance.TBGradient.ratio pb μ e",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 259,
+   "kind": "theorem",
+   "doc": "**`prop:tb_gradient`, `r̂` takes its values in `(0,+∞)`** on `E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.ratioAt_of_eq":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.ratioAt"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.ratioAt"],
+   "uses_external": 27,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} (μ : GFNBounds.Balance.EdgeSet pb → ℝ)\n  {a b : V} {e : GFNBounds.Balance.EdgeSet pb},\n  (a, b) = ↑e → GFNBounds.Balance.TBGradient.ratioAt pb μ a b = GFNBounds.Balance.TBGradient.ratio pb μ e",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 604,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.ratioAt_of_along":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.ratio"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.ratioAt"],
+   "uses_external": 26,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ}\n  {μ : GFNBounds.Balance.EdgeSet pb → ℝ} {τ : Fin (ℓ + 1) → V} (hτ : GFNBounds.Balance.TBGradient.AlongE pb τ)\n  (k : Fin ℓ),\n  GFNBounds.Balance.TBGradient.ratioAt pb μ (τ k.castSucc) (τ k.succ) =\n    GFNBounds.Balance.TBGradient.ratio pb μ ⟨(τ k.castSucc, τ k.succ), ⋯⟩",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 264,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.ratioAt":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.ratio"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 18,
+   "type":
+   "{V : Type u_1} → [Fintype V] → [DecidableEq V] → (pb : V → V → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → V → V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 150,
+   "kind": "def",
+   "doc":
+   "`r̂` read at a pair of states: `r̂(s,s')` on `E`, and the junk value `1` off `E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.ratio.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.ratio"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.ratio"],
+   "uses_external": 11,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] (pb : V → V → ℝ)\n  (μ μ_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n  μ = μ_1 →\n    ∀ (e e_1 : GFNBounds.Balance.EdgeSet pb),\n      e = e_1 → GFNBounds.Balance.TBGradient.ratio pb μ e = GFNBounds.Balance.TBGradient.ratio pb μ_1 e_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.ratio":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.push"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 7,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] → (pb : V → V → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → GFNBounds.Balance.EdgeSet pb → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 143,
+   "kind": "def",
+   "doc": "`r̂(e) := (μK₂)(e)/μ(e)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.push_pos":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.TBGradient.push_apply"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.push"],
+   "uses_external": 27,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n  (∀ (s : V), 0 < GFNBounds.Balance.TBGradient.marg pb μ s) →\n    ∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < GFNBounds.Balance.TBGradient.push pb μ e",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 254,
+   "kind": "theorem",
+   "doc": "`(μK₂) > 0` on `E` when `F > 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.push_apply":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.edgeKernelE"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.push"],
+   "uses_external": 88,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} (μ : GFNBounds.Balance.EdgeSet pb → ℝ)\n  (e : GFNBounds.Balance.EdgeSet pb),\n  GFNBounds.Balance.TBGradient.push pb μ e = pb (↑e).2 (↑e).1 * GFNBounds.Balance.TBGradient.marg pb μ (↑e).2",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 212,
+   "kind": "theorem",
+   "doc": "**`eq:muK2_density` on `E`**: `(μK₂)(s,s') = π_←(s' → s) F(s')`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.push_add_smul":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.edgeKernelE"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.push"],
+   "uses_external": 88,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} (μ d : GFNBounds.Balance.EdgeSet pb → ℝ)\n  (t : ℝ) (e : GFNBounds.Balance.EdgeSet pb),\n  GFNBounds.Balance.TBGradient.push pb (μ + t • d) e =\n    GFNBounds.Balance.TBGradient.push pb μ e + t * GFNBounds.Balance.TBGradient.push pb d e",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 221,
+   "kind": "theorem",
+   "doc": "`μ ↦ μK₂` is linear along a line. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.push.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.push"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.push"],
+   "uses_external": 11,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] (pb : V → V → ℝ)\n  (μ μ_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n  μ = μ_1 →\n    ∀ (a a_1 : GFNBounds.Balance.EdgeSet pb),\n      a = a_1 → GFNBounds.Balance.TBGradient.push pb μ a = GFNBounds.Balance.TBGradient.push pb μ_1 a_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.push":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.measAct",
+    "GFNBounds.Balance.edgeKernelE"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 3,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] → (pb : V → V → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → GFNBounds.Balance.EdgeSet pb → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 140,
+   "kind": "def",
+   "doc": "`μK₂` on `E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.psi_one":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.edgeMarg",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.marg_pos",
+    "GFNBounds.Balance.TBGradient.psi",
+    "GFNBounds.Balance.TBGradient.psi_eq",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.TBGradient.push_pos",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.ratioAt",
+    "GFNBounds.Balance.TBGradient.ratioAt_of_eq",
+    "GFNBounds.Balance.TBGradient.rho",
+    "GFNBounds.Balance.TBGradient.weight"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.edgeMarg",
+    "GFNBounds.Balance.TBGradient.psi",
+    "GFNBounds.Balance.TBGradient.ratio"],
+   "uses_external": 183,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {lam : V → ℝ},\n  GFNBounds.Balance.Invariant pb lam →\n    (∀ (x : V), 0 < lam x) →\n      ∀ {nu : (Fin (1 + 1) → V) → ℝ},\n        (∀ (τ : Fin (1 + 1) → V), 0 ≤ nu τ) →\n          ∀ (g : ℝ → ℝ) {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n            (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n              ∀ (e : GFNBounds.Balance.EdgeSet pb),\n                GFNBounds.Balance.TBGradient.psi pb nu g μ 0 e =\n                  deriv g (GFNBounds.Balance.TBGradient.ratio pb μ e) *\n                    (GFNBounds.Balance.TBGradient.edgeMarg pb nu 0 e / μ e)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 611,
+   "kind": "theorem",
+   "doc":
+   "**`prop:tb_gradient`, at `ℓ = 1`: `ψ_1 = g'(r̂) dν̂_1/dμ`** (the proof's last bullet). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.psi_eq":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.condExp",
+    "GFNBounds.Balance.TBGradient.edgeMarg",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.psi",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.TBGradient.push_pos",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.rho",
+    "GFNBounds.Balance.TBGradient.weight"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.psi",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.TBGradient.weight"],
+   "uses_external": 166,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ} {nu : (Fin (ℓ + 1) → V) → ℝ},\n  (∀ (τ : Fin (ℓ + 1) → V), 0 ≤ nu τ) →\n    ∀ (g : ℝ → ℝ) {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n      (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n        (∀ (s : V), 0 < GFNBounds.Balance.TBGradient.marg pb μ s) →\n          ∀ (k : Fin ℓ) (e : GFNBounds.Balance.EdgeSet pb),\n            GFNBounds.Balance.TBGradient.psi pb nu g μ k e =\n              GFNBounds.Balance.TBGradient.weight pb nu g μ k e / GFNBounds.Balance.TBGradient.push pb μ e",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 405,
+   "kind": "theorem",
+   "doc":
+   "**The step `ψ_k = a_k/(r̂μ) = a_k/(μK₂)`** of the paper's proof, from the printed `ψ_k`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.psi.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.psi"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.psi"],
+   "uses_external": 18,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] (pb : V → V → ℝ) {ℓ : ℕ}\n  (nu nu_1 : (Fin (ℓ + 1) → V) → ℝ),\n  nu = nu_1 →\n    ∀ (g g_1 : ℝ → ℝ),\n      g = g_1 →\n        ∀ (μ μ_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n          μ = μ_1 →\n            ∀ (k k_1 : Fin ℓ),\n              k = k_1 →\n                ∀ (e e_1 : GFNBounds.Balance.EdgeSet pb),\n                  e = e_1 →\n                    GFNBounds.Balance.TBGradient.psi pb nu g μ k e =\n                      GFNBounds.Balance.TBGradient.psi pb nu_1 g_1 μ_1 k_1 e_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.psi":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.condExp",
+    "GFNBounds.Balance.TBGradient.edgeMarg",
+    "GFNBounds.Balance.TBGradient.ratio"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 25,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] →\n      (pb : V → V → ℝ) →\n        {ℓ : ℕ} →\n          ((Fin (ℓ + 1) → V) → ℝ) →\n            (ℝ → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → Fin ℓ → GFNBounds.Balance.EdgeSet pb → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 183,
+   "kind": "def",
+   "doc":
+   "**`ψ_k`, as printed**: `(1/r̂) 𝔼(g'(ρ)ρ ∣ e_k) dν̂_k/dμ` where `ν̂_k > 0`, and `0` where\n`ν̂_k = 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.prod_succ_div_castSucc":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 26,
+   "type":
+   "∀ {n : ℕ} (f : Fin (n + 1) → ℝ), (∀ (i : Fin (n + 1)), f i ≠ 0) → ∏ k, f k.succ / f k.castSucc = f (Fin.last n) / f 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 281,
+   "kind": "theorem",
+   "doc": "`∏_{k=1}^{n} f(k)/f(k−1) = f(n)/f(0)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.posOrthant":
+  {"uses_value": ["GFNBounds.Balance.EdgeSet"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 7,
+   "type":
+   "{V : Type u_1} → (pb : V → V → ℝ) → Set (GFNBounds.Balance.EdgeSet pb → ℝ)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 496,
+   "kind": "def",
+   "doc": "The open orthant `(0,+∞)^E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.pathNu_along":
+  {"uses_value":
+   ["GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.pathNu",
+    "GFNBounds.Balance.TBGradient.swapPb"],
+   "uses_type":
+   ["GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.pathNu",
+    "GFNBounds.Balance.TBGradient.swapPb"],
+   "uses_external": 94,
+   "type":
+   "∀ (τ : Fin (2 + 1) → Fin 2),\n  GFNBounds.Balance.TBGradient.pathNu τ ≠ 0 → GFNBounds.Balance.TBGradient.AlongE GFNBounds.Balance.TBGradient.swapPb τ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 664,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.pathNu":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 22,
+   "type": "(Fin (2 + 1) → Fin 2) → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 655,
+   "kind": "def",
+   "doc":
+   "`ν̂ = δ_{(0,1,0)}`, a single trajectory of length `ℓ = 2` along `E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.measAct":
+  {"uses_value": ["GFNBounds.Balance.EdgeSet"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 19,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    (pb : V → V → ℝ) →\n      (GFNBounds.Balance.EdgeSet pb → GFNBounds.Balance.EdgeSet pb → ℝ) →\n        (GFNBounds.Balance.EdgeSet pb → ℝ) → GFNBounds.Balance.EdgeSet pb → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 136,
+   "kind": "def",
+   "doc":
+   "The action of a kernel `A` on measures on `E`: `(mA)(e) = ∑_{e'} m(e') A(e' → e)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.marg_pos":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.marg"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.marg"],
+   "uses_external": 85,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {lam : V → ℝ},\n  GFNBounds.Balance.Invariant pb lam →\n    (∀ (x : V), 0 < lam x) →\n      ∀ {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n        (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) → ∀ (s : V), 0 < GFNBounds.Balance.TBGradient.marg pb μ s",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 228,
+   "kind": "theorem",
+   "doc":
+   "**`prop:tb_gradient`, `F > 0` on `𝒮̂`**: every state has an outgoing edge in `E`, because `λ(s) > 0` is\n`∑_z λ(z) π_←(z → s)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.marg.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.marg"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.marg"],
+   "uses_external": 11,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] (pb : V → V → ℝ)\n  (μ μ_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n  μ = μ_1 →\n    ∀ (s s_1 : V), s = s_1 → GFNBounds.Balance.TBGradient.marg pb μ s = GFNBounds.Balance.TBGradient.marg pb μ_1 s_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.marg":
+  {"uses_value": ["GFNBounds.Balance.EdgeSet"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 20,
+   "type":
+   "{V : Type u_1} → [Fintype V] → [DecidableEq V] → (pb : V → V → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 132,
+   "kind": "def",
+   "doc":
+   "The first marginal `F(s) = ∑_{s' : (s,s') ∈ E} μ(s,s')` of an edge flow `μ` on `E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.loss_contDiffOn":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.contDiff_push",
+    "GFNBounds.Balance.TBGradient.loss",
+    "GFNBounds.Balance.TBGradient.marg_pos",
+    "GFNBounds.Balance.TBGradient.posOrthant",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.rho",
+    "GFNBounds.Balance.TBGradient.rho_of_along",
+    "GFNBounds.Balance.TBGradient.rho_pos"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.loss",
+    "GFNBounds.Balance.TBGradient.posOrthant"],
+   "uses_external": 96,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ} {lam : V → ℝ},\n  GFNBounds.Balance.Invariant pb lam →\n    (∀ (x : V), 0 < lam x) →\n      ∀ {nu : (Fin (ℓ + 1) → V) → ℝ},\n        (∀ (τ : Fin (ℓ + 1) → V), nu τ ≠ 0 → GFNBounds.Balance.TBGradient.AlongE pb τ) →\n          ∀ {g : ℝ → ℝ},\n            ContDiffOn ℝ 1 g (Set.Ioi 0) →\n              ContDiffOn ℝ 1 (GFNBounds.Balance.TBGradient.loss pb nu g) (GFNBounds.Balance.TBGradient.posOrthant pb)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 511,
+   "kind": "theorem",
+   "doc":
+   "**`prop:tb_gradient`, regularity**: `𝓛_{TB,g,ν̂}` is `C¹` on `(0,+∞)^E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.loss":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.rho"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 20,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] →\n      (pb : V → V → ℝ) → {ℓ : ℕ} → ((Fin (ℓ + 1) → V) → ℝ) → (ℝ → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 164,
+   "kind": "def",
+   "doc":
+   "**The TB loss with frozen backward policy**, `𝓛_{TB,g,ν̂}(μ) = ∫ g(ρ(τ)) dν̂(τ)`, with `ν̂` a\nfinite measure on `𝒮^{ℓ+1}` given by its weights. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.lam2_pos":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.edgeMeasureE_pos"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.edgeMeasureE"],
+   "uses_external": 6,
+   "type":
+   "∀ {V : Type u_1} {pb : V → V → ℝ} {lam : V → ℝ},\n  (∀ (x : V), 0 < lam x) → ∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < GFNBounds.Balance.edgeMeasureE pb lam e",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 248,
+   "kind": "theorem",
+   "doc":
+   "**`prop:tb_gradient`, \"on which `λ₂` is positive\"**: `λ₂ > 0` on `E` when `λ > 0`;\n`C3Wrappers.edgeMeasureE_pos`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.lam2_invariant":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Balance.edgeMeasureE_isInvariant",
+    "GFNBounds.Core.IsInvariant.inv"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeMeasureE"],
+   "uses_external": 16,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {lam : V → ℝ},\n  (∀ (x y : V), 0 ≤ pb x y) →\n    (∀ (x : V), 0 ≤ lam x) →\n      GFNBounds.Balance.Invariant pb lam →\n        ∀ (e : GFNBounds.Balance.EdgeSet pb),\n          ∑ e', GFNBounds.Balance.edgeMeasureE pb lam e' * GFNBounds.Balance.edgeKernelE pb e' e =\n            GFNBounds.Balance.edgeMeasureE pb lam e",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 587,
+   "kind": "theorem",
+   "doc":
+   "**`λ₂` is `K₂`-invariant on `E`** (`lem:lift_wellposed`, read on `E`):\n`C3Wrappers.edgeMeasureE_isInvariant`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.isOpen_posOrthant":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.posOrthant"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.posOrthant"],
+   "uses_external": 52,
+   "type":
+   "∀ {V : Type u_1} [Fintype V] (pb : V → V → ℝ), IsOpen (GFNBounds.Balance.TBGradient.posOrthant pb)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 501,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.ip_single":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.ip"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.ip"],
+   "uses_external": 76,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} (w m : GFNBounds.Balance.EdgeSet pb → ℝ)\n  (e : GFNBounds.Balance.EdgeSet pb), GFNBounds.Balance.TBGradient.ip pb w m (Pi.single e 1) = m e / w e",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 554,
+   "kind": "theorem",
+   "doc": "`⟨m ∣ 𝟙_e⟩_w = m(e)/w(e)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.ip":
+  {"uses_value": ["GFNBounds.Balance.EdgeSet"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 23,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    (pb : V → V → ℝ) →\n      (GFNBounds.Balance.EdgeSet pb → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 191,
+   "kind": "def",
+   "doc":
+   "The inner product `⟨m ∣ δ⟩_{λ₂} = ∑_{e ∈ E} m(e) δ(e)/λ₂(e)` on measures on `E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.hasFDerivAt_loss":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.dirAt",
+    "GFNBounds.Balance.TBGradient.grad",
+    "GFNBounds.Balance.TBGradient.hasDerivAt_loss",
+    "GFNBounds.Balance.TBGradient.ip",
+    "GFNBounds.Balance.TBGradient.isOpen_posOrthant",
+    "GFNBounds.Balance.TBGradient.loss",
+    "GFNBounds.Balance.TBGradient.loss_contDiffOn",
+    "GFNBounds.Balance.TBGradient.posOrthant",
+    "GFNBounds.Balance.TBGradient.rho",
+    "GFNBounds.Balance.TBGradient.sum_eq_ip_grad",
+    "GFNBounds.Balance.edgeMeasureE"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.grad",
+    "GFNBounds.Balance.TBGradient.ip",
+    "GFNBounds.Balance.TBGradient.loss",
+    "GFNBounds.Balance.edgeMeasureE"],
+   "uses_external": 201,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ} {lam : V → ℝ},\n  GFNBounds.Balance.Invariant pb lam →\n    (∀ (x : V), 0 < lam x) →\n      ∀ {nu : (Fin (ℓ + 1) → V) → ℝ},\n        (∀ (τ : Fin (ℓ + 1) → V), 0 ≤ nu τ) →\n          (∀ (τ : Fin (ℓ + 1) → V), nu τ ≠ 0 → GFNBounds.Balance.TBGradient.AlongE pb τ) →\n            ∀ {g : ℝ → ℝ},\n              ContDiffOn ℝ 1 g (Set.Ioi 0) →\n                ∀ {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n                  (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n                    HasFDerivAt (GFNBounds.Balance.TBGradient.loss pb nu g)\n                        (fderiv ℝ (GFNBounds.Balance.TBGradient.loss pb nu g) μ) μ ∧\n                      ∀ (d : GFNBounds.Balance.EdgeSet pb → ℝ),\n                        (fderiv ℝ (GFNBounds.Balance.TBGradient.loss pb nu g) μ) d =\n                          GFNBounds.Balance.TBGradient.ip pb (GFNBounds.Balance.edgeMeasureE pb lam)\n                            (GFNBounds.Balance.TBGradient.grad pb lam nu g μ) d",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 534,
+   "kind": "theorem",
+   "doc":
+   "**`prop:tb_gradient`, `eq:tb_gradient`**: at every `μ ∈ (0,+∞)^E`, `𝓛_{TB,g,ν̂}` is Fréchet\ndifferentiable, and its derivative is `δ ↦ ⟨∑_k (K₂^{λ₂} − r̂)[ψ_k λ₂] ∣ δ⟩_{λ₂}`: the right-hand\nside of `eq:tb_gradient` is the gradient in `⟨·∣·⟩_{λ₂}`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.hasDerivAt_rho":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.dir",
+    "GFNBounds.Balance.TBGradient.dirAt",
+    "GFNBounds.Balance.TBGradient.hasDerivAt_ratio",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.push_pos",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.TBGradient.ratio.congr_simp",
+    "GFNBounds.Balance.TBGradient.rho",
+    "GFNBounds.Balance.TBGradient.rho_of_along"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.dirAt",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.rho"],
+   "uses_external": 144,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ}\n  {μ : GFNBounds.Balance.EdgeSet pb → ℝ} (d : GFNBounds.Balance.EdgeSet pb → ℝ),\n  (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n    (∀ (s : V), 0 < GFNBounds.Balance.TBGradient.marg pb μ s) →\n      ∀ {τ : Fin (ℓ + 1) → V},\n        GFNBounds.Balance.TBGradient.AlongE pb τ →\n          HasDerivAt (fun t => GFNBounds.Balance.TBGradient.rho pb (μ + t • d) τ)\n            (GFNBounds.Balance.TBGradient.rho pb μ τ *\n              ∑ k, GFNBounds.Balance.TBGradient.dirAt μ d (τ k.castSucc) (τ k.succ))\n            0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 340,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.hasDerivAt_ratio":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.dir",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.TBGradient.push_add_smul",
+    "GFNBounds.Balance.TBGradient.ratio"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.dir",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.TBGradient.ratio"],
+   "uses_external": 210,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {μ : GFNBounds.Balance.EdgeSet pb → ℝ}\n  (d : GFNBounds.Balance.EdgeSet pb → ℝ) {e : GFNBounds.Balance.EdgeSet pb},\n  0 < μ e →\n    0 < GFNBounds.Balance.TBGradient.push pb μ e →\n      HasDerivAt (fun t => GFNBounds.Balance.TBGradient.ratio pb (μ + t • d) e)\n        (GFNBounds.Balance.TBGradient.ratio pb μ e * GFNBounds.Balance.TBGradient.dir μ d e) 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 324,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.hasDerivAt_loss":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.dirAt",
+    "GFNBounds.Balance.TBGradient.hasDerivAt_g",
+    "GFNBounds.Balance.TBGradient.hasDerivAt_rho",
+    "GFNBounds.Balance.TBGradient.marg",
+    "GFNBounds.Balance.TBGradient.marg_pos",
+    "GFNBounds.Balance.TBGradient.rho",
+    "GFNBounds.Balance.TBGradient.rho_pos"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.dirAt",
+    "GFNBounds.Balance.TBGradient.loss",
+    "GFNBounds.Balance.TBGradient.rho"],
+   "uses_external": 136,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ} {lam : V → ℝ},\n  GFNBounds.Balance.Invariant pb lam →\n    (∀ (x : V), 0 < lam x) →\n      ∀ {nu : (Fin (ℓ + 1) → V) → ℝ},\n        (∀ (τ : Fin (ℓ + 1) → V), nu τ ≠ 0 → GFNBounds.Balance.TBGradient.AlongE pb τ) →\n          ∀ {g : ℝ → ℝ},\n            ContDiffOn ℝ 1 g (Set.Ioi 0) →\n              ∀ {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n                (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n                  ∀ (d : GFNBounds.Balance.EdgeSet pb → ℝ),\n                    HasDerivAt (fun t => GFNBounds.Balance.TBGradient.loss pb nu g (μ + t • d))\n                      (∑ τ,\n                        nu τ *\n                          (deriv g (GFNBounds.Balance.TBGradient.rho pb μ τ) *\n                            (GFNBounds.Balance.TBGradient.rho pb μ τ *\n                              ∑ k, GFNBounds.Balance.TBGradient.dirAt μ d (τ k.castSucc) (τ k.succ))))\n                      0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 364,
+   "kind": "theorem",
+   "doc": "The derivative of `t ↦ 𝓛_{TB}(μ + t d)` at `0`, before regrouping. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.hasDerivAt_g":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 50,
+   "type":
+   "∀ {g : ℝ → ℝ}, ContDiffOn ℝ 1 g (Set.Ioi 0) → ∀ {y : ℝ}, 0 < y → HasDerivAt g (deriv g y) y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 360,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.halfLam_invariant":
+  {"uses_value":
+   ["GFNBounds.Balance.TBGradient.halfLam",
+    "GFNBounds.Balance.TBGradient.swapPb"],
+   "uses_type":
+   ["GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.halfLam",
+    "GFNBounds.Balance.TBGradient.swapPb"],
+   "uses_external": 100,
+   "type":
+   "GFNBounds.Balance.Invariant GFNBounds.Balance.TBGradient.swapPb GFNBounds.Balance.TBGradient.halfLam",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 660,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.halfLam":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 13,
+   "type": "Fin 2 → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 652,
+   "kind": "def",
+   "doc": "The uniform law, invariant under the swap. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.grad_unique":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.grad",
+    "GFNBounds.Balance.TBGradient.hasFDerivAt_loss",
+    "GFNBounds.Balance.TBGradient.ip",
+    "GFNBounds.Balance.TBGradient.ip_single",
+    "GFNBounds.Balance.TBGradient.loss",
+    "GFNBounds.Balance.edgeMeasureE"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.AlongE",
+    "GFNBounds.Balance.TBGradient.grad",
+    "GFNBounds.Balance.TBGradient.ip",
+    "GFNBounds.Balance.TBGradient.loss",
+    "GFNBounds.Balance.edgeMeasureE"],
+   "uses_external": 139,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {ℓ : ℕ} {lam : V → ℝ},\n  GFNBounds.Balance.Invariant pb lam →\n    (∀ (x : V), 0 < lam x) →\n      ∀ {nu : (Fin (ℓ + 1) → V) → ℝ},\n        (∀ (τ : Fin (ℓ + 1) → V), 0 ≤ nu τ) →\n          (∀ (τ : Fin (ℓ + 1) → V), nu τ ≠ 0 → GFNBounds.Balance.TBGradient.AlongE pb τ) →\n            ∀ {g : ℝ → ℝ},\n              ContDiffOn ℝ 1 g (Set.Ioi 0) →\n                ∀ {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n                  (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n                    ∀ {G : GFNBounds.Balance.EdgeSet pb → ℝ},\n                      (∀ (d : GFNBounds.Balance.EdgeSet pb → ℝ),\n                          (fderiv ℝ (GFNBounds.Balance.TBGradient.loss pb nu g) μ) d =\n                            GFNBounds.Balance.TBGradient.ip pb (GFNBounds.Balance.edgeMeasureE pb lam) G d) →\n                        G = GFNBounds.Balance.TBGradient.grad pb lam nu g μ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 562,
+   "kind": "theorem",
+   "doc":
+   "**`prop:tb_gradient`, the gradient is unique**: `⟨·∣·⟩_{λ₂}` is non-degenerate on `E`, so the right-hand side of\n`eq:tb_gradient` is the *only* measure representing the derivative. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.grad_one":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.edgeMarg",
+    "GFNBounds.Balance.TBGradient.grad",
+    "GFNBounds.Balance.TBGradient.measAct",
+    "GFNBounds.Balance.TBGradient.psi",
+    "GFNBounds.Balance.TBGradient.psi_one",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Core.reversal"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.Invariant",
+    "GFNBounds.Balance.TBGradient.edgeMarg",
+    "GFNBounds.Balance.TBGradient.grad",
+    "GFNBounds.Balance.TBGradient.measAct",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Core.reversal"],
+   "uses_external": 57,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} {lam : V → ℝ},\n  GFNBounds.Balance.Invariant pb lam →\n    (∀ (x : V), 0 < lam x) →\n      ∀ {nu : (Fin (1 + 1) → V) → ℝ},\n        (∀ (τ : Fin (1 + 1) → V), 0 ≤ nu τ) →\n          ∀ (g : ℝ → ℝ) {μ : GFNBounds.Balance.EdgeSet pb → ℝ},\n            (∀ (e : GFNBounds.Balance.EdgeSet pb), 0 < μ e) →\n              ∀ (e : GFNBounds.Balance.EdgeSet pb),\n                GFNBounds.Balance.TBGradient.grad pb lam nu g μ e =\n                  GFNBounds.Balance.TBGradient.measAct pb\n                      (GFNBounds.Core.reversal (GFNBounds.Balance.edgeMeasureE pb lam)\n                        (GFNBounds.Balance.edgeKernelE pb))\n                      (fun e' =>\n                        deriv g (GFNBounds.Balance.TBGradient.ratio pb μ e') *\n                            (GFNBounds.Balance.TBGradient.edgeMarg pb nu 0 e' / μ e') *\n                          GFNBounds.Balance.edgeMeasureE pb lam e')\n                      e -\n                    GFNBounds.Balance.TBGradient.ratio pb μ e *\n                      (deriv g (GFNBounds.Balance.TBGradient.ratio pb μ e) *\n                          (GFNBounds.Balance.TBGradient.edgeMarg pb nu 0 e / μ e) *\n                        GFNBounds.Balance.edgeMeasureE pb lam e)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 633,
+   "kind": "theorem",
+   "doc":
+   "**`prop:tb_gradient`, last sentence**: at `ℓ = 1` the right-hand side of `eq:tb_gradient` is\n`(K₂^{λ₂} − r̂)[g'(r̂)(dν̂_1/dμ)λ₂]`, the display of `cor:db_gradient` for the training distribution\n`ν̂_1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.grad.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.grad"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.grad"],
+   "uses_external": 18,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] (pb : V → V → ℝ) {ℓ : ℕ}\n  (lam lam_1 : V → ℝ),\n  lam = lam_1 →\n    ∀ (nu nu_1 : (Fin (ℓ + 1) → V) → ℝ),\n      nu = nu_1 →\n        ∀ (g g_1 : ℝ → ℝ),\n          g = g_1 →\n            ∀ (μ μ_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n              μ = μ_1 →\n                ∀ (e e_1 : GFNBounds.Balance.EdgeSet pb),\n                  e = e_1 →\n                    GFNBounds.Balance.TBGradient.grad pb lam nu g μ e =\n                      GFNBounds.Balance.TBGradient.grad pb lam_1 nu_1 g_1 μ_1 e_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.grad":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.measAct",
+    "GFNBounds.Balance.TBGradient.psi",
+    "GFNBounds.Balance.TBGradient.ratio",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Core.reversal"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 20,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] →\n      (pb : V → V → ℝ) →\n        {ℓ : ℕ} →\n          (V → ℝ) →\n            ((Fin (ℓ + 1) → V) → ℝ) → (ℝ → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → GFNBounds.Balance.EdgeSet pb → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 194,
+   "kind": "def",
+   "doc":
+   "**The right-hand side of `eq:tb_gradient`**:\n`∑_{k=1}^{ℓ} (K₂^{λ₂} − r̂)[ψ_k λ₂]`, with `K₂^{λ₂}` the `λ₂`-reversal of `K₂` on `E`\n(`Core.reversal`) acting on measures. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.fwd":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.marg"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 20,
+   "type":
+   "{V : Type u_1} → [Fintype V] → [DecidableEq V] → (pb : V → V → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → V → V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 146,
+   "kind": "def",
+   "doc": "`π_→^μ(s → s') := μ(s,s')/F(s)` on `E`, and `0` off `E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.edgeMarg.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.edgeMarg"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.edgeMarg"],
+   "uses_external": 18,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] (pb : V → V → ℝ) {ℓ : ℕ}\n  (nu nu_1 : (Fin (ℓ + 1) → V) → ℝ),\n  nu = nu_1 →\n    ∀ (k k_1 : Fin ℓ),\n      k = k_1 →\n        ∀ (e e_1 : GFNBounds.Balance.EdgeSet pb),\n          e = e_1 →\n            GFNBounds.Balance.TBGradient.edgeMarg pb nu k e = GFNBounds.Balance.TBGradient.edgeMarg pb nu_1 k_1 e_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.edgeMarg":
+  {"uses_value": ["GFNBounds.Balance.EdgeSet"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 31,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] → (pb : V → V → ℝ) → {ℓ : ℕ} → ((Fin (ℓ + 1) → V) → ℝ) → Fin ℓ → GFNBounds.Balance.EdgeSet pb → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 169,
+   "kind": "def",
+   "doc": "The edge marginal `ν̂_k(e)`: the law of `e_k` under `ν̂`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.dirAt.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.dirAt"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.dirAt"],
+   "uses_external": 11,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] {pb : V → V → ℝ}\n  (μ μ_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n  μ = μ_1 →\n    ∀ (d d_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n      d = d_1 →\n        ∀ (s s_1 : V),\n          s = s_1 →\n            ∀ (s' s'_1 : V),\n              s' = s'_1 →\n                GFNBounds.Balance.TBGradient.dirAt μ d s s' = GFNBounds.Balance.TBGradient.dirAt μ_1 d_1 s_1 s'_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.dirAt":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.dir"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 16,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] →\n      {pb : V → V → ℝ} → (GFNBounds.Balance.EdgeSet pb → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → V → V → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 320,
+   "kind": "def",
+   "doc": "`dir` read at a pair of states, `0` off `E`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.dir.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.dir"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.dir"],
+   "uses_external": 11,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] {pb : V → V → ℝ}\n  (μ μ_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n  μ = μ_1 →\n    ∀ (d d_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n      d = d_1 →\n        ∀ (e e_1 : GFNBounds.Balance.EdgeSet pb),\n          e = e_1 → GFNBounds.Balance.TBGradient.dir μ d e = GFNBounds.Balance.TBGradient.dir μ_1 d_1 e_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.dir":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.push"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 10,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] →\n      {pb : V → V → ℝ} →\n        (GFNBounds.Balance.EdgeSet pb → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → GFNBounds.Balance.EdgeSet pb → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 316,
+   "kind": "def",
+   "doc": "`d log r̂(e)` along `d`: `(dK₂)(e)/(μK₂)(e) − d(e)/μ(e)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.contDiff_push":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.measAct",
+    "GFNBounds.Balance.TBGradient.push",
+    "GFNBounds.Balance.edgeKernelE"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.push"],
+   "uses_external": 55,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ} (e : GFNBounds.Balance.EdgeSet pb),\n  ContDiff ℝ 1 fun μ => GFNBounds.Balance.TBGradient.push pb μ e",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 507,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.condExp.congr_simp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.condExp"],
+   "uses_type":
+   ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.TBGradient.condExp"],
+   "uses_external": 18,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {inst_1 : DecidableEq V} [inst_2 : DecidableEq V] (pb : V → V → ℝ) {ℓ : ℕ}\n  (nu nu_1 : (Fin (ℓ + 1) → V) → ℝ),\n  nu = nu_1 →\n    ∀ (g g_1 : ℝ → ℝ),\n      g = g_1 →\n        ∀ (μ μ_1 : GFNBounds.Balance.EdgeSet pb → ℝ),\n          μ = μ_1 →\n            ∀ (k k_1 : Fin ℓ),\n              k = k_1 →\n                ∀ (e e_1 : GFNBounds.Balance.EdgeSet pb),\n                  e = e_1 →\n                    GFNBounds.Balance.TBGradient.condExp pb nu g μ k e =\n                      GFNBounds.Balance.TBGradient.condExp pb nu_1 g_1 μ_1 k_1 e_1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 0,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.condExp":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.TBGradient.edgeMarg",
+    "GFNBounds.Balance.TBGradient.weight"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet"],
+   "uses_external": 14,
+   "type":
+   "{V : Type u_1} →\n  [Fintype V] →\n    [DecidableEq V] →\n      (pb : V → V → ℝ) →\n        {ℓ : ℕ} →\n          ((Fin (ℓ + 1) → V) → ℝ) →\n            (ℝ → ℝ) → (GFNBounds.Balance.EdgeSet pb → ℝ) → Fin ℓ → GFNBounds.Balance.EdgeSet pb → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 178,
+   "kind": "def",
+   "doc":
+   "`𝔼_{τ∼ν̂}(g'(ρ)ρ ∣ e_k = e) = a_k(e)/ν̂_k(e)`, read where `ν̂_k(e) > 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.K2_row_sum":
+  {"uses_value":
+   ["GFNBounds.Balance.EdgeSet",
+    "GFNBounds.Balance.edgeKernelE",
+    "GFNBounds.Balance.edgeKernelE_isMarkovOn",
+    "GFNBounds.Balance.edgeMeasureE",
+    "GFNBounds.Balance.edgeMeasureE_pos",
+    "GFNBounds.Core.IsMarkovOn.row_sum"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.edgeKernelE"],
+   "uses_external": 36,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {pb : V → V → ℝ},\n  (∀ (x y : V), 0 ≤ pb x y) →\n    (∀ (x : V), ∑ y, pb x y = 1) → ∀ (e : GFNBounds.Balance.EdgeSet pb), ∑ e', GFNBounds.Balance.edgeKernelE pb e e' = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 579,
+   "kind": "theorem",
+   "doc":
+   "**`prop:tb_gradient`, \"`K₂` maps `E` into itself\"**: from an edge, `K₂` puts all its mass on `E`.\n`C3Wrappers.edgeKernelE_isMarkovOn`, read at the reference weight `λ ≡ 1` (for which `λ₂ > 0` on\n`E`). ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.K2_apply":
+  {"uses_value": ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.edgeKernelE"],
+   "uses_type": ["GFNBounds.Balance.EdgeSet", "GFNBounds.Balance.edgeKernelE"],
+   "uses_external": 3,
+   "type":
+   "∀ {V : Type u_1} [inst : DecidableEq V] {pb : V → V → ℝ} (e e' : GFNBounds.Balance.EdgeSet pb),\n  GFNBounds.Balance.edgeKernelE pb e e' = if (↑e').2 = (↑e).1 then pb (↑e).1 (↑e').1 else 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 208,
+   "kind": "theorem",
+   "doc": "`K₂(e → e') = [e'.2 = e.1] π_←(e.1 → e'.1)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Balance.TBGradient.AlongE":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 14,
+   "type": "{V : Type u_1} → (V → V → ℝ) → {ℓ : ℕ} → (Fin (ℓ + 1) → V) → Prop",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Balance.TBGradient",
+   "line": 156,
+   "kind": "def",
+   "doc":
+   "A trajectory `τ = (x_0, …, x_ℓ)` runs along `E`: every edge `e_k = (x_{k−1}, x_k)` is in `E`.\nThe paper's edge `e_k`, `k = 1, …, ℓ`, is `(τ k.castSucc, τ k.succ)` at `k : Fin ℓ`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Balance.T0_eq":
   {"uses_value":

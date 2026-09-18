@@ -4,8 +4,13 @@
   "commit": "e5592ac42466fce2b46b2f162abf2ceb6e71ca20",
   "commit_short": "e5592ac",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "paper-map.json"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",

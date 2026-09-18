@@ -4413,7 +4413,7 @@ In scope: `variable, `∀ x, |r(x) − 1| < δ`. Step 4 of `theo:local_convergen
 *strict library; 2454 lines; 134 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `rem:freezing` (bucket B), ✅ `rem:visit_ratio` (bucket B), ✅ `rem:graphs_vs_L2` (bucket A)
+Certifies: ✅ `rem:freezing` (bucket B), ✅ `rem:visit_ratio` (bucket A), ✅ `rem:graphs_vs_L2` (bucket A)
 
 
 In scope: `variable (F : FreezingBands)`, `variable {F}`, `variable {V : Type*}`, `variable [Fintype V]`, `variable {K : V → V → ℝ} {lam : V → ℝ}`, `variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}`, `variable (L : Leveled G)`, `variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}`, `variable {V : Type*} [Fintype V] [DecidableEq V] {K : V → V → ℝ} {lam : V → ℝ}`, `variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}`
@@ -4585,7 +4585,7 @@ In scope: `variable {V : Type*} [Fintype V]`
 *strict library; 688 lines; 56 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `prop:tb_gradient` (bucket B)
+Certifies: ✅ `prop:tb_gradient` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable (pb : V → V → ℝ)`, `variable {ℓ : ℕ}`, `variable {pb}`, `variable (pb) in`, `variable (pb) in`
@@ -8232,7 +8232,7 @@ Certifies: 🟡 `rem:cycle_no_stalemate` (bucket B)
 *strict library; 898 lines; 100 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `rem:path_space` (bucket B), ✅ `theo:no_bound_divergence` (bucket B), ✅ `lem:cycle_counterexample` (bucket A)
+Certifies: 🟡 `rem:path_space` (bucket B), ✅ `theo:no_bound_divergence` (bucket A), ✅ `lem:cycle_counterexample` (bucket A)
 
 
 In scope: `variable {M : ℕ}`, `variable {V : Type*}`, `variable [DecidableEq V]`, `variable [Fintype V]`
@@ -8982,7 +8982,7 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V}`
 *strict library; 942 lines; 52 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_graphs` (bucket B), ✅ `rem:silva_model_constant` (bucket A), 🟡 `rem:path_space` (bucket B), ✅ `theo:no_bound_divergence` (bucket B), ✅ `lem:cycle_counterexample` (bucket A)
+Certifies: ✅ `theo:universality_graphs` (bucket A), ✅ `rem:silva_model_constant` (bucket A), 🟡 `rem:path_space` (bucket B), ✅ `theo:no_bound_divergence` (bucket A), ✅ `lem:cycle_counterexample` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : MarkedGraph V} {F : V → V → ℝ}`, `variable {M : ℕ}`, `variable {M : ℕ}`, `variable {M : ℕ}`, `variable (B : BackwardPolicy G)`
@@ -9076,7 +9076,7 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : Mar
 *strict library; 610 lines; 42 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `def:path_connected` (bucket A), ✅ `def:loop_closure` (bucket A), ✅ `theo:universality_graphs` (bucket B)
+Certifies: ✅ `def:path_connected` (bucket A), ✅ `def:loop_closure` (bucket A), ✅ `theo:universality_graphs` (bucket A)
 
 
 In scope: `variable {V : Type*} (G : MarkedGraph V)`, `variable {G}`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : MarkedGraph V} (B : BackwardPolicy G)`, `variable {B}`, `variable (B)`
@@ -9134,7 +9134,7 @@ In scope: `variable {V : Type*} (G : MarkedGraph V)`, `variable {G}`, `variable 
 *strict library; 550 lines; 38 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_graphs` (bucket B)
+Certifies: ✅ `theo:universality_graphs` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable (G : MarkedGraph V)`, `variable {G}`, `variable {G : MarkedGraph V} (B : BackwardPolicy G)`
@@ -9188,7 +9188,7 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable (G : Mar
 *strict library; 740 lines; 31 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:universality_graphs` (bucket B)
+Certifies: ✅ `theo:universality_graphs` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V}`, `variable {B : BackwardPolicy G}`

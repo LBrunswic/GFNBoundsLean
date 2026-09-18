@@ -324,9 +324,9 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `GFNBounds/Balance/MassAscent.lean` | The mass is the Lyapunov function: monotone ascent on the sphere, and the entry time **[SCOPE]** | ✅ `prop:no_distant_equilibrium` B, ✅ `cor:global_lojasiewicz` A | 25 |
 | `GFNBounds/Balance/MassIdentity.lean` | The mass identity: a strictly unimodal generator admits no distant equilibrium **[SCOPE]** | ✅ `prop:no_distant_equilibrium` B, 🟡 `theo:global_dichotomy_full` B, 🟡 `theo:global_dichotomy` D | 25 |
 | `GFNBounds/Balance/RatioBridge.lean` | From the ratio variable to the density variable: the local-phase rescaling step **[SCOPE]** | ✅ `prop:no_distant_equilibrium` B, ✅ `theo:training_speed_full` A, ✅ `theo:training_speed` B | 17 |
-| `GFNBounds/Balance/RemarksA.lean` | Three remarks of Appendix A: freezing, visit ratios, and periodic loop closures **[SCOPE]** | ✅ `rem:freezing` B, ✅ `rem:visit_ratio` B, ✅ `rem:graphs_vs_L2` A | 134 |
+| `GFNBounds/Balance/RemarksA.lean` | Three remarks of Appendix A: freezing, visit ratios, and periodic loop closures **[SCOPE]** | ✅ `rem:freezing` B, ✅ `rem:visit_ratio` A, ✅ `rem:graphs_vs_L2` A | 134 |
 | `GFNBounds/Balance/SqGenerator.lean` | The generator `(x − 1)²` is coercive off balance, and item *(3)*'s display holds for it **[SCOPE]** | ✅ `prop:no_distant_equilibrium` B | 6 |
-| `GFNBounds/Balance/TBGradient.lean` | The trajectory-balance gradient, on a finite state space **[SCOPE]** | 🟡 `prop:tb_gradient` B | 56 |
+| `GFNBounds/Balance/TBGradient.lean` | The trajectory-balance gradient, on a finite state space **[SCOPE]** | ✅ `prop:tb_gradient` A | 56 |
 | `GFNBounds/Balance/TrainingSpeed.lean` | The training-speed theorem, assembled: two phases, and every constant in `σ_*`, `σ̄`, `N_min` **[SCOPE]** | ✅ `theo:training_speed_full` A, ✅ `theo:training_speed` B | 29 |
 | `GFNBounds/Balance/TrainingSpeedAssembled.lean` | Theorem 10 under `C³` on the closed window, with its flow constructed; items 1 and 2 of the training-speed theorem as printed, from `u₀` alone **[SCOPE]** | ✅ `theo:local_convergence_full` A, ✅ `theo:training_speed_full` A, ✅ `theo:training_speed` B, ✅ `theo:local_convergence` A | 44 |
 | `GFNBounds/Balance/WeightedL2.lean` | Weighted `L²(λ)` as an inner-product space, and the contraction at `H = g''(1)A^†M_wA` **[SCOPE]** | 🟡 `theo:db_stable_frozen_full` D, 🟡 `theo:db_stable_frozen` D | 62 |
@@ -419,7 +419,7 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `WeightFull.lean` | `lem:doubling_weight` in the paper's form: `E(|Z_ℓ − 1| | Y_0 = m) ≤ c₃/ℓ` **[SCOPE]** | ✅ `lem:doubling_weight` A, ✅ `def:doubling_setting` A, ✅ `def:doubling_decay_notation` A, ✅ `lem:doubling_descent` A, ✅ `lem:doubling_escape` A | 49 |
 | `WindowSum.lean` | Sums of a power over a window, by telescoping | ✅ `lem:doubling_expansion` A | 5 |
 | `GFNBounds/Graph/CycleBlowup.lean` | On the five-vertex cycle, `B̂_σ` blows up as the leak closes **[SCOPE]** | 🟡 `rem:cycle_no_stalemate` B | 9 |
-| `GFNBounds/Graph/CycleDivergence.lean` | No bound on the sampling error can hold for a divergence-based FM loss: the cyclic counter-example **[SCOPE]** | 🟡 `rem:path_space` B, ✅ `theo:no_bound_divergence` B, ✅ `lem:cycle_counterexample` A | 100 |
+| `GFNBounds/Graph/CycleDivergence.lean` | No bound on the sampling error can hold for a divergence-based FM loss: the cyclic counter-example **[SCOPE]** | 🟡 `rem:path_space` B, ✅ `theo:no_bound_divergence` A, ✅ `lem:cycle_counterexample` A | 100 |
 | `GFNBounds/Graph/CycleExample.lean` | A five-vertex cycle: the frozen policy and the inflation force never deadlock **[SCOPE]** | 🟡 `rem:cycle_no_stalemate` B | 47 |
 | `GFNBounds/Graph/CycleRemarks.lean` | The cyclic counter-example at every target, and the closing claims of the five-vertex cycle **[SCOPE]** | 🟡 `rem:cycle_no_stalemate` B, ✅ `lem:cycle_counterexample` A | 135 |
 | `GFNBounds/Graph/FrozenUnstable.lean` | Freezing the backward policy does not restore stability, and the loop closure is what makes the frozen family nonempty **[SCOPE]** | ✅ `prop:frozen_unstable_full` A, ✅ `rem:loop_closure_necessary` A, ✅ `prop:frozen_unstable` A | 48 |
@@ -429,11 +429,11 @@ What each file is for. The declaration inventory is in [`REPO-INDEX.md`](REPO-IN
 | `GFNBounds/Graph/MorozovDB.lean` | The detailed-balance half of item *(3)*, and an infinite mixing sum on leveled graphs **[SCOPE]** | ✅ `prop:morozov_rate` A | 71 |
 | `GFNBounds/Graph/MorozovFM.lean` | The flow-matching half of item *(3)* with `C³` on the window and the flow proved to exist **[SCOPE]** | ✅ `prop:morozov_rate` A | 6 |
 | `GFNBounds/Graph/PartialSupportClose.lean` | `rem:partial_support` on the paper's terminating states, with or without an edge `s₀ → s_f` **[SCOPE]** | ✅ `rem:partial_support` A | 44 |
-| `GFNBounds/Graph/SamplerWiring.lean` | The sampler, wired into the rows that cite `theo:sampling_theorem` **[SCOPE]** | ✅ `theo:universality_graphs` B, ✅ `rem:silva_model_constant` A, 🟡 `rem:path_space` B, ✅ `theo:no_bound_divergence` B, ✅ `lem:cycle_counterexample` A | 52 |
+| `GFNBounds/Graph/SamplerWiring.lean` | The sampler, wired into the rows that cite `theo:sampling_theorem` **[SCOPE]** | ✅ `theo:universality_graphs` A, ✅ `rem:silva_model_constant` A, 🟡 `rem:path_space` B, ✅ `theo:no_bound_divergence` A, ✅ `lem:cycle_counterexample` A | 52 |
 | `GFNBounds/Graph/Sampling.lean` | The sampler of a flow-matching marked-graph flow emits its normalized terminal flow **[SCOPE]** | ✅ `theo:sampling_theorem` B | 10 |
-| `GFNBounds/Graph/Setting.lean` | Finite marked graphs, their loop closure, and the invariant measure of the backward chain **[SCOPE]** | ✅ `def:path_connected` A, ✅ `def:loop_closure` A, ✅ `theo:universality_graphs` B | 42 |
-| `GFNBounds/Graph/Universality.lean` | The frozen-backward family: the balanced ray, and the flow left by cutting the wrap edge **[SCOPE]** | ✅ `theo:universality_graphs` B | 38 |
-| `GFNBounds/Graph/UniversalityClosing.lean` | The closing paragraph of the finite-graph universality theorem: a frozen family matches every full-support target exactly, at every `p` **[SCOPE]** | ✅ `theo:universality_graphs` B | 31 |
+| `GFNBounds/Graph/Setting.lean` | Finite marked graphs, their loop closure, and the invariant measure of the backward chain **[SCOPE]** | ✅ `def:path_connected` A, ✅ `def:loop_closure` A, ✅ `theo:universality_graphs` A | 42 |
+| `GFNBounds/Graph/Universality.lean` | The frozen-backward family: the balanced ray, and the flow left by cutting the wrap edge **[SCOPE]** | ✅ `theo:universality_graphs` A | 38 |
+| `GFNBounds/Graph/UniversalityClosing.lean` | The closing paragraph of the finite-graph universality theorem: a frozen family matches every full-support target exactly, at every `p` **[SCOPE]** | ✅ `theo:universality_graphs` A | 31 |
 | `GFNBounds/Silva/Basic.lean` | Appendix B: the shared vocabulary | ✅ `prop:silva_explicit` A, ✅ `prop:silva_no_uniform` A | 15 |
 | `GFNBounds/Silva/Explicit.lean` | The Silva et al. total-variation bound, with the constant written out **[SCOPE]** | ✅ `prop:silva_explicit` A | 5 |
 | `GFNBounds/Silva/NoUniform.lean` | The state-space dependence of the Silva bound is unavoidable **[SCOPE]** | ✅ `prop:silva_no_uniform` A | 30 |

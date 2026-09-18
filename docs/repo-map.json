@@ -36462,16 +36462,3583 @@
   },
   {
    "file": "scaffold/GFNBoundsScaffold.lean",
-   "title": "The scaffold is empty",
+   "title": "The scaffold holds no `sorry`",
    "labels": [],
    "scope_disclosed": false,
    "imports": [],
    "variables": [],
-   "lines": 17,
+   "lines": 25,
    "decls": [],
    "library": "scaffold",
    "tracked": true,
    "root_reachable": true
+  },
+  {
+   "file": "scaffold/GFNBoundsScaffold/Balance/ClosuresA.lean",
+   "title": "Closures to bucket A: the training-speed theorem whole, and the closing paragraph of the finite-graph universality theorem",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.DiscreteGlobal",
+    "GFNBounds.Balance.TrainingSpeedAssembled",
+    "GFNBounds.Graph.Universality"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V}",
+    "variable {B : BackwardPolicy G}"
+   ],
+   "lines": 1257,
+   "decls": [
+    {
+     "name": "ofReal_le_inv_display",
+     "full": "GFNBounds.Balance.ofReal_le_inv_display",
+     "kind": "theorem",
+     "line": 203,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ofReal_le_inv_display {L0 Lk a : ℝ} (hL0 : 0 ≤ L0) (ha : 0 ≤ a) (hpos : 0 < L0 → Lk ≤ (L0⁻¹ + a)⁻¹) (hzero : L0 = 0 → Lk ≤ 0) : ENNReal.ofReal Lk ≤ ((ENNReal.ofReal L0)⁻¹ + ENNReal.ofReal a)⁻¹",
+     "doc": "**The paper's convention `𝓛(μ₀)^{−1} := +∞`, read in `[0,∞]`.** If `L_k ≤ (L₀^{−1} + a)^{−1}` whenever `L₀ > 0`, and `L_k ≤ 0` whenever `L₀ = 0`, then `ofReal L_k ≤ ((ofReal L₀)^{−1} + ofReal a)^{−1}` in `ℝ≥0∞`, where `0^{−1} = ∞` and `∞^{−1} = 0`."
+    },
+    {
+     "name": "gammaStar_ofReal",
+     "full": "GFNBounds.Balance.gammaStar_ofReal",
+     "kind": "theorem",
+     "line": 217,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gammaStar_ofReal {b3v U0 L0 γ0 m0 : ℝ} (hU0 : 0 < U0) (hL0 : 0 ≤ L0) : ENNReal.ofReal (gammaStar b3v U0 L0 γ0 m0) = min (min (ENNReal.ofReal (1 / b3v)) (ENNReal.ofReal (U0 ^ 2 / 2) * (ENNReal.ofReal L0)⁻¹)) (ENNReal.ofReal (γ0 * m0 ^ 2))",
+     "doc": "**`γ_* := min(1/b₃, (‖u₀‖²/2)𝓛(μ₀)^{−1}, γ₀m₀²)` with `𝓛(μ₀)^{−1} := +∞`, exactly** (`proofs.tex:1051`): `DiscreteGlobal.gammaStar`'s case split (the middle entry dropped at `𝓛(μ₀) = 0`) is the printed minimum read in `[0,∞]`."
+    },
+    {
+     "name": "gamma0W_logSq_eq_gamma0At",
+     "full": "GFNBounds.Balance.gamma0W_logSq_eq_gamma0At",
+     "kind": "theorem",
+     "line": 233,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gamma0W_logSq_eq_gamma0At (wmin W Bhat : ℝ) : gamma0W logSq (1/2) wmin W Bhat = gamma0At Gamma3Val wmin W Bhat",
+     "doc": "**Item *3*'s `γ₀` is Theorem 10's** for `g = (log x)²` at `a = 1/2`, with `Γ₃` the supremum of `|g'''|` within the window (`TrainingSpeedAssembled.gamma0W`)."
+    },
+    {
+     "name": "eps0W_logSq_eq_eps0At",
+     "full": "GFNBounds.Balance.eps0W_logSq_eq_eps0At",
+     "kind": "theorem",
+     "line": 239,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eps0W_logSq_eq_eps0At (wmin W Bhat lamMin : ℝ) : eps0W logSq (1/2) wmin W Bhat lamMin = eps0At Gamma3Val wmin W Bhat lamMin",
+     "doc": "**Item *3*'s `ε₀` is item *2*'s**, `TrainingSpeedAssembled.eps0W` at `g = (log x)²`, `a = 1/2`."
+    },
+    {
+     "name": "training_speed_gd_exact",
+     "full": "GFNBounds.Balance.training_speed_gd_exact",
+     "kind": "theorem",
+     "line": 263,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem training_speed_gd_exact {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam uH wf : V → ℝ} {wmin : ℝ} {u0 : V → ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hhit : B.IsHitExp uH) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) (hu0 : ∀ x, 0 < u0 x) : 0 < (gammaStar (b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0)) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))) (Graph.nrmL2 lam u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH lam)) (Graph.meanL2 lam u0)) ∧ ENNReal.ofReal (gammaStar (b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0)) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))) (Graph.nrmL2 lam u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH lam)) (Graph.meanL2 lam u0)) = min (min (ENNReal.ofReal (1 / b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0)) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0))))) (ENNReal.ofReal (Graph.nrmL2 lam u0 ^ 2 / 2) * (ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam u0)))⁻¹)) (ENNReal.ofReal (gamma0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH lam) * Graph.meanL2 lam u0 ^ 2)) ∧ (Balanced B.phat lam u0 ↔ (ENNReal.ofReal (lossVal lam wf logSq (ratio B.phat lam u0)))⁻¹ = ⊤) ∧ (∀ γ : ℝ, 0 < γ → γ ≤ (gammaStar (b3 (Graph.maxOver G wf) (uMin V (Graph.minOver G lam) (minPos B.phat) wmin (lossVal lam wf logSq (ratio B.phat lam u0)) (Graph.meanL2 lam u0)) (ratioCap (Graph.minOver G lam) wmin (lossVal lam wf logSq (ratio B.phat lam u0)))) (Graph.nrmL2 lam u0) (lossVal lam wf logSq (ratio B.phat lam u0)) (gamma0W logSq (1/2) wmin (Graph.maxOver G wf) (BhatSigma G uH lam)) (Graph.meanL2 lam u0)) → (∃ uk : ℕ → V → ℝ, uk 0 = u0 ∧ ∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad B.phat lam",
+     "doc": "**`theo:training_speed_full`, item *3*, as printed** (`proofs.tex:1021–1033`, proof `:1045–1090`), from `u₀` alone, with the paper's quantifiers: *there is an explicit `γ_* > 0` such that for every step `0 < γ ≤ γ_*` … the gradient descent `u_{k+1} := u_k − γD(u_k)` is well defined and satisfies (a)–(d)*, and the closing necessity sentence."
+    },
+    {
+     "name": "training_speed_full_complete",
+     "full": "GFNBounds.Balance.training_speed_full_complete",
+     "kind": "theorem",
+     "line": 440,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem training_speed_full_complete {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam gr uH wf : V → ℝ} {wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ((∀ x, lam x = Graph.visits G gr x / (2 + B.sigmaBar uH)) ∧ Graph.minOver G lam = Graph.minOver G (Graph.visits G gr) / (2 + B.sigmaBar uH) ∧ rhoSigma (deriv (deriv logSq) 1) wmin (Graph.minOver G lam) (Graph.sigmaStar G uH) = 2 * wmin * Graph.minOver G (Graph.visits G gr) / (Graph.sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)) ∧ ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ (∀ v : ℝ → V → ℝ, v 0 = u0 → IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv v → (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < v t x) → ∀ t : ℝ, 0 ≤ t → v t = u t) ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam u0) ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam u0) ∧ (∀ t : ℝ, 0 ≤ t → HasDerivAt (fun s => lossVal lam wf logSq (ratio B.phat lam (u s))) (-(Graph.nrmL2 lam (lossGrad B.phat lam (fun x => lam x * wf x) logSqDeriv (u t)) ^ 2)) t ∧ (wmin * Real.sqrt (Graph.minOver G lam) / (Graph.nrmL2 lam u0 * Graph.maxOver G wf * max 1 (Real.sqrt (lossVal lam wf logSq (ratio B.phat lam u0) / (wmin * Graph.minOver G lam))))) ^ 2 * lossVal lam wf logSq (ratio B.phat lam (u t)) ^ 2 ≤ Graph.nrmL2 lam (lossGrad B.phat lam (fun x => lam x * wf x) logSqDeriv (u t))",
+     "doc": "**`theo:training_speed_full`, the whole statement** (`proofs.tex:999–1035`): the preamble and items *1*–*2* (`TrainingSpeedAssembled.training_speed_full_paper`, the flow constructed, no flow hypothesis) and item *3* (`training_speed_gd_exact`), from the paper's hypotheses and `u₀` alone, with `𝓛(μ₀)^{−1} := +∞` at a balanced start honoured in both the flow's and the descent's displays, and `ε₀` literally the same constant in items *2* and *3*."
+    },
+    {
+     "name": "cycle_training_speed_complete_check",
+     "full": "GFNBounds.Balance.cycle_training_speed_complete_check",
+     "kind": "theorem",
+     "line": 609,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_training_speed_complete_check : ¬ Balanced (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (uInfl 2) ∧ ∃ γ : ℝ, 0 < γ ∧ ∃ uk : ℕ → Fin 5 → ℝ, uk 0 = uInfl 2 ∧ (∀ k, uk (k + 1) = fun x => uk k x - γ * lossGrad (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (fun z => lam (1 / 2) z * 1) logSqDeriv (uk k) x) ∧ ∀ k x, 0 < uk k x",
+     "doc": "**Non-vacuity of `training_speed_full_complete`** (kb 0025) on the five-vertex cycle of `rem:cycle_no_stalemate` at `p = 1/2`, `w ≡ 1`, from the over-inflated `uInfl 2`, which is **not** balanced: the theorem applies with nothing hypothesised beyond the setting, `γ_* > 0`, and at `γ = γ_*` the descent sequence exists and every iterate is positive."
+    },
+    {
+     "name": "IsFullTarget",
+     "full": "GFNBounds.Graph.ClosingClause.IsFullTarget",
+     "kind": "structure",
+     "line": 649,
+     "attrs": "",
+     "private": false,
+     "statement": "structure IsFullTarget (G : MarkedGraph V) (R : V → ℝ) (Z : ℝ) : Prop",
+     "doc": "**A target of mass `Z` with full support on the terminating states** (`proofs.tex:1140`)."
+    },
+    {
+     "name": "freezeSink",
+     "full": "GFNBounds.Graph.ClosingClause.freezeSink",
+     "kind": "def",
+     "line": 657,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def freezeSink (B : BackwardPolicy G) {R : V → ℝ} {Z : ℝ} (hR : IsFullTarget G R Z) (hZ : 0 < Z) : BackwardPolicy G",
+     "doc": "**\"freezing `π_←(s_f → ·) := R`\"** (`proofs.tex:1140`), with the row normalized: `π_←(s_f → ·) := R/Z`, every other row that of `B`."
+    },
+    {
+     "name": "freezeSink_pb_snk",
+     "full": "GFNBounds.Graph.ClosingClause.freezeSink_pb_snk",
+     "kind": "theorem",
+     "line": 676,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezeSink_pb_snk (B : BackwardPolicy G) {R : V → ℝ} {Z : ℝ} (hR : IsFullTarget G R Z) (hZ : 0 < Z) (x : V) : (freezeSink B hR hZ).pb G.snk x = R x / Z",
+     "doc": ""
+    },
+    {
+     "name": "freezeSink_pb_of_ne",
+     "full": "GFNBounds.Graph.ClosingClause.freezeSink_pb_of_ne",
+     "kind": "theorem",
+     "line": 680,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezeSink_pb_of_ne (B : BackwardPolicy G) {R : V → ℝ} {Z : ℝ} (hR : IsFullTarget G R Z) (hZ : 0 < Z) {s : V} (hs : s ≠ G.snk) (x : V) : (freezeSink B hR hZ).pb s x = B.pb s x",
+     "doc": ""
+    },
+    {
+     "name": "IsFullTarget.eq_zero_of_not_mem",
+     "full": "GFNBounds.Graph.ClosingClause.IsFullTarget.eq_zero_of_not_mem",
+     "kind": "theorem",
+     "line": 685,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsFullTarget.eq_zero_of_not_mem {R : V → ℝ} {Z : ℝ} (hR : IsFullTarget G R Z) {x : V} (hx : x ∉ G.internal) : R x = 0",
+     "doc": "A target on `𝒮` vanishes at both marks."
+    },
+    {
+     "name": "PositiveOffDirect",
+     "full": "GFNBounds.Graph.ClosingClause.PositiveOffDirect",
+     "kind": "def",
+     "line": 692,
+     "attrs": "",
+     "private": false,
+     "statement": "def PositiveOffDirect (B : BackwardPolicy G) : Prop",
+     "doc": "**Positivity on every edge but the direct one `s₀ → s_f`.** The hypothesis the closing paragraph actually has at its disposal after freezing: a target on `𝒮` gives `π_←(s_f → s₀) = 0`."
+    },
+    {
+     "name": "positiveOffDirect_of_positiveOnEdges",
+     "full": "GFNBounds.Graph.ClosingClause.positiveOffDirect_of_positiveOnEdges",
+     "kind": "theorem",
+     "line": 696,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem positiveOffDirect_of_positiveOnEdges {B : BackwardPolicy G} (hB : B.PositiveOnEdges) : PositiveOffDirect B",
+     "doc": ""
+    },
+    {
+     "name": "freezeSink_positiveOffDirect",
+     "full": "GFNBounds.Graph.ClosingClause.freezeSink_positiveOffDirect",
+     "kind": "theorem",
+     "line": 700,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezeSink_positiveOffDirect {B : BackwardPolicy G} (hB : B.PositiveOnEdges) {R : V → ℝ} {Z : ℝ} (hR : IsFullTarget G R Z) (hZ : 0 < Z) : PositiveOffDirect (freezeSink B hR hZ)",
+     "doc": "**The frozen policy is positive on every edge but `s₀ → s_f`.**"
+    },
+    {
+     "name": "freezeSink_positiveOnEdges_iff",
+     "full": "GFNBounds.Graph.ClosingClause.freezeSink_positiveOnEdges_iff",
+     "kind": "theorem",
+     "line": 719,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezeSink_positiveOnEdges_iff {B : BackwardPolicy G} (hB : B.PositiveOnEdges) {R : V → ℝ} {Z : ℝ} (hR : IsFullTarget G R Z) (hZ : 0 < Z) : (freezeSink B hR hZ).PositiveOnEdges ↔ ¬ G.Edge G.src G.snk",
+     "doc": "**FINDING (`proofs.tex:1140`): the closing paragraph cannot invoke item *(3)* when `s₀ → s_f` is an edge.** The frozen policy is positive on every edge of `G` — the hypothesis of `theo:universality_graphs` — **iff** `G` has no edge `s₀ → s_f`: a target on `𝒮` does not charge `s₀`, so freezing sets `π_←(s_f → s₀) = 0`."
+    },
+    {
+     "name": "breach_of_reach_ne_snk",
+     "full": "GFNBounds.Graph.ClosingClause.breach_of_reach_ne_snk",
+     "kind": "theorem",
+     "line": 740,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem breach_of_reach_ne_snk (hP : PositiveOffDirect B) {a b : V} (h : G.Reach a b) (hb : b ≠ G.snk) : B.BReach b a",
+     "doc": "A walk of `G` ending off `s_f` is reversed by the backward chain."
+    },
+    {
+     "name": "breach_of_reach_ne_src",
+     "full": "GFNBounds.Graph.ClosingClause.breach_of_reach_ne_src",
+     "kind": "theorem",
+     "line": 754,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem breach_of_reach_ne_src (hP : PositiveOffDirect B) {a b : V} (h : G.Reach a b) (ha : a ≠ G.src) : B.BReach b a",
+     "doc": "A walk of `G` starting off `s₀` is reversed by the backward chain."
+    },
+    {
+     "name": "breach_snk_src",
+     "full": "GFNBounds.Graph.ClosingClause.breach_snk_src",
+     "kind": "theorem",
+     "line": 767,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem breach_snk_src (hpc : G.PathConnected) (hP : PositiveOffDirect B) : B.BReach G.snk G.src",
+     "doc": "`s_f` reaches `s₀` backwards: its row charges some in-neighbour."
+    },
+    {
+     "name": "breach_all_off",
+     "full": "GFNBounds.Graph.ClosingClause.breach_all_off",
+     "kind": "theorem",
+     "line": 787,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem breach_all_off (hpc : G.PathConnected) (hP : PositiveOffDirect B) (x y : V) : B.BReach x y",
+     "doc": "**Irreducibility of the backward chain under positivity off `s₀ → s_f`.**"
+    },
+    {
+     "name": "invProb_pos_off",
+     "full": "GFNBounds.Graph.ClosingClause.invProb_pos_off",
+     "kind": "theorem",
+     "line": 799,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem invProb_pos_off (hpc : G.PathConnected) (hP : PositiveOffDirect B) {lam : V → ℝ} (h : B.IsInvProb lam) (y : V) : 0 < lam y",
+     "doc": ""
+    },
+    {
+     "name": "invProb_unique_off",
+     "full": "GFNBounds.Graph.ClosingClause.invProb_unique_off",
+     "kind": "theorem",
+     "line": 806,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem invProb_unique_off (hpc : G.PathConnected) (hP : PositiveOffDirect B) {lam lam' : V → ℝ} (h : B.IsInvProb lam) (h' : B.IsInvProb lam') : lam = lam'",
+     "doc": "Uniqueness of the invariant probability, `BackwardPolicy.invProb_unique`'s ratio maximum principle under positivity off `s₀ → s_f`."
+    },
+    {
+     "name": "frozenBalance_eq_off",
+     "full": "GFNBounds.Graph.ClosingClause.frozenBalance_eq_off",
+     "kind": "theorem",
+     "line": 840,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem frozenBalance_eq_off (hpc : G.PathConnected) (hP : PositiveOffDirect B) {lam : V → ℝ} (h : B.IsInvProb lam) {pf : V → V → ℝ} {fout : V → ℝ} (hrow : ∀ u, ∑ v, pf u v = 1) (hnn : ∀ x, 0 ≤ fout x) (hne : fout ≠ 0) (hfb : B.FrozenBalance pf fout) : 0 < ∑ z, fout z ∧ (∀ x, fout x = (∑ z, fout z) * lam x) ∧ pf = B.reversal lam",
+     "doc": "`theo:universality_graphs`*(2)*, the forward inclusion (`BackwardPolicy.frozenBalance_eq`), under positivity off `s₀ → s_f`."
+    },
+    {
+     "name": "frozenFamily",
+     "full": "GFNBounds.Graph.ClosingClause.frozenFamily",
+     "kind": "def",
+     "line": 876,
+     "attrs": "",
+     "private": false,
+     "statement": "def frozenFamily (B : BackwardPolicy G) : Set ((V → V → ℝ) × (V → ℝ))",
+     "doc": "**The frozen-backward family `Θ_{π_←}`** (`proofs.tex:1133`): pairs `(π_→, f_out)` with `π_→` a Markov kernel, `f_out ≥ 0`, and `(f_out μ) ⊗ π_→ = π̂_← ⊗ (f_out μ)`."
+    },
+    {
+     "name": "edgeOf",
+     "full": "GFNBounds.Graph.ClosingClause.edgeOf",
+     "kind": "def",
+     "line": 882,
+     "attrs": "",
+     "private": false,
+     "statement": "def edgeOf (θ : (V → V → ℝ) × (V → ℝ)) (u v : V) : ℝ",
+     "doc": "The edge flow of a member, `e(u → v) = f_out(u) π_→(u → v)`; its initial flow, once the wrap edge is cut, is `e(s₀ → ·)`."
+    },
+    {
+     "name": "cutOut",
+     "full": "GFNBounds.Graph.ClosingClause.cutOut",
+     "kind": "def",
+     "line": 885,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def cutOut (G : MarkedGraph V) (e : V → V → ℝ) (u : V) : ℝ",
+     "doc": "The star outflow of an edge flow on `𝒮`: `f_out⋆(u) = ∑_{w ≠ s_f} e(u → w)`."
+    },
+    {
+     "name": "cutPol",
+     "full": "GFNBounds.Graph.ClosingClause.cutPol",
+     "kind": "def",
+     "line": 889,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def cutPol (G : MarkedGraph V) (e : V → V → ℝ) (u v : V) : ℝ",
+     "doc": "The star forward policy, `π_→⋆(u → v) = e(u → v)/f_out⋆(u)`."
+    },
+    {
+     "name": "cutDefect",
+     "full": "GFNBounds.Graph.ClosingClause.cutDefect",
+     "kind": "def",
+     "line": 895,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def cutDefect (G : MarkedGraph V) (e : V → V → ℝ) (fi ft : V → ℝ) (v : V) : ℝ",
+     "doc": "**The defect of `equ:FM_const` on `𝒮` for the pair `(F_init, F_term)`**, the edge flow `e` read as the generative flow `(π_→⋆, f_out⋆)` on `𝒮`: `D(v) = F_init(v) + ((f_out⋆μ)π_→⋆)(v) − F_term(v) − f_out⋆(v)`."
+    },
+    {
+     "name": "cutResidual",
+     "full": "GFNBounds.Graph.ClosingClause.cutResidual",
+     "kind": "def",
+     "line": 901,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def cutResidual [MeasurableSpace V] (G : MarkedGraph V) (p : ℝ≥0∞) (e : V → V → ℝ) (fi ft : V → ℝ) : ℝ≥0∞",
+     "doc": "**`def:universality`'s residual for the pair `(F_init, F_term)`**: `‖δf_init‖_{L^p(μ)} + ‖δf_term‖_{L^p(μ)}` in `[0,∞]`, `μ` the counting measure on `𝒮`, `δf_init = D⁻`, `δf_term = D⁺`."
+    },
+    {
+     "name": "balancedMember",
+     "full": "GFNBounds.Graph.ClosingClause.balancedMember",
+     "kind": "def",
+     "line": 907,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def balancedMember (B : BackwardPolicy G) (lam : V → ℝ) (Z : ℝ) : (V → V → ℝ) × (V → ℝ)",
+     "doc": "**The balanced flow of initial mass `Z`**: `(π̂_←^λ, (Z/λ(s₀))λ)`, item *(3)*'s element."
+    },
+    {
+     "name": "edgeOf_balancedMember",
+     "full": "GFNBounds.Graph.ClosingClause.edgeOf_balancedMember",
+     "kind": "theorem",
+     "line": 912,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem edgeOf_balancedMember {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (Z : ℝ) : edgeOf (balancedMember B lam Z) = B.edgeFlow lam (Z / lam G.src)",
+     "doc": "The balanced member's edge flow is item *(3)*'s `edgeFlow` at `c = Z/λ(s₀)`."
+    },
+    {
+     "name": "cutDefect_edgeFlow",
+     "full": "GFNBounds.Graph.ClosingClause.cutDefect_edgeFlow",
+     "kind": "theorem",
+     "line": 921,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cutDefect_edgeFlow {lam : V → ℝ} (h : B.IsInvProb lam) (c : ℝ) (v : V) : cutDefect G (B.edgeFlow lam c) (B.initFlow lam c) (B.termFlow lam c) v = B.fmDefect lam c v",
+     "doc": "On item *(3)*'s flow, with its own initial flow and terminal flow, `cutDefect` **is** `BackwardPolicy.fmDefect`."
+    },
+    {
+     "name": "cutResidual_eq_zero",
+     "full": "GFNBounds.Graph.ClosingClause.cutResidual_eq_zero",
+     "kind": "theorem",
+     "line": 929,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cutResidual_eq_zero [MeasurableSpace V] [MeasurableSingletonClass V] {e : V → V → ℝ} {fi ft : V → ℝ} (h : ∀ v ∈ G.internal, cutDefect G e fi ft v = 0) (p : ℝ≥0∞) : cutResidual G p e fi ft = 0",
+     "doc": "A defect vanishing on `𝒮` has residual `0` at **every** `p`."
+    },
+    {
+     "name": "universality_graphs_closing",
+     "full": "GFNBounds.Graph.ClosingClause.universality_graphs_closing",
+     "kind": "theorem",
+     "line": 967,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem universality_graphs_closing [MeasurableSpace V] [MeasurableSingletonClass V] (hpc : G.PathConnected) (hB : B.PositiveOnEdges) {R : V → ℝ} {Z : ℝ} (hZ : 0 < Z) (hR : IsFullTarget G R Z) : (∀ x, (freezeSink B hR hZ).pb G.snk x = R x / Z) ∧ (∀ s, s ≠ G.snk → ∀ x, (freezeSink B hR hZ).pb s x = B.pb s x) ∧ PositiveOffDirect (freezeSink B hR hZ) ∧ ((freezeSink B hR hZ).PositiveOnEdges ↔ ¬ G.Edge G.src G.snk) ∧ (∃ lam : V → ℝ, (freezeSink B hR hZ).IsInvProb lam) ∧ (∀ lam lam' : V → ℝ, (freezeSink B hR hZ).IsInvProb lam → (freezeSink B hR hZ).IsInvProb lam' → lam = lam') ∧ ∀ lam : V → ℝ, (freezeSink B hR hZ).IsInvProb lam → (∀ x, 0 < lam x) ∧ (balancedMember (freezeSink B hR hZ) lam Z) ∈ frozenFamily (freezeSink B hR hZ) ∧ (balancedMember (freezeSink B hR hZ) lam Z).2 ≠ 0 ∧ (∀ θ ∈ frozenFamily (freezeSink B hR hZ), θ.2 ≠ 0 → (∑ v, edgeOf θ G.src v = Z ↔ θ = (balancedMember (freezeSink B hR hZ) lam Z))) ∧ (∀ x, edgeOf (balancedMember (freezeSink B hR hZ) lam Z) x G.snk = R x) ∧ (∀ v, 0 ≤ edgeOf (balancedMember (freezeSink B hR hZ) lam Z) G.src v) ∧ (∀ v, v ∉ G.internal → edgeOf (balancedMember (freezeSink B hR hZ) lam Z) G.src v = 0) ∧ ∑ v ∈ G.internal, edgeOf (balancedMember (freezeSink B hR hZ) lam Z) G.src v = Z ∧ (∀ v, v ∉ G.internal → R v = 0) ∧ ∑ v ∈ G.internal, R v = Z ∧ (∀ v ∈ G.internal, cutDefect G (edgeOf (balancedMember (freezeSink B hR hZ) lam Z)) (edgeOf (balancedMember (freezeSink B hR hZ) lam Z) G.src) R v = 0) ∧ (∀ p : ℝ≥0∞, cutResidual G p (edgeOf (balancedMember (freezeSink B hR hZ) lam Z)) (edgeOf (balancedMember (freezeSink B hR hZ) lam Z) G.src) R = 0) ∧ (∀ p : ℝ≥0∞, ⨅ θ ∈ frozenFamily (freezeSink B hR hZ), cutResidual G p (edgeOf θ) (edgeOf (balancedMember (freezeSink B hR hZ) lam Z) G.src) R = 0)",
+     "doc": "**`theo:universality_graphs`, the closing paragraph** (`proofs.tex:1140`, proof `:1167`): *for every target `R` with full support on the terminating states of `G`, freezing `π_←(s_f → ·) := R` produces a frozen-backward family whose unique balanced flow [matches] `R` exactly: the universality infimum vanishes and is attained, simultaneously for every `p ∈ [1,+∞]`.* With `R` of mass `Z` and the row frozen to `R/Z` (`freezeSink`): * the frozen policy has sink row `R/Z`, the other rows of `B`, and is positive on every edge but `s₀ → s_f` — on every edge iff there is no such edge (`freezeSink_positiveOnEdges_iff`); * its backward chain has a unique invariant probability `λ`, positive everywhere; * the balanced flow of initial mass `Z` lies in `Θ_{π_←}` and is the **unique** non-trivial member of initial mass `Z`; * its terminal flow `e(· → s_f)` is `R`, its initial flow `e(s₀ → ·)` is a distribution carried by `𝒮` of mass `Z`, and so is `R`: the pair `(F_init, R)` is a pair of `def:universality`; * flow matching holds exactly on `𝒮`, so its residual for that pair is `0` at every `p`, and the infimum of the residual over `Θ_{π_←}` for that pair is `0` at every `p`, attained."
+    },
+    {
+     "name": "universality_graphs_strongly_universal",
+     "full": "GFNBounds.Graph.ClosingClause.universality_graphs_strongly_universal",
+     "kind": "theorem",
+     "line": 1090,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem universality_graphs_strongly_universal [MeasurableSpace V] [MeasurableSingletonClass V] (hpc : G.PathConnected) (hB : B.PositiveOnEdges) : ∀ (R : V → ℝ) (Z : ℝ) (hZ : 0 < Z) (hR : IsFullTarget G R Z), ∃ θ ∈ frozenFamily (freezeSink B hR hZ), (∀ v, 0 ≤ edgeOf θ G.src v) ∧ (∀ v, v ∉ G.internal → edgeOf θ G.src v = 0) ∧ ∑ v ∈ G.internal, edgeOf θ G.src v = Z ∧ ∑ v ∈ G.internal, R v = Z ∧ ∀ p : ℝ≥0∞, cutResidual G p (edgeOf θ) (edgeOf θ G.src) R = 0",
+     "doc": "**\"The family is strongly universal over terminal targets\"** (`proofs.tex:1140`): for every target `R` of mass `Z > 0` with full support on the terminating states, the family frozen at `R` contains a flow whose initial flow is a distribution on `𝒮` of mass `Z` and whose residual for the pair (that initial flow, `R`) is `0` at every `p` at once."
+    },
+    {
+     "name": "item_three_masses_on_internal",
+     "full": "GFNBounds.Graph.ClosingClause.item_three_masses_on_internal",
+     "kind": "theorem",
+     "line": 1109,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem item_three_masses_on_internal (hpc : G.PathConnected) (hB : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) {Z c : ℝ} (hZ : 0 < Z) (hc : c = Z / lam G.src) : B.termFlow lam c G.src = Z * B.pb G.snk G.src ∧ ∑ v ∈ G.internal, B.termFlow lam c v = Z * (1 - B.pb G.snk G.src) ∧ ∑ v ∈ G.internal, B.initFlow lam c v = Z * (1 - B.pb G.snk G.src) ∧ (0 < B.pb G.snk G.src ↔ G.Edge G.src G.snk) ∧ (∑ v ∈ G.internal, B.termFlow lam c v = Z ↔ ¬ G.Edge G.src G.snk) ∧ (∑ v ∈ G.internal, B.initFlow lam c v = Z ↔ ¬ G.Edge G.src G.snk)",
+     "doc": "**FINDING (`proofs.tex:1136–1138`, item *(3)*).** Under the theorem's own hypotheses, item *(3)*'s flow at `c = Z/λ(s₀)` has, on `𝒮`, initial and terminal mass `Z(1 − π_←(s_f → s₀))`, and its terminal flow `F_term = Z π_←(s_f → ·)` charges `s₀ ∉ 𝒮` by `Z π_←(s_f → s₀)`."
+    },
+    {
+     "name": "tri",
+     "full": "GFNBounds.Graph.ClosingClause.tri",
+     "kind": "def",
+     "line": 1167,
+     "attrs": "",
+     "private": false,
+     "statement": "def tri : MarkedGraph (Fin 3)",
+     "doc": "The triangle `0 → 1 → 2`, `0 → 2`, with `s₀ = 0`, `s_f = 2`: the one internal state `1` is terminating, and the direct edge `s₀ → s_f` is present."
+    },
+    {
+     "name": "tri_pathConnected",
+     "full": "GFNBounds.Graph.ClosingClause.tri_pathConnected",
+     "kind": "theorem",
+     "line": 1177,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tri_pathConnected : tri.PathConnected",
+     "doc": ""
+    },
+    {
+     "name": "tri_edge_src_snk",
+     "full": "GFNBounds.Graph.ClosingClause.tri_edge_src_snk",
+     "kind": "theorem",
+     "line": 1187,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tri_edge_src_snk : tri.Edge tri.src tri.snk",
+     "doc": ""
+    },
+    {
+     "name": "triPol",
+     "full": "GFNBounds.Graph.ClosingClause.triPol",
+     "kind": "def",
+     "line": 1190,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def triPol : BackwardPolicy tri",
+     "doc": "The backward policy `π_←(1 → 0) = 1`, `π_←(2 → 1) = π_←(2 → 0) = 1/2`."
+    },
+    {
+     "name": "triPol_positiveOnEdges",
+     "full": "GFNBounds.Graph.ClosingClause.triPol_positiveOnEdges",
+     "kind": "theorem",
+     "line": 1202,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem triPol_positiveOnEdges : triPol.PositiveOnEdges",
+     "doc": ""
+    },
+    {
+     "name": "triTarget",
+     "full": "GFNBounds.Graph.ClosingClause.triTarget",
+     "kind": "def",
+     "line": 1207,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def triTarget : Fin 3 → ℝ",
+     "doc": "The target `δ₁`, of mass `1`: full support on the one terminating state."
+    },
+    {
+     "name": "triTarget_full",
+     "full": "GFNBounds.Graph.ClosingClause.triTarget_full",
+     "kind": "theorem",
+     "line": 1209,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem triTarget_full : IsFullTarget tri triTarget 1",
+     "doc": ""
+    },
+    {
+     "name": "tri_check",
+     "full": "GFNBounds.Graph.ClosingClause.tri_check",
+     "kind": "theorem",
+     "line": 1230,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tri_check : tri.PathConnected ∧ triPol.PositiveOnEdges ∧ tri.Edge tri.src tri.snk ∧ (∃ lam : Fin 3 → ℝ, triPol.IsInvProb lam ∧ 0 < triPol.termFlow lam (1 / lam tri.src) tri.src ∧ ∑ v ∈ tri.internal, triPol.termFlow lam (1 / lam tri.src) v < 1) ∧ ¬ (freezeSink triPol triTarget_full one_pos).PositiveOnEdges ∧ ∃ θ ∈ frozenFamily (freezeSink triPol triTarget_full one_pos), ∑ v ∈ tri.internal, edgeOf θ tri.src v = 1 ∧ ∀ p : ℝ≥0∞, cutResidual tri p (edgeOf θ) (edgeOf θ tri.src) triTarget = 0",
+     "doc": "**The hypotheses of both findings and of the closing theorem are inhabited, in the edge case.** On the triangle with `π_←` positive on every edge: item *(3)*'s terminal flow charges `s₀` and its `𝒮`-mass falls short of `Z`; freezing at the full target `δ₁` is **not** positive on every edge; and yet the closing paragraph's conclusion holds — the residual for `(F_init, δ₁)` is `0` at every `p`, with `F_init` of mass `1` on `𝒮`."
+    }
+   ],
+   "library": "scaffold",
+   "tracked": false,
+   "root_reachable": false
+  },
+  {
+   "file": "scaffold/GFNBoundsScaffold/Balance/RemarksA.lean",
+   "title": "Three remarks of Appendix A: freezing, visit ratios, and periodic loop closures",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.FreezingGeneral",
+    "GFNBounds.Balance.WeightedL2Norm",
+    "GFNBounds.Balance.FlowExistence",
+    "GFNBounds.Graph.Universality",
+    "GFNBounds.Graph.MorozovConsume",
+    "GFNBounds.Balance.C3Wrappers",
+    "Mathlib.NumberTheory.FrobeniusNumber"
+   ],
+   "variables": [
+    "variable (F : FreezingBands)",
+    "variable {F}",
+    "variable {V : Type*}",
+    "variable [Fintype V]",
+    "variable {K : V → V → ℝ} {lam : V → ℝ}",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}",
+    "variable (L : Leveled G)",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {K : V → V → ℝ} {lam : V → ℝ}",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}"
+   ],
+   "lines": 2493,
+   "decls": [
+    {
+     "name": "convex_deriv_ne_zero",
+     "full": "GFNBounds.Balance.RemarksA.convex_deriv_ne_zero",
+     "kind": "theorem",
+     "line": 224,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem convex_deriv_ne_zero {g : ℝ → ℝ} (hconv : ConvexOn ℝ (Ioi 0) g) (hdiff : ∀ x : ℝ, 0 < x → DifferentiableAt ℝ g x) (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {x : ℝ} (hx : 0 < x) (hx1 : x ≠ 1) : deriv g x ≠ 0",
+     "doc": "**A convex admissible generator has `g' ≠ 0` off `1`.**"
+    },
+    {
+     "name": "convex_no_flat_band",
+     "full": "GFNBounds.Balance.RemarksA.convex_no_flat_band",
+     "kind": "theorem",
+     "line": 243,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem convex_no_flat_band {g : ℝ → ℝ} (hconv : ConvexOn ℝ (Ioi 0) g) (hdiff : ∀ x : ℝ, 0 < x → DifferentiableAt ℝ g x) (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {α β : ℝ} (hαβ : α ≤ β) (hα : 0 < α) (hside : β < 1 ∨ 1 < α) : ¬ ∀ x ∈ Icc α β, deriv g x = 0",
+     "doc": "**`rem:freezing`*(i)*, first sentence**: a convex admissible generator has no flat band `[α, β] ⊂ (0,1)` or `[α, β] ⊂ (1,∞)`."
+    },
+    {
+     "name": "deriv_one_eq_zero",
+     "full": "GFNBounds.Balance.RemarksA.deriv_one_eq_zero",
+     "kind": "theorem",
+     "line": 257,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem deriv_one_eq_zero {g : ℝ → ℝ} (hd : DifferentiableAt ℝ g 1) (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) : deriv g 1 = 0",
+     "doc": "`g'(1) = 0` for a differentiable admissible generator: `1` is a minimum."
+    },
+    {
+     "name": "convex_small_deriv",
+     "full": "GFNBounds.Balance.RemarksA.convex_small_deriv",
+     "kind": "theorem",
+     "line": 269,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem convex_small_deriv {g : ℝ → ℝ} (hconv : ConvexOn ℝ (Ioi 0) g) (hdiff : ∀ x : ℝ, 0 < x → DifferentiableAt ℝ g x) (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) : (∀ x : ℝ, 0 < x → x < 1 → deriv g x ≤ 0) ∧ ∀ {x₀ ε : ℝ}, 0 < x₀ → x₀ < 1 → |deriv g x₀| ≤ ε → ∀ x ∈ Icc x₀ 1, |deriv g x| ≤ ε ∧ g x ≤ ε * (1 - x₀)",
+     "doc": "**`rem:freezing`*(i)*, second sentence**: a convex differentiable admissible generator has `g' ≤ 0` on `(0,1)`, and `|g'(x₀)| ≤ ε` at one `x₀ < 1` forces `|g'| ≤ ε` and `g ≤ ε(1 − x₀)` on `[x₀, 1]`."
+    },
+    {
+     "name": "analytic_const_of_flat",
+     "full": "GFNBounds.Balance.RemarksA.analytic_const_of_flat",
+     "kind": "theorem",
+     "line": 308,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem analytic_const_of_flat {g : ℝ → ℝ} (han : AnalyticOnNhd ℝ g (Ioi 0)) {p q : ℝ} (hp : 0 < p) (hpq : p < q) (hflat : ∀ x ∈ Ioo p q, deriv g x = 0) : ∀ x y : ℝ, 0 < x → 0 < y → g x = g y",
+     "doc": "**`rem:freezing`*(i)*, third sentence**: a generator real-analytic on `(0,∞)` whose derivative vanishes on a non-degenerate interval `(p, q) ⊂ (0,∞)` is constant on `(0,∞)`."
+    },
+    {
+     "name": "analytic_admissible_no_flat",
+     "full": "GFNBounds.Balance.RemarksA.analytic_admissible_no_flat",
+     "kind": "theorem",
+     "line": 326,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem analytic_admissible_no_flat {g : ℝ → ℝ} (han : AnalyticOnNhd ℝ g (Ioi 0)) (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {p q : ℝ} (hp : 0 < p) (hpq : p < q) : ¬ ∀ x ∈ Ioo p q, deriv g x = 0",
+     "doc": "**`rem:freezing`*(i)*: real-analytic admissible generators cannot freeze exactly** — no admissible `g` real-analytic on `(0,∞)` has `g' ≡ 0` on a non-degenerate interval of `(0,∞)`."
+    },
+    {
+     "name": "hasDerivAt_logSqDeriv",
+     "full": "GFNBounds.Balance.RemarksA.hasDerivAt_logSqDeriv",
+     "kind": "theorem",
+     "line": 337,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_logSqDeriv {x : ℝ} (hx : 0 < x) : HasDerivAt logSqDeriv (2 * (1 - Real.log x) / x ^ 2) x",
+     "doc": "**`g''(x) = 2(1 − log x)/x²`** for `g = (log x)²`, as the derivative of `logSqDeriv`."
+    },
+    {
+     "name": "deriv_deriv_logSq",
+     "full": "GFNBounds.Balance.RemarksA.deriv_deriv_logSq",
+     "kind": "theorem",
+     "line": 348,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem deriv_deriv_logSq {x : ℝ} (hx : 0 < x) : deriv (deriv logSq) x = 2 * (1 - Real.log x) / x ^ 2",
+     "doc": "**`rem:freezing`*(i)*: `g''(x) = 2(1 − log x)/x²`** for `g = (log x)²`, as the second derivative of `logSq` itself."
+    },
+    {
+     "name": "deriv_deriv_logSq_neg",
+     "full": "GFNBounds.Balance.RemarksA.deriv_deriv_logSq_neg",
+     "kind": "theorem",
+     "line": 357,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem deriv_deriv_logSq_neg {x : ℝ} (hx : Real.exp 1 < x) : deriv (deriv logSq) x < 0",
+     "doc": "**`rem:freezing`*(i)*: `g'' < 0` on `(e, ∞)`** for `g = (log x)²`."
+    },
+    {
+     "name": "logSq_not_convexOn",
+     "full": "GFNBounds.Balance.RemarksA.logSq_not_convexOn",
+     "kind": "theorem",
+     "line": 368,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem logSq_not_convexOn : ¬ ConvexOn ℝ (Ioi 0) logSq",
+     "doc": "**`rem:freezing`*(i)*: `(log x)²` is not convex** on `(0,∞)`: its derivative would be monotone, and `g'(e) = 2/e > 4/e² = g'(e²)` since `e > 2`."
+    },
+    {
+     "name": "tendsto_logSqDeriv_atTop",
+     "full": "GFNBounds.Balance.RemarksA.tendsto_logSqDeriv_atTop",
+     "kind": "theorem",
+     "line": 386,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tendsto_logSqDeriv_atTop : Tendsto logSqDeriv atTop (𝓝 0)",
+     "doc": "**`rem:freezing`*(i)*: `g' → 0` at `+∞`** for `g = (log x)²`."
+    },
+    {
+     "name": "tendsto_abs_logSqDeriv_nhdsGT_zero",
+     "full": "GFNBounds.Balance.RemarksA.tendsto_abs_logSqDeriv_nhdsGT_zero",
+     "kind": "theorem",
+     "line": 395,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tendsto_abs_logSqDeriv_nhdsGT_zero : Tendsto (fun x => |logSqDeriv x|) (𝓝[>] 0) atTop",
+     "doc": "**`rem:freezing`*(i)*: `|g'| → ∞` at `0⁺`** for `g = (log x)²`."
+    },
+    {
+     "name": "logSq_critical_balanced",
+     "full": "GFNBounds.Balance.RemarksA.logSq_critical_balanced",
+     "kind": "theorem",
+     "line": 411,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem logSq_critical_balanced {V : Type*} [Fintype V] {K : V → V → ℝ} {lam nu u : V → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hnu : ∀ x, 0 < nu x) (hcrit : ∀ d : V → ℝ, HasDerivAt (fun t : ℝ => loss K lam nu (fun x => u x + t * d x) logSq) 0 0) : Balanced K lam u",
+     "doc": "**`rem:freezing`*(i)*: `(log x)²` has no spurious critical point** — it is strictly unimodal, so by `prop:no_distant_equilibrium`*(1)* every flow at which every directional derivative of `𝓛_{(log x)², ν}` vanishes is balanced, for `ν` of positive density."
+    },
+    {
+     "name": "deltaBands",
+     "full": "GFNBounds.Balance.RemarksA.deltaBands",
+     "kind": "def",
+     "line": 428,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def deltaBands (δ : ℝ) (h0 : 0 < δ) (h1 : δ < 1 / 4) : FreezingBands",
+     "doc": "**The bands of `rem:freezing`*(ii)***: `(a,b,c,d) = (1−2δ, 1−δ, 1+δ, 1+2δ)` for `δ ∈ (0, 1/4)`."
+    },
+    {
+     "name": "etaVec",
+     "full": "GFNBounds.Balance.RemarksA.etaVec",
+     "kind": "def",
+     "line": 441,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def etaVec (s η : ℝ) : Fin 2 → ℝ",
+     "doc": "The density `(s, s(1−η))` against `λ = (1/2,1/2)`: at `s = 2` the flow `μ = (1, 1−η)` of the remark, at `s = 1` the flow `(1+h)λ` with `h = (0, −η)`."
+    },
+    {
+     "name": "etaVec_pos",
+     "full": "GFNBounds.Balance.RemarksA.etaVec_pos",
+     "kind": "theorem",
+     "line": 443,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem etaVec_pos {s η : ℝ} (hs : 0 < s) (hη : η < 1) (x : Fin 2) : 0 < etaVec s η x",
+     "doc": ""
+    },
+    {
+     "name": "ratio_etaVec_zero",
+     "full": "GFNBounds.Balance.RemarksA.ratio_etaVec_zero",
+     "kind": "theorem",
+     "line": 449,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_etaVec_zero {s η : ℝ} (hs : 0 < s) : ratio twoStateK twoStateLam (etaVec s η) 0 = 1 - η / 2",
+     "doc": "`r(0) = 1 − η/2` on the two-state chain."
+    },
+    {
+     "name": "ratio_etaVec_one",
+     "full": "GFNBounds.Balance.RemarksA.ratio_etaVec_one",
+     "kind": "theorem",
+     "line": 458,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_etaVec_one {s η : ℝ} (hs : 0 < s) (hη : η < 1) : ratio twoStateK twoStateLam (etaVec s η) 1 = (1 - η / 2) / (1 - η)",
+     "doc": "`r(1) = (1 − η/2)/(1 − η)` on the two-state chain."
+    },
+    {
+     "name": "etaVec_mem_frozen",
+     "full": "GFNBounds.Balance.RemarksA.etaVec_mem_frozen",
+     "kind": "theorem",
+     "line": 469,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem etaVec_mem_frozen {δ η s : ℝ} (h0 : 0 < δ) (h1 : δ < 1 / 4) (hs : 0 < s) (hη1 : 2 * δ < η) (hη2 : η < 4 * δ / (1 + 4 * δ)) : etaVec s η ∈ frozen twoStateK twoStateLam (deltaBands δ h0 h1).bands",
+     "doc": "**The window of `rem:freezing`*(ii)***: for `2δ < η < 4δ/(1+4δ)` the two ratios lie in `U⁻ = (1−2δ, 1−δ)` and `U⁺ = (1+δ, 1+2δ)`."
+    },
+    {
+     "name": "freezing_two_frozen",
+     "full": "GFNBounds.Balance.RemarksA.freezing_two_frozen",
+     "kind": "theorem",
+     "line": 497,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_two_frozen {δ η : ℝ} (h0 : 0 < δ) (h1 : δ < 1 / 4) (hη1 : 2 * δ < η) (hη2 : η < 4 * δ / (1 + 4 * δ)) : ratio twoStateK twoStateLam (etaVec 2 η) 0 = 1 - η / 2 ∧ ratio twoStateK twoStateLam (etaVec 2 η) 1 = (1 - η / 2) / (1 - η) ∧ etaVec 2 η ∈ frozen twoStateK twoStateLam (deltaBands δ h0 h1).bands ∧ (∀ (w : Fin 2 → ℝ) (x : Fin 2), lossGradDensity twoStateK twoStateLam (etaVec 2 η) w (deriv (deltaBands δ h0 h1).g) x = 0) ∧ (∀ nu : Fin 2 → ℝ, HasFDerivAt (fun u' => loss twoStateK twoStateLam nu u' (deltaBands δ h0 h1).g) (0 : (Fin 2 → ℝ) →L[ℝ] ℝ) (etaVec 2 η)) ∧ (∀ (w : Fin 2 → ℝ) (eps : ℝ), (fun x => etaVec 2 η x - eps * lossGradDensity twoStateK twoStateLam (etaVec 2 η) w (deriv (deltaBands δ h0 h1).g) x) = etaVec 2 η) ∧ Balanced twoStateK twoStateLam (fun _ => 2) ∧ Graph.nrmL2 twoStateLam (fun x => etaVec 2 η x - 2) = Real.sqrt 2 * η ∧ Real.sqrt 2 * η < 4 * Real.sqrt 2 * δ",
+     "doc": "**`rem:freezing`*(ii)*, the frozen flows**: for `δ ∈ (0,1/4)` and `2δ < η < 4δ/(1+4δ)`, the flow `μ = (1, 1−η)` on the two-state chain (density `u = (2, 2(1−η))` against `λ`) has `r = (1 − η/2, (1−η/2)/(1−η)) ∈ U⁻ × U⁺`; so item *(1)* of `prop:nonlinear_freezing` freezes it for the generator of the bands `(1−2δ, 1−δ, 1+δ, 1+2δ)` — its gradient density vanishes for every training measure, the loss has Fréchet derivative `0` there for every `ν`, and every gradient-descent step fixes it — and it lies at `L²(λ)`-distance `√2·η < 4√2·δ` from the balanced flow `2·𝟙` of the balanced ray."
+    },
+    {
+     "name": "freezing_two_example",
+     "full": "GFNBounds.Balance.RemarksA.freezing_two_example",
+     "kind": "theorem",
+     "line": 542,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_two_example : 2 * (1 / 10 : ℝ) < 1 / 4 ∧ (1 / 4 : ℝ) < 4 * (1 / 10) / (1 + 4 * (1 / 10)) ∧ ratio twoStateK twoStateLam (etaVec 2 (1 / 4)) 0 = 0.875 ∧ ratio twoStateK twoStateLam (etaVec 2 (1 / 4)) 1 = 7 / 6 ∧ |ratio twoStateK twoStateLam (etaVec 2 (1 / 4)) 1 - 1.1667| < 1 / 20000",
+     "doc": "**`rem:freezing`*(ii)*, the numerical instance**: at `δ = 1/10`, `η = 1/4` lies in the window and gives `r = (0.875, 7/6)`, `7/6 = 1.1667` to four decimals."
+    },
+    {
+     "name": "third_deriv_bound",
+     "full": "GFNBounds.Balance.RemarksA.third_deriv_bound",
+     "kind": "theorem",
+     "line": 556,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem third_deriv_bound {g g1 g2 g3 : ℝ → ℝ} {δ M : ℝ} (hδ : 0 < δ) (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) (hd0 : HasDerivAt g (g1 1) 1) (hd1 : ∀ x ∈ Icc 1 (1 + δ), HasDerivWithinAt g1 (g2 x) (Icc 1 (1 + δ)) x) (hd2 : ∀ x ∈ Icc 1 (1 + δ), HasDerivWithinAt g2 (g3 x) (Icc 1 (1 + δ)) x) (hflat : ∀ x ∈ Icc (1 + δ) (1 + 2 * δ), g1 x = 0) (h2 : g2 1 = 2) (hM : ∀ x ∈ Icc 1 (1 + δ), |g3 x| ≤ M) : 4 / δ ≤ M",
+     "doc": "**`rem:freezing`*(ii)*, the third-derivative bound**: an admissible generator, differentiable at `1`, with `g''` and `g'''` on `[1, 1+δ]`, `g''(1) = 2` and `g' ≡ 0` on `[1+δ, 1+2δ]` has `|g'''| ≤ M` on `[1, 1+δ]` only for `M ≥ 4/δ`."
+    },
+    {
+     "name": "third_deriv_sSup",
+     "full": "GFNBounds.Balance.RemarksA.third_deriv_sSup",
+     "kind": "theorem",
+     "line": 632,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem third_deriv_sSup {g g1 g2 g3 : ℝ → ℝ} {δ : ℝ} (hδ : 0 < δ) (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) (hd0 : HasDerivAt g (g1 1) 1) (hd1 : ∀ x ∈ Icc 1 (1 + δ), HasDerivWithinAt g1 (g2 x) (Icc 1 (1 + δ)) x) (hd2 : ∀ x ∈ Icc 1 (1 + δ), HasDerivWithinAt g2 (g3 x) (Icc 1 (1 + δ)) x) (hflat : ∀ x ∈ Icc (1 + δ) (1 + 2 * δ), g1 x = 0) (h2 : g2 1 = 2) (hbdd : BddAbove ((fun x => |g3 x|) '' Icc 1 (1 + δ))) : 4 / δ ≤ sSup ((fun x => |g3 x|) '' Icc 1 (1 + δ))",
+     "doc": "**`rem:freezing`*(ii)*: `sup_{[1,1+δ]} |g'''| ≥ 4/δ`**, the supremum form of `third_deriv_bound`, for a `|g'''|` bounded on `[1, 1+δ]`."
+    },
+    {
+     "name": "deltaBands_third_deriv",
+     "full": "GFNBounds.Balance.RemarksA.deltaBands_third_deriv",
+     "kind": "theorem",
+     "line": 647,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem deltaBands_third_deriv {δ : ℝ} (h0 : 0 < δ) (h1 : δ < 1 / 4) : 4 / δ ≤ sSup ((fun x => |deriv (deriv (deriv (deltaBands δ h0 h1).g)) x|) '' Icc 1 (1 + δ))",
+     "doc": "**The bound is met by the generator of the bands**: for `F = deltaBands δ`, the `C^∞` admissible generator of `prop:nonlinear_freezing` at `(1−2δ, 1−δ, 1+δ, 1+2δ)` has `sup_{[1,1+δ]} |g'''| ≥ 4/δ` — so the hypothesis bundle of `third_deriv_sSup` is inhabited, at every `δ ∈ (0, 1/4)`."
+    },
+    {
+     "name": "frozen_near_balance",
+     "full": "GFNBounds.Balance.RemarksA.frozen_near_balance",
+     "kind": "theorem",
+     "line": 670,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem frozen_near_balance {ε : ℝ} (hε : 0 < ε) : ∃ (δ : ℝ) (h0 : 0 < δ) (h1 : δ < 1 / 4) (h : Fin 2 → ℝ), ContDiff ℝ ∞ (deltaBands δ h0 h1).g ∧ deriv (deriv (deltaBands δ h0 h1).g) 1 = 2 ∧ Graph.nrmL2 twoStateLam h ≤ ε ∧ ¬ Balanced twoStateK twoStateLam (fun x => 1 + h x) ∧ ∀ nu : Fin 2 → ℝ, IsGradientFlow twoStateK twoStateLam nu (deriv (deltaBands δ h0 h1).g) (fun _ x => 1 + h x)",
+     "doc": "**Frozen flows arbitrarily close to balance, at `g''(1) = 2`**: for every `ε > 0` some `C^∞` admissible generator with `g''(1) = 2` (the generator of `deltaBands`) has, on the two-state chain — `β̂ₙ = 0` for `n ≥ 1`, `B̂ = 1` — a flow `(1+h)λ` with `‖h‖_{L²(λ)} ≤ ε` which is not balanced and whose constant curve is a gradient flow for every training measure."
+    },
+    {
+     "name": "radius_not_uniform_in_generator",
+     "full": "GFNBounds.Balance.RemarksA.radius_not_uniform_in_generator",
+     "kind": "theorem",
+     "line": 721,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem radius_not_uniform_in_generator : ¬ ∃ ε₀ : ℝ, 0 < ε₀ ∧ ∀ (F : FreezingBands) (u : ℝ → Fin 2 → ℝ), IsGradientFlow twoStateK twoStateLam twoStateLam (deriv F.g) u → Graph.nrmL2 twoStateLam (fun x => u 0 x - 1) ≤ ε₀ → ∃ c : Fin 2 → ℝ, Balanced twoStateK twoStateLam c ∧ Tendsto u atTop (𝓝 c)",
+     "doc": "**`rem:freezing`*(ii)*, last clause: the radius `ε₀` of `theo:local_convergence_full` must depend on `g` beyond `g''(1)`.** On the two-state chain with `w ≡ 1` — so `B̂ = 1`, `C_∞ = √2`, `w_min = ‖w‖_∞ = 1`, all fixed — no single `ε₀ > 0` makes every gradient flow started within `ε₀` of `λ` in `L²(λ)` converge to a balanced flow, uniformly over the `C^∞` admissible generators with `g''(1) = 2` of `prop:nonlinear_freezing`."
+    },
+    {
+     "name": "eps0C3_deltaBands_small",
+     "full": "GFNBounds.Balance.RemarksA.eps0C3_deltaBands_small",
+     "kind": "theorem",
+     "line": 748,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eps0C3_deltaBands_small {ε : ℝ} (hε : 0 < ε) : ∃ (δ : ℝ) (h0 : 0 < δ) (h1 : δ < 1 / 4), eps0C3 (deltaBands δ h0 h1).g (1 / 2) 1 1 1 (1 / 2) < ε",
+     "doc": "**`rem:freezing`*(ii)*, last clause, on the certified radius itself**: the radius `ε₀ = eps0C3 g a w_min ‖w‖_∞ B̂ λ_min` of `C3Wrappers.local_convergence_full_C3`, evaluated on the two-state chain (`a = 1/2`, `w ≡ 1`, `B̂ = 1`, `λ_min = 1/2` — every argument but `g` fixed) at the `C^∞` admissible generators of `deltaBands` (all with `g''(1) = 2`), takes values below every `ε > 0`: a frozen flow within `ε` of `λ` is not balanced, so the theorem cannot apply to it."
+    },
+    {
+     "name": "zeta",
+     "full": "GFNBounds.Balance.RemarksA.zeta",
+     "kind": "def",
+     "line": 804,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def zeta (t : ℝ) : ℝ",
+     "doc": "`ζ := φ_{a,b} φ_{c,d}`, vanishing exactly on the closed bands."
+    },
+    {
+     "name": "xi",
+     "full": "GFNBounds.Balance.RemarksA.xi",
+     "kind": "def",
+     "line": 807,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def xi (θ t : ℝ) : ℝ",
+     "doc": "`ξ := φ_{1−θ,1+θ}`, vanishing exactly on `[1−θ, 1+θ]`."
+    },
+    {
+     "name": "mTheta",
+     "full": "GFNBounds.Balance.RemarksA.mTheta",
+     "kind": "def",
+     "line": 810,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def mTheta (θ t : ℝ) : ℝ",
+     "doc": "**The multiplier of `rem:freezing`*(iii)***: `m := 2ζ/(ζ+ξ)`."
+    },
+    {
+     "name": "gTheta",
+     "full": "GFNBounds.Balance.RemarksA.gTheta",
+     "kind": "def",
+     "line": 813,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def gTheta (θ x : ℝ) : ℝ",
+     "doc": "**The generator of `rem:freezing`*(iii)***: `g(x) := ∫₁ˣ m(t)(t−1) dt`."
+    },
+    {
+     "name": "ThetaOK",
+     "full": "GFNBounds.Balance.RemarksA.ThetaOK",
+     "kind": "structure",
+     "line": 816,
+     "attrs": "",
+     "private": false,
+     "statement": "structure ThetaOK (θ : ℝ) : Prop",
+     "doc": "The standing hypothesis `0 < θ < min(1 − b, c − 1)`."
+    },
+    {
+     "name": "zeta_nonneg",
+     "full": "GFNBounds.Balance.RemarksA.zeta_nonneg",
+     "kind": "theorem",
+     "line": 823,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem zeta_nonneg (t : ℝ) : 0 ≤ zeta F t",
+     "doc": ""
+    },
+    {
+     "name": "xi_nonneg",
+     "full": "GFNBounds.Balance.RemarksA.xi_nonneg",
+     "kind": "theorem",
+     "line": 826,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem xi_nonneg (θ t : ℝ) : 0 ≤ xi θ t",
+     "doc": ""
+    },
+    {
+     "name": "zeta_eq_zero_iff",
+     "full": "GFNBounds.Balance.RemarksA.zeta_eq_zero_iff",
+     "kind": "theorem",
+     "line": 829,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem zeta_eq_zero_iff {t : ℝ} : zeta F t = 0 ↔ t ∈ Icc F.a F.b ∪ Icc F.c F.d",
+     "doc": "**`ζ` vanishes exactly on `[a,b] ∪ [c,d]`.**"
+    },
+    {
+     "name": "xi_eq_zero_iff",
+     "full": "GFNBounds.Balance.RemarksA.xi_eq_zero_iff",
+     "kind": "theorem",
+     "line": 833,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem xi_eq_zero_iff {θ t : ℝ} : xi θ t = 0 ↔ t ∈ Icc (1 - θ) (1 + θ)",
+     "doc": "**`ξ` vanishes exactly on `[1−θ, 1+θ]`.**"
+    },
+    {
+     "name": "zeta_add_xi_pos",
+     "full": "GFNBounds.Balance.RemarksA.zeta_add_xi_pos",
+     "kind": "theorem",
+     "line": 837,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem zeta_add_xi_pos {θ : ℝ} (hθ : ThetaOK F θ) (t : ℝ) : 0 < zeta F t + xi θ t",
+     "doc": "**The two zero sets are disjoint**, so `ζ + ξ > 0`."
+    },
+    {
+     "name": "contDiff_zeta",
+     "full": "GFNBounds.Balance.RemarksA.contDiff_zeta",
+     "kind": "theorem",
+     "line": 848,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem contDiff_zeta : ContDiff ℝ ∞ (zeta F)",
+     "doc": ""
+    },
+    {
+     "name": "contDiff_mTheta",
+     "full": "GFNBounds.Balance.RemarksA.contDiff_mTheta",
+     "kind": "theorem",
+     "line": 851,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem contDiff_mTheta {θ : ℝ} (hθ : ThetaOK F θ) : ContDiff ℝ ∞ (mTheta F θ)",
+     "doc": ""
+    },
+    {
+     "name": "continuous_mTheta",
+     "full": "GFNBounds.Balance.RemarksA.continuous_mTheta",
+     "kind": "theorem",
+     "line": 855,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem continuous_mTheta {θ : ℝ} (hθ : ThetaOK F θ) : Continuous (mTheta F θ)",
+     "doc": ""
+    },
+    {
+     "name": "mTheta_nonneg",
+     "full": "GFNBounds.Balance.RemarksA.mTheta_nonneg",
+     "kind": "theorem",
+     "line": 858,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mTheta_nonneg {θ : ℝ} (hθ : ThetaOK F θ) (t : ℝ) : 0 ≤ mTheta F θ t",
+     "doc": ""
+    },
+    {
+     "name": "mTheta_le_two",
+     "full": "GFNBounds.Balance.RemarksA.mTheta_le_two",
+     "kind": "theorem",
+     "line": 862,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mTheta_le_two {θ : ℝ} (hθ : ThetaOK F θ) (t : ℝ) : mTheta F θ t ≤ 2",
+     "doc": "**`m ≤ 2`.**"
+    },
+    {
+     "name": "mTheta_eq_two",
+     "full": "GFNBounds.Balance.RemarksA.mTheta_eq_two",
+     "kind": "theorem",
+     "line": 867,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mTheta_eq_two {θ : ℝ} (hθ : ThetaOK F θ) {t : ℝ} (ht : t ∈ Icc (1 - θ) (1 + θ)) : mTheta F θ t = 2",
+     "doc": "**`m = 2` on `[1−θ, 1+θ]`.**"
+    },
+    {
+     "name": "mTheta_eq_zero_iff",
+     "full": "GFNBounds.Balance.RemarksA.mTheta_eq_zero_iff",
+     "kind": "theorem",
+     "line": 876,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mTheta_eq_zero_iff {θ : ℝ} (hθ : ThetaOK F θ) {t : ℝ} : mTheta F θ t = 0 ↔ t ∈ Icc F.a F.b ∪ Icc F.c F.d",
+     "doc": "**`m` vanishes exactly on `[a,b] ∪ [c,d]`.**"
+    },
+    {
+     "name": "mTheta_pos_of_mem_Ioo",
+     "full": "GFNBounds.Balance.RemarksA.mTheta_pos_of_mem_Ioo",
+     "kind": "theorem",
+     "line": 885,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mTheta_pos_of_mem_Ioo {θ : ℝ} (hθ : ThetaOK F θ) {t : ℝ} (h1 : F.b < t) (h2 : t < F.c) : 0 < mTheta F θ t",
+     "doc": ""
+    },
+    {
+     "name": "continuous_integrandTheta",
+     "full": "GFNBounds.Balance.RemarksA.continuous_integrandTheta",
+     "kind": "theorem",
+     "line": 892,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem continuous_integrandTheta {θ : ℝ} (hθ : ThetaOK F θ) : Continuous fun t => mTheta F θ t * (t - 1)",
+     "doc": ""
+    },
+    {
+     "name": "gTheta_one",
+     "full": "GFNBounds.Balance.RemarksA.gTheta_one",
+     "kind": "theorem",
+     "line": 896,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gTheta_one (θ : ℝ) : gTheta F θ 1 = 0",
+     "doc": ""
+    },
+    {
+     "name": "deriv_gTheta",
+     "full": "GFNBounds.Balance.RemarksA.deriv_gTheta",
+     "kind": "theorem",
+     "line": 898,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem deriv_gTheta {θ : ℝ} (hθ : ThetaOK F θ) : deriv (gTheta F θ) = fun x => mTheta F θ x * (x - 1)",
+     "doc": ""
+    },
+    {
+     "name": "differentiable_gTheta",
+     "full": "GFNBounds.Balance.RemarksA.differentiable_gTheta",
+     "kind": "theorem",
+     "line": 903,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem differentiable_gTheta {θ : ℝ} (hθ : ThetaOK F θ) : Differentiable ℝ (gTheta F θ)",
+     "doc": ""
+    },
+    {
+     "name": "contDiff_gTheta",
+     "full": "GFNBounds.Balance.RemarksA.contDiff_gTheta",
+     "kind": "theorem",
+     "line": 906,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem contDiff_gTheta {θ : ℝ} (hθ : ThetaOK F θ) : ContDiff ℝ ∞ (gTheta F θ)",
+     "doc": ""
+    },
+    {
+     "name": "deriv_gTheta_eq_zero",
+     "full": "GFNBounds.Balance.RemarksA.deriv_gTheta_eq_zero",
+     "kind": "theorem",
+     "line": 913,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem deriv_gTheta_eq_zero {θ : ℝ} (hθ : ThetaOK F θ) {x : ℝ} (hx : x ∈ F.bands) : deriv (gTheta F θ) x = 0",
+     "doc": "**`g' ≡ 0` on the bands.**"
+    },
+    {
+     "name": "gTheta_pos",
+     "full": "GFNBounds.Balance.RemarksA.gTheta_pos",
+     "kind": "theorem",
+     "line": 923,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gTheta_pos {θ : ℝ} (hθ : ThetaOK F θ) {x : ℝ} (hx : x ≠ 1) : 0 < gTheta F θ x",
+     "doc": "**`g > 0` off `1`.**"
+    },
+    {
+     "name": "deriv_deriv_gTheta_one",
+     "full": "GFNBounds.Balance.RemarksA.deriv_deriv_gTheta_one",
+     "kind": "theorem",
+     "line": 961,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem deriv_deriv_gTheta_one {θ : ℝ} (hθ : ThetaOK F θ) : deriv (deriv (gTheta F θ)) 1 = 2",
+     "doc": "**`g''(1) = 2`.**"
+    },
+    {
+     "name": "gTheta_eq_sq",
+     "full": "GFNBounds.Balance.RemarksA.gTheta_eq_sq",
+     "kind": "theorem",
+     "line": 972,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gTheta_eq_sq {θ : ℝ} (hθ : ThetaOK F θ) {x : ℝ} (hx : x ∈ Icc (1 - θ) (1 + θ)) : gTheta F θ x = (x - 1) ^ 2",
+     "doc": "**`g = (x − 1)²` on `[1−θ, 1+θ]`.**"
+    },
+    {
+     "name": "abs_gTheta_le",
+     "full": "GFNBounds.Balance.RemarksA.abs_gTheta_le",
+     "kind": "theorem",
+     "line": 983,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_gTheta_le {θ : ℝ} (hθ : ThetaOK F θ) (x : ℝ) : |gTheta F θ x| ≤ (x - 1) ^ 2",
+     "doc": "`|g(x)| ≤ (x − 1)²`, from `0 ≤ m ≤ 2`."
+    },
+    {
+     "name": "freezing_three_multiplier",
+     "full": "GFNBounds.Balance.RemarksA.freezing_three_multiplier",
+     "kind": "theorem",
+     "line": 1017,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_three_multiplier {θ : ℝ} (hθ : ThetaOK F θ) : ContDiff ℝ ∞ (mTheta F θ) ∧ (∀ t, 0 ≤ mTheta F θ t ∧ mTheta F θ t ≤ 2) ∧ (∀ t ∈ Icc (1 - θ) (1 + θ), mTheta F θ t = 2) ∧ (∀ t, mTheta F θ t = 0 ↔ t ∈ Icc F.a F.b ∪ Icc F.c F.d)",
+     "doc": "**`rem:freezing`*(iii)*, the multiplier**: `m = 2ζ/(ζ+ξ)` is `C^∞` with values in `[0,2]`, equals `2` on `[1−θ, 1+θ]`, and vanishes exactly on `[a,b] ∪ [c,d]`."
+    },
+    {
+     "name": "freezing_three_generator",
+     "full": "GFNBounds.Balance.RemarksA.freezing_three_generator",
+     "kind": "theorem",
+     "line": 1027,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_three_generator {θ : ℝ} (hθ : ThetaOK F θ) : ContDiff ℝ ∞ (gTheta F θ) ∧ gTheta F θ 1 = 0 ∧ (∀ x ≠ (1:ℝ), 0 < gTheta F θ x) ∧ deriv (deriv (gTheta F θ)) 1 = 2 ∧ (∀ x, |gTheta F θ x| ≤ 2 * (1 + |x| ^ 2)) ∧ (∀ x ∈ F.bands, deriv (gTheta F θ) x = 0) ∧ (∀ x ∈ Icc (1 - θ) (1 + θ), gTheta F θ x = (x - 1) ^ 2)",
+     "doc": "**`rem:freezing`*(iii)*, the generator**: `g(x) := ∫₁ˣ m(t)(t−1) dt` is `C^∞` and admissible — `g(1) = 0`, `g > 0` elsewhere, `g''(1) = 2`, `|g(x)| ≤ 2(1 + |x|²)` — with `g' ≡ 0` on the bands, and it equals `(x − 1)²` on `[1−θ, 1+θ]`."
+    },
+    {
+     "name": "freezing_three_item_one",
+     "full": "GFNBounds.Balance.RemarksA.freezing_three_item_one",
+     "kind": "theorem",
+     "line": 1044,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_three_item_one {θ : ℝ} (hθ : ThetaOK F θ) {V : Type*} [Fintype V] [Nonempty V] {K : V → V → ℝ} {lam nu u : V → ℝ} (hlam : ∀ x, 0 < lam x) (hnu : ∀ x, 0 < nu x) (hu : u ∈ frozen K lam F.bands) : (∀ w : V → ℝ, ∀ x, lossGradDensity K lam u w (deriv (gTheta F θ)) x = 0) ∧ (∀ nu' : V → ℝ, HasFDerivAt (fun u' => loss K lam nu' u' (gTheta F θ)) (0 : (V → ℝ) →L[ℝ] ℝ) u) ∧ IsOpen (frozen K lam F.bands) ∧ (∀ᶠ u' in 𝓝 u, loss K lam nu u' (gTheta F θ) = loss K lam nu u (gTheta F θ)) ∧ 0 < loss K lam nu u (gTheta F θ)",
+     "doc": "**`rem:freezing`*(iii)*: item *(1)* of `prop:nonlinear_freezing` applies to it** — on a finite state space a band-valued flow is critical for every training measure (`D ≡ 0`, and a Fréchet derivative `0`), the set of such flows is open, and the loss is locally constant and positive on it."
+    },
+    {
+     "name": "freezing_three_invisible",
+     "full": "GFNBounds.Balance.RemarksA.freezing_three_invisible",
+     "kind": "theorem",
+     "line": 1060,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_three_invisible {θ : ℝ} (hθ : ThetaOK F θ) {V : Type*} [Fintype V] {K : V → V → ℝ} {lam nu u w : V → ℝ} (hr : ∀ x, ratio K lam u x ∈ Icc (1 - θ) (1 + θ)) : loss K lam nu u (gTheta F θ) = loss K lam nu u (fun z => (z - 1) ^ 2) ∧ lossGradDensity K lam u w (deriv (gTheta F θ)) = lossGradDensity K lam u w (fun z => 2 * (z - 1))",
+     "doc": "**`rem:freezing`*(iii)*: the freezing configurations are invisible to the linearization at balance** — wherever every ratio lies in `[1−θ, 1+θ]`, the loss and the gradient density of this freezing generator are those of `(x − 1)²`."
+    },
+    {
+     "name": "freezing_g_ne_sq_near_one",
+     "full": "GFNBounds.Balance.RemarksA.freezing_g_ne_sq_near_one",
+     "kind": "theorem",
+     "line": 1077,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_g_ne_sq_near_one (F : FreezingBands) : ¬ ∃ ε > 0, ∀ x ∈ Ioo (1 - ε) (1 + ε), F.g x = (x - 1) ^ 2",
+     "doc": "**`rem:freezing`*(iii)*, last clause: the generator of `prop:nonlinear_freezing` equals `(x − 1)²` on no neighbourhood of `1`.** Near `1` its multiplier is `2e^{−1/(t−b)−1/(c−t)}/scale`, and `1/(t−b) + 1/(c−t)` takes its value at `1` only at `t = 1` and `t = b + c − 1`."
+    },
+    {
+     "name": "freezing_four_critical",
+     "full": "GFNBounds.Balance.RemarksA.freezing_four_critical",
+     "kind": "theorem",
+     "line": 1157,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_four_critical {V : Type*} [Fintype V] {K : V → V → ℝ} {lam nu u : V → ℝ} {g gd : ℝ → ℝ} (hinv : Invariant K lam) (hK : ∀ x y, 0 ≤ K x y) (hlam : ∀ x, 0 < lam x) (hu : ∀ x, 0 < u x) (hnu : ∀ x, 0 < nu x) (hg : ∀ y : ℝ, 0 < y → HasDerivAt g (gd y) y) (hgd : StrictlyUnimodal gd) (hcrit : ∀ d : V → ℝ, HasDerivAt (fun t : ℝ => loss K lam nu (fun x => u x + t * d x) g) 0 0) : Balanced K lam u",
+     "doc": "**`rem:freezing`*(iv)*, first clause**: for a differentiable strictly unimodal generator, every flow at which every directional derivative of `𝓛_{g,ν}` vanishes is balanced, for `ν` of positive density (`prop:no_distant_equilibrium`*(1)*, through `theo:first_variation_full`)."
+    },
+    {
+     "name": "freezing_four_logSq_converges",
+     "full": "GFNBounds.Balance.RemarksA.freezing_four_logSq_converges",
+     "kind": "theorem",
+     "line": 1170,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_four_logSq_converges {V : Type*} [Fintype V] [DecidableEq V] {G : Graph.MarkedGraph V} {B : Graph.BackwardPolicy G} {lam wf : V → ℝ} {wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hwmin : 0 < wmin) (hw : ∀ x, wmin ≤ wf x) {u0 : V → ℝ} (hu0 : ∀ x, 0 < u0 x) : ∃ u : ℝ → V → ℝ, u 0 = u0 ∧ IsGradientFlow B.phat lam (fun x => lam x * wf x) logSqDeriv u ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < u t x) ∧ Tendsto u atTop (𝓝 fun _ => Graph.nrmL2 lam u0) ∧ Balanced B.phat lam (fun _ => Graph.nrmL2 lam u0)",
+     "doc": "**`rem:freezing`*(iv)*, second clause, the `(log x)²` half**: on the loop closure of a finite path-connected marked graph, the `(log x)²` gradient flow from every `u₀ > 0` exists, is unique among positive solutions, and converges to the balanced flow of its sphere (`prop:no_distant_equilibrium`*(3)*, `FlowExistence.no_distant_equilibrium_three_of_init`)."
+    },
+    {
+     "name": "ReachIn",
+     "full": "GFNBounds.Balance.RemarksA.ReachIn",
+     "kind": "def",
+     "line": 1192,
+     "attrs": "",
+     "private": false,
+     "statement": "def ReachIn (K : V → V → ℝ) : ℕ → V → V → Prop",
+     "doc": "**`n`-step accessibility** for a kernel: `ReachIn K n x y` iff some path `x = x₀, …, xₙ = y` has `K(xᵢ, xᵢ₊₁) ≠ 0` at every step."
+    },
+    {
+     "name": "ReachIn.append",
+     "full": "GFNBounds.Balance.RemarksA.ReachIn.append",
+     "kind": "theorem",
+     "line": 1196,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ReachIn.append {K : V → V → ℝ} {m : ℕ} {x y : V} (hxy : ReachIn K m x y) : ∀ {n : ℕ} {z : V}, ReachIn K n y z → ReachIn K (m + n) x z | 0, z, h => by have h' : y = z",
+     "doc": ""
+    },
+    {
+     "name": "PeriodicAt",
+     "full": "GFNBounds.Balance.RemarksA.PeriodicAt",
+     "kind": "def",
+     "line": 1208,
+     "attrs": "",
+     "private": false,
+     "statement": "def PeriodicAt (K : V → V → ℝ) (x₀ : V) (d : ℕ) : Prop",
+     "doc": "**Periodicity at a state**, read off its return times: `d ≥ 2` divides every `n` with a return `x₀ ⤳ x₀` in `n` steps."
+    },
+    {
+     "name": "exists_cyclic_of_periodicAt",
+     "full": "GFNBounds.Balance.RemarksA.exists_cyclic_of_periodicAt",
+     "kind": "theorem",
+     "line": 1214,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_cyclic_of_periodicAt {K : V → V → ℝ} (hirr : ∀ x y, ∃ n, ReachIn K n x y) {x₀ : V} {d : ℕ} (hper : PeriodicAt K x₀ d) : ∃ c : V → ZMod d, ∀ x y, K x y ≠ 0 → c y = c x + 1",
+     "doc": "**Cyclic classes from a period**, for an irreducible kernel: the class of `y` is the length of any path `x₀ ⤳ y`, modulo `d`; it is well defined because two such lengths differ by a multiple of `d`, and every transition raises it by `1`."
+    },
+    {
+     "name": "classInd",
+     "full": "GFNBounds.Balance.RemarksA.classInd",
+     "kind": "def",
+     "line": 1237,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def classInd {d : ℕ} (c : V → ZMod d) (i : ZMod d) : V → ℝ",
+     "doc": "The indicator of a cyclic class."
+    },
+    {
+     "name": "densAct_classInd",
+     "full": "GFNBounds.Balance.RemarksA.densAct_classInd",
+     "kind": "theorem",
+     "line": 1243,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densAct_classInd (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) {d : ℕ} {c : V → ZMod d} (hc : ∀ x y, K x y ≠ 0 → c y = c x + 1) (i : ZMod d) : Core.densAct lam K (classInd c i) = classInd c (i + 1)",
+     "doc": "**The density action moves each cyclic class to the next**: `P 𝟙_{Cᵢ} = 𝟙_{Cᵢ₊₁}`."
+    },
+    {
+     "name": "densOp_pow_classInd",
+     "full": "GFNBounds.Balance.RemarksA.densOp_pow_classInd",
+     "kind": "theorem",
+     "line": 1258,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densOp_pow_classInd (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) {d : ℕ} {c : V → ZMod d} (hc : ∀ x y, K x y ≠ 0 → c y = c x + 1) (i : ZMod d) (n : ℕ) : (densOp lam K ^ n) (wtL2 lam (classInd c i)) = wtL2 lam (classInd c (i + n))",
+     "doc": ""
+    },
+    {
+     "name": "densOp_pow_mul_meanOp'",
+     "full": "GFNBounds.Balance.RemarksA.densOp_pow_mul_meanOp'",
+     "kind": "theorem",
+     "line": 1267,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densOp_pow_mul_meanOp' (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (n : ℕ) : densOp lam K ^ n * meanOp lam = meanOp lam",
+     "doc": ""
+    },
+    {
+     "name": "pow_mul_apply_eq_self'",
+     "full": "GFNBounds.Balance.RemarksA.pow_mul_apply_eq_self'",
+     "kind": "theorem",
+     "line": 1274,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pow_mul_apply_eq_self' {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P : E →L[ℝ] E} {m : ℕ} {v : E} (h : (P ^ m) v = v) (k : ℕ) : (P ^ (m * k)) v = v",
+     "doc": "A fixed point of `P^m` is a fixed point of every `P^{mk}`."
+    },
+    {
+     "name": "one_le_beta_of_fixed'",
+     "full": "GFNBounds.Balance.RemarksA.one_le_beta_of_fixed'",
+     "kind": "theorem",
+     "line": 1281,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_le_beta_of_fixed' {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {P Pi : E →L[ℝ] E} {v : E} (hv : v ≠ 0) (hPi : Pi v = 0) {n : ℕ} (hfix : (P ^ n) v = v) : 1 ≤ Core.Mixing.beta P Pi n",
+     "doc": "**A non-zero vector killed by `Π` and fixed by `Pⁿ` forces `β̂ₙ ≥ 1`.**"
+    },
+    {
+     "name": "beta_mul_ge_one_of_cyclic",
+     "full": "GFNBounds.Balance.RemarksA.beta_mul_ge_one_of_cyclic",
+     "kind": "theorem",
+     "line": 1293,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem beta_mul_ge_one_of_cyclic (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {d : ℕ} (hd : 2 ≤ d) {c : V → ZMod d} (hc : ∀ x y, K x y ≠ 0 → c y = c x + 1) (k : ℕ) : 1 ≤ Core.Mixing.beta (densOp lam K) (meanOp lam) (d * k)",
+     "doc": "**`β̂_{dk} ≥ 1` for every `k`** on a chain with `d ≥ 2` cyclic classes: the centred indicator of one class is fixed by `P^d` and killed by `Π`."
+    },
+    {
+     "name": "not_summable_of_one_le'",
+     "full": "GFNBounds.Balance.RemarksA.not_summable_of_one_le'",
+     "kind": "theorem",
+     "line": 1345,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem not_summable_of_one_le' {β : ℕ → ℝ} {m : ℕ} (hm : 0 < m) (h : ∀ k, 1 ≤ β (m * k)) : ¬ Summable β",
+     "doc": "A non-negative sequence at least `1` along the multiples of `m > 0` is not summable."
+    },
+    {
+     "name": "sum_range_mul_le'",
+     "full": "GFNBounds.Balance.RemarksA.sum_range_mul_le'",
+     "kind": "theorem",
+     "line": 1354,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_range_mul_le' {β : ℕ → ℝ} (hβ : ∀ n, 0 ≤ β n) {m : ℕ} (hm : 0 < m) (K : ℕ) : ∑ k ∈ Finset.range K, β (m * k) ≤ ∑ n ∈ Finset.range (m * K), β n",
+     "doc": "Along the multiples of `m`, a sub-sum bounds the partial sum of a non-negative sequence."
+    },
+    {
+     "name": "tsum_ofReal_eq_top_of_one_le'",
+     "full": "GFNBounds.Balance.RemarksA.tsum_ofReal_eq_top_of_one_le'",
+     "kind": "theorem",
+     "line": 1366,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tsum_ofReal_eq_top_of_one_le' {β : ℕ → ℝ} (hβ : ∀ n, 0 ≤ β n) {m : ℕ} (hm : 0 < m) (h : ∀ k, 1 ≤ β (m * k)) : ∑' n, ENNReal.ofReal (β n) = ⊤",
+     "doc": ""
+    },
+    {
+     "name": "mixing_fails_of_cyclic",
+     "full": "GFNBounds.Balance.RemarksA.mixing_fails_of_cyclic",
+     "kind": "theorem",
+     "line": 1385,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mixing_fails_of_cyclic (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {d : ℕ} (hd : 2 ≤ d) {c : V → ZMod d} (hc : ∀ x y, K x y ≠ 0 → c y = c x + 1) : (∀ k, 1 ≤ Core.Mixing.beta (densOp lam K) (meanOp lam) (d * k)) ∧ ∑' n, ENNReal.ofReal (Core.Mixing.beta (densOp lam K) (meanOp lam) n) = ⊤ ∧ ¬ Summable (Core.Mixing.beta (densOp lam K) (meanOp lam)) ∧ ¬ Core.Mixing (densOp lam K) (meanOp lam)",
+     "doc": "**Summable `L²` mixing fails on a chain with `d ≥ 2` cyclic classes**: `β̂_{dk} ≥ 1` for all `k`, so `∑ₙ β̂ₙ = +∞` (as an extended real), the sequence is not summable, and `Core.Mixing (P, Π)` — `lem:sigma_mixing`'s hypothesis — fails."
+    },
+    {
+     "name": "mixing_fails_of_periodicAt",
+     "full": "GFNBounds.Balance.RemarksA.mixing_fails_of_periodicAt",
+     "kind": "theorem",
+     "line": 1400,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mixing_fails_of_periodicAt (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hirr : ∀ x y, ∃ n, ReachIn K n x y) {x₀ : V} {d : ℕ} (hper : PeriodicAt K x₀ d) : (∀ k, 1 ≤ Core.Mixing.beta (densOp lam K) (meanOp lam) (d * k)) ∧ ∑' n, ENNReal.ofReal (Core.Mixing.beta (densOp lam K) (meanOp lam) n) = ⊤ ∧ ¬ Summable (Core.Mixing.beta (densOp lam K) (meanOp lam)) ∧ ¬ Core.Mixing (densOp lam K) (meanOp lam)",
+     "doc": "**The same, from the period**: on an irreducible chain periodic at some state, summable `L²` mixing fails."
+    },
+    {
+     "name": "phat_isMarkov",
+     "full": "GFNBounds.Balance.RemarksA.phat_isMarkov",
+     "kind": "theorem",
+     "line": 1420,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem phat_isMarkov (B : BackwardPolicy G) : Core.IsMarkov B.phat",
+     "doc": ""
+    },
+    {
+     "name": "phat_isInvariant",
+     "full": "GFNBounds.Balance.RemarksA.phat_isInvariant",
+     "kind": "theorem",
+     "line": 1423,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem phat_isInvariant {lam : V → ℝ} (hl : B.IsInvProb lam) : Core.IsInvariant lam B.phat",
+     "doc": ""
+    },
+    {
+     "name": "reachIn_of_breach",
+     "full": "GFNBounds.Balance.RemarksA.reachIn_of_breach",
+     "kind": "theorem",
+     "line": 1427,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem reachIn_of_breach {x y : V} (h : B.BReach x y) : ∃ n, ReachIn B.phat n x y",
+     "doc": "Accessibility in the backward chain gives a path of some length."
+    },
+    {
+     "name": "graphs_vs_L2_periodic",
+     "full": "GFNBounds.Balance.RemarksA.graphs_vs_L2_periodic",
+     "kind": "theorem",
+     "line": 1440,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem graphs_vs_L2_periodic (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) {x₀ : V} {d : ℕ} (hper : PeriodicAt B.phat x₀ d) : (∀ k, 1 ≤ Core.Mixing.beta (densOp lam B.phat) (meanOp lam) (d * k)) ∧ ∑' n, ENNReal.ofReal (Core.Mixing.beta (densOp lam B.phat) (meanOp lam) n) = ⊤ ∧ ¬ Summable (Core.Mixing.beta (densOp lam B.phat) (meanOp lam)) ∧ ¬ Core.Mixing (densOp lam B.phat) (meanOp lam)",
+     "doc": "**`rem:graphs_vs_L2`: summable mixing fails on every periodic loop closure.** On the loop closure of a finite path-connected marked graph with a backward policy positive on its edges, if the backward chain is periodic at some state — some `d ≥ 2` divides every return time there — then `β̂_{dk} ≥ 1` for every `k`: the coefficients are bounded below along a subsequence, `∑ₙ β̂ₙ = +∞`, and the summable-mixing hypothesis of `theo:universality_L2` at `p = 2` (`Core.Mixing (P, Π)`) fails."
+    },
+    {
+     "name": "leveled_exists_nat",
+     "full": "GFNBounds.Balance.RemarksA.leveled_exists_nat",
+     "kind": "theorem",
+     "line": 1453,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem leveled_exists_nat (hpc : G.PathConnected) (x : V) : ∃ n : ℕ, L.lvl x = n",
+     "doc": "On a path-connected leveled graph every height is a natural number."
+    },
+    {
+     "name": "levNat",
+     "full": "GFNBounds.Balance.RemarksA.levNat",
+     "kind": "def",
+     "line": 1461,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def levNat (x : V) : ℕ",
+     "doc": "The height as a natural number."
+    },
+    {
+     "name": "levNat_eq",
+     "full": "GFNBounds.Balance.RemarksA.levNat_eq",
+     "kind": "theorem",
+     "line": 1464,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem levNat_eq (hpc : G.PathConnected) (x : V) : (levNat L x : ℝ) = L.lvl x",
+     "doc": ""
+    },
+    {
+     "name": "one_le_levNat_snk",
+     "full": "GFNBounds.Balance.RemarksA.one_le_levNat_snk",
+     "kind": "theorem",
+     "line": 1470,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_le_levNat_snk (hpc : G.PathConnected) : 1 ≤ levNat L G.snk",
+     "doc": "The sink is at height at least `1`: `s₀ ≠ s_f`."
+    },
+    {
+     "name": "leveled_cyclic",
+     "full": "GFNBounds.Balance.RemarksA.leveled_cyclic",
+     "kind": "theorem",
+     "line": 1483,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem leveled_cyclic (hpc : G.PathConnected) (B : BackwardPolicy G) (x y : V) (hxy : B.phat x y ≠ 0) : (-(levNat L y : ZMod (levNat L G.snk + 1))) = -(levNat L x : ZMod (levNat L G.snk + 1)) + 1",
+     "doc": "**The cyclic classes of a leveled loop closure**: `c(x) := −ℓ(x)` modulo `t_m + 1`, with `t_m = ℓ(s_f)` — every backward step lowers the height by one, and the wrap `s₀ → s_f` raises it by `t_m ≡ −1`."
+    },
+    {
+     "name": "leveled_mixing_fails",
+     "full": "GFNBounds.Balance.RemarksA.leveled_mixing_fails",
+     "kind": "theorem",
+     "line": 1516,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem leveled_mixing_fails (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : (∀ k, 1 ≤ Core.Mixing.beta (densOp lam B.phat) (meanOp lam) ((levNat L G.snk + 1) * k)) ∧ ∑' n, ENNReal.ofReal (Core.Mixing.beta (densOp lam B.phat) (meanOp lam) n) = ⊤ ∧ ¬ Summable (Core.Mixing.beta (densOp lam B.phat) (meanOp lam)) ∧ ¬ Core.Mixing (densOp lam B.phat) (meanOp lam)",
+     "doc": "**`prop:morozov_rate`, last assertion, and `rem:visit_ratio`'s witness: on a leveled graph the loop-closed chain is periodic and the mixing sum is `+∞`.** With `t_m := ℓ(s_f)`, the classes `−ℓ mod (t_m+1)` are cyclic for the backward chain, so `β̂_{(t_m+1)k} ≥ 1` for every `k`, `∑ₙ β̂ₙ = +∞`, and summable mixing fails — while `B̂_σ ≤ (t_m+1)√((2+t_m)/min N)` (`Morozov.Leveled.bsigma_le`)."
+    },
+    {
+     "name": "leveled_bsigma_finite_mixing_infinite",
+     "full": "GFNBounds.Balance.RemarksA.leveled_bsigma_finite_mixing_infinite",
+     "kind": "theorem",
+     "line": 1527,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem leveled_bsigma_finite_mixing_infinite (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) : (∀ h : V → ℝ, Graph.nrmL2 lam (fun x => h x - Graph.meanL2 lam h) ≤ sigmaStar G L.lvl * Real.sqrt ((2 + B.sigmaBar L.lvl) / minOver G (visits G g)) * Graph.nrmL2 lam (fun x => h x - B.pdens lam h x)) ∧ sigmaStar G L.lvl * Real.sqrt ((2 + B.sigmaBar L.lvl) / minOver G (visits G g)) ≤ (L.lvl G.snk + 1) * Real.sqrt ((2 + L.lvl G.snk) / minOver G (visits G g)) ∧ ∑' n, ENNReal.ofReal (Core.Mixing.beta (densOp lam B.phat) (meanOp lam) n) = ⊤",
+     "doc": "**The leveled graph separates `B̂_σ` from `B̂`**: the coercivity of `prop:morozov_rate`*(2)* holds with `B̂_σ ≤ (t_m+1)√((2+t_m)/min N)` finite, while the mixing sum `∑ₙ β̂ₙ` is `+∞`."
+    },
+    {
+     "name": "norm_S_le_of_coercive",
+     "full": "GFNBounds.Balance.RemarksA.norm_S_le_of_coercive",
+     "kind": "theorem",
+     "line": 1551,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_S_le_of_coercive {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E] {P Pi : E →L[ℝ] E} (hmx : Core.Mixing P Pi) {C : ℝ} (hC : 0 ≤ C) (hco : ∀ v, ‖v - Pi v‖ ≤ C * ‖(1 - P) v‖) (hPi1 : ∀ v, ‖v - Pi v‖ ≤ ‖v‖) : ‖Core.Mixing.S P Pi‖ ≤ C",
+     "doc": "**The coercivity constant bounds the mixing-sum operator**: if `‖v − Πv‖ ≤ C‖(1 − P)v‖` for every `v` and `‖1 − Π‖ ≤ 1`, then under summable mixing `‖S‖ ≤ C`."
+    },
+    {
+     "name": "coercivity_morozov_op",
+     "full": "GFNBounds.Balance.RemarksA.coercivity_morozov_op",
+     "kind": "theorem",
+     "line": 1570,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coercivity_morozov_op (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g u : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) (hu : B.IsHitExp u) (v : EuclideanSpace ℝ V) : ‖v - meanOp lam v‖ ≤ sigmaStar G u * Real.sqrt ((2 + B.sigmaBar u) / minOver G (visits G g)) * ‖(1 - densOp lam B.phat) v‖",
+     "doc": "`prop:morozov_rate`*(2)* read on the bundled `L²(λ)`: `‖v − Πv‖ ≤ B̂_σ‖(1 − P)v‖`."
+    },
+    {
+     "name": "visit_ratio_norm_S_le",
+     "full": "GFNBounds.Balance.RemarksA.visit_ratio_norm_S_le",
+     "kind": "theorem",
+     "line": 1592,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem visit_ratio_norm_S_le (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g u : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) (hu : B.IsHitExp u) (hmx : Core.Mixing (densOp lam B.phat) (meanOp lam)) : ‖Core.Mixing.S (densOp lam B.phat) (meanOp lam)‖ ≤ sigmaStar G u * Real.sqrt ((2 + B.sigmaBar u) / minOver G (visits G g))",
+     "doc": "**`rem:visit_ratio`: `B̂_σ ≥ ‖S‖` wherever `S` is defined** — under summable mixing, the operator `S = ∑ₙ(Pⁿ − Π)` of `lem:sigma_mixing` has operator norm at most the hitting-time constant `B̂_σ = σ_*√((2+σ̄)/min N)` of `prop:morozov_rate`."
+    },
+    {
+     "name": "visit_ratio_mass_lower",
+     "full": "GFNBounds.Balance.RemarksA.visit_ratio_mass_lower",
+     "kind": "theorem",
+     "line": 1613,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem visit_ratio_mass_lower (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam g σ u w : V → ℝ} {wmin δ : ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen g) (hσ : B.IsHitExp σ) (hu : ∀ x, 0 < u x) (hwmin0 : 0 ≤ wmin) (hw : ∀ x, wmin ≤ w x) (hδ0 : 0 < δ) (hδ1 : δ ≤ 1 / 2) (U : Finset V) (hU : ∀ x ∈ U, δ ≤ |ratio B.phat lam u x - 1|) : wmin / maxOver G u * (δ ^ 2 / 2) * ∑ x ∈ U, visits G g x / (2 + B.sigmaBar σ) ≤ ∑ x ∈ U, lam x * (|logSqDeriv (ratio B.phat lam u x) * (1 - ratio B.phat lam u x)| * (w x / u x)) ∧ ∑ x ∈ U, lam x * (|logSqDeriv (ratio B.phat lam u x) * (1 - ratio B.phat lam u x)| * (w x / u x)) ≤ |gradMass B.phat lam u (fun x => w x / u x) logSqDeriv|",
+     "doc": "**`rem:visit_ratio`, the displayed lower bound**: in the setting of `theo:training_speed_full` — `g = (log x)²`, `ν = wλ` with `w ≥ w_min ≥ 0`, on the loop closure of a finite path-connected marked graph — at any `μ = uλ ∼ λ`, with `u_max := max u`, the contribution to the gradient mass of a set `U` of states on which `|r − 1| ≥ δ`, `δ ∈ (0, 1/2]`, is `∫_U |g'(r)(1−r)| (dν/dμ) dλ ≥ (w_min/u_max)(δ²/2) ∑_{x∈U} N(x)/(2+σ̄)`, and it is at most the whole gradient mass `|∫ D dλ|`."
+    },
+    {
+     "name": "kpow",
+     "full": "GFNBounds.Balance.RemarksA.kpow",
+     "kind": "def",
+     "line": 1681,
+     "attrs": "",
+     "private": false,
+     "statement": "def kpow (K : V → V → ℝ) : ℕ → V → V → ℝ",
+     "doc": "**The `n`-step kernel** `Kⁿ(x, y)`."
+    },
+    {
+     "name": "kpow_nonneg",
+     "full": "GFNBounds.Balance.RemarksA.kpow_nonneg",
+     "kind": "theorem",
+     "line": 1685,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem kpow_nonneg (hK : ∀ x y, 0 ≤ K x y) : ∀ n x y, 0 ≤ kpow K n x y | 0, x, y => by simp only [kpow] split_ifs · exact zero_le_one · exact le_rfl | n + 1, x, y => Finset.sum_nonneg fun z _ => mul_nonneg (kpow_nonneg hK n x z) (hK z y)",
+     "doc": ""
+    },
+    {
+     "name": "kpow_row_sum",
+     "full": "GFNBounds.Balance.RemarksA.kpow_row_sum",
+     "kind": "theorem",
+     "line": 1693,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem kpow_row_sum (hK : Core.IsMarkov K) : ∀ n x, ∑ y, kpow K n x y = 1 | 0, x => by simp only [kpow, Finset.sum_ite_eq, Finset.mem_univ, if_true] | n + 1, x => by simp only [kpow] rw [Finset.sum_comm] simp only [← Finset.mul_sum, hK.row_sum, mul_one] exact kpow_row_sum hK n x",
+     "doc": ""
+    },
+    {
+     "name": "kpow_inv",
+     "full": "GFNBounds.Balance.RemarksA.kpow_inv",
+     "kind": "theorem",
+     "line": 1701,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem kpow_inv (hinv : Core.IsInvariant lam K) : ∀ n y, ∑ x, lam x * kpow K n x y = lam y | 0, y => by simp only [kpow, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] | n + 1, y => by simp only [kpow, Finset.mul_sum] rw [Finset.sum_comm] have h : ∀ z, ∑ x, lam x * (kpow K n x z * K z y) = lam z * K z y",
+     "doc": ""
+    },
+    {
+     "name": "kpow_pos_of_reachIn",
+     "full": "GFNBounds.Balance.RemarksA.kpow_pos_of_reachIn",
+     "kind": "theorem",
+     "line": 1713,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem kpow_pos_of_reachIn (hK : ∀ x y, 0 ≤ K x y) : ∀ {n : ℕ} {x y : V}, ReachIn K n x y → 0 < kpow K n x y | 0, x, y, h => by have h' : x = y",
+     "doc": ""
+    },
+    {
+     "name": "densOp_pow_wtL2_kpow",
+     "full": "GFNBounds.Balance.RemarksA.densOp_pow_wtL2_kpow",
+     "kind": "theorem",
+     "line": 1725,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densOp_pow_wtL2_kpow (hlam : ∀ x, 0 < lam x) (n : ℕ) (a : V → ℝ) : (densOp lam K ^ n) (wtL2 lam a) = wtL2 lam (fun y => (∑ x, lam x * kpow K n x y * a x) / lam y)",
+     "doc": "`Pⁿ` on densities is `a ↦ (∑ₓ λ(x)Kⁿ(x,·)a(x))/λ`."
+    },
+    {
+     "name": "exists_kpow_pos",
+     "full": "GFNBounds.Balance.RemarksA.exists_kpow_pos",
+     "kind": "theorem",
+     "line": 1753,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_kpow_pos (hK : ∀ x y, 0 ≤ K x y) (hirr : ∀ x y, ∃ n, ReachIn K n x y) {x₀ : V} (hap : ¬ ∃ d, PeriodicAt K x₀ d) : ∃ N, 0 < N ∧ ∀ x y, 0 < kpow K N x y",
+     "doc": "**Aperiodicity plus irreducibility make some power of the kernel positive** (Schur's theorem on numerical semigroups, `Nat.exists_mem_closure_of_ge`)."
+    },
+    {
+     "name": "variance_contract'",
+     "full": "GFNBounds.Balance.RemarksA.variance_contract'",
+     "kind": "theorem",
+     "line": 1789,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem variance_contract' {R : V → V → ℝ} {l h : V → ℝ} {δ : ℝ} (hrow : ∀ y, ∑ x, R y x = 1) (hinv : ∀ x, ∑ y, l y * R y x = l x) (hl : ∀ x, 0 ≤ l x) (hlsum : ∑ x, l x = 1) (hδ0 : 0 ≤ δ) (hmin : ∀ y x, δ * l x ≤ R y x) (hmean : ∑ x, l x * h x = 0) : ∑ y, l y * (∑ x, R y x * h x) ^ 2 ≤ (1 - δ) * ∑ x, l x * h x ^ 2",
+     "doc": "**The variance inequality**: a row-stochastic `R ≥ 0` with `λR = λ` and `R(y,x) ≥ δλ(x)` contracts the `λ`-mean-zero functions in `L²(λ)` by `1 − δ`."
+    },
+    {
+     "name": "norm_wtL2_sq'",
+     "full": "GFNBounds.Balance.RemarksA.norm_wtL2_sq'",
+     "kind": "theorem",
+     "line": 1822,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_wtL2_sq' (hnn : ∀ x, 0 ≤ lam x) (a : V → ℝ) : ‖wtL2 lam a‖ ^ 2 = Graph.ipL2 lam a a",
+     "doc": ""
+    },
+    {
+     "name": "sum_sq_sub_mean'",
+     "full": "GFNBounds.Balance.RemarksA.sum_sq_sub_mean'",
+     "kind": "theorem",
+     "line": 1827,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_sq_sub_mean' {a : V → ℝ} (hlsum : ∑ x, lam x = 1) : ∑ x, lam x * (a x - ∑ z, lam z * a z) ^ 2 = ∑ x, lam x * a x ^ 2 - (∑ z, lam z * a z) ^ 2",
+     "doc": ""
+    },
+    {
+     "name": "norm_pow_sub_meanOp_le",
+     "full": "GFNBounds.Balance.RemarksA.norm_pow_sub_meanOp_le",
+     "kind": "theorem",
+     "line": 1836,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_pow_sub_meanOp_le (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {N : ℕ} {ε : ℝ} (hε : 0 ≤ ε) (hfloor : ∀ x y, ε ≤ kpow K N x y) : ε ≤ 1 ∧ ‖densOp lam K ^ N - meanOp lam‖ ≤ Real.sqrt (1 - ε)",
+     "doc": "**The `L²(λ)` Doeblin step**: if `Kᴺ(x, y) ≥ ε` everywhere then `‖Pᴺ − Π‖ ≤ √(1 − ε)`."
+    },
+    {
+     "name": "meanOp_mul_densOp_pow'",
+     "full": "GFNBounds.Balance.RemarksA.meanOp_mul_densOp_pow'",
+     "kind": "theorem",
+     "line": 1913,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanOp_mul_densOp_pow' (hK : Core.IsMarkov K) (hlam : ∀ x, 0 < lam x) (n : ℕ) : meanOp lam * densOp lam K ^ n = meanOp lam",
+     "doc": ""
+    },
+    {
+     "name": "beta_add_le",
+     "full": "GFNBounds.Balance.RemarksA.beta_add_le",
+     "kind": "theorem",
+     "line": 1921,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem beta_add_le (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (N n : ℕ) : Core.Mixing.beta (densOp lam K) (meanOp lam) (n + N) ≤ ‖densOp lam K ^ N - meanOp lam‖ * Core.Mixing.beta (densOp lam K) (meanOp lam) n",
+     "doc": "`β̂_{n+N} ≤ ‖Pᴺ − Π‖ β̂ₙ`."
+    },
+    {
+     "name": "beta_le_two",
+     "full": "GFNBounds.Balance.RemarksA.beta_le_two",
+     "kind": "theorem",
+     "line": 1938,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem beta_le_two (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (n : ℕ) : Core.Mixing.beta (densOp lam K) (meanOp lam) n ≤ 2",
+     "doc": "`β̂ₙ ≤ 2`: `P` and `Π` are contractions of `L²(λ)`."
+    },
+    {
+     "name": "beta_le_geometric_of_floor",
+     "full": "GFNBounds.Balance.RemarksA.beta_le_geometric_of_floor",
+     "kind": "theorem",
+     "line": 1971,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem beta_le_geometric_of_floor (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {N : ℕ} {ε : ℝ} (hN : 0 < N) (hε : 0 < ε) (hfloor : ∀ x y, ε ≤ kpow K N x y) (n : ℕ) : Core.Mixing.beta (densOp lam K) (meanOp lam) n ≤ 2 / (1 - ε / (2 * N)) ^ (N - 1) * (1 - ε / (2 * N)) ^ n",
+     "doc": "**Geometric decay of the mixing coefficients from a Doeblin floor**: if `Kᴺ ≥ ε > 0` entrywise, then `β̂ₙ ≤ (2/r^{N−1}) rⁿ` with the explicit rate `r = 1 − ε/(2N) < 1`."
+    },
+    {
+     "name": "mixing_of_aperiodic",
+     "full": "GFNBounds.Balance.RemarksA.mixing_of_aperiodic",
+     "kind": "theorem",
+     "line": 2029,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mixing_of_aperiodic (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) (hirr : ∀ x y, ∃ n, ReachIn K n x y) {x₀ : V} (hap : ¬ ∃ d, PeriodicAt K x₀ d) : ∃ (N : ℕ) (ε : ℝ), 0 < N ∧ 0 < ε ∧ (∀ x y, ε ≤ kpow K N x y) ∧ (∀ n, Core.Mixing.beta (densOp lam K) (meanOp lam) n ≤ 2 / (1 - ε / (2 * N)) ^ (N - 1) * (1 - ε / (2 * N)) ^ n) ∧ 1 - ε / (2 * N) < 1 ∧ Core.Mixing (densOp lam K) (meanOp lam)",
+     "doc": "**`rem:graphs_vs_L2`: a finite irreducible aperiodic chain has summable `L²` mixing, at a geometric rate.** For `K` Markov with an invariant probability `λ > 0`, irreducible, and aperiodic at some state — no `d ≥ 2` divides all its return times — some `N ≥ 1` has `Kᴺ ≥ ε > 0` entrywise, `β̂ₙ ≤ (2/r^{N−1}) rⁿ` with `r = 1 − ε/(2N) < 1`, and `Core.Mixing (P, Π)` holds."
+    },
+    {
+     "name": "periodicAt_iff_setGcd",
+     "full": "GFNBounds.Balance.RemarksA.periodicAt_iff_setGcd",
+     "kind": "theorem",
+     "line": 2067,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem periodicAt_iff_setGcd {x₀ : V} : (∃ d, PeriodicAt K x₀ d) ↔ Nat.setGcd {n | ReachIn K n x₀ x₀} ≠ 1",
+     "doc": "**Periodicity is the return-time gcd**: `x₀` is periodic in the sense of `PeriodicAt` for some `d` if and only if the gcd of its return times, `Nat.setGcd {n | x₀ ⤳ x₀ in n steps}`, is not `1`."
+    },
+    {
+     "name": "cyclic_reachIn",
+     "full": "GFNBounds.Balance.RemarksA.cyclic_reachIn",
+     "kind": "theorem",
+     "line": 2095,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cyclic_reachIn {K : V → V → ℝ} {d : ℕ} {c : V → ZMod d} (hc : ∀ x y, K x y ≠ 0 → c y = c x + 1) : ∀ {n : ℕ} {x y : V}, ReachIn K n x y → c y = c x + n | 0, x, y, h => by have h' : x = y",
+     "doc": "Cyclic classes force every path length to be read off the classes: `c(y) = c(x) + n`."
+    },
+    {
+     "name": "periodicAt_of_cyclic",
+     "full": "GFNBounds.Balance.RemarksA.periodicAt_of_cyclic",
+     "kind": "theorem",
+     "line": 2108,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem periodicAt_of_cyclic {K : V → V → ℝ} {d : ℕ} (hd : 2 ≤ d) {c : V → ZMod d} (hc : ∀ x y, K x y ≠ 0 → c y = c x + 1) (x₀ : V) : PeriodicAt K x₀ d",
+     "doc": "**Cyclic classes make every state periodic**: with `d ≥ 2` cyclic classes, `d` divides every return time."
+    },
+    {
+     "name": "graphs_vs_L2_aperiodic",
+     "full": "GFNBounds.Balance.RemarksA.graphs_vs_L2_aperiodic",
+     "kind": "theorem",
+     "line": 2119,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem graphs_vs_L2_aperiodic (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) {x₀ : V} (hap : ¬ ∃ d, PeriodicAt B.phat x₀ d) : Core.Mixing (densOp lam B.phat) (meanOp lam) ∧ 1 ≤ Core.Mixing.B (densOp lam B.phat) (meanOp lam) ∧ ∀ f : V → ℝ, Graph.nrmL2 lam (perpL2 lam f) ≤ Core.Mixing.B (densOp lam B.phat) (meanOp lam) * Graph.nrmL2 lam (Aop B.phat lam f)",
+     "doc": "**`rem:graphs_vs_L2`: a finite irreducible aperiodic loop closure has summable `L²` mixing, `B̂ ≥ 1`, and `B̂` is a coercivity constant.**"
+    },
+    {
+     "name": "graphs_vs_L2_rate",
+     "full": "GFNBounds.Balance.RemarksA.graphs_vs_L2_rate",
+     "kind": "theorem",
+     "line": 2135,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem graphs_vs_L2_rate (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) {x₀ : V} (hap : ¬ ∃ d, PeriodicAt B.phat x₀ d) {w : V → ℝ} {g2 wmin wsup eps : ℝ} {h : ℕ → V → ℝ} (hg2 : 0 ≤ g2) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hwsup : ∀ x, w x ≤ wsup) (heps : 0 ≤ eps) (hepsL : eps * (4 * g2 * wsup) ≤ 1) (hstep : ∀ k x, h (k + 1) x = h k x - eps * linHess B.phat lam w g2 (h k) x) : (∀ k, Graph.meanL2 lam (h k) = Graph.meanL2 lam (h 0)) ∧ ∀ k, Graph.nrmL2 lam (perpL2 lam (h k)) ≤ (1 - eps * (g2 * wmin / Core.Mixing.B (densOp lam B.phat) (meanOp lam) ^ 2)) ^ k * Graph.nrmL2 lam (perpL2 lam (h 0))",
+     "doc": "**`rem:graphs_vs_L2`: on an aperiodic loop closure, `theo:db_stable_frozen_full` gives the rate `g''(1)w_min/B̂²` of the linearized gradient descent toward the balanced ray** — `Πhₖ` is conserved and `‖hₖ^⊥‖ ≤ (1 − εϱ)ᵏ‖h₀^⊥‖` with `ϱ = g''(1)w_min/B̂²`, `B̂ = ∑ₙ β̂ₙ`, for every step `ε ≤ (4g''(1)‖w‖_∞)⁻¹`."
+    },
+    {
+     "name": "graphs_vs_L2_rate_sigma",
+     "full": "GFNBounds.Balance.RemarksA.graphs_vs_L2_rate_sigma",
+     "kind": "theorem",
+     "line": 2154,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem graphs_vs_L2_rate_sigma (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam gr uH : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) {w : V → ℝ} {g2 wmin wsup eps : ℝ} {h : ℕ → V → ℝ} (hg2 : 0 ≤ g2) (hwmin0 : 0 ≤ wmin) (hwmin : ∀ x, wmin ≤ w x) (hwsup : ∀ x, w x ≤ wsup) (heps : 0 ≤ eps) (hepsL : eps * (4 * g2 * wsup) ≤ 1) (hstep : ∀ k x, h (k + 1) x = h k x - eps * linHess B.phat lam w g2 (h k) x) : (∀ k, Graph.meanL2 lam (h k) = Graph.meanL2 lam (h 0)) ∧ ∀ k, Graph.nrmL2 lam (perpL2 lam (h k)) ≤ (1 - eps * (g2 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)))) ^ k * Graph.nrmL2 lam (perpL2 lam (h 0))",
+     "doc": "**`rem:graphs_vs_L2`: `prop:morozov_rate` removes the aperiodicity**: the same contraction holds on every loop closure, periodic or not, at `B̂_σ` in place of `B̂` (`MorozovConsume.stable_frozen_discrete_sigma`)."
+    },
+    {
+     "name": "graphs_vs_L2_balanced_ray",
+     "full": "GFNBounds.Balance.RemarksA.graphs_vs_L2_balanced_ray",
+     "kind": "theorem",
+     "line": 2169,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem graphs_vs_L2_balanced_ray (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) {u : V → ℝ} (hu : ∀ x, 0 < u x) : Balanced B.phat lam u ↔ ∃ c : ℝ, 0 < c ∧ u = fun _ => c",
+     "doc": "**`rem:graphs_vs_L2`: the balanced locus is one-dimensional** — a positive density is balanced if and only if it is constant, i.e."
+    },
+    {
+     "name": "graphs_vs_L2_mass_monotone",
+     "full": "GFNBounds.Balance.RemarksA.graphs_vs_L2_mass_monotone",
+     "kind": "theorem",
+     "line": 2184,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem graphs_vs_L2_mass_monotone (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam nu : V → ℝ} {gd : ℝ → ℝ} {u : ℝ → V → ℝ} (hl : B.IsInvProb lam) (hu : ∀ t, 0 ≤ t → ∀ x, 0 < u t x) (hnu : ∀ x, 0 < nu x) (hg : StrictlyUnimodal gd) (hflow : IsGradientFlow B.phat lam nu gd u) : MonotoneOn (fun s : ℝ => Graph.meanL2 lam (u s)) (Ici 0)",
+     "doc": "**`rem:graphs_vs_L2`: the total mass increases along the nonlinear gradient flow of a strictly unimodal generator** (`prop:no_distant_equilibrium`*(2)*, `MassAscent.mass_monotone_flow`), on every positive trajectory of the flow on the loop closure."
+    },
+    {
+     "name": "pathGraph",
+     "full": "GFNBounds.Balance.RemarksA.pathGraph",
+     "kind": "def",
+     "line": 2201,
+     "attrs": "",
+     "private": false,
+     "statement": "def pathGraph (n : ℕ) : MarkedGraph (Fin (n + 2))",
+     "doc": "**The directed path** `0 → 1 → ⋯ → n+1` on `Fin (n+2)`, source `0`, sink `n+1`."
+    },
+    {
+     "name": "pathPolicy",
+     "full": "GFNBounds.Balance.RemarksA.pathPolicy",
+     "kind": "def",
+     "line": 2219,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def pathPolicy (n : ℕ) : BackwardPolicy (pathGraph n)",
+     "doc": "The only backward policy on the path: one step back."
+    },
+    {
+     "name": "pathGraph_pathConnected",
+     "full": "GFNBounds.Balance.RemarksA.pathGraph_pathConnected",
+     "kind": "theorem",
+     "line": 2239,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathGraph_pathConnected (n : ℕ) : (pathGraph n).PathConnected",
+     "doc": ""
+    },
+    {
+     "name": "pathPolicy_positiveOnEdges",
+     "full": "GFNBounds.Balance.RemarksA.pathPolicy_positiveOnEdges",
+     "kind": "theorem",
+     "line": 2264,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathPolicy_positiveOnEdges (n : ℕ) : (pathPolicy n).PositiveOnEdges",
+     "doc": ""
+    },
+    {
+     "name": "pathPolicy_phat",
+     "full": "GFNBounds.Balance.RemarksA.pathPolicy_phat",
+     "kind": "theorem",
+     "line": 2272,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathPolicy_phat (n : ℕ) (x y : Fin (n + 2)) : (pathPolicy n).phat x y = if x = y + 1 then 1 else 0",
+     "doc": "**The loop closure of a directed path is a directed cycle**: the backward chain moves `y + 1 ↦ y` deterministically, indices modulo `n + 2`, the wrap `0 ↦ n+1` included."
+    },
+    {
+     "name": "pathPolicy_invProb",
+     "full": "GFNBounds.Balance.RemarksA.pathPolicy_invProb",
+     "kind": "theorem",
+     "line": 2306,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathPolicy_invProb (n : ℕ) : (pathPolicy n).IsInvProb (fun _ => 1 / ((n : ℝ) + 2))",
+     "doc": "The uniform invariant probability of the directed cycle."
+    },
+    {
+     "name": "pathLeveled",
+     "full": "GFNBounds.Balance.RemarksA.pathLeveled",
+     "kind": "def",
+     "line": 2316,
+     "attrs": "",
+     "private": false,
+     "statement": "def pathLeveled (n : ℕ) : Leveled (pathGraph n)",
+     "doc": "The path is leveled by its index."
+    },
+    {
+     "name": "path_witness",
+     "full": "GFNBounds.Balance.RemarksA.path_witness",
+     "kind": "theorem",
+     "line": 2329,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem path_witness (n : ℕ) : (∀ x₀, PeriodicAt (pathPolicy n).phat x₀ (n + 2)) ∧ ∑' k, ENNReal.ofReal (Core.Mixing.beta (densOp (fun _ => 1 / ((n : ℝ) + 2)) (pathPolicy n).phat) (meanOp (fun _ => 1 / ((n : ℝ) + 2))) k) = ⊤ ∧ ¬ Core.Mixing (densOp (fun _ => 1 / ((n : ℝ) + 2)) (pathPolicy n).phat) (meanOp (fun _ => 1 / ((n : ℝ) + 2))) ∧ ∃ gr : Fin (n + 2) → ℝ, (pathPolicy n).IsGreen gr ∧ ∀ h : Fin (n + 2) → ℝ, Graph.nrmL2 (fun _ => 1 / ((n : ℝ) + 2)) (fun x => h x - Graph.meanL2 (fun _ => 1 / ((n : ℝ) + 2)) h) ≤ sigmaStar (pathGraph n) (pathLeveled n).lvl * Real.sqrt ((2 + (pathPolicy n).sigmaBar (pathLeveled n).lvl) / minOver (pathGraph n) (visits (pathGraph n) gr)) * Graph.nrmL2 (fun _ => 1 / ((n : ℝ) + 2)) (fun x => h x - (pathPolicy n).pdens (fun _ => 1 / ((n : ℝ) + 2)) h x)",
+     "doc": "**The witness of `rem:graphs_vs_L2` and `rem:visit_ratio`, inhabited**: on the directed path with `n + 2` vertices, the loop closure is periodic at every state with period `n + 2`, the mixing sum is `+∞`, and `B̂_σ ≤ (n+2)√((n+3)/min N)` is finite with the coercivity of `prop:morozov_rate`*(2)*."
+    },
+    {
+     "name": "triGraph",
+     "full": "GFNBounds.Balance.RemarksA.triGraph",
+     "kind": "def",
+     "line": 2372,
+     "attrs": "",
+     "private": false,
+     "statement": "def triGraph : MarkedGraph (Fin 3)",
+     "doc": "**An aperiodic marked graph**: `s₀ → x → s_f` and `s₀ → s_f` on `Fin 3` (`s₀ = 0`, `x = 1`, `s_f = 2`); its loop closure has returns to `s₀` of lengths `2` and `3`."
+    },
+    {
+     "name": "triPb",
+     "full": "GFNBounds.Balance.RemarksA.triPb",
+     "kind": "def",
+     "line": 2381,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def triPb (s s' : Fin 3) : ℝ",
+     "doc": "The triangle's backward policy: `π_←(x → s₀) = 1`, `π_←(s_f → x) = π_←(s_f → s₀) = 1/2`."
+    },
+    {
+     "name": "triPolicy",
+     "full": "GFNBounds.Balance.RemarksA.triPolicy",
+     "kind": "def",
+     "line": 2384,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def triPolicy : BackwardPolicy triGraph",
+     "doc": ""
+    },
+    {
+     "name": "triGraph_pathConnected",
+     "full": "GFNBounds.Balance.RemarksA.triGraph_pathConnected",
+     "kind": "theorem",
+     "line": 2395,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem triGraph_pathConnected : triGraph.PathConnected",
+     "doc": ""
+    },
+    {
+     "name": "triPolicy_positiveOnEdges",
+     "full": "GFNBounds.Balance.RemarksA.triPolicy_positiveOnEdges",
+     "kind": "theorem",
+     "line": 2405,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem triPolicy_positiveOnEdges : triPolicy.PositiveOnEdges",
+     "doc": ""
+    },
+    {
+     "name": "triPolicy_aperiodic",
+     "full": "GFNBounds.Balance.RemarksA.triPolicy_aperiodic",
+     "kind": "theorem",
+     "line": 2410,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem triPolicy_aperiodic : ¬ ∃ d, PeriodicAt triPolicy.phat 0 d",
+     "doc": "**The triangle's loop closure is aperiodic at `s₀`**: returns of lengths `2` and `3`."
+    },
+    {
+     "name": "triangle_witness",
+     "full": "GFNBounds.Balance.RemarksA.triangle_witness",
+     "kind": "theorem",
+     "line": 2432,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem triangle_witness : ∃ lam gr uH : Fin 3 → ℝ, triPolicy.IsInvProb lam ∧ triPolicy.IsGreen gr ∧ triPolicy.IsHitExp uH ∧ Core.Mixing (densOp lam triPolicy.phat) (meanOp lam) ∧ 1 ≤ Core.Mixing.B (densOp lam triPolicy.phat) (meanOp lam) ∧ ‖Core.Mixing.S (densOp lam triPolicy.phat) (meanOp lam)‖ ≤ sigmaStar triGraph uH * Real.sqrt ((2 + triPolicy.sigmaBar uH) / minOver triGraph (visits triGraph gr))",
+     "doc": "**The aperiodic witness, inhabited**: on the triangle, for its invariant probability, summable `L²` mixing holds, and `rem:visit_ratio`'s `‖S‖ ≤ B̂_σ` applies."
+    },
+    {
+     "name": "sq_admissible",
+     "full": "GFNBounds.Balance.RemarksA.sq_admissible",
+     "kind": "theorem",
+     "line": 2457,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sq_admissible : (fun x : ℝ => (x - 1) ^ 2) 1 = 0 ∧ ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < (fun x : ℝ => (x - 1) ^ 2) x",
+     "doc": "`(x − 1)²` is admissible in the sense used by `rem:freezing`*(i)*: `g(1) = 0`, `g > 0` off `1`."
+    },
+    {
+     "name": "sq_convexOn",
+     "full": "GFNBounds.Balance.RemarksA.sq_convexOn",
+     "kind": "theorem",
+     "line": 2464,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sq_convexOn : ConvexOn ℝ (Ioi 0) fun x : ℝ => (x - 1) ^ 2",
+     "doc": "**The convex hypothesis bundle of `rem:freezing`*(i)* is inhabited** by `(x − 1)²`."
+    },
+    {
+     "name": "sq_convex_small_deriv",
+     "full": "GFNBounds.Balance.RemarksA.sq_convex_small_deriv",
+     "kind": "theorem",
+     "line": 2471,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sq_convex_small_deriv : (∀ x : ℝ, 0 < x → x < 1 → deriv (fun x : ℝ => (x - 1) ^ 2) x ≤ 0) ∧ ∀ {x₀ ε : ℝ}, 0 < x₀ → x₀ < 1 → |deriv (fun x : ℝ => (x - 1) ^ 2) x₀| ≤ ε → ∀ x ∈ Icc x₀ 1, |deriv (fun x : ℝ => (x - 1) ^ 2) x| ≤ ε ∧ (x - 1) ^ 2 ≤ ε * (1 - x₀)",
+     "doc": ""
+    },
+    {
+     "name": "sq_analyticOnNhd",
+     "full": "GFNBounds.Balance.RemarksA.sq_analyticOnNhd",
+     "kind": "theorem",
+     "line": 2479,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sq_analyticOnNhd : AnalyticOnNhd ℝ (fun x : ℝ => (x - 1) ^ 2) (Ioi 0)",
+     "doc": "**The analytic hypothesis bundle of `rem:freezing`*(i)* is inhabited** by `(x − 1)²`."
+    },
+    {
+     "name": "sq_no_flat",
+     "full": "GFNBounds.Balance.RemarksA.sq_no_flat",
+     "kind": "theorem",
+     "line": 2482,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sq_no_flat (p q : ℝ) (hp : 0 < p) (hpq : p < q) : ¬ ∀ x ∈ Ioo p q, deriv (fun x : ℝ => (x - 1) ^ 2) x = 0",
+     "doc": ""
+    },
+    {
+     "name": "thetaOK_twoStateBands",
+     "full": "GFNBounds.Balance.RemarksA.thetaOK_twoStateBands",
+     "kind": "theorem",
+     "line": 2488,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem thetaOK_twoStateBands : ThetaOK twoStateBands (1 / 16)",
+     "doc": "**`ThetaOK` is inhabited**: the bands `(5/8, 7/8)`, `(11/8, 13/8)` of `prop:nonlinear_freezing`*(2)* with `θ = 1/16`."
+    }
+   ],
+   "library": "scaffold",
+   "tracked": false,
+   "root_reachable": false
+  },
+  {
+   "file": "scaffold/GFNBoundsScaffold/Graph/LooseEnds.lean",
+   "title": "Loose ends (draft header)",
+   "labels": [],
+   "scope_disclosed": false,
+   "imports": [
+    "GFNBounds.Doubling.Remarks",
+    "GFNBounds.Graph.CycleExample",
+    "GFNBounds.Graph.MorozovConsume",
+    "GFNBounds.Balance.TrainingSpeedAssembled"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable {G : MarkedGraph V} {B : BackwardPolicy G}"
+   ],
+   "lines": 415,
+   "decls": [
+    {
+     "name": "paths",
+     "full": "GFNBounds.Doubling.Remarks.paths",
+     "kind": "def",
+     "line": 19,
+     "attrs": "",
+     "private": false,
+     "statement": "def paths (x : V) (n : ℕ) : Finset (Fin (n + 1) → V)",
+     "doc": "The trajectories `(X₀, …, Xₙ)` of length `n` started at `x`."
+    },
+    {
+     "name": "trajMass",
+     "full": "GFNBounds.Doubling.Remarks.trajMass",
+     "kind": "def",
+     "line": 23,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def trajMass (K : V → V → ℝ) {n : ℕ} (γ : Fin (n + 1) → V) : ℝ",
+     "doc": "The mass `∏_{i<n} T(Xᵢ → Xᵢ₊₁)` of a trajectory."
+    },
+    {
+     "name": "condExp",
+     "full": "GFNBounds.Doubling.Remarks.condExp",
+     "kind": "def",
+     "line": 27,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def condExp (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) : ℝ",
+     "doc": "`E(θ(Xₙ) | X₀ = x)`, against the finite path law."
+    },
+    {
+     "name": "paths_eq_map",
+     "full": "GFNBounds.Doubling.Remarks.paths_eq_map",
+     "kind": "theorem",
+     "line": 30,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem paths_eq_map (x : V) (n : ℕ) : paths x n = Finset.univ.map ⟨Fin.cons x, Fin.cons_right_injective (α := fun _ => V) x⟩",
+     "doc": ""
+    },
+    {
+     "name": "condExp_eq_sum_cons",
+     "full": "GFNBounds.Doubling.Remarks.condExp_eq_sum_cons",
+     "kind": "theorem",
+     "line": 41,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem condExp_eq_sum_cons (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) : condExp K θ n x = ∑ ω : Fin n → V, trajMass K (Fin.cons x ω : Fin (n + 1) → V) * θ ((Fin.cons x ω : Fin (n + 1) → V) (Fin.last n))",
+     "doc": ""
+    },
+    {
+     "name": "trajMass_cons_cons",
+     "full": "GFNBounds.Doubling.Remarks.trajMass_cons_cons",
+     "kind": "theorem",
+     "line": 49,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem trajMass_cons_cons (K : V → V → ℝ) {n : ℕ} (x y : V) (ω : Fin n → V) : trajMass K (Fin.cons x (Fin.cons y ω : Fin (n + 1) → V) : Fin (n + 2) → V) = K x y * trajMass K (Fin.cons y ω : Fin (n + 1) → V)",
+     "doc": ""
+    },
+    {
+     "name": "condExp_succ",
+     "full": "GFNBounds.Doubling.Remarks.condExp_succ",
+     "kind": "theorem",
+     "line": 57,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem condExp_succ (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) : condExp K θ (n + 1) x = ∑ y, K x y * condExp K θ n y",
+     "doc": ""
+    },
+    {
+     "name": "condExp_zero",
+     "full": "GFNBounds.Doubling.Remarks.condExp_zero",
+     "kind": "theorem",
+     "line": 68,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem condExp_zero (K : V → V → ℝ) (θ : V → ℝ) (x : V) : condExp K θ 0 x = θ x",
+     "doc": ""
+    },
+    {
+     "name": "condExp_eq_iterate",
+     "full": "GFNBounds.Doubling.Remarks.condExp_eq_iterate",
+     "kind": "theorem",
+     "line": 73,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem condExp_eq_iterate (K : V → V → ℝ) (θ : V → ℝ) : ∀ n x, condExp K θ n x = (Core.funAct K)^[n] θ x",
+     "doc": ""
+    },
+    {
+     "name": "trajMass_nonneg",
+     "full": "GFNBounds.Doubling.Remarks.trajMass_nonneg",
+     "kind": "theorem",
+     "line": 84,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem trajMass_nonneg {K : V → V → ℝ} (hK : ∀ x y, 0 ≤ K x y) {n : ℕ} (γ : Fin (n + 1) → V) : 0 ≤ trajMass K γ",
+     "doc": ""
+    },
+    {
+     "name": "funAct_one",
+     "full": "GFNBounds.Doubling.Remarks.funAct_one",
+     "kind": "theorem",
+     "line": 89,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funAct_one {K : V → V → ℝ} (hK : Core.IsMarkov K) : Core.funAct K (fun _ => (1 : ℝ)) = fun _ => 1",
+     "doc": ""
+    },
+    {
+     "name": "sum_trajMass",
+     "full": "GFNBounds.Doubling.Remarks.sum_trajMass",
+     "kind": "theorem",
+     "line": 96,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_trajMass {K : V → V → ℝ} (hK : Core.IsMarkov K) (n : ℕ) (x : V) : ∑ γ ∈ paths x n, trajMass K γ = 1",
+     "doc": ""
+    },
+    {
+     "name": "condExp_one_eq_funAct",
+     "full": "GFNBounds.Doubling.Remarks.condExp_one_eq_funAct",
+     "kind": "theorem",
+     "line": 102,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem condExp_one_eq_funAct (K : V → V → ℝ) (f : V → ℝ) (x : V) : condExp K f 1 x = Core.funAct K f x",
+     "doc": ""
+    },
+    {
+     "name": "unwtL2_funOp_pow_wtL2",
+     "full": "GFNBounds.Doubling.Remarks.unwtL2_funOp_pow_wtL2",
+     "kind": "theorem",
+     "line": 107,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unwtL2_funOp_pow_wtL2 {K : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (θ : V → ℝ) (n : ℕ) (x : V) : Balance.unwtL2 lam ((funOp lam K ^ n) (Balance.wtL2 lam θ)) x = condExp K θ n x",
+     "doc": ""
+    },
+    {
+     "name": "diffusion_apply_eq_series_condExp",
+     "full": "GFNBounds.Doubling.Remarks.diffusion_apply_eq_series_condExp",
+     "kind": "theorem",
+     "line": 112,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem diffusion_apply_eq_series_condExp {K : V → V → ℝ} {lam : V → ℝ} (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hconv : Tendsto (partialSum (funOp lam K) (Balance.meanOp lam)) atTop (𝓝 U)) (θ : V → ℝ) (x : V) : Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N, (condExp K θ n x - Graph.meanL2 lam θ)) atTop (𝓝 (Balance.unwtL2 lam ((Ring.inverse (1 - funOp lam K + Balance.meanOp lam) - Balance.meanOp lam) (Balance.wtL2 lam θ)) x))",
+     "doc": ""
+    },
+    {
+     "name": "flip_condExp_series_check",
+     "full": "GFNBounds.Doubling.Remarks.flip_condExp_series_check",
+     "kind": "theorem",
+     "line": 124,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flip_condExp_series_check : (∀ n x, ∑ γ ∈ paths x n, trajMass (flipK (3 / 4)) γ = 1) ∧ ∀ (θ : Fin 2 → ℝ) (x : Fin 2), Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N, (condExp (flipK (3 / 4)) θ n x - Graph.meanL2 Balance.twoStateLam θ)) atTop (𝓝 (Balance.unwtL2 Balance.twoStateLam ((Ring.inverse (1 - funOp Balance.twoStateLam (flipK (3 / 4)) + Balance.meanOp Balance.twoStateLam) - Balance.meanOp Balance.twoStateLam) (Balance.wtL2 Balance.twoStateLam θ)) x))",
+     "doc": "Inhabitation of the path law and of the restated series, on the flip chain at `3/4`."
+    },
+    {
+     "name": "internal",
+     "full": "GFNBounds.Graph.internal",
+     "kind": "def",
+     "line": 152,
+     "attrs": "",
+     "private": false,
+     "statement": "def internal (G : MarkedGraph V) : Finset V",
+     "doc": "The internal states `𝒱 ∖ {s₀, s_f}`."
+    },
+    {
+     "name": "sum_eq_internal_add",
+     "full": "GFNBounds.Graph.sum_eq_internal_add",
+     "kind": "theorem",
+     "line": 154,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_eq_internal_add (G : MarkedGraph V) (F : V → ℝ) : ∑ x, F x = (∑ x ∈ internal G, F x) + F G.src + F G.snk",
+     "doc": ""
+    },
+    {
+     "name": "snk_inflow",
+     "full": "GFNBounds.Graph.snk_inflow",
+     "kind": "theorem",
+     "line": 172,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem snk_inflow (B : BackwardPolicy G) (F : V → ℝ) : ∑ s, F G.snk * B.pb G.snk s = F G.snk",
+     "doc": "The flow into the sink along the edges of `G`: `∑_s F(s_f) π_←(s_f → s) = F(s_f)`."
+    },
+    {
+     "name": "internal_flow_eq",
+     "full": "GFNBounds.Graph.internal_flow_eq",
+     "kind": "theorem",
+     "line": 178,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem internal_flow_eq (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam gr uH F : V → ℝ} (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (hF : ∀ y, ∑ x, F x * B.phat x y = F y) : ∑ x ∈ internal G, F x = F G.snk * B.sigmaBar uH",
+     "doc": "**Morozov's identity in this library's reading**: an invariant measure `F` of the loop-closed backward chain carries total mass `F(s_f)·σ̄` on the internal states."
+    },
+    {
+     "name": "flow_eq_of_snk_eq",
+     "full": "GFNBounds.Graph.flow_eq_of_snk_eq",
+     "kind": "theorem",
+     "line": 197,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flow_eq_of_snk_eq (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam F F' : V → ℝ} (hl : B.IsInvProb lam) (hF : ∀ y, ∑ x, F x * B.phat x y = F y) (hF' : ∀ y, ∑ x, F' x * B.phat x y = F' y) (hsnk : F G.snk = F' G.snk) : F = F'",
+     "doc": "**No circulation can be added at fixed sink flow**: two invariant measures of the loop-closed backward chain with the same value at `s_f` coincide."
+    },
+    {
+     "name": "internal_cyc",
+     "full": "GFNBounds.Graph.CycleExample.internal_cyc",
+     "kind": "theorem",
+     "line": 216,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem internal_cyc : internal cyc = {1, 2, 3}",
+     "doc": "The internal states of the five-vertex cycle are `x₁, x₂, x₃`."
+    },
+    {
+     "name": "cycle_internal_flow",
+     "full": "GFNBounds.Graph.CycleExample.cycle_internal_flow",
+     "kind": "theorem",
+     "line": 220,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_internal_flow {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) {F : Fin 5 → ℝ} (hF : ∀ y, ∑ x, F x * (pol hp0 hp1).phat x y = F y) : ∑ x ∈ internal cyc, F x = F cyc.snk * (3 / (1 - p)) ∧ F 1 + F 2 + F 3 = F 4 * (3 / (1 - p))",
+     "doc": "**`rem:cycle_no_stalemate`, the example identity**: every flow `F` balanced for the frozen loop-closed backward policy has total flow `F(s_f)·3/(1−p)` through the internal states."
+    },
+    {
+     "name": "cycle_flow_values",
+     "full": "GFNBounds.Graph.CycleExample.cycle_flow_values",
+     "kind": "theorem",
+     "line": 235,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_flow_values {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) {F : Fin 5 → ℝ} (hF : ∀ y, ∑ x, F x * (pol hp0 hp1).phat x y = F y) : F 1 = F 4 / (1 - p) ∧ F 2 = F 4 / (1 - p) ∧ F 3 = F 4 / (1 - p) ∧ F 0 = F 4",
+     "doc": "The flow of each cycle state, and the flow at the source."
+    },
+    {
+     "name": "cycle_internal_flow_check",
+     "full": "GFNBounds.Graph.CycleExample.cycle_internal_flow_check",
+     "kind": "theorem",
+     "line": 252,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_internal_flow_check {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) : ∑ x ∈ internal cyc, lam p x = lam p cyc.snk * (3 / (1 - p))",
+     "doc": "Inhabitation: the invariant probability is such a flow, and at `p = 1/2` the identity reads `3λ(x₁) = λ(s_f)·6`."
+    },
+    {
+     "name": "local_convergence_sigma_C3On",
+     "full": "GFNBounds.Graph.local_convergence_sigma_C3On",
+     "kind": "theorem",
+     "line": 267,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_sigma_C3On {lam gr uH wf : V → ℝ} {g gd : ℝ → ℝ} {a wsup wmin : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (Balance.winC3 a)) (hgd : ∀ y ∈ Balance.winC3 a, HasDerivWithinAt g (gd y) (Balance.winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, |wf x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ wf x) {h0 : V → ℝ} (hnorm0 : nrmL2 lam h0 ≤ Balance.eps0W g a wmin wsup (Balance.BhatSigma G uH lam) (minOver G lam)) : ∃ h : ℝ → V → ℝ, h 0 = h0 ∧ Balance.IsGradientFlow B.phat lam (fun z => lam z * wf z) gd (fun s x => 1 + h s x) ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < 1 + h t x ∧ |Balance.ratio B.phat lam (fun z => 1 + h t z) x - 1| ≤ 2 * a / 3) ∧ (∀ h' : ℝ → V → ℝ, h' 0 = h0 → Balance.IsGradientFlow B.phat lam (fun z => lam z * wf z) gd (fun s x => 1 + h' s x) → ∀ t : ℝ, 0 ≤ t → h' t = h t) ∧ ∃ cinf : ℝ, Balance.Balanced B.phat lam (fun _ => cinf) ∧ |cinf - 1 - meanL2 lam h0| ≤ Balance.CW g a wmin wsup * nrmL2 lam (Balance.perpL2 lam h0) ^ 2 ∧ ∀ t : ℝ, 0 ≤ t → nrmL2 lam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(deriv (deriv g) 1 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH)) * t / 2)) * nrmL2 lam (Balance.perpL2 lam h0)",
+     "doc": "**`prop:morozov_rate`*(3)*, flow matching, `theo:local_convergence_full` flow clause, with existence**: at `B̂ := B̂_σ` and `λ_min := min λ`, for `g` `C³` on the closed window `[1−a,1+a]` (one-sided at the ends) with derivative `gd` there, from every `h₀` with `‖h₀‖_{L²(λ)} ≤ ε₀` the nonlinear flow-matching gradient flow on the loop closure **exists**, is unique, stays in the window, and converges to a balanced `c_∞λ` at rate `ϱ_σ/2`, with `ϱ_σ = g''(1) w_min min_x N(x)/(σ_*²(2+σ̄))` written out."
+    },
+    {
+     "name": "local_convergence_gd_sigma_C3On",
+     "full": "GFNBounds.Graph.local_convergence_gd_sigma_C3On",
+     "kind": "theorem",
+     "line": 307,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_gd_sigma_C3On {lam gr uH wf : V → ℝ} {g gd : ℝ → ℝ} {hk : ℕ → V → ℝ} {a wsup wmin gam : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hg : B.IsGreen gr) (hhit : B.IsHitExp uH) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (Balance.winC3 a)) (hgd : ∀ y ∈ Balance.winC3 a, HasDerivWithinAt g (gd y) (Balance.winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwsup : ∀ x, |wf x| ≤ wsup) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ wf x) (hstep : ∀ k : ℕ, hk (k + 1) = fun x => hk k x - gam * Balance.lossGrad B.phat lam (fun z => lam z * wf z) gd (fun z => 1 + hk k z) x) (hgam0 : 0 ≤ gam) (hgam : gam ≤ Balance.gamma0W g a wmin wsup (Balance.BhatSigma G uH lam)) (hnorm0 : nrmL2 lam (hk 0) ≤ Balance.eps0W g a wmin wsup (Balance.BhatSigma G uH lam) (minOver G lam)) : ∀ k : ℕ, ((∀ x, 0 < 1 + hk k x) ∧ (∀ x, |Balance.ratio B.phat lam (fun z => 1 + hk k z) x - 1| ≤ 2 * a / 3) ∧ ∀ d : V → ℝ, HasDerivAt (fun t : ℝ => Balance.loss B.phat lam (fun z => lam z * wf z) (fun x => 1 + hk k x + t * d x) g) (ipL2 lam (Balance.lossGrad B.phat lam (fun z => lam z * wf z) gd fun z => 1 + hk k z) d) 0) ∧ nrmL2 lam (Balance.perpL2 lam (hk (k + 1))) ≤ (1 - gam * (deriv (deriv g) 1 * wmin * minOver G (visits G gr) / (sigmaStar G uH ^ 2 * (2 + B.sigmaBar uH))) / 4) * nrmL2 lam (Balance.perpL2 lam (hk k))",
+     "doc": "**`prop:morozov_rate`*(3)*, flow matching, `theo:local_convergence_full` descent clause**: at `B̂ := B̂_σ`, for `g` `C³` on the closed window, for `0 ≤ γ ≤ γ₀` and `‖h₀‖ ≤ ε₀` (`ε₀` read at `λ_min := min λ`), the descent is well defined at every step and contracts `‖h_k − Πh_k‖` by `1 − γϱ_σ/4`, `ϱ_σ` written out."
+    },
+    {
+     "name": "arEps0FM",
+     "full": "GFNBounds.Graph.arEps0FM",
+     "kind": "def",
+     "line": 345,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def arEps0FM : ℝ",
+     "doc": "The paper's radius `ε₀` for the flow-matching loss on `s₀ → s_f`, at `g = (log x)²`, `a = 1/2`, `w ≡ 1`."
+    },
+    {
+     "name": "arEps0FM_pos",
+     "full": "GFNBounds.Graph.arEps0FM_pos",
+     "kind": "theorem",
+     "line": 348,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem arEps0FM_pos : 0 < arEps0FM",
+     "doc": ""
+    },
+    {
+     "name": "arSnkInd",
+     "full": "GFNBounds.Graph.arSnkInd",
+     "kind": "def",
+     "line": 357,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def arSnkInd : Fin 2 → ℝ",
+     "doc": "The indicator of the sink."
+    },
+    {
+     "name": "ar_local_convergence_FM_witness",
+     "full": "GFNBounds.Graph.ar_local_convergence_FM_witness",
+     "kind": "theorem",
+     "line": 362,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ar_local_convergence_FM_witness : 0 < nrmL2 arLam (Balance.perpL2 arLam fun x => arEps0FM * arSnkInd x) ∧ ∃ h : ℝ → Fin 2 → ℝ, h 0 = (fun x => arEps0FM * arSnkInd x) ∧ Balance.IsGradientFlow arPol.phat arLam (fun z => arLam z * 1) Balance.logSqDeriv (fun s x => 1 + h s x) ∧ ∃ cinf : ℝ, Balance.Balanced arPol.phat arLam (fun _ => cinf) ∧ ∀ t : ℝ, 0 ≤ t → nrmL2 arLam (fun x => h t x - (cinf - 1)) ≤ 2 * Real.exp (-(1 * t / 2)) * nrmL2 arLam (Balance.perpL2 arLam fun x => arEps0FM * arSnkInd x)",
+     "doc": "**`local_convergence_sigma_C3On`, inhabited off balance.** On `s₀ → s_f`, at `g = (log x)²`, `a = 1/2`, `w ≡ 1`, from `h₀ = ε₀𝟙_{s_f}`, whose deviation from its mean has positive norm, the flow-matching gradient flow exists and converges to a balanced flow at rate `ϱ_σ/2 = 1/2`."
+    }
+   ],
+   "library": "scaffold",
+   "tracked": false,
+   "root_reachable": false
+  },
+  {
+   "file": "scaffold/GFNBoundsScaffold/Silva/Remarks.lean",
+   "title": "The hypotheses, the constant and the path space of the Silva bound: three remarks of Appendix B",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Silva.Explicit",
+    "GFNBounds.Silva.NoUniform",
+    "GFNBounds.Graph.CycleDivergence",
+    "GFNBounds.Graph.CycleRemarks",
+    "GFNBounds.Doubling.Setting"
+   ],
+   "variables": [
+    "variable {X T : Type*} [Fintype X] [Fintype T]",
+    "variable {X T : Type*} [Fintype X] [Fintype T]",
+    "variable {X T : Type*} [Fintype T] [DecidableEq X]",
+    "variable {X T : Type*} [Fintype X] [Fintype T]",
+    "variable {X T : Type*} [Fintype X] [Fintype T] [DecidableEq X]",
+    "variable {S : Type*} [DecidableEq S]",
+    "variable {S : Type*}",
+    "variable {M : ℕ}"
+   ],
+   "lines": 1970,
+   "decls": [
+    {
+     "name": "mVal",
+     "full": "GFNBounds.Silva.Remarks.mVal",
+     "kind": "def",
+     "line": 288,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def mVal (pB : X → T → ℝ) (pF : T → ℝ) (hs : (wSupport pB).Nonempty) : ℝ",
+     "doc": "`M := max{ p_F(τ)/p_B(τ|x) : p_B(τ|x) > 0 }` of `silva_comparison.tex:32`, as a value."
+    },
+    {
+     "name": "piInf",
+     "full": "GFNBounds.Silva.Remarks.piInf",
+     "kind": "def",
+     "line": 292,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def piInf (π : X → ℝ) (hX : (univ : Finset X).Nonempty) : ℝ",
+     "doc": "`‖π‖_∞ = max_x π(x)`, as a value."
+    },
+    {
+     "name": "mPrime",
+     "full": "GFNBounds.Silva.Remarks.mPrime",
+     "kind": "def",
+     "line": 296,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def mPrime (pB : X → T → ℝ) (pF : T → ℝ) (π : X → ℝ) (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) : ℝ",
+     "doc": "`M' := max(M, ‖π‖_∞)` of `silva_comparison.tex:32`, as a value."
+    },
+    {
+     "name": "mem_wSupport",
+     "full": "GFNBounds.Silva.Remarks.mem_wSupport",
+     "kind": "theorem",
+     "line": 300,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mem_wSupport {pB : X → T → ℝ} {x : X} {t : T} (ht : 0 < pB x t) : (x, t) ∈ wSupport pB",
+     "doc": ""
+    },
+    {
+     "name": "ratio_le_mVal",
+     "full": "GFNBounds.Silva.Remarks.ratio_le_mVal",
+     "kind": "theorem",
+     "line": 305,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_le_mVal {pB : X → T → ℝ} (pF : T → ℝ) (hs : (wSupport pB).Nonempty) {x : X} {t : T} (ht : 0 < pB x t) : pF t / pB x t ≤ mVal pB pF hs",
+     "doc": ""
+    },
+    {
+     "name": "mVal_le_mPrime",
+     "full": "GFNBounds.Silva.Remarks.mVal_le_mPrime",
+     "kind": "theorem",
+     "line": 309,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mVal_le_mPrime (pB : X → T → ℝ) (pF : T → ℝ) (π : X → ℝ) (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) : mVal pB pF hs ≤ mPrime pB pF π hs hX",
+     "doc": ""
+    },
+    {
+     "name": "mPrime_le_iff",
+     "full": "GFNBounds.Silva.Remarks.mPrime_le_iff",
+     "kind": "theorem",
+     "line": 315,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mPrime_le_iff (pB : X → T → ℝ) (pF : T → ℝ) (π : X → ℝ) (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) (c : ℝ) : mPrime pB pF π hs hX ≤ c ↔ MprimeLe pB pF π c",
+     "doc": "The value `M'` and the library's `MprimeLe` agree: `M' ≤ c ↔ MprimeLe pB pF π c`."
+    },
+    {
+     "name": "chiSqE",
+     "full": "GFNBounds.Silva.Remarks.chiSqE",
+     "kind": "def",
+     "line": 338,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def chiSqE (q p : X → ℝ) : ℝ≥0∞",
+     "doc": "`χ²(q‖p)` in `[0,∞]`: a state with `p = 0 < q` contributes `+∞`, a state with `p = q = 0` contributes `0`."
+    },
+    {
+     "name": "chiSqE_eq_ofReal",
+     "full": "GFNBounds.Silva.Remarks.chiSqE_eq_ofReal",
+     "kind": "theorem",
+     "line": 342,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem chiSqE_eq_ofReal {q p : X → ℝ} (hp : ∀ x, 0 < p x) : chiSqE q p = ENNReal.ofReal (chiSq q p)",
+     "doc": "On full support `chiSqE` is the library's real `chiSq`."
+    },
+    {
+     "name": "chiSqE_unif_eq_top",
+     "full": "GFNBounds.Silva.Remarks.chiSqE_unif_eq_top",
+     "kind": "theorem",
+     "line": 349,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem chiSqE_unif_eq_top {pET : X → ℝ} {x₀ : X} (h0 : pET x₀ = 0) : chiSqE (unif X) pET = ⊤",
+     "doc": "**`rem:silva_hypotheses`(1)**: off full support of `p_{E,T}`, `χ²(q_{E,T}‖p_{E,T}) = +∞`."
+    },
+    {
+     "name": "logSqE",
+     "full": "GFNBounds.Silva.Remarks.logSqE",
+     "kind": "def",
+     "line": 360,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def logSqE (a b : ℝ) : ℝ≥0∞",
+     "doc": "`log(a/b)²` in `[0,∞]`, with `log 0 = −∞` and `log(+∞) = +∞`: it is `+∞` as soon as `a = 0` or `b = 0`."
+    },
+    {
+     "name": "residualE",
+     "full": "GFNBounds.Silva.Remarks.residualE",
+     "kind": "def",
+     "line": 365,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def residualE (pET π : X → ℝ) (pB : X → T → ℝ) (pF : T → ℝ) : ℝ≥0∞",
+     "doc": "The residual `𝓔(p_F)` of `silva_comparison.tex:24–26` in `[0,∞]`."
+    },
+    {
+     "name": "residualE_eq_ofReal",
+     "full": "GFNBounds.Silva.Remarks.residualE_eq_ofReal",
+     "kind": "theorem",
+     "line": 370,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem residualE_eq_ofReal {pET π : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} (hET : ∀ x, 0 ≤ pET x) (hπ : ∀ x, 0 < π x) (hB : ∀ x t, 0 ≤ pB x t) (hF : ∀ x t, 0 < pB x t → 0 < pF t) : residualE pET π pB pF = ENNReal.ofReal (residual pET π pB pF)",
+     "doc": "On the setting of `prop:silva_explicit` (`π > 0`, `p_F > 0` on the support of `p_B`), `residualE` is the library's real `residual`."
+    },
+    {
+     "name": "residualE_eq_top_of_pF_zero",
+     "full": "GFNBounds.Silva.Remarks.residualE_eq_top_of_pF_zero",
+     "kind": "theorem",
+     "line": 392,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem residualE_eq_top_of_pF_zero {pET π : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} {x₀ : X} {t₀ : T} (hET : 0 < pET x₀) (hB : 0 < pB x₀ t₀) (hF0 : pF t₀ = 0) : residualE pET π pB pF = ⊤",
+     "doc": "**`rem:silva_hypotheses`(2)**: if `p_F(τ) = 0` for a trajectory `τ` into `x` with `p_{E,T}(x) > 0` and `p_B(τ|x) > 0`, then `𝓔(p_F) = +∞`."
+    },
+    {
+     "name": "rhsE",
+     "full": "GFNBounds.Silva.Remarks.rhsE",
+     "kind": "def",
+     "line": 405,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def rhsE (c : ℝ) (chi E : ℝ≥0∞) : ℝ≥0∞",
+     "doc": "The right side `c · [(1 + χ²) 𝓔]^{1/2}` of `prop:silva_explicit` in `[0,∞]`, with `c = (|𝒳|/2) M'` the (finite, nonnegative) prefactor."
+    },
+    {
+     "name": "rhsE_ofReal",
+     "full": "GFNBounds.Silva.Remarks.rhsE_ofReal",
+     "kind": "theorem",
+     "line": 409,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rhsE_ofReal {c chi E : ℝ} (hchi : 0 ≤ chi) (hE : 0 ≤ E) : rhsE c (ENNReal.ofReal chi) (ENNReal.ofReal E) = ENNReal.ofReal (c * Real.sqrt ((1 + chi) * E))",
+     "doc": "On finite values `rhsE` is the real right side of `prop:silva_explicit`."
+    },
+    {
+     "name": "tv_le_rhsE",
+     "full": "GFNBounds.Silva.Remarks.tv_le_rhsE",
+     "kind": "theorem",
+     "line": 423,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tv_le_rhsE {pET π pT : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} {M Pinf : ℝ} (hET_pos : ∀ x, 0 < pET x) (hET_sum : ∑ x, pET x = 1) (hπ_pos : ∀ x, 0 < π x) (hB_nonneg : ∀ x τ, 0 ≤ pB x τ) (hB_sum : ∀ x, ∑ τ, pB x τ = 1) (hF_pos : ∀ x τ, 0 < pB x τ → 0 < pF τ) (hdom : ∀ x, pT x = ∑ τ, pB x τ * (pF τ / pB x τ)) (hM : ∀ x τ, 0 < pB x τ → pF τ / pB x τ ≤ M) (hPinf : ∀ x, π x ≤ Pinf) : ENNReal.ofReal (tv pT π) ≤ rhsE ((Fintype.card X : ℝ) / 2 * max M Pinf) (chiSqE (unif X) pET) (residualE pET π pB pF)",
+     "doc": "**`prop:silva_explicit` read in `[0,∞]`**: under the proposition's hypotheses the extended-real bound holds, with `chiSqE` and `residualE`."
+    },
+    {
+     "name": "rhsE_eq_top_of_not_full_support",
+     "full": "GFNBounds.Silva.Remarks.rhsE_eq_top_of_not_full_support",
+     "kind": "theorem",
+     "line": 443,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rhsE_eq_top_of_not_full_support {c : ℝ} (hc : 0 < c) {pET : X → ℝ} {x₀ : X} (h0 : pET x₀ = 0) {E : ℝ≥0∞} (hE : E ≠ 0) : rhsE c (chiSqE (unif X) pET) E = ⊤",
+     "doc": "**`rem:silva_hypotheses`(1), the right side**: off full support of `p_{E,T}` and with `𝓔(p_F) ≠ 0`, the right side of `prop:silva_explicit` is `+∞` (for a positive prefactor)."
+    },
+    {
+     "name": "one_add_chiSqE_eq_top",
+     "full": "GFNBounds.Silva.Remarks.one_add_chiSqE_eq_top",
+     "kind": "theorem",
+     "line": 452,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_add_chiSqE_eq_top {pET : X → ℝ} {x₀ : X} (h0 : pET x₀ = 0) : 1 + chiSqE (unif X) pET = ⊤",
+     "doc": "**`rem:silva_hypotheses`(1), the case `𝓔(p_F) = 0`**: the product under the root is `(1 + χ²)·𝓔` with `1 + χ² = +∞` and `𝓔 = 0` — the paper's `∞·0`."
+    },
+    {
+     "name": "rhsE_eq_top_of_residual_top",
+     "full": "GFNBounds.Silva.Remarks.rhsE_eq_top_of_residual_top",
+     "kind": "theorem",
+     "line": 459,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rhsE_eq_top_of_residual_top {c : ℝ} (hc : 0 < c) (chi : ℝ≥0∞) : rhsE c chi ⊤ = ⊤",
+     "doc": "**`rem:silva_hypotheses`(2), \"the bound holds but carries no information\"**: when `𝓔(p_F) = +∞` the right side of `prop:silva_explicit` is `+∞` (for a positive prefactor), so the bound holds for every `p_T` and says nothing."
+    },
+    {
+     "name": "tv_le_rhsE_of_pF_zero",
+     "full": "GFNBounds.Silva.Remarks.tv_le_rhsE_of_pF_zero",
+     "kind": "theorem",
+     "line": 465,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tv_le_rhsE_of_pF_zero {pET π pT : X → ℝ} {pB : X → T → ℝ} {pF : T → ℝ} {c : ℝ} (hc : 0 < c) {x₀ : X} {t₀ : T} (hET : 0 < pET x₀) (hB : 0 < pB x₀ t₀) (hF0 : pF t₀ = 0) : rhsE c (chiSqE (unif X) pET) (residualE pET π pB pF) = ⊤ ∧ ENNReal.ofReal (tv pT π) ≤ rhsE c (chiSqE (unif X) pET) (residualE pET π pB pF)",
+     "doc": ""
+    },
+    {
+     "name": "termMarginal",
+     "full": "GFNBounds.Silva.Remarks.termMarginal",
+     "kind": "def",
+     "line": 482,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def termMarginal (into : T → X) (pF : T → ℝ) (x : X) : ℝ",
+     "doc": "The terminal marginal `p_T(x) = ∑_{τ into x} p_F(τ)` of a trajectory weight `p_F`, where `into τ` is the terminal state of `τ`."
+    },
+    {
+     "name": "identity_iff_domination",
+     "full": "GFNBounds.Silva.Remarks.identity_iff_domination",
+     "kind": "theorem",
+     "line": 489,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem identity_iff_domination (into : T → X) {pB : X → T → ℝ} {pF : T → ℝ} (hF : ∀ t, 0 ≤ pF t) (hBsupp : ∀ x t, pB x t ≠ 0 → into t = x) (x : X) : termMarginal into pF x = ∑ t, pB x t * (pF t / pB x t) ↔ ∀ t, into t = x → pB x t = 0 → pF t = 0",
+     "doc": "**`rem:silva_hypotheses`(3)**: for a backward policy `p_B(·|x)` living on the trajectories into `x`, the identity `p_T(x) = 𝔼_{p_B(·|x)}[p_F/p_B]` holds **if and only if** `p_B(·|x)` dominates the forward trajectories into `x` (`p_B(τ|x) = 0 ⇒ p_F(τ) = 0`)."
+    },
+    {
+     "name": "uniformBackProb",
+     "full": "GFNBounds.Silva.Remarks.uniformBackProb",
+     "kind": "def",
+     "line": 523,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def uniformBackProb {S : Type*} (parents : S → Finset S) : List S → ℝ",
+     "doc": "The probability that the **uniform backward policy** retraces the path `s₀ → s₁ → ⋯ → s_n` from its last state: the product over its steps of `1/#parents(s_{i+1})`."
+    },
+    {
+     "name": "uniformBackProb_pos",
+     "full": "GFNBounds.Silva.Remarks.uniformBackProb_pos",
+     "kind": "theorem",
+     "line": 530,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem uniformBackProb_pos {S : Type*} (parents : S → Finset S) : ∀ l : List S, l.IsChain (fun a b => a ∈ parents b) → 0 < uniformBackProb parents l | [], _ => by simp only [uniformBackProb]; norm_num | [_], _ => by simp only [uniformBackProb]; norm_num | a :: b :: l, h => by rw [List.isChain_cons_cons] at h have hc : (0 : ℝ) < ((parents b).card : ℝ)",
+     "doc": "Along a path of the graph (each state a parent of the next) the uniform backward policy charges the path."
+    },
+    {
+     "name": "identity_of_uniformBackward",
+     "full": "GFNBounds.Silva.Remarks.identity_of_uniformBackward",
+     "kind": "theorem",
+     "line": 544,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem identity_of_uniformBackward {S : Type*} (parents : S → Finset S) (into : T → X) (path : T → List S) (hpath : ∀ t, (path t).IsChain (fun a b => a ∈ parents b)) {pF : T → ℝ} (hF : ∀ t, 0 ≤ pF t) (x : X) : termMarginal into pF x = ∑ t, (if into t = x then uniformBackProb parents (path t) else 0) * (pF t / if into t = x then uniformBackProb parents (path t) else 0)",
+     "doc": "**`rem:silva_hypotheses`(3), \"automatic for the uniform `p_B`\"**: the backward policy that charges each trajectory into `x` with its uniform retracing probability dominates every forward trajectory weight, so the identity holds for every nonnegative `p_F`."
+    },
+    {
+     "name": "identity_fails_without_domination",
+     "full": "GFNBounds.Silva.Remarks.identity_fails_without_domination",
+     "kind": "theorem",
+     "line": 563,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem identity_fails_without_domination : ∃ (pB : Unit → Bool → ℝ) (pF : Bool → ℝ), (∀ t, 0 ≤ pF t) ∧ ∑ t, pF t = 1 ∧ (∀ t, 0 ≤ pB () t) ∧ ∑ t, pB () t = 1 ∧ termMarginal (fun _ => ()) pF () ≠ ∑ t, pB () t * (pF t / pB () t)",
+     "doc": "**`rem:silva_hypotheses`(3), \"an assumption under the extension to learnable `p_B`\"**: a backward policy that is a probability but vanishes on a charged forward trajectory breaks the identity."
+    },
+    {
+     "name": "star_mVal_lt_piInf",
+     "full": "GFNBounds.Silva.Remarks.star_mVal_lt_piInf",
+     "kind": "theorem",
+     "line": 583,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem star_mVal_lt_piInf {K : ℕ} (hK : 3 ≤ K) {π : Fin K → ℝ} (hπ0 : ∀ x, 0 ≤ π x) (hπ1 : ∑ x, π x = 1) {x₀ : Fin K} (hx₀ : π x₀ = 1 / 2) (hs : (wSupport (deltaPB (Fin K))).Nonempty) (hX : (univ : Finset (Fin K)).Nonempty) : mVal (deltaPB (Fin K)) (fun _ => (K : ℝ)⁻¹) hs = (K : ℝ)⁻¹ ∧ piInf π hX = 1 / 2 ∧ mVal (deltaPB (Fin K)) (fun _ => (K : ℝ)⁻¹) hs < piInf π hX",
+     "doc": "**`rem:silva_hypotheses`(5)**: on a star `s_o` with `K ≥ 3` terminal children (`p_B(τ|x) = 1`, the one-parent kernel `deltaPB`), the uniform forward policy has `M = 1/K`, while a target with `π(x₀) = ½` at one child has `‖π‖_∞ = ½ > M`."
+    },
+    {
+     "name": "le_one_of_sum_eq_one",
+     "full": "GFNBounds.Silva.Remarks.le_one_of_sum_eq_one",
+     "kind": "theorem",
+     "line": 621,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_one_of_sum_eq_one {Y : Type*} [Fintype Y] {p : Y → ℝ} (h0 : ∀ y, 0 ≤ p y) (h1 : ∑ y, p y = 1) (y : Y) : p y ≤ 1",
+     "doc": "A probability weight is at most `1` pointwise."
+    },
+    {
+     "name": "mPrime_le_fixedGraph",
+     "full": "GFNBounds.Silva.Remarks.mPrime_le_fixedGraph",
+     "kind": "theorem",
+     "line": 628,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mPrime_le_fixedGraph (pB : X → T → ℝ) {pF : T → ℝ} {π : X → ℝ} (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) (hF1 : ∀ t, pF t ≤ 1) (hπ1 : ∀ x, π x ≤ 1) : mPrime pB pF π hs hX ≤ max 1 ((wSupport pB).sup' hs fun p => 1 / pB p.1 p.2)",
+     "doc": "**`rem:silva_model_constant`, the fixed-graph bound**: since `p_F(τ) ≤ 1` and `‖π‖_∞ ≤ 1`, every forward trajectory law has `M' ≤ max(1, max_{τ,x : p_B(τ|x) > 0} 1/p_B(τ|x))`."
+    },
+    {
+     "name": "mPrime_le_fixedGraph_of_prob",
+     "full": "GFNBounds.Silva.Remarks.mPrime_le_fixedGraph_of_prob",
+     "kind": "theorem",
+     "line": 642,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mPrime_le_fixedGraph_of_prob (pB : X → T → ℝ) {pF : T → ℝ} {π : X → ℝ} (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) (hF0 : ∀ t, 0 ≤ pF t) (hF1 : ∑ t, pF t = 1) (hπ0 : ∀ x, 0 ≤ π x) (hπ1 : ∑ x, π x = 1) : mPrime pB pF π hs hX ≤ max 1 ((wSupport pB).sup' hs fun p => 1 / pB p.1 p.2)",
+     "doc": "The fixed-graph bound for probability laws: `p_F` and `π` nonnegative and summing to `1`."
+    },
+    {
+     "name": "tree_pB_eq_one",
+     "full": "GFNBounds.Silva.Remarks.tree_pB_eq_one",
+     "kind": "theorem",
+     "line": 652,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tree_pB_eq_one {into : T → X} (hinj : Function.Injective into) {pB : X → T → ℝ} (hBsupp : ∀ x t, pB x t ≠ 0 → into t = x) (hB1 : ∀ x, ∑ t, pB x t = 1) {x : X} {t : T} (ht : 0 < pB x t) : pB x t = 1",
+     "doc": "**`rem:silva_model_constant`, on a tree `p_B(τ|x) = 1`**: when each terminal state has at most one trajectory (`into` injective) and `p_B(·|x)` is a probability on the trajectories into `x`, `p_B(τ|x) = 1` on its support."
+    },
+    {
+     "name": "tree_mVal_le_one",
+     "full": "GFNBounds.Silva.Remarks.tree_mVal_le_one",
+     "kind": "theorem",
+     "line": 663,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tree_mVal_le_one {into : T → X} (hinj : Function.Injective into) {pB : X → T → ℝ} (hBsupp : ∀ x t, pB x t ≠ 0 → into t = x) (hB1 : ∀ x, ∑ t, pB x t = 1) {pF : T → ℝ} (hF1 : ∀ t, pF t ≤ 1) (hs : (wSupport pB).Nonempty) : mVal pB pF hs ≤ 1",
+     "doc": "**`rem:silva_model_constant`, on a tree `M ≤ 1`**."
+    },
+    {
+     "name": "LadderTraj",
+     "full": "GFNBounds.Silva.Remarks.LadderTraj",
+     "kind": "abbrev",
+     "line": 679,
+     "attrs": "",
+     "private": false,
+     "statement": "abbrev LadderTraj (n : ℕ)",
+     "doc": "The trajectories of the **ladder graph of depth `n`** into its only terminal state `x`: one of the two parallel edges at each of the `n` stages."
+    },
+    {
+     "name": "ladderPB",
+     "full": "GFNBounds.Silva.Remarks.ladderPB",
+     "kind": "def",
+     "line": 683,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ladderPB (n : ℕ) : Unit → LadderTraj n → ℝ",
+     "doc": "The uniform backward policy on the ladder: `½` at each of the `n` stages."
+    },
+    {
+     "name": "ladderOne",
+     "full": "GFNBounds.Silva.Remarks.ladderOne",
+     "kind": "def",
+     "line": 687,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ladderOne : Unit → ℝ",
+     "doc": "The constant `1` on the single terminal state: the ladder's `π(x)` and `p_{E,T}(x)`."
+    },
+    {
+     "name": "ladderPB_eq",
+     "full": "GFNBounds.Silva.Remarks.ladderPB_eq",
+     "kind": "theorem",
+     "line": 689,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladderPB_eq (n : ℕ) (x : Unit) (t : LadderTraj n) : ladderPB n x t = ((2 : ℝ) ^ n)⁻¹",
+     "doc": ""
+    },
+    {
+     "name": "card_ladderTraj",
+     "full": "GFNBounds.Silva.Remarks.card_ladderTraj",
+     "kind": "theorem",
+     "line": 694,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem card_ladderTraj (n : ℕ) : Fintype.card (LadderTraj n) = 2 ^ n",
+     "doc": "`x` has `2ⁿ` incoming trajectories."
+    },
+    {
+     "name": "ladderPB_pos",
+     "full": "GFNBounds.Silva.Remarks.ladderPB_pos",
+     "kind": "theorem",
+     "line": 697,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladderPB_pos (n : ℕ) (x : Unit) (t : LadderTraj n) : 0 < ladderPB n x t",
+     "doc": ""
+    },
+    {
+     "name": "ladderPB_sum",
+     "full": "GFNBounds.Silva.Remarks.ladderPB_sum",
+     "kind": "theorem",
+     "line": 702,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladderPB_sum (n : ℕ) (x : Unit) : ∑ t, ladderPB n x t = 1",
+     "doc": "The uniform backward policy is a probability on the `2ⁿ` trajectories into `x`."
+    },
+    {
+     "name": "ladder_wSupport_nonempty",
+     "full": "GFNBounds.Silva.Remarks.ladder_wSupport_nonempty",
+     "kind": "theorem",
+     "line": 707,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_wSupport_nonempty (n : ℕ) : (wSupport (ladderPB n)).Nonempty",
+     "doc": ""
+    },
+    {
+     "name": "unit_univ_nonempty",
+     "full": "GFNBounds.Silva.Remarks.unit_univ_nonempty",
+     "kind": "theorem",
+     "line": 710,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem unit_univ_nonempty : (univ : Finset Unit).Nonempty",
+     "doc": ""
+    },
+    {
+     "name": "ladder_sup_inv_pB",
+     "full": "GFNBounds.Silva.Remarks.ladder_sup_inv_pB",
+     "kind": "theorem",
+     "line": 713,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_sup_inv_pB (n : ℕ) : (wSupport (ladderPB n)).sup' (ladder_wSupport_nonempty n) (fun p => 1 / ladderPB n p.1 p.2) = 2 ^ n",
+     "doc": "`max_{τ,x} 1/p_B(τ|x) = 2ⁿ` on the ladder."
+    },
+    {
+     "name": "ladder_mPrime_le",
+     "full": "GFNBounds.Silva.Remarks.ladder_mPrime_le",
+     "kind": "theorem",
+     "line": 724,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_mPrime_le (n : ℕ) {pF : LadderTraj n → ℝ} (hF0 : ∀ t, 0 ≤ pF t) (hF1 : ∑ t, pF t = 1) : mPrime (ladderPB n) pF ladderOne (ladder_wSupport_nonempty n) unit_univ_nonempty ≤ 2 ^ n",
+     "doc": "**`rem:silva_model_constant`, the ladder: `M' ≤ 2ⁿ`** for every forward trajectory law, as the instance of the fixed-graph bound."
+    },
+    {
+     "name": "ladder_balanced",
+     "full": "GFNBounds.Silva.Remarks.ladder_balanced",
+     "kind": "theorem",
+     "line": 734,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_balanced (n : ℕ) : mVal (ladderPB n) (fun t => ladderOne () * ladderPB n () t) (ladder_wSupport_nonempty n) = 1 ∧ piInf ladderOne unit_univ_nonempty = 1",
+     "doc": "**`rem:silva_model_constant`, the balanced solution**: `p_F(τ) = π(x) p_B(τ|x)` has `M = ‖π‖_∞ = 1`."
+    },
+    {
+     "name": "ladder_mVal_ge",
+     "full": "GFNBounds.Silva.Remarks.ladder_mVal_ge",
+     "kind": "theorem",
+     "line": 747,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_mVal_ge {n : ℕ} (pF : LadderTraj n → ℝ) (t₀ : LadderTraj n) : pF t₀ * 2 ^ n ≤ mVal (ladderPB n) pF (ladder_wSupport_nonempty n)",
+     "doc": "**`rem:silva_model_constant`: mass `c` on one trajectory gives `M ≥ c 2ⁿ`**."
+    },
+    {
+     "name": "ladder_residual_eq",
+     "full": "GFNBounds.Silva.Remarks.ladder_residual_eq",
+     "kind": "theorem",
+     "line": 753,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_residual_eq (n : ℕ) (pF : LadderTraj n → ℝ) : residual ladderOne ladderOne (ladderPB n) pF = ∑ t, ((2 : ℝ) ^ n)⁻¹ * Real.log (pF t * 2 ^ n) ^ 2",
+     "doc": "The residual on the ladder: one term per trajectory, `2⁻ⁿ (log(p_F(τ) 2ⁿ))²`."
+    },
+    {
+     "name": "ladder_term_eq",
+     "full": "GFNBounds.Silva.Remarks.ladder_term_eq",
+     "kind": "theorem",
+     "line": 761,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_term_eq {n : ℕ} (pF : LadderTraj n → ℝ) (t₀ : LadderTraj n) : ladderOne () * (ladderPB n () t₀ * logRatio ladderOne (ladderPB n) pF () t₀ ^ 2) = ((2 : ℝ) ^ n)⁻¹ * Real.log (pF t₀ * 2 ^ n) ^ 2",
+     "doc": "**`rem:silva_model_constant`: the term of `𝓔` on the concentrated trajectory**, `p_{E,T}(x) p_B(τ₀|x) (log(p_F(τ₀)/(π(x)p_B(τ₀|x))))² = 2⁻ⁿ (log(c 2ⁿ))²` for `p_F(τ₀) = c`."
+    },
+    {
+     "name": "tendsto_ladder_term",
+     "full": "GFNBounds.Silva.Remarks.tendsto_ladder_term",
+     "kind": "theorem",
+     "line": 767,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tendsto_ladder_term {c : ℝ} (hc : 0 < c) : Tendsto (fun n : ℕ => ((2 : ℝ) ^ n)⁻¹ * Real.log (c * 2 ^ n) ^ 2) atTop (𝓝 0)",
+     "doc": "**`rem:silva_model_constant`: `2⁻ⁿ (log(c 2ⁿ))² → 0`** as `n → ∞`, for every `c > 0`."
+    },
+    {
+     "name": "ladderT0",
+     "full": "GFNBounds.Silva.Remarks.ladderT0",
+     "kind": "def",
+     "line": 789,
+     "attrs": "",
+     "private": false,
+     "statement": "def ladderT0 (n : ℕ) : LadderTraj n",
+     "doc": "The trajectory `τ₀` on which the mass is concentrated."
+    },
+    {
+     "name": "ladderPFc",
+     "full": "GFNBounds.Silva.Remarks.ladderPFc",
+     "kind": "def",
+     "line": 793,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ladderPFc (n : ℕ) (c : ℝ) : LadderTraj n → ℝ",
+     "doc": "**The trajectory law of `rem:silva_model_constant`**: mass `c` on `τ₀` and the remaining mass `1 − c` spread uniformly over the other `2ⁿ − 1` trajectories."
+    },
+    {
+     "name": "two_pow_sub_one_pos",
+     "full": "GFNBounds.Silva.Remarks.two_pow_sub_one_pos",
+     "kind": "theorem",
+     "line": 796,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem two_pow_sub_one_pos {n : ℕ} (hn : 1 ≤ n) : (0 : ℝ) < (2 : ℝ) ^ n - 1",
+     "doc": ""
+    },
+    {
+     "name": "sum_ladder_split",
+     "full": "GFNBounds.Silva.Remarks.sum_ladder_split",
+     "kind": "theorem",
+     "line": 804,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_ladder_split (n : ℕ) (a b : ℝ) : ∑ t : LadderTraj n, (if t = ladderT0 n then a else b) = a + ((2 : ℝ) ^ n - 1) * b",
+     "doc": "A sum over the ladder's trajectories of a function taking one value on `τ₀` and another elsewhere."
+    },
+    {
+     "name": "ladderPFc_pos",
+     "full": "GFNBounds.Silva.Remarks.ladderPFc_pos",
+     "kind": "theorem",
+     "line": 814,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladderPFc_pos {n : ℕ} (hn : 1 ≤ n) {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (t : LadderTraj n) : 0 < ladderPFc n c t",
+     "doc": ""
+    },
+    {
+     "name": "ladderPFc_sum",
+     "full": "GFNBounds.Silva.Remarks.ladderPFc_sum",
+     "kind": "theorem",
+     "line": 821,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladderPFc_sum {n : ℕ} (hn : 1 ≤ n) (c : ℝ) : ∑ t, ladderPFc n c t = 1",
+     "doc": ""
+    },
+    {
+     "name": "ladder_residual_ladderPFc",
+     "full": "GFNBounds.Silva.Remarks.ladder_residual_ladderPFc",
+     "kind": "theorem",
+     "line": 828,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_residual_ladderPFc (n : ℕ) (c : ℝ) : residual ladderOne ladderOne (ladderPB n) (ladderPFc n c) = ((2 : ℝ) ^ n)⁻¹ * Real.log (c * 2 ^ n) ^ 2 + ((2 : ℝ) ^ n - 1) * (((2 : ℝ) ^ n)⁻¹ * Real.log ((1 - c) / ((2 : ℝ) ^ n - 1) * 2 ^ n) ^ 2)",
+     "doc": "The residual of the family, in closed form."
+    },
+    {
+     "name": "tendsto_ladder_residual",
+     "full": "GFNBounds.Silva.Remarks.tendsto_ladder_residual",
+     "kind": "theorem",
+     "line": 843,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tendsto_ladder_residual {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) : Tendsto (fun n : ℕ => residual ladderOne ladderOne (ladderPB n) (ladderPFc n c)) atTop (𝓝 (Real.log (1 - c) ^ 2))",
+     "doc": "**`rem:silva_model_constant`: `𝓔(p_F) → (log(1 − c))²`** along the family, for `0 < c < 1`."
+    },
+    {
+     "name": "log_one_sub_cEps_sq",
+     "full": "GFNBounds.Silva.Remarks.log_one_sub_cEps_sq",
+     "kind": "theorem",
+     "line": 875,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem log_one_sub_cEps_sq {ε : ℝ} (hε : 0 ≤ ε) : Real.log (1 - (1 - Real.exp (-Real.sqrt (ε / 2)))) ^ 2 = ε / 2",
+     "doc": "With `c := 1 − e^{−√(ε/2)}`, `(log(1 − c))² = ε/2`."
+    },
+    {
+     "name": "cEps_pos",
+     "full": "GFNBounds.Silva.Remarks.cEps_pos",
+     "kind": "theorem",
+     "line": 879,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cEps_pos {ε : ℝ} (hε : 0 < ε) : 0 < 1 - Real.exp (-Real.sqrt (ε / 2))",
+     "doc": ""
+    },
+    {
+     "name": "cEps_lt_one",
+     "full": "GFNBounds.Silva.Remarks.cEps_lt_one",
+     "kind": "theorem",
+     "line": 884,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cEps_lt_one (ε : ℝ) : 1 - Real.exp (-Real.sqrt (ε / 2)) < 1",
+     "doc": ""
+    },
+    {
+     "name": "tendsto_ladder_residual_eps",
+     "full": "GFNBounds.Silva.Remarks.tendsto_ladder_residual_eps",
+     "kind": "theorem",
+     "line": 889,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tendsto_ladder_residual_eps {ε : ℝ} (hε : 0 < ε) : Tendsto (fun n : ℕ => residual ladderOne ladderOne (ladderPB n) (ladderPFc n (1 - Real.exp (-Real.sqrt (ε / 2))))) atTop (𝓝 (ε / 2))",
+     "doc": "**`rem:silva_model_constant`: `𝓔(p_F) → ε/2`** for `c := 1 − e^{−√(ε/2)}`."
+    },
+    {
+     "name": "ladder_witness",
+     "full": "GFNBounds.Silva.Remarks.ladder_witness",
+     "kind": "theorem",
+     "line": 898,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_witness {ε : ℝ} (hε : 0 < ε) : ∀ᶠ n in atTop, ∃ pF : LadderTraj n → ℝ, (∀ t, 0 < pF t) ∧ ∑ t, pF t = 1 ∧ residual ladderOne ladderOne (ladderPB n) pF ≤ ε ∧ (1 - Real.exp (-Real.sqrt (ε / 2))) * 2 ^ n ≤ mPrime (ladderPB n) pF ladderOne (ladder_wSupport_nonempty n) unit_univ_nonempty",
+     "doc": "**`rem:silva_model_constant`, the display**: for every `ε > 0` and every `n` large enough there is a full-support trajectory law on the ladder with `𝓔(p_F) ≤ ε` and `M' ≥ (1 − e^{−√(ε/2)}) 2ⁿ`."
+    },
+    {
+     "name": "ladder_pF_ne_zero_of_residualE_ne_top",
+     "full": "GFNBounds.Silva.Remarks.ladder_pF_ne_zero_of_residualE_ne_top",
+     "kind": "theorem",
+     "line": 917,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_pF_ne_zero_of_residualE_ne_top {n : ℕ} {pF : LadderTraj n → ℝ} (h : residualE ladderOne ladderOne (ladderPB n) pF ≠ ⊤) (t : LadderTraj n) : pF t ≠ 0",
+     "doc": "On the ladder a trajectory law with finite residual has no zero: `p_B > 0` on every trajectory and `p_{E,T}(x) = 1`, so a zero of `p_F` makes `𝓔 = +∞` (`rem:silva_hypotheses`(2))."
+    },
+    {
+     "name": "ladder_sSup_ge",
+     "full": "GFNBounds.Silva.Remarks.ladder_sSup_ge",
+     "kind": "theorem",
+     "line": 925,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_sSup_ge {ε : ℝ} (hε : 0 < ε) : ∀ᶠ n in atTop, (1 - Real.exp (-Real.sqrt (ε / 2))) * 2 ^ n ≤ sSup {m : ℝ | ∃ pF : LadderTraj n → ℝ, (∀ t, 0 < pF t) ∧ ∑ t, pF t = 1 ∧ residual ladderOne ladderOne (ladderPB n) pF ≤ ε ∧ m = mPrime (ladderPB n) pF ladderOne (ladder_wSupport_nonempty n) unit_univ_nonempty}",
+     "doc": "**`rem:silva_model_constant`, the display in the paper's supremum form**: `sup{M'(p_F) : 𝓔(p_F) ≤ ε} ≥ (1 − e^{−√(ε/2)}) 2ⁿ` for `n` large, the supremum over full-support trajectory laws on the ladder (bounded above by `2ⁿ`, `ladder_mPrime_le`)."
+    },
+    {
+     "name": "ladder_no_uniform_constant",
+     "full": "GFNBounds.Silva.Remarks.ladder_no_uniform_constant",
+     "kind": "theorem",
+     "line": 937,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_no_uniform_constant {ε : ℝ} (hε : 0 < ε) : ¬ ∃ C : ℝ, ∀ (n : ℕ) (pF : LadderTraj n → ℝ), (∀ t, 0 < pF t) → ∑ t, pF t = 1 → residual ladderOne ladderOne (ladderPB n) pF ≤ ε → mPrime (ladderPB n) pF ladderOne (ladder_wSupport_nonempty n) unit_univ_nonempty ≤ C",
+     "doc": "**`rem:silva_model_constant`, \"no constant is uniform in the depth\"**: for every `ε > 0` no `C` bounds `M'` over all depths `n` and all full-support trajectory laws with `𝓔(p_F) ≤ ε`."
+    },
+    {
+     "name": "ladder_mVal_exceeds_one",
+     "full": "GFNBounds.Silva.Remarks.ladder_mVal_exceeds_one",
+     "kind": "theorem",
+     "line": 952,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_mVal_exceeds_one : ∃ pF : LadderTraj 1 → ℝ, (∀ t, 0 < pF t) ∧ ∑ t, pF t = 1 ∧ 1 < mVal (ladderPB 1) pF (ladder_wSupport_nonempty 1) ∧ mPrime (ladderPB 1) pF ladderOne (ladder_wSupport_nonempty 1) unit_univ_nonempty ≤ 2",
+     "doc": "**`rem:silva_model_constant`, \"`M` can exceed `1`\"** on a graph with several backward paths into a terminal state: the depth-`1` ladder with mass `¾` on one of its two trajectories has `M ≥ 3/2`, while `M' ≤ 2 = max(1, 1/min p_B)`."
+    },
+    {
+     "name": "pathCount",
+     "full": "GFNBounds.Silva.Remarks.pathCount",
+     "kind": "def",
+     "line": 974,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def pathCount (into : T → X) (x : X) : ℕ",
+     "doc": "`P(x)`, the number of trajectories into `x`."
+    },
+    {
+     "name": "exists_pB_le_inv_pathCount",
+     "full": "GFNBounds.Silva.Remarks.exists_pB_le_inv_pathCount",
+     "kind": "theorem",
+     "line": 980,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_pB_le_inv_pathCount (into : T → X) {pB : X → T → ℝ} {x : X} (hBsupp : ∀ t, pB x t ≠ 0 → into t = x) (hB1 : ∑ t, pB x t = 1) : 0 < pathCount into x ∧ ∃ t, into t = x ∧ pB x t ≤ 1 / (pathCount into x : ℝ)",
+     "doc": "**`rem:path_space`, `min_τ p_B(τ|x) ≤ 1/P(x)`**: a probability `p_B(·|x)` charging each of the `P(x)` trajectories into `x` (and nothing else) gives one of them mass at most `1/P(x)`."
+    },
+    {
+     "name": "pathCount_div_le_inv_wMin",
+     "full": "GFNBounds.Silva.Remarks.pathCount_div_le_inv_wMin",
+     "kind": "theorem",
+     "line": 1013,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathCount_div_le_inv_wMin (into : T → X) {pET : X → ℝ} {pB : X → T → ℝ} (hs : (wSupport pB).Nonempty) (hET : ∀ x, 0 < pET x) (hBsupp : ∀ x t, pB x t ≠ 0 → into t = x) (hBpos : ∀ x t, into t = x → 0 < pB x t) (hB1 : ∀ x, ∑ t, pB x t = 1) (x : X) : (pathCount into x : ℝ) / pET x ≤ 1 / wMin pET pB hs",
+     "doc": "**`rem:path_space`, `1/w_min ≥ P(x)/p_{E,T}(x)` for every `x`**, for a full-support backward policy and a full-support training law."
+    },
+    {
+     "name": "sup_pathCount_div_le_inv_wMin",
+     "full": "GFNBounds.Silva.Remarks.sup_pathCount_div_le_inv_wMin",
+     "kind": "theorem",
+     "line": 1028,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sup_pathCount_div_le_inv_wMin (into : T → X) {pET : X → ℝ} {pB : X → T → ℝ} (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) (hET : ∀ x, 0 < pET x) (hBsupp : ∀ x t, pB x t ≠ 0 → into t = x) (hBpos : ∀ x t, into t = x → 0 < pB x t) (hB1 : ∀ x, ∑ t, pB x t = 1) : univ.sup' hX (fun x => (pathCount into x : ℝ) / pET x) ≤ 1 / wMin pET pB hs",
+     "doc": "**`rem:path_space`, the display**: `1/w_min ≥ max_x P(x)/p_{E,T}(x)`."
+    },
+    {
+     "name": "mPrime_le_of_le_one",
+     "full": "GFNBounds.Silva.Remarks.mPrime_le_of_le_one",
+     "kind": "theorem",
+     "line": 1039,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mPrime_le_of_le_one (pB : X → T → ℝ) {pF : T → ℝ} (π : X → ℝ) (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) (hF1 : ∀ t, pF t ≤ 1) : mPrime pB pF π hs hX ≤ max ((wSupport pB).sup' hs fun p => 1 / pB p.1 p.2) (piInf π hX)",
+     "doc": "The `M'` values are bounded above over forward trajectory laws with `p_F ≤ 1`, by `max(max 1/p_B, ‖π‖_∞)` — so the suprema below are suprema of bounded sets."
+    },
+    {
+     "name": "le_of_forall_one_sub_pow_mul_le",
+     "full": "GFNBounds.Silva.Remarks.le_of_forall_one_sub_pow_mul_le",
+     "kind": "theorem",
+     "line": 1050,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem le_of_forall_one_sub_pow_mul_le {P S : ℝ} (L : ℕ) (h : ∀ η : ℝ, 0 < η → η < 1 → (1 - η) ^ L * P ≤ S) : P ≤ S",
+     "doc": "From `(1 − η)^L P ≤ S` for every `η ∈ (0,1)`, `P ≤ S`."
+    },
+    {
+     "name": "pathCount_le_sSup_mPrime",
+     "full": "GFNBounds.Silva.Remarks.pathCount_le_sSup_mPrime",
+     "kind": "theorem",
+     "line": 1062,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathCount_le_sSup_mPrime [Nonempty T] (into : T → X) {pB : X → T → ℝ} (π : X → ℝ) (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) (hBsupp : ∀ x t, pB x t ≠ 0 → into t = x) (hBpos : ∀ x t, into t = x → 0 < pB x t) (hB1 : ∀ x, ∑ t, pB x t = 1) (x : X) : (pathCount into x : ℝ) ≤ sSup {m : ℝ | ∃ pF : T → ℝ, (∀ t, 0 < pF t) ∧ ∑ t, pF t = 1 ∧ m = mPrime pB pF π hs hX}",
+     "doc": "**`rem:path_space`, `sup_{p_F} M' ≥ P(x)`**, the supremum over full-support forward **trajectory laws** (see SCOPE; the Markov form is `pathCount_le_sSup_mPrime_markov`)."
+    },
+    {
+     "name": "sup_pathCount_le_sSup_mPrime",
+     "full": "GFNBounds.Silva.Remarks.sup_pathCount_le_sSup_mPrime",
+     "kind": "theorem",
+     "line": 1111,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sup_pathCount_le_sSup_mPrime [Nonempty T] (into : T → X) {pB : X → T → ℝ} (π : X → ℝ) (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) (hBsupp : ∀ x t, pB x t ≠ 0 → into t = x) (hBpos : ∀ x t, into t = x → 0 < pB x t) (hB1 : ∀ x, ∑ t, pB x t = 1) : univ.sup' hX (fun x => (pathCount into x : ℝ)) ≤ sSup {m : ℝ | ∃ pF : T → ℝ, (∀ t, 0 < pF t) ∧ ∑ t, pF t = 1 ∧ m = mPrime pB pF π hs hX}",
+     "doc": "**`rem:path_space`, `sup_{p_F} M' ≥ max_x P(x)`** over full-support trajectory laws."
+    },
+    {
+     "name": "nextOn",
+     "full": "GFNBounds.Silva.Remarks.nextOn",
+     "kind": "def",
+     "line": 1127,
+     "attrs": "",
+     "private": false,
+     "statement": "def nextOn : List S → S → Option S",
+     "doc": "The state following `s` on the path `l`, if any."
+    },
+    {
+     "name": "pathProb",
+     "full": "GFNBounds.Silva.Remarks.pathProb",
+     "kind": "def",
+     "line": 1134,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def pathProb (pol : S → S → ℝ) : List S → ℝ",
+     "doc": "The probability a forward policy `pol` assigns to a path `s₀ → s₁ → ⋯ → s_n`: the product over its steps of `pol(s_i → s_{i+1})`."
+    },
+    {
+     "name": "pol_le_one",
+     "full": "GFNBounds.Silva.Remarks.pol_le_one",
+     "kind": "theorem",
+     "line": 1141,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pol_le_one {succ : S → Finset S} {pol : S → S → ℝ} (hpos : ∀ s, ∀ s' ∈ succ s, 0 < pol s s') (hsum : ∀ s, (succ s).Nonempty → ∑ s' ∈ succ s, pol s s' = 1) {s s' : S} (h : s' ∈ succ s) : pol s s' ≤ 1",
+     "doc": "A step of a stochastic, positive policy along an edge has probability at most `1`."
+    },
+    {
+     "name": "pathProb_mem_Icc",
+     "full": "GFNBounds.Silva.Remarks.pathProb_mem_Icc",
+     "kind": "theorem",
+     "line": 1149,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathProb_mem_Icc {succ : S → Finset S} {pol : S → S → ℝ} (hpos : ∀ s, ∀ s' ∈ succ s, 0 < pol s s') (hsum : ∀ s, (succ s).Nonempty → ∑ s' ∈ succ s, pol s s' = 1) : ∀ l : List S, l.IsChain (fun a b => b ∈ succ a) → 0 ≤ pathProb pol l ∧ pathProb pol l ≤ 1 | [], _ => by simp only [pathProb]; norm_num | [_], _ => by simp only [pathProb]; norm_num | a :: b :: l, h => by rw [List.isChain_cons_cons] at h obtain ⟨h0, h1⟩",
+     "doc": ""
+    },
+    {
+     "name": "nextOn_rel",
+     "full": "GFNBounds.Silva.Remarks.nextOn_rel",
+     "kind": "theorem",
+     "line": 1162,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nextOn_rel {R : S → S → Prop} : ∀ {l : List S} {s b : S}, l.IsChain R → nextOn l s = some b → R s b | [], _, _, _, h => by simp only [nextOn, reduceCtorEq] at h | [_], _, _, _, h => by simp only [nextOn, reduceCtorEq] at h | a :: c :: l, s, b, hc, h => by rw [List.isChain_cons_cons] at hc simp only [nextOn] at h split_ifs at h with hsa · obtain rfl",
+     "doc": ""
+    },
+    {
+     "name": "nextOn_of_infix",
+     "full": "GFNBounds.Silva.Remarks.nextOn_of_infix",
+     "kind": "theorem",
+     "line": 1177,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nextOn_of_infix : ∀ {l : List S} {a b : S}, l.Nodup → [a, b] <:+: l → nextOn l a = some b | [], _, _, _, h => absurd h.length_le (by simp only [List.length_cons, List.length_nil]; omega) | [_], _, _, _, h => absurd h.length_le (by simp only [List.length_cons, List.length_nil]; omega) | c :: d :: l, a, b, hnd, h => by simp only [nextOn] rw [List.infix_cons_iff] at h rcases h with hpre | hinf · rw [List.cons_prefix_cons] at hpre obtain ⟨rfl, hpre'⟩",
+     "doc": "On a path visiting each state at most once, the state after `a` is `b` whenever `a, b` are consecutive on it."
+    },
+    {
+     "name": "concPolicy",
+     "full": "GFNBounds.Silva.Remarks.concPolicy",
+     "kind": "def",
+     "line": 1198,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def concPolicy (succ : S → Finset S) (l : List S) (η : ℝ) (s s' : S) : ℝ",
+     "doc": "**The policy concentrated on a path `l`**: at a state of `l` it follows `l` with probability `1 − η` and spreads `η` uniformly over the successors; elsewhere it is uniform."
+    },
+    {
+     "name": "concPolicy_pos",
+     "full": "GFNBounds.Silva.Remarks.concPolicy_pos",
+     "kind": "theorem",
+     "line": 1203,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem concPolicy_pos (succ : S → Finset S) (l : List S) {η : ℝ} (hη0 : 0 < η) (hη1 : η ≤ 1) (s : S) : ∀ s' ∈ succ s, 0 < concPolicy succ l η s s'",
+     "doc": ""
+    },
+    {
+     "name": "concPolicy_sum",
+     "full": "GFNBounds.Silva.Remarks.concPolicy_sum",
+     "kind": "theorem",
+     "line": 1216,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem concPolicy_sum (succ : S → Finset S) {l : List S} (hl : l.IsChain (fun a b => b ∈ succ a)) (η : ℝ) (s : S) (hs : (succ s).Nonempty) : ∑ s' ∈ succ s, concPolicy succ l η s s' = 1",
+     "doc": ""
+    },
+    {
+     "name": "pathProb_concPolicy_ge",
+     "full": "GFNBounds.Silva.Remarks.pathProb_concPolicy_ge",
+     "kind": "theorem",
+     "line": 1232,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathProb_concPolicy_ge (succ : S → Finset S) {l : List S} (hnd : l.Nodup) {η : ℝ} (hη0 : 0 ≤ η) (hη1 : η ≤ 1) : ∀ m : List S, m <:+: l → (1 - η) ^ (m.length - 1) ≤ pathProb (concPolicy succ l η) m | [], _ => by simp only [pathProb, List.length_nil, zero_tsub, pow_zero, le_refl] | [_], _ => by simp only [pathProb, List.length_singleton, tsub_self, pow_zero, le_refl] | a :: b :: r, hm => by have hab : nextOn l a = some b",
+     "doc": "Along its own path the concentrated policy has probability at least `(1 − η)^{#steps}`."
+    },
+    {
+     "name": "pathCount_le_sSup_mPrime_markov",
+     "full": "GFNBounds.Silva.Remarks.pathCount_le_sSup_mPrime_markov",
+     "kind": "theorem",
+     "line": 1255,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathCount_le_sSup_mPrime_markov {X T : Type*} [Fintype X] [Fintype T] [DecidableEq X] (succ : S → Finset S) (path : T → List S) (hchain : ∀ t, (path t).IsChain (fun a b => b ∈ succ a)) (hnodup : ∀ t, (path t).Nodup) (into : T → X) {pB : X → T → ℝ} (π : X → ℝ) (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) (hBsupp : ∀ x t, pB x t ≠ 0 → into t = x) (hBpos : ∀ x t, into t = x → 0 < pB x t) (hB1 : ∀ x, ∑ t, pB x t = 1) (x : X) : (pathCount into x : ℝ) ≤ sSup {m : ℝ | ∃ pol : S → S → ℝ, (∀ s, ∀ s' ∈ succ s, 0 < pol s s') ∧ (∀ s, (succ s).Nonempty → ∑ s' ∈ succ s, pol s s' = 1) ∧ m = mPrime pB (fun t => pathProb pol (path t)) π hs hX}",
+     "doc": "**`rem:path_space`, `sup_{p_F} M' ≥ P(x)` over full-support Markov forward policies.** Trajectories `t` are paths `path t` of a graph with successor sets `succ`, each visiting a state at most once (as on a DAG), and a Markov policy `pol` — positive on every edge, a probability on the successors of every non-sink state — gives `p_F(t) = pathProb pol (path t)`."
+    },
+    {
+     "name": "sup_pathCount_le_sSup_mPrime_markov",
+     "full": "GFNBounds.Silva.Remarks.sup_pathCount_le_sSup_mPrime_markov",
+     "kind": "theorem",
+     "line": 1296,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sup_pathCount_le_sSup_mPrime_markov {X T : Type*} [Fintype X] [Fintype T] [DecidableEq X] (succ : S → Finset S) (path : T → List S) (hchain : ∀ t, (path t).IsChain (fun a b => b ∈ succ a)) (hnodup : ∀ t, (path t).Nodup) (into : T → X) {pB : X → T → ℝ} (π : X → ℝ) (hs : (wSupport pB).Nonempty) (hX : (univ : Finset X).Nonempty) (hBsupp : ∀ x t, pB x t ≠ 0 → into t = x) (hBpos : ∀ x t, into t = x → 0 < pB x t) (hB1 : ∀ x, ∑ t, pB x t = 1) : univ.sup' hX (fun x => (pathCount into x : ℝ)) ≤ sSup {m : ℝ | ∃ pol : S → S → ℝ, (∀ s, ∀ s' ∈ succ s, 0 < pol s s') ∧ (∀ s, (succ s).Nonempty → ∑ s' ∈ succ s, pol s s' = 1) ∧ m = mPrime pB (fun t => pathProb pol (path t)) π hs hX}",
+     "doc": "**`rem:path_space`, `sup_{p_F} M' ≥ max_x P(x)`** over full-support Markov forward policies."
+    },
+    {
+     "name": "walksInto",
+     "full": "GFNBounds.Silva.Remarks.walksInto",
+     "kind": "def",
+     "line": 1317,
+     "attrs": "",
+     "private": false,
+     "statement": "def walksInto (E : S → S → Prop) (s₀ x : S) : Set (List S)",
+     "doc": "The walks from `s₀` to `x` in the graph with edge relation `E`: the trajectories into `x`."
+    },
+    {
+     "name": "pumpRest",
+     "full": "GFNBounds.Silva.Remarks.pumpRest",
+     "kind": "def",
+     "line": 1321,
+     "attrs": "",
+     "private": false,
+     "statement": "def pumpRest (c w₂ : List S) (k : ℕ) : List S",
+     "doc": "`w₂` with the cycle `c` (a closed walk from `v`) inserted `k` times after `v`."
+    },
+    {
+     "name": "pumpRest_succ",
+     "full": "GFNBounds.Silva.Remarks.pumpRest_succ",
+     "kind": "theorem",
+     "line": 1323,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pumpRest_succ (c w₂ : List S) (k : ℕ) : pumpRest c w₂ (k + 1) = c ++ pumpRest c w₂ k",
+     "doc": ""
+    },
+    {
+     "name": "length_pumpRest",
+     "full": "GFNBounds.Silva.Remarks.length_pumpRest",
+     "kind": "theorem",
+     "line": 1327,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem length_pumpRest (c w₂ : List S) (k : ℕ) : (pumpRest c w₂ k).length = k * c.length + w₂.length",
+     "doc": ""
+    },
+    {
+     "name": "getLast",
+     "full": "GFNBounds.Silva.Remarks.getLast",
+     "kind": "theorem",
+     "line": 1334,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem getLast?_cons_self_of {v : S} {c : List S} (hc : c.getLast? = some v) : (v :: c).getLast? = some v",
+     "doc": ""
+    },
+    {
+     "name": "isChain_pumpRest",
+     "full": "GFNBounds.Silva.Remarks.isChain_pumpRest",
+     "kind": "theorem",
+     "line": 1339,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isChain_pumpRest {E : S → S → Prop} {v : S} {c w₂ : List S} (hcE : (v :: c).IsChain E) (hc : c.getLast? = some v) (hw₂ : (v :: w₂).IsChain E) : ∀ k, (v :: pumpRest c w₂ k).IsChain E | 0 => by simpa only [pumpRest, List.replicate_zero, List.flatten_nil, List.nil_append] using hw₂ | k + 1 => by have ih",
+     "doc": ""
+    },
+    {
+     "name": "getLast",
+     "full": "GFNBounds.Silva.Remarks.getLast",
+     "kind": "theorem",
+     "line": 1352,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem getLast?_pumpRest {v : S} {c w₂ : List S} (hc : c.getLast? = some v) : ∀ k, (v :: pumpRest c w₂ k).getLast? = (v :: w₂).getLast? | 0 => by simp only [pumpRest, List.replicate_zero, List.flatten_nil, List.nil_append] | k + 1 => by have ih",
+     "doc": ""
+    },
+    {
+     "name": "walksInto_infinite",
+     "full": "GFNBounds.Silva.Remarks.walksInto_infinite",
+     "kind": "theorem",
+     "line": 1364,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem walksInto_infinite {E : S → S → Prop} {s₀ x v : S} {w : List S} (hw : w ∈ walksInto E s₀ x) (hv : v ∈ w) {c : List S} (hcne : c ≠ []) (hcE : (v :: c).IsChain E) (hc : c.getLast? = some v) : (walksInto E s₀ x).Infinite",
+     "doc": "**`rem:path_space`, \"when a cycle lies on the trajectories into `x`, these are infinitely many\"**: if a walk from `s₀` to `x` visits a state `v` that lies on a cycle (a nonempty closed walk `v → ⋯ → v`), the walks from `s₀` to `x` form an infinite set."
+    },
+    {
+     "name": "iInf_eq_zero_of_summable",
+     "full": "GFNBounds.Silva.Remarks.iInf_eq_zero_of_summable",
+     "kind": "theorem",
+     "line": 1389,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem iInf_eq_zero_of_summable {ι : Type*} [Infinite ι] {p : ι → ℝ} (hp : ∀ i, 0 ≤ p i) (hs : Summable p) : ⨅ i, p i = 0",
+     "doc": "**`rem:path_space`, `inf_τ p_B(τ|x) = 0`**: a summable nonnegative family on an infinite index set — in particular a probability `p_B(·|x)` on infinitely many trajectories — has infimum `0`."
+    },
+    {
+     "name": "iInf_pB_walksInto_eq_zero",
+     "full": "GFNBounds.Silva.Remarks.iInf_pB_walksInto_eq_zero",
+     "kind": "theorem",
+     "line": 1399,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem iInf_pB_walksInto_eq_zero {E : S → S → Prop} {s₀ x v : S} {w : List S} (hw : w ∈ walksInto E s₀ x) (hv : v ∈ w) {c : List S} (hcne : c ≠ []) (hcE : (v :: c).IsChain E) (hc : c.getLast? = some v) {pB : walksInto E s₀ x → ℝ} (hB0 : ∀ τ, 0 ≤ pB τ) (hB1 : HasSum pB 1) : ⨅ τ, pB τ = 0",
+     "doc": "**`rem:path_space`, the two combined**: on a graph where a cycle lies on a walk into `x`, every probability `p_B(·|x)` on the walks into `x` has `inf_τ p_B(τ|x) = 0`."
+    },
+    {
+     "name": "exists_ratio_gt",
+     "full": "GFNBounds.Silva.Remarks.exists_ratio_gt",
+     "kind": "theorem",
+     "line": 1411,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_ratio_gt {ι : Type*} {pB : ι → ℝ} (hB0 : ∀ i, 0 ≤ pB i) (hBs : Summable pB) (hinf : {i | 0 < pB i}.Infinite) {ν : ι → ℝ} (hν0 : ∀ i, 0 < ν i) (hν1 : HasSum ν 1) (R : ℝ) : ∃ pF : ι → ℝ, (∀ i, 0 < pF i) ∧ HasSum pF 1 ∧ ∃ i, 0 < pB i ∧ R < pF i / pB i",
+     "doc": "**`rem:path_space`, `sup_{p_F} M' = +∞`**: when `p_B(·|x)` charges infinitely many trajectories, for every `R` some full-support trajectory law `p_F` has a ratio `p_F(τ)/p_B(τ|x) > R` at a charged `τ` — so `M' ≥ M > R`."
+    },
+    {
+     "name": "exists_ratio_gt_walksInto",
+     "full": "GFNBounds.Silva.Remarks.exists_ratio_gt_walksInto",
+     "kind": "theorem",
+     "line": 1440,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_ratio_gt_walksInto {E : S → S → Prop} {s₀ x v : S} {w : List S} (hw : w ∈ walksInto E s₀ x) (hv : v ∈ w) {c : List S} (hcne : c ≠ []) (hcE : (v :: c).IsChain E) (hc : c.getLast? = some v) {pB : walksInto E s₀ x → ℝ} (hBpos : ∀ τ, 0 < pB τ) (hB1 : HasSum pB 1) (R : ℝ) : ∃ pF : walksInto E s₀ x → ℝ, (∀ τ, 0 < pF τ) ∧ HasSum pF 1 ∧ ∃ τ, 0 < pB τ ∧ R < pF τ / pB τ",
+     "doc": "**`rem:path_space`, `sup_{p_F} M' = +∞` on the walks into `x`**: on a graph where a cycle lies on a walk into `x`, for every probability `p_B(·|x)` charging each walk into `x` and every `R`, some full-support trajectory law `p_F` on those walks has `p_F(τ)/p_B(τ|x) > R` at some walk `τ` — so `M' ≥ M > R`."
+    },
+    {
+     "name": "not_hasSum_const_one",
+     "full": "GFNBounds.Silva.Remarks.not_hasSum_const_one",
+     "kind": "theorem",
+     "line": 1452,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem not_hasSum_const_one {ι : Type*} [Infinite ι] (c : ℝ) : ¬ HasSum (fun _ : ι => c) 1",
+     "doc": "**`rem:path_space`, \"there being no uniform distribution on an infinite set\"**: no constant function on an infinite type sums to `1`."
+    },
+    {
+     "name": "doubling_terminal_infinite",
+     "full": "GFNBounds.Silva.Remarks.doubling_terminal_infinite",
+     "kind": "theorem",
+     "line": 1461,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem doubling_terminal_infinite : (Set.range fun j : ℕ => GFNBounds.Doubling.St.lad (j + 1)).Infinite",
+     "doc": "**`rem:path_space`, the counter-example graph `eq:counterexample_graph`**: its ladder states `1, 2, 3, …` — the states with a terminal edge to `s_f` — form an infinite set, and no uniform probability exists on it."
+    },
+    {
+     "name": "doubling_no_uniform_terminal_law",
+     "full": "GFNBounds.Silva.Remarks.doubling_no_uniform_terminal_law",
+     "kind": "theorem",
+     "line": 1466,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem doubling_no_uniform_terminal_law (c : ℝ) : ¬ HasSum (fun _ : Set.range (fun j : ℕ => GFNBounds.Doubling.St.lad (j + 1)) => c) 1",
+     "doc": ""
+    },
+    {
+     "name": "target_x2_lt_one",
+     "full": "GFNBounds.Silva.Remarks.target_x2_lt_one",
+     "kind": "theorem",
+     "line": 1481,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem target_x2_lt_one {t : Fin (M + 2) → ℝ} (ht0 : ∀ i, 0 ≤ t i) (hsum : ∑ i, t i = 1) (ht : t ≠ fun i => if i = 1 then 1 else 0) : t 1 < 1",
+     "doc": "A probability `κ` on `{x₁,…,x_N}` other than `δ_{x₂}` has `κ(x₂) < 1`."
+    },
+    {
+     "name": "termMass_Fk_pos",
+     "full": "GFNBounds.Silva.Remarks.termMass_Fk_pos",
+     "kind": "theorem",
+     "line": 1495,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem termMass_Fk_pos (k : ℝ) : 0 < ∑ y, Fk M k y (cycGraph M).snk",
+     "doc": "The terminal mass of `F_k` is `1`, so its terminal law is not a junk value."
+    },
+    {
+     "name": "cycle_flows_target",
+     "full": "GFNBounds.Silva.Remarks.cycle_flows_target",
+     "kind": "theorem",
+     "line": 1505,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_flows_target {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgc : ContinuousAt g 1) {t : Fin (M + 2) → ℝ} (ht0 : ∀ i, 0 ≤ t i) (hsum : ∑ i, t i = 1) (ht : t ≠ fun i => if i = 1 then 1 else 0) : (∀ k : ℕ, ∀ u v, 0 ≤ Fk M k u v) ∧ (∀ k : ℕ, ∀ u v, Fk M k u v ≠ 0 → (cycGraph M).Edge u v) ∧ (∀ k : ℕ, ∀ x ∈ (cycGraph M).internal, edgeInflow (Fk M k) x = edgeOutflow (Fk M k) x) ∧ (∀ k : ℕ, 1 ≤ k → ∀ j, 0 < extT M t (xC M j) + ∑ v ∈ (cycGraph M).internal, Fk M k (xC M j) v ∧ 0 < fmRatio (cycGraph M) (extT M t) (Fk M k) (xC M j)) ∧ (∀ k : ℕ, 0 < ∑ y, Fk M k y (cycGraph M).snk) ∧ (∀ nu : cycV M → ℝ, Tendsto (fun k : ℕ => fmLossTarget (cycGraph M) g nu (extT M t) (Fk M k)) atTop (𝓝 0)) ∧ (∀ k : ℕ, termLaw (cycGraph M) (Fk M k) = fun v => if v = xC M 1 then 1 else 0) ∧ (∀ k : ℕ, tvFin (termLaw (cycGraph M) (Fk M k)) (extT M t) = 1 - t 1) ∧ 0 < 1 - t 1",
+     "doc": "**`rem:path_space`, the flows `lem:cycle_counterexample` supplies**: on `𝒞_N`, `N = M + 2`, for a probability target `κ ≠ δ_{x₂}` on `{x₁,…,x_N}`, the flows `F_k`, `k ∈ ℕ`, are nonnegative, carried by the edges and exactly flow-matching; for `k ≥ 1` every denominator `κ + f_→` and every ratio is positive (the loss is defined) and the terminal mass is `1`; their loss tends to `0` for every training weight; their terminal law is `δ_{x₂}`, at total variation `1 − κ(x₂) > 0` from `κ`."
+    },
+    {
+     "name": "loss_Fk_nonneg",
+     "full": "GFNBounds.Silva.Remarks.loss_Fk_nonneg",
+     "kind": "theorem",
+     "line": 1526,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem loss_Fk_nonneg {g : ℝ → ℝ} (hg0 : ∀ r, 0 < r → 0 ≤ g r) {nu : cycV M → ℝ} (hnu : ∀ v, 0 ≤ nu v) {t : Fin (M + 2) → ℝ} (ht0 : ∀ i, 0 ≤ t i) {k : ℕ} (hk : 1 ≤ k) : 0 ≤ fmLossTarget (cycGraph M) g nu (extT M t) (Fk M k)",
+     "doc": ""
+    },
+    {
+     "name": "cycle_no_bound_along_Fk",
+     "full": "GFNBounds.Silva.Remarks.cycle_no_bound_along_Fk",
+     "kind": "theorem",
+     "line": 1539,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_no_bound_along_Fk {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgc : ContinuousAt g 1) (hg0 : ∀ r, 0 < r → 0 ≤ g r) {nu : cycV M → ℝ} (hnu : ∀ v, 0 ≤ nu v) {t : Fin (M + 2) → ℝ} (ht0 : ∀ i, 0 ≤ t i) (hsum : ∑ i, t i = 1) (ht : t ≠ fun i => if i = 1 then 1 else 0) : ¬ ∃ Φ : ℝ → ℝ, Tendsto Φ (𝓝[≥] 0) (𝓝 0) ∧ ∀ k : ℕ, 1 ≤ k → tvFin (termLaw (cycGraph M) (Fk M k)) (extT M t) ≤ Φ (fmLossTarget (cycGraph M) g nu (extT M t) (Fk M k))",
+     "doc": "**`rem:path_space`, \"no model-free bound tending to `0` with the loss holds\"** (and the same sentence of `rem:silva_model_constant`), along the flows `F_k` where the loss is defined (`k ≥ 1`): for every training weight `ν ≥ 0`, every generator `g ≥ 0` on `(0,∞)` continuous at `1` with `g(1) = 0`, and every probability `κ ≠ δ_{x₂}` on `{x₁,…,x_N}`, no `Φ` with `Φ(L) → 0` as `L → 0` through `L ≥ 0` (so `Φ(0) = 0`) bounds `TV(terminal law ‖ κ) ≤ Φ(𝓛)` along `(F_k)_{k≥1}`."
+    },
+    {
+     "name": "cycle_no_model_free_bound",
+     "full": "GFNBounds.Silva.Remarks.cycle_no_model_free_bound",
+     "kind": "theorem",
+     "line": 1562,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_no_model_free_bound {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgc : ContinuousAt g 1) (hg0 : ∀ r, 0 < r → 0 ≤ g r) {nu : cycV M → ℝ} (hnu : ∀ v, 0 ≤ nu v) {t : Fin (M + 2) → ℝ} (ht0 : ∀ i, 0 ≤ t i) (hsum : ∑ i, t i = 1) (ht : t ≠ fun i => if i = 1 then 1 else 0) : ¬ ∃ Φ : ℝ → ℝ, Tendsto Φ (𝓝[≥] 0) (𝓝 0) ∧ ∀ F : cycV M → cycV M → ℝ, (∀ u v, 0 ≤ F u v) → (∀ u v, F u v ≠ 0 → (cycGraph M).Edge u v) → (∀ x ∈ (cycGraph M).internal, edgeInflow F x = edgeOutflow F x) → (∀ x ∈ (cycGraph M).internal, 0 < extT M t x + ∑ v ∈ (cycGraph M).internal, F x v) → 0 < ∑ y, F y (cycGraph M).snk → tvFin (termLaw (cycGraph M) F) (extT M t) ≤ Φ (fmLossTarget (cycGraph M) g nu (extT M t) F)",
+     "doc": "**The same, over the flow-matching flows on `𝒞_N` on which the loss and the terminal law are defined** — the reading \"model-free\": no `Φ` bounds the total variation by the loss over the nonnegative, edge-carried, exactly flow-matching flows with every denominator `κ + f_→` positive and positive terminal mass."
+    },
+    {
+     "name": "cycle_no_bound_punctured",
+     "full": "GFNBounds.Silva.Remarks.cycle_no_bound_punctured",
+     "kind": "theorem",
+     "line": 1586,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cycle_no_bound_punctured {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgc : ContinuousAt g 1) (hg0 : ∀ r, 0 < r → 0 ≤ g r) (hgpos : ∀ r, 0 < r → r ≠ 1 → 0 < g r) {nu : cycV M → ℝ} (hnu : ∀ v, 0 ≤ nu v) (hnu2 : 0 < nu (xC M 1)) {t : Fin (M + 2) → ℝ} (ht0 : ∀ i, 0 ≤ t i) (hsum : ∑ i, t i = 1) (ht : t ≠ fun i => if i = 1 then 1 else 0) : ¬ ∃ Φ : ℝ → ℝ, Tendsto Φ (𝓝[>] 0) (𝓝 0) ∧ ∀ k : ℕ, 1 ≤ k → tvFin (termLaw (cycGraph M) (Fk M k)) (extT M t) ≤ Φ (fmLossTarget (cycGraph M) g nu (extT M t) (Fk M k))",
+     "doc": "**The punctured reading**: if `Φ` is only asked to tend to `0` as `L → 0` with `L > 0`, the conclusion still holds along `(F_k)_{k≥1}` when `ν(x₂) > 0` and `g > 0` off `1` — the source class has `g` vanishing exactly at `1` — since `ρ_k(x₂) = (1+k)/(κ(x₂)+k) ≠ 1` for `κ(x₂) ≠ 1`, so the loss never vanishes."
+    },
+    {
+     "name": "diamondSucc",
+     "full": "GFNBounds.Silva.Remarks.diamondSucc",
+     "kind": "def",
+     "line": 1640,
+     "attrs": "",
+     "private": false,
+     "statement": "def diamondSucc : Fin 4 → Finset (Fin 4)",
+     "doc": "The successor sets of the diamond DAG `s₀ → a, s₀ → b, a → x, b → x` on `Fin 4`."
+    },
+    {
+     "name": "diamondPath",
+     "full": "GFNBounds.Silva.Remarks.diamondPath",
+     "kind": "def",
+     "line": 1643,
+     "attrs": "",
+     "private": false,
+     "statement": "def diamondPath : Bool → List (Fin 4)",
+     "doc": "The two trajectories of the diamond."
+    },
+    {
+     "name": "diamondEdges",
+     "full": "GFNBounds.Silva.Remarks.diamondEdges",
+     "kind": "def",
+     "line": 1647,
+     "attrs": "",
+     "private": false,
+     "statement": "def diamondEdges : Finset (Fin 6 × Fin 6)",
+     "doc": "The edges of the diamond as a marked graph on `Fin 6`: `0 = s₀` (source mark), `1 = o` (the DAG's root), `2 = a`, `3 = b`, `4 = x` (the terminal state), `5 = s_f`."
+    },
+    {
+     "name": "diamondGraph",
+     "full": "GFNBounds.Silva.Remarks.diamondGraph",
+     "kind": "def",
+     "line": 1650,
+     "attrs": "",
+     "private": false,
+     "statement": "def diamondGraph : MarkedGraph (Fin 6)",
+     "doc": "The diamond DAG as a `MarkedGraph`."
+    },
+    {
+     "name": "diamondFlow",
+     "full": "GFNBounds.Silva.Remarks.diamondFlow",
+     "kind": "def",
+     "line": 1660,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def diamondFlow (q : ℝ) (u v : Fin 6) : ℝ",
+     "doc": "The unit-mass edge flow of the Markov policy sending `o → a` with probability `q`, `o → b` with `1 − q`, and deterministic elsewhere."
+    },
+    {
+     "name": "diamondTarget",
+     "full": "GFNBounds.Silva.Remarks.diamondTarget",
+     "kind": "def",
+     "line": 1666,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def diamondTarget : Fin 6 → ℝ",
+     "doc": "The target `δ_x`."
+    },
+    {
+     "name": "diamondGraph_internal",
+     "full": "GFNBounds.Silva.Remarks.diamondGraph_internal",
+     "kind": "theorem",
+     "line": 1668,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem diamondGraph_internal : diamondGraph.internal = {1, 2, 3, 4}",
+     "doc": ""
+    },
+    {
+     "name": "diamondPol",
+     "full": "GFNBounds.Silva.Remarks.diamondPol",
+     "kind": "def",
+     "line": 1673,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def diamondPol (q : ℝ) (s s' : Fin 4) : ℝ",
+     "doc": "The Markov forward policy of the family on `Fin 4` (`0 = o, 1 = a, 2 = b, 3 = x`, the numbering of `diamondSucc`)."
+    },
+    {
+     "name": "pathProb_diamondPol",
+     "full": "GFNBounds.Silva.Remarks.pathProb_diamondPol",
+     "kind": "theorem",
+     "line": 1678,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pathProb_diamondPol (q : ℝ) (b : Bool) : pathProb (diamondPol q) (diamondPath b) = if b then 1 - q else q",
+     "doc": "The trajectory law of the family: `p_F(o → a → x) = q`, `p_F(o → b → x) = 1 − q`, the probabilities the Markov policy `diamondPol q` gives the two paths `diamondPath`."
+    },
+    {
+     "name": "diamond_ratio_one",
+     "full": "GFNBounds.Silva.Remarks.diamond_ratio_one",
+     "kind": "theorem",
+     "line": 1683,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem diamond_ratio_one {q : ℝ} (hq0 : 0 < q) (hq1 : q < 1) : ∀ x ∈ diamondGraph.internal, 0 < diamondTarget x + ∑ v ∈ diamondGraph.internal, diamondFlow q x v ∧ fmRatio diamondGraph diamondTarget (diamondFlow q) x = 1",
+     "doc": ""
+    },
+    {
+     "name": "residual_not_divergence_FM_loss",
+     "full": "GFNBounds.Silva.Remarks.residual_not_divergence_FM_loss",
+     "kind": "theorem",
+     "line": 1707,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem residual_not_divergence_FM_loss : (∀ (g : ℝ → ℝ) (nu : Fin 6 → ℝ), g 1 = 0 → ∀ q : ℝ, 0 < q → q < 1 → fmLossTarget diamondGraph g nu diamondTarget (diamondFlow q) = 0) ∧ (∀ q : ℝ, 0 < q → q < 1 → residual (fun _ : Unit => (1 : ℝ)) (fun _ => 1) (fun (_ : Unit) (_ : Bool) => (1 : ℝ) / 2) (fun b => pathProb (diamondPol q) (diamondPath b)) = 2⁻¹ * Real.log (2 * q) ^ 2 + 2⁻¹ * Real.log (2 * (1 - q)) ^ 2) ∧ (∀ q : ℝ, 0 < q → q < 1 → q ≠ 1 / 2 → 0 < residual (fun _ : Unit => (1 : ℝ)) (fun _ => 1) (fun (_ : Unit) (_ : Bool) => (1 : ℝ) / 2) (fun b => pathProb (diamondPol q) (diamondPath b))) ∧ ¬ ∃ (g : ℝ → ℝ) (nu : Fin 6 → ℝ), g 1 = 0 ∧ ∀ q : ℝ, 0 < q → q < 1 → residual (fun _ : Unit => (1 : ℝ)) (fun _ => 1) (fun (_ : Unit) (_ : Bool) => (1 : ℝ) / 2) (fun b => pathProb (diamondPol q) (diamondPath b)) = fmLossTarget diamondGraph g nu diamondTarget (diamondFlow q)",
+     "doc": "**`rem:silva_model_constant` and `rem:path_space`, \"a class that does not contain the idealized residual\"**: on the diamond family every divergence-based FM loss (any `g` with `g(1) = 0`, any `ν`) vanishes identically, with every denominator positive, while the idealized residual `𝓔(p_F) = ½(log 2q)² + ½(log 2(1−q))²` of the same models does not; hence no such loss equals `𝓔` on the family."
+    },
+    {
+     "name": "inhabit_not_full_support",
+     "full": "GFNBounds.Silva.Remarks.inhabit_not_full_support",
+     "kind": "theorem",
+     "line": 1762,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabit_not_full_support : chiSqE (unif Bool) (fun b => if b then 1 else 0) = ⊤ ∧ rhsE 1 (chiSqE (unif Bool) (fun b => if b then 1 else 0)) 1 = ⊤",
+     "doc": "Item (1): a training law with a zero, on `Bool`."
+    },
+    {
+     "name": "inhabit_pF_zero",
+     "full": "GFNBounds.Silva.Remarks.inhabit_pF_zero",
+     "kind": "theorem",
+     "line": 1770,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabit_pF_zero : residualE (fun _ : Unit => (1 : ℝ)) (fun _ => 1) (fun (_ : Unit) (_ : Bool) => (1 : ℝ) / 2) (fun b => if b then 1 else 0) = ⊤",
+     "doc": "Item (2): one terminal, two trajectories charged `½` each, `p_F = (0, 1)`."
+    },
+    {
+     "name": "inhabit_uniformBackward",
+     "full": "GFNBounds.Silva.Remarks.inhabit_uniformBackward",
+     "kind": "theorem",
+     "line": 1777,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabit_uniformBackward : termMarginal (fun _ : Unit => ()) (fun _ => (1 : ℝ)) () = ∑ _t : Unit, (if () = () then uniformBackProb (fun s : Bool => if s then {false} else ∅) [false, true] else 0) * (1 / if () = () then uniformBackProb (fun s : Bool => if s then {false} else ∅) [false, true] else 0)",
+     "doc": "Item (3): the uniform backward policy on the two-state path `false → true`."
+    },
+    {
+     "name": "wSupport_deltaPB_nonempty",
+     "full": "GFNBounds.Silva.Remarks.wSupport_deltaPB_nonempty",
+     "kind": "theorem",
+     "line": 1787,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem wSupport_deltaPB_nonempty {Y : Type*} [Fintype Y] [DecidableEq Y] (y : Y) : (wSupport (deltaPB Y)).Nonempty",
+     "doc": "The one-parent kernel on a nonempty type charges its diagonal."
+    },
+    {
+     "name": "inhabit_tree",
+     "full": "GFNBounds.Silva.Remarks.inhabit_tree",
+     "kind": "theorem",
+     "line": 1793,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabit_tree (K : ℕ) (hK : 0 < K) : mVal (deltaPB (Star K)) (starPF K) (wSupport_deltaPB_nonempty (Sum.inl false)) ≤ 1",
+     "doc": "The tree hypotheses hold for the star of `prop:silva_no_uniform`(ii) (`into = id`), and give `M ≤ 1` there."
+    },
+    {
+     "name": "ladder_pathCount",
+     "full": "GFNBounds.Silva.Remarks.ladder_pathCount",
+     "kind": "theorem",
+     "line": 1802,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_pathCount (n : ℕ) : pathCount (fun _ : LadderTraj n => ()) () = 2 ^ n",
+     "doc": "The ladder has `P(x) = 2ⁿ`."
+    },
+    {
+     "name": "ladder_sSup_mPrime_eq",
+     "full": "GFNBounds.Silva.Remarks.ladder_sSup_mPrime_eq",
+     "kind": "theorem",
+     "line": 1809,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ladder_sSup_mPrime_eq (n : ℕ) : sSup {m : ℝ | ∃ pF : LadderTraj n → ℝ, (∀ t, 0 < pF t) ∧ ∑ t, pF t = 1 ∧ m = mPrime (ladderPB n) pF ladderOne (ladder_wSupport_nonempty n) unit_univ_nonempty} = 2 ^ n ∧ (2 : ℝ) ^ n ≤ 1 / wMin ladderOne (ladderPB n) (ladder_wSupport_nonempty n)",
+     "doc": "**`rem:path_space` on the ladder, and a consistency check with `rem:silva_model_constant`**: the lower bound `sup M' ≥ P(x) = 2ⁿ` meets the fixed-graph upper bound `M' ≤ 2ⁿ`, so over full-support trajectory laws `sup M' = 2ⁿ` exactly, and `1/w_min ≥ 2ⁿ`."
+    },
+    {
+     "name": "diamondPB_wSupport_nonempty",
+     "full": "GFNBounds.Silva.Remarks.diamondPB_wSupport_nonempty",
+     "kind": "theorem",
+     "line": 1832,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem diamondPB_wSupport_nonempty : (wSupport (fun (_ : Unit) (_ : Bool) => (1 : ℝ) / 2)).Nonempty",
+     "doc": ""
+    },
+    {
+     "name": "inhabit_markov_diamond",
+     "full": "GFNBounds.Silva.Remarks.inhabit_markov_diamond",
+     "kind": "theorem",
+     "line": 1838,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabit_markov_diamond : (2 : ℝ) ≤ sSup {m : ℝ | ∃ pol : Fin 4 → Fin 4 → ℝ, (∀ s, ∀ s' ∈ diamondSucc s, 0 < pol s s') ∧ (∀ s, (diamondSucc s).Nonempty → ∑ s' ∈ diamondSucc s, pol s s' = 1) ∧ m = mPrime (fun (_ : Unit) (_ : Bool) => (1 : ℝ) / 2) (fun t => pathProb pol (diamondPath t)) (fun _ => 1) diamondPB_wSupport_nonempty unit_univ_nonempty}",
+     "doc": "**The Markov hypotheses hold on the diamond DAG**, whose terminal `x` has `P(x) = 2`: the Markov-policy supremum of `M'` is at least `2`."
+    },
+    {
+     "name": "inhabit_cycle_walks",
+     "full": "GFNBounds.Silva.Remarks.inhabit_cycle_walks",
+     "kind": "theorem",
+     "line": 1858,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabit_cycle_walks : (walksInto (cycGraph 0).Edge (srcC 0) (xC 0 1)).Infinite",
+     "doc": "**The cycle hypotheses hold on `𝒞₂`**: the walk `s₀ → x₁ → x₂` visits `x₁`, which lies on the cycle `x₁ → x₂ → x₁`, so the walks into `x₂` are infinitely many."
+    },
+    {
+     "name": "exists_pos_hasSum_one",
+     "full": "GFNBounds.Silva.Remarks.exists_pos_hasSum_one",
+     "kind": "theorem",
+     "line": 1871,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_pos_hasSum_one {ι : Type*} [Countable ι] [Nonempty ι] : ∃ p : ι → ℝ, (∀ i, 0 < p i) ∧ HasSum p 1",
+     "doc": "Every nonempty countable type carries a full-support probability: `2^{-encode i}`, normalized."
+    },
+    {
+     "name": "inhabit_cycle_ratio",
+     "full": "GFNBounds.Silva.Remarks.inhabit_cycle_ratio",
+     "kind": "theorem",
+     "line": 1890,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabit_cycle_ratio : ∃ pB : walksInto (cycGraph 0).Edge (srcC 0) (xC 0 1) → ℝ, (∀ τ, 0 < pB τ) ∧ HasSum pB 1 ∧ (⨅ τ, pB τ) = 0 ∧ ∀ R : ℝ, ∃ pF : walksInto (cycGraph 0).Edge (srcC 0) (xC 0 1) → ℝ, (∀ τ, 0 < pF τ) ∧ HasSum pF 1 ∧ ∃ τ, 0 < pB τ ∧ R < pF τ / pB τ",
+     "doc": "**The cycle bundle of `exists_ratio_gt_walksInto` and `iInf_pB_walksInto_eq_zero` holds on `𝒞₂`**: the walks into `x₂` carry a full-support probability `p_B`, and for it `inf p_B = 0` and every `R` is exceeded by a ratio `p_F/p_B`."
+    },
+    {
+     "name": "inhabit_geometric",
+     "full": "GFNBounds.Silva.Remarks.inhabit_geometric",
+     "kind": "theorem",
+     "line": 1915,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabit_geometric : (⨅ n : ℕ, (1 : ℝ) / 2 / 2 ^ n) = 0 ∧ ∀ R : ℝ, ∃ pF : ℕ → ℝ, (∀ n, 0 < pF n) ∧ HasSum pF 1 ∧ ∃ n, 0 < (1 : ℝ) / 2 / 2 ^ n ∧ R < pF n / ((1 : ℝ) / 2 / 2 ^ n)",
+     "doc": "The geometric law `2^{-(n+1)}` on `ℕ` inhabits the infinite-support hypotheses: its infimum is `0` and its ratios are unbounded."
+    },
+    {
+     "name": "inhabit_cycle_no_bound",
+     "full": "GFNBounds.Silva.Remarks.inhabit_cycle_no_bound",
+     "kind": "theorem",
+     "line": 1928,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inhabit_cycle_no_bound (M : ℕ) : (¬ ∃ Φ : ℝ → ℝ, Tendsto Φ (𝓝[≥] 0) (𝓝 0) ∧ ∀ F : cycV M → cycV M → ℝ, (∀ u v, 0 ≤ F u v) → (∀ u v, F u v ≠ 0 → (cycGraph M).Edge u v) → (∀ x ∈ (cycGraph M).internal, edgeInflow F x = edgeOutflow F x) → (∀ x ∈ (cycGraph M).internal, 0 < extT M (fun _ => 1 / ((M : ℝ) + 2)) x + ∑ v ∈ (cycGraph M).internal, F x v) → 0 < ∑ y, F y (cycGraph M).snk → tvFin (termLaw (cycGraph M) F) (extT M fun _ => 1 / ((M : ℝ) + 2)) ≤ Φ (fmLossTarget (cycGraph M) (fun r => (r - 1) ^ 2) (fun _ => 1) (extT M fun _ => 1 / ((M : ℝ) + 2)) F)) ∧ (¬ ∃ Φ : ℝ → ℝ, Tendsto Φ (𝓝[>] 0) (𝓝 0) ∧ ∀ k : ℕ, 1 ≤ k → tvFin (termLaw (cycGraph M) (Fk M k)) (extT M fun _ => 1 / ((M : ℝ) + 2)) ≤ Φ (fmLossTarget (cycGraph M) (fun r => (r - 1) ^ 2) (fun _ => 1) (extT M fun _ => 1 / ((M : ℝ) + 2)) (Fk M k)))",
+     "doc": "**The no-bound hypotheses hold on every `𝒞_N`**: `g(r) = (r − 1)²`, `ν ≡ 1` and the uniform target on `{x₁,…,x_N}`, which is not `δ_{x₂}`."
+    }
+   ],
+   "library": "scaffold",
+   "tracked": false,
+   "root_reachable": false
   }
  ]
 }

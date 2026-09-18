@@ -4,8 +4,18 @@
   "commit": "8542f9c70621a5be625a74976b2a6a69c4e6a4d8",
   "commit_short": "8542f9c",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/repo-map.json",
+    "paper-map.json",
+    "scaffold/GFNBoundsScaffold.lean",
+    "scaffold/GFNBoundsScaffold/Balance/",
+    "scaffold/GFNBoundsScaffold/Graph/",
+    "scaffold/GFNBoundsScaffold/Silva/"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -33,7 +43,11 @@
   "strict_library": "GFNBounds",
   "scaffold_library": "GFNBoundsScaffold",
   "scaffold_modules": [
-    "scaffold/GFNBoundsScaffold.lean"
+    "scaffold/GFNBoundsScaffold.lean",
+    "scaffold/GFNBoundsScaffold/Balance/ClosuresA.lean",
+    "scaffold/GFNBoundsScaffold/Balance/RemarksA.lean",
+    "scaffold/GFNBoundsScaffold/Graph/LooseEnds.lean",
+    "scaffold/GFNBoundsScaffold/Silva/Remarks.lean"
   ],
   "scaffold_sorries": 0,
   "facts": {

@@ -1,5 +1,13 @@
 /-!
-# The scaffold is empty
+# The scaffold holds no `sorry`
+
+Since 2026-09-18 it holds four sorry-free drafts written on the laptop on 2026-09-14 and never
+audited: `Balance/ClosuresA.lean` (`theo:training_speed_full` whole, `theo:universality_graphs`'
+closing paragraph), `Balance/RemarksA.lean` (`rem:freezing`, `rem:visit_ratio`,
+`rem:graphs_vs_L2`), `Silva/Remarks.lean` (`rem:silva_hypotheses`, `rem:silva_model_constant`,
+`rem:path_space`) and `Graph/LooseEnds.lean`. They graduate the usual way, after a reading by an
+agent that did not write them.
+
 
 This library exists to hold statements the strict library `GFNBounds` states but does not yet
 prove, each carrying a tagged `sorry` that `scripts/sorry_audit.py` tracks. **It currently holds

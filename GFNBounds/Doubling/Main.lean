@@ -18,7 +18,7 @@ import GFNBounds.Doubling.ConstantFunctional
 /-!
 # The doubling graph in one statement
 
-**`theo:doubling_main`** — `app_doubling.tex:275–321`.
+**`theo:doubling_main`** — label `theo:doubling_main` in `app_doubling.tex`.
 
 This file assembles the closed results of the library into the shape of the umbrella theorem,
 item by item, and says on its face what is not there. Nothing here is `sorry`; every theorem
@@ -38,11 +38,10 @@ recurrent", supplied for rows (b) and (f) by `main_phase`.
 
 ## SCOPE (disclosed)
 
-**Not stated, because the library builds no chain:** the words *transient* and *null recurrent*
-in rows (a), (c), (e) — here every one of those rows reads "no invariant probability", which is
-what the appendix uses them for and all it can mean for `Stat`; and the clause
-`E(σ | X₀ = j) = +∞` at `1 ≤ c < 2` of `prop:doubling_phase`(3). Row (d), `c = 1/ln 2`, is stated
-only as "no invariant probability", which is exactly the paper's claim there.
+**The recurrence labels** of rows (a)–(f) and the clause `E(σ | X₀ = j) = +∞` of
+`prop:doubling_phase`(3) are stated in `PhaseRecurrence.lean` (`main_phase_classes`,
+`prop_doubling_phase`), in the least-solution classes of `RecurrenceClass.lean` (ruling R8);
+`main_phase` below is the invariant-probability reading of the same table.
 
 **Not stated in this file, for other reasons:** the state count `K + 2` of the truncation (`St`
 is infinite, the chain is `OnChain (some K)`) — stated in `MainPackaging.lean` as
@@ -116,7 +115,7 @@ theorem main_irreducible (P : PreStat S none) :
 an invariant probability of the loop closure: (a) `s < 1`, none; (b) `s = 1`, `0 < c < 1`, one;
 (c)–(e) `s = 1`, `1 ≤ c`, none — row (d), `c = 1/ln 2`, included, exactly as the paper's "not
 positive recurrent"; (f) `s > 1`, one. The standing range `c < 2^s` is carried by the `Setting`.
-The labels *transient* / *null recurrent* are not stated: see the SCOPE above. -/
+The labels *transient* / *null recurrent* are `main_phase_classes` (`PhaseRecurrence.lean`). -/
 theorem main_phase {c s : ℝ} (hc : 0 < c) (heps : ∀ j, S.eps j = epsCS c s j) :
     (s < 1 → IsEmpty (Stat S none)) ∧
       (s = 1 → c < 1 → Nonempty (Stat S none)) ∧

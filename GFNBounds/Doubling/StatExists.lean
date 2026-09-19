@@ -44,12 +44,12 @@ is what is constructed here, and it is constructed rather than deduced from a ch
   identity `Σ_x λ_x = 2 + σ̄` of Step 5 is not asserted — `Kac.lean` derives its `s₀` shadow
   `λ(s₀)(2 + σ̄) = 1` from an arbitrary `Stat`, and this file now supplies the `Stat` that theorem
   was waiting for at `s = 1`, `0 < c < 1`.
-* **Uniqueness is not claimed.** The paper does not need it at this point and it is not proved
-  here; `TruncationStat.lean` proves it at a finite cap, by an argument that does not transfer.
+* **Uniqueness is not claimed here; it is `stat_unique_none` (`RecurrenceClass.lean`), via Kac's
+  formula.
 * **The other rows of the phase diagram are untouched.** `s > 1` (Step 3), `s < 1` (Step 4),
   `s = 1` with `c ≥ 1` (Steps 6–8) are Lyapunov arguments, and their analytic halves are
-  `GFNBounds.Doubling.Lyapunov`; their chain conclusions remain open, as does row (d),
-  `c = 1/ln 2`, which is open in the paper itself.
+  `GFNBounds.Doubling.Lyapunov`; their chain conclusions are `prop_doubling_phase` (`PhaseRecurrence.lean`); row (d),
+  `c = 1/ln 2`, is open in the paper itself.
 * The construction fixes `λ(s₀) = λ(s_f) = 1` before normalising. That is a choice of scale, not
   of solution: any invariant probability has `λ(s_f) = λ(s₀)` by the single edge into the sink.
 

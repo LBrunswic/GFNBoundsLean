@@ -46,13 +46,16 @@ bound. A summable `λ` cannot do that. This is `cut_tail_ge` and `isEmpty_stat_o
 * **Only "not positive recurrent" is proved, and only in the form `IsEmpty (Stat S none)`** — the
   loop closure carries no invariant probability. That is the paper's own wording for row (3)
   (`app_doubling.tex:598–601`) and it is weaker than what rows (2) and (3) also claim:
-  - `s < 1`: the paper proves **transience**. Transience is not stated here, and the
-    supermartingale criterion it uses is not available.
-  - `s = 1`, `1 ≤ c < 2`: the paper also proves `E(σ | X₀ = j) = +∞` at every ladder `j`, which
-    needs optional stopping (`prop:doubling_length`'s obstruction), and it splits the row into
+  - `s < 1`: the paper proves **transience**. Transience is not stated here; it is
+    stated in `PhaseRecurrence.lean` (`phase_lt_one`, `phase_one_ge`, `phase_one_null`,
+    `phase_one_transient`), with the least-solution classes of ruling R8 and without optional
+    stopping.
+  - `s = 1`, `1 ≤ c < 2`: the paper also proves `E(σ | X₀ = j) = +∞` at every ladder `j`, which is
+    not stated here, and it splits the row into
     **null recurrent** for `c < 1/ln 2` and **transient** for `c > 1/ln 2`. Neither half of that
-    dichotomy is stated here: distinguishing them is a chain statement with no counterpart in this
-    library's objects, and the analytic input to Steps 6 and 8 is already in
+    dichotomy is stated here; both are stated in `PhaseRecurrence.lean` (`phase_lt_one`,
+    `phase_one_ge`, `phase_one_null`, `phase_one_transient`), with the least-solution classes of
+    ruling R8 and without optional stopping, and the analytic input to Steps 6 and 8 is already in
     `GFNBounds.Doubling.Lyapunov` (`exists_logHeight_drift_nonpos`, `exists_Wpow_drift_neg`).
   - Row (d), `c = 1/ln 2`, is **open in the paper itself** and is untouched; it is covered by the
     `c ≥ 1` statement here only in as much as `1/ln 2 > 1`, which settles "not positive recurrent"
@@ -74,8 +77,8 @@ bound. A summable `λ` cannot do that. This is `cut_tail_ge` and `isEmpty_stat_o
 | the loop closure | ✓ carried (`cap = none`) |
 | `eq:doubling_cut` at every `m > d` | ✓ carried, via `cut_balance` |
 | `λ` positive at every state | ✓ carried (`Stat.pos`, `lem:doubling_irreducible`) |
-| optional stopping, the strong Markov property, the return-time criterion | ✗ not used and not available |
-| the bounded-supermartingale transience criterion | ✗ not used and not available |
+| optional stopping, the strong Markov property, the return-time criterion | ✗ not used here; replaced in `PhaseRecurrence.lean` |
+| the bounded-supermartingale transience criterion | ✗ not used here; replaced in `PhaseRecurrence.lean` |
 | the conclusion "transient" (row 2) | ⚠ **weakened** to "not positive recurrent" |
 | the conclusion "null recurrent / transient" (row 3) | ⚠ **weakened** to "not positive recurrent" |
 | the conclusion "not positive recurrent" | ⚠ weakened to `IsEmpty (Stat S none)` |

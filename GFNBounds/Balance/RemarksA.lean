@@ -131,8 +131,8 @@ Witnesses: `sq_convexOn`, `sq_convex_small_deriv`, `sq_analyticOnNhd`, `sq_no_fl
 * **"Real-analytic"** is `AnalyticOnNhd ℝ g (Ioi 0)`; *an interval* is a non-degenerate open
   interval `(p,q) ⊂ (0,∞)` — a closed band `[α,β]`, `α < β`, contains one.
 * **"`C³` on `[1,1+δ]`"** is carried as within-derivatives `g' → g''` and `g'' → g'''` on
-  `[1,1+δ]` and a derivative of `g` at `1` (the admissible generator is differentiable on
-  `(0,∞)`); continuity of `g'''` is not used. The supremum form assumes `|g'''|` bounded on
+  `[1,1+δ]` and a derivative of `g` at `1` (presupposed by the remark's `g'(1) = 0`; an
+  admissible generator is only continuous); continuity of `g'''` is not used. The supremum form assumes `|g'''|` bounded on
   `[1,1+δ]`, which continuity would give.
 * **The distance to the balanced ray** is measured in `L²(λ)` from the density `(2, 2(1−η))` of
   `μ = (1,1−η)` to the balanced density `2·𝟙`; it is `√2·η < 4√2·δ`, an explicit `O(δ)`.

@@ -101,6 +101,8 @@ import GFNBounds.Core.AdjointGeneral
 import GFNBounds.Balance.LiftGeneral
 import GFNBounds.Doubling.RecurrenceClass
 import GFNBounds.Doubling.PhaseRecurrence
+import GFNBounds.Balance.TBHessian
+import GFNBounds.Balance.TBvsDB
 
 /-!
 # Axiom audit
@@ -1797,3 +1799,95 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.prop_doubling_phase
 #print axioms GFNBounds.Doubling.main_phase_classes
 #print axioms GFNBounds.Doubling.main_invariant_unique
+
+#print axioms GFNBounds.Balance.TBHessian.window
+#print axioms GFNBounds.Balance.TBHessian.Qv
+#print axioms GFNBounds.Balance.TBHessian.window_cons
+#print axioms GFNBounds.Balance.TBHessian.sum_cons
+#print axioms GFNBounds.Balance.TBHessian.window_along
+#print axioms GFNBounds.Balance.TBHessian.window_tail
+#print axioms GFNBounds.Balance.TBHessian.window_state
+#print axioms GFNBounds.Balance.TBHessian.window_two
+#print axioms GFNBounds.Balance.TBHessian.corr
+#print axioms GFNBounds.Balance.TBHessian.window_sq
+#print axioms GFNBounds.Balance.TBHessian.uAt
+#print axioms GFNBounds.Balance.TBHessian.uAt_edge
+#print axioms GFNBounds.Balance.TBHessian.pair_sum_eq
+#print axioms GFNBounds.Balance.TBHessian.Qv_iterate_uAt
+#print axioms GFNBounds.Balance.TBHessian.corr_uAt
+#print axioms GFNBounds.Balance.TBHessian.Theta
+#print axioms GFNBounds.Balance.TBHessian.HTB
+#print axioms GFNBounds.Balance.TBHessian.HDB
+#print axioms GFNBounds.Balance.TBHessian.betaHat
+#print axioms GFNBounds.Balance.TBHessian.edgeKernelE_isMarkov
+#print axioms GFNBounds.Balance.TBHessian.edgeMeasureE_isInvariant'
+#print axioms GFNBounds.Balance.TBHessian.adj_Q
+#print axioms GFNBounds.Balance.TBHessian.funAct_iterate_add
+#print axioms GFNBounds.Balance.TBHessian.densAct_iterate_add
+#print axioms GFNBounds.Balance.TBHessian.Theta_add
+#print axioms GFNBounds.Balance.TBHessian.ipL2_add_right
+#print axioms GFNBounds.Balance.TBHessian.ip_Theta
+#print axioms GFNBounds.Balance.TBHessian.ip_P_self
+#print axioms GFNBounds.Balance.TBHessian.window_variance
+#print axioms GFNBounds.Balance.TBHessian.window_nonneg
+#print axioms GFNBounds.Balance.TBHessian.Theta_psd
+#print axioms GFNBounds.Balance.TBHessian.Theta_selfAdjoint
+#print axioms GFNBounds.Balance.TBHessian.sum_range_succ_cast
+#print axioms GFNBounds.Balance.TBHessian.cesaro_sum
+#print axioms GFNBounds.Balance.TBHessian.abs_ipL2_le
+#print axioms GFNBounds.Balance.TBHessian.nrmL2_densAct_iterate_le
+#print axioms GFNBounds.Balance.TBHessian.abs_ip_Theta_le
+#print axioms GFNBounds.Balance.TBHessian.betaHat_opBound
+#print axioms GFNBounds.Balance.TBHessian.ip_Q_le_betaHat
+#print axioms GFNBounds.Balance.TBHessian.Theta_le_cesaro
+#print axioms GFNBounds.Balance.TBHessian.Theta_le
+#print axioms GFNBounds.Balance.TBHessian.abs_log_one_add_sub_le
+#print axioms GFNBounds.Balance.TBHessian.loss_eq_window
+#print axioms GFNBounds.Balance.TBHessian.abs_densAct_le
+#print axioms GFNBounds.Balance.TBHessian.ratio_perturb
+#print axioms GFNBounds.Balance.TBHessian.nrmL2_le_const
+#print axioms GFNBounds.Balance.TBHessian.half_ip_HTB
+#print axioms GFNBounds.Balance.TBHessian.ip_HDB
+#print axioms GFNBounds.Balance.TBHessian.expansion_explicit
+#print axioms GFNBounds.Balance.TBHessian.expansion_isBigO
+#print axioms GFNBounds.Balance.TBHessian.edgeMarg_window
+#print axioms GFNBounds.Balance.TBHessian.mean_Aop
+#print axioms GFNBounds.Balance.TBHessian.HTB_nonneg
+#print axioms GFNBounds.Balance.TBHessian.HTB_le
+#print axioms GFNBounds.Balance.TBHessian.HTB_one
+#print axioms GFNBounds.Balance.TBHessian.loss_one
+#print axioms GFNBounds.Balance.TBHessian.opNorm_densDeviation_zero
+#print axioms GFNBounds.Balance.TBHessian.betaHat_one
+#print axioms GFNBounds.Balance.TBHessian.one_le_Bprime
+#print axioms GFNBounds.Balance.TBHessian.stepCap
+#print axioms GFNBounds.Balance.TBHessian.pbU_nonneg
+#print axioms GFNBounds.Balance.TBHessian.pbU_row
+#print axioms GFNBounds.Balance.TBHessian.lamU_pos
+#print axioms GFNBounds.Balance.TBHessian.lamU_inv
+#print axioms GFNBounds.Balance.TBHessian.lamU_tot
+#print axioms GFNBounds.Balance.TBHessian.opNorm_zero_op
+#print axioms GFNBounds.Balance.TBHessian.densDeviation_pbU
+#print axioms GFNBounds.Balance.TBHessian.witness
+#print axioms GFNBounds.Balance.TBHessian.fejer
+#print axioms GFNBounds.Balance.TBHessian.sum_neg_one_pow
+#print axioms GFNBounds.Balance.TBHessian.alt_weighted
+#print axioms GFNBounds.Balance.TBHessian.fejer_pi_even
+#print axioms GFNBounds.Balance.TBHessian.fejer_pi_odd
+#print axioms GFNBounds.Balance.TBHessian.fejer_zero
+#print axioms GFNBounds.Balance.TBHessian.continuous_fejer
+#print axioms GFNBounds.Balance.TBHessian.tendsto_fejer
+#print axioms GFNBounds.Balance.TBHessian.funAct_lin
+#print axioms GFNBounds.Balance.TBHessian.Q_iterate_rot
+#print axioms GFNBounds.Balance.TBHessian.rayleigh_fejer
+#print axioms GFNBounds.Doubling.TBvsDB.sbar_bdd_iff
+#print axioms GFNBounds.Doubling.TBvsDB.bhat_infinite_of_posRec
+#print axioms GFNBounds.Doubling.TBvsDB.norm_sub_piL2_le
+#print axioms GFNBounds.Doubling.TBvsDB.adjoint_mul
+#print axioms GFNBounds.Doubling.TBvsDB.adjoint_one
+#print axioms GFNBounds.Doubling.TBvsDB.CoercConst
+#print axioms GFNBounds.Doubling.TBvsDB.isLeast_bhatK
+#print axioms GFNBounds.Doubling.TBvsDB.coercConst_mono
+#print axioms GFNBounds.Doubling.TBvsDB.truncation_rate
+#print axioms GFNBounds.Doubling.TBvsDB.sigmaBar_six
+#print axioms GFNBounds.Doubling.TBvsDB.row8
+#print axioms GFNBounds.Doubling.TBvsDB.exists_setting_six

@@ -96,12 +96,9 @@ With `G := F_term + F⋆_out`, `Z := F_init(𝒮)` and `q_n(y) := P(τ > n, s_{n
 
 * **Finite state space only.** The paper states the theorem on a Polish space with measures
   `F_init, F_term, F⋆_out` and a Markov kernel `π⋆_→`. Here `V` is a `Fintype`, measures are
-  functions `V → ℝ` and the kernel is a stochastic matrix. The general measurable form needs the
-  sub-Markov kernel `cont · π⋆_→` acting on finite measures, monotone convergence for the
-  occupation measure and a Radon–Nikodym derivative for `stop` — obstruction 2 of kb `0006`, the
-  general measure layer. The argument itself transfers unchanged (every step is linear and
-  monotone in the measures); it is the layer that is missing. **The row closes in bucket `B` with
-  this narrowing, not in `A`.**
+  functions `V → ℝ` and the kernel is a stochastic matrix. The general measurable form is
+  `Core/SamplingGeneral.lean` (`MFlow.sampling_theorem`), which closes the row in A; this file is
+  its finite-state counterpart, proved independently.
 * **The sampler is modelled by its time-`n` marginals, not by a path-space measure.** `law n` is
   the forward (Chapman–Kolmogorov) recursion of the absorbing chain on `V × Bool`, which is the
   law of `X_n` for the chain `Kernel.traj` would build; no trajectory measure is constructed. It

@@ -73,7 +73,7 @@ space.
 | `(π⋆, f⋆_out)` generative flow, `π⋆` Markov, `f⋆_out ∈ L¹₊`, `F⋆_← ≪ ν_B` | ✓ `Family.IsGenerativeFlow ν θ` and `InflowAC ν θ` |
 | inference at `F_term = κ̂ = E⁺` | ✓ `κ̂ = e⁺ ν`, `e = eFlow ν θ f_init`; finite: `NegativeControl.inference` |
 | the loss `equ:weakFM`, valued in `(−∞,+∞]` | ✓ `ilLoss`, `⊤` off `LossFinite` — see SCOPE |
-| `TV(s_τ ‖ κ)` | ⚠ general space: abstract `tv`, `tvNC` with `hNC`, `htri`; ✓ finite: `tvD ν (p/ν) k`, `p` the law of `s_τ` |
+| `TV(s_τ ‖ κ)` | ⚠ general space: abstract `tv`, `tvNC` with `hNC`, `htri`; ✓ finite: `tvD ν (p/ν) k`, `p` the law of `s_τ`; on a general space the sampler is built and both inputs are discharged in `Core/SamplingGeneralBounds.lean` (`il_first_bullet_general`: `tvD ν samplerDens k`) |
 | `theo:negative_control` (in the proof) | ✗ **hypothesis `hNC`** on a general space; ✓ discharged on a finite space by `NegativeControl.negative_control_hNC` |
 | Pinsker (in the proof) | ✓ `pinsker` |
 | `Θ` family of generative flows, outflows `L¹₊`, inflows `≪ ν_B` | ✓ `Θ : Set (Kernel α α × (α → ℝ))`, `hΘ : ∀ θ ∈ Θ, IsGenerativeFlow ν θ ∧ InflowAC ν θ` |
@@ -85,13 +85,12 @@ space.
 
 ## SCOPE (disclosed)
 
-* **`theo:negative_control` is proved on a finite state space only** (`Core/NegativeControl.lean`,
-  row B). On the paper's general space the first bullet's TV clause therefore carries it as the
+* **`theo:negative_control` and the sampler are hypotheses in this file**, discharged on a general
+  measurable space by `Core/SamplingGeneralBounds.lean` (`il_first_bullet_general`); the row
+  closes in A. Here the first bullet's TV clause carries `theo:negative_control` as the
   hypothesis `hNC : tvNC ≤ δF_init(𝒮)/κ̂(𝒮)`, with `htri` the triangle inequality for the
-  abstract sampler; `il_first_bullet_finite` discharges both, with every other hypothesis the
-  paper's. **The row closes in bucket `B`, not `A`**: the fully discharged form is narrowed to a
-  finite `V`, and the general form needs the general measure layer for the sampler (kb `0006`,
-  obstruction 2). Everything else — Pinsker, Hölder at `q ∈ {1,∞}`, `E(𝒮) = F_init(𝒮)`, the family
+  abstract sampler; `il_first_bullet_finite` discharges both on a finite `V`, with every other
+  hypothesis the paper's. Everything else — Pinsker, Hölder at `q ∈ {1,∞}`, `E(𝒮) = F_init(𝒮)`, the family
   `Θ`, strong universality, the `+∞` convention — is proved on a general measurable space.
 * **The paper's `+∞` is `ilLoss = ⊤`.** `LossFinite` is `κ ≪ κ̂`, `k log e⁺ ∈ L¹(ν_B)` and
   `δf_init ∈ L^q(ν_T)`. Off it the paper's loss is `+∞`: `−k log e⁺ = +∞` on a `ν_B`-positive set
@@ -106,7 +105,9 @@ space.
   density of `F⋆_←`), `κ̂ = e⁺ ν_B`.
 * **The sampler on a general space is abstract** (`tv`, `tvNC`), as in `ILBound`; on a finite
   space it is `Core.Sampling`'s absorbing chain, its law the limit of its time-`n` marginals, and
-  `NegativeControl`'s `hν : ∀ x, 0 < ν.real {x}` (full support) is inherited.
+  `NegativeControl`'s `hν : ∀ x, 0 < ν.real {x}` (full support) is inherited; on a general space
+  the sampler is built and both inputs are discharged in `Core/SamplingGeneralBounds.lean`
+  (`il_first_bullet_general`: `tvD ν samplerDens k`).
 * **No `sorry`.**
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
@@ -447,7 +448,8 @@ theorem lossE_sub_selfEntropy_ge {q : ℝ≥0∞} {b N δ zhat : ℝ}
 
 /-- **The first bullet of `theo:IL_CV_bound` on densities, at any `q ∈ [1,∞]`, Pinsker proved**:
 `𝓛^q ≥ 𝓗` and `equ:il_tv_explicit`. The two inputs left as hypotheses are `hNC`
-(`theo:negative_control`, proved on a finite space only — `il_first_bullet_finite`) and `htri`
+(`theo:negative_control`, discharged on a general measurable space by
+`Core/SamplingGeneralBounds.lean` (`il_first_bullet_general`); the row closes in A) and `htri`
 (the triangle inequality for the abstract sampler; `Core.tvD_triangle` when `s_τ` has a density).
 Pinsker is `pinsker`; the Hölder estimate `hHolder` is `il_holderE`. -/
 theorem il_bullet_one_dens {q : ℝ≥0∞} {b N δ zhat tv tvNC : ℝ}
@@ -695,9 +697,10 @@ measurable space, at any `q ∈ [1, +∞]` (with `q*` its conjugate):
 
 Pinsker (`pinsker`), Hölder (`il_holderE`) and `E(𝒮) = F_init(𝒮)` (`eFlow_integral`) are proved.
 **Two inputs stay hypotheses on this general space**: `hNC`, `theo:negative_control` in the form
-`TV(s_τ ‖ κ̂/κ̂(𝒮)) ≤ δF_init(𝒮)/κ̂(𝒮)`, proved in `Core.NegativeControl` on a finite space only,
-and `htri`, the triangle inequality for the abstract sampler (`Core.tvD_triangle` whenever `s_τ`
-has a `ν_B`-density); `il_first_bullet_finite` discharges both. -/
+`TV(s_τ ‖ κ̂/κ̂(𝒮)) ≤ δF_init(𝒮)/κ̂(𝒮)`, and `htri`, the triangle inequality for the abstract
+sampler (`Core.tvD_triangle` whenever `s_τ` has a `ν_B`-density); both are discharged on a general
+measurable space by `Core/SamplingGeneralBounds.lean` (`il_first_bullet_general`), and the row
+closes in A. `il_first_bullet_finite` discharges both on a finite `V`. -/
 theorem il_first_bullet [SigmaFinite ν] [SigmaFinite νT] {q qstar : ℝ≥0∞}
     [ENNReal.HolderConjugate qstar q] (hνT : ν ≪ νT)
     (hr : MemLp (fun x => (ν.rnDeriv νT x).toReal) qstar νT) {b : ℝ}

@@ -139,4 +139,6 @@ import GFNBounds.Silva.PathSpaceMarkov
 import GFNBounds.Doubling.RenewalClose
 import GFNBounds.Balance.LocalConvergenceClose
 import GFNBounds.Silva.PathSpaceMarkovGeneral
+import GFNBounds.Core.SamplingGeneral
+import GFNBounds.Core.SamplingGeneralBounds
 import GFNBounds.Audit

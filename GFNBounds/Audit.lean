@@ -94,6 +94,7 @@ import GFNBounds.Graph.PartialSupportClose
 import GFNBounds.Silva.PathSpaceMarkov
 import GFNBounds.Doubling.RenewalClose
 import GFNBounds.Balance.LocalConvergenceClose
+import GFNBounds.Silva.PathSpaceMarkovGeneral
 
 /-!
 # Axiom audit
@@ -1332,3 +1333,70 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.local_convergence_full_paper
 #print axioms GFNBounds.Balance.local_convergence_full_DB_paper
 #print axioms GFNBounds.Balance.twoState_DB_exists_check
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.pathProb_append_cons
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.pathProb_ge_pow
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cycW
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cycW_eq_cons
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cycW_eq_append
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.length_cycW
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.isChain_cycW
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.pathProb_cycW_ge
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.pathProb_exit_ge
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.pathProb_concat
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.mem_walksInto_concat
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.reach_of_mem_of_head
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.reach_of_mem_of_getLast
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.first_entry
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.last_exit_or
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.last_exit
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.SimpleCycle
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.SimpleCycle.q_add_mul
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.SimpleCycle.q_mod
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.SimpleCycle.q_eq_q_iff
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.SimpleCycle.nxt
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.SimpleCycle.nxt_q
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.SimpleCycle.exists_lt_eq
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.ClosedIn
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.exists_simpleCycle
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.closedIn_of_list
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.outDeg
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.IsFullSupportMarkov
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.outDeg_pos
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.outDeg_le
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cycPolicy
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cycPolicy_isFullSupportMarkov
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cycPolicy_ge_off
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cycPolicy_ge_exit
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cycPolicy_ge_cyc
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.IsFullSupportMarkovBackward
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.backProb
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.backProb_nonneg
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.backProb_pos
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.backProb_concat
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.eq_singleton_src
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.sum_backProb_le_one
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.summable_backProb
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.pow_mul_one_sub_le
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.pathProb_nonneg
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.fsm_nonneg
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.fsm_le_one
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.fsm_pair
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.pathProb_fsm_Icc
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cnt
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cnt_add
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.one_le_cnt
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.cnt_ge_mul
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.pathProb_cycW_le
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.one_div_three_lt
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.exists_succ_mul_lt
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.frequently_succ_mul_lt
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.exists_pumped_of_simpleCycle
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.exists_pumped
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.exists_markov_ratio_gt
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.exists_pumped_liminf
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.iInf_backProb_eq_zero
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.markov_ratio_not_bddAbove
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.exists_markov_ratio_gt_backward
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.markov_ratio_not_bddAbove_backward
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.exists_isFullSupportMarkovBackward
+#print axioms GFNBounds.Silva.PathSpaceMarkovGeneral.inhabit_markov_general

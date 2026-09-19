@@ -1,7 +1,7 @@
 {
   "paper": {
     "path": "/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex",
-    "git_commit": "ac0b4b4",
+    "git_commit": "c09a158",
     "appendix": "H"
   },
   "statements": [
@@ -431,8 +431,8 @@
     {
       "label": "def:doubling_decay_notation",
       "tex_span": [
-        799,
-        822
+        798,
+        821
       ],
       "block_sha256": "11697b348e8ba6d7c26cf26447813a19bb52c608ce171b1a81f59eb00d42d706",
       "lean_files": [
@@ -462,8 +462,8 @@
     {
       "label": "lem:doubling_averaging",
       "tex_span": [
-        824,
-        856
+        823,
+        855
       ],
       "block_sha256": "54fa6cfaedef950de7a8ab2dfd545e762f1df91052642d40331b5d5118edd6c0",
       "lean_files": [
@@ -484,8 +484,8 @@
     {
       "label": "lem:doubling_expansion",
       "tex_span": [
-        858,
-        963
+        857,
+        962
       ],
       "block_sha256": "7387301b3345f4927b0ec473806a2b03b944781b8c50b5150fff84df435e7b41",
       "lean_files": [
@@ -530,8 +530,8 @@
     {
       "label": "rem:doubling_parity",
       "tex_span": [
-        965,
-        978
+        964,
+        977
       ],
       "block_sha256": "a3128a86ff568fe196c4e2ba271eb6be4bbc0c8c66cf92112cd77559c159230d",
       "lean_files": [
@@ -565,8 +565,8 @@
     {
       "label": "lem:doubling_descent",
       "tex_span": [
-        980,
-        1039
+        979,
+        1038
       ],
       "block_sha256": "b13b9257c03792666b0a66c5b4072c66a63da9ebba4361254b80417108f24cc5",
       "lean_files": [
@@ -612,8 +612,8 @@
     {
       "label": "lem:doubling_escape",
       "tex_span": [
-        1041,
-        1123
+        1040,
+        1122
       ],
       "block_sha256": "d942f1c9c0ff9d186cc8dcc67c050d4dbbc979464c42b09bb189a2eee4b870e2",
       "lean_files": [
@@ -637,8 +637,8 @@
     {
       "label": "lem:doubling_product",
       "tex_span": [
-        1125,
-        1168
+        1124,
+        1167
       ],
       "block_sha256": "8c21fc14f1a4b7dd660acf9e21ba4af90d9ffdc393e7ab98968e0bcc36697da1",
       "lean_files": [
@@ -656,8 +656,8 @@
     {
       "label": "theo:doubling_decay",
       "tex_span": [
-        1170,
-        1243
+        1169,
+        1242
       ],
       "block_sha256": "b2f8f408d14f0bf8f740933cd30d762e9c9f1be377dbfba8453ec988f6409b39",
       "lean_files": [
@@ -681,8 +681,8 @@
     {
       "label": "cor:doubling_tail",
       "tex_span": [
-        1245,
-        1283
+        1244,
+        1282
       ],
       "block_sha256": "3f22eac7acad3f7c8c24e7fbe04263e777531a2b0c522ec51e2d4de34114176c",
       "lean_files": [
@@ -708,53 +708,10 @@
       "source": "app_doubling.tex"
     },
     {
-      "label": "rem:doubling_renewal",
-      "tex_span": [
-        1285,
-        1316
-      ],
-      "block_sha256": "8230d03c23ca15a8701d522bd170daf12a206ae91176647e4ba7b613f8e3f01a",
-      "lean_files": [
-        "GFNBounds/Doubling/Remarks.lean",
-        "GFNBounds/Doubling/RenewalClose.lean"
-      ],
-      "decls": [
-        "GFNBounds.Doubling.Remarks.integral_kern",
-        "GFNBounds.Doubling.Remarks.kernMeasure_univ",
-        "GFNBounds.Doubling.Remarks.kernMeasure_absolutelyContinuous",
-        "GFNBounds.Doubling.Remarks.kernMeasure_nonlattice",
-        "GFNBounds.Doubling.Remarks.kbar_zero",
-        "GFNBounds.Doubling.Remarks.kbar_one",
-        "GFNBounds.Doubling.Remarks.hasDerivAt_kbar",
-        "GFNBounds.Doubling.Remarks.abs_kern_le",
-        "GFNBounds.Doubling.Remarks.kern_boundedVariationOn",
-        "GFNBounds.Doubling.Remarks.rhs_eq_shift",
-        "GFNBounds.Doubling.Remarks.renewal_rhs_lipschitz",
-        "GFNBounds.Doubling.Remarks.renewal_lipschitz",
-        "GFNBounds.Doubling.Remarks.Gfun_eq_shift",
-        "GFNBounds.Doubling.Remarks.hasDerivAt_Gfun",
-        "GFNBounds.Doubling.Remarks.renewal_hasDerivAt_G",
-        "GFNBounds.Doubling.Remarks.renewal_G_const",
-        "GFNBounds.Doubling.Remarks.renewal_limit",
-        "GFNBounds.Doubling.Remarks.integral_kbar_eq_kernMean",
-        "GFNBounds.Doubling.Remarks.kernMean_eq",
-        "GFNBounds.Doubling.Remarks.renewal_limit_check",
-        "GFNBounds.Doubling.RenewalClose.kern_ge",
-        "GFNBounds.Doubling.RenewalClose.kbar_le_one",
-        "GFNBounds.Doubling.RenewalClose.sup_mul_sub_G_le",
-        "GFNBounds.Doubling.RenewalClose.renewal_solution_const",
-        "GFNBounds.Doubling.RenewalClose.renewal_limit_trivial"
-      ],
-      "status": "closed",
-      "bucket": "A",
-      "scope_notes": "2026-09-18 (round 4, GFNBounds/Doubling/RenewalClose.lean, audited READY): CLOSED in A against the current text (unchanged since 3194054). Every non-heuristic sentence is certified in GFNBounds/Doubling/Remarks.lean as of 2026-09-14: the kernel integrates to 1 (Cramer relation); its law is absolutely continuous and non-lattice; k-bar has its closed form; V is Lipschitz with constant M(2K_0+K_1); G' = 0 by the Leibniz computation; and ell = G(x_0)/int k-bar, with int k-bar = psi'(p*)/(p* ln 2) = tau/(tau-1) - 1/(p* ln 2) > 0. The range is widened to c > 0 and any non-zero root of psi, the safe direction. C is not derived, as the remark says. The 2026-09-14 FINDING FOR THE AUTHOR is now a theorem rather than an appeal to Choquet-Deny. renewal_solution_const proves that every bounded measurable solution of the limit equation on all of R is constant. It uses only G constant, k >= c ln2 2^{-|p|} on [0,1] (kern_ge) and k-bar <= 1 (kbar_le_one), with a sup/inf squeeze through sup_mul_sub_G_le, and no compactness. renewal_limit_trivial proves that under the remark's own hypotheses V is identically ell and G is identically ell int k-bar. So the remark's hypothesis class is exactly the constants: inhabited (const_isRenewalSolution, renewal_limit_check), so no clause is vacuous or false, but the limit clause reads ell = ell and the non-lattice sentence is used by nothing. These two declarations are statements about the remark, not ones it makes. The content the remark presumably intends is the one-sided problem (x >= x_0, data on [x_0-1, x_0)), which needs the key renewal theorem; restating the remark there reopens this row. || 2026-09-14 (Phase 2B, GFNBounds/Doubling/Remarks.lean, audited READY): CLOSED against the current text (3194054): every non-heuristic sentence certified -- kernel integrates to 1 (Cramer relation), law absolutely continuous and non-lattice, k-bar closed form, V Lipschitz (constant M(2K_0+K_1), via a Lipschitz bound on k; BV also proved), G' = 0 by the Leibniz computation, limit ell = G(x_0)/int k-bar with int k-bar = psi'(p*)/(p* ln 2) = tau/(tau-1) - 1/(p* ln 2) > 0. Range widened to c > 0 and any non-zero root of psi (the Cramer lemma's range; safe direction). The constant C not derived, as the remark says. FINDING FOR THE AUTHOR (prover and auditor independently): by Choquet-Deny (bounded continuous form; supp of the law of -v is [-1,0], generating R) every bounded solution of the limit equation on all of R is constant, so the remark's hypothesis class is the constants and its limit clause reads ell = ell; the non-lattice sentence is used nowhere. The presumably intended content is the one-sided problem (x >= x_0 with data on [x_0-1, x_0)), where the key renewal theorem needs non-lattice; a restatement there reopens this row.",
-      "source": "app_doubling.tex"
-    },
-    {
       "label": "theo:doubling_sharp",
       "tex_span": [
-        1337,
-        1355
+        1303,
+        1321
       ],
       "block_sha256": "e970b14109bf07b6cdb41777c52ed50b8a672b0fce549b0d7fc093d070e7fa8c",
       "lean_files": [
@@ -782,8 +739,8 @@
     {
       "label": "lem:doubling_weight",
       "tex_span": [
-        1357,
-        1397
+        1323,
+        1363
       ],
       "block_sha256": "aa34bc0d4f7a368232ed6eca51d3eee5f0b1caf0c6cb450358ffc1d99d6874f8",
       "lean_files": [
@@ -829,8 +786,8 @@
     {
       "label": "lem:doubling_doeblin",
       "tex_span": [
-        1399,
-        1487
+        1365,
+        1453
       ],
       "block_sha256": "e37ea2a509ebeb7edc42216cede3b812313a7bf5cddd4d5cdc0536f240e8b2a5",
       "lean_files": [
@@ -851,8 +808,8 @@
     {
       "label": "lem:doubling_coupling",
       "tex_span": [
-        1489,
-        1547
+        1455,
+        1513
       ],
       "block_sha256": "9ca82978f2c96c1a789f1fb6437a796e7d5e9a87c2890aa629b7239a305036cc",
       "lean_files": [
@@ -873,10 +830,10 @@
     {
       "label": "rem:doubling_no_logperiodic",
       "tex_span": [
-        1673,
-        1684
+        1639,
+        1650
       ],
-      "block_sha256": "86f13ca4ccce536b6bd5f5b1a90837fdd00a91dbe6653bb1219452e204be983a",
+      "block_sha256": "e40ed4d0e14e604ee0889ac56b2b435c1308df5c9fb475c106ca7460e3ba0789",
       "lean_files": [],
       "decls": [],
       "status": "open",
@@ -887,8 +844,8 @@
     {
       "label": "cor:doubling_tail_sharp",
       "tex_span": [
-        1686,
-        1714
+        1652,
+        1680
       ],
       "block_sha256": "236a28750c6741a711ced497138379ec61aba3073263df3179201b87d11cf7d7",
       "lean_files": [
@@ -907,8 +864,8 @@
     {
       "label": "prop:doubling_constant",
       "tex_span": [
-        1716,
-        1777
+        1682,
+        1743
       ],
       "block_sha256": "e44c10fd20bb3d5be033de229a2f1e75d133e4587d10ecf927a424aa746a5f3e",
       "lean_files": [
@@ -948,8 +905,8 @@
     {
       "label": "rem:doubling_second_order",
       "tex_span": [
-        1783,
-        1799
+        1749,
+        1765
       ],
       "block_sha256": "27bc7100a1cc4e23b36f72f4724f62af4ad59905b123cd9d80c47466c991a4f2",
       "lean_files": [],
@@ -962,8 +919,8 @@
     {
       "label": "lem:doubling_truncation_irreducible",
       "tex_span": [
-        1819,
-        1860
+        1785,
+        1826
       ],
       "block_sha256": "f911ccce02e4422c6d2b18825ba3947b78d6b34108ac2b204a88b83ca22bf057",
       "lean_files": [
@@ -985,8 +942,8 @@
     {
       "label": "lem:doubling_percut",
       "tex_span": [
-        1862,
-        1957
+        1828,
+        1923
       ],
       "block_sha256": "208f08108c076df9f3caa4a1b81abf35830d4fd440e7ddd67c534c79b6061e8a",
       "lean_files": [
@@ -1018,8 +975,8 @@
     {
       "label": "theo:doubling_unbounded",
       "tex_span": [
-        1959,
-        2033
+        1925,
+        1999
       ],
       "block_sha256": "71138ced76f59f0dbc8d165fa581f9cc49205fcaf66e57dc03bf60508cde4e7a",
       "lean_files": [
@@ -1050,8 +1007,8 @@
     {
       "label": "lem:doubling_ramp",
       "tex_span": [
-        2035,
-        2099
+        2001,
+        2065
       ],
       "block_sha256": "35c51432f174c0299adcd1d44fb241bc28b3866efc8ee0f15e7a54e9c5e64f35",
       "lean_files": [
@@ -1079,8 +1036,8 @@
     {
       "label": "cor:doubling_family",
       "tex_span": [
-        2101,
-        2138
+        2067,
+        2104
       ],
       "block_sha256": "909585b04232eb8e85ca370c7e0fbc7d99b15b687946ff7b7d7c8df76bae0512",
       "lean_files": [
@@ -1101,8 +1058,8 @@
     {
       "label": "prop:doubling_unsolvable",
       "tex_span": [
-        2140,
-        2195
+        2106,
+        2161
       ],
       "block_sha256": "a195679a74255fa14e2c571e4c8a2d931dafc5a63a9e7878e45d9e56aba029da",
       "lean_files": [
@@ -1121,8 +1078,8 @@
     {
       "label": "rem:doubling_geometric",
       "tex_span": [
-        2197,
-        2203
+        2163,
+        2169
       ],
       "block_sha256": "3eeaf9fef370efff9eadab9bb1d2e0221e93760f614e9761538983f362073913",
       "lean_files": [
@@ -1140,8 +1097,8 @@
     {
       "label": "cor:doubling_truncation",
       "tex_span": [
-        2213,
-        2350
+        2179,
+        2316
       ],
       "block_sha256": "87367845bf1d850602b5758516f6650d2b4047ce3f00b6e0c443c42aaf67841b",
       "lean_files": [
@@ -1849,7 +1806,7 @@
         666,
         727
       ],
-      "block_sha256": "e19258d3b0b540c4ad54eb538dc6fa1cd3885fd0334adcccb1b71f8c0ae34c00",
+      "block_sha256": "2f2a5ad8a09ac296ddb50c0b0b689d1b9d502fdd38a8a075557ff788fe5257d9",
       "lean_files": [
         "GFNBounds/Balance/Expansion.lean",
         "GFNBounds/Balance/L2Toolkit.lean",
@@ -2304,7 +2261,7 @@
         910,
         912
       ],
-      "block_sha256": "3f267989c9bc225a63b4191793810e62eaab6892dcd46d4247dd455bea0551a8",
+      "block_sha256": "da2b0c20d59c8093e7d3f16ed6ee956b31edf0497d8eaceffda18a9acc3e5b35",
       "lean_files": [
         "GFNBounds/Graph/CycleExample.lean",
         "GFNBounds/Graph/CycleBlowup.lean",
@@ -2359,11 +2316,12 @@
         "GFNBounds.Graph.CycleRemarks.cycle_flow_values",
         "GFNBounds.Graph.CycleRemarks.snk_inflow",
         "GFNBounds.Graph.CycleRemarks.sum_univ_eq_internal_add",
-        "GFNBounds.Graph.CycleRemarks.cycle_internal_flow_check"
+        "GFNBounds.Graph.CycleRemarks.cycle_internal_flow_check",
+        "GFNBounds.Graph.CycleRemarks.mixing_sum_tendsto_top"
       ],
-      "status": "partial",
-      "bucket": "B",
-      "scope_notes": "2026-09-18 (Graph/CycleRemarks.lean, InducedFlow sections, audited READY): item (ii) CERTIFIED. 'The flow induced by the frozen backward policy' is any real F invariant under the loop-closed chain; internal_flow_eq: sum over S of F = F(s_f)*sigma-bar on every finite path-connected marked graph with a policy positive on its edges, from prop:morozov_rate(1); cycle_internal_flow gives F(s_f)*3/(1-p), cycle_flow_values F(x_i) = F(s_f)/(1-p), F(s_0) = F(s_f); inhabited by cycle_internal_flow_check. 'No exploding circulation' read (disclosed) as the internal mass pinned to F(s_f)*sigma-bar plus uniqueness at fixed F(s_f) (flow_eq_of_snk_eq). The Morozov citation itself is not a target. Every other sentence except item (i) was already certified (inflation_force_max_mono, rescaled_flow, mixing_sum_endpoints, mixing_B_tendsto_atTop, rho_mixing_tendsto, rhoSigma_cycle_tendsto, kappa_cycle_tendsto, cycle_no_stalemate_limits). STILL OPEN, keeping the row out of A: item (i), beta-hat_n >= |zeta_p|^n with zeta_p a root of z^5 - p z^2 - (1-p) chosen continuous in p with zeta_1 = e^{2 i pi/3}; true but unformalized (continuous root selection is not at this pin). Author's call: certify it, or reword to the test-vector argument the Lean uses. || 2026-09-14 (Phase 2C, GFNBounds/Graph/CycleRemarks.lean, audited READY): certified -- S1 (mixing sum +inf at p in {0,1}; endpoints use kern p, matched to the loop closure by formula), S2's sigma-bar = 3/(1-p), S3-S8 (force 2 log M maximal at s_0 and increasing in M; not a critical point, for (log x)^2 only; the rescaled flow t -> alpha u(t/alpha^2) exists, is unique, entry times scale by alpha^2 exactly), summability on (0,1) by a Doeblin argument (presupposed by the paper), and the closing limits as p -> 1^- (sigma-bar, B-hat, B-hat_sigma -> inf; rho, rho_sigma, kappa -> 0, kappa for fixed u_0, fixed mu_0, or norms bounded below). NOT certified (claims, keep the row out of A): (i) the eigenvalue aside beta-hat_n >= |zeta_p|^n with zeta_1 = e^{2 i pi/3} (true; needs an implicit-function argument plus a spectral lower bound -- or a /writer rewording to the test-vector argument); (ii) the example identity 'total flow through internal states F(s_f) 3/(1-p)' (a few lines from invProb_paper) and the reading 'no exploding circulation'. Not targets: the heuristic leak ratio, the numerical sentences (0.720, 'after which ... takes over', 1.62). The DB instances are not claims of the remark as printed. Author call on (i)-(ii): certify or reword. || 2026-09-14 (Phase 1 re-read against commit 3194054): proved claims stand; the rewrite adds unproved ones: the force is largest at s0 and increases with M; the rescaling t -> alpha mu_{t/alpha^2}; the mixing sum is +inf at p in {0,1} and -> inf as p -> 1; rho, rho_sigma, kappa -> 0. The Prop 3.12 citation and the numerics 0.720, 1.62 are not certification targets. || CORRECTION 2026-09-14: claims 3 and 4 were corrected in the draft on 2026-09-13 (r(s_0) = M exactly on u = dmu/dlambda; the transient is Theta(M^2), not M/log M), and B-hat_sigma -> inf is certified in CycleBlowup.lean; the 'claims 3 and 4 stand uncorrected' and 'M/log M' statements below are superseded. Remaining: the remark rewrite pass (author ruling 2026-09-14), then the claims it leaves. PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 44 declarations on V = Fin 5. All four claims formalized; THREE OF THEM DID NOT COME OUT AS PRINTED, see the paper findings. Claim 1's number was corrected in the draft on 2026-09-08; claims 3 and 4 stand uncorrected. Claim 2 is exactly right, with q = 1/(5-2p), and its uniqueness goes through theo:universality_graphs(1). Claim 3's r(x_1) = r(x_2) = r(s_f) = 1 hold EXACTLY at every M, not just in the limit, and r(x_3) = p + (1-p)/M -> p. Claim 4 is certified as `no_stalemate`: at the over-inflated configuration the total mass of the gradient density is STRICTLY negative for every training measure of positive density -- by the remark's own route, prop:no_distant_equilibrium(1) plus the observation that r(x_3) < 1 so the configuration is not balanced. `decide` carried the three MarkedGraph side conditions and nothing else; PathConnected is not decidable (ReflTransGen) and was built by hand off the single walk. NOT CERTIFIED, and classified as interpretation rather than claim: the closing 'B-hat blows up and every rate degenerates ... interpolates smoothly toward the instability regime' -- B-hat is an operator norm (obstruction 2), and only its checkable half `sigmaBar_unbounded` is proved. The dynamical continuations (the source refilling at logarithmic speed, the M/log M transient, the handover to theo:local_convergence) are not stated: there is no ODE layer and they do not follow from the computation.\n\n2026-09-13, paper repairs verified by proof-checker: the printed statement now claims more than this Lean certifies. New clause B-hat_sigma -> inf has no lemma (one line from bSigma_eq). The claim that the coercivity constant stays bounded was REMOVED from the paper as underived.\n\n[Wave 1, 2026-09-13, audited] The B-hat_sigma clause CLOSED (CycleBlowup.lean): B-hat_sigma -> +inf as p -> 1 from below, both as BhatSigma and in the defining form sigma_* sqrt((2+sigma-bar)/min N) for every solution of the hitting-time and renewal systems, with explicit threshold delta(C) = 3/(|C|+3); sigma-bar = 3/(1-p) -> inf as a limit. NOT covered anywhere: B-hat -> inf (missing: a Core.Mixing instance for this chain's densOp and a lower bound on beta-hat_n -- NOT obstruction 2); 'every certified rate degenerates'; the p in {0,1} no-mixing clause; the M^2 transient. The M/log M transient in older notes was withdrawn from the paper on 2026-09-13."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-19: CLOSED IN A. The author ruled (2026-09-18) to replace item (i)'s eigenvalue parenthetical by the test-vector argument; the draft now says (c09a158): v = 1_{x1} - 1_{x2}, Pi v = 0, ||P^3 v - v||^2 <= 2(1-p)||v||^2 for p < 1, beta-hat_{3k} >= 1/2 for k <= K_p = floor((8(1-p))^{-1/2}), sum beta-hat_n >= K_p/2 -> +inf as p -> 1 -- the argument of three_step_defect, betaCyc_three_mul_ge_half, betaCyc_partial_sum_ge, mixing_sum_gt, mixing_sum_tendsto_top, mixing_B_tendsto_atTop. Item (i) was the row's only open item. || 2026-09-18 (Graph/CycleRemarks.lean, InducedFlow sections, audited READY): item (ii) CERTIFIED. 'The flow induced by the frozen backward policy' is any real F invariant under the loop-closed chain; internal_flow_eq: sum over S of F = F(s_f)*sigma-bar on every finite path-connected marked graph with a policy positive on its edges, from prop:morozov_rate(1); cycle_internal_flow gives F(s_f)*3/(1-p), cycle_flow_values F(x_i) = F(s_f)/(1-p), F(s_0) = F(s_f); inhabited by cycle_internal_flow_check. 'No exploding circulation' read (disclosed) as the internal mass pinned to F(s_f)*sigma-bar plus uniqueness at fixed F(s_f) (flow_eq_of_snk_eq). The Morozov citation itself is not a target. Every other sentence except item (i) was already certified (inflation_force_max_mono, rescaled_flow, mixing_sum_endpoints, mixing_B_tendsto_atTop, rho_mixing_tendsto, rhoSigma_cycle_tendsto, kappa_cycle_tendsto, cycle_no_stalemate_limits). STILL OPEN, keeping the row out of A: item (i), beta-hat_n >= |zeta_p|^n with zeta_p a root of z^5 - p z^2 - (1-p) chosen continuous in p with zeta_1 = e^{2 i pi/3}; true but unformalized (continuous root selection is not at this pin). Author's call: certify it, or reword to the test-vector argument the Lean uses. || 2026-09-14 (Phase 2C, GFNBounds/Graph/CycleRemarks.lean, audited READY): certified -- S1 (mixing sum +inf at p in {0,1}; endpoints use kern p, matched to the loop closure by formula), S2's sigma-bar = 3/(1-p), S3-S8 (force 2 log M maximal at s_0 and increasing in M; not a critical point, for (log x)^2 only; the rescaled flow t -> alpha u(t/alpha^2) exists, is unique, entry times scale by alpha^2 exactly), summability on (0,1) by a Doeblin argument (presupposed by the paper), and the closing limits as p -> 1^- (sigma-bar, B-hat, B-hat_sigma -> inf; rho, rho_sigma, kappa -> 0, kappa for fixed u_0, fixed mu_0, or norms bounded below). NOT certified (claims, keep the row out of A): (i) the eigenvalue aside beta-hat_n >= |zeta_p|^n with zeta_1 = e^{2 i pi/3} (true; needs an implicit-function argument plus a spectral lower bound -- or a /writer rewording to the test-vector argument); (ii) the example identity 'total flow through internal states F(s_f) 3/(1-p)' (a few lines from invProb_paper) and the reading 'no exploding circulation'. Not targets: the heuristic leak ratio, the numerical sentences (0.720, 'after which ... takes over', 1.62). The DB instances are not claims of the remark as printed. Author call on (i)-(ii): certify or reword. || 2026-09-14 (Phase 1 re-read against commit 3194054): proved claims stand; the rewrite adds unproved ones: the force is largest at s0 and increases with M; the rescaling t -> alpha mu_{t/alpha^2}; the mixing sum is +inf at p in {0,1} and -> inf as p -> 1; rho, rho_sigma, kappa -> 0. The Prop 3.12 citation and the numerics 0.720, 1.62 are not certification targets. || CORRECTION 2026-09-14: claims 3 and 4 were corrected in the draft on 2026-09-13 (r(s_0) = M exactly on u = dmu/dlambda; the transient is Theta(M^2), not M/log M), and B-hat_sigma -> inf is certified in CycleBlowup.lean; the 'claims 3 and 4 stand uncorrected' and 'M/log M' statements below are superseded. Remaining: the remark rewrite pass (author ruling 2026-09-14), then the claims it leaves. PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- 44 declarations on V = Fin 5. All four claims formalized; THREE OF THEM DID NOT COME OUT AS PRINTED, see the paper findings. Claim 1's number was corrected in the draft on 2026-09-08; claims 3 and 4 stand uncorrected. Claim 2 is exactly right, with q = 1/(5-2p), and its uniqueness goes through theo:universality_graphs(1). Claim 3's r(x_1) = r(x_2) = r(s_f) = 1 hold EXACTLY at every M, not just in the limit, and r(x_3) = p + (1-p)/M -> p. Claim 4 is certified as `no_stalemate`: at the over-inflated configuration the total mass of the gradient density is STRICTLY negative for every training measure of positive density -- by the remark's own route, prop:no_distant_equilibrium(1) plus the observation that r(x_3) < 1 so the configuration is not balanced. `decide` carried the three MarkedGraph side conditions and nothing else; PathConnected is not decidable (ReflTransGen) and was built by hand off the single walk. NOT CERTIFIED, and classified as interpretation rather than claim: the closing 'B-hat blows up and every rate degenerates ... interpolates smoothly toward the instability regime' -- B-hat is an operator norm (obstruction 2), and only its checkable half `sigmaBar_unbounded` is proved. The dynamical continuations (the source refilling at logarithmic speed, the M/log M transient, the handover to theo:local_convergence) are not stated: there is no ODE layer and they do not follow from the computation.\n\n2026-09-13, paper repairs verified by proof-checker: the printed statement now claims more than this Lean certifies. New clause B-hat_sigma -> inf has no lemma (one line from bSigma_eq). The claim that the coercivity constant stays bounded was REMOVED from the paper as underived.\n\n[Wave 1, 2026-09-13, audited] The B-hat_sigma clause CLOSED (CycleBlowup.lean): B-hat_sigma -> +inf as p -> 1 from below, both as BhatSigma and in the defining form sigma_* sqrt((2+sigma-bar)/min N) for every solution of the hitting-time and renewal systems, with explicit threshold delta(C) = 3/(|C|+3); sigma-bar = 3/(1-p) -> inf as a limit. NOT covered anywhere: B-hat -> inf (missing: a Core.Mixing instance for this chain's densOp and a lower bound on beta-hat_n -- NOT obstruction 2); 'every certified rate degenerates'; the p in {0,1} no-mixing clause; the M^2 transient. The M/log M transient in older notes was withdrawn from the paper on 2026-09-13."
     },
     {
       "label": "theo:global_dichotomy_full",
@@ -2694,7 +2652,7 @@
         1125,
         1171
       ],
-      "block_sha256": "5692714877ffa727dccef35c6c2c05597f2d0e95494fbbaa9a210cc165faa864",
+      "block_sha256": "092a908f31f97337a6124a51db25a184f4c2bd0e6319b58cf8579a631b7b3040",
       "lean_files": [
         "GFNBounds/Graph/Setting.lean",
         "GFNBounds/Graph/Universality.lean",
@@ -2800,7 +2758,7 @@
         1181,
         1183
       ],
-      "block_sha256": "25ff7bcf99edad569d5f3b0adad185e95ff629481a219faffc999bfaa824ad4a",
+      "block_sha256": "1ab68aa0d1914a522e1d8579d4eb1d203cbf25d2cb1bb03664ccaf2971b9418b",
       "lean_files": [
         "GFNBounds/Core/FamilyUniversality.lean",
         "GFNBounds/Graph/PartialSupportClose.lean"
@@ -2998,7 +2956,7 @@
         110,
         116
       ],
-      "block_sha256": "dcdd0d774e41070ffab41e164a29e5f9dbe601c7e3d7fed7f189cefd05f76b3a",
+      "block_sha256": "79510860c768beb734ef941c13952bf91a31e7b0a41c1f145b73f2da08465896",
       "lean_files": [
         "GFNBounds/Silva/Remarks.lean",
         "GFNBounds/Graph/CycleDivergence.lean",

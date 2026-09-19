@@ -3,7 +3,7 @@ import GFNBounds.Doubling.Remarks
 /-!
 # Every bounded solution of the renewal limit equation on `ℝ` is constant
 
-**`rem:doubling_renewal`** — `app_doubling.tex`, the remark of that label (a remark; no proof
+**The renewal remark**, dropped from the draft by the author on 2026-09-19 (it was a remark; no proof
 environment). Read against draft commit `3194054`.
 
 `GFNBounds/Doubling/Remarks.lean` certifies every non-heuristic sentence of the remark. Its SCOPE
@@ -153,7 +153,7 @@ theorem neg_solution (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (
 theorem Gfun_neg (x : ℝ) : Gfun c p (-V) x = -Gfun c p V x := by
   simp only [Gfun, Pi.neg_apply, mul_neg, intervalIntegral.integral_neg]
 
-/-- **`rem:doubling_renewal`, the finding certified: every bounded measurable solution of the
+/-- **the dropped renewal remark, the finding certified: every bounded measurable solution of the
 limit equation `V(x) = ∫₀¹ k(v)V(x−v)dv` on `ℝ` is constant.** -/
 theorem renewal_solution_const (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V)
     (hM : ∀ x, |V x| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v))
@@ -195,7 +195,7 @@ theorem renewal_solution_const (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (
   have hSI : S ≤ I := le_of_mul_le_mul_right (hup.trans hlo) hApos
   exact le_antisymm ((hS x).trans (hSI.trans (hI y))) ((hS y).trans (hSI.trans (hI x)))
 
-/-- **`rem:doubling_renewal`, the limit clause is `ℓ = ℓ`**: under the remark's hypotheses, the
+/-- **the dropped renewal remark, the limit clause is `ℓ = ℓ`**: under the remark's hypotheses, the
 limit `ℓ` at `+∞` is the value of `V` at every point, and `G ≡ ℓ ∫₀¹ k̄`. -/
 theorem renewal_limit_trivial (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V)
     (hM : ∀ x, |V x| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v))

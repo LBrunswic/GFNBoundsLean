@@ -5,13 +5,15 @@ import GFNBounds.Balance.WeightedL2Norm
 /-!
 # The renewal form of the cut balance, and the two constants written `B̂`
 
-**`rem:doubling_renewal`** — `app_doubling.tex:1285–1316` (a remark; no proof environment).
+**The renewal remark** — formerly `app_doubling.tex:1285–1316`, dropped from the draft by the author on
+2026-09-19 (its limit clause is `ℓ = ℓ` on the whole line, `RenewalClose.lean`); the declarations below
+are kept and certify no row.
 
 **`rem:doubling_two_constants`** — `app_doubling.tex:264–277` (a remark; no proof environment).
 
 Both read against draft commit `3194054`.
 
-> (`rem:doubling_renewal`) In the variable `x = log₂ m` the cut balance `eq:doubling_cut`, read on
+> (the renewal remark, dropped 2026-09-19) In the variable `x = log₂ m` the cut balance `eq:doubling_cut`, read on
 > the rescaled profile `u_m` of Definition `def:doubling_decay_notation`, is heuristically, to
 > leading order, the renewal equation `V(x) = ∫₀¹ k(v) V(x − v) dv`, with the kernel `k` of
 > Lemma `lem:doubling_cramer_root`(2), whose normalization `∫₀¹ k = 1` is the Cramér relation
@@ -49,7 +51,7 @@ Both read against draft commit `3194054`.
 
 ## What is proved
 
-### `rem:doubling_renewal`
+### the renewal remark (dropped 2026-09-19)
 
 | paper claim | declaration |
 |---|---|
@@ -87,7 +89,7 @@ Both read against draft commit `3194054`.
 
 ## SCOPE (disclosed)
 
-### `rem:doubling_renewal`
+### the renewal remark (dropped 2026-09-19)
 
 * **The heuristic sentence is not a target.** "In the variable `x = log₂ m` the cut balance … is
   heuristically, to leading order, the renewal equation" is marked heuristic in the text and is
@@ -241,7 +243,7 @@ noncomputable def kernSup (c p : ℝ) : ℝ := c * log 2 * (1 + (2 : ℝ) ^ p)
 /-- The explicit Lipschitz constant of the kernel on `[0,1]`: `K₁ := c (ln 2)² |p| (1 + τ)`. -/
 noncomputable def kernLip (c p : ℝ) : ℝ := c * log 2 * log 2 * |p| * (1 + (2 : ℝ) ^ p)
 
-/-- **`rem:doubling_renewal`, "`k` being bounded … on `[0,1]`"**: `|k(v)| ≤ c ln 2 (1 + τ)`. -/
+/-- **the dropped renewal remark, "`k` being bounded … on `[0,1]`"**: `|k(v)| ≤ c ln 2 (1 + τ)`. -/
 theorem abs_kern_le {c : ℝ} (hc : 0 < c) (p : ℝ) {v : ℝ} (hv : v ∈ Icc (0 : ℝ) 1) :
     |kern c p v| ≤ kernSup c p := by
   rw [abs_of_pos (kern_pos hc p v)]
@@ -256,7 +258,7 @@ theorem kernLip_nonneg {c : ℝ} (hc : 0 < c) (p : ℝ) : 0 ≤ kernLip c p := b
   unfold kernLip
   positivity
 
-/-- **`rem:doubling_renewal`, the kernel is Lipschitz on `[0,1]`**, with constant
+/-- **the dropped renewal remark, the kernel is Lipschitz on `[0,1]`**, with constant
 `c (ln 2)² |p| (1 + τ)` — the form in which its regularity enters `conv_lipschitz`. -/
 theorem abs_kern_sub_le {c : ℝ} (hc : 0 < c) (p : ℝ) {u v : ℝ} (hu : u ∈ Icc (0 : ℝ) 1)
     (hv : v ∈ Icc (0 : ℝ) 1) : |kern c p u - kern c p v| ≤ kernLip c p * |u - v| := by
@@ -276,7 +278,7 @@ theorem abs_kern_sub_le {c : ℝ} (hc : 0 < c) (p : ℝ) {u v : ℝ} (hu : u ∈
         = c * log 2 * log 2 * |p| * (2 : ℝ) ^ (p * w) := by ring
       _ ≤ c * log 2 * log 2 * |p| * (1 + (2 : ℝ) ^ p) := mul_le_mul_of_nonneg_left h2 hc'
 
-/-- **`rem:doubling_renewal`, "`k` being … of bounded variation on `[0,1]`"** — it is Lipschitz
+/-- **the dropped renewal remark, "`k` being … of bounded variation on `[0,1]`"** — it is Lipschitz
 there. -/
 theorem kern_boundedVariationOn {c : ℝ} (hc : 0 < c) (p : ℝ) :
     BoundedVariationOn (kern c p) (Icc (0 : ℝ) 1) := by
@@ -417,7 +419,7 @@ theorem conv_sub_le (hk : Continuous k) (hK0 : ∀ v ∈ Icc (0 : ℝ) 1, |k v| 
       _ ≤ K0 * M * h + K1 * h * M + K0 * M * h := by gcongr
       _ = M * (2 * K0 + K1) * h := by ring
 
-/-- **`rem:doubling_renewal`, "the right side is Lipschitz in `x`, `k` being bounded and of bounded
+/-- **the dropped renewal remark, "the right side is Lipschitz in `x`, `k` being bounded and of bounded
 variation on `[0,1]` and `V` bounded"**, for a kernel bounded by `K₀` and `K₁`-Lipschitz on
 `[0,1]`: `x ↦ ∫₀¹ k(v)V(x−v)dv` is `M(2K₀ + K₁)`-Lipschitz. -/
 theorem conv_lipschitz (hk : Continuous k) (hK0 : ∀ v ∈ Icc (0 : ℝ) 1, |k v| ≤ K0)
@@ -441,7 +443,7 @@ section RenewalMain
 
 variable {c p : ℝ}
 
-/-- **`rem:doubling_renewal`, "whose normalization `∫₀¹ k = 1` is the Cramér relation"**: the
+/-- **the dropped renewal remark, "whose normalization `∫₀¹ k = 1` is the Cramér relation"**: the
 kernel of `lem:doubling_cramer_root`(2) integrates to `1` at a root of `ψ`
 (`cramer_kernel_integral`). -/
 theorem integral_kern (hp0 : p ≠ 0) (hp : psi c p = 0) : ∫ v in (0 : ℝ)..1, kern c p v = 1 :=
@@ -450,13 +452,13 @@ theorem integral_kern (hp0 : p ≠ 0) (hp : psi c p = 0) : ∫ v in (0 : ℝ)..1
 /-- `k̄(v) := ∫_v^1 k(w) dw`. -/
 noncomputable def kbar (c p v : ℝ) : ℝ := ∫ w in v..1, kern c p w
 
-/-- **`rem:doubling_renewal`, `k̄(0) = 1`** — the Cramér relation again. -/
+/-- **the dropped renewal remark, `k̄(0) = 1`** — the Cramér relation again. -/
 theorem kbar_zero (hp0 : p ≠ 0) (hp : psi c p = 0) : kbar c p 0 = 1 := integral_kern hp0 hp
 
-/-- **`rem:doubling_renewal`, `k̄(1) = 0`**. -/
+/-- **the dropped renewal remark, `k̄(1) = 0`**. -/
 theorem kbar_one : kbar c p 1 = 0 := intervalIntegral.integral_same
 
-/-- **`rem:doubling_renewal`, `k̄' = −k`**, at every `v`. -/
+/-- **the dropped renewal remark, `k̄' = −k`**, at every `v`. -/
 theorem hasDerivAt_kbar (v : ℝ) : HasDerivAt (kbar c p) (-kern c p v) v :=
   intervalIntegral.integral_hasDerivAt_left ((continuous_kern c p).intervalIntegrable _ _)
     ((continuous_kern c p).stronglyMeasurableAtFilter _ _) (continuous_kern c p).continuousAt
@@ -491,7 +493,7 @@ theorem continuous_kbar (c p : ℝ) : Continuous (kbar c p) :=
 noncomputable def Gfun (c p : ℝ) (V : ℝ → ℝ) (x : ℝ) : ℝ :=
   ∫ v in (0 : ℝ)..1, kbar c p v * V (x - v)
 
-/-- **`rem:doubling_renewal`, the two expressions of `G` agree**:
+/-- **the dropped renewal remark, the two expressions of `G` agree**:
 `∫₀¹ k̄(v)V(x−v)dv = ∫_{x−1}^x k̄(x−y)V(y)dy`. -/
 theorem Gfun_eq_shift (V : ℝ → ℝ) (x : ℝ) :
     Gfun c p V x = ∫ y in (x - 1)..x, kbar c p (x - y) * V y := by
@@ -500,7 +502,7 @@ theorem Gfun_eq_shift (V : ℝ → ℝ) (x : ℝ) :
   simp only [sub_sub_cancel, sub_zero] at this
   exact this
 
-/-- **`rem:doubling_renewal`, the right side of the limit equation, in both forms**:
+/-- **the dropped renewal remark, the right side of the limit equation, in both forms**:
 `∫₀¹ k(v)V(x−v)dv = ∫_{x−1}^x k(x−y)V(y)dy`. -/
 theorem rhs_eq_shift (V : ℝ → ℝ) (x : ℝ) :
     (∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) = ∫ y in (x - 1)..x, kern c p (x - y) * V y := by
@@ -515,7 +517,7 @@ section RenewalSolution
 
 variable {c p : ℝ} {V : ℝ → ℝ} {M : ℝ}
 
-/-- **`rem:doubling_renewal`, the Lipschitz sentence, first half**: for bounded measurable `V`, the
+/-- **the dropped renewal remark, the Lipschitz sentence, first half**: for bounded measurable `V`, the
 right side `x ↦ ∫₀¹ k(v)V(x−v)dv` of the limit equation is Lipschitz, with the explicit constant
 `M(2K₀ + K₁)`, `K₀ = c ln 2 (1+τ)` and `K₁ = c (ln 2)² |p| (1+τ)`. -/
 theorem renewal_rhs_lipschitz (hc : 0 < c) (hVm : Measurable V) (hM : ∀ x, |V x| ≤ M) :
@@ -524,7 +526,7 @@ theorem renewal_rhs_lipschitz (hc : 0 < c) (hVm : Measurable V) (hM : ∀ x, |V 
   conv_lipschitz (continuous_kern c p) (fun _ hv => abs_kern_le hc p hv) (kernLip_nonneg hc p)
     (fun _ hu _ hv => abs_kern_sub_le hc p hu hv) hVm hM
 
-/-- **`rem:doubling_renewal`, the Lipschitz sentence, second half**: a bounded measurable solution
+/-- **the dropped renewal remark, the Lipschitz sentence, second half**: a bounded measurable solution
 `V` of the limit equation `V(x) = ∫₀¹ k(v)V(x−v)dv` is Lipschitz, with the same constant. -/
 theorem renewal_lipschitz (hc : 0 < c) (hVm : Measurable V) (hM : ∀ x, |V x| ≤ M)
     (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) :
@@ -534,7 +536,7 @@ theorem renewal_lipschitz (hc : 0 < c) (hVm : Measurable V) (hM : ∀ x, |V x| �
   rw [← h] at hL
   exact hL
 
-/-- **`rem:doubling_renewal`, the Leibniz computation of the display**, for continuous `V`:
+/-- **the dropped renewal remark, the Leibniz computation of the display**, for continuous `V`:
 `G'(x) = k̄(0)V(x) − k̄(1)V(x−1) − ∫₀¹ k(v)V(x−v)dv`, at every `x`. -/
 theorem hasDerivAt_Gfun (hp0 : p ≠ 0) (hVc : Continuous V) (x : ℝ) :
     HasDerivAt (Gfun c p V)
@@ -614,7 +616,7 @@ theorem hasDerivAt_Gfun (hp0 : p ≠ 0) (hVc : Continuous V) (x : ℝ) :
   linear_combination (-(log 2 * (2 : ℝ) ^ (p * x) * (Φ₂ x - Φ₂ (x - 1)))) * hcp
     + (-(c / p * V x)) * hex + (c / p * V (x - 1)) * hex1
 
-/-- **`rem:doubling_renewal`, `G' = 0`**: for a bounded measurable solution `V` of the limit
+/-- **the dropped renewal remark, `G' = 0`**: for a bounded measurable solution `V` of the limit
 equation, `G'(x) = k̄(0)V(x) − k̄(1)V(x−1) − ∫₀¹ k(v)V(x−v)dv = 0` at every `x`. -/
 theorem renewal_hasDerivAt_G (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V)
     (hM : ∀ x, |V x| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v))
@@ -628,7 +630,7 @@ theorem renewal_hasDerivAt_G (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hV
   rw [kbar_zero hp0 hp, kbar_one, ← heq x]
   ring
 
-/-- **`rem:doubling_renewal`, "so `G` is constant"**. -/
+/-- **the dropped renewal remark, "so `G` is constant"**. -/
 theorem renewal_G_const (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V)
     (hM : ∀ x, |V x| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v))
     (x y : ℝ) : Gfun c p V x = Gfun c p V y := by
@@ -640,7 +642,7 @@ theorem renewal_G_const (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : M
 /-- The mean of the kernel, `∫₀¹ v k(v) dv`. -/
 noncomputable def kernMean (c p : ℝ) : ℝ := ∫ v in (0 : ℝ)..1, v * kern c p v
 
-/-- **`rem:doubling_renewal`, `∫₀¹ k̄ = ∫₀¹ v k(v) dv`**, both in closed form: `(c/p)(τ − (τ−1)/(p ln 2))`. -/
+/-- **the dropped renewal remark, `∫₀¹ k̄ = ∫₀¹ v k(v) dv`**, both in closed form: `(c/p)(τ − (τ−1)/(p ln 2))`. -/
 theorem integral_kbar_eq_kernMean (hp0 : p ≠ 0) :
     (∫ v in (0 : ℝ)..1, kbar c p v) = kernMean c p
       ∧ kernMean c p = c / p * ((2 : ℝ) ^ p - ((2 : ℝ) ^ p - 1) / (p * log 2)) := by
@@ -683,7 +685,7 @@ theorem integral_kbar_eq_kernMean (hp0 : p ≠ 0) :
   field_simp
   ring
 
-/-- **`rem:doubling_renewal`, the mean of the kernel is `ψ'(p_*)/(p_* ln 2) = τ/(τ−1) − 1/(p_* ln 2)`**,
+/-- **the dropped renewal remark, the mean of the kernel is `ψ'(p_*)/(p_* ln 2) = τ/(τ−1) − 1/(p_* ln 2)`**,
 by the Cramér relation `eq:doubling_cramer_form`. -/
 theorem kernMean_eq (hp0 : p ≠ 0) (hp : psi c p = 0) :
     kernMean c p = deriv (psi c) p / (p * log 2)
@@ -710,7 +712,7 @@ theorem kernMean_pos (hc : 0 < c) : 0 < kernMean c p := by
   exact intervalIntegral.intervalIntegral_pos_of_pos_on (hcont.intervalIntegrable _ _)
     (fun v hv => mul_pos hv.1 (kern_pos hc p v)) zero_lt_one
 
-/-- **`rem:doubling_renewal`, the limit**: if a bounded measurable solution `V` of the limit
+/-- **the dropped renewal remark, the limit**: if a bounded measurable solution `V` of the limit
 equation has a limit `ℓ` at `+∞`, then, dominated convergence in the leftmost expression of `G`,
 `ℓ = G / ∫₀¹ k̄` — with `∫₀¹ k̄ = ∫₀¹ v k(v) dv = ψ'(p_*)/(p_* ln 2) = τ/(τ−1) − 1/(p_* ln 2)`
 (`integral_kbar_eq_kernMean`, `kernMean_eq`). `G` being constant (`renewal_G_const`), the
@@ -753,7 +755,7 @@ theorem renewal_limit (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Mea
 noncomputable def kernMeasure (c p : ℝ) : Measure ℝ :=
   (volume.restrict (Icc (0 : ℝ) 1)).withDensity fun v => ENNReal.ofReal (kern c p v)
 
-/-- **`rem:doubling_renewal`, `∫₀¹ k = 1` as a probability law**: the kernel is a probability
+/-- **the dropped renewal remark, `∫₀¹ k = 1` as a probability law**: the kernel is a probability
 density. -/
 theorem kernMeasure_univ (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) :
     kernMeasure c p univ = 1 := by
@@ -763,11 +765,11 @@ theorem kernMeasure_univ (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) :
     integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le zero_le_one,
     integral_kern hp0 hp, ENNReal.ofReal_one]
 
-/-- **`rem:doubling_renewal`, "that kernel has a density"**: its law is absolutely continuous. -/
+/-- **the dropped renewal remark, "that kernel has a density"**: its law is absolutely continuous. -/
 theorem kernMeasure_absolutelyContinuous (c p : ℝ) : kernMeasure c p ≪ volume :=
   (withDensity_absolutelyContinuous _ _).trans Measure.restrict_le_self.absolutelyContinuous
 
-/-- **`rem:doubling_renewal`, "hence is non-lattice"**: no lattice `a + hℤ` carries the law,
+/-- **the dropped renewal remark, "hence is non-lattice"**: no lattice `a + hℤ` carries the law,
 since it charges no countable set. -/
 theorem kernMeasure_nonlattice (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (a h : ℝ) :
     ¬ ∀ᵐ x ∂kernMeasure c p, ∃ n : ℤ, x = a + n * h := by

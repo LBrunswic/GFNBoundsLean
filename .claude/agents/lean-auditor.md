@@ -53,7 +53,7 @@ it silent about a gap you can see?
 **3. Flags the paper itself raises.** These must be mirrored, not laundered (kb `0005`):
 `theo:doubling_main`(1) row (d) at `c = 1/ln 2` is open *in the paper*;
 `rem:doubling_second_order` is explicitly not proved there; `prop:doubling_unsolvable`(1) gives a
-*dense* range, so only **exact** `L²` flow matching is refuted; `rem:doubling_renewal`'s
+*dense* range, so only **exact** `L²` flow matching is refuted; the renewal remark's (dropped from the draft 2026-09-19)
 kernel-mean identity does not determine `C`.
 
 **4. Constants.** Any `∃ C` that could have been an explicit formula (kb `0007`). Any constant

@@ -168,7 +168,7 @@ The appendix flags these itself; this library mirrors the flags rather than laun
 - `rem:doubling_second_order` is explicitly "a formal matching computation and is not proved here".
 - `prop:doubling_unsolvable`'s witness pair is non-explicit by construction (open mapping), so the
   Lean statement is an `∃`.
-- `rem:doubling_renewal`'s kernel-mean identity is exact for the limit equation only and does not
+- the renewal remark's (dropped from the draft 2026-09-19) kernel-mean identity is exact for the limit equation only and does not
   determine `C`.
 
 ## Verification

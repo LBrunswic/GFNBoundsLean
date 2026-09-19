@@ -7378,10 +7378,10 @@ In scope: `variable {S : Setting} {cap : Option ℕ} (L : Stat S cap)`
 
 **The renewal form of the cut balance, and the two constants written `B̂`**  
 
-*strict library; 1390 lines; 93 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 1392 lines; 93 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `rem:doubling_renewal` (bucket A), ✅ `rem:doubling_two_constants` (bucket A),  `def:doubling_decay_not`
+Certifies: ✅ `rem:doubling_two_constants` (bucket A)
 
 
 In scope: `variable {k V : ℝ → ℝ} {K0 K1 M : ℝ}`, `variable {c p : ℝ}`, `variable {c p : ℝ} {V : ℝ → ℝ} {M : ℝ}`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] {K : V → V → ℝ} {lam : V → ℝ}`, `variable {q : ℝ}`, `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {Q : E →L[ℝ] E}`, `variable {q : ℝ}`, `variable {V : Type*} [Fintype V] [DecidableEq V]`
@@ -7389,108 +7389,105 @@ In scope: `variable {k V : ℝ → ℝ} {K0 K1 M : ℝ}`, `variable {c p : ℝ}`
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 207 | def | `kern` | `noncomputable def kern (c p v : ℝ) : ℝ` |
-| 209 | theorem | `continuous_kern` | `theorem continuous_kern (c p : ℝ) : Continuous (kern c p)` |
-| 213 | theorem | `hasDerivAt_kern` | `theorem hasDerivAt_kern (c p v : ℝ) : HasDerivAt (kern c p) (c * log 2 * ((2 : ℝ) ^ (p * v) * log 2 * p)) v` |
-| 220 | theorem | `kern_pos` | `theorem kern_pos {c : ℝ} (hc : 0 < c) (p v : ℝ) : 0 < kern c p v` |
-| 226 | theorem | `two_rpow_mul_le` | `theorem two_rpow_mul_le {p v : ℝ} (hv : v ∈ Icc (0 : ℝ) 1) : (2 : ℝ) ^ (p * v) ≤ 1 + (2 : ℝ) ^ p` |
-| 239 | def | `kernSup` | `noncomputable def kernSup (c p : ℝ) : ℝ` |
-| 242 | def | `kernLip` | `noncomputable def kernLip (c p : ℝ) : ℝ` |
-| 245 | theorem | `abs_kern_le` | `theorem abs_kern_le {c : ℝ} (hc : 0 < c) (p : ℝ) {v : ℝ} (hv : v ∈ Icc (0 : ℝ) 1) : \|kern c p v\| ≤ kernSup c p` |
-| 253 | theorem | `kernLip_nonneg` | `theorem kernLip_nonneg {c : ℝ} (hc : 0 < c) (p : ℝ) : 0 ≤ kernLip c p` |
-| 261 | theorem | `abs_kern_sub_le` | `theorem abs_kern_sub_le {c : ℝ} (hc : 0 < c) (p : ℝ) {u v : ℝ} (hu : u ∈ Icc (0 : ℝ) 1) (hv : v ∈ Icc (0 : ℝ) 1) : \|kern c p u - kern c p v\| ≤ kernLip c p * \|u - v\|` |
-| 281 | theorem | `kern_boundedVariationOn` | `theorem kern_boundedVariationOn {c : ℝ} (hc : 0 < c) (p : ℝ) : BoundedVariationOn (kern c p) (Icc (0 : ℝ) 1)` |
-| 295 | theorem | `intervalIntegrable_of_abs_le` | `theorem intervalIntegrable_of_abs_le {f : ℝ → ℝ} (hf : Measurable f) {M : ℝ} (hM : ∀ x, \|f x\| ≤ M) (a b : ℝ) : IntervalIntegrable f volume a b` |
-| 304 | theorem | `intervalIntegrable_mul_shift` | `theorem intervalIntegrable_mul_shift (hk : Continuous k) (hV : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (x a b : ℝ) : IntervalIntegrable (fun u => k u * V (x - u)) volume a b` |
-| 312 | theorem | `intervalIntegrable_mul_shift'` | `theorem intervalIntegrable_mul_shift' (hk : Continuous k) (hV : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (x h a b : ℝ) : IntervalIntegrable (fun u => k (u + h) * V (x - u)) volume a b` |
-| 320 | theorem | `conv_sub_le` | `theorem conv_sub_le (hk : Continuous k) (hK0 : ∀ v ∈ Icc (0 : ℝ) 1, \|k v\| ≤ K0) (hK1 : 0 ≤ K1) (hK1' : ∀ u ∈ Icc (0 : ℝ) 1, ∀ v ∈ Icc (0 : ℝ) 1, \|k u - k v\| ≤ K1 * \|u - v\|) (hV : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (x : ℝ) {h : ℝ} (hh : 0 ≤ h) : \|(∫ v in (0 : ℝ)..1, k v * V (x + h - v)) - ∫ v in (0 : ℝ)..1, k v * V (x - v)\| ≤ M * (2 * K0 + K1) * h` |
-| 423 | theorem | `conv_lipschitz` | `theorem conv_lipschitz (hk : Continuous k) (hK0 : ∀ v ∈ Icc (0 : ℝ) 1, \|k v\| ≤ K0) (hK1 : 0 ≤ K1) (hK1' : ∀ u ∈ Icc (0 : ℝ) 1, ∀ v ∈ Icc (0 : ℝ) 1, \|k u - k v\| ≤ K1 * \|u - v\|) (hV : Measurable V) (hM : ∀ x, \|V x\| ≤ M) : LipschitzWith (Real.toNNReal (M * (2 * K0 + K1))) (fun x => ∫ v in (0 : ℝ)..1, k v * V (x - v))` |
-| 447 | theorem | `integral_kern` | `theorem integral_kern (hp0 : p ≠ 0) (hp : psi c p = 0) : ∫ v in (0 : ℝ)..1, kern c p v = 1` |
-| 451 | def | `kbar` | `noncomputable def kbar (c p v : ℝ) : ℝ` |
-| 454 | theorem | `kbar_zero` | `theorem kbar_zero (hp0 : p ≠ 0) (hp : psi c p = 0) : kbar c p 0 = 1` |
-| 457 | theorem | `kbar_one` | `theorem kbar_one : kbar c p 1 = 0` |
-| 460 | theorem | `hasDerivAt_kbar` | `theorem hasDerivAt_kbar (v : ℝ) : HasDerivAt (kbar c p) (-kern c p v) v` |
-| 465 | theorem | `hasDerivAt_two_rpow_mul` | `theorem hasDerivAt_two_rpow_mul (p w : ℝ) : HasDerivAt (fun v : ℝ => (2 : ℝ) ^ (p * v)) ((2 : ℝ) ^ (p * w) * log 2 * p) w` |
-| 472 | theorem | `kbar_eq` | `theorem kbar_eq (hp0 : p ≠ 0) (v : ℝ) : kbar c p v = c / p * ((2 : ℝ) ^ p - (2 : ℝ) ^ (p * v))` |
-| 487 | theorem | `continuous_kbar` | `theorem continuous_kbar (c p : ℝ) : Continuous (kbar c p)` |
-| 491 | def | `Gfun` | `noncomputable def Gfun (c p : ℝ) (V : ℝ → ℝ) (x : ℝ) : ℝ` |
-| 496 | theorem | `Gfun_eq_shift` | `theorem Gfun_eq_shift (V : ℝ → ℝ) (x : ℝ) : Gfun c p V x = ∫ y in (x - 1)..x, kbar c p (x - y) * V y` |
-| 505 | theorem | `rhs_eq_shift` | `theorem rhs_eq_shift (V : ℝ → ℝ) (x : ℝ) : (∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) = ∫ y in (x - 1)..x, kern c p (x - y) * V y` |
-| 521 | theorem | `renewal_rhs_lipschitz` | `theorem renewal_rhs_lipschitz (hc : 0 < c) (hVm : Measurable V) (hM : ∀ x, \|V x\| ≤ M) : LipschitzWith (Real.toNNReal (M * (2 * kernSup c p + kernLip c p))) (fun x => ∫ v in (0 : ℝ)..1, kern c p v * V (x - v))` |
-| 529 | theorem | `renewal_lipschitz` | `theorem renewal_lipschitz (hc : 0 < c) (hVm : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) : LipschitzWith (Real.toNNReal (M * (2 * kernSup c p + kernLip c p))) V` |
-| 539 | theorem | `hasDerivAt_Gfun` | `theorem hasDerivAt_Gfun (hp0 : p ≠ 0) (hVc : Continuous V) (x : ℝ) : HasDerivAt (Gfun c p V) (kbar c p 0 * V x - kbar c p 1 * V (x - 1) - ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) x` |
-| 619 | theorem | `renewal_hasDerivAt_G` | `theorem renewal_hasDerivAt_G (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) (x : ℝ) : HasDerivAt (Gfun c p V) (kbar c p 0 * V x - kbar c p 1 * V (x - 1) - ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) x ∧ kbar c p 0 * V x - kbar c p 1 * V (x - 1) - ∫ v in (0 : ℝ)..1, kern c p v * V (x - v) = 0` |
-| 632 | theorem | `renewal_G_const` | `theorem renewal_G_const (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) (x y : ℝ) : Gfun c p V x = Gfun c p V y` |
-| 641 | def | `kernMean` | `noncomputable def kernMean (c p : ℝ) : ℝ` |
-| 644 | theorem | `integral_kbar_eq_kernMean` | `theorem integral_kbar_eq_kernMean (hp0 : p ≠ 0) : (∫ v in (0 : ℝ)..1, kbar c p v) = kernMean c p ∧ kernMean c p = c / p * ((2 : ℝ) ^ p - ((2 : ℝ) ^ p - 1) / (p * log 2))` |
-| 688 | theorem | `kernMean_eq` | `theorem kernMean_eq (hp0 : p ≠ 0) (hp : psi c p = 0) : kernMean c p = deriv (psi c) p / (p * log 2) ∧ kernMean c p = (2 : ℝ) ^ p / ((2 : ℝ) ^ p - 1) - 1 / (p * log 2)` |
-| 708 | theorem | `kernMean_pos` | `theorem kernMean_pos (hc : 0 < c) : 0 < kernMean c p` |
-| 718 | theorem | `renewal_limit` | `theorem renewal_limit (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) {ℓ : ℝ} (hlim : Tendsto V atTop (𝓝 ℓ)) (x₀ : ℝ) : ℓ = Gfun c p V x₀ / ∫ v in (0 : ℝ)..1, kbar c p v` |
-| 753 | def | `kernMeasure` | `noncomputable def kernMeasure (c p : ℝ) : Measure ℝ` |
-| 758 | theorem | `kernMeasure_univ` | `theorem kernMeasure_univ (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) : kernMeasure c p univ = 1` |
-| 767 | theorem | `kernMeasure_absolutelyContinuous` | `theorem kernMeasure_absolutelyContinuous (c p : ℝ) : kernMeasure c p ≪ volume` |
-| 772 | theorem | `kernMeasure_nonlattice` | `theorem kernMeasure_nonlattice (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (a h : ℝ) : ¬ ∀ᵐ x ∂kernMeasure c p, ∃ n : ℤ, x = a + n * h` |
-| 797 | theorem | `const_isRenewalSolution` | `theorem const_isRenewalSolution (hp0 : p ≠ 0) (hp : psi c p = 0) (ℓ x : ℝ) : (fun _ : ℝ => ℓ) x = ∫ v in (0 : ℝ)..1, kern c p v * (fun _ : ℝ => ℓ) (x - v)` |
-| 804 | theorem | `renewal_limit_check` | `theorem renewal_limit_check (ℓ : ℝ) : ∃ p : ℝ, p ≠ 0 ∧ psi (1 / 2) p = 0 ∧ ℓ = Gfun (1 / 2) p (fun _ => ℓ) 0 / ∫ v in (0 : ℝ)..1, kbar (1 / 2) p v` |
-| 826 | theorem | `funAct_add'` | `theorem funAct_add' (K : V → V → ℝ) (a b : V → ℝ) : Core.funAct K (fun y => a y + b y) = fun x => Core.funAct K a x + Core.funAct K b x` |
-| 831 | theorem | `funAct_smul'` | `theorem funAct_smul' (K : V → V → ℝ) (c : ℝ) (a : V → ℝ) : Core.funAct K (fun y => c * a y) = fun x => c * Core.funAct K a x` |
-| 839 | def | `funLin` | `noncomputable def funLin (lam : V → ℝ) (K : V → V → ℝ) : EuclideanSpace ℝ V →ₗ[ℝ] EuclideanSpace ℝ V` |
-| 851 | def | `funOp` | `noncomputable def funOp (lam : V → ℝ) (K : V → V → ℝ) : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V` |
-| 855 | theorem | `funOp_wtL2` | `theorem funOp_wtL2 {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (a : V → ℝ) : funOp lam K (wtL2 lam a) = wtL2 lam (Core.funAct K a)` |
-| 860 | theorem | `funOp_pow_wtL2` | `theorem funOp_pow_wtL2 {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (a : V → ℝ) (n : ℕ) : (funOp lam K ^ n) (wtL2 lam a) = wtL2 lam ((Core.funAct K)^[n] a)` |
-| 872 | theorem | `inner_funOp` | `theorem inner_funOp {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (u v : EuclideanSpace ℝ V) : ⟪funOp lam K u, v⟫ = ⟪u, densOp lam K v⟫` |
-| 890 | theorem | `funOp_eq_star` | `theorem funOp_eq_star {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) : funOp lam K = star (densOp lam K)` |
-| 895 | theorem | `meanOp_eq_star` | `theorem meanOp_eq_star {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) : meanOp lam = star (meanOp lam)` |
-| 902 | theorem | `norm_funOp_pow_sub` | `theorem norm_funOp_pow_sub {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (n : ℕ) : ‖funOp lam K ^ n - meanOp lam‖ = Core.Mixing.beta (densOp lam K) (meanOp lam) n` |
-| 912 | theorem | `meanOp_mul_funOp` | `theorem meanOp_mul_funOp {K : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) : meanOp lam * funOp lam K = meanOp lam` |
-| 919 | theorem | `funOp_mul_meanOp` | `theorem funOp_mul_meanOp {K : V → V → ℝ} {lam : V → ℝ} (hK : Core.IsMarkov K) (hlam : ∀ x, 0 < lam x) : funOp lam K * meanOp lam = meanOp lam` |
-| 925 | theorem | `meanOp_mul_self` | `theorem meanOp_mul_self {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) : meanOp lam * meanOp lam = meanOp lam` |
-| 939 | theorem | `inverse_sub_eq_of_tendsto` | `theorem inverse_sub_eq_of_tendsto (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hconv : Tendsto (partialSum (funOp lam K) (meanOp lam)) atTop (𝓝 U)) : IsUnit (1 - funOp lam K + meanOp lam) ∧ Ring.inverse (1 - funOp lam K + meanOp lam) - meanOp lam = U` |
-| 963 | theorem | `bhat_le_mixing_sum` | `theorem bhat_le_mixing_sum (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {B : ℝ} (hB : ∀ N : ℕ, ∑ n ∈ Finset.range N, Core.Mixing.beta (densOp lam K) (meanOp lam) n ≤ B) : ‖Ring.inverse (1 - funOp lam K + meanOp lam) - meanOp lam‖ ≤ B` |
-| 986 | theorem | `diffusion_apply_eq_series` | `theorem diffusion_apply_eq_series (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hconv : Tendsto (partialSum (funOp lam K) (meanOp lam)) atTop (𝓝 U)) (θ : V → ℝ) (x : V) : Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N, ((Core.funAct K)^[n] θ x - Graph.meanL2 lam θ)) atTop (𝓝 (unwtL2 lam ((Ring.inverse (1 - funOp lam K + meanOp lam) - meanOp lam) (wtL2 lam θ)) x))` |
-| 1026 | def | `flipK` | `noncomputable def flipK (q : ℝ) : Fin 2 → Fin 2 → ℝ` |
-| 1030 | theorem | `flipK_isMarkov` | `theorem flipK_isMarkov (hq0 : 0 ≤ q) (hq1 : q ≤ 1) : Core.IsMarkov (flipK q)` |
-| 1036 | theorem | `flipK_isInvariant` | `theorem flipK_isInvariant (q : ℝ) : Core.IsInvariant twoStateLam (flipK q)` |
-| 1042 | theorem | `flipK_invariant_unique` | `theorem flipK_invariant_unique (hq : q ≠ 0) {mu : Fin 2 → ℝ} (hinv : ∀ y, ∑ x, mu x * flipK q x y = mu y) (htot : ∑ x, mu x = 1) : mu = twoStateLam` |
-| 1056 | theorem | `densOp_flipK` | `theorem densOp_flipK (q : ℝ) : densOp twoStateLam (flipK q) = meanOp twoStateLam + (1 - 2 * q) • (1 - meanOp twoStateLam)` |
-| 1069 | theorem | `funOp_flipK` | `theorem funOp_flipK (q : ℝ) : funOp twoStateLam (flipK q) = meanOp twoStateLam + (1 - 2 * q) • (1 - meanOp twoStateLam)` |
-| 1084 | theorem | `flipK_funAct_centred` | `theorem flipK_funAct_centred (q : ℝ) {f : Fin 2 → ℝ} (hf : Graph.meanL2 twoStateLam f = 0) : Core.funAct (flipK q) f = fun x => (1 - 2 * q) * f x` |
-| 1096 | theorem | `mul_proj_add_smul` | `theorem mul_proj_add_smul (hQ : Q * Q = Q) (a b : ℝ) : (Q + a • (1 - Q)) * (Q + b • (1 - Q)) = Q + (a * b) • (1 - Q)` |
-| 1105 | theorem | `pow_proj_add_smul` | `theorem pow_proj_add_smul (hQ : Q * Q = Q) (r : ℝ) (n : ℕ) : (Q + r • (1 - Q)) ^ n = Q + r ^ n • (1 - Q)` |
-| 1116 | theorem | `beta_flipK` | `theorem beta_flipK (q : ℝ) (n : ℕ) : Core.Mixing.beta (densOp twoStateLam (flipK q)) (meanOp twoStateLam) n = \|1 - 2 * q\| ^ n` |
-| 1123 | theorem | `mixing_flipK` | `theorem mixing_flipK (hq0 : 0 < q) (hq1 : q < 1) : Core.Mixing (densOp twoStateLam (flipK q)) (meanOp twoStateLam)` |
-| 1134 | theorem | `B_flipK` | `theorem B_flipK (hq0 : 0 < q) (hq1 : q < 1) : Core.Mixing.B (densOp twoStateLam (flipK q)) (meanOp twoStateLam) = (1 - \|1 - 2 * q\|)⁻¹` |
-| 1142 | theorem | `diffusion_flipK` | `theorem diffusion_flipK (hq : q ≠ 0) : Ring.inverse (1 - funOp twoStateLam (flipK q) + meanOp twoStateLam) - meanOp twoStateLam = (2 * q)⁻¹ • (1 - meanOp twoStateLam)` |
-| 1168 | theorem | `norm_diffusion_flipK` | `theorem norm_diffusion_flipK {q : ℝ} (hq : 0 < q) : ‖Ring.inverse (1 - funOp twoStateLam (flipK q) + meanOp twoStateLam) - meanOp twoStateLam‖ = (2 * q)⁻¹` |
-| 1179 | theorem | `two_constants_flip_three_quarters` | `theorem two_constants_flip_three_quarters : (∀ mu : Fin 2 → ℝ, (∀ y, ∑ x, mu x * flipK (3 / 4) x y = mu y) → ∑ x, mu x = 1 → mu = twoStateLam) ∧ Core.IsInvariant twoStateLam (flipK (3 / 4)) ∧ (∀ f : Fin 2 → ℝ, Graph.meanL2 twoStateLam f = 0 → Core.funAct (flipK (3 / 4)) f = fun x => -(1 / 2) * f x) ∧ ‖Ring.inverse (1 - funOp twoStateLam (flipK (3 / 4)) + meanOp twoStateLam) - meanOp twoStateLam‖ = 2 / 3 ∧ (∀ n : ℕ, Core.Mixing.beta (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam) n = ((2 : ℝ) ^ n)⁻¹) ∧ Core.Mixing (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam) ∧ Core.Mixing.B (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam) = 2 ∧ ‖Ring.inverse (1 - funOp twoStateLam (flipK (3 / 4)) + meanOp twoStateLam) - meanOp twoStateLam‖ ≠ Core.Mixing.B (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam)` |
-| 1211 | theorem | `two_constants_flip_half` | `theorem two_constants_flip_half : ‖Ring.inverse (1 - funOp twoStateLam (flipK (1 / 2)) + meanOp twoStateLam) - meanOp twoStateLam‖ = 1 ∧ Core.Mixing.B (densOp twoStateLam (flipK (1 / 2))) (meanOp twoStateLam) = 1` |
-| 1223 | theorem | `flipK_half_eq_twoStateK` | `theorem flipK_half_eq_twoStateK : flipK (1 / 2) = twoStateK` |
-| 1230 | theorem | `bhat_le_mixing_sum_check` | `theorem bhat_le_mixing_sum_check : ‖Ring.inverse (1 - funOp twoStateLam (flipK (3 / 4)) + meanOp twoStateLam) - meanOp twoStateLam‖ ≤ 2` |
-| 1243 | theorem | `diffusion_series_converges_check` | `theorem diffusion_series_converges_check : ∃ U : EuclideanSpace ℝ (Fin 2) →L[ℝ] EuclideanSpace ℝ (Fin 2), Tendsto (partialSum (funOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam)) atTop (𝓝 U)` |
-| 1273 | def | `paths` | `def paths (x : V) (n : ℕ) : Finset (Fin (n + 1) → V)` |
-| 1277 | def | `trajMass` | `noncomputable def trajMass (K : V → V → ℝ) {n : ℕ} (γ : Fin (n + 1) → V) : ℝ` |
-| 1281 | def | `condExp` | `noncomputable def condExp (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) : ℝ` |
-| 1284 | theorem | `paths_eq_map` | `theorem paths_eq_map (x : V) (n : ℕ) : paths x n = Finset.univ.map ⟨Fin.cons x, Fin.cons_right_injective (α := fun _ => V) x⟩` |
-| 1295 | theorem | `condExp_eq_sum_cons` | `theorem condExp_eq_sum_cons (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) : condExp K θ n x = ∑ ω : Fin n → V, trajMass K (Fin.cons x ω : Fin (n + 1) → V) * θ ((Fin.cons x ω : Fin (n + 1) → V) (Fin.last n))` |
-| 1303 | theorem | `trajMass_cons_cons` | `theorem trajMass_cons_cons (K : V → V → ℝ) {n : ℕ} (x y : V) (ω : Fin n → V) : trajMass K (Fin.cons x (Fin.cons y ω : Fin (n + 1) → V) : Fin (n + 2) → V) = K x y * trajMass K (Fin.cons y ω : Fin (n + 1) → V)` |
-| 1311 | theorem | `condExp_succ` | `theorem condExp_succ (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) : condExp K θ (n + 1) x = ∑ y, K x y * condExp K θ n y` |
-| 1322 | theorem | `condExp_zero` | `theorem condExp_zero (K : V → V → ℝ) (θ : V → ℝ) (x : V) : condExp K θ 0 x = θ x` |
-| 1327 | theorem | `condExp_eq_iterate` | `theorem condExp_eq_iterate (K : V → V → ℝ) (θ : V → ℝ) : ∀ n x, condExp K θ n x = (Core.funAct K)^[n] θ x` |
-| 1338 | theorem | `trajMass_nonneg` | `theorem trajMass_nonneg {K : V → V → ℝ} (hK : ∀ x y, 0 ≤ K x y) {n : ℕ} (γ : Fin (n + 1) → V) : 0 ≤ trajMass K γ` |
-| 1343 | theorem | `sum_trajMass` | `theorem sum_trajMass {K : V → V → ℝ} (hK : Core.IsMarkov K) (n : ℕ) (x : V) : ∑ γ ∈ paths x n, trajMass K γ = 1` |
-| 1352 | theorem | `condExp_one_eq_funAct` | `theorem condExp_one_eq_funAct (K : V → V → ℝ) (f : V → ℝ) (x : V) : condExp K f 1 x = Core.funAct K f x` |
-| 1357 | theorem | `unwtL2_funOp_pow_wtL2` | `theorem unwtL2_funOp_pow_wtL2 {K : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (θ : V → ℝ) (n : ℕ) (x : V) : Balance.unwtL2 lam ((funOp lam K ^ n) (Balance.wtL2 lam θ)) x = condExp K θ n x` |
-| 1362 | theorem | `diffusion_apply_eq_series_condExp` | `theorem diffusion_apply_eq_series_condExp {K : V → V → ℝ} {lam : V → ℝ} (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hconv : Tendsto (partialSum (funOp lam K) (Balance.meanOp lam)) atTop (𝓝 U)) (θ : V → ℝ) (x : V) : Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N, (condExp K θ n x - Graph.meanL2 lam θ)) atTop (𝓝 (Balance.unwtL2 lam ((Ring.inverse (1 - funOp lam K + Balance.meanOp lam) - Balance.meanOp lam) (Balance.wtL2 lam θ)) x))` |
-| 1374 | theorem | `flip_condExp_series_check` | `theorem flip_condExp_series_check : (∀ n x, ∑ γ ∈ paths x n, trajMass (flipK (3 / 4)) γ = 1) ∧ ∀ (θ : Fin 2 → ℝ) (x : Fin 2), Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N, (condExp (flipK (3 / 4)) θ n x - Graph.meanL2 Balance.twoStateLam θ)) atTop (𝓝 (Balance.unwtL2 Balance.twoStateLam ((Ring.inverse (1 - funOp Balance.twoStateLam (flipK (3 / 4)) + Balance.meanOp Balance.twoStateLam) - Balance.meanOp Balance.twoStateLam) (Balance.wtL2 Balance.twoStateLam θ)) x))` |
+| 209 | def | `kern` | `noncomputable def kern (c p v : ℝ) : ℝ` |
+| 211 | theorem | `continuous_kern` | `theorem continuous_kern (c p : ℝ) : Continuous (kern c p)` |
+| 215 | theorem | `hasDerivAt_kern` | `theorem hasDerivAt_kern (c p v : ℝ) : HasDerivAt (kern c p) (c * log 2 * ((2 : ℝ) ^ (p * v) * log 2 * p)) v` |
+| 222 | theorem | `kern_pos` | `theorem kern_pos {c : ℝ} (hc : 0 < c) (p v : ℝ) : 0 < kern c p v` |
+| 228 | theorem | `two_rpow_mul_le` | `theorem two_rpow_mul_le {p v : ℝ} (hv : v ∈ Icc (0 : ℝ) 1) : (2 : ℝ) ^ (p * v) ≤ 1 + (2 : ℝ) ^ p` |
+| 241 | def | `kernSup` | `noncomputable def kernSup (c p : ℝ) : ℝ` |
+| 244 | def | `kernLip` | `noncomputable def kernLip (c p : ℝ) : ℝ` |
+| 247 | theorem | `abs_kern_le` | `theorem abs_kern_le {c : ℝ} (hc : 0 < c) (p : ℝ) {v : ℝ} (hv : v ∈ Icc (0 : ℝ) 1) : \|kern c p v\| ≤ kernSup c p` |
+| 255 | theorem | `kernLip_nonneg` | `theorem kernLip_nonneg {c : ℝ} (hc : 0 < c) (p : ℝ) : 0 ≤ kernLip c p` |
+| 263 | theorem | `abs_kern_sub_le` | `theorem abs_kern_sub_le {c : ℝ} (hc : 0 < c) (p : ℝ) {u v : ℝ} (hu : u ∈ Icc (0 : ℝ) 1) (hv : v ∈ Icc (0 : ℝ) 1) : \|kern c p u - kern c p v\| ≤ kernLip c p * \|u - v\|` |
+| 283 | theorem | `kern_boundedVariationOn` | `theorem kern_boundedVariationOn {c : ℝ} (hc : 0 < c) (p : ℝ) : BoundedVariationOn (kern c p) (Icc (0 : ℝ) 1)` |
+| 297 | theorem | `intervalIntegrable_of_abs_le` | `theorem intervalIntegrable_of_abs_le {f : ℝ → ℝ} (hf : Measurable f) {M : ℝ} (hM : ∀ x, \|f x\| ≤ M) (a b : ℝ) : IntervalIntegrable f volume a b` |
+| 306 | theorem | `intervalIntegrable_mul_shift` | `theorem intervalIntegrable_mul_shift (hk : Continuous k) (hV : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (x a b : ℝ) : IntervalIntegrable (fun u => k u * V (x - u)) volume a b` |
+| 314 | theorem | `intervalIntegrable_mul_shift'` | `theorem intervalIntegrable_mul_shift' (hk : Continuous k) (hV : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (x h a b : ℝ) : IntervalIntegrable (fun u => k (u + h) * V (x - u)) volume a b` |
+| 322 | theorem | `conv_sub_le` | `theorem conv_sub_le (hk : Continuous k) (hK0 : ∀ v ∈ Icc (0 : ℝ) 1, \|k v\| ≤ K0) (hK1 : 0 ≤ K1) (hK1' : ∀ u ∈ Icc (0 : ℝ) 1, ∀ v ∈ Icc (0 : ℝ) 1, \|k u - k v\| ≤ K1 * \|u - v\|) (hV : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (x : ℝ) {h : ℝ} (hh : 0 ≤ h) : \|(∫ v in (0 : ℝ)..1, k v * V (x + h - v)) - ∫ v in (0 : ℝ)..1, k v * V (x - v)\| ≤ M * (2 * K0 + K1) * h` |
+| 425 | theorem | `conv_lipschitz` | `theorem conv_lipschitz (hk : Continuous k) (hK0 : ∀ v ∈ Icc (0 : ℝ) 1, \|k v\| ≤ K0) (hK1 : 0 ≤ K1) (hK1' : ∀ u ∈ Icc (0 : ℝ) 1, ∀ v ∈ Icc (0 : ℝ) 1, \|k u - k v\| ≤ K1 * \|u - v\|) (hV : Measurable V) (hM : ∀ x, \|V x\| ≤ M) : LipschitzWith (Real.toNNReal (M * (2 * K0 + K1))) (fun x => ∫ v in (0 : ℝ)..1, k v * V (x - v))` |
+| 449 | theorem | `integral_kern` | `theorem integral_kern (hp0 : p ≠ 0) (hp : psi c p = 0) : ∫ v in (0 : ℝ)..1, kern c p v = 1` |
+| 453 | def | `kbar` | `noncomputable def kbar (c p v : ℝ) : ℝ` |
+| 456 | theorem | `kbar_zero` | `theorem kbar_zero (hp0 : p ≠ 0) (hp : psi c p = 0) : kbar c p 0 = 1` |
+| 459 | theorem | `kbar_one` | `theorem kbar_one : kbar c p 1 = 0` |
+| 462 | theorem | `hasDerivAt_kbar` | `theorem hasDerivAt_kbar (v : ℝ) : HasDerivAt (kbar c p) (-kern c p v) v` |
+| 467 | theorem | `hasDerivAt_two_rpow_mul` | `theorem hasDerivAt_two_rpow_mul (p w : ℝ) : HasDerivAt (fun v : ℝ => (2 : ℝ) ^ (p * v)) ((2 : ℝ) ^ (p * w) * log 2 * p) w` |
+| 474 | theorem | `kbar_eq` | `theorem kbar_eq (hp0 : p ≠ 0) (v : ℝ) : kbar c p v = c / p * ((2 : ℝ) ^ p - (2 : ℝ) ^ (p * v))` |
+| 489 | theorem | `continuous_kbar` | `theorem continuous_kbar (c p : ℝ) : Continuous (kbar c p)` |
+| 493 | def | `Gfun` | `noncomputable def Gfun (c p : ℝ) (V : ℝ → ℝ) (x : ℝ) : ℝ` |
+| 498 | theorem | `Gfun_eq_shift` | `theorem Gfun_eq_shift (V : ℝ → ℝ) (x : ℝ) : Gfun c p V x = ∫ y in (x - 1)..x, kbar c p (x - y) * V y` |
+| 507 | theorem | `rhs_eq_shift` | `theorem rhs_eq_shift (V : ℝ → ℝ) (x : ℝ) : (∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) = ∫ y in (x - 1)..x, kern c p (x - y) * V y` |
+| 523 | theorem | `renewal_rhs_lipschitz` | `theorem renewal_rhs_lipschitz (hc : 0 < c) (hVm : Measurable V) (hM : ∀ x, \|V x\| ≤ M) : LipschitzWith (Real.toNNReal (M * (2 * kernSup c p + kernLip c p))) (fun x => ∫ v in (0 : ℝ)..1, kern c p v * V (x - v))` |
+| 531 | theorem | `renewal_lipschitz` | `theorem renewal_lipschitz (hc : 0 < c) (hVm : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) : LipschitzWith (Real.toNNReal (M * (2 * kernSup c p + kernLip c p))) V` |
+| 541 | theorem | `hasDerivAt_Gfun` | `theorem hasDerivAt_Gfun (hp0 : p ≠ 0) (hVc : Continuous V) (x : ℝ) : HasDerivAt (Gfun c p V) (kbar c p 0 * V x - kbar c p 1 * V (x - 1) - ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) x` |
+| 621 | theorem | `renewal_hasDerivAt_G` | `theorem renewal_hasDerivAt_G (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) (x : ℝ) : HasDerivAt (Gfun c p V) (kbar c p 0 * V x - kbar c p 1 * V (x - 1) - ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) x ∧ kbar c p 0 * V x - kbar c p 1 * V (x - 1) - ∫ v in (0 : ℝ)..1, kern c p v * V (x - v) = 0` |
+| 634 | theorem | `renewal_G_const` | `theorem renewal_G_const (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) (x y : ℝ) : Gfun c p V x = Gfun c p V y` |
+| 643 | def | `kernMean` | `noncomputable def kernMean (c p : ℝ) : ℝ` |
+| 646 | theorem | `integral_kbar_eq_kernMean` | `theorem integral_kbar_eq_kernMean (hp0 : p ≠ 0) : (∫ v in (0 : ℝ)..1, kbar c p v) = kernMean c p ∧ kernMean c p = c / p * ((2 : ℝ) ^ p - ((2 : ℝ) ^ p - 1) / (p * log 2))` |
+| 690 | theorem | `kernMean_eq` | `theorem kernMean_eq (hp0 : p ≠ 0) (hp : psi c p = 0) : kernMean c p = deriv (psi c) p / (p * log 2) ∧ kernMean c p = (2 : ℝ) ^ p / ((2 : ℝ) ^ p - 1) - 1 / (p * log 2)` |
+| 710 | theorem | `kernMean_pos` | `theorem kernMean_pos (hc : 0 < c) : 0 < kernMean c p` |
+| 720 | theorem | `renewal_limit` | `theorem renewal_limit (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (hVm : Measurable V) (hM : ∀ x, \|V x\| ≤ M) (heq : ∀ x, V x = ∫ v in (0 : ℝ)..1, kern c p v * V (x - v)) {ℓ : ℝ} (hlim : Tendsto V atTop (𝓝 ℓ)) (x₀ : ℝ) : ℓ = Gfun c p V x₀ / ∫ v in (0 : ℝ)..1, kbar c p v` |
+| 755 | def | `kernMeasure` | `noncomputable def kernMeasure (c p : ℝ) : Measure ℝ` |
+| 760 | theorem | `kernMeasure_univ` | `theorem kernMeasure_univ (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) : kernMeasure c p univ = 1` |
+| 769 | theorem | `kernMeasure_absolutelyContinuous` | `theorem kernMeasure_absolutelyContinuous (c p : ℝ) : kernMeasure c p ≪ volume` |
+| 774 | theorem | `kernMeasure_nonlattice` | `theorem kernMeasure_nonlattice (hc : 0 < c) (hp0 : p ≠ 0) (hp : psi c p = 0) (a h : ℝ) : ¬ ∀ᵐ x ∂kernMeasure c p, ∃ n : ℤ, x = a + n * h` |
+| 799 | theorem | `const_isRenewalSolution` | `theorem const_isRenewalSolution (hp0 : p ≠ 0) (hp : psi c p = 0) (ℓ x : ℝ) : (fun _ : ℝ => ℓ) x = ∫ v in (0 : ℝ)..1, kern c p v * (fun _ : ℝ => ℓ) (x - v)` |
+| 806 | theorem | `renewal_limit_check` | `theorem renewal_limit_check (ℓ : ℝ) : ∃ p : ℝ, p ≠ 0 ∧ psi (1 / 2) p = 0 ∧ ℓ = Gfun (1 / 2) p (fun _ => ℓ) 0 / ∫ v in (0 : ℝ)..1, kbar (1 / 2) p v` |
+| 828 | theorem | `funAct_add'` | `theorem funAct_add' (K : V → V → ℝ) (a b : V → ℝ) : Core.funAct K (fun y => a y + b y) = fun x => Core.funAct K a x + Core.funAct K b x` |
+| 833 | theorem | `funAct_smul'` | `theorem funAct_smul' (K : V → V → ℝ) (c : ℝ) (a : V → ℝ) : Core.funAct K (fun y => c * a y) = fun x => c * Core.funAct K a x` |
+| 841 | def | `funLin` | `noncomputable def funLin (lam : V → ℝ) (K : V → V → ℝ) : EuclideanSpace ℝ V →ₗ[ℝ] EuclideanSpace ℝ V` |
+| 853 | def | `funOp` | `noncomputable def funOp (lam : V → ℝ) (K : V → V → ℝ) : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V` |
+| 857 | theorem | `funOp_wtL2` | `theorem funOp_wtL2 {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (a : V → ℝ) : funOp lam K (wtL2 lam a) = wtL2 lam (Core.funAct K a)` |
+| 862 | theorem | `funOp_pow_wtL2` | `theorem funOp_pow_wtL2 {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (a : V → ℝ) (n : ℕ) : (funOp lam K ^ n) (wtL2 lam a) = wtL2 lam ((Core.funAct K)^[n] a)` |
+| 874 | theorem | `inner_funOp` | `theorem inner_funOp {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (u v : EuclideanSpace ℝ V) : ⟪funOp lam K u, v⟫ = ⟪u, densOp lam K v⟫` |
+| 892 | theorem | `funOp_eq_star` | `theorem funOp_eq_star {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) : funOp lam K = star (densOp lam K)` |
+| 897 | theorem | `meanOp_eq_star` | `theorem meanOp_eq_star {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) : meanOp lam = star (meanOp lam)` |
+| 904 | theorem | `norm_funOp_pow_sub` | `theorem norm_funOp_pow_sub {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (K : V → V → ℝ) (n : ℕ) : ‖funOp lam K ^ n - meanOp lam‖ = Core.Mixing.beta (densOp lam K) (meanOp lam) n` |
+| 914 | theorem | `meanOp_mul_funOp` | `theorem meanOp_mul_funOp {K : V → V → ℝ} {lam : V → ℝ} (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) : meanOp lam * funOp lam K = meanOp lam` |
+| 921 | theorem | `funOp_mul_meanOp` | `theorem funOp_mul_meanOp {K : V → V → ℝ} {lam : V → ℝ} (hK : Core.IsMarkov K) (hlam : ∀ x, 0 < lam x) : funOp lam K * meanOp lam = meanOp lam` |
+| 927 | theorem | `meanOp_mul_self` | `theorem meanOp_mul_self {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) : meanOp lam * meanOp lam = meanOp lam` |
+| 941 | theorem | `inverse_sub_eq_of_tendsto` | `theorem inverse_sub_eq_of_tendsto (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hconv : Tendsto (partialSum (funOp lam K) (meanOp lam)) atTop (𝓝 U)) : IsUnit (1 - funOp lam K + meanOp lam) ∧ Ring.inverse (1 - funOp lam K + meanOp lam) - meanOp lam = U` |
+| 965 | theorem | `bhat_le_mixing_sum` | `theorem bhat_le_mixing_sum (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {B : ℝ} (hB : ∀ N : ℕ, ∑ n ∈ Finset.range N, Core.Mixing.beta (densOp lam K) (meanOp lam) n ≤ B) : ‖Ring.inverse (1 - funOp lam K + meanOp lam) - meanOp lam‖ ≤ B` |
+| 988 | theorem | `diffusion_apply_eq_series` | `theorem diffusion_apply_eq_series (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hconv : Tendsto (partialSum (funOp lam K) (meanOp lam)) atTop (𝓝 U)) (θ : V → ℝ) (x : V) : Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N, ((Core.funAct K)^[n] θ x - Graph.meanL2 lam θ)) atTop (𝓝 (unwtL2 lam ((Ring.inverse (1 - funOp lam K + meanOp lam) - meanOp lam) (wtL2 lam θ)) x))` |
+| 1028 | def | `flipK` | `noncomputable def flipK (q : ℝ) : Fin 2 → Fin 2 → ℝ` |
+| 1032 | theorem | `flipK_isMarkov` | `theorem flipK_isMarkov (hq0 : 0 ≤ q) (hq1 : q ≤ 1) : Core.IsMarkov (flipK q)` |
+| 1038 | theorem | `flipK_isInvariant` | `theorem flipK_isInvariant (q : ℝ) : Core.IsInvariant twoStateLam (flipK q)` |
+| 1044 | theorem | `flipK_invariant_unique` | `theorem flipK_invariant_unique (hq : q ≠ 0) {mu : Fin 2 → ℝ} (hinv : ∀ y, ∑ x, mu x * flipK q x y = mu y) (htot : ∑ x, mu x = 1) : mu = twoStateLam` |
+| 1058 | theorem | `densOp_flipK` | `theorem densOp_flipK (q : ℝ) : densOp twoStateLam (flipK q) = meanOp twoStateLam + (1 - 2 * q) • (1 - meanOp twoStateLam)` |
+| 1071 | theorem | `funOp_flipK` | `theorem funOp_flipK (q : ℝ) : funOp twoStateLam (flipK q) = meanOp twoStateLam + (1 - 2 * q) • (1 - meanOp twoStateLam)` |
+| 1086 | theorem | `flipK_funAct_centred` | `theorem flipK_funAct_centred (q : ℝ) {f : Fin 2 → ℝ} (hf : Graph.meanL2 twoStateLam f = 0) : Core.funAct (flipK q) f = fun x => (1 - 2 * q) * f x` |
+| 1098 | theorem | `mul_proj_add_smul` | `theorem mul_proj_add_smul (hQ : Q * Q = Q) (a b : ℝ) : (Q + a • (1 - Q)) * (Q + b • (1 - Q)) = Q + (a * b) • (1 - Q)` |
+| 1107 | theorem | `pow_proj_add_smul` | `theorem pow_proj_add_smul (hQ : Q * Q = Q) (r : ℝ) (n : ℕ) : (Q + r • (1 - Q)) ^ n = Q + r ^ n • (1 - Q)` |
+| 1118 | theorem | `beta_flipK` | `theorem beta_flipK (q : ℝ) (n : ℕ) : Core.Mixing.beta (densOp twoStateLam (flipK q)) (meanOp twoStateLam) n = \|1 - 2 * q\| ^ n` |
+| 1125 | theorem | `mixing_flipK` | `theorem mixing_flipK (hq0 : 0 < q) (hq1 : q < 1) : Core.Mixing (densOp twoStateLam (flipK q)) (meanOp twoStateLam)` |
+| 1136 | theorem | `B_flipK` | `theorem B_flipK (hq0 : 0 < q) (hq1 : q < 1) : Core.Mixing.B (densOp twoStateLam (flipK q)) (meanOp twoStateLam) = (1 - \|1 - 2 * q\|)⁻¹` |
+| 1144 | theorem | `diffusion_flipK` | `theorem diffusion_flipK (hq : q ≠ 0) : Ring.inverse (1 - funOp twoStateLam (flipK q) + meanOp twoStateLam) - meanOp twoStateLam = (2 * q)⁻¹ • (1 - meanOp twoStateLam)` |
+| 1170 | theorem | `norm_diffusion_flipK` | `theorem norm_diffusion_flipK {q : ℝ} (hq : 0 < q) : ‖Ring.inverse (1 - funOp twoStateLam (flipK q) + meanOp twoStateLam) - meanOp twoStateLam‖ = (2 * q)⁻¹` |
+| 1181 | theorem | `two_constants_flip_three_quarters` | `theorem two_constants_flip_three_quarters : (∀ mu : Fin 2 → ℝ, (∀ y, ∑ x, mu x * flipK (3 / 4) x y = mu y) → ∑ x, mu x = 1 → mu = twoStateLam) ∧ Core.IsInvariant twoStateLam (flipK (3 / 4)) ∧ (∀ f : Fin 2 → ℝ, Graph.meanL2 twoStateLam f = 0 → Core.funAct (flipK (3 / 4)) f = fun x => -(1 / 2) * f x) ∧ ‖Ring.inverse (1 - funOp twoStateLam (flipK (3 / 4)) + meanOp twoStateLam) - meanOp twoStateLam‖ = 2 / 3 ∧ (∀ n : ℕ, Core.Mixing.beta (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam) n = ((2 : ℝ) ^ n)⁻¹) ∧ Core.Mixing (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam) ∧ Core.Mixing.B (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam) = 2 ∧ ‖Ring.inverse (1 - funOp twoStateLam (flipK (3 / 4)) + meanOp twoStateLam) - meanOp twoStateLam‖ ≠ Core.Mixing.B (densOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam)` |
+| 1213 | theorem | `two_constants_flip_half` | `theorem two_constants_flip_half : ‖Ring.inverse (1 - funOp twoStateLam (flipK (1 / 2)) + meanOp twoStateLam) - meanOp twoStateLam‖ = 1 ∧ Core.Mixing.B (densOp twoStateLam (flipK (1 / 2))) (meanOp twoStateLam) = 1` |
+| 1225 | theorem | `flipK_half_eq_twoStateK` | `theorem flipK_half_eq_twoStateK : flipK (1 / 2) = twoStateK` |
+| 1232 | theorem | `bhat_le_mixing_sum_check` | `theorem bhat_le_mixing_sum_check : ‖Ring.inverse (1 - funOp twoStateLam (flipK (3 / 4)) + meanOp twoStateLam) - meanOp twoStateLam‖ ≤ 2` |
+| 1245 | theorem | `diffusion_series_converges_check` | `theorem diffusion_series_converges_check : ∃ U : EuclideanSpace ℝ (Fin 2) →L[ℝ] EuclideanSpace ℝ (Fin 2), Tendsto (partialSum (funOp twoStateLam (flipK (3 / 4))) (meanOp twoStateLam)) atTop (𝓝 U)` |
+| 1275 | def | `paths` | `def paths (x : V) (n : ℕ) : Finset (Fin (n + 1) → V)` |
+| 1279 | def | `trajMass` | `noncomputable def trajMass (K : V → V → ℝ) {n : ℕ} (γ : Fin (n + 1) → V) : ℝ` |
+| 1283 | def | `condExp` | `noncomputable def condExp (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) : ℝ` |
+| 1286 | theorem | `paths_eq_map` | `theorem paths_eq_map (x : V) (n : ℕ) : paths x n = Finset.univ.map ⟨Fin.cons x, Fin.cons_right_injective (α := fun _ => V) x⟩` |
+| 1297 | theorem | `condExp_eq_sum_cons` | `theorem condExp_eq_sum_cons (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) : condExp K θ n x = ∑ ω : Fin n → V, trajMass K (Fin.cons x ω : Fin (n + 1) → V) * θ ((Fin.cons x ω : Fin (n + 1) → V) (Fin.last n))` |
+| 1305 | theorem | `trajMass_cons_cons` | `theorem trajMass_cons_cons (K : V → V → ℝ) {n : ℕ} (x y : V) (ω : Fin n → V) : trajMass K (Fin.cons x (Fin.cons y ω : Fin (n + 1) → V) : Fin (n + 2) → V) = K x y * trajMass K (Fin.cons y ω : Fin (n + 1) → V)` |
+| 1313 | theorem | `condExp_succ` | `theorem condExp_succ (K : V → V → ℝ) (θ : V → ℝ) (n : ℕ) (x : V) : condExp K θ (n + 1) x = ∑ y, K x y * condExp K θ n y` |
+| 1324 | theorem | `condExp_zero` | `theorem condExp_zero (K : V → V → ℝ) (θ : V → ℝ) (x : V) : condExp K θ 0 x = θ x` |
+| 1329 | theorem | `condExp_eq_iterate` | `theorem condExp_eq_iterate (K : V → V → ℝ) (θ : V → ℝ) : ∀ n x, condExp K θ n x = (Core.funAct K)^[n] θ x` |
+| 1340 | theorem | `trajMass_nonneg` | `theorem trajMass_nonneg {K : V → V → ℝ} (hK : ∀ x y, 0 ≤ K x y) {n : ℕ} (γ : Fin (n + 1) → V) : 0 ≤ trajMass K γ` |
+| 1345 | theorem | `sum_trajMass` | `theorem sum_trajMass {K : V → V → ℝ} (hK : Core.IsMarkov K) (n : ℕ) (x : V) : ∑ γ ∈ paths x n, trajMass K γ = 1` |
+| 1354 | theorem | `condExp_one_eq_funAct` | `theorem condExp_one_eq_funAct (K : V → V → ℝ) (f : V → ℝ) (x : V) : condExp K f 1 x = Core.funAct K f x` |
+| 1359 | theorem | `unwtL2_funOp_pow_wtL2` | `theorem unwtL2_funOp_pow_wtL2 {K : V → V → ℝ} {lam : V → ℝ} (hlam : ∀ x, 0 < lam x) (θ : V → ℝ) (n : ℕ) (x : V) : Balance.unwtL2 lam ((funOp lam K ^ n) (Balance.wtL2 lam θ)) x = condExp K θ n x` |
+| 1364 | theorem | `diffusion_apply_eq_series_condExp` | `theorem diffusion_apply_eq_series_condExp {K : V → V → ℝ} {lam : V → ℝ} (hK : Core.IsMarkov K) (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (htot : ∑ x, lam x = 1) {U : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hconv : Tendsto (partialSum (funOp lam K) (Balance.meanOp lam)) atTop (𝓝 U)) (θ : V → ℝ) (x : V) : Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N, (condExp K θ n x - Graph.meanL2 lam θ)) atTop (𝓝 (Balance.unwtL2 lam ((Ring.inverse (1 - funOp lam K + Balance.meanOp lam) - Balance.meanOp lam) (Balance.wtL2 lam θ)) x))` |
+| 1376 | theorem | `flip_condExp_series_check` | `theorem flip_condExp_series_check : (∀ n x, ∑ γ ∈ paths x n, trajMass (flipK (3 / 4)) γ = 1) ∧ ∀ (θ : Fin 2 → ℝ) (x : Fin 2), Tendsto (fun N : ℕ => ∑ n ∈ Finset.range N, (condExp (flipK (3 / 4)) θ n x - Graph.meanL2 Balance.twoStateLam θ)) atTop (𝓝 (Balance.unwtL2 Balance.twoStateLam ((Ring.inverse (1 - funOp Balance.twoStateLam (flipK (3 / 4)) + Balance.meanOp Balance.twoStateLam) - Balance.meanOp Balance.twoStateLam) (Balance.wtL2 Balance.twoStateLam θ)) x))` |
 
 ### `GFNBounds/Doubling/RenewalClose.lean`
 
 **Every bounded solution of the renewal limit equation on `ℝ` is constant**  
 
 *strict library; 212 lines; 9 declarations; carries a **SCOPE** disclosure — read it before extending.*
-
-
-Certifies: ✅ `rem:doubling_renewal` (bucket A)
 
 
 In scope: `variable {c p : ℝ} {V : ℝ → ℝ} {M : ℝ}`
@@ -8210,7 +8207,7 @@ Certifies: ✅ `lem:doubling_expansion` (bucket A)
 *strict library; 200 lines; 9 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `rem:cycle_no_stalemate` (bucket B)
+Certifies: ✅ `rem:cycle_no_stalemate` (bucket A)
 
 
 | ln | kind | name | statement |
@@ -8348,7 +8345,7 @@ In scope: `variable {M : ℕ}`, `variable {V : Type*}`, `variable [DecidableEq V
 *strict library; 705 lines; 47 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `rem:cycle_no_stalemate` (bucket B)
+Certifies: ✅ `rem:cycle_no_stalemate` (bucket A)
 
 
 | ln | kind | name | statement |
@@ -8408,7 +8405,7 @@ Certifies: 🟡 `rem:cycle_no_stalemate` (bucket B)
 *strict library; 2005 lines; 135 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: 🟡 `rem:cycle_no_stalemate` (bucket B), ✅ `lem:cycle_counterexample` (bucket A)
+Certifies: ✅ `rem:cycle_no_stalemate` (bucket A), ✅ `lem:cycle_counterexample` (bucket A)
 
 
 In scope: `variable {M : ℕ}`, `variable {V : Type*} [Fintype V]`, `variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]`, `variable {V : Type*} [Fintype V] [DecidableEq V] {G : MarkedGraph V} {B : BackwardPolicy G}`

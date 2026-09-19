@@ -4,8 +4,20 @@
   "commit": "6024ca26bd5116822561892ca68ebd080d9428e7",
   "commit_short": "6024ca2",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    ".claude/agents/lean-auditor.md",
+    "GFNBounds/Audit.lean",
+    "GFNBounds/Doubling/Remarks.lean",
+    "GFNBounds/Doubling/RenewalClose.lean",
+    "README.md",
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json",
+    "paper-map.json"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -47,6 +59,6 @@
       "GFNBounds.Silva": 225
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "0d692cd5e5039aa0c93f724061a087abdfd6d20ab078d8256d968ac16a8ca581"
+    "sha256": "c1544771e22ef4d96ec8f0be8495c98270c5d1099456c4aa4b5d9dde00141298"
   }
 }

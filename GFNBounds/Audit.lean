@@ -750,7 +750,7 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.DiscreteGlobal.training_speed_full_complete
 #print axioms GFNBounds.Balance.DiscreteGlobal.cycle_training_speed_complete_check
 
--- `rem:doubling_renewal` and `rem:doubling_two_constants` — GFNBounds/Doubling/Remarks.lean
+-- the dropped renewal remark and `rem:doubling_two_constants` — GFNBounds/Doubling/Remarks.lean
 #print axioms GFNBounds.Doubling.Remarks.renewal_limit
 #print axioms GFNBounds.Doubling.Remarks.renewal_G_const
 #print axioms GFNBounds.Doubling.Remarks.renewal_hasDerivAt_G

@@ -159,10 +159,14 @@
     "GFNBounds.Balance.TBHessian",
     "GFNBounds.Balance.TBvsDB",
     "GFNBounds.Balance.FreezingGeneral2",
+    "GFNBounds.Balance.FreezingGradientBridge",
+    "GFNBounds.Balance.GdDiffusionGeneral",
+    "GFNBounds.Balance.StableFrozenGeneral",
+    "GFNBounds.Balance.TBvsDBClose",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 154,
+   "lines": 158,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -282,10 +286,14 @@
     "GFNBounds.Doubling.OperatorGeneral",
     "GFNBounds.Balance.TBHessian",
     "GFNBounds.Balance.TBvsDB",
-    "GFNBounds.Balance.FreezingGeneral2"
+    "GFNBounds.Balance.FreezingGeneral2",
+    "GFNBounds.Balance.FreezingGradientBridge",
+    "GFNBounds.Balance.GdDiffusionGeneral",
+    "GFNBounds.Balance.StableFrozenGeneral",
+    "GFNBounds.Balance.TBvsDBClose"
    ],
    "variables": [],
-   "lines": 2142,
+   "lines": 2354,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -5379,6 +5387,1315 @@
      "private": false,
      "statement": "theorem freezing_no_time_bound (Tb : ℝ → ℝ → (ℕ → ℝ) → (Fin 2 → ℝ) → ℝ) : ¬ (∀ g : ℝ → ℝ, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) g → g 1 = 0 → (∀ x ≠ (1 : ℝ), 0 < g x) → deriv (deriv g) 1 = 2 → (∃ C : ℝ, ∀ x, |g x| ≤ C * (1 + |x| ^ 2)) → ∀ nu : Fin 2 → ℝ, (∀ x, 0 ≤ nu x) → (∃ x, 0 < nu x) → ∀ u : ℝ → Fin 2 → ℝ, IsGradientFlow twoStateK twoStateLam nu (deriv g) u → (∀ x, 0 < u 0 x) → ∀ ℓ : ℝ, 0 < ℓ → ∃ t, 0 ≤ t ∧ t ≤ Tb ℓ (deriv (deriv g) 1) (Core.Mixing.beta (densOp twoStateLam twoStateK) (meanOp twoStateLam)) nu ∧ loss twoStateK twoStateLam nu (u t) g < ℓ)",
      "doc": "**`prop:nonlinear_freezing`, the last assertion**: *no bound on the time the gradient flow takes to bring the loss below a given positive level, finite and depending only on that level, on `g''(1)`, on the mixing coefficients and on `w`, holds for every admissible generator.* Stated as the paper's negation, and in a strong form: for every candidate bound `Tb(level, g''(1), (β̂ₙ), ν)`, the claim fails already on the two-state chain of item *(2)*, already within the `C^∞` admissible generators with `g''(1) = 2`, and already for flows started at a positive density."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/FreezingGradientBridge.lean",
+   "title": "The freezing and dichotomy group with `D` read as the gradient",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.FreezingGeneral2",
+    "GFNBounds.Core.FirstVariationGeneral",
+    "GFNBounds.Balance.RemarksA"
+   ],
+   "variables": [
+    "variable {S : Type*} [MeasurableSpace S]",
+    "variable {T : Kernel S S} [IsMarkovKernel T] {μ : Measure S}",
+    "variable {T : Kernel S S} [IsMarkovKernel T] {lam μ ν : Measure S} [IsFiniteMeasure lam]",
+    "variable {T : Kernel S S} [IsMarkovKernel T] {lam μ ν : Measure S} [IsFiniteMeasure lam]",
+    "variable {T : Kernel S S} [IsMarkovKernel T] {lam ν : Measure S} [IsFiniteMeasure lam]",
+    "variable {T : Kernel S S} [IsMarkovKernel T] {lam : Measure S} [IsProbabilityMeasure lam]",
+    "variable {T : Kernel S S} [IsMarkovKernel T] {lam μ ν : Measure S} [IsFiniteMeasure lam]"
+   ],
+   "lines": 1040,
+   "decls": [
+    {
+     "name": "ratioG_eq_ratio",
+     "full": "GFNBounds.Balance.General.Bridge.ratioG_eq_ratio",
+     "kind": "theorem",
+     "line": 134,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratioG_eq_ratio (T : Kernel S S) (μ : Measure S) : ratioG T μ = Core.General.FirstVariation.ratio T μ",
+     "doc": ""
+    },
+    {
+     "name": "gradDensityG_eq_gradDens",
+     "full": "GFNBounds.Balance.General.Bridge.gradDensityG_eq_gradDens",
+     "kind": "theorem",
+     "line": 137,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gradDensityG_eq_gradDens (T : Kernel S S) (μ ν : Measure S) (gd : ℝ → ℝ) : gradDensityG T μ ν gd = Core.General.FirstVariation.gradDens T gd ν μ",
+     "doc": ""
+    },
+    {
+     "name": "lossG_eq_loss",
+     "full": "GFNBounds.Balance.General.Bridge.lossG_eq_loss",
+     "kind": "theorem",
+     "line": 140,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lossG_eq_loss (T : Kernel S S) (ν : Measure S) (g : ℝ → ℝ) (μ : Measure S) : lossG T ν g μ = Core.General.FirstVariation.loss T g ν μ",
+     "doc": ""
+    },
+    {
+     "name": "AdmissibleDir",
+     "full": "GFNBounds.Balance.General.Bridge.AdmissibleDir",
+     "kind": "def",
+     "line": 149,
+     "attrs": "",
+     "private": false,
+     "statement": "def AdmissibleDir (T : Kernel S S) (μ : Measure S) (u : S → ℝ) : Prop",
+     "doc": "**A direction admissible in `theo:first_variation_full`**, given by its density `u = dδ/dμ`: `δ ≪ μ` with `‖dδ/dμ‖_{L^∞(μ)} < 1` and `d(δT)/dμ ∈ L^∞(μ)` (the last is automatic when `r` is essentially bounded: `Core.General.FirstVariation.abs_dirPush_le`, `|d(δT)/dμ| ≤ ‖u‖_∞·r`; `admissibleDir_of_abs_le` packages the case `|u| ≤ ½`)."
+    },
+    {
+     "name": "IsGradDensity",
+     "full": "GFNBounds.Balance.General.Bridge.IsGradDensity",
+     "kind": "def",
+     "line": 155,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsGradDensity (T : Kernel S S) (lam ν μ : Measure S) (g : ℝ → ℝ) (D : S → ℝ) : Prop",
+     "doc": "**`D` is the `λ`-density of `∇^λ_μ𝓛_{g,ν}`**: `D ∈ L²(λ)` and, along every admissible direction `δ = uμ`, `d/ds|₀ 𝓛_{g,ν}(μ + sδ) = ⟨D, dδ/dλ⟩_{L²(λ)}`, `dδ/dλ = u·dμ/dλ` (`theo:first_variation_full` at `ν_G = λ`)."
+    },
+    {
+     "name": "IsCriticalG",
+     "full": "GFNBounds.Balance.General.Bridge.IsCriticalG",
+     "kind": "def",
+     "line": 162,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsCriticalG (T : Kernel S S) (ν μ : Measure S) (g : ℝ → ℝ) : Prop",
+     "doc": "**`μ` is a critical point of `𝓛_{g,ν}`**: the derivative of `s ↦ 𝓛_{g,ν}(μ + sδ)` at `0` exists and vanishes along every admissible direction."
+    },
+    {
+     "name": "ae_abs_le_one_of_admissible",
+     "full": "GFNBounds.Balance.General.Bridge.ae_abs_le_one_of_admissible",
+     "kind": "theorem",
+     "line": 170,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ae_abs_le_one_of_admissible {u : S → ℝ} (hu : AdmissibleDir T μ u) : ∀ᵐ x ∂μ, |u x| ≤ 1",
+     "doc": ""
+    },
+    {
+     "name": "admissibleDir_of_abs_le",
+     "full": "GFNBounds.Balance.General.Bridge.admissibleDir_of_abs_le",
+     "kind": "theorem",
+     "line": 181,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem admissibleDir_of_abs_le [IsFiniteMeasure μ] {b : ℝ} (hrb : ∀ᵐ x ∂μ, Core.General.FirstVariation.ratio T μ x ≤ b) {u : S → ℝ} (hu : Measurable u) (hub : ∀ᵐ x ∂μ, |u x| ≤ 1 / 2) : AdmissibleDir T μ u",
+     "doc": "The directions `|dδ/dμ| ≤ ½` are admissible when `r ≤ b`: `‖·‖_∞ ≤ ½ < 1`, and `|d(δT)/dμ| ≤ ½·r ≤ b/2`."
+    },
+    {
+     "name": "ratio_Icc_of_setting",
+     "full": "GFNBounds.Balance.General.Bridge.ratio_Icc_of_setting",
+     "kind": "theorem",
+     "line": 206,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_Icc_of_setting (h : FirstVariationSetting T lam μ ν gd) : ∃ a b : ℝ, 0 < a ∧ a ≤ b ∧ ∀ᵐ x ∂μ, a ≤ Core.General.FirstVariation.ratio T μ x ∧ Core.General.FirstVariation.ratio T μ x ≤ b",
+     "doc": ""
+    },
+    {
+     "name": "gradDensityG_isGradDensity",
+     "full": "GFNBounds.Balance.General.Bridge.gradDensityG_isGradDensity",
+     "kind": "theorem",
+     "line": 216,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gradDensityG_isGradDensity (hinv : IsInvariant T lam) (h : FirstVariationSetting T lam μ ν gd) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) : IsGradDensity T lam ν μ g (gradDensityG T μ ν gd)",
+     "doc": "**`theo:first_variation_full` at `ν_G = λ`, read for `D = Tφ − rφ`**: under the first-variation hypotheses (`FirstVariationSetting`, and `g` differentiable on `ℝ₊*` with derivative `gd`), `gradDensityG` **is** the `λ`-density of `∇^λ_μ𝓛_{g,ν}`."
+    },
+    {
+     "name": "isGradDensity_unique",
+     "full": "GFNBounds.Balance.General.Bridge.isGradDensity_unique",
+     "kind": "theorem",
+     "line": 237,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isGradDensity_unique (hinv : IsInvariant T lam) (h : FirstVariationSetting T lam μ ν gd) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) {D : S → ℝ} (hD : IsGradDensity T lam ν μ g D) : D =ᵐ[lam] gradDensityG T μ ν gd",
+     "doc": "**The `λ`-gradient density is unique** (`representative_unique` at `ν_G = λ`): any `L²(λ)` function representing the derivative along the admissible directions is `gradDensityG`, `λ`-a.e."
+    },
+    {
+     "name": "isCriticalG_iff",
+     "full": "GFNBounds.Balance.General.Bridge.isCriticalG_iff",
+     "kind": "theorem",
+     "line": 252,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isCriticalG_iff (hinv : IsInvariant T lam) (h : FirstVariationSetting T lam μ ν gd) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) : IsCriticalG T ν μ g ↔ gradDensityG T μ ν gd =ᵐ[lam] 0",
+     "doc": "**Critical ⟺ `D = 0`**: `μ` is a critical point of `𝓛_{g,ν}` in the derivative sense (every admissible directional derivative vanishes) iff `D = Tφ − rφ = 0` `λ`-a.e."
+    },
+    {
+     "name": "no_distant_equilibrium_one_bridge",
+     "full": "GFNBounds.Balance.General.Bridge.no_distant_equilibrium_one_bridge",
+     "kind": "theorem",
+     "line": 279,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_distant_equilibrium_one_bridge [IsFiniteMeasure ν] (hinv : IsInvariant T lam) (h : FirstVariationSetting T lam μ ν gd) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) (hg : StrictlyUnimodal gd) (hν : ∀ᵐ x ∂μ, 0 < (ν.rnDeriv μ x).toReal) : IsGradDensity T lam ν μ g (gradDensityG T μ ν gd) ∧ (∀ D : S → ℝ, IsGradDensity T lam ν μ g D → ∫ x, D x ∂lam = ∫ x, gd (ratioG T μ x) * (1 - ratioG T μ x) * (ν.rnDeriv μ x).toReal ∂lam ∧ ∫ x, D x ∂lam ≤ 0 ∧ (∫ x, D x ∂lam = 0 ↔ BalancedG T μ)) ∧ (IsCriticalG T ν μ g → BalancedG T μ)",
+     "doc": "**`prop:no_distant_equilibrium`*(1)*, with the gradient**: under the hypotheses of `theo:first_variation_full` at `μ` (with `ν_G = λ`), `g` differentiable on `ℝ₊*` with derivative `gd` strictly unimodal, and `dν/dμ > 0` `μ`-a.e.: `∇^λ_μ𝓛_{g,ν}` exists (its density is `D = Tφ − rφ`); **every** `λ`-density `D'` of it has total mass `∫ D' dλ = ∫ g'(r)(1 − r)(dν/dμ) dλ ≤ 0`, vanishing iff `μ` is balanced; and every critical point of `𝓛_{g,ν}` (all admissible directional derivatives zero) is balanced."
+    },
+    {
+     "name": "nonlinear_freezing_one_critical",
+     "full": "GFNBounds.Balance.General.Bridge.nonlinear_freezing_one_critical",
+     "kind": "theorem",
+     "line": 304,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nonlinear_freezing_one_critical (F : FreezingBands) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) (hgc : ContinuousOn gd (Set.Ioi 0)) (hgd0 : ∀ z ∈ F.bands, gd z = 0) (hml : μ ≪ lam) (hband : ∀ᵐ x ∂lam, ratioG T μ x ∈ F.bands) (ν : Measure S) [IsFiniteMeasure ν] (hνμ : ν ≪ μ) : IsCriticalG T ν μ g",
+     "doc": "**`prop:nonlinear_freezing`*(1)*, criticality in the derivative sense**: for every `g̃` differentiable on `ℝ₊*` with derivative `g̃'` continuous there and `g̃' ≡ 0` on the bands, and every Markov kernel `T`, a finite `μ ≪ λ` whose ratio is band-valued `λ`-a.e."
+    },
+    {
+     "name": "nonlinear_freezing_one_bridge",
+     "full": "GFNBounds.Balance.General.Bridge.nonlinear_freezing_one_bridge",
+     "kind": "theorem",
+     "line": 333,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nonlinear_freezing_one_bridge (F : FreezingBands) (hinv : IsInvariant T lam) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) (hgc : ContinuousOn gd (Set.Ioi 0)) (hgd0 : ∀ z ∈ F.bands, gd z = 0) (hml : μ ≪ lam) (hband : ∀ᵐ x ∂lam, ratioG T μ x ∈ F.bands) : (∀ (ν : Measure S) [IsFiniteMeasure ν], ν ≪ μ → IsCriticalG T ν μ g) ∧ (∀ ν : Measure S, gradDensityG T μ ν gd =ᵐ[lam] 0) ∧ (∀ (ν : Measure S) [IsFiniteMeasure ν], FirstVariationSetting T lam μ ν gd → IsGradDensity T lam ν μ g (fun _ => 0))",
+     "doc": "**`prop:nonlinear_freezing`*(1)*, with the gradient**: in addition, under the first-variation hypotheses at `μ` the `λ`-gradient of `𝓛_{g̃,ν}` exists and its density is `0`, for every `ν` meeting them."
+    },
+    {
+     "name": "global_dichotomy_full_bridge",
+     "full": "GFNBounds.Balance.General.Bridge.global_dichotomy_full_bridge",
+     "kind": "theorem",
+     "line": 357,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem global_dichotomy_full_bridge (hinv : IsInvariant T lam) (hml : μ ≪ lam) : (∀ (ν : Measure S) [IsFiniteMeasure ν] (g gd : ℝ → ℝ), FirstVariationSetting T lam μ ν gd → (∀ y, 0 < y → HasDerivAt g (gd y) y) → StrictlyUnimodal gd → (∀ᵐ x ∂μ, 0 < (ν.rnDeriv μ x).toReal) → (∀ D : S → ℝ, IsGradDensity T lam ν μ g D → ∫ x, D x ∂lam = ∫ x, gd (ratioG T μ x) * (1 - ratioG T μ x) * (ν.rnDeriv μ x).toReal ∂lam ∧ ∫ x, D x ∂lam ≤ 0 ∧ (∫ x, D x ∂lam = 0 ↔ BalancedG T μ)) ∧ (IsCriticalG T ν μ g → BalancedG T μ)) ∧ (∀ (F : FreezingBands) (g gd : ℝ → ℝ), (∀ y, 0 < y → HasDerivAt g (gd y) y) → ContinuousOn gd (Set.Ioi 0) → (∀ z ∈ F.bands, gd z = 0) → (∀ᵐ x ∂lam, ratioG T μ x ∈ F.bands) → ∀ (ν : Measure S) [IsFiniteMeasure ν], ν ≪ μ → IsCriticalG T ν μ g)",
+     "doc": "**`theo:global_dichotomy_full`, the general halves, with the gradient**: *(1)* for a strictly unimodal `g` every gradient density has mass `∫ g'(r)(1 − r)(dν/dμ) dλ ≤ 0`, zero only at balance, and every critical point of `𝓛_{g,ν}` is balanced, for every training measure with positive density meeting the first-variation hypotheses; *(2)* if `g'` vanishes on bands on either side of `1`, every flow with band-valued ratios is a critical point of `𝓛_{g,ν}` for every finite `ν ≪ μ`."
+    },
+    {
+     "name": "freezing_remark_four_bridge",
+     "full": "GFNBounds.Balance.General.Bridge.freezing_remark_four_bridge",
+     "kind": "theorem",
+     "line": 379,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem freezing_remark_four_bridge [IsFiniteMeasure ν] (hinv : IsInvariant T lam) (h : FirstVariationSetting T lam μ ν gd) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) (hg : StrictlyUnimodal gd) (hν : ∀ᵐ x ∂μ, 0 < (ν.rnDeriv μ x).toReal) (hc : IsCriticalG T ν μ g) : BalancedG T μ",
+     "doc": "**`theo:global_dichotomy`** (body) **and `rem:freezing`*(i)*, *(iv)*, the critical-point sentence**: for an admissible differentiable strictly unimodal generator, every critical point of `𝓛_{g,ν}` — in the derivative sense — is balanced when `ν` has positive density."
+    },
+    {
+     "name": "IsGradientFlowPaper",
+     "full": "GFNBounds.Balance.General.Bridge.IsGradientFlowPaper",
+     "kind": "def",
+     "line": 397,
+     "attrs": "",
+     "private": false,
+     "statement": "def IsGradientFlowPaper (T : Kernel S S) (lam ν : Measure S) (g : ℝ → ℝ) (μ : ℝ → Measure S) (u : ℝ → Lp ℝ 2 lam) : Prop",
+     "doc": "**The gradient flow `μ̇_t = −∇^λ𝓛_{g,ν}(μ_t)` of the paper**, for `t ≥ 0`: the `λ`-densities `u_t` of `μ_t` form a curve in `L²(λ)` whose derivative is minus **a** `λ`-density of the gradient (`IsGradDensity`, the first-variation reading, not a formula)."
+    },
+    {
+     "name": "IsGradDensity.congr",
+     "full": "GFNBounds.Balance.General.Bridge.IsGradDensity.congr",
+     "kind": "theorem",
+     "line": 404,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem IsGradDensity.congr {μ : Measure S} {D D' : S → ℝ} (hD : IsGradDensity T lam ν μ g D) (hD' : MemLp D' 2 lam) (he : D =ᵐ[lam] D') : IsGradDensity T lam ν μ g D'",
+     "doc": "A gradient density can be replaced by any `λ`-a.e."
+    },
+    {
+     "name": "isGradientFlowPaper_iff",
+     "full": "GFNBounds.Balance.General.Bridge.isGradientFlowPaper_iff",
+     "kind": "theorem",
+     "line": 416,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isGradientFlowPaper_iff [IsFiniteMeasure ν] (hinv : IsInvariant T lam) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) {μ : ℝ → Measure S} {u : ℝ → Lp ℝ 2 lam} (hfin : ∀ t, IsFiniteMeasure (μ t)) (hset : ∀ t, 0 ≤ t → FirstVariationSetting T lam (μ t) ν gd) : IsGradientFlowPaper T lam ν g μ u ↔ IsGradientFlowG T lam ν gd μ u",
+     "doc": "**The paper's flow is `IsGradientFlowG`**, and conversely, wherever the first-variation hypotheses hold along the curve: the two predicates differ only in naming the derivative's density by the formula `D = Tφ − rφ` or by the first variation, and those agree (`isGradDensity_unique`)."
+    },
+    {
+     "name": "no_distant_equilibrium_two_flow_bridge",
+     "full": "GFNBounds.Balance.General.Bridge.no_distant_equilibrium_two_flow_bridge",
+     "kind": "theorem",
+     "line": 436,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_distant_equilibrium_two_flow_bridge [IsFiniteMeasure ν] {R : Kernel S S} [IsMarkovKernel R] (hR : IsReversalPair lam T R) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) (hg : StrictlyUnimodal gd) {μ : ℝ → Measure S} {u : ℝ → Lp ℝ 2 lam} (hflow : IsGradientFlowPaper T lam ν g μ u) (hfin : ∀ t, IsFiniteMeasure (μ t)) (hset : ∀ t, 0 ≤ t → FirstVariationSetting T lam (μ t) ν gd) : (∀ t, 0 ≤ t → ‖u t‖ = ‖u 0‖) ∧ MonotoneOn (fun s => ∫ x, u s x ∂lam) (Set.Ici 0) ∧ ∀ t, 0 ≤ t → (∀ᵐ x ∂(μ t), 0 < (ν.rnDeriv (μ t) x).toReal) → ¬ BalancedG T (μ t) → HasDerivAt (fun s => ∫ x, u s x ∂lam) (-∫ x, gradDensityG T (μ t) ν gd x ∂lam) t ∧ 0 < -∫ x, gradDensityG T (μ t) ν gd x ∂lam",
+     "doc": "**`prop:no_distant_equilibrium`*(2)*, the flow, for the paper's flow**: along a gradient flow in `𝓜²(λ)` at fixed `ν`, meeting the first-variation hypotheses at every time, `‖u_t‖_{L²(λ)}` is constant, the mass is non-decreasing on `[0, ∞)`, and its derivative is positive at every time off balance."
+    },
+    {
+     "name": "no_distant_equilibrium_two_bridge",
+     "full": "GFNBounds.Balance.General.Bridge.no_distant_equilibrium_two_bridge",
+     "kind": "theorem",
+     "line": 453,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem no_distant_equilibrium_two_bridge [StandardBorelSpace S] [Nonempty S] {μ : Measure S} [IsFiniteMeasure μ] [IsFiniteMeasure ν] (hinv : IsInvariant T lam) (h : FirstVariationSetting T lam μ ν gd) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) : (∀ c : ℝ≥0∞, c ≠ 0 → c ≠ ∞ → lossG T ν g (c • μ) = lossG T ν g μ) ∧ (∀ D : S → ℝ, IsGradDensity T lam ν μ g D → ∫ x, D x * (μ.rnDeriv lam x).toReal ∂lam = 0) ∧ (ErgodicG T lam → lam ≠ 0 → ∫ x, (μ.rnDeriv lam x).toReal ∂lam ≤ Real.sqrt (lam.real Set.univ * ∫ x, (μ.rnDeriv lam x).toReal ^ 2 ∂lam) ∧ (∫ x, (μ.rnDeriv lam x).toReal ∂lam = Real.sqrt (lam.real Set.univ * ∫ x, (μ.rnDeriv lam x).toReal ^ 2 ∂lam) ↔ BalancedG T μ))",
+     "doc": "**`prop:no_distant_equilibrium`*(2)*, static half, with the gradient** (on a standard Borel space, where the `λ`-reversal exists): the loss is scale-invariant; every `λ`-density `D` of `∇^λ𝓛_{g,ν}(μ)` is orthogonal to the radial direction, `⟨D, u⟩_{L²(λ)} = 0`; and under ergodicity the mass is at most `√λ(𝒮)‖u‖`, with equality iff `μ` is balanced."
+    },
+    {
+     "name": "isFiniteMeasure_pertG_ae",
+     "full": "GFNBounds.Balance.General.Bridge.isFiniteMeasure_pertG_ae",
+     "kind": "theorem",
+     "line": 483,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isFiniteMeasure_pertG_ae [IsFiniteMeasure lam] {h : S → ℝ} (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ 1 / 2) : IsFiniteMeasure (pertG lam h)",
+     "doc": ""
+    },
+    {
+     "name": "isFiniteMeasure_wtG_ae",
+     "full": "GFNBounds.Balance.General.Bridge.isFiniteMeasure_wtG_ae",
+     "kind": "theorem",
+     "line": 492,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isFiniteMeasure_wtG_ae [IsFiniteMeasure lam] {w : S → ℝ} {W : ℝ} (hwm : Measurable w) (hw0 : ∀ᵐ x ∂lam, 0 ≤ w x) (hwW : ∀ᵐ x ∂lam, w x ≤ W) : IsFiniteMeasure (wtG lam w)",
+     "doc": ""
+    },
+    {
+     "name": "setting_pertG",
+     "full": "GFNBounds.Balance.General.Bridge.setting_pertG",
+     "kind": "theorem",
+     "line": 503,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem setting_pertG [IsFiniteMeasure lam] (F : FreezingBands) {w h : S → ℝ} {W : ℝ} (hwm : Measurable w) (hw0 : ∀ᵐ x ∂lam, 0 ≤ w x) (hwW : ∀ᵐ x ∂lam, w x ≤ W) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ 1 / 2) (hband : ∀ᵐ x ∂lam, ratioG T (pertG lam h) x ∈ F.bands) (hgc : ContinuousOn gd (Set.Ioi 0)) : FirstVariationSetting T lam (pertG lam h) (wtG lam w) gd",
+     "doc": "**The first-variation hypotheses hold on the set of item *(3)***: `μ = (1 + h)λ` with `|h| ≤ ½` and band-valued ratio, `ν = wλ` with `0 ≤ w ≤ W`, `g̃'` continuous on `ℝ₊*` (the proof's \"`μ ∼ λ` and `dν/dμ = w/(1 + h) ∈ L^∞(μ)`, and `r` takes its values in `(a, d)`\")."
+    },
+    {
+     "name": "nonlinear_freezing_three_bridge",
+     "full": "GFNBounds.Balance.General.Bridge.nonlinear_freezing_three_bridge",
+     "kind": "theorem",
+     "line": 540,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nonlinear_freezing_three_bridge (F : FreezingBands) (hinv : IsInvariant T lam) {ε : ℝ} (hε : 0 < ε) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) (hgc : ContinuousOn gd (Set.Ioi 0)) (hgdε : ∀ z ∈ F.bands, |gd z| ≤ ε) {w : S → ℝ} (hwm : Measurable w) (hw0 : ∀ᵐ x ∂lam, 0 ≤ w x) (hwinf : eLpNorm w ⊤ lam ≠ ⊤) : (∀ h : S → ℝ, Measurable h → (∀ᵐ x ∂lam, |h x| ≤ 1 / 2) → (∀ᵐ x ∂lam, ratioG T (pertG lam h) x ∈ F.bands) → IsGradDensity T lam (wtG lam w) (pertG lam h) g (gradDensityG T (pertG lam h) (wtG lam w) gd) ∧ ∀ D : S → ℝ, IsGradDensity T lam (wtG lam w) (pertG lam h) g D → eLpNorm D 2 lam ≤ ENNReal.ofReal (2 * (1 + F.d) * (eLpNorm w ⊤ lam).toReal * ε)) ∧ ∀ (μ : ℝ → Measure S) (u : ℝ → Lp ℝ 2 lam), IsGradientFlowPaper T lam (wtG lam w) g μ u → ∀ τ : ℝ, 0 ≤ τ → (∀ t ∈ Set.Icc 0 τ, ∃ h : S → ℝ, Measurable h ∧ (∀ᵐ x ∂lam, |h x| ≤ 1 / 2) ∧ μ t = pertG lam h ∧ ∀ᵐ x ∂lam, ratioG T (μ t) x ∈ F.bands) → ∀ η : ℝ, η ≤ ‖u τ - u 0‖ → η ≤ 2 * (1 + F.d) * (eLpNorm w ⊤ lam).toReal * ε * τ",
+     "doc": "**`prop:nonlinear_freezing`*(3)* with the gradient read by the first variation**: on the set of flows `μ = (1 + h)λ`, `‖h‖_{L^∞(λ)} ≤ ½`, with band-valued ratio, `∇^λ𝓛_{g̃,ν}(μ)` exists — its `λ`-density is `D = Tφ − rφ` — and **every** `λ`-density of it has `L²(λ)`-norm at most `C'ε`, `C' = 2(1 + d)‖w‖_{L^∞(λ)}`; and a trajectory of the paper's gradient flow (`IsGradientFlowPaper`) moves at most `C'ετ` in `𝓜²(λ)` during a time `τ` it spends in the set, so moving a distance `η` there takes a time `τ ≥ η/(C'ε)`."
+    },
+    {
+     "name": "AdmL",
+     "full": "GFNBounds.Balance.General.Bridge.AdmL",
+     "kind": "def",
+     "line": 609,
+     "attrs": "",
+     "private": false,
+     "statement": "def AdmL (lam μ : Measure S) : Set (S → ℝ)",
+     "doc": "**The admissible directions in `λ`-coordinates**: `δ = eλ` with `|e| ≤ C·dμ/dλ`, i.e."
+    },
+    {
+     "name": "lineG_eq_perturb",
+     "full": "GFNBounds.Balance.General.Bridge.lineG_eq_perturb",
+     "kind": "theorem",
+     "line": 615,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lineG_eq_perturb (hμl : μ ≪ lam) {e w : S → ℝ} (hwm : Measurable w) (hwe : ∀ᵐ x ∂lam, w x * (μ.rnDeriv lam x).toReal = e x) (s : ℝ) : lineG lam (fun x => (μ.rnDeriv lam x).toReal) e s = Core.General.FirstVariation.perturb μ w s",
+     "doc": "`λ`-coordinates and `μ`-coordinates describe the same line: `(u + se)λ = (1 + s·w)μ` when `w·u = e`, `u = dμ/dλ`."
+    },
+    {
+     "name": "firstVariationFull_of_setting",
+     "full": "GFNBounds.Balance.General.Bridge.firstVariationFull_of_setting",
+     "kind": "theorem",
+     "line": 635,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem firstVariationFull_of_setting [IsFiniteMeasure ν] (hinv : IsInvariant T lam) (h : FirstVariationSetting T lam μ ν gd) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) : FirstVariationFull T lam ν g μ (AdmL lam μ) (gradDensityG T μ ν gd)",
+     "doc": "**`FirstVariationFull` holds**, on the admissible cone `AdmL`, with density `D = Tφ − rφ`, under the first-variation hypotheses: the named hypothesis that `nonlinear_freezing_one_general` and `balanced_of_isCriticalAlong` consume is discharged."
+    },
+    {
+     "name": "isCriticalAlong_iff",
+     "full": "GFNBounds.Balance.General.Bridge.isCriticalAlong_iff",
+     "kind": "theorem",
+     "line": 679,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isCriticalAlong_iff [IsFiniteMeasure ν] (hinv : IsInvariant T lam) (h : FirstVariationSetting T lam μ ν gd) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) : IsCriticalAlong T lam ν g μ (AdmL lam μ) ↔ IsCriticalG T ν μ g",
+     "doc": "**Criticality along `AdmL` is criticality**: in `λ`-coordinates (`IsCriticalAlong`, on the admissible cone) and in `μ`-coordinates (`IsCriticalG`) the notions agree, both being `D = 0`."
+    },
+    {
+     "name": "balanced_of_isCriticalAlong_bridge",
+     "full": "GFNBounds.Balance.General.Bridge.balanced_of_isCriticalAlong_bridge",
+     "kind": "theorem",
+     "line": 706,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem balanced_of_isCriticalAlong_bridge [IsFiniteMeasure ν] (hinv : IsInvariant T lam) (h : FirstVariationSetting T lam μ ν gd) (hgd : ∀ y, 0 < y → HasDerivAt g (gd y) y) (hg : StrictlyUnimodal gd) (hν : ∀ᵐ x ∂μ, 0 < (ν.rnDeriv μ x).toReal) (hc : IsCriticalAlong T lam ν g μ (AdmL lam μ)) : BalancedG T μ",
+     "doc": "**`balanced_of_isCriticalAlong` without the constant direction**: a critical point of `𝓛_{g,ν}` along the admissible cone is balanced, for strictly unimodal `g` and `dν/dμ > 0` — no lower bound on `dμ/dλ` is asked."
+    },
+    {
+     "name": "hasDerivAt_twoStateBands_g",
+     "full": "GFNBounds.Balance.General.Bridge.hasDerivAt_twoStateBands_g",
+     "kind": "theorem",
+     "line": 718,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_twoStateBands_g : ∀ y, 0 < y → HasDerivAt twoStateBands.g (deriv twoStateBands.g y) y",
+     "doc": ""
+    },
+    {
+     "name": "continuousOn_deriv_twoStateBands_g",
+     "full": "GFNBounds.Balance.General.Bridge.continuousOn_deriv_twoStateBands_g",
+     "kind": "theorem",
+     "line": 722,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem continuousOn_deriv_twoStateBands_g : ContinuousOn (deriv twoStateBands.g) (Set.Ioi 0)",
+     "doc": ""
+    },
+    {
+     "name": "bool_critical_unbalanced",
+     "full": "GFNBounds.Balance.General.Bridge.bool_critical_unbalanced",
+     "kind": "theorem",
+     "line": 731,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bool_critical_unbalanced : (∀ (ν : Measure Bool) [IsFiniteMeasure ν], ν ≪ pertG boolUnif boolH → IsCriticalG (Kernel.const Bool boolUnif) ν (pertG boolUnif boolH) twoStateBands.g) ∧ IsGradDensity (Kernel.const Bool boolUnif) boolUnif boolUnif (pertG boolUnif boolH) twoStateBands.g (fun _ => 0) ∧ ¬ BalancedG (Kernel.const Bool boolUnif) (pertG boolUnif boolH)",
+     "doc": "**A critical point that is not balanced** (`prop:nonlinear_freezing`*(1)*–*(2)*, in the derivative sense): on the two-state chain (`Bool`, uniform `π`, `T = const π`), the flow `μ = (1 + h)π`, `h = (3/10, −3/10)`, is a critical point of `𝓛_{g,ν}` for the constructed generator `g` of item *(2)*'s bands and every finite `ν ≪ μ`; its gradient exists and is `0`; and `μ` is not balanced."
+    },
+    {
+     "name": "bool_not_critical",
+     "full": "GFNBounds.Balance.General.Bridge.bool_not_critical",
+     "kind": "theorem",
+     "line": 748,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bool_not_critical : IsGradDensity (Kernel.const Bool boolUnif) boolUnif boolUnif (pertG boolUnif boolH) (fun x => (x - 1) ^ 2) (gradDensityG (Kernel.const Bool boolUnif) (pertG boolUnif boolH) boolUnif (fun z => 2 * (z - 1))) ∧ ¬ IsCriticalG (Kernel.const Bool boolUnif) boolUnif (pertG boolUnif boolH) (fun x => (x - 1) ^ 2)",
+     "doc": "**`prop:no_distant_equilibrium`*(1)* with the gradient is not vacuous**: on the same unbalanced flow, for the strictly unimodal `g = (x − 1)²` and `ν = π`, the gradient exists (density `D = Tφ − rφ`) and `μ` is **not** a critical point."
+    },
+    {
+     "name": "bool_paper_flow",
+     "full": "GFNBounds.Balance.General.Bridge.bool_paper_flow",
+     "kind": "theorem",
+     "line": 770,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bool_paper_flow : ∃ u : Lp ℝ 2 boolUnif, IsGradientFlowPaper (Kernel.const Bool boolUnif) boolUnif boolUnif twoStateBands.g (fun _ => pertG boolUnif boolH) (fun _ => u) ∧ ¬ BalancedG (Kernel.const Bool boolUnif) (pertG boolUnif boolH)",
+     "doc": "**The paper's gradient-flow predicate is inhabited off balance**: the constant curve at the frozen, unbalanced Bool flow is an `IsGradientFlowPaper` of `𝓛_{g,π}` for the constructed generator."
+    },
+    {
+     "name": "third_deriv_sSup_of_C3",
+     "full": "GFNBounds.Balance.General.Bridge.third_deriv_sSup_of_C3",
+     "kind": "theorem",
+     "line": 794,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem third_deriv_sSup_of_C3 {g g1 g2 g3 : ℝ → ℝ} {δ : ℝ} (hδ : 0 < δ) (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) (hd0 : HasDerivAt g (g1 1) 1) (hd1 : ∀ x ∈ Icc 1 (1 + δ), HasDerivWithinAt g1 (g2 x) (Icc 1 (1 + δ)) x) (hd2 : ∀ x ∈ Icc 1 (1 + δ), HasDerivWithinAt g2 (g3 x) (Icc 1 (1 + δ)) x) (hc3 : ContinuousOn g3 (Icc 1 (1 + δ))) (hflat : ∀ x ∈ Icc (1 + δ) (1 + 2 * δ), g1 x = 0) (h2 : g2 1 = 2) : 4 / δ ≤ sSup ((fun x => |g3 x|) '' Icc 1 (1 + δ))",
+     "doc": "**`rem:freezing`*(ii)*, `C³` read with a continuous third derivative**: for a generator `C³` on `[1, 1 + δ]` (derivative chain `g → g₁ → g₂ → g₃` within the interval, `g₃` continuous there), `sup_{[1,1+δ]} |g₃| ≥ 4/δ`."
+    },
+    {
+     "name": "boolIdx",
+     "full": "GFNBounds.Balance.General.Bridge.boolIdx",
+     "kind": "def",
+     "line": 818,
+     "attrs": "",
+     "private": false,
+     "statement": "def boolIdx (b : Bool) : Fin 2",
+     "doc": "`true ↦ 0`, `false ↦ 1`."
+    },
+    {
+     "name": "boolFlow",
+     "full": "GFNBounds.Balance.General.Bridge.boolFlow",
+     "kind": "def",
+     "line": 821,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def boolFlow (f : Bool → ℝ) : Measure Bool",
+     "doc": "The flow of `π`-density `f` on `Bool`."
+    },
+    {
+     "name": "boolFlow.isFinite",
+     "full": "GFNBounds.Balance.General.Bridge.boolFlow.isFinite",
+     "kind": "instance",
+     "line": 824,
+     "attrs": "",
+     "private": false,
+     "statement": "instance boolFlow.isFinite (f : Bool → ℝ) : IsFiniteMeasure (boolFlow f)",
+     "doc": ""
+    },
+    {
+     "name": "integral_boolUnif",
+     "full": "GFNBounds.Balance.General.Bridge.integral_boolUnif",
+     "kind": "theorem",
+     "line": 828,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_boolUnif (φ : Bool → ℝ) : ∫ b, φ b ∂boolUnif = (φ true + φ false) / 2",
+     "doc": ""
+    },
+    {
+     "name": "boolUnif_ne_zero",
+     "full": "GFNBounds.Balance.General.Bridge.boolUnif_ne_zero",
+     "kind": "theorem",
+     "line": 838,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem boolUnif_ne_zero (b : Bool) : boolUnif {b} ≠ 0",
+     "doc": ""
+    },
+    {
+     "name": "ae_bool_iff",
+     "full": "GFNBounds.Balance.General.Bridge.ae_bool_iff",
+     "kind": "theorem",
+     "line": 841,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ae_bool_iff {p : Bool → Prop} : (∀ᵐ b ∂boolUnif, p b) ↔ ∀ b, p b",
+     "doc": ""
+    },
+    {
+     "name": "toReal_rnDeriv_boolFlow",
+     "full": "GFNBounds.Balance.General.Bridge.toReal_rnDeriv_boolFlow",
+     "kind": "theorem",
+     "line": 845,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem toReal_rnDeriv_boolFlow {f : Bool → ℝ} (hf : ∀ b, 0 < f b) (b : Bool) : ((boolFlow f).rnDeriv boolUnif b).toReal = f b",
+     "doc": ""
+    },
+    {
+     "name": "toReal_rnDeriv_unif_boolFlow",
+     "full": "GFNBounds.Balance.General.Bridge.toReal_rnDeriv_unif_boolFlow",
+     "kind": "theorem",
+     "line": 853,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem toReal_rnDeriv_unif_boolFlow {f : Bool → ℝ} (hf : ∀ b, 0 < f b) (b : Bool) : (boolUnif.rnDeriv (boolFlow f) b).toReal = 1 / f b",
+     "doc": ""
+    },
+    {
+     "name": "boolFlow_univ_toReal",
+     "full": "GFNBounds.Balance.General.Bridge.boolFlow_univ_toReal",
+     "kind": "theorem",
+     "line": 866,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem boolFlow_univ_toReal {f : Bool → ℝ} (hf : ∀ b, 0 < f b) : ((boolFlow f) Set.univ).toReal = (f true + f false) / 2",
+     "doc": ""
+    },
+    {
+     "name": "ratioG_boolFlow",
+     "full": "GFNBounds.Balance.General.Bridge.ratioG_boolFlow",
+     "kind": "theorem",
+     "line": 874,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratioG_boolFlow {f : Bool → ℝ} (hf : ∀ b, 0 < f b) (b : Bool) : ratioG (Kernel.const Bool boolUnif) (boolFlow f) b = ((f true + f false) / 2) / f b",
+     "doc": ""
+    },
+    {
+     "name": "gradDensityG_boolFlow",
+     "full": "GFNBounds.Balance.General.Bridge.gradDensityG_boolFlow",
+     "kind": "theorem",
+     "line": 898,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gradDensityG_boolFlow {f : Bool → ℝ} (hf : ∀ b, 0 < f b) (gd : ℝ → ℝ) (b : Bool) : gradDensityG (Kernel.const Bool boolUnif) (boolFlow f) boolUnif gd b = ((gd (((f true + f false) / 2) / f true) * (1 / f true) + gd (((f true + f false) / 2) / f false) * (1 / f false)) / 2) - ((f true + f false) / 2) / f b * (gd (((f true + f false) / 2) / f b) * (1 / f b))",
+     "doc": "`D = Tφ − rφ` on `Bool`, for `ν = π`: `φ = g'(r)/f`, `Tφ` the mean of `φ`."
+    },
+    {
+     "name": "setting_boolFlow",
+     "full": "GFNBounds.Balance.General.Bridge.setting_boolFlow",
+     "kind": "theorem",
+     "line": 910,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem setting_boolFlow {f : Bool → ℝ} (hf : ∀ b, 0 < f b) {gd : ℝ → ℝ} (hgd : ContinuousOn gd (Set.Ioi 0)) : FirstVariationSetting (Kernel.const Bool boolUnif) boolUnif (boolFlow f) boolUnif gd",
+     "doc": "**The first-variation hypotheses at every positive flow on `Bool`** (`ν = π`)."
+    },
+    {
+     "name": "boolLp",
+     "full": "GFNBounds.Balance.General.Bridge.boolLp",
+     "kind": "def",
+     "line": 938,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def boolLp : (Fin 2 → ℝ) →L[ℝ] Lp ℝ 2 boolUnif",
+     "doc": "`L²(π)` on `Bool` as the image of `ℝ²`: `v ↦ v ∘ boolIdx`."
+    },
+    {
+     "name": "coe_boolLp",
+     "full": "GFNBounds.Balance.General.Bridge.coe_boolLp",
+     "kind": "theorem",
+     "line": 945,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coe_boolLp (v : Fin 2 → ℝ) : (boolLp v : Bool → ℝ) =ᵐ[boolUnif] fun b => v (boolIdx b)",
+     "doc": ""
+    },
+    {
+     "name": "lossGrad_twoState",
+     "full": "GFNBounds.Balance.General.Bridge.lossGrad_twoState",
+     "kind": "theorem",
+     "line": 949,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lossGrad_twoState {U : Fin 2 → ℝ} (hU : ∀ i, 0 < U i) (gd : ℝ → ℝ) (i : Fin 2) : lossGrad twoStateK twoStateLam (fun x => twoStateLam x * 1) gd U i = ((gd (((U 0 + U 1) / 2) / U 0) * (1 / U 0) + gd (((U 0 + U 1) / 2) / U 1) * (1 / U 1)) / 2) - ((U 0 + U 1) / 2) / U i * (gd (((U 0 + U 1) / 2) / U i) * (1 / U i))",
+     "doc": "The finite gradient density on the two-state chain, `ν = λ = (½, ½)`, is the same formula."
+    },
+    {
+     "name": "bool_unimodal_flow",
+     "full": "GFNBounds.Balance.General.Bridge.bool_unimodal_flow",
+     "kind": "theorem",
+     "line": 971,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bool_unimodal_flow : ∃ (μ : ℝ → Measure Bool) (u : ℝ → Lp ℝ 2 boolUnif), IsGradientFlowPaper (Kernel.const Bool boolUnif) boolUnif boolUnif (fun x => (x - 1) ^ 2) μ u ∧ IsGradientFlowG (Kernel.const Bool boolUnif) boolUnif boolUnif (fun z => 2 * (z - 1)) μ u ∧ (∀ t, IsFiniteMeasure (μ t)) ∧ (∀ t, 0 ≤ t → FirstVariationSetting (Kernel.const Bool boolUnif) boolUnif (μ t) boolUnif (fun z => 2 * (z - 1))) ∧ ¬ BalancedG (Kernel.const Bool boolUnif) (μ 0) ∧ 0 < -∫ x, gradDensityG (Kernel.const Bool boolUnif) (μ 0) boolUnif (fun z => 2 * (z - 1)) x ∂boolUnif",
+     "doc": "**The paper's gradient flow, with the strictly unimodal `g = (x − 1)²`, exists off balance on a general space**: on `Bool` with the resampling kernel and `ν = π`, a curve of flows `μ_t` from the unbalanced `μ₀ = (3/2, 1/2)·π` is an `IsGradientFlowPaper` of `𝓛_{g,π}`, meets the first-variation hypotheses at every `t ≥ 0`, and its mass strictly increases at `t = 0` — so `no_distant_equilibrium_two_flow_bridge` applies to it with a non-trivial conclusion."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/GdDiffusionGeneral.lean",
+   "title": "Gradient descent as backward diffusion, and the DB gradient, on a standard Borel space",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Core.FirstVariationGeneral",
+    "GFNBounds.Balance.TrainingSpeedAssembled",
+    "GFNBounds.Balance.LiftGeneralMixing"
+   ],
+   "variables": [
+    "variable {hx Px eps a : ℝ}",
+    "variable {w W g2 M3 : ℝ} {gd : ℝ → ℝ}",
+    "variable {g gd : ℝ → ℝ} {a : ℝ}",
+    "variable {S : Type*} [MeasurableSpace S] [StandardBorelSpace S] [Nonempty S]",
+    "variable {S : Type*} [MeasurableSpace S]",
+    "variable {lam : Measure S} [IsFiniteMeasure lam] {h : S → ℝ} {eps : ℝ}",
+    "variable {S : Type*} [MeasurableSpace S] [StandardBorelSpace S] [Nonempty S]",
+    "variable {S : Type*} [MeasurableSpace S] [StandardBorelSpace S] [Nonempty S]",
+    "variable {S : Type*} [MeasurableSpace S] [StandardBorelSpace S] [Nonempty S]",
+    "variable {S : Type*} [MeasurableSpace S] [StandardBorelSpace S] [Nonempty S]",
+    "variable {S : Type*} [MeasurableSpace S] [StandardBorelSpace S] [Nonempty S]",
+    "variable {S : Type*} [MeasurableSpace S] [StandardBorelSpace S] [Nonempty S]",
+    "variable {S : Type*} [MeasurableSpace S] [StandardBorelSpace S] [Nonempty S]",
+    "variable {S : Type*} [MeasurableSpace S] [StandardBorelSpace S] [Nonempty S]"
+   ],
+   "lines": 1620,
+   "decls": [
+    {
+     "name": "three_quarters_le",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.three_quarters_le",
+     "kind": "theorem",
+     "line": 155,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem three_quarters_le {t eps : ℝ} (ht : |t| ≤ eps) (heps : eps ≤ 1 / 4) : 3 / 4 ≤ 1 + t",
+     "doc": "`3/4 ≤ 1 + t` for `|t| ≤ ε ≤ 1/4`."
+    },
+    {
+     "name": "ratio_sub_one",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.ratio_sub_one",
+     "kind": "theorem",
+     "line": 159,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_sub_one {hx Px : ℝ} (hd : 1 + hx ≠ 0) : (1 + Px) / (1 + hx) - 1 = (Px - hx) / (1 + hx)",
+     "doc": "`r − 1 = Ah/(1+h)` for `r = (1+Ph)/(1+h)`, `Ah = Ph − h`."
+    },
+    {
+     "name": "abs_A_le",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.abs_A_le",
+     "kind": "theorem",
+     "line": 166,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_A_le (hh : |hx| ≤ eps) (hP : |Px| ≤ eps) : |Px - hx| ≤ 2 * eps",
+     "doc": "`|Ah| ≤ 2ε`."
+    },
+    {
+     "name": "abs_r_sub_one_le_four_thirds",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.abs_r_sub_one_le_four_thirds",
+     "kind": "theorem",
+     "line": 170,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_r_sub_one_le_four_thirds (hh : |hx| ≤ eps) (heps : eps ≤ 1 / 4) : |(1 + Px) / (1 + hx) - 1| ≤ 4 / 3 * |Px - hx|",
+     "doc": "**`|r − 1| ≤ (4/3)|Ah|`**."
+    },
+    {
+     "name": "abs_r_sub_one_le_eight_thirds",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.abs_r_sub_one_le_eight_thirds",
+     "kind": "theorem",
+     "line": 178,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_r_sub_one_le_eight_thirds (hh : |hx| ≤ eps) (hP : |Px| ≤ eps) (heps : eps ≤ 1 / 4) : |(1 + Px) / (1 + hx) - 1| ≤ 8 * eps / 3",
+     "doc": "**`|r − 1| ≤ 8ε/3`**."
+    },
+    {
+     "name": "abs_r_sub_one_le_two_a_div_three",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.abs_r_sub_one_le_two_a_div_three",
+     "kind": "theorem",
+     "line": 189,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_r_sub_one_le_two_a_div_three (hh : |hx| ≤ eps) (hP : |Px| ≤ eps) (heps : eps ≤ a / 4) (ha1 : a < 1) : |(1 + Px) / (1 + hx) - 1| ≤ 2 * a / 3",
+     "doc": "**`|r − 1| ≤ 2a/3`** for `ε ≤ a/4`, `a < 1`."
+    },
+    {
+     "name": "sq_r_sub_one_le",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.sq_r_sub_one_le",
+     "kind": "theorem",
+     "line": 196,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sq_r_sub_one_le (hh : |hx| ≤ eps) (hP : |Px| ≤ eps) (heps : eps ≤ 1 / 4) : ((1 + Px) / (1 + hx) - 1) ^ 2 ≤ 4 * eps * |Px - hx|",
+     "doc": "**`(r − 1)² ≤ 4ε|Ah|`**."
+    },
+    {
+     "name": "psi_expansion",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.psi_expansion",
+     "kind": "theorem",
+     "line": 212,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem psi_expansion (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (hw : |w| ≤ W) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : |hx| ≤ eps) (hP : |Px| ≤ eps) (heps : eps ≤ a / 4) (ha1 : a < 1) : |gd ((1 + Px) / (1 + hx)) * (w / (1 + hx)) - g2 * (w * (Px - hx))| ≤ C4 W g2 M3 * eps * |Px - hx|",
+     "doc": "**`ψ = g''(1) w Ah + e`, `|e| ≤ C₄ε|Ah|`**, pointwise, with `ψ = g'(r)·w/(1+h)`."
+    },
+    {
+     "name": "r_sub_one_mul_psi_le",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.r_sub_one_mul_psi_le",
+     "kind": "theorem",
+     "line": 263,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem r_sub_one_mul_psi_le (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (hw : |w| ≤ W) (htaylor : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hh : |hx| ≤ eps) (hP : |Px| ≤ eps) (heps : eps ≤ a / 4) (ha1 : a < 1) : |((1 + Px) / (1 + hx) - 1) * (gd ((1 + Px) / (1 + hx)) * (w / (1 + hx)))| ≤ C5 g2 a M3 W * eps * |Px - hx|",
+     "doc": "**`|(r − 1)ψ| ≤ C₅ε|Ah|`**, pointwise."
+    },
+    {
+     "name": "gext",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gext",
+     "kind": "def",
+     "line": 305,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def gext (g gd : ℝ → ℝ) (a : ℝ) (y : ℝ) : ℝ",
+     "doc": "**The paper's `g̃`** (proof of `theo:gd_diffusion_full`, second bullet): equal to `g` on `[1−a, 1+a]`, and affine with slope `g'(1∓a)` to either side, `g'` a derivative of `g` within the window (one-sided at `1 ± a`)."
+    },
+    {
+     "name": "gext'",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gext'",
+     "kind": "def",
+     "line": 310,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def gext' (gd : ℝ → ℝ) (a : ℝ) (y : ℝ) : ℝ",
+     "doc": "The derivative of `g̃`: `g'` on the window, constant to either side."
+    },
+    {
+     "name": "gext_of_mem",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gext_of_mem",
+     "kind": "theorem",
+     "line": 314,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gext_of_mem {y : ℝ} (hy : y ∈ Icc (1 - a) (1 + a)) : gext g gd a y = g y",
+     "doc": ""
+    },
+    {
+     "name": "gext'_of_mem",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gext'_of_mem",
+     "kind": "theorem",
+     "line": 318,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gext'_of_mem {y : ℝ} (hy : y ∈ Icc (1 - a) (1 + a)) : gext' gd a y = gd y",
+     "doc": ""
+    },
+    {
+     "name": "continuousOn_gd",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.continuousOn_gd",
+     "kind": "theorem",
+     "line": 322,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem continuousOn_gd (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) : ContinuousOn gd (winC3 a)",
+     "doc": "A derivative of `g` within the window is continuous on it (`C³` on the window)."
+    },
+    {
+     "name": "continuous_gext'",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.continuous_gext'",
+     "kind": "theorem",
+     "line": 328,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem continuous_gext' (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) : Continuous (gext' gd a)",
+     "doc": ""
+    },
+    {
+     "name": "hasDerivAt_gext",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.hasDerivAt_gext",
+     "kind": "theorem",
+     "line": 335,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_gext (ha : 0 < a) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) (y : ℝ) : HasDerivAt (gext g gd a) (gext' gd a y) y",
+     "doc": "**`g̃` is differentiable everywhere, with derivative `gext'`** (continuous, `continuous_gext'`) — what `first_variation_general` asks of a generator."
+    },
+    {
+     "name": "taylor_gext'",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.taylor_gext'",
+     "kind": "theorem",
+     "line": 401,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem taylor_gext' {g2 M3 : ℝ} (htay : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) : ∀ y : ℝ, |y - 1| ≤ a → |gext' gd a y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2",
+     "doc": "`g̃'` still satisfies the Taylor bound of `g'`, the two agreeing on the window."
+    },
+    {
+     "name": "Pd",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.Pd",
+     "kind": "def",
+     "line": 419,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Pd (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam] (f : S → ℝ) : S → ℝ",
+     "doc": "**`P`, the density action of `T` on `L²(λ)`**, `h ↦ d((hλ)T)/dλ` — by `lem:adjoint`(3) the function action of the `λ`-reversal `T^λ` (`IsInvariant.toReal_rnDeriv_comp`)."
+    },
+    {
+     "name": "Aop",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.Aop",
+     "kind": "def",
+     "line": 424,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Aop (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam] (h : S → ℝ) : S → ℝ",
+     "doc": "`A := P − I`."
+    },
+    {
+     "name": "Adag",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.Adag",
+     "kind": "def",
+     "line": 429,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Adag (T : Kernel S S) (f : S → ℝ) : S → ℝ",
+     "doc": "`A† = P† − I`, `P†` the function action of `T` (`lem:adjoint`(3))."
+    },
+    {
+     "name": "linHess",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.linHess",
+     "kind": "def",
+     "line": 432,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def linHess (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam] (w : S → ℝ) (g2 : ℝ) (h : S → ℝ) : S → ℝ",
+     "doc": "**`H := g''(1) A† M_w A`**, the linearization of the gradient field."
+    },
+    {
+     "name": "flowOf",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.flowOf",
+     "kind": "def",
+     "line": 443,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def flowOf (lam : Measure S) (h : S → ℝ) : Measure S",
+     "doc": "The flow `μ := (1+h)λ`."
+    },
+    {
+     "name": "wMeas",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.wMeas",
+     "kind": "def",
+     "line": 447,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def wMeas (lam : Measure S) (w : S → ℝ) : Measure S",
+     "doc": "The training measure `ν := wλ`."
+    },
+    {
+     "name": "psiP",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.psiP",
+     "kind": "def",
+     "line": 451,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def psiP (T : Kernel S S) (lam : Measure S) (gd : ℝ → ℝ) (w h : S → ℝ) : S → ℝ",
+     "doc": "**The paper's `ψ := g'(r)·w/(1+h)`**, `r` the ratio of `μ = (1+h)λ`, `gd` standing for `g'`."
+    },
+    {
+     "name": "gradD",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gradD",
+     "kind": "def",
+     "line": 455,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def gradD (T : Kernel S S) (lam : Measure S) (gd : ℝ → ℝ) (w h : S → ℝ) : S → ℝ",
+     "doc": "**The paper's gradient density `D := P†ψ − rψ`** against `λ`."
+    },
+    {
+     "name": "flowOf_isFinite",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.flowOf_isFinite",
+     "kind": "theorem",
+     "line": 462,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flowOf_isFinite (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) : IsFiniteMeasure (flowOf lam h)",
+     "doc": ""
+    },
+    {
+     "name": "wMeas_isFinite",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.wMeas_isFinite",
+     "kind": "theorem",
+     "line": 471,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem wMeas_isFinite {w : S → ℝ} (hwm : Measurable w) {W : ℝ} (hwb : ∀ᵐ x ∂lam, |w x| ≤ W) : IsFiniteMeasure (wMeas lam w)",
+     "doc": ""
+    },
+    {
+     "name": "flowOf_ac",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.flowOf_ac",
+     "kind": "theorem",
+     "line": 477,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem flowOf_ac : flowOf lam h ≪ lam",
+     "doc": ""
+    },
+    {
+     "name": "ac_flowOf",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.ac_flowOf",
+     "kind": "theorem",
+     "line": 480,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ac_flowOf (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (heps : eps ≤ 1 / 4) : lam ≪ flowOf lam h",
+     "doc": ""
+    },
+    {
+     "name": "toReal_rnDeriv_flowOf",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.toReal_rnDeriv_flowOf",
+     "kind": "theorem",
+     "line": 487,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem toReal_rnDeriv_flowOf (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (heps : eps ≤ 1 / 4) : (fun x => ((flowOf lam h).rnDeriv lam x).toReal) =ᵐ[lam] fun x => 1 + h x",
+     "doc": ""
+    },
+    {
+     "name": "abs_Pd_le",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.abs_Pd_le",
+     "kind": "theorem",
+     "line": 504,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem abs_Pd_le (hinv : IsInvariant T lam) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) : ∀ᵐ x ∂lam, |Pd T lam h x| ≤ eps",
+     "doc": "`|Ph| ≤ ε` `λ`-a.e."
+    },
+    {
+     "name": "Pd_eq_densityAction",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.Pd_eq_densityAction",
+     "kind": "theorem",
+     "line": 514,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Pd_eq_densityAction (hinv : IsInvariant T lam) {f : S → ℝ} (hf : Measurable f) (hfi : Integrable f lam) : Pd T lam f =ᵐ[lam] GFNBounds.Core.densityAction T lam f",
+     "doc": "**`P` is the density action `h ↦ d((hλ)T)/dλ`** of the paper, on signed integrable densities: `Pd T lam f` agrees `λ`-a.e."
+    },
+    {
+     "name": "Pd_adjoint",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.Pd_adjoint",
+     "kind": "theorem",
+     "line": 554,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Pd_adjoint (hinv : IsInvariant T lam) {u v : S → ℝ} (hv : MemLp v 2 lam) (hu : MemLp u 2 lam) : ∫ x, v x * Pd T lam u x ∂lam = ∫ x, Core.General.funAct T v x * u x ∂lam",
+     "doc": "**`P†` is the `L²(λ)`-adjoint of `P`** (`lem:adjoint`(3)): `⟪v ∣ Pu⟫_λ = ⟪P†v ∣ u⟫_λ` with `P† = ` the function action of `T` (`Core.General.funAct T`), which is how `Adag` reads it."
+    },
+    {
+     "name": "Pd_one_add",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.Pd_one_add",
+     "kind": "theorem",
+     "line": 560,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Pd_one_add (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) : ∀ᵐ x ∂lam, Pd T lam (fun y => 1 + h y) x = 1 + Pd T lam h x",
+     "doc": "`P(1 + h) = 1 + Ph` `λ`-a.e."
+    },
+    {
+     "name": "ratio_flowOf",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.ratio_flowOf",
+     "kind": "theorem",
+     "line": 572,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_flowOf (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (heps : eps ≤ 1 / 4) : FirstVariation.ratio T (flowOf lam h) =ᵐ[lam] fun x => (1 + Pd T lam h x) / (1 + h x)",
+     "doc": "**`theo:gd_diffusion_full`: the ratio of `μ = (1+h)λ` is `r = (1+Ph)/(1+h)`**, `λ`-a.e."
+    },
+    {
+     "name": "toReal_rnDeriv_wMeas",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.toReal_rnDeriv_wMeas",
+     "kind": "theorem",
+     "line": 591,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem toReal_rnDeriv_wMeas {w : S → ℝ} (hwm : Measurable w) (hw0 : ∀ᵐ x ∂lam, 0 ≤ w x) {W : ℝ} (hwb : ∀ᵐ x ∂lam, |w x| ≤ W) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (heps : eps ≤ 1 / 4) : (fun x => ((wMeas lam w).rnDeriv (flowOf lam h) x).toReal) =ᵐ[lam] fun x => w x / (1 + h x)",
+     "doc": "**`dν/dμ = w/(1+h)`**, `λ`-a.e., for `ν = wλ`, `w ≥ 0`."
+    },
+    {
+     "name": "ae_data",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.ae_data",
+     "kind": "theorem",
+     "line": 619,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ae_data (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (heps : eps ≤ 1 / 4) : ∀ᵐ x ∂lam, |h x| ≤ eps ∧ |Pd T lam h x| ≤ eps ∧ FirstVariation.ratio T (flowOf lam h) x = (1 + Pd T lam h x) / (1 + h x)",
+     "doc": "The pointwise data at a.e."
+    },
+    {
+     "name": "gd_ratio_bounds",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gd_ratio_bounds",
+     "kind": "theorem",
+     "line": 627,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gd_ratio_bounds (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (ha : 0 < a) (ha1 : a < 1) (heps : eps ≤ a / 4) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) (hg'1 : deriv g 1 = 0) (hg2 : 0 ≤ deriv (deriv g) 1) : ∀ᵐ x ∂lam, |FirstVariation.ratio T (flowOf lam h) x - 1| ≤ 4 / 3 * |Aop T lam h x| ∧ |FirstVariation.ratio T (flowOf lam h) x - 1| ≤ 2 * a / 3 ∧ |gd (FirstVariation.ratio T (flowOf lam h) x)| ≤ Cg (deriv (deriv g) 1) a (Gamma3W g a) * |FirstVariation.ratio T (flowOf lam h) x - 1|",
+     "doc": "**`eq:gd_ratio_bounds`**: `|r−1| ≤ (4/3)|Ah|`, `|r−1| ≤ 2a/3`, `|g'(r)| ≤ C_g|r−1|`, `λ`-a.e."
+    },
+    {
+     "name": "ratio_window",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.ratio_window",
+     "kind": "theorem",
+     "line": 647,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ratio_window (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (ha1 : a < 1) (heps : eps ≤ a / 4) : ∀ᵐ x ∂(flowOf lam h), 1 - 2 * a / 3 ≤ FirstVariation.ratio T (flowOf lam h) x ∧ FirstVariation.ratio T (flowOf lam h) x ≤ 1 + 2 * a / 3",
+     "doc": "The ratio lies in `[1 − 2a/3, 1 + 2a/3]`, `μ`-a.e."
+    },
+    {
+     "name": "psi_eq_psiP",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.psi_eq_psiP",
+     "kind": "theorem",
+     "line": 660,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem psi_eq_psiP (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (ha1 : a < 1) (heps : eps ≤ a / 4) (hwm : Measurable w) (hw0 : ∀ᵐ x ∂lam, 0 ≤ w x) (hwb : ∀ᵐ x ∂lam, |w x| ≤ W) : FirstVariation.psi T (gext' gd a) (wMeas lam w) (flowOf lam h) =ᵐ[lam] psiP T lam gd w h",
+     "doc": "`ψ` of `theo_first_variation_full` at `(g̃, ν = wλ, μ = (1+h)λ)` is the paper's `g'(r)·w/(1+h)`, `λ`-a.e."
+    },
+    {
+     "name": "gradDens_eq_gradD",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gradDens_eq_gradD",
+     "kind": "theorem",
+     "line": 675,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gradDens_eq_gradD (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (ha1 : a < 1) (heps : eps ≤ a / 4) (hwm : Measurable w) (hw0 : ∀ᵐ x ∂lam, 0 ≤ w x) (hwb : ∀ᵐ x ∂lam, |w x| ≤ W) : FirstVariation.gradDens T (gext' gd a) (wMeas lam w) (flowOf lam h) =ᵐ[lam] gradD T lam gd w h",
+     "doc": "… and hence the gradient density `Tψ − rψ` is the paper's `D`, `λ`-a.e."
+    },
+    {
+     "name": "loss_eventually_eq_gext",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.loss_eventually_eq_gext",
+     "kind": "theorem",
+     "line": 687,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem loss_eventually_eq_gext (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (ha : 0 < a) (ha1 : a < 1) (heps : eps ≤ a / 4) (ν : Measure S) (hν : ν ≪ flowOf lam h) {u : S → ℝ} (hu : Measurable u) {C : ℝ} (hC : 0 ≤ C) (hub : ∀ᵐ x ∂(flowOf lam h), |u x| ≤ C) : ∀ᶠ s in 𝓝 (0 : ℝ), FirstVariation.loss T g ν (FirstVariation.perturb (flowOf lam h) u s) = FirstVariation.loss T (gext g gd a) ν (FirstVariation.perturb (flowOf lam h) u s)",
+     "doc": "Near `s = 0` the loss of `g` and of `g̃` agree along every bounded direction: the ratio of `μ + sδ` stays in the window, where `g̃ = g`."
+    },
+    {
+     "name": "gd_gradient",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gd_gradient",
+     "kind": "theorem",
+     "line": 711,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gd_gradient (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (ha : 0 < a) (ha1 : a < 1) (heps : eps ≤ a / 4) (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) (hwm : Measurable w) (hw0 : ∀ᵐ x ∂lam, 0 ≤ w x) (hwb : ∀ᵐ x ∂lam, |w x| ≤ W) : (∀ s : Set S, MeasurableSet s → (reversal T lam ∘ₘ lam.withDensity fun y => ENNReal.ofReal (psiP T lam gd w h y)).real s - (reversal T lam ∘ₘ lam.withDensity fun y => ENNReal.ofReal (-psiP T lam gd w h y)).real s - ∫ x in s, FirstVariation.ratio T (flowOf lam h) x * psiP T lam gd w h x ∂lam = ∫ x in s, gradD T lam gd w h x ∂lam) ∧ MemLp (gradD T lam gd w h) 2 lam ∧ (∀ u : S → ℝ, Measurable u → ∀ C : ℝ, (∀ᵐ x ∂lam, |u x| ≤ C) → HasDerivAt (fun s => FirstVariation.loss T g (wMeas lam w) (FirstVariation.perturb (flowOf lam h) u s)) (∫ x, gradD T lam gd w h x * (u x * (1 + h x)) ∂lam) 0) ∧ (∀ D' : S → ℝ, MemLp D' 2 lam → (∀ u : S → ℝ, Measurable u → (∀ᵐ x ∂lam, |u x| ≤ 1 / 2) → HasDerivAt (fun s => FirstVariation.loss T g (wMeas lam w) (FirstVariation.perturb (flowOf lam h) u s)) (∫ x, D' x * (u x * (1 + h x)) ∂lam) 0) → D' =ᵐ[lam] gradD T lam gd w h)",
+     "doc": "**`theo:gd_diffusion_full`, the gradient clause**: `𝓛_{g,ν}` has at `μ = (1+h)λ` a gradient in the sense of `theo_first_variation_full` (with `ν_G = λ`), of density `D = P†ψ − rψ` against `λ`, `ψ = g'(r)·w/(1+h)`."
+    },
+    {
+     "name": "ae_funAct_bound",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.ae_funAct_bound",
+     "kind": "theorem",
+     "line": 812,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ae_funAct_bound (hinv : IsInvariant T lam) {f : S → ℝ} (hf : Measurable f) {L : ℝ} (hfb : ∀ᵐ x ∂lam, |f x| ≤ L) : ∀ᵐ x ∂lam, Integrable f (T x) ∧ |Core.General.funAct T f x| ≤ L",
+     "doc": "A bounded measurable function stays bounded under the function action of `T`, `λ`-a.e., and is integrable against `T(x → ·)` for `λ`-a.e."
+    },
+    {
+     "name": "measurable_Pd",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.measurable_Pd",
+     "kind": "theorem",
+     "line": 821,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem measurable_Pd (f : S → ℝ) (hf : Measurable f) : Measurable (Pd T lam f)",
+     "doc": ""
+    },
+    {
+     "name": "measurable_Aop",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.measurable_Aop",
+     "kind": "theorem",
+     "line": 824,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem measurable_Aop (hhm : Measurable h) : Measurable (Aop T lam h)",
+     "doc": ""
+    },
+    {
+     "name": "measurable_psiP",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.measurable_psiP",
+     "kind": "theorem",
+     "line": 828,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem measurable_psiP (hgdm : Measurable gd) (hhm : Measurable h) (hwm : Measurable w) : Measurable (psiP T lam gd w h)",
+     "doc": ""
+    },
+    {
+     "name": "ae_data_psi",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.ae_data_psi",
+     "kind": "theorem",
+     "line": 834,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ae_data_psi (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (heps4 : eps ≤ 1 / 4) (hwb : ∀ᵐ x ∂lam, |w x| ≤ W) : ∀ᵐ x ∂lam, |h x| ≤ eps ∧ |Pd T lam h x| ≤ eps ∧ |w x| ≤ W ∧ FirstVariation.ratio T (flowOf lam h) x = (1 + Pd T lam h x) / (1 + h x) ∧ psiP T lam gd w h x = gd ((1 + Pd T lam h x) / (1 + h x)) * (w x / (1 + h x))",
+     "doc": "The pointwise data of the expansion: at `λ`-a.e."
+    },
+    {
+     "name": "gd_expansion",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gd_expansion",
+     "kind": "theorem",
+     "line": 846,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gd_expansion (hinv : IsInvariant T lam) (hhm : Measurable h) (hh : ∀ᵐ x ∂lam, |h x| ≤ eps) (ha1 : a < 1) (heps0 : 0 ≤ eps) (heps : eps ≤ a / 4) (hgdm : Measurable gd) {g2 M3 : ℝ} (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (htay : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hwm : Measurable w) (hwb : ∀ᵐ x ∂lam, |w x| ≤ W) (hW0 : 0 ≤ W) : eLpNorm (fun x => gradD T lam gd w h x - linHess T lam w g2 h x) 2 lam ≤ ENNReal.ofReal (Kexp g2 a M3 W * eps) * eLpNorm (Aop T lam h) 2 lam ∧ eLpNorm (Aop T lam h) 2 lam ≤ 2 * eLpNorm h 2 lam",
+     "doc": "**`eq:linearized_flow`**, in `L²(λ)`: with `E := D − g''(1)A†M_wAh`, `‖E‖_{L²(λ)} ≤ Kε‖(P−I)h‖_{L²(λ)}` and `‖(P−I)h‖_{L²(λ)} ≤ 2‖h‖_{L²(λ)}`, `K = 2C₄ + C₅` the paper's constant at `Γ₃ = sup_{[1−a,1+a]}|g'''|` and `W ≥ ‖w‖_{L^∞}`."
+    },
+    {
+     "name": "IminusP",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.IminusP",
+     "kind": "def",
+     "line": 968,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def IminusP (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam] (f : S → ℝ) : S → ℝ",
+     "doc": "`I − P`."
+    },
+    {
+     "name": "funAct_const_mul",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.funAct_const_mul",
+     "kind": "theorem",
+     "line": 973,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funAct_const_mul (A : Kernel S S) (c : ℝ) (f : S → ℝ) : Core.General.funAct A (fun y => c * f y) = fun x => c * Core.General.funAct A f x",
+     "doc": ""
+    },
+    {
+     "name": "Aop_const_mul",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.Aop_const_mul",
+     "kind": "theorem",
+     "line": 977,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Aop_const_mul (c : ℝ) (f : S → ℝ) : Aop T lam (fun y => c * f y) = fun x => c * Aop T lam f x",
+     "doc": ""
+    },
+    {
+     "name": "linHess_const_mul",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.linHess_const_mul",
+     "kind": "theorem",
+     "line": 984,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_const_mul (w : S → ℝ) (g2 c : ℝ) (f : S → ℝ) : linHess T lam w g2 (fun y => c * f y) = fun x => c * linHess T lam w g2 f x",
+     "doc": "**`H` is linear** (homogeneity, exactly and not only a.e.)."
+    },
+    {
+     "name": "Pd_eq_funAct_of_reversible",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.Pd_eq_funAct_of_reversible",
+     "kind": "theorem",
+     "line": 998,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem Pd_eq_funAct_of_reversible (hrev : IsReversalPair lam T T) : ∀ᵐ x ∂lam, ∀ f : S → ℝ, Pd T lam f x = Core.General.funAct T f x",
+     "doc": "For `T` reversible with respect to `λ` (`λ ⊗ T = T ⊗ λ`), `P` and the function action of `T` agree `λ`-a.e.: the uniqueness in `lem:adjoint`(1) gives `T^λ = T`."
+    },
+    {
+     "name": "linHess_reversible",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.linHess_reversible",
+     "kind": "theorem",
+     "line": 1006,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_reversible (hrev : IsReversalPair lam T T) (g2 : ℝ) (f : S → ℝ) : linHess T lam (fun _ => 1) g2 f =ᵐ[lam] fun x => g2 * IminusP T lam (IminusP T lam f) x",
+     "doc": "**`theo:gd_diffusion_full`, the \"in particular\"**: for `w ≡ 1` and `T` reversible, `H = g''(1)(I − P)²`, `λ`-a.e."
+    },
+    {
+     "name": "linHess_eigen",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.linHess_eigen",
+     "kind": "theorem",
+     "line": 1023,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linHess_eigen (hrev : IsReversalPair lam T T) (g2 β : ℝ) {φ : S → ℝ} (heig : Pd T lam φ =ᵐ[lam] fun x => β * φ x) : linHess T lam (fun _ => 1) g2 φ =ᵐ[lam] fun x => g2 * (1 - β) ^ 2 * φ x",
+     "doc": "**`theo:gd_diffusion_full`: each eigenmode `Pφ = βφ` is an eigenmode of `H`** (`w ≡ 1`, `T` reversible), with eigenvalue `g''(1)(1 − β)²`, `λ`-a.e."
+    },
+    {
+     "name": "eigenmode_decay",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.eigenmode_decay",
+     "kind": "theorem",
+     "line": 1042,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eigenmode_decay (hrev : IsReversalPair lam T T) (g2 β : ℝ) {φ : S → ℝ} (heig : Pd T lam φ =ᵐ[lam] fun x => β * φ x) (t : ℝ) : ∀ᵐ x ∂lam, HasDerivAt (fun t => Real.exp (-(g2 * (1 - β) ^ 2) * t) * φ x) (-linHess T lam (fun _ => 1) g2 (fun y => Real.exp (-(g2 * (1 - β) ^ 2) * t) * φ y) x) t",
+     "doc": "**`theo:gd_diffusion_full`: each eigenmode decays at rate `g''(1)(1 − β)²`**: `h_t := e^{−g''(1)(1−β)²t}φ` solves the linearized flow `ḣ = −Hh` (`w ≡ 1`), pointwise in `t` and `λ`-a.e."
+    },
+    {
+     "name": "measurable_gradD",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.measurable_gradD",
+     "kind": "theorem",
+     "line": 1068,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem measurable_gradD (hgdm : Measurable gd) {h : S → ℝ} (hhm : Measurable h) (hwm : Measurable w) : Measurable (gradD T lam gd w h)",
+     "doc": ""
+    },
+    {
+     "name": "measurable_linHess",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.measurable_linHess",
+     "kind": "theorem",
+     "line": 1073,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem measurable_linHess {h : S → ℝ} (hhm : Measurable h) (hwm : Measurable w) (g2 : ℝ) : Measurable (linHess T lam w g2 h)",
+     "doc": ""
+    },
+    {
+     "name": "gradD_zero",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gradD_zero",
+     "kind": "theorem",
+     "line": 1080,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gradD_zero (hinv : IsInvariant T lam) (ha : 0 < a) (ha1 : a < 1) (hgdm : Measurable gd) {g2 M3 : ℝ} (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (htay : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hwm : Measurable w) (hwb : ∀ᵐ x ∂lam, |w x| ≤ W) (hW0 : 0 ≤ W) : gradD T lam gd w (fun _ => 0) =ᵐ[lam] fun _ => 0",
+     "doc": "**`theo:gd_diffusion_full`, the flow sentence: the balanced flow is a zero of the field**: `D(0) = 0`, `λ`-a.e."
+    },
+    {
+     "name": "linearization_unique",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.linearization_unique",
+     "kind": "theorem",
+     "line": 1105,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linearization_unique (hinv : IsInvariant T lam) (ha : 0 < a) (ha1 : a < 1) (hgdm : Measurable gd) {g2 M3 : ℝ} (hg2 : 0 ≤ g2) (hM3 : 0 ≤ M3) (htay : ∀ y : ℝ, |y - 1| ≤ a → |gd y - g2 * (y - 1)| ≤ M3 / 2 * (y - 1) ^ 2) (hwm : Measurable w) (hwb : ∀ᵐ x ∂lam, |w x| ≤ W) (hW0 : 0 ≤ W) (H' : (S → ℝ) → S → ℝ) (hH'lin : ∀ f : S → ℝ, ∀ c : ℝ, H' (fun y => c * f y) =ᵐ[lam] fun x => c * H' f x) (hH'm : ∀ f : S → ℝ, Measurable f → AEStronglyMeasurable (H' f) lam) {c : ℝ → ℝ} (hc : Tendsto c (𝓝[>] 0) (𝓝 0)) (hH' : ∀ f : S → ℝ, Measurable f → ∀ δ : ℝ, 0 < δ → δ ≤ a / 4 → (∀ᵐ x ∂lam, |f x| ≤ δ) → eLpNorm (fun x => gradD T lam gd w f x - H' f x) 2 lam ≤ ENNReal.ofReal (c δ) * eLpNorm f 2 lam) {f : S → ℝ} (hf : Measurable f) {L : ℝ} (hL : 0 < L) (hfb : ∀ᵐ x ∂lam, |f x| ≤ L) : H' f =ᵐ[lam] linHess T lam w g2 f",
+     "doc": "**`theo:gd_diffusion_full`, the flow sentence: the part of the field linear in `h` is `−H`, uniquely.** `D(h) − Hh = o(‖h‖_{L²(λ)})` as `‖h‖_{L^∞(λ)} → 0` (`gd_expansion`, with the explicit rate `2K‖h‖_{L^∞}`), and `H` is linear (`linHess_const_mul`)."
+    },
+    {
+     "name": "ae_abs_le_eLpNorm_top",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.ae_abs_le_eLpNorm_top",
+     "kind": "theorem",
+     "line": 1226,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ae_abs_le_eLpNorm_top {w : S → ℝ} (hw : MemLp w ⊤ lam) : ∀ᵐ x ∂lam, |w x| ≤ (eLpNorm w ⊤ lam).toReal",
+     "doc": "`|w| ≤ ‖w‖_{L^∞(λ)}` `λ`-a.e."
+    },
+    {
+     "name": "gradD_eq_gext'",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gradD_eq_gext'",
+     "kind": "theorem",
+     "line": 1237,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gradD_eq_gext' (hinv : IsInvariant T lam) {gd : ℝ → ℝ} {a δ : ℝ} (ha1 : a < 1) (hδ : δ ≤ a / 4) (w : S → ℝ) {f : S → ℝ} (hfm : Measurable f) (hf : ∀ᵐ x ∂lam, |f x| ≤ δ) : gradD T lam gd w f =ᵐ[lam] gradD T lam (gext' gd a) w f",
+     "doc": "On `‖f‖_{L^∞} ≤ a/4` the field only reads `g'` inside the window, so `D` is unchanged when `g'` is replaced by its clamped (continuous, measurable) version `g̃'`."
+    },
+    {
+     "name": "theo_gd_diffusion_full",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.theo_gd_diffusion_full",
+     "kind": "theorem",
+     "line": 1272,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem theo_gd_diffusion_full (_hlam0 : lam ≠ 0) (hinv : IsInvariant T lam) {w : S → ℝ} (hwm : Measurable w) (hw0 : ∀ᵐ x ∂lam, 0 ≤ w x) (hwinf : MemLp w ⊤ lam) {a : ℝ} (ha : 0 < a) (ha1 : a < 1) {g gd : ℝ → ℝ} (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) (_hg1 : g 1 = 0) (hg'1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) : (∀ eps : ℝ, 0 < eps → eps ≤ a / 4 → ∀ h : S → ℝ, Measurable h → (∀ᵐ x ∂lam, |h x| ≤ eps) → FirstVariation.ratio T (flowOf lam h) =ᵐ[lam] (fun x => (1 + Pd T lam h x) / (1 + h x)) ∧ (∀ᵐ x ∂lam, |FirstVariation.ratio T (flowOf lam h) x - 1| ≤ 4 / 3 * |Aop T lam h x| ∧ |FirstVariation.ratio T (flowOf lam h) x - 1| ≤ 2 * a / 3 ∧ |gd (FirstVariation.ratio T (flowOf lam h) x)| ≤ Cg (deriv (deriv g) 1) a (Gamma3W g a) * |FirstVariation.ratio T (flowOf lam h) x - 1|) ∧ (∀ s : Set S, MeasurableSet s → (reversal T lam ∘ₘ lam.withDensity fun y => ENNReal.ofReal (psiP T lam gd w h y)).real s - (reversal T lam ∘ₘ lam.withDensity fun y => ENNReal.ofReal (-psiP T lam gd w h y)).real s - ∫ x in s, FirstVariation.ratio T (flowOf lam h) x * psiP T lam gd w h x ∂lam = ∫ x in s, gradD T lam gd w h x ∂lam) ∧ MemLp (gradD T lam gd w h) 2 lam ∧ (∀ u : S → ℝ, Measurable u → ∀ C : ℝ, (∀ᵐ x ∂lam, |u x| ≤ C) → HasDerivAt (fun s => FirstVariation.loss T g (wMeas lam w) (FirstVariation.perturb (flowOf lam h) u s)) (∫ x, gradD T lam gd w h x * (u x * (1 + h x)) ∂lam) 0) ∧ (∀ D' : S → ℝ, MemLp D' 2 lam →",
+     "doc": "**`theo:gd_diffusion_full`, on a standard Borel space, with the paper's hypotheses.** `T` Markov with `λ` non-zero, finite, `T`-invariant (`lem:adjoint`); `w ≥ 0` in `L^∞(λ)`, `ν = wλ`; `a ∈ (0,1)`, `g` `C³` on `[1−a, 1+a]` (`ContDiffOn`, one-sided at `1 ± a`) with `g'(1) = 0 < g''(1)` and `g(1) = 0`, `g'` (`gd`) its derivative within the window; `Γ₃ = sup_{[1−a,1+a]}|g'''|` (`Gamma3W`) and `‖w‖_{L^∞}` enter `K = 2C₄ + C₅` (`Kexp`)."
+    },
+    {
+     "name": "dbLoss",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.dbLoss",
+     "kind": "def",
+     "line": 1384,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def dbLoss (pb : Kernel S S) (g : ℝ → ℝ) (nu μ : Measure (S × S)) : ℝ",
+     "doc": "**The DB loss with frozen backward policy** (`prop:db_lift`): `𝓛_DB(μ) = ∫ g(F(ds')π_←(s'→ds) / F(ds)π_→^μ(s→ds')) dν̂`, `F = m₁μ`."
+    },
+    {
+     "name": "dbLoss_eq_condKernel",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.dbLoss_eq_condKernel",
+     "kind": "theorem",
+     "line": 1390,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbLoss_eq_condKernel (g : ℝ → ℝ) (nu μ : Measure (S × S)) [IsFiniteMeasure μ] (pf : Kernel S S) [μ.IsCondKernel pf] : dbLoss pb g nu μ = ∫ p, g ((LiftGeneral.edgeMeasure pb μ.fst).rnDeriv (μ.fst ⊗ₘ pf) p).toReal ∂nu",
+     "doc": "`dbLoss` in the paper's form: `F(ds')π_←(s'→ds)` over `F(ds)π_→^μ(s→ds')`, for every disintegration `μ = F ⊗ π_→^μ`."
+    },
+    {
+     "name": "dbLoss_eq_loss",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.dbLoss_eq_loss",
+     "kind": "theorem",
+     "line": 1398,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbLoss_eq_loss (g : ℝ → ℝ) (nu μ : Measure (S × S)) [SFinite μ] : dbLoss pb g nu μ = FirstVariation.loss (LiftGeneral.edgeLift pb) g nu μ",
+     "doc": "**`prop:db_lift`, read as a loss**: the DB loss is the balance loss of the edge lift `K₂`, `𝓛_DB = 𝓛_{g,ν̂}` for `T = K₂`, at every s-finite edge flow."
+    },
+    {
+     "name": "reversal_edgeLift_ae",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.reversal_edgeLift_ae",
+     "kind": "theorem",
+     "line": 1405,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem reversal_edgeLift_ae (hinv : IsInvariant pb lam) : LiftGeneral.edgeLiftDual (pb†lam) =ᵐ[LiftGeneral.edgeMeasure pb lam] reversal (LiftGeneral.edgeLift pb) (LiftGeneral.edgeMeasure pb lam)",
+     "doc": "`K₂^{λ₂}`, the `λ₂`-reversal of `K₂`, is the forward edge kernel of `lem:lift_wellposed`, `(s,s') ↦ (s', π_→^λ(s'))`, `λ₂`-a.e."
+    },
+    {
+     "name": "cor_db_gradient",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.cor_db_gradient",
+     "kind": "theorem",
+     "line": 1419,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cor_db_gradient (hlam0 : lam ≠ 0) (hinv : IsInvariant pb lam) {μ : Measure (S × S)} (hμ2 : InM2 (LiftGeneral.edgeMeasure pb lam) μ) (hlμ : LiftGeneral.edgeMeasure pb lam ≪ μ) (hac : LiftGeneral.edgeLift pb ∘ₘ μ ≪ μ) {a b : ℝ} (ha : 0 < a) (hab : a ≤ b) (hr : ∀ᵐ p ∂μ, a ≤ FirstVariation.ratio (LiftGeneral.edgeLift pb) μ p ∧ FirstVariation.ratio (LiftGeneral.edgeLift pb) μ p ≤ b) {nu : Measure (S × S)} [IsFiniteMeasure nu] (hνμ : nu ≪ μ) (hw : MemLp (fun p => (nu.rnDeriv μ p).toReal) ⊤ μ) {g g' : ℝ → ℝ} (hgd : ∀ y, 0 < y → HasDerivAt g (g' y) y) (hg'c : ContinuousOn g' (Ioi 0)) (hg'L : LocallyLipschitzOn (Ioi 0) g') : (∀ s : Set (S × S), MeasurableSet s → (LiftGeneral.edgeLiftDual (pb†lam) ∘ₘ (LiftGeneral.edgeMeasure pb lam).withDensity fun y => ENNReal.ofReal (FirstVariation.psi (LiftGeneral.edgeLift pb) g' nu μ y)).real s - (LiftGeneral.edgeLiftDual (pb†lam) ∘ₘ (LiftGeneral.edgeMeasure pb lam).withDensity fun y => ENNReal.ofReal (-FirstVariation.psi (LiftGeneral.edgeLift pb) g' nu μ y)).real s - ∫ p in s, FirstVariation.ratio (LiftGeneral.edgeLift pb) μ p * FirstVariation.psi (LiftGeneral.edgeLift pb) g' nu μ p ∂(LiftGeneral.edgeMeasure pb lam) = ∫ p in s, FirstVariation.gradDens (LiftGeneral.edgeLift pb) g' nu μ p ∂(LiftGeneral.edgeMeasure pb lam)) ∧ MemLp (FirstVariation.gradDens (LiftGeneral.edgeLift pb) g' nu μ) 2 (LiftGeneral.edgeMeasure pb lam) ∧ (∀ u : S × S → ℝ, Measurable u → ∀ C : ℝ, (∀ᵐ p ∂μ, |u p| ≤ C) → HasDerivAt (fun s => dbLoss pb g nu (FirstVariation.perturb μ u s)) (∫ p, FirstVariation.gradDens (LiftGeneral.edgeLift pb) g' nu μ p * (u p * (μ.rnDeriv (LiftGeneral.edgeMeasure pb lam) p).toReal) ∂(LiftGeneral.edgeMeasure pb lam)) 0) ∧ (∀ h' : S × S → ℝ, MemLp h' 2 (LiftGeneral.edgeMeasure pb lam) → (∀ u : S × S → ℝ, Measurable u → (∀ᵐ p ∂μ, |u p| ≤ 1 / 2) → HasDerivAt (fun s => dbLoss pb g nu (FirstVariation.perturb μ u s)) (∫ p, h' p * (u p * (μ.rnDeriv (LiftGeneral.edgeMeasure pb lam) p).toReal) ∂(LiftGeneral.edgeMeasure pb lam)) 0) → h' =ᵐ[LiftGeneral.edgeMeasure pb lam] FirstVariation.gradDens (LiftGeneral.edgeLift pb) g' nu μ)",
+     "doc": "**`cor:db_gradient`, on a standard Borel `𝒮`.** Under the hypotheses of `theo:first_variation_full` on `(𝒮², λ₂, K₂)` — `μ ∈ 𝓜²(λ₂)`, `μ ∼ λ₂`, `μK₂ ≪ μ`, `r̂ = d(μK₂)/dμ ∈ [a, b] ⊂ (0,∞)` `μ`-a.e., `ν̂` finite with `dν̂/dμ ∈ L^∞(μ)`, `g` `C¹` on `ℝ₊*` with locally Lipschitz `g'` — the DB loss with frozen backward policy has, in `⟨·∣·⟩_{λ₂}`, the gradient `(K₂^{λ₂} − r̂)[g'(r̂)(dν̂/dμ)λ₂]`, `K₂^{λ₂} = (s,s') ↦ (s', π_→^λ(s'))` the forward edge kernel of `lem:lift_wellposed`: (1) that signed measure has `λ₂`-density `h = K₂ψ − r̂ψ`, `ψ = g'(r̂)dν̂/dμ`; (2) `h ∈ L²(λ₂)`; (3) `h` represents the derivative of `𝓛_DB` along every bounded direction; (4) uniquely."
+    },
+    {
+     "name": "cor_db_gradient_hypotheses_inhabited",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.cor_db_gradient_hypotheses_inhabited",
+     "kind": "theorem",
+     "line": 1481,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem cor_db_gradient_hypotheses_inhabited (π : Measure S) [IsProbabilityMeasure π] : π ≠ 0 ∧ IsInvariant (Kernel.const S π) π ∧ InM2 (LiftGeneral.edgeMeasure (Kernel.const S π) π) (LiftGeneral.edgeMeasure (Kernel.const S π) π) ∧ LiftGeneral.edgeMeasure (Kernel.const S π) π ≪ LiftGeneral.edgeMeasure (Kernel.const S π) π ∧ LiftGeneral.edgeLift (Kernel.const S π) ∘ₘ LiftGeneral.edgeMeasure (Kernel.const S π) π ≪ LiftGeneral.edgeMeasure (Kernel.const S π) π ∧ (∀ᵐ p ∂(LiftGeneral.edgeMeasure (Kernel.const S π) π), 1 ≤ FirstVariation.ratio (LiftGeneral.edgeLift (Kernel.const S π)) (LiftGeneral.edgeMeasure (Kernel.const S π) π) p ∧ FirstVariation.ratio (LiftGeneral.edgeLift (Kernel.const S π)) (LiftGeneral.edgeMeasure (Kernel.const S π) π) p ≤ 1) ∧ MemLp (fun p => ((LiftGeneral.edgeMeasure (Kernel.const S π) π).rnDeriv (LiftGeneral.edgeMeasure (Kernel.const S π) π) p).toReal) ⊤ (LiftGeneral.edgeMeasure (Kernel.const S π) π) ∧ (∀ y, 0 < y → HasDerivAt (fun x : ℝ => (x - 1) ^ 2) (2 * (y - 1)) y) ∧ ContinuousOn (fun y : ℝ => 2 * (y - 1)) (Ioi 0) ∧ LocallyLipschitzOn (Ioi 0) (fun y : ℝ => 2 * (y - 1))",
+     "doc": "**Non-vacuity of `cor_db_gradient`** (kb `0025`, `0027`): on every standard Borel space carrying a probability `π`, the hypotheses of `cor_db_gradient` are met on the edge lift of the resampling kernel `π_← = x ↦ π`, with `λ = π`, `μ = ν̂ = λ₂ = π ⊗ π_←`, `a = b = 1` (`λ₂` is `K₂`-invariant, so `r̂ = 1` `λ₂`-a.e.) and the generator `g(x) = (x−1)²`, `g' = 2(x−1)`."
+    },
+    {
+     "name": "theo_gd_diffusion_DB",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.theo_gd_diffusion_DB",
+     "kind": "theorem",
+     "line": 1538,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem theo_gd_diffusion_DB (hinv : IsInvariant pb lam) {w : S × S → ℝ} (hwm : Measurable w) (hw0 : ∀ᵐ p ∂(LiftGeneral.edgeMeasure pb lam), 0 ≤ w p) {W : ℝ} (hwb : ∀ᵐ p ∂(LiftGeneral.edgeMeasure pb lam), |w p| ≤ W) (hW0 : 0 ≤ W) {a : ℝ} (ha : 0 < a) (ha1 : a < 1) {g gd : ℝ → ℝ} (hC3 : ContDiffOn ℝ 3 g (winC3 a)) (hgd : ∀ y ∈ winC3 a, HasDerivWithinAt g (gd y) (winC3 a) y) (hg'1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) {eps : ℝ} (heps0 : 0 < eps) (heps : eps ≤ a / 4) {h : S × S → ℝ} (hhm : Measurable h) (hh : ∀ᵐ p ∂(LiftGeneral.edgeMeasure pb lam), |h p| ≤ eps) : (∀ u : S × S → ℝ, Measurable u → ∀ C : ℝ, (∀ᵐ p ∂(LiftGeneral.edgeMeasure pb lam), |u p| ≤ C) → HasDerivAt (fun s => dbLoss pb g (wMeas (LiftGeneral.edgeMeasure pb lam) w) (FirstVariation.perturb (flowOf (LiftGeneral.edgeMeasure pb lam) h) u s)) (∫ p, gradD (LiftGeneral.edgeLift pb) (LiftGeneral.edgeMeasure pb lam) gd w h p * (u p * (1 + h p)) ∂(LiftGeneral.edgeMeasure pb lam)) 0) ∧ eLpNorm (fun p => gradD (LiftGeneral.edgeLift pb) (LiftGeneral.edgeMeasure pb lam) gd w h p - linHess (LiftGeneral.edgeLift pb) (LiftGeneral.edgeMeasure pb lam) w (deriv (deriv g) 1) h p) 2 (LiftGeneral.edgeMeasure pb lam) ≤ ENNReal.ofReal (Kexp (deriv (deriv g) 1) a (Gamma3W g a) W * eps) * eLpNorm (Aop (LiftGeneral.edgeLift pb) (LiftGeneral.edgeMeasure pb lam) h) 2 (LiftGeneral.edgeMeasure pb lam) ∧ eLpNorm (Aop (LiftGeneral.edgeLift pb) (LiftGeneral.edgeMeasure pb lam) h) 2 (LiftGeneral.edgeMeasure pb lam) ≤ 2 * eLpNorm h 2 (LiftGeneral.edgeMeasure pb lam)",
+     "doc": "**`theo:gd_diffusion` (body), the DB half**: on the edge lift `(𝒮², λ₂, K₂)`, the gradient of the **DB loss** at `μ = (1+h)λ₂` is represented by `D = K₂ψ − r̂ψ` (along every bounded direction), and `D` is `g''(1)A†M_wAh` up to `‖E‖ ≤ Kε‖Ah‖ ≤ 2Kε‖h‖` — the same statement as for the FM loss (`theo_gd_diffusion_full` at `T = π_←`), transported by `prop:db_lift`."
+    },
+    {
+     "name": "gd_diffusion_hypotheses_inhabited",
+     "full": "GFNBounds.Balance.GdDiffusionGeneral.gd_diffusion_hypotheses_inhabited",
+     "kind": "theorem",
+     "line": 1587,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gd_diffusion_hypotheses_inhabited (π : Measure S) [IsProbabilityMeasure π] : π ≠ 0 ∧ IsInvariant (Kernel.const S π) π ∧ IsReversalPair π (Kernel.const S π) (Kernel.const S π) ∧ Measurable (fun _ : S => (1 : ℝ)) ∧ (∀ᵐ x ∂π, (0 : ℝ) ≤ (fun _ : S => (1 : ℝ)) x) ∧ MemLp (fun _ : S => (1 : ℝ)) ⊤ π ∧ ContDiffOn ℝ 3 (fun x : ℝ => (x - 1) ^ 2) (winC3 (1 / 2)) ∧ (∀ y ∈ winC3 (1 / 2), HasDerivWithinAt (fun x : ℝ => (x - 1) ^ 2) (2 * (y - 1)) (winC3 (1 / 2)) y) ∧ (fun x : ℝ => (x - 1) ^ 2) 1 = 0 ∧ deriv (fun x : ℝ => (x - 1) ^ 2) 1 = 0 ∧ 0 < deriv (deriv (fun x : ℝ => (x - 1) ^ 2)) 1 ∧ (0 : ℝ) < 1 / 8 ∧ (1 / 8 : ℝ) ≤ (1 / 2) / 4 ∧ Measurable (fun _ : S => (1 / 8 : ℝ)) ∧ (∀ᵐ x ∂π, |(fun _ : S => (1 / 8 : ℝ)) x| ≤ 1 / 8) ∧ Pd (Kernel.const S π) π (fun _ => (1 : ℝ)) =ᵐ[π] (fun x => (1 : ℝ) * (fun _ => (1 : ℝ)) x)",
+     "doc": "**Non-vacuity** (kb `0025`, `0027`): on every standard Borel space carrying a probability `π`, the hypotheses of `theo_gd_diffusion_full` are met, including the reversible sentence, by the resampling kernel `x ↦ π` (reversible), `λ = π ≠ 0`, `w ≡ 1`, `a = 1/2`, the generator `g(x) = (x−1)²` with `g' = 2(x − 1)` (`C³`, `g(1) = g'(1) = 0`, `g''(1) = 2 > 0`), a non-zero `h ≡ 1/8` with `‖h‖_{L^∞} ≤ ε = 1/8 = a/4`, and the eigenmode `φ ≡ 1`, `β = 1`."
     }
    ],
    "library": "strict",
@@ -12509,6 +13826,383 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Balance/StableFrozenGeneral.lean",
+   "title": "Convergence speed under a frozen backward policy, on a general state space",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.LiftGeneralMixing",
+    "GFNBounds.Balance.Flow",
+    "GFNBounds.Balance.Discrete",
+    "GFNBounds.Doubling.OperatorGeneral",
+    "Mathlib.Analysis.SpecialFunctions.Exponential"
+   ],
+   "variables": [
+    "variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]",
+    "variable {S : Type*} [MeasurableSpace S] {lam : Measure S}",
+    "variable {S : Type*} [MeasurableSpace S]",
+    "variable (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam]",
+    "variable {T lam hinv}",
+    "variable {S : Type*} [MeasurableSpace S]"
+   ],
+   "lines": 703,
+   "decls": [
+    {
+     "name": "stable_frozen_decay_forward",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.stable_frozen_decay_forward",
+     "kind": "theorem",
+     "line": 118,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stable_frozen_decay_forward {H Pi : E →L[ℝ] E} {rho : ℝ} {h : ℝ → E} (hPisa : ∀ x y : E, ⟪Pi x, y⟫ = ⟪x, Pi y⟫) (hPiH : ∀ x : E, Pi (H x) = 0) (hcoer : ∀ x : E, rho * ‖x - Pi x‖ ^ 2 ≤ ⟪x, H x⟫) (hflow : ∀ t : ℝ, 0 ≤ t → HasDerivAt h (-H (h t)) t) : (∀ t : ℝ, 0 ≤ t → Pi (h t) = Pi (h 0)) ∧ ∀ t : ℝ, 0 ≤ t → ‖h t - Pi (h t)‖ ≤ Real.exp (-(rho * t)) * ‖h 0 - Pi (h 0)‖",
+     "doc": "**`theo:db_stable_frozen_full`, the continuous half, on the forward half-line**: the sibling of `GFNBounds.Balance.stable_frozen_decay` whose curve solves `ḣ = −Hh` only at times `t ≥ 0` (two-sided derivative at every `t ≥ 0`, as `IsGradientFlow` asks, kb `0025`)."
+    },
+    {
+     "name": "linearFlow_hasDerivAt",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.linearFlow_hasDerivAt",
+     "kind": "theorem",
+     "line": 193,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linearFlow_hasDerivAt [CompleteSpace E] (H : E →L[ℝ] E) (h0 : E) (t : ℝ) : HasDerivAt (fun s : ℝ => NormedSpace.exp (s • -H) h0) (-H (NormedSpace.exp (t • -H) h0)) t",
+     "doc": "**The linearized flow exists**, forward and backward: for every bounded `H` on a Banach space and every `h₀`, `t ↦ exp(−tH) h₀` solves `ḣ = −Hh` at every `t`."
+    },
+    {
+     "name": "linearFlow_zero",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.linearFlow_zero",
+     "kind": "theorem",
+     "line": 200,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linearFlow_zero [CompleteSpace E] (H : E →L[ℝ] E) (h0 : E) : NormedSpace.exp ((0 : ℝ) • -H) h0 = h0",
+     "doc": ""
+    },
+    {
+     "name": "ae_norm_le_linfty",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.ae_norm_le_linfty",
+     "kind": "theorem",
+     "line": 213,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ae_norm_le_linfty {w : S → ℝ} (hw : MemLp w ⊤ lam) : ∀ᵐ x ∂lam, ‖w x‖ ≤ (eLpNorm w ⊤ lam).toReal",
+     "doc": "`|w| ≤ ‖w‖_{L^∞(λ)}`, `λ`-a.e."
+    },
+    {
+     "name": "linfty_nonneg",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.linfty_nonneg",
+     "kind": "theorem",
+     "line": 221,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linfty_nonneg (w : S → ℝ) : 0 ≤ (eLpNorm w ⊤ lam).toReal",
+     "doc": ""
+    },
+    {
+     "name": "mulOpG",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.mulOpG",
+     "kind": "def",
+     "line": 224,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def mulOpG (lam : Measure S) {w : S → ℝ} (hw : MemLp w ⊤ lam) : Lp ℝ 2 lam →L[ℝ] Lp ℝ 2 lam",
+     "doc": "**`M_w`**, the multiplication `f ↦ wf` on `L²(λ)` by `w ∈ L^∞(λ)`; `‖M_w‖ ≤ ‖w‖_{L^∞}`."
+    },
+    {
+     "name": "coeFn_mulOpG",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.coeFn_mulOpG",
+     "kind": "theorem",
+     "line": 263,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coeFn_mulOpG {w : S → ℝ} (hw : MemLp w ⊤ lam) (f : Lp ℝ 2 lam) : ⇑(mulOpG lam hw f) =ᵐ[lam] fun x => w x * f x",
+     "doc": ""
+    },
+    {
+     "name": "inner_nonneg_of_ae_mul",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.inner_nonneg_of_ae_mul",
+     "kind": "theorem",
+     "line": 268,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inner_nonneg_of_ae_mul (y z : Lp ℝ 2 lam) {v : S → ℝ} (hv : ∀ᵐ x ∂lam, 0 ≤ v x) (hz : ⇑z =ᵐ[lam] fun x => v x * y x) : 0 ≤ ⟪y, z⟫",
+     "doc": "`⟪y, z⟫ ≥ 0` when `z = v y` with `v ≥ 0` a.e."
+    },
+    {
+     "name": "mulOpG_symm",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.mulOpG_symm",
+     "kind": "theorem",
+     "line": 279,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mulOpG_symm {w : S → ℝ} (hw : MemLp w ⊤ lam) (f g : Lp ℝ 2 lam) : ⟪mulOpG lam hw f, g⟫ = ⟪f, mulOpG lam hw g⟫",
+     "doc": "`M_w` is self-adjoint: `⟪M_w f, g⟫ = ⟪f, M_w g⟫`."
+    },
+    {
+     "name": "mulOpG_lower",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.mulOpG_lower",
+     "kind": "theorem",
+     "line": 289,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mulOpG_lower {w : S → ℝ} (hw : MemLp w ⊤ lam) {c : ℝ} (hc : ∀ᵐ x ∂lam, c ≤ w x) (y : Lp ℝ 2 lam) : c * ‖y‖ ^ 2 ≤ ⟪y, mulOpG lam hw y⟫",
+     "doc": "`⟪y, M_w y⟫ ≥ w_min ‖y‖²` when `w ≥ w_min` a.e."
+    },
+    {
+     "name": "mulOpG_upper",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.mulOpG_upper",
+     "kind": "theorem",
+     "line": 302,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mulOpG_upper {w : S → ℝ} (hw : MemLp w ⊤ lam) (y : Lp ℝ 2 lam) : ⟪y, mulOpG lam hw y⟫ ≤ (eLpNorm w ⊤ lam).toReal * ‖y‖ ^ 2",
+     "doc": "`⟪y, M_w y⟫ ≤ ‖w‖_{L^∞} ‖y‖²`."
+    },
+    {
+     "name": "lp_eq_zero_of_measure_zero",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.lp_eq_zero_of_measure_zero",
+     "kind": "theorem",
+     "line": 327,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lp_eq_zero_of_measure_zero {lam : Measure S} (hlam : lam = 0) (f : Lp ℝ 2 lam) : f = 0",
+     "doc": "On the zero measure `L²(λ)` is trivial."
+    },
+    {
+     "name": "aOpG",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.aOpG",
+     "kind": "def",
+     "line": 337,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def aOpG : Lp ℝ 2 lam →L[ℝ] Lp ℝ 2 lam",
+     "doc": "**`A := P − I`**, `P` the density action `h ↦ d((hλ)T)/dλ` on `L²(λ)`."
+    },
+    {
+     "name": "hessG",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.hessG",
+     "kind": "def",
+     "line": 340,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def hessG (g2 : ℝ) {w : S → ℝ} (hw : MemLp w ⊤ lam) : Lp ℝ 2 lam →L[ℝ] Lp ℝ 2 lam",
+     "doc": "**`H := g''(1) A^† M_w A`**, with `A^†` the Hilbert adjoint on `L²(λ)`."
+    },
+    {
+     "name": "hessG_apply",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.hessG_apply",
+     "kind": "theorem",
+     "line": 347,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hessG_apply (g2 : ℝ) {w : S → ℝ} (hw : MemLp w ⊤ lam) (x : Lp ℝ 2 lam) : hessG T lam hinv g2 hw x = g2 • ContinuousLinearMap.adjoint (aOpG T lam hinv) (mulOpG lam hw (aOpG T lam hinv x))",
+     "doc": ""
+    },
+    {
+     "name": "one_sub_eq_neg_aOpG",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.one_sub_eq_neg_aOpG",
+     "kind": "theorem",
+     "line": 353,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_sub_eq_neg_aOpG (x : Lp ℝ 2 lam) : (1 - densityActionL2 T lam hinv) x = -aOpG T lam hinv x",
+     "doc": "`(I − P)h = −Ah`."
+    },
+    {
+     "name": "norm_aOpG_apply_le",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.norm_aOpG_apply_le",
+     "kind": "theorem",
+     "line": 358,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem norm_aOpG_apply_le (x : Lp ℝ 2 lam) : ‖aOpG T lam hinv x‖ ≤ 2 * ‖x‖",
+     "doc": "`‖Ah‖ ≤ 2‖h‖`: `‖P‖ ≤ 1`."
+    },
+    {
+     "name": "aOpG_meanProj",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.aOpG_meanProj",
+     "kind": "theorem",
+     "line": 368,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem aOpG_meanProj (x : Lp ℝ 2 lam) : aOpG T lam hinv (meanProj lam 2 x) = 0",
+     "doc": "`AΠ = 0`: `PΠ = Π` (invariance, `P𝟏 = 𝟏`)."
+    },
+    {
+     "name": "meanProj_symm",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.meanProj_symm",
+     "kind": "theorem",
+     "line": 375,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanProj_symm (x y : Lp ℝ 2 lam) : ⟪meanProj lam 2 x, y⟫ = ⟪x, meanProj lam 2 y⟫",
+     "doc": "`Π` is self-adjoint on `L²(λ)`."
+    },
+    {
+     "name": "inner_hessG_left",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.inner_hessG_left",
+     "kind": "theorem",
+     "line": 382,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inner_hessG_left (g2 : ℝ) {w : S → ℝ} (hw : MemLp w ⊤ lam) (x y : Lp ℝ 2 lam) : ⟪hessG T lam hinv g2 hw x, y⟫ = g2 * ⟪mulOpG lam hw (aOpG T lam hinv x), aOpG T lam hinv y⟫",
+     "doc": "`⟪Hx, y⟫ = g''(1)⟪M_wAx, Ay⟫`."
+    },
+    {
+     "name": "hessG_symm",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.hessG_symm",
+     "kind": "theorem",
+     "line": 387,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hessG_symm (g2 : ℝ) {w : S → ℝ} (hw : MemLp w ⊤ lam) (x y : Lp ℝ 2 lam) : ⟪hessG T lam hinv g2 hw x, y⟫ = ⟪x, hessG T lam hinv g2 hw y⟫",
+     "doc": "`H` is self-adjoint."
+    },
+    {
+     "name": "inner_hessG_self",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.inner_hessG_self",
+     "kind": "theorem",
+     "line": 393,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem inner_hessG_self (g2 : ℝ) {w : S → ℝ} (hw : MemLp w ⊤ lam) (x : Lp ℝ 2 lam) : ⟪x, hessG T lam hinv g2 hw x⟫ = g2 * ⟪aOpG T lam hinv x, mulOpG lam hw (aOpG T lam hinv x)⟫",
+     "doc": "`⟪x, Hx⟫ = g''(1)⟪Ax, M_wAx⟫`."
+    },
+    {
+     "name": "meanProj_hessG",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.meanProj_hessG",
+     "kind": "theorem",
+     "line": 398,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanProj_hessG (g2 : ℝ) {w : S → ℝ} (hw : MemLp w ⊤ lam) (x : Lp ℝ 2 lam) : meanProj lam 2 (hessG T lam hinv g2 hw x) = 0",
+     "doc": "**`ΠH = 0`**: `P^†` preserves integrals, i.e."
+    },
+    {
+     "name": "hessG_coercive",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.hessG_coercive",
+     "kind": "theorem",
+     "line": 408,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hessG_coercive {g2 : ℝ} (hg2 : 0 ≤ g2) {w : S → ℝ} (hw : MemLp w ⊤ lam) {wmin : ℝ} (hwmin : ∀ᵐ x ∂lam, wmin ≤ w x) (hwmin0 : 0 ≤ wmin) {Bhat : ℝ} (hB : 0 < Bhat) (hcoer : ∀ h : Lp ℝ 2 lam, ‖h - meanProj lam 2 h‖ ≤ Bhat * ‖(1 - densityActionL2 T lam hinv) h‖) (x : Lp ℝ 2 lam) : g2 * wmin / Bhat ^ 2 * ‖x - meanProj lam 2 x‖ ^ 2 ≤ ⟪x, hessG T lam hinv g2 hw x⟫",
+     "doc": "**The coercivity of `H`**: `ϱ‖x − Πx‖² ≤ ⟪x, Hx⟫` with `ϱ = g''(1)w_min/B̂²`, from `eq:coercivity` and `w ≥ w_min`."
+    },
+    {
+     "name": "hessG_upper",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.hessG_upper",
+     "kind": "theorem",
+     "line": 431,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hessG_upper {g2 : ℝ} (hg2 : 0 ≤ g2) {w : S → ℝ} (hw : MemLp w ⊤ lam) (x : Lp ℝ 2 lam) : ⟪x, hessG T lam hinv g2 hw x⟫ ≤ 4 * g2 * (eLpNorm w ⊤ lam).toReal * ‖x‖ ^ 2",
+     "doc": "**The step bound**: `⟪x, Hx⟫ ≤ 4g''(1)‖w‖_{L^∞}‖x‖²`, the quadratic-form face of the paper's `‖H‖ ≤ 4g''(1)‖w‖_{L^∞}` (`‖A‖ ≤ 2`)."
+    },
+    {
+     "name": "step_cap_mul",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.step_cap_mul",
+     "kind": "theorem",
+     "line": 454,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem step_cap_mul {eps L : ℝ} (hL : 0 ≤ L) (hcap : eps ≤ L⁻¹) : eps * L ≤ 1",
+     "doc": "The step cap `ε ≤ Λ⁻¹` gives `εΛ ≤ 1` (Lean's `0⁻¹ = 0` makes `Λ = 0` harmless)."
+    },
+    {
+     "name": "FrozenDecay",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.FrozenDecay",
+     "kind": "def",
+     "line": 471,
+     "attrs": "",
+     "private": false,
+     "statement": "def FrozenDecay (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam] (hinv : lam.bind ⇑T = lam) (g2 : ℝ) {w : S → ℝ} (hw : MemLp w ⊤ lam) (wmin Bhat : ℝ) : Prop",
+     "doc": "**The conclusion of `theo:db_stable_frozen_full`**, for a Markov kernel `T` with finite invariant `λ`, the second derivative `g2 = g''(1)`, the weight `w ∈ L^∞(λ)` with lower bound `w_min`, and a coercivity constant `B̂`; `ϱ := g2·w_min/B̂²`, `H := g2·A^†M_wA`, `‖w‖_{L^∞} = (eLpNorm w ∞ λ).toReal`: * along every curve with `ḣ_t = −Hh_t` for `t ≥ 0`, `Πh_t` is conserved and `‖h_t − Πh_t‖ ≤ e^{−ϱt}‖h_0 − Πh_0‖`; * along every recursion `h_{k+1} = h_k − εHh_k` with `0 ≤ ε ≤ (4g2‖w‖_{L^∞})^{−1}`, the factor `1 − εϱ` is non-negative, `Πh_k` is conserved, each step contracts `h − Πh` by `1 − εϱ`, hence `‖h_k − Πh_k‖ ≤ (1 − εϱ)^k‖h_0 − Πh_0‖`."
+    },
+    {
+     "name": "db_stable_frozen_general",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.db_stable_frozen_general",
+     "kind": "theorem",
+     "line": 494,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem db_stable_frozen_general (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam] (hinv : lam.bind ⇑T = lam) (g : ℝ → ℝ) (_hg : (∀ᶠ x in 𝓝 (1 : ℝ), DifferentiableAt ℝ g x) ∧ DifferentiableAt ℝ (deriv g) 1) (hg2 : 0 < deriv (deriv g) 1) {w : S → ℝ} (hw : MemLp w ⊤ lam) {wmin : ℝ} (hwmin0 : 0 < wmin) (hwmin : ∀ᵐ x ∂lam, wmin ≤ w x) {Bhat : ℝ} (hB : 1 ≤ Bhat) (hcoer : ∀ h : Lp ℝ 2 lam, ‖h - meanProj lam 2 h‖ ≤ Bhat * ‖(1 - densityActionL2 T lam hinv) h‖) : FrozenDecay T lam hinv (deriv (deriv g) 1) hw wmin Bhat",
+     "doc": "**`theo:db_stable_frozen_full`, the two decays, from a coercivity constant** — on any measurable space, for any Markov kernel `T` leaving a finite `λ` invariant, `g` twice differentiable at `1` with `g''(1) > 0`, `w ∈ L^∞(λ)` with `w ≥ w_min > 0` `λ`-a.e., and `B̂ ≥ 1` satisfying `eq:coercivity`."
+    },
+    {
+     "name": "mixSum",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.mixSum",
+     "kind": "def",
+     "line": 549,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def mixSum (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam] (hinv : lam.bind ⇑T = lam) : ℝ",
+     "doc": "**The mixing sum** `B = ∑_{n≥0} ‖Pⁿ − Π‖_{L²(λ)}` of a Markov kernel's density action (`Core.Mixing.B`, a `tsum`, meaningful under summability)."
+    },
+    {
+     "name": "db_stable_frozen_DB",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.db_stable_frozen_DB",
+     "kind": "theorem",
+     "line": 557,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem db_stable_frozen_DB (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam] (hinv : lam.bind ⇑T = lam) {C : ℝ} (hC : 0 ≤ C) (hcoer : ∀ φ : Lp ℝ 2 lam, ‖φ - meanProj lam 2 φ‖ ≤ C * ‖(1 - densityActionL2 T lam hinv) φ‖) (g : ℝ → ℝ) (hg : (∀ᶠ x in 𝓝 (1 : ℝ), DifferentiableAt ℝ g x) ∧ DifferentiableAt ℝ (deriv g) 1) (hg2 : 0 < deriv (deriv g) 1) {w : S × S → ℝ} (hw : MemLp w ⊤ (LiftGeneral.edgeMeasure T lam)) {wmin : ℝ} (hwmin0 : 0 < wmin) (hwmin : ∀ᵐ p ∂(LiftGeneral.edgeMeasure T lam), wmin ≤ w p) : FrozenDecay (LiftGeneral.edgeLift T) (LiftGeneral.edgeMeasure T lam) (LiftGeneral.edgeMeasure_invariant T lam hinv) (deriv (deriv g) 1) hw wmin (1 + C)",
+     "doc": "**`theo:db_stable_frozen_full`, the DB instance from a coercivity constant of `π_←`**: if `C ≥ 0` is a coercivity constant of `π_←` on `L²(λ)`, then `1 + C` is one of its edge lift `K₂` on `L²(λ₂)` (`lem:lift_coercivity`), and the two decays hold for the DB loss, `T = K₂`, `λ₂` in place of `λ`, at rate `g''(1)w_min/(1 + C)²`."
+    },
+    {
+     "name": "db_stable_frozen_FM_mixing",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.db_stable_frozen_FM_mixing",
+     "kind": "theorem",
+     "line": 577,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem db_stable_frozen_FM_mixing [StandardBorelSpace S] (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam] [NeZero lam] (hinv : lam.bind ⇑T = lam) (hsum : Summable (Mixing.beta (densityActionL2 T lam hinv) (meanProj lam 2))) (hdirac : ∀ (c : ℝ≥0∞) (x : S), lam ≠ c • Measure.dirac x) (g : ℝ → ℝ) (hg : (∀ᶠ x in 𝓝 (1 : ℝ), DifferentiableAt ℝ g x) ∧ DifferentiableAt ℝ (deriv g) 1) (hg2 : 0 < deriv (deriv g) 1) {w : S → ℝ} (hw : MemLp w ⊤ lam) {wmin : ℝ} (hwmin0 : 0 < wmin) (hwmin : ∀ᵐ x ∂lam, wmin ≤ w x) : (∀ h : Lp ℝ 2 lam, ‖h - meanProj lam 2 h‖ ≤ mixSum T lam hinv * ‖(1 - densityActionL2 T lam hinv) h‖) ∧ 1 ≤ mixSum T lam hinv ∧ deriv (deriv g) 1 * wmin / (1 + mixSum T lam hinv) ^ 2 ≤ deriv (deriv g) 1 * wmin / mixSum T lam hinv ^ 2 ∧ FrozenDecay T lam hinv (deriv (deriv g) 1) hw wmin (mixSum T lam hinv)",
+     "doc": "**`theo:db_stable_frozen_full`, the summable-mixing clause, FM loss** (`T = π_←`): when `π_←` has summable `L²`-mixing, `B = ∑ β_n < ∞`, on a standard Borel space (the paper's Polish `𝒮`), and its invariant `λ` is non-zero and not a multiple of a Dirac mass, `B̂ := ∑ β̂_n` — which for `T = π_←` **is** `B` (`mixSum T λ`) — is a coercivity constant with `B̂ ≥ 1` (`lem:sigma_mixing`), the two decays hold at rate `ϱ = g''(1)w_min/B²`, and `ϱ ≥ g''(1)w_min/(1 + B)²`."
+    },
+    {
+     "name": "db_stable_frozen_DB_mixing",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.db_stable_frozen_DB_mixing",
+     "kind": "theorem",
+     "line": 606,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem db_stable_frozen_DB_mixing [StandardBorelSpace S] (T : Kernel S S) [IsMarkovKernel T] (lam : Measure S) [IsFiniteMeasure lam] [NeZero lam] (hinv : lam.bind ⇑T = lam) (hsum : Summable (Mixing.beta (densityActionL2 T lam hinv) (meanProj lam 2))) (hdirac : ∀ (c : ℝ≥0∞) (x : S), lam ≠ c • Measure.dirac x) (g : ℝ → ℝ) (hg : (∀ᶠ x in 𝓝 (1 : ℝ), DifferentiableAt ℝ g x) ∧ DifferentiableAt ℝ (deriv g) 1) (hg2 : 0 < deriv (deriv g) 1) {w : S × S → ℝ} (hw : MemLp w ⊤ (LiftGeneral.edgeMeasure T lam)) {wmin : ℝ} (hwmin0 : 0 < wmin) (hwmin : ∀ᵐ p ∂(LiftGeneral.edgeMeasure T lam), wmin ≤ w p) : Summable (Mixing.beta (densityActionL2 (LiftGeneral.edgeLift T) (LiftGeneral.edgeMeasure T lam) (LiftGeneral.edgeMeasure_invariant T lam hinv)) (meanProj (LiftGeneral.edgeMeasure T lam) 2)) ∧ (∀ h : Lp ℝ 2 (LiftGeneral.edgeMeasure T lam), ‖h - meanProj (LiftGeneral.edgeMeasure T lam) 2 h‖ ≤ mixSum (LiftGeneral.edgeLift T) (LiftGeneral.edgeMeasure T lam) (LiftGeneral.edgeMeasure_invariant T lam hinv) * ‖(1 - densityActionL2 (LiftGeneral.edgeLift T) (LiftGeneral.edgeMeasure T lam) (LiftGeneral.edgeMeasure_invariant T lam hinv)) h‖) ∧ mixSum (LiftGeneral.edgeLift T) (LiftGeneral.edgeMeasure T lam) (LiftGeneral.edgeMeasure_invariant T lam hinv) = 1 + mixSum T lam hinv ∧ 1 ≤ mixSum (LiftGeneral.edgeLift T) (LiftGeneral.edgeMeasure T lam) (LiftGeneral.edgeMeasure_invariant T lam hinv) ∧ FrozenDecay (LiftGeneral.edgeLift T) (LiftGeneral.edgeMeasure T lam) (LiftGeneral.edgeMeasure_invariant T lam hinv) (deriv (deriv g) 1) hw wmin (1 + mixSum T lam hinv)",
+     "doc": "**`theo:db_stable_frozen_full`, the summable-mixing clause, DB loss** (`T = K₂` on `λ₂`): when `π_←` has summable `L²`-mixing, `B = ∑ β_n < ∞`, on a standard Borel space, and its invariant `λ` is non-zero and not a multiple of a Dirac mass, the edge lift's mixing coefficients are summable, `B̂ := ∑ β̂_n` (computed for `K₂` on `L²(λ₂)`) is a coercivity constant of `K₂` with `B̂ = 1 + B ≥ 1` (`lem:lift_mixing`, `lem:sigma_mixing`), and the two decays hold for the DB loss at rate `g''(1)w_min/(1 + B)²`."
+    },
+    {
+     "name": "frozenDecay_flow_apply",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.frozenDecay_flow_apply",
+     "kind": "theorem",
+     "line": 653,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem frozenDecay_flow_apply {T : Kernel S S} [IsMarkovKernel T] {lam : Measure S} [IsFiniteMeasure lam] {hinv : lam.bind ⇑T = lam} {g2 : ℝ} {w : S → ℝ} {hw : MemLp w ⊤ lam} {wmin Bhat : ℝ} (hD : FrozenDecay T lam hinv g2 hw wmin Bhat) (h0 : Lp ℝ 2 lam) : (∀ t : ℝ, 0 ≤ t → meanProj lam 2 (NormedSpace.exp (t • -hessG T lam hinv g2 hw) h0) = meanProj lam 2 h0) ∧ ∀ t : ℝ, 0 ≤ t → ‖NormedSpace.exp (t • -hessG T lam hinv g2 hw) h0 - meanProj lam 2 (NormedSpace.exp (t • -hessG T lam hinv g2 hw) h0)‖ ≤ Real.exp (-(g2 * wmin / Bhat ^ 2 * t)) * ‖h0 - meanProj lam 2 h0‖",
+     "doc": "**The flow hypothesis of `FrozenDecay` is inhabited from every initial condition** (kb `0025`): `t ↦ exp(−tH)h₀` solves `ḣ = −Hh` at every `t ≥ 0` and starts at `h₀`, so the continuous conclusion applies to it."
+    },
+    {
+     "name": "deriv_deriv_sq_one",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.deriv_deriv_sq_one",
+     "kind": "theorem",
+     "line": 673,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem deriv_deriv_sq_one : deriv (deriv fun x : ℝ => x ^ 2) 1 = 2",
+     "doc": "`g(x) = x²`: `g''(1) = 2`."
+    },
+    {
+     "name": "stable_frozen_witness",
+     "full": "GFNBounds.Balance.StableFrozenGeneral.stable_frozen_witness",
+     "kind": "theorem",
+     "line": 683,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stable_frozen_witness : mixSum (Kernel.const Bool boolUniform) boolUniform Family.bind_const_kernel = 1 ∧ FrozenDecay (Kernel.const Bool boolUniform) boolUniform Family.bind_const_kernel (deriv (deriv fun x : ℝ => x ^ 2) 1) (memLp_top_const (μ := boolUniform) (1 : ℝ)) 1 (mixSum (Kernel.const Bool boolUniform) boolUniform Family.bind_const_kernel)",
+     "doc": "**Inhabitation of the whole hypothesis bundle of `db_stable_frozen_FM_mixing`** (kb `0025`, `0027`), on the two-state chain `T(i → j) = 1/2`, `λ = (1/2, 1/2)` of `prop:nonlinear_freezing`(2) (`Kernel.const Bool λ`, `Core.sigma_mixing_witness`), with `g(x) = x²`, `w ≡ 1`, `w_min = 1`: the mixing clause fires, `B = 1`, and the decays hold at `ϱ = g''(1)w_min/B² = 2`."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Balance/TBGradient.lean",
    "title": "The trajectory-balance gradient, on a finite state space",
    "labels": [],
@@ -14045,6 +15739,484 @@
      "private": false,
      "statement": "theorem exists_setting_six : ∃ S : Setting, (∀ j, S.eps j = epsCS (1 / 4) 1 j) ∧ S.jbar = 9 / 2",
      "doc": "**`rem:tb_vs_db`, inhabitation**: a `Setting` with `ε = ε_{1/4,1}` and a target row of mean `9/2` exists, so `sigmaBar_six` is not vacuous."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/TBvsDBClose.lean",
+   "title": "TB against DB: the detailed-balance supply on the truncation, the complex Fejér kernel, the step cap on norms",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.TBvsDB",
+    "GFNBounds.Balance.LiftGeneralMixing",
+    "GFNBounds.Doubling.OperatorGeneral"
+   ],
+   "variables": [
+    "variable (S : Setting) (cap : Option ℕ)",
+    "variable {S : Setting} {cap : Option ℕ} (L : Stat S cap)",
+    "variable {S : Setting} {K : ℕ} (L : Stat S (some K)) (hdK : S.d ≤ K)",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {pb : V → V → ℝ} {lam : V → ℝ}",
+    "variable {α : Type*} [Fintype α]",
+    "variable {w : α → ℝ} {H : (α → ℝ) → (α → ℝ)}",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {pb : V → V → ℝ} {lam : V → ℝ}",
+    "variable (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) (hlam : ∀ x, 0 < lam x)",
+    "variable (htot : ∑ x, lam x = 1)"
+   ],
+   "lines": 788,
+   "decls": [
+    {
+     "name": "kerMeas",
+     "full": "GFNBounds.Doubling.TBvsDBClose.kerMeas",
+     "kind": "def",
+     "line": 99,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def kerMeas : St → Measure St",
+     "doc": "The backward kernel of the chain in play, state by state: the three cases of `pstar`."
+    },
+    {
+     "name": "ker",
+     "full": "GFNBounds.Doubling.TBvsDBClose.ker",
+     "kind": "def",
+     "line": 110,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ker : Kernel St St",
+     "doc": "**The backward kernel `π_←` of the chain in play** (the loop closure at `cap = none`, the truncation at `cap = some K`) as a Mathlib kernel on the discrete countable `St`."
+    },
+    {
+     "name": "ker_apply",
+     "full": "GFNBounds.Doubling.TBvsDBClose.ker_apply",
+     "kind": "theorem",
+     "line": 112,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ker_apply (x : St) : ker S cap x = kerMeas S cap x",
+     "doc": ""
+    },
+    {
+     "name": "integrable_kerMeas",
+     "full": "GFNBounds.Doubling.TBvsDBClose.integrable_kerMeas",
+     "kind": "theorem",
+     "line": 114,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integrable_kerMeas (f : St → ℝ) (x : St) : Integrable f (kerMeas S cap x)",
+     "doc": ""
+    },
+    {
+     "name": "integral_kerMeas",
+     "full": "GFNBounds.Doubling.TBvsDBClose.integral_kerMeas",
+     "kind": "theorem",
+     "line": 128,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem integral_kerMeas (f : St → ℝ) (x : St) : ∫ y, f y ∂(kerMeas S cap x) = pstar S cap f x",
+     "doc": "**`∫ f dπ_←(x, ·) = (P⋆f)(x)`**: the function action of `ker` is `pstar`, for every `f`."
+    },
+    {
+     "name": "isMarkovKernel_ker",
+     "full": "GFNBounds.Doubling.TBvsDBClose.isMarkovKernel_ker",
+     "kind": "instance",
+     "line": 148,
+     "attrs": "",
+     "private": false,
+     "statement": "instance isMarkovKernel_ker : IsMarkovKernel (ker S cap)",
+     "doc": ""
+    },
+    {
+     "name": "funAct_ker",
+     "full": "GFNBounds.Doubling.TBvsDBClose.funAct_ker",
+     "kind": "theorem",
+     "line": 163,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funAct_ker (f : St → ℝ) : General.funAct (ker S cap) f = pstar S cap f",
+     "doc": "`General.funAct (ker S cap) = pstar S cap`, pointwise and for every function."
+    },
+    {
+     "name": "ker_apply_set",
+     "full": "GFNBounds.Doubling.TBvsDBClose.ker_apply_set",
+     "kind": "theorem",
+     "line": 173,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ker_apply_set (x : St) (A : Set St) : ker S cap x A = ENNReal.ofReal (pstar S cap (A.indicator 1) x)",
+     "doc": "`π_←(x, A) = (P⋆1_A)(x)`."
+    },
+    {
+     "name": "mu_bind_ker",
+     "full": "GFNBounds.Doubling.TBvsDBClose.mu_bind_ker",
+     "kind": "theorem",
+     "line": 181,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mu_bind_ker : L.mu.bind (ker S cap) = L.mu",
+     "doc": "**`λ` is `π_←`-invariant as a measure**: `L.mu.bind π_← = L.mu`, from `Stat.inv` tested against indicators."
+    },
+    {
+     "name": "funActLp_ker",
+     "full": "GFNBounds.Doubling.TBvsDBClose.funActLp_ker",
+     "kind": "theorem",
+     "line": 212,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funActLp_ker (hrow : RowOnChain S cap) : Doubling.General.funActLp (ker S cap) L.mu 2 (mu_bind_ker L) = L.pstarL2 hrow",
+     "doc": "**`P⋆` of the general layer is `Stat.pstarL2`**, as operators of `L²(λ)`."
+    },
+    {
+     "name": "densityActionL2_ker",
+     "full": "GFNBounds.Doubling.TBvsDBClose.densityActionL2_ker",
+     "kind": "theorem",
+     "line": 221,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densityActionL2_ker (hrow : RowOnChain S cap) : densityActionL2 (ker S cap) L.mu (mu_bind_ker L) = L.densL2 hrow",
+     "doc": "**The density action of the general layer is `Stat.densL2`**: both are the `L²(λ)`-adjoint of the same function action."
+    },
+    {
+     "name": "meanProj_mu",
+     "full": "GFNBounds.Doubling.TBvsDBClose.meanProj_mu",
+     "kind": "theorem",
+     "line": 226,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem meanProj_mu : meanProj L.mu 2 = L.piL2",
+     "doc": "**The mean projection of the general layer is `Stat.piL2`**."
+    },
+    {
+     "name": "coercive_bhatK",
+     "full": "GFNBounds.Doubling.TBvsDBClose.coercive_bhatK",
+     "kind": "theorem",
+     "line": 242,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coercive_bhatK (φ : Lp ℝ 2 L.mu) : ‖φ - meanProj L.mu 2 φ‖ ≤ L.bhatK hdK * ‖(1 - densityActionL2 (ker S (some K)) L.mu (mu_bind_ker L)) φ‖",
+     "doc": "**`eq:coercivity` of the truncation at `C = B̂_K`, on the general layer**: `isLeast_bhatK`'s coercivity read through the bridge (`densityActionL2_ker`, `meanProj_mu`)."
+    },
+    {
+     "name": "lift_coercivity_truncation",
+     "full": "GFNBounds.Doubling.TBvsDBClose.lift_coercivity_truncation",
+     "kind": "theorem",
+     "line": 252,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lift_coercivity_truncation (h : Lp ℝ 2 (edgeMeasure (ker S (some K)) L.mu)) : ‖h - meanProj (edgeMeasure (ker S (some K)) L.mu) 2 h‖ ≤ (1 + L.bhatK hdK) * ‖(1 - densityActionL2 (edgeLift (ker S (some K))) (edgeMeasure (ker S (some K)) L.mu) (edgeMeasure_invariant _ L.mu (mu_bind_ker L))) h‖",
+     "doc": "**`rem:tb_vs_db`, the detailed-balance instance's supply**: `1 + B̂_K` is a coercivity constant of the edge lift `K₂` of the truncation's backward kernel on `L²(λ₂)`, `‖h − Π₂h‖ ≤ (1 + B̂_K)‖(I − P₂)h‖` — `lem:lift_coercivity` (`lift_coercivity_general`) applied to `C = B̂_K`."
+    },
+    {
+     "name": "truncation_rate_DB",
+     "full": "GFNBounds.Doubling.TBvsDBClose.truncation_rate_DB",
+     "kind": "theorem",
+     "line": 266,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem truncation_rate_DB {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) (hK : (Decay.ofC hc0 hc1).K0Of S.d ≤ K) : ∀ g2w : ℝ, 0 ≤ g2w → (0 ≤ 1 + L.bhatK hdK ∧ ∀ h : Lp ℝ 2 (edgeMeasure (ker S (some K)) L.mu), ‖h - meanProj (edgeMeasure (ker S (some K)) L.mu) 2 h‖ ≤ (1 + L.bhatK hdK) * ‖(1 - densityActionL2 (edgeLift (ker S (some K))) (edgeMeasure (ker S (some K)) L.mu) (edgeMeasure_invariant _ L.mu (mu_bind_ker L))) h‖) ∧ g2w / (1 + L.bhatK hdK) ^ 2 ≤ g2w / ((Decay.ofC hc0 hc1).c8Of S.d S.jbar ^ 2 * K)",
+     "doc": "**`rem:tb_vs_db`, the truncation clause, detailed-balance instance, with its supply.** At `s = 1`, `0 < c < 1`, with `c₈`, `K₀` of `theo:doubling_main`(5): at every `K ≥ K₀` and every invariant probability `λ^K` of the truncation (inhabited at every even `K ≥ K₀`, `truncation_rate`), `1 + B̂_K` is a coercivity constant of the edge lift `K₂` of the truncation (`lem:lift_coercivity`), and the rate `ϱ = g''(1)w_min/C²` of `theo:db_stable_frozen_full` at that constant satisfies `ϱ ≤ g''(1)w_min/(c₈²K)`."
+    },
+    {
+     "name": "sum_Ioo_symm",
+     "full": "GFNBounds.Balance.TBHessian.sum_Ioo_symm",
+     "kind": "theorem",
+     "line": 295,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_Ioo_symm (f : ℤ → ℂ) : ∀ n : ℕ, 1 ≤ n → ∑ m ∈ Finset.Ioo (-(n : ℤ)) n, f m = f 0 + ∑ k ∈ Finset.Ico 1 n, (f k + f (-k)) | 0, h => absurd h (by norm_num) | 1, _ => by have : Finset.Ioo (-((1 : ℕ) : ℤ)) ((1 : ℕ) : ℤ) = {0}",
+     "doc": "A sum over the symmetric window `(−n, n)` of `ℤ` pairs the terms `±k`."
+    },
+    {
+     "name": "fejerC",
+     "full": "GFNBounds.Balance.TBHessian.fejerC",
+     "kind": "def",
+     "line": 318,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def fejerC (ℓ : ℕ) (θ : ℝ) : ℂ",
+     "doc": "**`rem:tb_vs_db`, the Fejér kernel as printed**: `∑_{|m|<ℓ}(1 − |m|/ℓ)e^{imθ}`."
+    },
+    {
+     "name": "fejerC_eq",
+     "full": "GFNBounds.Balance.TBHessian.fejerC_eq",
+     "kind": "theorem",
+     "line": 323,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fejerC_eq {ℓ : ℕ} (hℓ : 1 ≤ ℓ) (θ : ℝ) : fejerC ℓ θ = (fejer ℓ θ : ℂ)",
+     "doc": "**The complex and the real forms of the Fejér kernel agree** (`ℓ ≥ 1`): `∑_{|m|<ℓ}(1 − |m|/ℓ)e^{imθ} = 1 + 2∑_{m=1}^{ℓ−1}(1 − m/ℓ)cos(mθ)`."
+    },
+    {
+     "name": "funActC",
+     "full": "GFNBounds.Balance.TBHessian.funActC",
+     "kind": "def",
+     "line": 345,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def funActC (u : EdgeSet pb → ℂ) : EdgeSet pb → ℂ",
+     "doc": "The complex function action `(Q_ℂu)(e) = ∑_{e'} K₂(e,e')u(e')` of `K₂` on `E → ℂ`."
+    },
+    {
+     "name": "cplx",
+     "full": "GFNBounds.Balance.TBHessian.cplx",
+     "kind": "def",
+     "line": 350,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def cplx (A : (EdgeSet pb → ℝ) → (EdgeSet pb → ℝ)) (u : EdgeSet pb → ℂ) : EdgeSet pb → ℂ",
+     "doc": "The real-linear extension `A_ℂ(f + ig) := Af + iAg` of a real operator to `E → ℂ`: how `Θ_ℓ`, a real operator, acts on a complex eigenfunction."
+    },
+    {
+     "name": "ipC",
+     "full": "GFNBounds.Balance.TBHessian.ipC",
+     "kind": "def",
+     "line": 355,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ipC (w : EdgeSet pb → ℝ) (u v : EdgeSet pb → ℂ) : ℂ",
+     "doc": "The complex inner product of `L²(λ₂; ℂ)`, `⟨u, v⟩_ℂ = ∑_e λ₂(e) conj(u e) v(e)`."
+    },
+    {
+     "name": "funActC_eq_cplx",
+     "full": "GFNBounds.Balance.TBHessian.funActC_eq_cplx",
+     "kind": "theorem",
+     "line": 359,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem funActC_eq_cplx (u : EdgeSet pb → ℂ) : funActC u = cplx (funAct (edgeKernelE pb)) u",
+     "doc": "`Q_ℂ` is the complexification of the real `Q = funAct K₂`."
+    },
+    {
+     "name": "rayleigh_fejerC",
+     "full": "GFNBounds.Balance.TBHessian.rayleigh_fejerC",
+     "kind": "theorem",
+     "line": 368,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rayleigh_fejerC (hnn : ∀ x y, 0 ≤ pb x y) (hlam : ∀ x, 0 < lam x) (hinv : Invariant pb lam) {ℓ : ℕ} (hℓ : 1 ≤ ℓ) (θ : ℝ) {u : EdgeSet pb → ℂ} (hu : funActC u = fun e => Complex.exp (θ * I) * u e) : ipC (edgeMeasureE pb lam) u (cplx (Theta pb lam ℓ) u) = fejerC ℓ θ * ipC (edgeMeasureE pb lam) u u",
+     "doc": "**`rem:tb_vs_db`, the Fejér clause in its printed complex form**: if `u : E → ℂ` is an eigenfunction of `Q` with eigenvalue `e^{iθ}`, then `⟨u, Θ_ℓu⟩_ℂ = F_ℓ(θ)⟨u, u⟩_ℂ` with `F_ℓ(θ) = ∑_{|m|<ℓ}(1 − |m|/ℓ)e^{imθ}` (`ℓ ≥ 1`)."
+    },
+    {
+     "name": "rayleigh_quotient_fejerC",
+     "full": "GFNBounds.Balance.TBHessian.rayleigh_quotient_fejerC",
+     "kind": "theorem",
+     "line": 425,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rayleigh_quotient_fejerC (hnn : ∀ x y, 0 ≤ pb x y) (hlam : ∀ x, 0 < lam x) (hinv : Invariant pb lam) {ℓ : ℕ} (hℓ : 1 ≤ ℓ) (θ : ℝ) {u : EdgeSet pb → ℂ} (hu : funActC u = fun e => Complex.exp (θ * I) * u e) (hne : ipC (edgeMeasureE pb lam) u u ≠ 0) : ipC (edgeMeasureE pb lam) u (cplx (Theta pb lam ℓ) u) / ipC (edgeMeasureE pb lam) u u = fejerC ℓ θ",
+     "doc": "The same, as a Rayleigh quotient: `⟨u, Θ_ℓu⟩_ℂ / ⟨u, u⟩_ℂ = F_ℓ(θ)` for `u ≠ 0` in `L²(λ₂; ℂ)`."
+    },
+    {
+     "name": "RLin",
+     "full": "GFNBounds.Balance.TBHessian.RLin",
+     "kind": "def",
+     "line": 442,
+     "attrs": "",
+     "private": false,
+     "statement": "def RLin (H : (α → ℝ) → (α → ℝ)) : Prop",
+     "doc": "Real-linearity of an operator on `α → ℝ`."
+    },
+    {
+     "name": "ipL2_quad",
+     "full": "GFNBounds.Balance.TBHessian.ipL2_quad",
+     "kind": "theorem",
+     "line": 445,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_quad (w a b c d : α → ℝ) (t : ℝ) : Graph.ipL2 w (fun x => a x + t * b x) (fun x => c x + t * d x) = Graph.ipL2 w a c + t * (Graph.ipL2 w a d + Graph.ipL2 w b c) + t ^ 2 * Graph.ipL2 w b d",
+     "doc": ""
+    },
+    {
+     "name": "form_cs",
+     "full": "GFNBounds.Balance.TBHessian.form_cs",
+     "kind": "theorem",
+     "line": 456,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem form_cs (hlin : RLin H) (hsym : ∀ a b, Graph.ipL2 w (H a) b = Graph.ipL2 w a (H b)) (hpsd : ∀ a, 0 ≤ Graph.ipL2 w a (H a)) (a b : α → ℝ) : Graph.ipL2 w a (H b) ^ 2 ≤ Graph.ipL2 w a (H a) * Graph.ipL2 w b (H b)",
+     "doc": "**Cauchy–Schwarz for the form `⟨a, Hb⟩`** of a linear, self-adjoint, positive semi-definite `H` on `L²(w)`."
+    },
+    {
+     "name": "nrm_pow_four_le",
+     "full": "GFNBounds.Balance.TBHessian.nrm_pow_four_le",
+     "kind": "theorem",
+     "line": 471,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrm_pow_four_le (hw : ∀ x, 0 ≤ w x) (hlin : RLin H) (hsym : ∀ a b, Graph.ipL2 w (H a) b = Graph.ipL2 w a (H b)) (hpsd : ∀ a, 0 ≤ Graph.ipL2 w a (H a)) (h : α → ℝ) : Graph.nrmL2 w (H h) ^ 4 ≤ Graph.ipL2 w h (H h) * Graph.ipL2 w (H h) (H (H h))",
+     "doc": "`‖Hh‖⁴ ≤ ⟨h, Hh⟩⟨Hh, H²h⟩`."
+    },
+    {
+     "name": "opBound_of_form",
+     "full": "GFNBounds.Balance.TBHessian.opBound_of_form",
+     "kind": "theorem",
+     "line": 485,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem opBound_of_form [DecidableEq α] (hw : ∀ x, 0 ≤ w x) (hlin : RLin H) (hsym : ∀ a b, Graph.ipL2 w (H a) b = Graph.ipL2 w a (H b)) (hpsd : ∀ a, 0 ≤ Graph.ipL2 w a (H a)) {L : ℝ} (hL0 : 0 ≤ L) (hL : ∀ a, Graph.ipL2 w a (H a) ≤ L * Graph.ipL2 w a a) : OpBound w H L",
+     "doc": "**A quadratic-form bound is an operator-norm bound** for a linear, self-adjoint, positive semi-definite operator: `⟨a, Ha⟩ ≤ L‖a‖²` for all `a` gives `‖Hh‖ ≤ L‖h‖`."
+    },
+    {
+     "name": "nrm_sq_le_form",
+     "full": "GFNBounds.Balance.TBHessian.nrm_sq_le_form",
+     "kind": "theorem",
+     "line": 510,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nrm_sq_le_form [DecidableEq α] (hw : ∀ x, 0 ≤ w x) (hlin : RLin H) (hsym : ∀ a b, Graph.ipL2 w (H a) b = Graph.ipL2 w a (H b)) (hpsd : ∀ a, 0 ≤ Graph.ipL2 w a (H a)) {L : ℝ} (hb : OpBound w H L) (h : α → ℝ) : Graph.nrmL2 w (H h) ^ 2 ≤ L * Graph.ipL2 w h (H h)",
+     "doc": "`‖Hh‖² ≤ L⟨h, Hh⟩` for an operator-norm bound `L`."
+    },
+    {
+     "name": "step_nonexpansive",
+     "full": "GFNBounds.Balance.TBHessian.step_nonexpansive",
+     "kind": "theorem",
+     "line": 532,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem step_nonexpansive [DecidableEq α] (hw : ∀ x, 0 ≤ w x) (hlin : RLin H) (hsym : ∀ a b, Graph.ipL2 w (H a) b = Graph.ipL2 w a (H b)) (hpsd : ∀ a, 0 ≤ Graph.ipL2 w a (H a)) {L : ℝ} (hb : OpBound w H L) {η : ℝ} (hη : 0 ≤ η) (hηL : η * L ≤ 2) (h : α → ℝ) : Graph.nrmL2 w (fun x => h x - η * H h x) ≤ Graph.nrmL2 w h",
+     "doc": "**A step below `2/‖H‖` is stable**: for an operator-norm bound `L` of a linear, self-adjoint, positive semi-definite `H` and `0 ≤ η` with `ηL ≤ 2`, the linearized descent step `h ↦ h − ηHh` does not expand `L²(w)`."
+    },
+    {
+     "name": "rlin_funAct_iter",
+     "full": "GFNBounds.Balance.TBHessian.rlin_funAct_iter",
+     "kind": "theorem",
+     "line": 560,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rlin_funAct_iter {α : Type*} [Fintype α] [DecidableEq α] (K : α → α → ℝ) : ∀ m : ℕ, RLin (funAct K)^[m] | 0 => fun _ _ _ => rfl | m + 1 => fun a b t => by rw [Function.iterate_succ_apply', Function.iterate_succ_apply', Function.iterate_succ_apply', rlin_funAct_iter K m a b t] funext x simp only [funAct, mul_add, Finset.sum_add_distrib, Finset.mul_sum] congr 1 exact Finset.sum_congr rfl fun y _ => by ring",
+     "doc": ""
+    },
+    {
+     "name": "rlin_densAct_iter",
+     "full": "GFNBounds.Balance.TBHessian.rlin_densAct_iter",
+     "kind": "theorem",
+     "line": 571,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rlin_densAct_iter {α : Type*} [Fintype α] [DecidableEq α] (w : α → ℝ) (K : α → α → ℝ) : ∀ m : ℕ, RLin (Core.densAct w K)^[m] | 0 => fun _ _ _ => rfl | m + 1 => fun a b t => by rw [Function.iterate_succ_apply', Function.iterate_succ_apply', Function.iterate_succ_apply', rlin_densAct_iter w K m a b t] funext y simp only [Core.densAct_apply, mul_add, Finset.sum_add_distrib, add_div] congr 1 rw [← mul_div_assoc, Finset.mul_sum] congr 1 exact Finset.sum_congr rfl fun x _ => by ring",
+     "doc": ""
+    },
+    {
+     "name": "rlin_Theta",
+     "full": "GFNBounds.Balance.TBHessian.rlin_Theta",
+     "kind": "theorem",
+     "line": 584,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rlin_Theta (ℓ : ℕ) : RLin (Theta pb lam ℓ)",
+     "doc": ""
+    },
+    {
+     "name": "rlin_HTB",
+     "full": "GFNBounds.Balance.TBHessian.rlin_HTB",
+     "kind": "theorem",
+     "line": 599,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem rlin_HTB (ℓ : ℕ) : RLin (HTB pb lam ℓ)",
+     "doc": ""
+    },
+    {
+     "name": "HTB_selfAdjoint",
+     "full": "GFNBounds.Balance.TBHessian.HTB_selfAdjoint",
+     "kind": "theorem",
+     "line": 629,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem HTB_selfAdjoint (ℓ : ℕ) (a b : EdgeSet pb → ℝ) : Graph.ipL2 (edgeMeasureE pb lam) (HTB pb lam ℓ a) b = Graph.ipL2 (edgeMeasureE pb lam) a (HTB pb lam ℓ b)",
+     "doc": "**`rem:tb_vs_db`, `H_TB` is self-adjoint** on `L²(λ₂)` (hence so is `H_DB = H_TB|_{ℓ=1}`)."
+    },
+    {
+     "name": "HDB_eq",
+     "full": "GFNBounds.Balance.TBHessian.HDB_eq",
+     "kind": "theorem",
+     "line": 647,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem HDB_eq : HDB pb lam = HTB pb lam 1",
+     "doc": ""
+    },
+    {
+     "name": "HDB_form_le_eight",
+     "full": "GFNBounds.Balance.TBHessian.HDB_form_le_eight",
+     "kind": "theorem",
+     "line": 652,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem HDB_form_le_eight (h : EdgeSet pb → ℝ) : Graph.ipL2 (edgeMeasureE pb lam) h (HDB pb lam h) ≤ 8 * Graph.ipL2 (edgeMeasureE pb lam) h h",
+     "doc": "`⟨h, H_DB h⟩ ≤ 8‖h‖²` (`g''(1) = 2`, `‖A‖ ≤ 2`): `H_DB` is bounded."
+    },
+    {
+     "name": "opBound_HTB_of_form",
+     "full": "GFNBounds.Balance.TBHessian.opBound_HTB_of_form",
+     "kind": "theorem",
+     "line": 662,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem opBound_HTB_of_form (ℓ : ℕ) {L : ℝ} (hL0 : 0 ≤ L) (hL : ∀ a, Graph.ipL2 (edgeMeasureE pb lam) a (HTB pb lam ℓ a) ≤ L * Graph.ipL2 (edgeMeasureE pb lam) a a) : OpBound (edgeMeasureE pb lam) (HTB pb lam ℓ) L",
+     "doc": ""
+    },
+    {
+     "name": "opBound_HDB_opNorm",
+     "full": "GFNBounds.Balance.TBHessian.opBound_HDB_opNorm",
+     "kind": "theorem",
+     "line": 670,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem opBound_HDB_opNorm : OpBound (edgeMeasureE pb lam) (HDB pb lam) (opNorm (edgeMeasureE pb lam) (HDB pb lam))",
+     "doc": "`‖H_DB‖` is attained: `opNorm λ₂ H_DB` is itself a bound."
+    },
+    {
+     "name": "opNorm_HTB_le",
+     "full": "GFNBounds.Balance.TBHessian.opNorm_HTB_le",
+     "kind": "theorem",
+     "line": 684,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem opNorm_HTB_le (ℓ : ℕ) {B : ℝ} (hB : ∀ N, ∑ m ∈ range N, betaHat pb lam (m + 1) ≤ B) : opNorm (edgeMeasureE pb lam) (HTB pb lam ℓ) ≤ ℓ * (1 + 2 * B) * opNorm (edgeMeasureE pb lam) (HDB pb lam)",
+     "doc": "**`rem:tb_vs_db`, the step cap on operator norms**: `‖H_TB‖ ≤ ℓ(1 + 2B̂′)‖H_DB‖` on `L²(λ₂)`, for every real bound `B` of the partial sums of `B̂′` — the quadratic-form sandwich `H_TB ⪯ ℓ(1 + 2B̂′)H_DB` read on norms, which needs `H_TB` self-adjoint and `⪰ 0`."
+    },
+    {
+     "name": "stepCap_opNorm",
+     "full": "GFNBounds.Balance.TBHessian.stepCap_opNorm",
+     "kind": "theorem",
+     "line": 708,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stepCap_opNorm {ℓ : ℕ} (hℓ : 1 ≤ ℓ) {B : ℝ} (hB : ∀ N, ∑ m ∈ range N, betaHat pb lam (m + 1) ≤ B) {η c : ℝ} (hη : 0 ≤ η) (hc : η * opNorm (edgeMeasureE pb lam) (HDB pb lam) ≤ c) : η / (ℓ * (1 + 2 * B)) * opNorm (edgeMeasureE pb lam) (HTB pb lam ℓ) ≤ c",
+     "doc": "**`rem:tb_vs_db`, \"a step cap derived from the norm of `H_DB` remains sufficient for TB once divided by `ℓ(1 + 2B̂′)`\"**, as a norm statement: every cap `c` with `η‖H_DB‖ ≤ c` gives `(η/(ℓ(1 + 2B̂′)))‖H_TB‖ ≤ c` (`ℓ ≥ 1`)."
+    },
+    {
+     "name": "stepCap_stable",
+     "full": "GFNBounds.Balance.TBHessian.stepCap_stable",
+     "kind": "theorem",
+     "line": 726,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stepCap_stable {ℓ : ℕ} (hℓ : 1 ≤ ℓ) {B : ℝ} (hB : ∀ N, ∑ m ∈ range N, betaHat pb lam (m + 1) ≤ B) {η : ℝ} (hη : 0 ≤ η) (hc : η * opNorm (edgeMeasureE pb lam) (HDB pb lam) ≤ 2) (h : EdgeSet pb → ℝ) : Graph.nrmL2 (edgeMeasureE pb lam) (fun e => h e - η / (ℓ * (1 + 2 * B)) * HTB pb lam ℓ h e) ≤ Graph.nrmL2 (edgeMeasureE pb lam) h ∧ Graph.nrmL2 (edgeMeasureE pb lam) (fun e => h e - η * HDB pb lam h e) ≤ Graph.nrmL2 (edgeMeasureE pb lam) h",
+     "doc": "**The step cap, as stability of the linearized descent**: if `η‖H_DB‖ ≤ 2` — the classical cap for the DB quadratic model — then with `η′ = η/(ℓ(1 + 2B̂′))` the TB step `h ↦ h − η′H_TB h` does not expand `L²(λ₂)`; and the DB step `h ↦ h − ηH_DB h` does not either."
+    },
+    {
+     "name": "stepCap_witness",
+     "full": "GFNBounds.Balance.TBHessian.stepCap_witness",
+     "kind": "theorem",
+     "line": 765,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stepCap_witness {ℓ : ℕ} (hℓ : 1 ≤ ℓ) {η : ℝ} (hη : 0 ≤ η) (hc : η * opNorm (edgeMeasureE pbU lamU) (HDB pbU lamU) ≤ 2) (h : EdgeSet pbU → ℝ) : opNorm (edgeMeasureE pbU lamU) (HTB pbU lamU ℓ) ≤ ℓ * (1 + 2 * 1) * opNorm (edgeMeasureE pbU lamU) (HDB pbU lamU) ∧ Graph.nrmL2 (edgeMeasureE pbU lamU) (fun e => h e - η / (ℓ * (1 + 2 * 1)) * HTB pbU lamU ℓ h e) ≤ Graph.nrmL2 (edgeMeasureE pbU lamU) h",
+     "doc": "**Inhabitation of the step-cap statements** (kb `0025`): on the uniform two-state chain, `B = 1` bounds `B̂′`, so `opNorm_HTB_le` and `stepCap_stable` apply with `ℓ(1 + 2B̂′) = 3ℓ`."
+    },
+    {
+     "name": "fejerC_witness",
+     "full": "GFNBounds.Balance.TBHessian.fejerC_witness",
+     "kind": "theorem",
+     "line": 779,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fejerC_witness {V : Type*} [Fintype V] [DecidableEq V] {pb : V → V → ℝ} (hnn : ∀ x y, 0 ≤ pb x y) (hrow : ∀ x, ∑ y, pb x y = 1) : funActC (pb := pb) (fun _ => (1 : ℂ)) = fun _ => Complex.exp ((0 : ℝ) * I) * 1",
+     "doc": "**Inhabitation of the complex Fejér clause** (kb `0025`): on any chain meeting the hypotheses, `u ≡ 1` is an eigenfunction of `Q` with eigenvalue `e^{i·0}`, so the hypothesis `hu` of `rayleigh_fejerC` is inhabited."
     }
    ],
    "library": "strict",

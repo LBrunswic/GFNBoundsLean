@@ -102,6 +102,7 @@ import GFNBounds.Balance.LiftGeneral
 import GFNBounds.Doubling.RecurrenceClass
 import GFNBounds.Doubling.PhaseRecurrence
 import GFNBounds.Core.FirstVariationGeneral
+import GFNBounds.Balance.LiftGeneralMixing
 
 /-!
 # Axiom audit
@@ -1868,3 +1869,53 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Core.General.FirstVariation.cor_gradient_formulas_sq
 #print axioms GFNBounds.Core.General.FirstVariation.cor_gradient_formulas_abs
 #print axioms GFNBounds.Core.General.FirstVariation.theo_first_variation_full_hypotheses_inhabited
+#print axioms GFNBounds.Balance.LiftGeneral.DetailedBalance
+#print axioms GFNBounds.Balance.LiftGeneral.detailedBalance_iff_isReversal
+#print axioms GFNBounds.Balance.LiftGeneral.db_lift_ratio_eq
+#print axioms GFNBounds.Balance.LiftGeneral.db_lift_loss_eq
+#print axioms GFNBounds.Balance.LiftGeneral.bind_edgeLift_eq_self_iff
+#print axioms GFNBounds.Balance.LiftGeneral.rnDeriv_bind_eq_one_iff
+#print axioms GFNBounds.Balance.LiftGeneral.db_lift_ratio_ae
+#print axioms GFNBounds.Balance.LiftGeneral.fst_withDensity_fst
+#print axioms GFNBounds.Balance.LiftGeneral.measurePreserving_snd_edge
+#print axioms GFNBounds.Balance.LiftGeneral.measurePreserving_fst_edge
+#print axioms GFNBounds.Balance.LiftGeneral.edgeMeasure_univ
+#print axioms GFNBounds.Balance.LiftGeneral.ae_comp_snd
+#print axioms GFNBounds.Balance.LiftGeneral.bindDensity_edge_snd
+#print axioms GFNBounds.Balance.LiftGeneral.bindDensity_edge_fst
+#print axioms GFNBounds.Balance.LiftGeneral.bindDensity_edge
+#print axioms GFNBounds.Balance.LiftGeneral.densityAction_edge_snd
+#print axioms GFNBounds.Balance.LiftGeneral.densityAction_edge_fst
+#print axioms GFNBounds.Balance.LiftGeneral.densityAction_edge_exists
+#print axioms GFNBounds.Balance.LiftGeneral.liftSnd
+#print axioms GFNBounds.Balance.LiftGeneral.coeFn_liftSnd
+#print axioms GFNBounds.Balance.LiftGeneral.norm_liftSnd
+#print axioms GFNBounds.Balance.LiftGeneral.adjoint_liftSnd_comp
+#print axioms GFNBounds.Balance.LiftGeneral.adjoint_liftSnd_apply
+#print axioms GFNBounds.Balance.LiftGeneral.norm_adjoint_liftSnd_le
+#print axioms GFNBounds.Balance.LiftGeneral.liftSnd_constOne
+#print axioms GFNBounds.Balance.LiftGeneral.liftFst
+#print axioms GFNBounds.Balance.LiftGeneral.coeFn_liftFst
+#print axioms GFNBounds.Balance.LiftGeneral.norm_liftFst
+#print axioms GFNBounds.Balance.LiftGeneral.edgeMarg
+#print axioms GFNBounds.Balance.LiftGeneral.densityActionL2_edge_liftSnd
+#print axioms GFNBounds.Balance.LiftGeneral.densityActionL2_edge_liftFst
+#print axioms GFNBounds.Balance.LiftGeneral.liftSnd_edgeMarg
+#print axioms GFNBounds.Balance.LiftGeneral.edgeMarg_liftSnd
+#print axioms GFNBounds.Balance.LiftGeneral.edgeMarg_liftFst
+#print axioms GFNBounds.Balance.LiftGeneral.norm_edgeMarg_apply_le
+#print axioms GFNBounds.Balance.LiftGeneral.integral_edgeMarg
+#print axioms GFNBounds.Balance.LiftGeneral.meanProj_edge
+#print axioms GFNBounds.Balance.LiftGeneral.densityActionL2_edge_pow_succ_apply
+#print axioms GFNBounds.Balance.LiftGeneral.edge_deviation_apply
+#print axioms GFNBounds.Balance.LiftGeneral.lift_mixing_succ
+#print axioms GFNBounds.Balance.LiftGeneral.lift_mixing_general
+#print axioms GFNBounds.Balance.LiftGeneral.lift_coercivity_general
+#print axioms GFNBounds.Balance.LiftGeneral.lift_mixing_summable_iff
+#print axioms GFNBounds.Balance.LiftGeneral.lift_mixing_B
+#print axioms GFNBounds.Balance.LiftGeneral.lift_beta_zero_le_one
+#print axioms GFNBounds.Balance.LiftGeneral.lift_mixing_B_eq_one_add
+#print axioms GFNBounds.Balance.LiftGeneral.lift_coercivity_of_mixing
+#print axioms GFNBounds.Balance.LiftGeneral.db_lift
+#print axioms GFNBounds.Balance.LiftGeneral.lift_hypotheses_inhabited
+#print axioms GFNBounds.Balance.LiftGeneral.lift_coercivity_const

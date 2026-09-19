@@ -147,4 +147,5 @@ import GFNBounds.Doubling.RecurrenceClass
 import GFNBounds.Doubling.PhaseRecurrence
 import GFNBounds.Core.FirstVariationGeneral
 import GFNBounds.Balance.LiftGeneralMixing
+import GFNBounds.Doubling.OperatorGeneral
 import GFNBounds.Audit

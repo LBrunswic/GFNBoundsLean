@@ -148,4 +148,6 @@ import GFNBounds.Doubling.PhaseRecurrence
 import GFNBounds.Core.FirstVariationGeneral
 import GFNBounds.Balance.LiftGeneralMixing
 import GFNBounds.Doubling.OperatorGeneral
+import GFNBounds.Balance.TBHessian
+import GFNBounds.Balance.TBvsDB
 import GFNBounds.Audit

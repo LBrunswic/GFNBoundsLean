@@ -66,11 +66,10 @@ since the chain from `F_init` is dominated by the one from `F̂_init`.
 ## SCOPE (disclosed)
 
 * **Finite state space only**, inheriting `Core/Sampling.lean`'s narrowing: measures are functions
-  `V → ℝ` (masses of atoms) and the kernel a stochastic matrix. The general form needs the
-  general measure layer (obstruction 2 of kb `0006`): the sampler as a sub-Markov kernel on
-  finite measures, the Jordan decomposition of the defect measure for `δF_init`, `δF_term`, and
-  the sampling theorem on a Polish space. The argument (steps 1–3) is linear and transfers
-  unchanged. **The row closes in bucket `B` with this narrowing, not in `A`.**
+  `V → ℝ` (masses of atoms) and the kernel a stochastic matrix. The general form is
+  `Core/SamplingGeneralBounds.lean` (`MFlow.negative_control_general`), with `δF_init`,
+  `δF_term` the Jordan parts of the signed defect. The argument (steps 1–3) is linear and
+  transfers unchanged; this file is its finite-state counterpart, proved independently.
 * **The sampler is modelled by its time-`n` marginals**, as in `Core/Sampling.lean`; "`s_τ` has
   law `p`" is delivered as `P(τ ≤ n, s_τ = y) → p y` with `∑ p = 1` and `P(τ > n) → 0`.
 * **`negative_control_hNC` asks every atom of `ν` to be charged** (`hν : ∀ x, 0 < ν.real {x}`), so
@@ -79,9 +78,9 @@ since the chain from `F_init` is dominated by the one from `F̂_init`.
   on a `ν_B`-null atom the densities the downstream theorems carry are undefined anyway.
 * **Downstream wiring is not done here.** `negative_control_hNC` produces the hypothesis `hNC` of
   `Core.stable_bound`/`Core.il_tv_bound` for the finite instance, and `tv_le_two_fmL1_finite`
-  shows it composes (with `htri` from `Core.tvD_triangle`). Those rows stay on their general
-  measurable space, where `hNC` remains a hypothesis until the general layer exists; whether to
-  add finite-instance corollaries to them is the master's call.
+  shows it composes (with `htri` from `Core.tvD_triangle`). On the general measurable space `hNC`
+  is discharged by `Core/SamplingGeneralBounds.lean` (`inference_negative_control`, used by
+  `stable_bound_general` and `il_first_bullet_general`).
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

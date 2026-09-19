@@ -56,11 +56,11 @@ this file finishes the row as far as the built layers reach. The body restatemen
 
 | paper hypothesis | here |
 |---|---|
-| `(𝒮, ν_B)` Polish, `ν_B` finite | ⚠ any `MeasurableSpace α` with `[IsFiniteMeasure ν]` (Polish used nowhere); `stable_bound_finite` on a finite `V` — see SCOPE |
+| `(𝒮, ν_B)` Polish, `ν_B` finite | ⚠ any `MeasurableSpace α` with `[IsFiniteMeasure ν]` (Polish used nowhere); `stable_bound_finite` on a finite `V` — see SCOPE; on a general space the sampler is built and both inputs are discharged in `Core/SamplingGeneralBounds.lean` (`stable_bound_general`) |
 | `F_init ≪ ν_B` non-zero | ✓ a density `f_init`, integrable; non-zero as `0 < ∫ f_init` (item 1), `¬ f =ᵐ 0` in `IsInitialFamily` (item 3). In `stable_bound_finite`, `F.finit ≠ 0` on atoms |
 | `κ ≪ ν_B` non-zero, known density | ✓ `k`, `0 ≤ᵐ k`, `0 < ∫ k` |
 | `q ∈ [1, +∞]` | ✓ `q : ℝ≥0∞`, `1 ≤ q` — **`q = ∞` now covered** |
-| `ν_T` probability, `ν_B ≪ ν_T`, `dν_B/dν_T ∈ L^∞(ν_T)` | ✓ `hdom : ν ≤ M • ν_T` as in `Core.StableBound`; item (2) asks `[IsFiniteMeasure ν_T]` only; item (3)'s right implication also uses `hdom`, through `equ:mass_floor` |
+| `ν_T` probability, `ν_B ≪ ν_T`, `dν_B/dν_T ∈ L^∞(ν_T)` | ✓ `hdom : ν ≤ M • ν_T` as in `Core.StableBound`; item (2) asks `[IsFiniteMeasure ν_T]` only; item (3)'s right implication also uses `hdom`, through `equ:mass_floor`; the paper's `M = ‖dν_B/dν_T‖_{L^∞(ν_T)}` is admissible (`SamplingGeneral.le_essSup_rnDeriv_smul`) and item (1) is instantiated at it by `SamplingGeneral.stable_bound_general_essSup` |
 | `(π⋆, f⋆_out)` a generative flow, `E := F_init + F⋆_← − F⋆_out` | ✓ `Family.IsGenerativeFlow` (Markov kernel, `f⋆_out ≥ 0` integrable), `E = eFn`; **plus `ν_B π⋆ ≪ ν_B`**, see SCOPE |
 | inference at `κ̂ := E⁺`, sampler `s_τ` | general space: `hNC`/`htri` hypotheses; finite space: `NegativeControl.inference`, its limit law `p` |
 | (2) `Θ` `L^p`-universal | ✓ `Family.WeaklyUniversal ν p Θ` (arbitrary `Θ`, `def:universality`) |
@@ -71,14 +71,13 @@ this file finishes the row as far as the built layers reach. The body restatemen
 
 ## SCOPE (disclosed)
 
-* **The TV display of item (1) is discharged only on a finite state space.** On a general
-  measurable space `stable_boundE`/`stable_bound_kernel` keep `hNC` (`theo:negative_control`) and
-  `htri` (the triangle inequality for the law of `s_τ`) as hypotheses: `theo:negative_control` is
-  proved in `Core/NegativeControl.lean` on a finite space only, and the sampler as a sub-Markov
-  kernel on a Polish space is the general measure layer (obstruction 2 of kb `0006`).
+* **In this file the TV display of item (1) is discharged only on a finite state space.** On a
+  general measurable space `stable_boundE`/`stable_bound_kernel` keep `hNC` (`theo:negative_control`) and
+  `htri` (the triangle inequality for the law of `s_τ`) as hypotheses; both are discharged on a
+  general measurable space by `Core/SamplingGeneralBounds.lean` (`stable_bound_general`).
   `stable_bound_finite` closes both displays with nothing external, on a finite `V` with a
   background measure charging every atom (`NegativeControl`'s standing narrowing, which it
-  inherits). **The row therefore stays in bucket `B`**: the paper's setting is Polish, not finite.
+  inherits).
 * **Everything else is on the paper's general setting.** `equ:mass_floor` (`mass_floor_kernel`),
   items (2) and (3), and the `q = ∞` case hold on any measurable space with `ν_B` finite, Polish
   never used.
@@ -273,9 +272,9 @@ theorem mass_floor_kernel [IsFiniteMeasure ν] {M : ℝ≥0} (hdom : ν ≤ (M :
     (integral_eFn hθ hac hi).symm rfl
 
 /-- **`equ:stable_bound` for a kernel flow**: Step 0 (`hz`) discharged; `hNC`
-(`theo:negative_control`, proved in this library only on a finite space) and `htri` (the
-triangle inequality for a sampler this library does not build on a general space) remain
-hypotheses. -/
+(`theo:negative_control`) and `htri` (the triangle inequality for the law of `s_τ`) remain
+hypotheses here; both are discharged on a general measurable space by
+`Core/SamplingGeneralBounds.lean` (`stable_bound_general`). -/
 theorem stable_bound_kernel [IsFiniteMeasure ν] {M : ℝ≥0} (hdom : ν ≤ (M : ℝ≥0∞) • νT)
     {q : ℝ≥0∞} (hq : 1 ≤ q) (hθ : IsGenerativeFlow ν θ) (hac : ν.bind ⇑θ.1 ≪ ν)
     (hi : Integrable f_init ν) (hk : Integrable k ν) (hk0 : 0 ≤ᵐ[ν] k)

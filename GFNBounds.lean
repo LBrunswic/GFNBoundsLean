@@ -145,4 +145,5 @@ import GFNBounds.Core.AdjointGeneral
 import GFNBounds.Balance.LiftGeneral
 import GFNBounds.Doubling.RecurrenceClass
 import GFNBounds.Doubling.PhaseRecurrence
+import GFNBounds.Doubling.OperatorGeneral
 import GFNBounds.Audit

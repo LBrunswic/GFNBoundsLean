@@ -101,6 +101,7 @@ import GFNBounds.Core.AdjointGeneral
 import GFNBounds.Balance.LiftGeneral
 import GFNBounds.Doubling.RecurrenceClass
 import GFNBounds.Doubling.PhaseRecurrence
+import GFNBounds.Doubling.OperatorGeneral
 
 /-!
 # Axiom audit
@@ -1797,3 +1798,47 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.prop_doubling_phase
 #print axioms GFNBounds.Doubling.main_phase_classes
 #print axioms GFNBounds.Doubling.main_invariant_unique
+
+#print axioms GFNBounds.Doubling.General.isInvariant_of_bind
+#print axioms GFNBounds.Doubling.General.ae_integrable_fibre
+#print axioms GFNBounds.Doubling.General.funAct_add_ae
+#print axioms GFNBounds.Doubling.General.funAct_smul
+#print axioms GFNBounds.Doubling.General.funActLM
+#print axioms GFNBounds.Doubling.General.funActLp
+#print axioms GFNBounds.Doubling.General.norm_funActLp_le
+#print axioms GFNBounds.Doubling.General.coeFn_funActLp
+#print axioms GFNBounds.Doubling.General.funActLp_constOne
+#print axioms GFNBounds.Doubling.General.indicatorConstLp_eq_smul
+#print axioms GFNBounds.Doubling.General.densityAction_indicator
+#print axioms GFNBounds.Doubling.General.setLIntegral_bindDensity_indicator
+#print axioms GFNBounds.Doubling.General.inner_densityActionL2_indicator
+#print axioms GFNBounds.Doubling.General.inner_densityActionL2_indicator_right
+#print axioms GFNBounds.Doubling.General.inner_densityActionL2_left
+#print axioms GFNBounds.Doubling.General.adjoint_funActL2
+#print axioms GFNBounds.Doubling.General.adjoint_densityActionL2
+#print axioms GFNBounds.Doubling.General.adjoint_meanProj
+#print axioms GFNBounds.Doubling.General.meanProj_mul_densityActionL2
+#print axioms GFNBounds.Doubling.General.densityActionL2_mul_meanProj
+#print axioms GFNBounds.Doubling.General.funActL2_mul_meanProj
+#print axioms GFNBounds.Doubling.General.meanProj_mul_funActL2
+#print axioms GFNBounds.Doubling.General.meanProj_mul_self
+#print axioms GFNBounds.Doubling.General.betaHat
+#print axioms GFNBounds.Doubling.General.adjoint_densityActionL2_pow_sub
+#print axioms GFNBounds.Doubling.General.norm_funActL2_pow_sub
+#print axioms GFNBounds.Doubling.General.ofReal_le_tsum_of_forall_bdd
+#print axioms GFNBounds.Doubling.General.doubling_operator_item3
+#print axioms GFNBounds.Doubling.General.KernelIrreducible
+#print axioms GFNBounds.Doubling.General.measure_singleton_mul_le
+#print axioms GFNBounds.Doubling.General.measure_singleton_ne_zero
+#print axioms GFNBounds.Doubling.General.eq_of_ae_eq
+#print axioms GFNBounds.Doubling.General.funAct_fixed_const
+#print axioms GFNBounds.Doubling.General.evalLp
+#print axioms GFNBounds.Doubling.General.evalLp_injective
+#print axioms GFNBounds.Doubling.General.finiteDimensional_Lp
+#print axioms GFNBounds.Doubling.General.eq_smul_constOne_of_fixed
+#print axioms GFNBounds.Doubling.General.meanProj_fixed_of_fixed
+#print axioms GFNBounds.Doubling.General.doubling_operator_item2
+#print axioms GFNBounds.Doubling.General.doubling_operator_item3_finite
+#print axioms GFNBounds.Doubling.General.doubling_operator_item1
+#print axioms GFNBounds.Doubling.General.lem_doubling_operator
+#print axioms GFNBounds.Doubling.General.doubling_operator_witness

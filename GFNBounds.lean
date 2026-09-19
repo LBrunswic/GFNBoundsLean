@@ -153,4 +153,5 @@ import GFNBounds.Balance.TBvsDB
 import GFNBounds.Balance.FreezingGeneral2
 import GFNBounds.Balance.FreezingGradientBridge
 import GFNBounds.Balance.GdDiffusionGeneral
+import GFNBounds.Balance.StableFrozenGeneral
 import GFNBounds.Audit

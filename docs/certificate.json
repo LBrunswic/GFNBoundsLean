@@ -1,23 +1,11 @@
 {
   "schema": 1,
-  "source_date": "2026-09-18T22:35:31Z",
-  "commit": "6024ca26bd5116822561892ca68ebd080d9428e7",
-  "commit_short": "6024ca2",
+  "source_date": "2026-09-19T07:17:29Z",
+  "commit": "2156702bf338c43c79f33432491365294ed6c444",
+  "commit_short": "2156702",
   "branch": "main",
-  "dirty": true,
-  "dirty_files": [
-    ".claude/agents/lean-auditor.md",
-    "GFNBounds/Audit.lean",
-    "GFNBounds/Doubling/Remarks.lean",
-    "GFNBounds/Doubling/RenewalClose.lean",
-    "README.md",
-    "docs/COVERAGE.md",
-    "docs/REPO-INDEX.md",
-    "docs/REPO-MAP.md",
-    "docs/lean-facts.json",
-    "docs/repo-map.json",
-    "paper-map.json"
-  ],
+  "dirty": false,
+  "dirty_files": [],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",

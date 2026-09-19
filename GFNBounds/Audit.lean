@@ -107,6 +107,7 @@ import GFNBounds.Doubling.OperatorGeneral
 import GFNBounds.Balance.TBHessian
 import GFNBounds.Balance.TBvsDB
 import GFNBounds.Balance.FreezingGeneral2
+import GFNBounds.Balance.FreezingGradientBridge
 
 /-!
 # Axiom audit
@@ -2140,3 +2141,58 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.General.bool_frozen_flow
 #print axioms GFNBounds.Balance.General.freezing_last_instance
 #print axioms GFNBounds.Balance.General.freezing_no_time_bound
+
+-- Balance/FreezingGradientBridge.lean
+#print axioms GFNBounds.Balance.General.Bridge.ratioG_eq_ratio
+#print axioms GFNBounds.Balance.General.Bridge.gradDensityG_eq_gradDens
+#print axioms GFNBounds.Balance.General.Bridge.lossG_eq_loss
+#print axioms GFNBounds.Balance.General.Bridge.AdmissibleDir
+#print axioms GFNBounds.Balance.General.Bridge.IsGradDensity
+#print axioms GFNBounds.Balance.General.Bridge.IsCriticalG
+#print axioms GFNBounds.Balance.General.Bridge.ae_abs_le_one_of_admissible
+#print axioms GFNBounds.Balance.General.Bridge.admissibleDir_of_abs_le
+#print axioms GFNBounds.Balance.General.Bridge.ratio_Icc_of_setting
+#print axioms GFNBounds.Balance.General.Bridge.gradDensityG_isGradDensity
+#print axioms GFNBounds.Balance.General.Bridge.isGradDensity_unique
+#print axioms GFNBounds.Balance.General.Bridge.isCriticalG_iff
+#print axioms GFNBounds.Balance.General.Bridge.no_distant_equilibrium_one_bridge
+#print axioms GFNBounds.Balance.General.Bridge.nonlinear_freezing_one_critical
+#print axioms GFNBounds.Balance.General.Bridge.nonlinear_freezing_one_bridge
+#print axioms GFNBounds.Balance.General.Bridge.global_dichotomy_full_bridge
+#print axioms GFNBounds.Balance.General.Bridge.freezing_remark_four_bridge
+#print axioms GFNBounds.Balance.General.Bridge.IsGradientFlowPaper
+#print axioms GFNBounds.Balance.General.Bridge.IsGradDensity.congr
+#print axioms GFNBounds.Balance.General.Bridge.isGradientFlowPaper_iff
+#print axioms GFNBounds.Balance.General.Bridge.no_distant_equilibrium_two_flow_bridge
+#print axioms GFNBounds.Balance.General.Bridge.no_distant_equilibrium_two_bridge
+#print axioms GFNBounds.Balance.General.Bridge.isFiniteMeasure_pertG_ae
+#print axioms GFNBounds.Balance.General.Bridge.isFiniteMeasure_wtG_ae
+#print axioms GFNBounds.Balance.General.Bridge.setting_pertG
+#print axioms GFNBounds.Balance.General.Bridge.nonlinear_freezing_three_bridge
+#print axioms GFNBounds.Balance.General.Bridge.AdmL
+#print axioms GFNBounds.Balance.General.Bridge.lineG_eq_perturb
+#print axioms GFNBounds.Balance.General.Bridge.firstVariationFull_of_setting
+#print axioms GFNBounds.Balance.General.Bridge.isCriticalAlong_iff
+#print axioms GFNBounds.Balance.General.Bridge.balanced_of_isCriticalAlong_bridge
+#print axioms GFNBounds.Balance.General.Bridge.hasDerivAt_twoStateBands_g
+#print axioms GFNBounds.Balance.General.Bridge.continuousOn_deriv_twoStateBands_g
+#print axioms GFNBounds.Balance.General.Bridge.bool_critical_unbalanced
+#print axioms GFNBounds.Balance.General.Bridge.bool_not_critical
+#print axioms GFNBounds.Balance.General.Bridge.bool_paper_flow
+#print axioms GFNBounds.Balance.General.Bridge.third_deriv_sSup_of_C3
+#print axioms GFNBounds.Balance.General.Bridge.boolIdx
+#print axioms GFNBounds.Balance.General.Bridge.boolFlow
+#print axioms GFNBounds.Balance.General.Bridge.boolFlow.isFinite
+#print axioms GFNBounds.Balance.General.Bridge.integral_boolUnif
+#print axioms GFNBounds.Balance.General.Bridge.boolUnif_ne_zero
+#print axioms GFNBounds.Balance.General.Bridge.ae_bool_iff
+#print axioms GFNBounds.Balance.General.Bridge.toReal_rnDeriv_boolFlow
+#print axioms GFNBounds.Balance.General.Bridge.toReal_rnDeriv_unif_boolFlow
+#print axioms GFNBounds.Balance.General.Bridge.boolFlow_univ_toReal
+#print axioms GFNBounds.Balance.General.Bridge.ratioG_boolFlow
+#print axioms GFNBounds.Balance.General.Bridge.gradDensityG_boolFlow
+#print axioms GFNBounds.Balance.General.Bridge.setting_boolFlow
+#print axioms GFNBounds.Balance.General.Bridge.boolLp
+#print axioms GFNBounds.Balance.General.Bridge.coe_boolLp
+#print axioms GFNBounds.Balance.General.Bridge.lossGrad_twoState
+#print axioms GFNBounds.Balance.General.Bridge.bool_unimodal_flow

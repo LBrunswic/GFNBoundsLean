@@ -151,4 +151,5 @@ import GFNBounds.Doubling.OperatorGeneral
 import GFNBounds.Balance.TBHessian
 import GFNBounds.Balance.TBvsDB
 import GFNBounds.Balance.FreezingGeneral2
+import GFNBounds.Balance.FreezingGradientBridge
 import GFNBounds.Audit

@@ -107,6 +107,7 @@ import GFNBounds.Doubling.OperatorGeneral
 import GFNBounds.Balance.TBHessian
 import GFNBounds.Balance.TBvsDB
 import GFNBounds.Balance.FreezingGeneral2
+import GFNBounds.Balance.StableFrozenGeneral
 
 /-!
 # Axiom audit
@@ -2140,3 +2141,39 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.General.bool_frozen_flow
 #print axioms GFNBounds.Balance.General.freezing_last_instance
 #print axioms GFNBounds.Balance.General.freezing_no_time_bound
+
+#print axioms GFNBounds.Balance.StableFrozenGeneral.stable_frozen_decay_forward
+#print axioms GFNBounds.Balance.StableFrozenGeneral.linearFlow_hasDerivAt
+#print axioms GFNBounds.Balance.StableFrozenGeneral.linearFlow_zero
+#print axioms GFNBounds.Balance.StableFrozenGeneral.ae_norm_le_linfty
+#print axioms GFNBounds.Balance.StableFrozenGeneral.linfty_nonneg
+#print axioms GFNBounds.Balance.StableFrozenGeneral.mulOpG
+#print axioms GFNBounds.Balance.StableFrozenGeneral.coeFn_mulOpG
+#print axioms GFNBounds.Balance.StableFrozenGeneral.inner_nonneg_of_ae_mul
+#print axioms GFNBounds.Balance.StableFrozenGeneral.mulOpG_symm
+#print axioms GFNBounds.Balance.StableFrozenGeneral.mulOpG_lower
+#print axioms GFNBounds.Balance.StableFrozenGeneral.mulOpG_upper
+#print axioms GFNBounds.Balance.StableFrozenGeneral.lp_eq_zero_of_measure_zero
+#print axioms GFNBounds.Balance.StableFrozenGeneral.aOpG
+#print axioms GFNBounds.Balance.StableFrozenGeneral.hessG
+#print axioms GFNBounds.Balance.StableFrozenGeneral.hessG_apply
+#print axioms GFNBounds.Balance.StableFrozenGeneral.one_sub_eq_neg_aOpG
+#print axioms GFNBounds.Balance.StableFrozenGeneral.norm_aOpG_apply_le
+#print axioms GFNBounds.Balance.StableFrozenGeneral.aOpG_meanProj
+#print axioms GFNBounds.Balance.StableFrozenGeneral.meanProj_symm
+#print axioms GFNBounds.Balance.StableFrozenGeneral.inner_hessG_left
+#print axioms GFNBounds.Balance.StableFrozenGeneral.hessG_symm
+#print axioms GFNBounds.Balance.StableFrozenGeneral.inner_hessG_self
+#print axioms GFNBounds.Balance.StableFrozenGeneral.meanProj_hessG
+#print axioms GFNBounds.Balance.StableFrozenGeneral.hessG_coercive
+#print axioms GFNBounds.Balance.StableFrozenGeneral.hessG_upper
+#print axioms GFNBounds.Balance.StableFrozenGeneral.step_cap_mul
+#print axioms GFNBounds.Balance.StableFrozenGeneral.FrozenDecay
+#print axioms GFNBounds.Balance.StableFrozenGeneral.db_stable_frozen_general
+#print axioms GFNBounds.Balance.StableFrozenGeneral.mixSum
+#print axioms GFNBounds.Balance.StableFrozenGeneral.db_stable_frozen_DB
+#print axioms GFNBounds.Balance.StableFrozenGeneral.db_stable_frozen_FM_mixing
+#print axioms GFNBounds.Balance.StableFrozenGeneral.db_stable_frozen_DB_mixing
+#print axioms GFNBounds.Balance.StableFrozenGeneral.frozenDecay_flow_apply
+#print axioms GFNBounds.Balance.StableFrozenGeneral.deriv_deriv_sq_one
+#print axioms GFNBounds.Balance.StableFrozenGeneral.stable_frozen_witness

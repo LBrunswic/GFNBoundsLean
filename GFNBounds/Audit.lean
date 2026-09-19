@@ -101,6 +101,7 @@ import GFNBounds.Core.AdjointGeneral
 import GFNBounds.Balance.LiftGeneral
 import GFNBounds.Doubling.RecurrenceClass
 import GFNBounds.Doubling.PhaseRecurrence
+import GFNBounds.Core.FirstVariationGeneral
 
 /-!
 # Axiom audit
@@ -1797,3 +1798,73 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.prop_doubling_phase
 #print axioms GFNBounds.Doubling.main_phase_classes
 #print axioms GFNBounds.Doubling.main_invariant_unique
+
+-- Core/FirstVariationGeneral: theo:first_variation_full on a general space, cor:gradient_formulas
+#print axioms GFNBounds.Core.General.FirstVariation.ratio
+#print axioms GFNBounds.Core.General.FirstVariation.loss
+#print axioms GFNBounds.Core.General.FirstVariation.perturb
+#print axioms GFNBounds.Core.General.FirstVariation.push
+#print axioms GFNBounds.Core.General.FirstVariation.pushDens
+#print axioms GFNBounds.Core.General.FirstVariation.dirPush
+#print axioms GFNBounds.Core.General.FirstVariation.push_isFinite
+#print axioms GFNBounds.Core.General.FirstVariation.push_one
+#print axioms GFNBounds.Core.General.FirstVariation.pushDens_one
+#print axioms GFNBounds.Core.General.FirstVariation.push_zero
+#print axioms GFNBounds.Core.General.FirstVariation.pushDens_zero
+#print axioms GFNBounds.Core.General.FirstVariation.push_congr
+#print axioms GFNBounds.Core.General.FirstVariation.push_add
+#print axioms GFNBounds.Core.General.FirstVariation.pushDens_add4
+#print axioms GFNBounds.Core.General.FirstVariation.pushDens_smul
+#print axioms GFNBounds.Core.General.FirstVariation.ofReal_one_add_split
+#print axioms GFNBounds.Core.General.FirstVariation.integrable_of_abs_le
+#print axioms GFNBounds.Core.General.FirstVariation.pushDens_one_add
+#print axioms GFNBounds.Core.General.FirstVariation.perturb_isFinite
+#print axioms GFNBounds.Core.General.FirstVariation.perturb_toSignedMeasure
+#print axioms GFNBounds.Core.General.FirstVariation.ratio_perturb
+#print axioms GFNBounds.Core.General.FirstVariation.abs_dirPush_le
+#print axioms GFNBounds.Core.General.FirstVariation.ratio_nonneg
+#print axioms GFNBounds.Core.General.FirstVariation.quot_bounds
+#print axioms GFNBounds.Core.General.FirstVariation.hasDerivAt_integral_quot
+#print axioms GFNBounds.Core.General.FirstVariation.measurable_ratio
+#print axioms GFNBounds.Core.General.FirstVariation.measurable_pushDens
+#print axioms GFNBounds.Core.General.FirstVariation.measurable_dirPush
+#print axioms GFNBounds.Core.General.FirstVariation.loss_perturb_eq
+#print axioms GFNBounds.Core.General.FirstVariation.eventually_abs_mul_lt'
+#print axioms GFNBounds.Core.General.FirstVariation.eventually_abs_mul_lt
+#print axioms GFNBounds.Core.General.FirstVariation.hasDerivAt_loss_perturb_of_continuous
+#print axioms GFNBounds.Core.General.FirstVariation.clamp
+#print axioms GFNBounds.Core.General.FirstVariation.continuous_clamp
+#print axioms GFNBounds.Core.General.FirstVariation.clamp_mem
+#print axioms GFNBounds.Core.General.FirstVariation.clamp_of_mem
+#print axioms GFNBounds.Core.General.FirstVariation.eventually_ratio_perturb_near
+#print axioms GFNBounds.Core.General.FirstVariation.hasDerivAt_loss_perturb
+#print axioms GFNBounds.Core.General.FirstVariation.exists_ae_abs_le_of_memLp_top
+#print axioms GFNBounds.Core.General.FirstVariation.ae_abs_funAct_le
+#print axioms GFNBounds.Core.General.FirstVariation.funAct_congr_of_ac
+#print axioms GFNBounds.Core.General.FirstVariation.integral_mul_pushDens
+#print axioms GFNBounds.Core.General.FirstVariation.integral_mul_dirPush
+#print axioms GFNBounds.Core.General.FirstVariation.psi
+#print axioms GFNBounds.Core.General.FirstVariation.gradDens
+#print axioms GFNBounds.Core.General.FirstVariation.integral_deriv_eq_gradDens
+#print axioms GFNBounds.Core.General.FirstVariation.exists_psi_version
+#print axioms GFNBounds.Core.General.FirstVariation.hasDerivAt_loss_gradDens
+#print axioms GFNBounds.Core.General.FirstVariation.abs_taylor_le_of_lipschitz
+#print axioms GFNBounds.Core.General.FirstVariation.loss_remainder_le
+#print axioms GFNBounds.Core.General.FirstVariation.reversal_comp_withDensity_real
+#print axioms GFNBounds.Core.General.FirstVariation.reversal_comp_signed
+#print axioms GFNBounds.Core.General.FirstVariation.withDensityᵥ_rnDeriv_mul
+#print axioms GFNBounds.Core.General.FirstVariation.representative_unique
+#print axioms GFNBounds.Core.General.FirstVariation.phi_density
+#print axioms GFNBounds.Core.General.FirstVariation.first_variation_general
+#print axioms GFNBounds.Core.General.FirstVariation.theo_first_variation_full
+#print axioms GFNBounds.Core.General.FirstVariation.theo_first_variation
+#print axioms GFNBounds.Core.General.FirstVariation.measurable_real_sign
+#print axioms GFNBounds.Core.General.FirstVariation.abs_real_sign_le
+#print axioms GFNBounds.Core.General.FirstVariation.memLp_top_rnDeriv_self
+#print axioms GFNBounds.Core.General.FirstVariation.psi_self_ae
+#print axioms GFNBounds.Core.General.FirstVariation.gradDens_self_ae
+#print axioms GFNBounds.Core.General.FirstVariation.cor_gradient_formulas
+#print axioms GFNBounds.Core.General.FirstVariation.funAct_two_mul_sub
+#print axioms GFNBounds.Core.General.FirstVariation.cor_gradient_formulas_sq
+#print axioms GFNBounds.Core.General.FirstVariation.cor_gradient_formulas_abs
+#print axioms GFNBounds.Core.General.FirstVariation.theo_first_variation_full_hypotheses_inhabited

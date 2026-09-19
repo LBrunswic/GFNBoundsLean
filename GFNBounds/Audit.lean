@@ -108,6 +108,7 @@ import GFNBounds.Balance.TBHessian
 import GFNBounds.Balance.TBvsDB
 import GFNBounds.Balance.FreezingGeneral2
 import GFNBounds.Balance.FreezingGradientBridge
+import GFNBounds.Balance.GdDiffusionGeneral
 
 /-!
 # Axiom audit
@@ -2196,3 +2197,75 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.General.Bridge.coe_boolLp
 #print axioms GFNBounds.Balance.General.Bridge.lossGrad_twoState
 #print axioms GFNBounds.Balance.General.Bridge.bool_unimodal_flow
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.three_quarters_le
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.ratio_sub_one
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.abs_A_le
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.abs_r_sub_one_le_four_thirds
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.abs_r_sub_one_le_eight_thirds
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.abs_r_sub_one_le_two_a_div_three
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.sq_r_sub_one_le
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.psi_expansion
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.r_sub_one_mul_psi_le
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gext
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gext'
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gext_of_mem
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gext'_of_mem
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.continuousOn_gd
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.continuous_gext'
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.hasDerivAt_gext
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.taylor_gext'
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.Pd
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.Aop
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.Adag
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.linHess
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.flowOf
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.wMeas
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.psiP
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gradD
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.flowOf_isFinite
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.wMeas_isFinite
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.flowOf_ac
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.ac_flowOf
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.toReal_rnDeriv_flowOf
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.abs_Pd_le
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.Pd_eq_densityAction
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.Pd_adjoint
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.Pd_one_add
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.ratio_flowOf
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.toReal_rnDeriv_wMeas
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.ae_data
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gd_ratio_bounds
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.ratio_window
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.psi_eq_psiP
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gradDens_eq_gradD
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.loss_eventually_eq_gext
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gd_gradient
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.ae_funAct_bound
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.measurable_Pd
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.measurable_Aop
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.measurable_psiP
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.ae_data_psi
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gd_expansion
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.IminusP
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.funAct_const_mul
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.Aop_const_mul
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.linHess_const_mul
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.Pd_eq_funAct_of_reversible
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.linHess_reversible
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.linHess_eigen
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.eigenmode_decay
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.measurable_gradD
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.measurable_linHess
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gradD_zero
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.linearization_unique
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.ae_abs_le_eLpNorm_top
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gradD_eq_gext'
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.theo_gd_diffusion_full
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.dbLoss
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.dbLoss_eq_condKernel
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.dbLoss_eq_loss
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.reversal_edgeLift_ae
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.cor_db_gradient
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.cor_db_gradient_hypotheses_inhabited
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.theo_gd_diffusion_DB
+#print axioms GFNBounds.Balance.GdDiffusionGeneral.gd_diffusion_hypotheses_inhabited

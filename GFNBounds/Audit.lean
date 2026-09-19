@@ -110,6 +110,7 @@ import GFNBounds.Balance.FreezingGeneral2
 import GFNBounds.Balance.FreezingGradientBridge
 import GFNBounds.Balance.GdDiffusionGeneral
 import GFNBounds.Balance.StableFrozenGeneral
+import GFNBounds.Balance.TBvsDBClose
 
 /-!
 # Axiom audit
@@ -2305,3 +2306,49 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.StableFrozenGeneral.frozenDecay_flow_apply
 #print axioms GFNBounds.Balance.StableFrozenGeneral.deriv_deriv_sq_one
 #print axioms GFNBounds.Balance.StableFrozenGeneral.stable_frozen_witness
+-- Balance/TBvsDBClose (rem:tb_vs_db: DB supply, complex Fejér, step cap on norms)
+#print axioms GFNBounds.Doubling.TBvsDBClose.kerMeas
+#print axioms GFNBounds.Doubling.TBvsDBClose.ker
+#print axioms GFNBounds.Doubling.TBvsDBClose.ker_apply
+#print axioms GFNBounds.Doubling.TBvsDBClose.integrable_kerMeas
+#print axioms GFNBounds.Doubling.TBvsDBClose.integral_kerMeas
+#print axioms GFNBounds.Doubling.TBvsDBClose.isMarkovKernel_ker
+#print axioms GFNBounds.Doubling.TBvsDBClose.funAct_ker
+#print axioms GFNBounds.Doubling.TBvsDBClose.ker_apply_set
+#print axioms GFNBounds.Doubling.TBvsDBClose.mu_bind_ker
+#print axioms GFNBounds.Doubling.TBvsDBClose.funActLp_ker
+#print axioms GFNBounds.Doubling.TBvsDBClose.densityActionL2_ker
+#print axioms GFNBounds.Doubling.TBvsDBClose.meanProj_mu
+#print axioms GFNBounds.Doubling.TBvsDBClose.coercive_bhatK
+#print axioms GFNBounds.Doubling.TBvsDBClose.lift_coercivity_truncation
+#print axioms GFNBounds.Doubling.TBvsDBClose.truncation_rate_DB
+#print axioms GFNBounds.Balance.TBHessian.sum_Ioo_symm
+#print axioms GFNBounds.Balance.TBHessian.fejerC
+#print axioms GFNBounds.Balance.TBHessian.fejerC_eq
+#print axioms GFNBounds.Balance.TBHessian.funActC
+#print axioms GFNBounds.Balance.TBHessian.cplx
+#print axioms GFNBounds.Balance.TBHessian.ipC
+#print axioms GFNBounds.Balance.TBHessian.funActC_eq_cplx
+#print axioms GFNBounds.Balance.TBHessian.rayleigh_fejerC
+#print axioms GFNBounds.Balance.TBHessian.rayleigh_quotient_fejerC
+#print axioms GFNBounds.Balance.TBHessian.RLin
+#print axioms GFNBounds.Balance.TBHessian.ipL2_quad
+#print axioms GFNBounds.Balance.TBHessian.form_cs
+#print axioms GFNBounds.Balance.TBHessian.nrm_pow_four_le
+#print axioms GFNBounds.Balance.TBHessian.opBound_of_form
+#print axioms GFNBounds.Balance.TBHessian.nrm_sq_le_form
+#print axioms GFNBounds.Balance.TBHessian.step_nonexpansive
+#print axioms GFNBounds.Balance.TBHessian.rlin_funAct_iter
+#print axioms GFNBounds.Balance.TBHessian.rlin_densAct_iter
+#print axioms GFNBounds.Balance.TBHessian.rlin_Theta
+#print axioms GFNBounds.Balance.TBHessian.rlin_HTB
+#print axioms GFNBounds.Balance.TBHessian.HTB_selfAdjoint
+#print axioms GFNBounds.Balance.TBHessian.HDB_eq
+#print axioms GFNBounds.Balance.TBHessian.HDB_form_le_eight
+#print axioms GFNBounds.Balance.TBHessian.opBound_HTB_of_form
+#print axioms GFNBounds.Balance.TBHessian.opBound_HDB_opNorm
+#print axioms GFNBounds.Balance.TBHessian.opNorm_HTB_le
+#print axioms GFNBounds.Balance.TBHessian.stepCap_opNorm
+#print axioms GFNBounds.Balance.TBHessian.stepCap_stable
+#print axioms GFNBounds.Balance.TBHessian.stepCap_witness
+#print axioms GFNBounds.Balance.TBHessian.fejerC_witness

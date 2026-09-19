@@ -38,7 +38,9 @@ The one-step conditional expectation `E(f(X₁) | X₀ = j)` is `pstar S cap f (
 ## SCOPE (disclosed)
 
 * **The chain conclusions are not proved, and are not stated.** No declaration here says
-  "positive recurrent", "null recurrent" or "transient". What is delivered is, for each of the
+  "positive recurrent", "null recurrent" or "transient". They are fed to the criteria
+  `ladder_recurrent` and `ladder_survival_ge` in `PhaseRecurrence.lean`, which state the chain
+  conclusions. What is delivered is, for each of the
   four Lyapunov steps, an inequality of the form "for every ladder `m` past an explicit `m₀`, the
   drift of the test function at `m` has the required sign", which is precisely the hypothesis
   Foster's criterion and the transience criterion consume. Steps 1, 5 and 7 are elsewhere:
@@ -72,7 +74,7 @@ The one-step conditional expectation `E(f(X₁) | X₀ = j)` is `pstar S cap f (
 | ladder state `j ≥ 1` | ✓ carried (`hm`) |
 | `ε = ε_{c,s}` | ✓ carried, pointwise on the ladder (`heps`) |
 | Step 2's `Ξ_t` depends on `t` alone | ✓ carried and made explicit; ⚠ strengthened by the side condition `4t ≤ m+1` |
-| Foster's criterion, the transience criterion, optional stopping, the strong Markov property | ✗ not available; the conclusions they yield are not stated |
+| Foster's criterion, the transience criterion, optional stopping, the strong Markov property | ✗ not used here; the conclusions are stated in `PhaseRecurrence.lean` via `ladder_recurrent` and `ladder_survival_ge` |
 
 Provenance: mathlib `fabf563a` (tag `v4.31.0`), pinned via `lakefile.toml`.
 -/

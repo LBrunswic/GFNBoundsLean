@@ -98,6 +98,7 @@ import GFNBounds.Silva.PathSpaceMarkovGeneral
 import GFNBounds.Core.SamplingGeneral
 import GFNBounds.Core.SamplingGeneralBounds
 import GFNBounds.Core.AdjointGeneral
+import GFNBounds.Balance.LiftGeneral
 
 /-!
 # Axiom audit
@@ -1592,3 +1593,43 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Core.General.IsInvariant.toReal_reversal_singleton
 -- `lem:adjoint` finite graph half — GFNBounds/Core/Adjoint.lean
 #print axioms GFNBounds.Core.adjoint_finite
+-- Balance/LiftGeneral: def:edge_lift, lem:lift_wellposed on a general measurable space
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLift
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLift_isMarkovKernel
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLift_apply
+#print axioms GFNBounds.Balance.LiftGeneral.edgeMeasure
+#print axioms GFNBounds.Balance.LiftGeneral.lintegral_edgeLift
+#print axioms GFNBounds.Balance.LiftGeneral.lintegral_edgeMeasure
+#print axioms GFNBounds.Balance.LiftGeneral.bind_edgeLift
+#print axioms GFNBounds.Balance.LiftGeneral.fst_edgeMeasure
+#print axioms GFNBounds.Balance.LiftGeneral.snd_edgeMeasure
+#print axioms GFNBounds.Balance.LiftGeneral.edgeMeasure_invariant
+#print axioms GFNBounds.Balance.LiftGeneral.edgeMeasure_withDensity
+#print axioms GFNBounds.Balance.LiftGeneral.le_of_le_sqrt_mul_sqrt
+#print axioms GFNBounds.Balance.LiftGeneral.lintegral_rnDeriv_map_sq_le
+#print axioms GFNBounds.Balance.LiftGeneral.fst_absolutelyContinuous
+#print axioms GFNBounds.Balance.LiftGeneral.bind_edgeLift_eq_withDensity
+#print axioms GFNBounds.Balance.LiftGeneral.bind_edgeLift_absolutelyContinuous
+#print axioms GFNBounds.Balance.LiftGeneral.rnDeriv_bind_edgeLift
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLift_contraction
+#print axioms GFNBounds.Balance.LiftGeneral.IsReversal
+#print axioms GFNBounds.Balance.LiftGeneral.IsReversal.bind_eq
+#print axioms GFNBounds.Balance.LiftGeneral.IsReversal.bind_eq_left
+#print axioms GFNBounds.Balance.LiftGeneral.IsReversal.flip
+#print axioms GFNBounds.Balance.LiftGeneral.IsReversal.ae_eq
+#print axioms GFNBounds.Balance.LiftGeneral.isReversal_posterior
+#print axioms GFNBounds.Balance.LiftGeneral.lintegral_rnDeriv_bind_mul
+#print axioms GFNBounds.Balance.LiftGeneral.adjoint_of_isReversal
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLiftDual
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLiftDual_apply
+#print axioms GFNBounds.Balance.LiftGeneral.lintegral_edgeLiftDual
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLift_duality
+#print axioms GFNBounds.Balance.LiftGeneral.edgeMeasure_invariant_dual
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLift_adjoint
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLift_reversal_unique
+#print axioms GFNBounds.Balance.LiftGeneral.isFiniteMeasure_withDensity_of_sq
+#print axioms GFNBounds.Balance.LiftGeneral.integral_toReal_mul_toReal
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLift_adjoint_real
+#print axioms GFNBounds.Balance.LiftGeneral.edgeLift_apply_singleton
+#print axioms GFNBounds.Balance.LiftGeneral.isReversal_const
+#print axioms GFNBounds.Balance.LiftGeneral.lift_wellposed

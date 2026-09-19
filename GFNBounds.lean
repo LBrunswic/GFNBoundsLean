@@ -142,4 +142,5 @@ import GFNBounds.Silva.PathSpaceMarkovGeneral
 import GFNBounds.Core.SamplingGeneral
 import GFNBounds.Core.SamplingGeneralBounds
 import GFNBounds.Core.AdjointGeneral
+import GFNBounds.Balance.LiftGeneral
 import GFNBounds.Audit

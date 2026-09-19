@@ -22,6 +22,10 @@ import GFNBounds.Doubling.Excursion
 import GFNBounds.Doubling.Expansion
 import GFNBounds.Doubling.Exponent
 import GFNBounds.Doubling.Family
+import GFNBounds.Doubling.GeomFamily
+import GFNBounds.Doubling.GeomHardy
+import GFNBounds.Doubling.GeomOperator
+import GFNBounds.Doubling.GeomPoincare
 import GFNBounds.Doubling.FixedPoints
 import GFNBounds.Doubling.FixedPointsP
 import GFNBounds.Doubling.HarmonicWindow
@@ -40,6 +44,7 @@ import GFNBounds.Doubling.PerCutNorms
 import GFNBounds.Doubling.PhaseEmpty
 import GFNBounds.Doubling.PhaseExists
 import GFNBounds.Doubling.PointwiseInv
+import GFNBounds.Doubling.PolicyTable
 import GFNBounds.Doubling.Product
 import GFNBounds.Doubling.R0Bound
 import GFNBounds.Doubling.Ramp

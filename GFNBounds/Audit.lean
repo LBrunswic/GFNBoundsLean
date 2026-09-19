@@ -111,6 +111,8 @@ import GFNBounds.Balance.FreezingGradientBridge
 import GFNBounds.Balance.GdDiffusionGeneral
 import GFNBounds.Balance.StableFrozenGeneral
 import GFNBounds.Balance.TBvsDBClose
+import GFNBounds.Doubling.GeomFamily
+import GFNBounds.Doubling.PolicyTable
 
 /-!
 # Axiom audit
@@ -2352,3 +2354,23 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.TBHessian.stepCap_stable
 #print axioms GFNBounds.Balance.TBHessian.stepCap_witness
 #print axioms GFNBounds.Balance.TBHessian.fejerC_witness
+
+-- the geometric row of the policy table (2026-09-19): `ε(j) = a ρ^j` has `B̂ < +∞`
+#print axioms GFNBounds.Doubling.Hardy.hardy
+#print axioms GFNBounds.Doubling.Stat.dirichlet_partial
+#print axioms GFNBounds.Doubling.Stat.poincare
+#print axioms GFNBounds.Doubling.Stat.coercive
+#print axioms GFNBounds.Doubling.Stat.defectRange_eq_kerPi
+#print axioms GFNBounds.Doubling.Stat.exists_inverse_of_tail
+#print axioms GFNBounds.Doubling.Stat.exists_diffusionOp_of_tail
+#print axioms GFNBounds.Doubling.Stat.decr_le
+#print axioms GFNBounds.Doubling.Stat.tail_le_far
+#print axioms GFNBounds.Doubling.Stat.tail_bound_of_ratio
+#print axioms GFNBounds.Doubling.Stat.exists_diffusionOp_of_ratio
+#print axioms GFNBounds.Doubling.geometric_ratio
+#print axioms GFNBounds.Doubling.geometric_exists_stat
+#print axioms GFNBounds.Doubling.main_geometric
+#print axioms GFNBounds.Doubling.geometric_diffusionOp
+#print axioms GFNBounds.Doubling.table_polynomial
+#print axioms GFNBounds.Doubling.table_uniform
+#print axioms GFNBounds.Doubling.table_geometric

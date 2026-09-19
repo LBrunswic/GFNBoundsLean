@@ -2561,6 +2561,13 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `tendsto_mpow_foot` | `Exponent.lean` | `theorem tendsto_mpow_foot (p : ℝ) : Tendsto (fun m : ℕ => (m : ℝ) ^ p * (((m + 1) / 2 : ℕ) : ℝ) ^ (-p)) atTop (𝓝 ((2 : ℝ) ^ p))` |
 | `eq_zero_of_three_nonneg` | `FixedPointsP.lean` | `theorem eq_zero_of_three_nonneg {a b c : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c) (h : a + b + c = 0) : a = 0` |
 | `eq_mean_of_var_zero` | `FixedPointsP.lean` | `theorem eq_mean_of_var_zero {w₁ w₂ w₃ u₁ u₂ u₃ : ℝ} (h2 : 0 ≤ w₂) (h3 : 0 ≤ w₃) (hw : w₁ + w₂ + w₃ = 1) (hpos : 0 < w₁) (hgap : w₁ * u₁ ^ 2 + w₂ * u₂ ^ 2 + w₃ * u₃ ^ 2 = (w₁ * u₁ + w₂ * u₂ + w₃ * u₃) ^ 2) : u₁ = w₁ * u₁ + w₂ * u₂ + w₃ * u₃` |
+| `geometric_ratio` | `GeomFamily.lean` | `theorem geometric_ratio (ha : 0 < a) (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) : ∃ i₀ : ℕ, S.d < i₀ ∧ ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ (1 + ρ) / 2 * (1 - S.eps (i + 1)) * S.eps i` |
+| `sqrt_step` | `GeomHardy.lean` | `theorem sqrt_step (hq0 : 0 ≤ q) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) {x : ℕ} (hx : 1 ≤ x) : Real.sqrt (T (x + 1)) ≤ Real.sqrt q * Real.sqrt (T x)` |
+| `sqrt_geom` | `GeomHardy.lean` | `theorem sqrt_geom (hq0 : 0 ≤ q) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) {k : ℕ} (hk : 1 ≤ k) : ∀ j : ℕ, Real.sqrt (T (k + j)) ≤ Real.sqrt q ^ j * Real.sqrt (T k)` |
+| `geom_le` | `GeomHardy.lean` | `theorem geom_le {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) (n : ℕ) : ∑ j ∈ range n, r ^ j ≤ 1 / (1 - r)` |
+| `sum_inv_sqrt_le` | `GeomHardy.lean` | `theorem sum_inv_sqrt_le (hq0 : 0 ≤ q) (hq1 : q < 1) (hTpos : ∀ k, 1 ≤ k → 0 < T k) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) : ∀ x : ℕ, 1 ≤ x → ∑ k ∈ Icc 1 x, 1 / Real.sqrt (T k) ≤ 1 / ((1 - Real.sqrt q) * Real.sqrt (T x))` |
+| `sum_lam_div_sqrt_le` | `GeomHardy.lean` | `theorem sum_lam_div_sqrt_le (hq0 : 0 ≤ q) (hq1 : q < 1) (hTpos : ∀ k, 1 ≤ k → 0 < T k) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) (hlamT : ∀ k, 1 ≤ k → lam k ≤ T k) {k : ℕ} (hk : 1 ≤ k) (N : ℕ) : ∑ x ∈ Icc k N, lam x / Real.sqrt (T x) ≤ Real.sqrt (T k) / (1 - Real.sqrt q)` |
+| `hardy` | `GeomHardy.lean` | `theorem hardy (hq0 : 0 ≤ q) (hq1 : q < 1) (hTpos : ∀ k, 1 ≤ k → 0 < T k) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) (hlam0 : ∀ k, 0 ≤ lam k) (hlamT : ∀ k, 1 ≤ k → lam k ≤ T k) (hTB : ∀ k, 1 ≤ k → T k ≤ B * lam k) (N : ℕ) : ∑ x ∈ Icc 1 N, lam x * (∑ k ∈ Icc 1 x, D k) ^ 2 ≤ B / (1 - Real.sqrt q) ^ 2 * ∑ k ∈ Icc 1 N, lam k * D k ^ 2` |
 | `log_step_le` | `HarmonicWindow.lean` | `theorem log_step_le (j : ℕ) : Real.log ((j : ℝ) + 2) - Real.log ((j : ℝ) + 1) ≤ 1 / ((j : ℝ) + 1)` |
 | `harmonic_window_ge` | `HarmonicWindow.lean` | `theorem harmonic_window_ge {A B : ℕ} (hAB : A ≤ B) : Real.log ((B : ℝ) + 1) - Real.log ((A : ℝ) + 1) ≤ ∑ j ∈ Finset.Ico A B, 1 / ((j : ℝ) + 1)` |
 | `Jlow` | `HarmonicWindow.lean` | `def Jlow (a : ℕ) : Finset ℕ` |
@@ -8358,6 +8365,97 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 | 216 | theorem | `pstar_fixed_of_const` | `theorem pstar_fixed_of_const (hrow : RowOnChain S cap) {u : St → ℝ} (hc : ∀ x, OnChain cap x → u x = u (.lad 0)) {y : St} (hy : OnChain cap y) : pstar S cap u y = u y` |
 | 237 | theorem | `ker_eq_const` | `theorem ker_eq_const (hrow : RowOnChain S cap) {u : St → ℝ} (hu : Summable fun x => \|u x\| ^ (2 : ℝ) * L.lam x) : ((∀ x, OnChain cap x → L.dens u x = u x) ↔ (∀ x, OnChain cap x → u x = u (.lad 0))) ∧ ((∀ x, OnChain cap x → pstar S cap u x = u x) ↔ (∀ x, OnChain cap x → u x = u (.lad 0)))` |
 
+### `GFNBounds/Doubling/GeomFamily.lean`
+
+**The geometric row of the policy table: `ε(j) = a ρ^j` has a finite diffusion constant**  
+
+*strict library; 313 lines; 14 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+In scope: `variable {S : Setting}`, `variable (L : Stat S none)`, `variable {θ : ℝ} {i₀ : ℕ}`, `variable {a ρ : ℝ}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 49 | def | `dbl` | `noncomputable def dbl (i : ℕ) : ℝ` |
+| 51 | theorem | `dbl_nonneg` | `theorem dbl_nonneg {i : ℕ} (hi : 1 ≤ i) : 0 ≤ L.dbl i` |
+| 55 | theorem | `decr_le` | `theorem decr_le {i : ℕ} (hi : S.d < i) : L.lam (.lad (i + 1)) * (1 - S.eps (i + 1)) ≤ L.lam (.lad i)` |
+| 79 | theorem | `dbl_step` | `theorem dbl_step (hθ0 : 0 ≤ θ) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) {i : ℕ} (hi : i₀ ≤ i) : L.dbl (i + 1) ≤ θ * L.dbl i` |
+| 93 | theorem | `dbl_geom` | `theorem dbl_geom (hθ0 : 0 ≤ θ) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) {i : ℕ} (hi : i₀ ≤ i) : ∀ t : ℕ, L.dbl (i + t) ≤ θ ^ t * L.dbl i` |
+| 106 | theorem | `dbl_half_le` | `theorem dbl_half_le {m : ℕ} (hm : S.d < m) (h2 : 2 ≤ m) : L.dbl ((m + 1) / 2) ≤ L.lam (.lad m)` |
+| 119 | theorem | `lam_le_dbl_half` | `theorem lam_le_dbl_half (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) {m : ℕ} (hm : S.d < m) (hc : i₀ ≤ (m + 1) / 2) : (1 - S.epsMax) * L.lam (.lad m) ≤ L.dbl ((m + 1) / 2) / (1 - θ)` |
+| 142 | theorem | `tail_le_far` | `theorem tail_le_far (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) {r : ℕ} (hr : 2 * i₀ ≤ r) : L.tailMass r ≤ 2 / ((1 - θ) ^ 2 * (1 - S.epsMax)) * L.lam (.lad r)` |
+| 198 | theorem | `tail_bound_of_ratio` | `theorem tail_bound_of_ratio (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) : ∃ B : ℝ, ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)` |
+| 218 | theorem | `exists_diffusionOp_of_ratio` | `theorem exists_diffusionOp_of_ratio (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) : ∃ R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) * R = 1 ∧ R * (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) = 1 ∧ (1 - L.pstarL2 (rowOnChain_none S)) * (R - L.piL2) = 1 - L.piL2 ∧ (R - L.piL2) * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2 ∧ L.piL2 * (R - L.piL2) = 0 ∧ (R - L.piL2) * L.piL2 = 0` |
+| 239 | theorem | `geometric_ratio` | `theorem geometric_ratio (ha : 0 < a) (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) : ∃ i₀ : ℕ, S.d < i₀ ∧ ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ (1 + ρ) / 2 * (1 - S.eps (i + 1)) * S.eps i` |
+| 265 | theorem | `geometric_exists_stat` | `theorem geometric_exists_stat (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) : Nonempty (Stat S none)` |
+| 288 | theorem | `main_geometric` | `theorem main_geometric (ha : 0 < a) (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) : Nonempty (Stat S none) ∧ ∀ L : Stat S none, ∃ R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) * R = 1 ∧ R * (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) = 1 ∧ (1 - L.pstarL2 (rowOnChain_none S)) * (R - L.piL2) = 1 - L.piL2 ∧ (R - L.piL2) * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2 ∧ L.piL2 * (R - L.piL2) = 0 ∧ (R - L.piL2) * L.piL2 = 0` |
+| 304 | theorem | `geometric_diffusionOp` | `theorem geometric_diffusionOp (ha : 0 < a) (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) (L : Stat S none) : ∃ Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, Sop * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2` |
+
+### `GFNBounds/Doubling/GeomHardy.lean`
+
+**A weighted discrete Hardy inequality under a geometric tail**  
+
+*strict library; 208 lines; 6 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+In scope: `variable {lam T D : ℕ → ℝ} {q B : ℝ}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 36 | theorem | `sqrt_step` | `theorem sqrt_step (hq0 : 0 ≤ q) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) {x : ℕ} (hx : 1 ≤ x) : Real.sqrt (T (x + 1)) ≤ Real.sqrt q * Real.sqrt (T x)` |
+| 42 | theorem | `sqrt_geom` | `theorem sqrt_geom (hq0 : 0 ≤ q) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) {k : ℕ} (hk : 1 ≤ k) : ∀ j : ℕ, Real.sqrt (T (k + j)) ≤ Real.sqrt q ^ j * Real.sqrt (T k)` |
+| 56 | theorem | `geom_le` | `theorem geom_le {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) (n : ℕ) : ∑ j ∈ range n, r ^ j ≤ 1 / (1 - r)` |
+| 64 | theorem | `sum_inv_sqrt_le` | `theorem sum_inv_sqrt_le (hq0 : 0 ≤ q) (hq1 : q < 1) (hTpos : ∀ k, 1 ≤ k → 0 < T k) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) : ∀ x : ℕ, 1 ≤ x → ∑ k ∈ Icc 1 x, 1 / Real.sqrt (T k) ≤ 1 / ((1 - Real.sqrt q) * Real.sqrt (T x))` |
+| 99 | theorem | `sum_lam_div_sqrt_le` | `theorem sum_lam_div_sqrt_le (hq0 : 0 ≤ q) (hq1 : q < 1) (hTpos : ∀ k, 1 ≤ k → 0 < T k) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) (hlamT : ∀ k, 1 ≤ k → lam k ≤ T k) {k : ℕ} (hk : 1 ≤ k) (N : ℕ) : ∑ x ∈ Icc k N, lam x / Real.sqrt (T x) ≤ Real.sqrt (T k) / (1 - Real.sqrt q)` |
+| 127 | theorem | `hardy` | `theorem hardy (hq0 : 0 ≤ q) (hq1 : q < 1) (hTpos : ∀ k, 1 ≤ k → 0 < T k) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) (hlam0 : ∀ k, 0 ≤ lam k) (hlamT : ∀ k, 1 ≤ k → lam k ≤ T k) (hTB : ∀ k, 1 ≤ k → T k ≤ B * lam k) (N : ℕ) : ∑ x ∈ Icc 1 N, lam x * (∑ k ∈ Icc 1 x, D k) ^ 2 ≤ B / (1 - Real.sqrt q) ^ 2 * ∑ k ∈ Icc 1 N, lam k * D k ^ 2` |
+
+### `GFNBounds/Doubling/GeomOperator.lean`
+
+**A finite diffusion constant on the infinite doubling graph**  
+
+*strict library; 152 lines; 6 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+In scope: `variable {S : Setting}`, `variable (L : Stat S none)`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 40 | theorem | `coerK_nonneg` | `theorem coerK_nonneg {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) : 0 ≤ L.coerK B` |
+| 53 | theorem | `piL2_defect` | `theorem piL2_defect (F : Lp ℝ 2 L.mu) : L.piL2 (L.defect F) = 0` |
+| 57 | theorem | `piL2_eq_zero_iff` | `theorem piL2_eq_zero_iff {F : Lp ℝ 2 L.mu} : L.piL2 F = 0 ↔ F ∈ L.kerPi` |
+| 67 | theorem | `defectRange_eq_kerPi` | `theorem defectRange_eq_kerPi {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) : L.defectRange = L.kerPi` |
+| 89 | theorem | `exists_inverse_of_tail` | `theorem exists_inverse_of_tail {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) : ∃ R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) * R = 1 ∧ R * (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) = 1` |
+| 136 | theorem | `exists_diffusionOp_of_tail` | `theorem exists_diffusionOp_of_tail {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) : ∃ R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) * R = 1 ∧ R * (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) = 1 ∧ (1 - L.pstarL2 (rowOnChain_none S)) * (R - L.piL2) = 1 - L.piL2 ∧ (R - L.piL2) * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2 ∧ L.piL2 * (R - L.piL2) = 0 ∧ (R - L.piL2) * L.piL2 = 0` |
+
+### `GFNBounds/Doubling/GeomPoincare.lean`
+
+**Coercivity of `Id − P⋆` on `ker Π` under a geometric tail**  
+
+*strict library; 348 lines; 13 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+In scope: `variable {S : Setting}`, `variable (L : Stat S none)`, `variable {L}`, `variable (L)`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 46 | def | `stepVar` | `noncomputable def stepVar (f : St → ℝ) (x : St) : ℝ` |
+| 49 | theorem | `stepVar_nonneg` | `theorem stepVar_nonneg (f : St → ℝ) (x : St) : 0 ≤ stepVar (S := S) f x` |
+| 56 | theorem | `stepVar_lad_ge` | `theorem stepVar_lad_ge (f : St → ℝ) {k : ℕ} (hk : 1 ≤ k) : (1 - S.eps k) * (f (.lad k) - f (.lad (k - 1))) ^ 2 ≤ stepVar (S := S) f (.lad k)` |
+| 65 | theorem | `stepVar_src` | `theorem stepVar_src (f : St → ℝ) : stepVar (S := S) f (.lad 0) = (f .sink - f (.lad 0)) ^ 2` |
+| 75 | theorem | `summable_lam_sq_pstar` | `theorem summable_lam_sq_pstar {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) : Summable fun x => L.lam x * pstar S none (fun y => f y ^ 2) x` |
+| 79 | theorem | `summable_lam_mul_defect` | `theorem summable_lam_mul_defect {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) : Summable fun x => L.lam x * f x * (f x - pstar S none f x)` |
+| 96 | theorem | `summable_lam_stepVar` | `theorem summable_lam_stepVar {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) : Summable fun x => L.lam x * stepVar (S := S) f x` |
+| 109 | theorem | `tsum_stepVar_le` | `theorem tsum_stepVar_le {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) : ∑' x, L.lam x * stepVar (S := S) f x ≤ 2 * ∑' x, L.lam x * f x * (f x - pstar S none f x)` |
+| 123 | theorem | `dirichlet_partial` | `theorem dirichlet_partial {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) (N : ℕ) : ∑ k ∈ Icc 1 N, L.lam (.lad k) * (1 - S.eps k) * (f (.lad k) - f (.lad (k - 1))) ^ 2 + L.lam (.lad 0) * (f .sink - f (.lad 0)) ^ 2 ≤ 2 * ∑' x, L.lam x * f x * (f x - pstar S none f x)` |
+| 158 | theorem | `sum_Icc_telescope` | `theorem sum_Icc_telescope (f : St → ℝ) (x : ℕ) : ∑ k ∈ Icc 1 x, (f (.lad k) - f (.lad (k - 1))) = f (.lad x) - f (.lad 0)` |
+| 169 | theorem | `poincare` | `theorem poincare {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) (hf1 : Summable fun x => L.lam x * f x) (hmean : ∑' x, L.lam x * f x = 0) : ∑' x, L.lam x * f x ^ 2 ≤ (2 * B / ((1 - Real.sqrt (1 - 1 / B)) ^ 2 * (1 - S.epsMax)) + 2 / L.lam (.lad 0)) * ∑' x, L.lam x * f x * (f x - pstar S none f x)` |
+| 293 | def | `coerK` | `noncomputable def coerK (B : ℝ) : ℝ` |
+| 298 | theorem | `coercive` | `theorem coercive {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) {F : Lp ℝ 2 L.mu} (hF : F ∈ L.kerPi) : ‖F‖ ≤ L.coerK B * ‖L.defect F‖` |
+
 ### `GFNBounds/Doubling/HarmonicWindow.lean`
 
 **`eq:doubling_windowsums`: two harmonic window sums, with explicit constants**  
@@ -9124,6 +9222,22 @@ In scope: `variable {S : Setting}`
 | 61 | def | `stEquiv` | `def stEquiv : ℕ ≃ St` |
 | 68 | theorem | `hasSum_st` | `theorem hasSum_st {g : St → ℝ} {A : ℝ} (h : HasSum (fun k : ℕ => g (.lad k)) A) : HasSum g (A + g .sink)` |
 | 80 | theorem | `inv_of_pointwise` | `theorem inv_of_pointwise (S : Setting) {mu : St → ℝ} (hnn : ∀ x, 0 ≤ mu x) (hsum : Summable (fun k : ℕ => mu (.lad k))) (hsink : mu .sink = mu (.lad 0)) (hpt : ∀ k : ℕ, mu (.lad k) = mu (.lad (k + 1)) * (1 - S.eps (k + 1)) + (if 1 ≤ k ∧ 2 ∣ k then mu (.lad (k / 2)) * S.eps (k / 2) else 0) + mu .sink * S.row k) (f : St → ℝ) (hf : ∃ C, ∀ x, \|f x\| ≤ C) : ∑' x, mu x * pstar S none f x = ∑' x, mu x * f x` |
+
+### `GFNBounds/Doubling/PolicyTable.lean`
+
+**The policy table of the doubling graph**  
+
+*strict library; 62 lines; 3 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+In scope: `variable {S : Setting}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 38 | theorem | `table_polynomial` | `theorem table_polynomial {c s : ℝ} (hc : 0 < c) (hs : 0 ≤ s) (heps : ∀ j, S.eps j = epsCS c s j) (L : Stat S none) : ¬ ∃ Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, Sop * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2` |
+| 46 | theorem | `table_uniform` | `theorem table_uniform (heps : ∀ j, S.eps j = 1 / 2) : IsTransient S none ∧ IsEmpty (Stat S none)` |
+| 55 | theorem | `table_geometric` | `theorem table_geometric {a ρ : ℝ} (ha : 0 < a) (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) : Nonempty (Stat S none) ∧ ∀ L : Stat S none, ∃ Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, Sop * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2` |
 
 ### `GFNBounds/Doubling/Product.lean`
 
@@ -12542,8 +12656,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `coe_coinKernel` | `GFNBounds.Core.UniversalityBody` |
 | `coe_const_kernel` | `GFNBounds.Core.FamilyUniversality` |
 | `coeff_identity` | `GFNBounds.Doubling.ExpansionSecond` |
+| `coerK` | `GFNBounds.Doubling.GeomPoincare` |
+| `coerK_nonneg` | `GFNBounds.Doubling.GeomOperator` |
 | `coer_edgeU` | `GFNBounds.Balance.C3Wrappers` |
 | `coercConst_mono` | `GFNBounds.Balance.TBvsDB` |
+| `coercive` | `GFNBounds.Doubling.GeomPoincare` |
 | `coercive_bhatK` | `GFNBounds.Balance.TBvsDBClose` |
 | `coercive_restrict` | `GFNBounds.Balance.LiftFinite` |
 | `coercivity` | `GFNBounds.Core.Mixing` |
@@ -12781,10 +12898,15 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `db_stable_frozen_DB_mixing` | `GFNBounds.Balance.StableFrozenGeneral` |
 | `db_stable_frozen_FM_mixing` | `GFNBounds.Balance.StableFrozenGeneral` |
 | `db_stable_frozen_general` | `GFNBounds.Balance.StableFrozenGeneral` |
+| `dbl` | `GFNBounds.Doubling.GeomFamily` |
 | `dblW` | `GFNBounds.Doubling.Balance` |
 | `dblW_add_decW` | `GFNBounds.Doubling.Balance` |
 | `dblW_le_one` | `GFNBounds.Doubling.Balance` |
 | `dblW_nonneg` | `GFNBounds.Doubling.Balance` |
+| `dbl_geom` | `GFNBounds.Doubling.GeomFamily` |
+| `dbl_half_le` | `GFNBounds.Doubling.GeomFamily` |
+| `dbl_nonneg` | `GFNBounds.Doubling.GeomFamily` |
+| `dbl_step` | `GFNBounds.Doubling.GeomFamily` |
 | `decW` | `GFNBounds.Doubling.Balance` |
 | `decW_le_one` | `GFNBounds.Doubling.Balance` |
 | `decW_nonneg` | `GFNBounds.Doubling.Balance` |
@@ -12796,11 +12918,13 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `decay_two_sided` | `GFNBounds.Doubling.Descent` |
 | `decay_two_sided_explicit` | `GFNBounds.Doubling.Product` |
 | `decay_two_sided_of_cutBal` | `GFNBounds.Doubling.Product` |
+| `decr_le` | `GFNBounds.Doubling.GeomFamily` |
 | `defect` | `GFNBounds.Doubling.Unsolvable` |
 | `defectFn` | `GFNBounds.Core.FamilyUniversality` |
 | `defectFn_eq_eFn_sub` | `GFNBounds.Core.RLBound` |
 | `defectFn_eq_sub` | `GFNBounds.Core.FamilyUniversality` |
 | `defectRange` | `GFNBounds.Doubling.Unsolvable` |
+| `defectRange_eq_kerPi` | `GFNBounds.Doubling.GeomOperator` |
 | `defectRange_le_kerPi` | `GFNBounds.Doubling.Unsolvable` |
 | `defectRange_ne_kerPi` | `GFNBounds.Doubling.Unsolvable` |
 | `defect_apply` | `GFNBounds.Doubling.Unsolvable` |
@@ -13004,6 +13128,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `dirac_lad` | `GFNBounds.Doubling.PerCutIdentity` |
 | `dirac_nonneg` | `GFNBounds.Doubling.Ratios` |
 | `dirac_sink` | `GFNBounds.Doubling.PerCutIdentity` |
+| `dirichlet_partial` | `GFNBounds.Doubling.GeomPoincare` |
 | `disint` | `GFNBounds.Balance.Lift` |
 | `doeblin` | `GFNBounds.Doubling.Doeblin` |
 | `doeblin_low` | `GFNBounds.Doubling.Doeblin` |
@@ -13311,6 +13436,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `exists_descentPath_of_mem` | `GFNBounds.Doubling.WeightFull` |
 | `exists_descent_seq` | `GFNBounds.Balance.DiscreteGlobal` |
 | `exists_diffusionOp` | `GFNBounds.Doubling.OperatorL2` |
+| `exists_diffusionOp_of_ratio` | `GFNBounds.Doubling.GeomFamily` |
+| `exists_diffusionOp_of_tail` | `GFNBounds.Doubling.GeomOperator` |
 | `exists_edgeFloor` | `GFNBounds.Balance.BoundaryBlowup` |
 | `exists_family_setting` | `GFNBounds.Doubling.PhaseRecurrence` |
 | `exists_fixed` | `GFNBounds.Graph.Setting` |
@@ -13319,6 +13446,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `exists_height_drift_neg` | `GFNBounds.Doubling.Lyapunov` |
 | `exists_invProb` | `GFNBounds.Graph.Setting` |
 | `exists_inverse` | `GFNBounds.Doubling.OperatorFinite` |
+| `exists_inverse_of_tail` | `GFNBounds.Doubling.GeomOperator` |
 | `exists_isFullSupportMarkovBackward` | `GFNBounds.Silva.PathSpaceMarkovGeneral` |
 | `exists_isGreen` | `GFNBounds.Graph.Morozov` |
 | `exists_isHitExp` | `GFNBounds.Graph.Morozov` |
@@ -13671,7 +13799,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `gd_gradient` | `GFNBounds.Balance.GdDiffusionGeneral` |
 | `gd_ratio_bounds` | `GFNBounds.Balance.GdDiffusionGeneral` |
 | `geom_iterate` | `GFNBounds.Doubling.TotalVariation` |
+| `geom_le` | `GFNBounds.Doubling.GeomHardy` |
 | `geom_sum_le_inv` | `GFNBounds.Doubling.Sojourn` |
+| `geometric_diffusionOp` | `GFNBounds.Doubling.GeomFamily` |
+| `geometric_exists_stat` | `GFNBounds.Doubling.GeomFamily` |
+| `geometric_ratio` | `GFNBounds.Doubling.GeomFamily` |
 | `geometric_sum` | `GFNBounds.Doubling.Unbounded` |
 | `getD_trajOf` | `GFNBounds.Doubling.WeightFull` |
 | `getLast` | `GFNBounds.Silva.Remarks` |
@@ -13749,6 +13881,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `halveIco_eq_filter` | `GFNBounds.Doubling.Escape` |
 | `halveIco_subset` | `GFNBounds.Doubling.Sojourn` |
 | `halve_halve_lt` | `GFNBounds.Doubling.Sojourn` |
+| `hardy` | `GFNBounds.Doubling.GeomHardy` |
 | `harmonic_window_ge` | `GFNBounds.Doubling.HarmonicWindow` |
 | `hasDerivAt_Gfun` | `GFNBounds.Doubling.Remarks` |
 | `hasDerivAt_abs_sub_one` | `GFNBounds.Balance.GradientFormulas` |
@@ -14352,6 +14485,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `lam_ge_prev` | `GFNBounds.Doubling.Truncation` |
 | `lam_isInvariant` | `GFNBounds.Graph.CycleRemarks` |
 | `lam_lad` | `GFNBounds.Doubling.Balance` |
+| `lam_le_dbl_half` | `GFNBounds.Doubling.GeomFamily` |
 | `lam_mul_dens` | `GFNBounds.Doubling.Adjoint` |
 | `lam_mul_dirac_eq` | `GFNBounds.Doubling.CutBalance` |
 | `lam_mul_retT_le` | `GFNBounds.Doubling.RecurrenceClass` |
@@ -14679,6 +14813,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `main_c7_congr` | `GFNBounds.Doubling.MainPackaging` |
 | `main_constant_determined` | `GFNBounds.Doubling.Main` |
 | `main_constant_functional` | `GFNBounds.Doubling.Main` |
+| `main_geometric` | `GFNBounds.Doubling.GeomFamily` |
 | `main_invariant_measure` | `GFNBounds.Doubling.Main` |
 | `main_invariant_unique` | `GFNBounds.Doubling.PhaseRecurrence` |
 | `main_irreducible` | `GFNBounds.Doubling.Main` |
@@ -15366,6 +15501,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `piInf` | `GFNBounds.Silva.Remarks` |
 | `piL2` | `GFNBounds.Doubling.AdjointL2` |
 | `piL2_apply` | `GFNBounds.Doubling.AdjointL2` |
+| `piL2_defect` | `GFNBounds.Doubling.GeomOperator` |
+| `piL2_eq_zero_iff` | `GFNBounds.Doubling.GeomOperator` |
 | `piL2_fixed_of_pstarL2_fixed` | `GFNBounds.Doubling.OperatorL2` |
 | `piL2_mul_densL2` | `GFNBounds.Doubling.AdjointL2` |
 | `piL2_mul_piL2` | `GFNBounds.Doubling.AdjointL2` |
@@ -15377,6 +15514,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `pinsker_pointwise` | `GFNBounds.Core.ILBoundFull` |
 | `pk` | `GFNBounds.Doubling.Sojourn` |
 | `pk_nonneg` | `GFNBounds.Doubling.Sojourn` |
+| `poincare` | `GFNBounds.Doubling.GeomPoincare` |
 | `poissonMap` | `GFNBounds.Graph.Morozov` |
 | `poissonMap_apply` | `GFNBounds.Graph.Morozov` |
 | `poisson_left` | `GFNBounds.Core.Mixing` |
@@ -15882,8 +16020,10 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `sqrtK` | `GFNBounds.Doubling.Truncation` |
 | `sqrtK_bhatK` | `GFNBounds.Doubling.TruncationBhat` |
 | `sqrtK_explicit` | `GFNBounds.Doubling.TruncationBhat` |
+| `sqrt_geom` | `GFNBounds.Doubling.GeomHardy` |
 | `sqrt_minOver_mul_abs_le_nrmL2` | `GFNBounds.Graph.Morozov` |
 | `sqrt_one_sub_le` | `GFNBounds.Balance.L2Toolkit` |
+| `sqrt_step` | `GFNBounds.Doubling.GeomHardy` |
 | `sqrt_two_le_two` | `GFNBounds.Balance.LocalConvergence` |
 | `sqrt_two_lt` | `GFNBounds.Doubling.Escape` |
 | `sqrt_two_pos` | `GFNBounds.Doubling.Escape` |
@@ -15962,6 +16102,10 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `stepCost_nonneg` | `GFNBounds.Doubling.Length` |
 | `stepCost_succ` | `GFNBounds.Doubling.Length` |
 | `stepCost_zero` | `GFNBounds.Doubling.Length` |
+| `stepVar` | `GFNBounds.Doubling.GeomPoincare` |
+| `stepVar_lad_ge` | `GFNBounds.Doubling.GeomPoincare` |
+| `stepVar_nonneg` | `GFNBounds.Doubling.GeomPoincare` |
+| `stepVar_src` | `GFNBounds.Doubling.GeomPoincare` |
 | `step_add` | `GFNBounds.Core.SamplingGeneral` |
 | `step_apply` | `GFNBounds.Core.SamplingGeneral` |
 | `step_cap_mul` | `GFNBounds.Balance.StableFrozenGeneral` |
@@ -16010,6 +16154,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `sub_one_le_mul_log` | `GFNBounds.Balance.Lojasiewicz` |
 | `sub_piL2_eq_tsum` | `GFNBounds.Doubling.OperatorFiniteSum` |
 | `sub_reach` | `GFNBounds.Core.FamilyUniversality` |
+| `sum_Icc_telescope` | `GFNBounds.Doubling.GeomPoincare` |
 | `sum_Ico_rpow_le` | `GFNBounds.Doubling.ExpansionSecond` |
 | `sum_Ico_rpow_sub_integral_le` | `GFNBounds.Doubling.Exponent` |
 | `sum_Ioo_symm` | `GFNBounds.Balance.TBvsDBClose` |
@@ -16048,10 +16193,12 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `sum_internal_row` | `GFNBounds.Graph.CycleDivergence` |
 | `sum_internal_snk` | `GFNBounds.Graph.SamplerWiring` |
 | `sum_internal_termFlow` | `GFNBounds.Graph.SamplerWiring` |
+| `sum_inv_sqrt_le` | `GFNBounds.Doubling.GeomHardy` |
 | `sum_ite_edge` | `GFNBounds.Balance.TBGradient` |
 | `sum_iterate_densAct` | `GFNBounds.Graph.MorozovDB` |
 | `sum_kern` | `GFNBounds.Doubling.TruncationStat` |
 | `sum_ladder_split` | `GFNBounds.Silva.Remarks` |
+| `sum_lam_div_sqrt_le` | `GFNBounds.Doubling.GeomHardy` |
 | `sum_law_true_le_one` | `GFNBounds.Core.NegativeControl` |
 | `sum_mul_div_sum` | `GFNBounds.Core.NegativeControl` |
 | `sum_neg_one_pow` | `GFNBounds.Balance.TBvsDB` |
@@ -16094,8 +16241,11 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `summable_lad` | `GFNBounds.Doubling.Unbounded` |
 | `summable_lam_abs` | `GFNBounds.Doubling.Unsolvable` |
 | `summable_lam_dens` | `GFNBounds.Doubling.Adjoint` |
+| `summable_lam_mul_defect` | `GFNBounds.Doubling.GeomPoincare` |
 | `summable_lam_mul_dirac` | `GFNBounds.Doubling.CutBalance` |
 | `summable_lam_mul_mul` | `GFNBounds.Doubling.Adjoint` |
+| `summable_lam_sq_pstar` | `GFNBounds.Doubling.GeomPoincare` |
+| `summable_lam_stepVar` | `GFNBounds.Doubling.GeomPoincare` |
 | `summable_mact` | `GFNBounds.Doubling.Balance` |
 | `summable_mass_dens` | `GFNBounds.Doubling.Adjoint` |
 | `summable_mass_pstar` | `GFNBounds.Doubling.Adjoint` |
@@ -16143,6 +16293,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `sv_zero` | `GFNBounds.Doubling.PhaseRecurrence` |
 | `swapPb` | `GFNBounds.Balance.TBGradient` |
 | `swapPb_not_full` | `GFNBounds.Balance.TBGradient` |
+| `table_geometric` | `GFNBounds.Doubling.PolicyTable` |
+| `table_polynomial` | `GFNBounds.Doubling.PolicyTable` |
+| `table_uniform` | `GFNBounds.Doubling.PolicyTable` |
 | `tailInd` | `GFNBounds.Doubling.PerCutIdentity` |
 | `tailInd_bounded` | `GFNBounds.Doubling.PerCutIdentity` |
 | `tailInd_lad` | `GFNBounds.Doubling.PerCutIdentity` |
@@ -16161,7 +16314,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `tailProb_tendsto_zero_of_ne_top` | `GFNBounds.Core.SamplingGeneral` |
 | `tailSeq` | `GFNBounds.Doubling.Tail` |
 | `tailSeq_eq_tailMass` | `GFNBounds.Doubling.Family` |
+| `tail_bound_of_ratio` | `GFNBounds.Doubling.GeomFamily` |
 | `tail_bounds` | `GFNBounds.Doubling.Tail` |
+| `tail_le_far` | `GFNBounds.Doubling.GeomFamily` |
 | `tail_lower` | `GFNBounds.Doubling.Truncation` |
 | `tail_ratio_ge` | `GFNBounds.Doubling.Tail` |
 | `tail_ratio_le` | `GFNBounds.Doubling.Tail` |
@@ -16356,6 +16511,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `tsum_pstar_eq` | `GFNBounds.Doubling.Unsolvable` |
 | `tsum_pstar_eq_of_nonneg` | `GFNBounds.Doubling.Unsolvable` |
 | `tsum_pstar_le` | `GFNBounds.Doubling.LpLayer` |
+| `tsum_stepVar_le` | `GFNBounds.Doubling.GeomPoincare` |
 | `tsum_sub_pstar` | `GFNBounds.Doubling.Setting` |
 | `tv` | `GFNBounds.Silva.Basic` |
 | `tvD` | `GFNBounds.Core.StableBound` |

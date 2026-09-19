@@ -30,6 +30,10 @@
     "GFNBounds.Doubling.Expansion",
     "GFNBounds.Doubling.Exponent",
     "GFNBounds.Doubling.Family",
+    "GFNBounds.Doubling.GeomFamily",
+    "GFNBounds.Doubling.GeomHardy",
+    "GFNBounds.Doubling.GeomOperator",
+    "GFNBounds.Doubling.GeomPoincare",
     "GFNBounds.Doubling.FixedPoints",
     "GFNBounds.Doubling.FixedPointsP",
     "GFNBounds.Doubling.HarmonicWindow",
@@ -48,6 +52,7 @@
     "GFNBounds.Doubling.PhaseEmpty",
     "GFNBounds.Doubling.PhaseExists",
     "GFNBounds.Doubling.PointwiseInv",
+    "GFNBounds.Doubling.PolicyTable",
     "GFNBounds.Doubling.Product",
     "GFNBounds.Doubling.R0Bound",
     "GFNBounds.Doubling.Ramp",
@@ -166,7 +171,7 @@
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 158,
+   "lines": 163,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -290,10 +295,12 @@
     "GFNBounds.Balance.FreezingGradientBridge",
     "GFNBounds.Balance.GdDiffusionGeneral",
     "GFNBounds.Balance.StableFrozenGeneral",
-    "GFNBounds.Balance.TBvsDBClose"
+    "GFNBounds.Balance.TBvsDBClose",
+    "GFNBounds.Doubling.GeomFamily",
+    "GFNBounds.Doubling.PolicyTable"
    ],
    "variables": [],
-   "lines": 2354,
+   "lines": 2376,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -31766,6 +31773,478 @@
    "root_reachable": true
   },
   {
+   "file": "GFNBounds/Doubling/GeomFamily.lean",
+   "title": "The geometric row of the policy table: `ε(j) = a ρ^j` has a finite diffusion constant",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.GeomOperator",
+    "GFNBounds.Doubling.PhaseExists"
+   ],
+   "variables": [
+    "variable {S : Setting}",
+    "variable (L : Stat S none)",
+    "variable {θ : ℝ} {i₀ : ℕ}",
+    "variable {a ρ : ℝ}"
+   ],
+   "lines": 313,
+   "decls": [
+    {
+     "name": "dbl",
+     "full": "GFNBounds.Doubling.Stat.dbl",
+     "kind": "def",
+     "line": 49,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def dbl (i : ℕ) : ℝ",
+     "doc": "`a_i = λ_i ε(i)`, the mass doubling out of `i`."
+    },
+    {
+     "name": "dbl_nonneg",
+     "full": "GFNBounds.Doubling.Stat.dbl_nonneg",
+     "kind": "theorem",
+     "line": 51,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbl_nonneg {i : ℕ} (hi : 1 ≤ i) : 0 ≤ L.dbl i",
+     "doc": ""
+    },
+    {
+     "name": "decr_le",
+     "full": "GFNBounds.Doubling.Stat.decr_le",
+     "kind": "theorem",
+     "line": 55,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem decr_le {i : ℕ} (hi : S.d < i) : L.lam (.lad (i + 1)) * (1 - S.eps (i + 1)) ≤ L.lam (.lad i)",
+     "doc": "**Step 1.** `λ_{i+1}(1 − ε(i+1)) ≤ λ_i` past `d`."
+    },
+    {
+     "name": "dbl_step",
+     "full": "GFNBounds.Doubling.Stat.dbl_step",
+     "kind": "theorem",
+     "line": 79,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbl_step (hθ0 : 0 ≤ θ) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) {i : ℕ} (hi : i₀ ≤ i) : L.dbl (i + 1) ≤ θ * L.dbl i",
+     "doc": "`a_{i+1} ≤ θ a_i` past `i₀`."
+    },
+    {
+     "name": "dbl_geom",
+     "full": "GFNBounds.Doubling.Stat.dbl_geom",
+     "kind": "theorem",
+     "line": 93,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbl_geom (hθ0 : 0 ≤ θ) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) {i : ℕ} (hi : i₀ ≤ i) : ∀ t : ℕ, L.dbl (i + t) ≤ θ ^ t * L.dbl i",
+     "doc": ""
+    },
+    {
+     "name": "dbl_half_le",
+     "full": "GFNBounds.Doubling.Stat.dbl_half_le",
+     "kind": "theorem",
+     "line": 106,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dbl_half_le {m : ℕ} (hm : S.d < m) (h2 : 2 ≤ m) : L.dbl ((m + 1) / 2) ≤ L.lam (.lad m)",
+     "doc": "**Step 2, lower half.** `a_{c(m)} ≤ λ_m`."
+    },
+    {
+     "name": "lam_le_dbl_half",
+     "full": "GFNBounds.Doubling.Stat.lam_le_dbl_half",
+     "kind": "theorem",
+     "line": 119,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lam_le_dbl_half (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) {m : ℕ} (hm : S.d < m) (hc : i₀ ≤ (m + 1) / 2) : (1 - S.epsMax) * L.lam (.lad m) ≤ L.dbl ((m + 1) / 2) / (1 - θ)",
+     "doc": "**Step 2, upper half.** `(1 − ε_max) λ_m ≤ a_{c(m)}/(1 − θ)`."
+    },
+    {
+     "name": "tail_le_far",
+     "full": "GFNBounds.Doubling.Stat.tail_le_far",
+     "kind": "theorem",
+     "line": 142,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tail_le_far (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) {r : ℕ} (hr : 2 * i₀ ≤ r) : L.tailMass r ≤ 2 / ((1 - θ) ^ 2 * (1 - S.epsMax)) * L.lam (.lad r)",
+     "doc": "**Step 3.** Past `R₀ = 2 i₀`, `L(r) ≤ 2 λ_r / ((1 − θ)²(1 − ε_max))`."
+    },
+    {
+     "name": "tail_bound_of_ratio",
+     "full": "GFNBounds.Doubling.Stat.tail_bound_of_ratio",
+     "kind": "theorem",
+     "line": 198,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tail_bound_of_ratio (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) : ∃ B : ℝ, ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)",
+     "doc": "**Steps 3–4."
+    },
+    {
+     "name": "exists_diffusionOp_of_ratio",
+     "full": "GFNBounds.Doubling.Stat.exists_diffusionOp_of_ratio",
+     "kind": "theorem",
+     "line": 218,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_diffusionOp_of_ratio (hθ0 : 0 ≤ θ) (hθ1 : θ < 1) (hi0 : S.d < i₀) (hrat : ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ θ * (1 - S.eps (i + 1)) * S.eps i) : ∃ R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) * R = 1 ∧ R * (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) = 1 ∧ (1 - L.pstarL2 (rowOnChain_none S)) * (R - L.piL2) = 1 - L.piL2 ∧ (R - L.piL2) * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2 ∧ L.piL2 * (R - L.piL2) = 0 ∧ (R - L.piL2) * L.piL2 = 0",
+     "doc": "**`B̂ < +∞` under the ratio condition.**"
+    },
+    {
+     "name": "geometric_ratio",
+     "full": "GFNBounds.Doubling.geometric_ratio",
+     "kind": "theorem",
+     "line": 239,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem geometric_ratio (ha : 0 < a) (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) : ∃ i₀ : ℕ, S.d < i₀ ∧ ∀ i, i₀ ≤ i → S.eps (i + 1) ≤ (1 + ρ) / 2 * (1 - S.eps (i + 1)) * S.eps i",
+     "doc": "The geometric family satisfies the ratio condition with `θ = (1 + ρ)/2`."
+    },
+    {
+     "name": "geometric_exists_stat",
+     "full": "GFNBounds.Doubling.geometric_exists_stat",
+     "kind": "theorem",
+     "line": 265,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem geometric_exists_stat (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) : Nonempty (Stat S none)",
+     "doc": "**Positive recurrence of the geometric family**: the loop closure carries an invariant probability."
+    },
+    {
+     "name": "main_geometric",
+     "full": "GFNBounds.Doubling.main_geometric",
+     "kind": "theorem",
+     "line": 288,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem main_geometric (ha : 0 < a) (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) : Nonempty (Stat S none) ∧ ∀ L : Stat S none, ∃ R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) * R = 1 ∧ R * (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) = 1 ∧ (1 - L.pstarL2 (rowOnChain_none S)) * (R - L.piL2) = 1 - L.piL2 ∧ (R - L.piL2) * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2 ∧ L.piL2 * (R - L.piL2) = 0 ∧ (R - L.piL2) * L.piL2 = 0",
+     "doc": "**The geometric row of the policy table.** For the doubling probability `ε(j) = a ρ^j`, `0 < ρ < 1`, the loop-closed backward chain on the infinite doubling graph is positive recurrent, and at its invariant probability `Id − P⋆ + Π` is invertible on `L²(λ)`, the diffusion operator `S = (Id − P⋆ + Π)^{-1} − Π` satisfying `eq:doubling_resolvent`: `B̂ = ‖S‖ < +∞`."
+    },
+    {
+     "name": "geometric_diffusionOp",
+     "full": "GFNBounds.Doubling.geometric_diffusionOp",
+     "kind": "theorem",
+     "line": 304,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem geometric_diffusionOp (ha : 0 < a) (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) (L : Stat S none) : ∃ Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, Sop * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2",
+     "doc": "**`B̂ < +∞`, in the form `no_diffusionOp` negates.** Some bounded `S` on `L²(λ)` has `S(Id − P⋆) = Id − Π`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/GeomHardy.lean",
+   "title": "A weighted discrete Hardy inequality under a geometric tail",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "Mathlib"
+   ],
+   "variables": [
+    "variable {lam T D : ℕ → ℝ} {q B : ℝ}"
+   ],
+   "lines": 208,
+   "decls": [
+    {
+     "name": "sqrt_step",
+     "full": "GFNBounds.Doubling.Hardy.sqrt_step",
+     "kind": "theorem",
+     "line": 36,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sqrt_step (hq0 : 0 ≤ q) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) {x : ℕ} (hx : 1 ≤ x) : Real.sqrt (T (x + 1)) ≤ Real.sqrt q * Real.sqrt (T x)",
+     "doc": "`√T_{x+1} ≤ √q · √T_x`."
+    },
+    {
+     "name": "sqrt_geom",
+     "full": "GFNBounds.Doubling.Hardy.sqrt_geom",
+     "kind": "theorem",
+     "line": 42,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sqrt_geom (hq0 : 0 ≤ q) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) {k : ℕ} (hk : 1 ≤ k) : ∀ j : ℕ, Real.sqrt (T (k + j)) ≤ Real.sqrt q ^ j * Real.sqrt (T k)",
+     "doc": "`√T_{k+j} ≤ (√q)^j √T_k`."
+    },
+    {
+     "name": "geom_le",
+     "full": "GFNBounds.Doubling.Hardy.geom_le",
+     "kind": "theorem",
+     "line": 56,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem geom_le {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) (n : ℕ) : ∑ j ∈ range n, r ^ j ≤ 1 / (1 - r)",
+     "doc": "`Σ_{j<n} r^j ≤ 1/(1 − r)` for `0 ≤ r < 1`."
+    },
+    {
+     "name": "sum_inv_sqrt_le",
+     "full": "GFNBounds.Doubling.Hardy.sum_inv_sqrt_le",
+     "kind": "theorem",
+     "line": 64,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_inv_sqrt_le (hq0 : 0 ≤ q) (hq1 : q < 1) (hTpos : ∀ k, 1 ≤ k → 0 < T k) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) : ∀ x : ℕ, 1 ≤ x → ∑ k ∈ Icc 1 x, 1 / Real.sqrt (T k) ≤ 1 / ((1 - Real.sqrt q) * Real.sqrt (T x))",
+     "doc": "**The inner sum.** `Σ_{k=1}^{x} 1/√T_k ≤ 1/((1 − √q)√T_x)`."
+    },
+    {
+     "name": "sum_lam_div_sqrt_le",
+     "full": "GFNBounds.Doubling.Hardy.sum_lam_div_sqrt_le",
+     "kind": "theorem",
+     "line": 99,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_lam_div_sqrt_le (hq0 : 0 ≤ q) (hq1 : q < 1) (hTpos : ∀ k, 1 ≤ k → 0 < T k) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) (hlamT : ∀ k, 1 ≤ k → lam k ≤ T k) {k : ℕ} (hk : 1 ≤ k) (N : ℕ) : ∑ x ∈ Icc k N, lam x / Real.sqrt (T x) ≤ Real.sqrt (T k) / (1 - Real.sqrt q)",
+     "doc": "**The outer sum.** `Σ_{x=k}^{N} λ_x/√T_x ≤ √T_k/(1 − √q)`."
+    },
+    {
+     "name": "hardy",
+     "full": "GFNBounds.Doubling.Hardy.hardy",
+     "kind": "theorem",
+     "line": 127,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hardy (hq0 : 0 ≤ q) (hq1 : q < 1) (hTpos : ∀ k, 1 ≤ k → 0 < T k) (hTq : ∀ k, 1 ≤ k → T (k + 1) ≤ q * T k) (hlam0 : ∀ k, 0 ≤ lam k) (hlamT : ∀ k, 1 ≤ k → lam k ≤ T k) (hTB : ∀ k, 1 ≤ k → T k ≤ B * lam k) (N : ℕ) : ∑ x ∈ Icc 1 N, lam x * (∑ k ∈ Icc 1 x, D k) ^ 2 ≤ B / (1 - Real.sqrt q) ^ 2 * ∑ k ∈ Icc 1 N, lam k * D k ^ 2",
+     "doc": "**The weighted discrete Hardy inequality.** `Σ_{x=1}^{N} λ_x (Σ_{k=1}^{x} D_k)² ≤ B/(1 − √q)² · Σ_{k=1}^{N} λ_k D_k²`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/GeomOperator.lean",
+   "title": "A finite diffusion constant on the infinite doubling graph",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.GeomPoincare",
+    "GFNBounds.Doubling.OperatorFinite"
+   ],
+   "variables": [
+    "variable {S : Setting}",
+    "variable (L : Stat S none)"
+   ],
+   "lines": 152,
+   "decls": [
+    {
+     "name": "coerK_nonneg",
+     "full": "GFNBounds.Doubling.Stat.coerK_nonneg",
+     "kind": "theorem",
+     "line": 40,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coerK_nonneg {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) : 0 ≤ L.coerK B",
+     "doc": ""
+    },
+    {
+     "name": "piL2_defect",
+     "full": "GFNBounds.Doubling.Stat.piL2_defect",
+     "kind": "theorem",
+     "line": 53,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem piL2_defect (F : Lp ℝ 2 L.mu) : L.piL2 (L.defect F) = 0",
+     "doc": "`Π` kills every defect."
+    },
+    {
+     "name": "piL2_eq_zero_iff",
+     "full": "GFNBounds.Doubling.Stat.piL2_eq_zero_iff",
+     "kind": "theorem",
+     "line": 57,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem piL2_eq_zero_iff {F : Lp ℝ 2 L.mu} : L.piL2 F = 0 ↔ F ∈ L.kerPi",
+     "doc": ""
+    },
+    {
+     "name": "defectRange_eq_kerPi",
+     "full": "GFNBounds.Doubling.Stat.defectRange_eq_kerPi",
+     "kind": "theorem",
+     "line": 67,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem defectRange_eq_kerPi {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) : L.defectRange = L.kerPi",
+     "doc": "**The range of `Id − P⋆` is `ker Π`.**"
+    },
+    {
+     "name": "exists_inverse_of_tail",
+     "full": "GFNBounds.Doubling.Stat.exists_inverse_of_tail",
+     "kind": "theorem",
+     "line": 89,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_inverse_of_tail {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) : ∃ R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) * R = 1 ∧ R * (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) = 1",
+     "doc": "**`Id − P⋆ + Π` is invertible on `L²(λ)`.**"
+    },
+    {
+     "name": "exists_diffusionOp_of_tail",
+     "full": "GFNBounds.Doubling.Stat.exists_diffusionOp_of_tail",
+     "kind": "theorem",
+     "line": 136,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_diffusionOp_of_tail {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) : ∃ R : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) * R = 1 ∧ R * (1 - L.pstarL2 (rowOnChain_none S) + L.piL2) = 1 ∧ (1 - L.pstarL2 (rowOnChain_none S)) * (R - L.piL2) = 1 - L.piL2 ∧ (R - L.piL2) * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2 ∧ L.piL2 * (R - L.piL2) = 0 ∧ (R - L.piL2) * L.piL2 = 0",
+     "doc": "**A finite diffusion constant.** Under `L(k) ≤ B λ_k`, `Id − P⋆ + Π` is invertible on `L²(λ)` and `S := (Id − P⋆ + Π)^{-1} − Π` satisfies `eq:doubling_resolvent`: `(Id − P⋆)S = S(Id − P⋆) = Id − Π` and `ΠS = SΠ = 0`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/GeomPoincare.lean",
+   "title": "Coercivity of `Id − P⋆` on `ker Π` under a geometric tail",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.GeomHardy",
+    "GFNBounds.Doubling.AdjointL2"
+   ],
+   "variables": [
+    "variable {S : Setting}",
+    "variable (L : Stat S none)",
+    "variable {L}",
+    "variable (L)"
+   ],
+   "lines": 348,
+   "decls": [
+    {
+     "name": "stepVar",
+     "full": "GFNBounds.Doubling.Stat.stepVar",
+     "kind": "def",
+     "line": 46,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def stepVar (f : St → ℝ) (x : St) : ℝ",
+     "doc": "The one-step variance `E_x[(f(X₁) − f(x))²] = P⋆(f²)(x) − 2f(x)P⋆f(x) + f(x)²`."
+    },
+    {
+     "name": "stepVar_nonneg",
+     "full": "GFNBounds.Doubling.Stat.stepVar_nonneg",
+     "kind": "theorem",
+     "line": 49,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stepVar_nonneg (f : St → ℝ) (x : St) : 0 ≤ stepVar (S := S) f x",
+     "doc": ""
+    },
+    {
+     "name": "stepVar_lad_ge",
+     "full": "GFNBounds.Doubling.Stat.stepVar_lad_ge",
+     "kind": "theorem",
+     "line": 56,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stepVar_lad_ge (f : St → ℝ) {k : ℕ} (hk : 1 ≤ k) : (1 - S.eps k) * (f (.lad k) - f (.lad (k - 1))) ^ 2 ≤ stepVar (S := S) f (.lad k)",
+     "doc": "At a ladder state the decrement edge alone contributes `(1 − ε_k)(f(k) − f(k−1))²`."
+    },
+    {
+     "name": "stepVar_src",
+     "full": "GFNBounds.Doubling.Stat.stepVar_src",
+     "kind": "theorem",
+     "line": 65,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stepVar_src (f : St → ℝ) : stepVar (S := S) f (.lad 0) = (f .sink - f (.lad 0)) ^ 2",
+     "doc": "At the source the wrap `s₀ → s_f` contributes `(f(s_f) − f(s₀))²`."
+    },
+    {
+     "name": "summable_lam_sq_pstar",
+     "full": "GFNBounds.Doubling.Stat.summable_lam_sq_pstar",
+     "kind": "theorem",
+     "line": 75,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem summable_lam_sq_pstar {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) : Summable fun x => L.lam x * pstar S none (fun y => f y ^ 2) x",
+     "doc": ""
+    },
+    {
+     "name": "summable_lam_mul_defect",
+     "full": "GFNBounds.Doubling.Stat.summable_lam_mul_defect",
+     "kind": "theorem",
+     "line": 79,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem summable_lam_mul_defect {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) : Summable fun x => L.lam x * f x * (f x - pstar S none f x)",
+     "doc": ""
+    },
+    {
+     "name": "summable_lam_stepVar",
+     "full": "GFNBounds.Doubling.Stat.summable_lam_stepVar",
+     "kind": "theorem",
+     "line": 96,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem summable_lam_stepVar {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) : Summable fun x => L.lam x * stepVar (S := S) f x",
+     "doc": ""
+    },
+    {
+     "name": "tsum_stepVar_le",
+     "full": "GFNBounds.Doubling.Stat.tsum_stepVar_le",
+     "kind": "theorem",
+     "line": 109,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tsum_stepVar_le {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) : ∑' x, L.lam x * stepVar (S := S) f x ≤ 2 * ∑' x, L.lam x * f x * (f x - pstar S none f x)",
+     "doc": "**The Dirichlet form is dominated by `2⟨f, (Id − P⋆)f⟩_λ`.**"
+    },
+    {
+     "name": "dirichlet_partial",
+     "full": "GFNBounds.Doubling.Stat.dirichlet_partial",
+     "kind": "theorem",
+     "line": 123,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem dirichlet_partial {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) (N : ℕ) : ∑ k ∈ Icc 1 N, L.lam (.lad k) * (1 - S.eps k) * (f (.lad k) - f (.lad (k - 1))) ^ 2 + L.lam (.lad 0) * (f .sink - f (.lad 0)) ^ 2 ≤ 2 * ∑' x, L.lam x * f x * (f x - pstar S none f x)",
+     "doc": "**The decrement part of the Dirichlet form, partial sums.**"
+    },
+    {
+     "name": "sum_Icc_telescope",
+     "full": "GFNBounds.Doubling.Stat.sum_Icc_telescope",
+     "kind": "theorem",
+     "line": 158,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sum_Icc_telescope (f : St → ℝ) (x : ℕ) : ∑ k ∈ Icc 1 x, (f (.lad k) - f (.lad (k - 1))) = f (.lad x) - f (.lad 0)",
+     "doc": "`Σ_{k=1}^{x} (f(k) − f(k−1)) = f(x) − f(0)`."
+    },
+    {
+     "name": "poincare",
+     "full": "GFNBounds.Doubling.Stat.poincare",
+     "kind": "theorem",
+     "line": 169,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem poincare {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) {f : St → ℝ} (hf2 : Summable fun x => L.lam x * f x ^ 2) (hf1 : Summable fun x => L.lam x * f x) (hmean : ∑' x, L.lam x * f x = 0) : ∑' x, L.lam x * f x ^ 2 ≤ (2 * B / ((1 - Real.sqrt (1 - 1 / B)) ^ 2 * (1 - S.epsMax)) + 2 / L.lam (.lad 0)) * ∑' x, L.lam x * f x * (f x - pstar S none f x)",
+     "doc": "**The Poincaré inequality.** Under `L(k) ≤ B λ_k`, a mean-zero `f` of `L²(λ)` has `Σ λ f² ≤ K Σ λ f(f − P⋆f)`."
+    },
+    {
+     "name": "coerK",
+     "full": "GFNBounds.Doubling.Stat.coerK",
+     "kind": "def",
+     "line": 293,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def coerK (B : ℝ) : ℝ",
+     "doc": "The coercivity constant."
+    },
+    {
+     "name": "coercive",
+     "full": "GFNBounds.Doubling.Stat.coercive",
+     "kind": "theorem",
+     "line": 298,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem coercive {B : ℝ} (hB : ∀ k, 1 ≤ k → L.tailMass k ≤ B * L.lam (.lad k)) {F : Lp ℝ 2 L.mu} (hF : F ∈ L.kerPi) : ‖F‖ ≤ L.coerK B * ‖L.defect F‖",
+     "doc": "**Coercivity of `Id − P⋆` on `ker Π`.** Under `L(k) ≤ B λ_k`, every mean-zero class `F` of `L²(λ)` has `‖F‖ ≤ K‖(Id − P⋆)F‖`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
+   "root_reachable": true
+  },
+  {
    "file": "GFNBounds/Doubling/HarmonicWindow.lean",
    "title": "`eq:doubling_windowsums`: two harmonic window sums, with explicit constants",
    "labels": [
@@ -36730,6 +37209,56 @@
    ],
    "library": "strict",
    "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/PolicyTable.lean",
+   "title": "The policy table of the doubling graph",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.GeomFamily",
+    "GFNBounds.Doubling.Main",
+    "GFNBounds.Doubling.PhaseRecurrence"
+   ],
+   "variables": [
+    "variable {S : Setting}"
+   ],
+   "lines": 62,
+   "decls": [
+    {
+     "name": "table_polynomial",
+     "full": "GFNBounds.Doubling.table_polynomial",
+     "kind": "theorem",
+     "line": 38,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem table_polynomial {c s : ℝ} (hc : 0 < c) (hs : 0 ≤ s) (heps : ∀ j, S.eps j = epsCS c s j) (L : Stat S none) : ¬ ∃ Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, Sop * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2",
+     "doc": "**Polynomial row.** For `ε(j) = c/(j+1)^s`, `s ≥ 0`, at every invariant probability no bounded `S` on `L²(λ)` has `S(Id − P⋆) = Id − Π`: `B̂ = +∞`."
+    },
+    {
+     "name": "table_uniform",
+     "full": "GFNBounds.Doubling.table_uniform",
+     "kind": "theorem",
+     "line": 46,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem table_uniform (heps : ∀ j, S.eps j = 1 / 2) : IsTransient S none ∧ IsEmpty (Stat S none)",
+     "doc": "**Uniform row.** For `ε ≡ 1/2` the loop-closed backward chain is transient and carries no invariant probability."
+    },
+    {
+     "name": "table_geometric",
+     "full": "GFNBounds.Doubling.table_geometric",
+     "kind": "theorem",
+     "line": 55,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem table_geometric {a ρ : ℝ} (ha : 0 < a) (hρ0 : 0 < ρ) (hρ1 : ρ < 1) (heps : ∀ j, 1 ≤ j → S.eps j = a * ρ ^ j) : Nonempty (Stat S none) ∧ ∀ L : Stat S none, ∃ Sop : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu, Sop * (1 - L.pstarL2 (rowOnChain_none S)) = 1 - L.piL2",
+     "doc": "**Geometric row.** For `ε(j) = a ρ^j`, `0 < ρ < 1`, the chain is positive recurrent and, at every invariant probability, some bounded `S` on `L²(λ)` has `S(Id − P⋆) = Id − Π`: `B̂ < +∞`."
+    }
+   ],
+   "library": "strict",
+   "tracked": false,
    "root_reachable": true
   },
   {

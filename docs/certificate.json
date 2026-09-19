@@ -3,9 +3,23 @@
   "source_date": "2026-09-19T14:10:11Z",
   "commit": "f51425e1b2c3d79abf342fd678fd83278f2e602d",
   "commit_short": "f51425e",
-  "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "branch": "lane/geometric-gap",
+  "dirty": true,
+  "dirty_files": [
+    "GFNBounds.lean",
+    "GFNBounds/Audit.lean",
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json",
+    "paper-map.json",
+    "GFNBounds/Doubling/GeomFamily.lean",
+    "GFNBounds/Doubling/GeomHardy.lean",
+    "GFNBounds/Doubling/GeomOperator.lean",
+    "GFNBounds/Doubling/GeomPoincare.lean",
+    "GFNBounds/Doubling/PolicyTable.lean"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -38,15 +52,15 @@
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 5661,
+    "declarations": 5703,
     "by_namespace": {
+      "GFNBounds.Doubling": 1730,
       "GFNBounds.Balance": 1724,
-      "GFNBounds.Doubling": 1688,
       "GFNBounds.Graph": 992,
       "GFNBounds.Core": 946,
       "GFNBounds.Silva": 311
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "5fa862f54296ee00713b29834b8a24ca7c5af7eca08a7482c4439d8cac0812a8"
+    "sha256": "6d7a496159423435c7d3d62e1a1ce6469c1fcdc3066b1d729a092de7138f1582"
   }
 }

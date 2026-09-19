@@ -106,6 +106,7 @@ import GFNBounds.Balance.LiftGeneralMixing
 import GFNBounds.Doubling.OperatorGeneral
 import GFNBounds.Balance.TBHessian
 import GFNBounds.Balance.TBvsDB
+import GFNBounds.Balance.FreezingGeneral2
 
 /-!
 # Axiom audit
@@ -2056,3 +2057,86 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.TBvsDB.sigmaBar_six
 #print axioms GFNBounds.Doubling.TBvsDB.row8
 #print axioms GFNBounds.Doubling.TBvsDB.exists_setting_six
+-- `prop:nonlinear_freezing, prop:no_distant_equilibrium, theo:global_dichotomy_full on a measurable space` — GFNBounds/Balance/FreezingGeneral2.lean
+#print axioms GFNBounds.Balance.General.ratioG
+#print axioms GFNBounds.Balance.General.potG
+#print axioms GFNBounds.Balance.General.gradDensityG
+#print axioms GFNBounds.Balance.General.BalancedG
+#print axioms GFNBounds.Balance.General.measurable_ratioG
+#print axioms GFNBounds.Balance.General.absolutelyContinuous_comp
+#print axioms GFNBounds.Balance.General.comp_absolutelyContinuous_self
+#print axioms GFNBounds.Balance.General.ratioG_pos
+#print axioms GFNBounds.Balance.General.ratioG_eq_one_iff
+#print axioms GFNBounds.Balance.General.FirstVariationSetting
+#print axioms GFNBounds.Balance.General.aestronglyMeasurable_gd_comp
+#print axioms GFNBounds.Balance.General.FirstVariationSetting.ratio_pos_lam
+#print axioms GFNBounds.Balance.General.FirstVariationSetting.bound
+#print axioms GFNBounds.Balance.General.FirstVariationSetting.aestronglyMeasurable_pot
+#print axioms GFNBounds.Balance.General.FirstVariationSetting.memLp_pot
+#print axioms GFNBounds.Balance.General.FirstVariationSetting.memLp_rpot
+#print axioms GFNBounds.Balance.General.FirstVariationSetting.integrable_pot
+#print axioms GFNBounds.Balance.General.FirstVariationSetting.integrable_rpot
+#print axioms GFNBounds.Balance.General.integral_funAct_eq
+#print axioms GFNBounds.Balance.General.integral_gradDensityG
+#print axioms GFNBounds.Balance.General.integrand_nonpos
+#print axioms GFNBounds.Balance.General.mass_nonpos
+#print axioms GFNBounds.Balance.General.mass_eq_zero_iff
+#print axioms GFNBounds.Balance.General.balanced_of_criticalG
+#print axioms GFNBounds.Balance.General.gradDensityG_eq_zero_of_band
+#print axioms GFNBounds.Balance.General.lossG
+#print axioms GFNBounds.Balance.General.lineG
+#print axioms GFNBounds.Balance.General.FirstVariationFull
+#print axioms GFNBounds.Balance.General.IsCriticalAlong
+#print axioms GFNBounds.Balance.General.isCriticalAlong_of_ae_zero
+#print axioms GFNBounds.Balance.General.integral_mul_eq_zero_of_critical
+#print axioms GFNBounds.Balance.General.toReal_rnDeriv_comp_eq
+#print axioms GFNBounds.Balance.General.integral_gradDensityG_mul_dens
+#print axioms GFNBounds.Balance.General.ratioG_smul
+#print axioms GFNBounds.Balance.General.lossG_smul
+#print axioms GFNBounds.Balance.General.sq_integral_le_integral_sq
+#print axioms GFNBounds.Balance.General.ErgodicG
+#print axioms GFNBounds.Balance.General.ergodicG_const
+#print axioms GFNBounds.Balance.General.balancedG_iff_const
+#print axioms GFNBounds.Balance.General.mass_le_nrm_and_eq_iff_balanced
+#print axioms GFNBounds.Balance.General.IsGradientFlowG
+#print axioms GFNBounds.Balance.General.inner_Lp_eq
+#print axioms GFNBounds.Balance.General.norm_const_of_flow
+#print axioms GFNBounds.Balance.General.oneLp
+#print axioms GFNBounds.Balance.General.inner_oneLp
+#print axioms GFNBounds.Balance.General.mass_hasDerivAt_of_flow
+#print axioms GFNBounds.Balance.General.mass_monotoneOn_of_flow
+#print axioms GFNBounds.Balance.General.pertG
+#print axioms GFNBounds.Balance.General.wtG
+#print axioms GFNBounds.Balance.General.pertG.sigmaFinite
+#print axioms GFNBounds.Balance.General.wtG.sigmaFinite
+#print axioms GFNBounds.Balance.General.toReal_rnDeriv_wt_pert
+#print axioms GFNBounds.Balance.General.freezing_three_ae_bound
+#print axioms GFNBounds.Balance.General.freezing_three_eLpNorm_le
+#print axioms GFNBounds.Balance.General.nonneg_of_ae_le
+#print axioms GFNBounds.Balance.General.freezing_three_flow
+#print axioms GFNBounds.Balance.General.ae_le_linfty
+#print axioms GFNBounds.Balance.General.nonlinear_freezing_three_general
+#print axioms GFNBounds.Balance.General.no_distant_equilibrium_one_general
+#print axioms GFNBounds.Balance.General.balanced_of_isCriticalAlong
+#print axioms GFNBounds.Balance.General.no_distant_equilibrium_two_general
+#print axioms GFNBounds.Balance.General.no_distant_equilibrium_two_flow
+#print axioms GFNBounds.Balance.General.nonlinear_freezing_one_general
+#print axioms GFNBounds.Balance.General.global_dichotomy_full_general
+#print axioms GFNBounds.Balance.General.freezing_remark_four_general
+#print axioms GFNBounds.Balance.General.isFiniteMeasure_pertG
+#print axioms GFNBounds.Balance.General.rnDeriv_pertG
+#print axioms GFNBounds.Balance.General.ratioG_const_pertG
+#print axioms GFNBounds.Balance.General.measure_univ_pertG_toReal
+#print axioms GFNBounds.Balance.General.firstVariationSetting_const_pertG
+#print axioms GFNBounds.Balance.General.boolUnif
+#print axioms GFNBounds.Balance.General.boolUnif_singleton
+#print axioms GFNBounds.Balance.General.boolH
+#print axioms GFNBounds.Balance.General.boolH_abs
+#print axioms GFNBounds.Balance.General.integral_boolH
+#print axioms GFNBounds.Balance.General.ratioG_boolH
+#print axioms GFNBounds.Balance.General.bool_witness
+#print axioms GFNBounds.Balance.General.toReal_rnDeriv_pos_of_ac
+#print axioms GFNBounds.Balance.General.bool_mass_neg
+#print axioms GFNBounds.Balance.General.bool_frozen_flow
+#print axioms GFNBounds.Balance.General.freezing_last_instance
+#print axioms GFNBounds.Balance.General.freezing_no_time_bound

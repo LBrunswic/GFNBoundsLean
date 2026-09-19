@@ -150,4 +150,5 @@ import GFNBounds.Balance.LiftGeneralMixing
 import GFNBounds.Doubling.OperatorGeneral
 import GFNBounds.Balance.TBHessian
 import GFNBounds.Balance.TBvsDB
+import GFNBounds.Balance.FreezingGeneral2
 import GFNBounds.Audit

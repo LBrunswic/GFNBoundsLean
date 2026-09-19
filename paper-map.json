@@ -1,7 +1,7 @@
 {
   "paper": {
     "path": "/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex",
-    "git_commit": "c09a158",
+    "git_commit": "cbec716",
     "appendix": "H"
   },
   "statements": [
@@ -196,7 +196,9 @@
         "GFNBounds/Doubling/RayleighBridge.lean",
         "GFNBounds/Doubling/ConstantFunctional.lean",
         "GFNBounds/Doubling/MainPackaging.lean",
-        "GFNBounds/Doubling/TruncationBhat.lean"
+        "GFNBounds/Doubling/TruncationBhat.lean",
+        "GFNBounds/Doubling/PhaseRecurrence.lean",
+        "GFNBounds/Doubling/RecurrenceClass.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.main_unbounded",
@@ -224,11 +226,15 @@
         "GFNBounds.Doubling.main_rate_explicit",
         "GFNBounds.Doubling.main_c7_congr",
         "GFNBounds.Doubling.main_truncation_explicit",
-        "GFNBounds.Doubling.main_truncation"
+        "GFNBounds.Doubling.main_truncation",
+        "GFNBounds.Doubling.main_phase_classes",
+        "GFNBounds.Doubling.main_invariant_unique",
+        "GFNBounds.Doubling.stat_unique_none",
+        "GFNBounds.Doubling.Stat.kac_eq"
       ],
-      "status": "partial",
-      "bucket": "C",
-      "scope_notes": "PARTIAL, bucket C. 2026-09-13 (Wave 1, MainPackaging.lean) closes the packaging: the truncation has K + 2 states (card_chainFinset); c7 is certified to depend only on (c, d, lambda_1..lambda_{2m0-1}) by the congruence Decay.c7Of_congr, the block read being 1 <= j < 2m0 as the paper's proof uses (the index 2m0 the statement names is not read); c8, K0 are formulas in (D, d, jbar) with binder order enforced by main_truncation (TruncationBhat.lean). c4 = 16 c tau and c5 = 6/gamma^2 are the library's effective constants. OPEN, and why the row stays C: item (1)'s recurrence/transience labels and item (2)'s uniqueness of lambda on the loop closure (taken from Levin-Peres; no Markov-chain recurrence theory in the pin; Wave 4). The other clauses of items (1)-(4) stand in Main.lean as disclosed there; Main.lean:47-48 still lists the K + 2 count and the dependence clauses as not stated (stale).",
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED, bucket A, 2026-09-19. The two gaps that kept the row in C are closed. Item (1)'s recurrence labels are main_phase_classes (PhaseRecurrence.lean): irreducible; (a) transient; (b) positive recurrent; (c) null recurrent; (d) no state positive recurrent, with null recurrence versus transience left open as in the paper; (e) transient; (f) positive recurrent. The classes are the least-solution classes of RecurrenceClass.lean under ruling R8 (disclosed: no path space is built). main_phase remains the invariant-probability reading of the same table. Item (2)'s definite article ('lambda the invariant probability of X') is main_invariant_unique: any two invariant probabilities of the loop closure coincide, positivity not assumed (PreStat). It holds for every Setting, via Kac's formula lambda(y) * E_y(tau_y+) = 1 at every state (Stat.kac_eq), proved from invariance, recurrence and irreducibility with no citation. The paper cites Levin-Peres only for finite chains. Items (2)-(5) are unchanged from Wave 1 (MainPackaging.lean, TruncationBhat.lean). C > 0 is a functional sum_{j<=d} nu_j lambda_j with nu depending on c, d alone. c7 depends only on c, d, lambda_1..lambda_{2m0-1} (Decay.c7Of_congr; the index 2m0 is not read). The p-infinity clause is stated over bounded f. c8 and K0 depend only on (c, d, jbar) in main_truncation; main_truncation_sqrtK is the weaker epsMax-dependent form, and the bound is stated squared, c8 K <= ||S||^2. Item (3) takes an invariant probability as hypothesis; by main_phase it exists exactly at rows (b) and (f), and it is now unique. sigma-bar and E(sigma ^ n) are recursion-defined (R17, disclosed). || PARTIAL, bucket C. 2026-09-13 (Wave 1, MainPackaging.lean) closes the packaging: the truncation has K + 2 states (card_chainFinset); c7 is certified to depend only on (c, d, lambda_1..lambda_{2m0-1}) by the congruence Decay.c7Of_congr, the block read being 1 <= j < 2m0 as the paper's proof uses (the index 2m0 the statement names is not read); c8, K0 are formulas in (D, d, jbar) with binder order enforced by main_truncation (TruncationBhat.lean). c4 = 16 c tau and c5 = 6/gamma^2 are the library's effective constants. OPEN, and why the row stays C: item (1)'s recurrence/transience labels and item (2)'s uniqueness of lambda on the loop closure (taken from Levin-Peres; no Markov-chain recurrence theory in the pin; Wave 4). The other clauses of items (1)-(4) stand in Main.lean as disclosed there; Main.lean:47-48 still lists the K + 2 count and the dependence clauses as not stated (stale).",
       "source": "app_doubling.tex"
     },
     {
@@ -334,7 +340,11 @@
         "GFNBounds/Doubling/PhaseExists.lean",
         "GFNBounds/Doubling/PhaseEmpty.lean",
         "GFNBounds/Doubling/Lyapunov.lean",
-        "GFNBounds/Doubling/PointwiseInv.lean"
+        "GFNBounds/Doubling/PointwiseInv.lean",
+        "GFNBounds/Doubling/PhaseRecurrence.lean",
+        "GFNBounds/Doubling/RecurrenceClass.lean",
+        "GFNBounds/Doubling/Length.lean",
+        "GFNBounds/Doubling/Irreducible.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.exists_stat_of_family",
@@ -344,11 +354,32 @@
         "GFNBounds.Doubling.isEmpty_stat_of_family_ge_one",
         "GFNBounds.Doubling.isEmpty_stat_of_family_lt_one",
         "GFNBounds.Doubling.isEmpty_stat_of_supercritical",
-        "GFNBounds.Doubling.cut_tail_ge"
+        "GFNBounds.Doubling.cut_tail_ge",
+        "GFNBounds.Doubling.prop_doubling_phase",
+        "GFNBounds.Doubling.phase_gt_one",
+        "GFNBounds.Doubling.phase_lt_one",
+        "GFNBounds.Doubling.phase_one_lt",
+        "GFNBounds.Doubling.phase_one_ge",
+        "GFNBounds.Doubling.phase_one_recurrent",
+        "GFNBounds.Doubling.phase_one_null",
+        "GFNBounds.Doubling.phase_one_transient",
+        "GFNBounds.Doubling.exists_family_setting",
+        "GFNBounds.Doubling.ladder_recurrent",
+        "GFNBounds.Doubling.ladder_survival_ge",
+        "GFNBounds.Doubling.hitLad_unbdd",
+        "GFNBounds.Doubling.IsRecurrentAt",
+        "GFNBounds.Doubling.IsTransientAt",
+        "GFNBounds.Doubling.IsPosRecurrentAt",
+        "GFNBounds.Doubling.IsNullRecurrentAt",
+        "GFNBounds.Doubling.Stat.kac_hitP",
+        "GFNBounds.Doubling.Stat.isPositiveRecurrent",
+        "GFNBounds.Doubling.recurrent_solidarity",
+        "GFNBounds.Doubling.posRecurrent_solidarity",
+        "GFNBounds.Doubling.hitExp_iSup_eq"
       ],
-      "status": "partial",
-      "bucket": "C",
-      "scope_notes": "",
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED, bucket A, 2026-09-19 (PhaseRecurrence.lean, RecurrenceClass.lean). prop_doubling_phase states every clause of the proposition. It states irreducibility (reach_all_none). It states (1) s > 1 positive recurrent; (2) s < 1 transient; (3) at s = 1: positive recurrent for 0 < c < 1 with sup_n E(sigma ^ n | X0 = j) = j/(1-c) at every ladder j; for 1 <= c, E(sigma | X0 = j) = +infinity at every ladder j and no state positive recurrent (stronger than the chain not being positive recurrent); null recurrent for 1 <= c < 1/ln 2; transient for 1/ln 2 < c. Under ruling R8 the classes are defined by least nonnegative solutions of the hitting and return recursions, not by a path space (disclosed). Recurrent means retProb = 1, transient means retProb < 1, and positive or null recurrent is read from whether the truncated expected return times are bounded. The chain is in a class when every state is. E(sigma) = +infinity is stated as unboundedness of the recursion-defined E(sigma ^ n) (R17), because a supremum in R is junk. The definitions are not vacuous: rows (b)/(f) and (a)/(e) produce mutually exclusive classes (isTransientAt_iff_not_recurrent). The standing range enters through the Setting: a Setting with eps = eps_{c,s} and c > 0 exists exactly when s >= 0 and c < 2^s (epsMax_lt_one), inhabited by exists_family_setting, and c < 2 at s = 1 is implied. The Lean takes different routes from the paper, all proved here with no citation. Foster at s > 1 is replaced by an invariant probability plus Kac from invariance. The transience criterion becomes a least-solution comparison (ladder_survival_ge). Foster's recurrence criterion becomes a maximum principle (ladder_recurrent). Step 7's optional stopping and strong Markov property are replaced by a supersolution contradiction (hitLad_unbdd). The Levin-Peres class facts are recurrent_solidarity and posRecurrent_solidarity, proved from renewal identities. Row (d), c = 1/ln 2, is left open as in the paper.",
       "source": "app_doubling.tex"
     },
     {
@@ -1151,7 +1182,8 @@
       "block_sha256": "5071f6a112cbbafd7421c9f47c8ddd1104ebe67fd307631d033fbf9b00417508",
       "lean_files": [
         "GFNBounds/Core/Sampling.lean",
-        "GFNBounds/Graph/Sampling.lean"
+        "GFNBounds/Graph/Sampling.lean",
+        "GFNBounds/Core/SamplingGeneral.lean"
       ],
       "decls": [
         "GFNBounds.Core.Sampling.FlowData.sampling_theorem",
@@ -1164,11 +1196,28 @@
         "GFNBounds.Core.Sampling.Parked.inhabited",
         "GFNBounds.Graph.Sampling.sampler_law",
         "GFNBounds.Graph.Sampling.sampler_termLaw",
-        "GFNBounds.Graph.Sampling.sampler_Fk"
+        "GFNBounds.Graph.Sampling.sampler_Fk",
+        "GFNBounds.Core.SamplingGeneral.MFlow.sampling_theorem",
+        "GFNBounds.Core.SamplingGeneral.MFlow.FlowMatching",
+        "GFNBounds.Core.SamplingGeneral.MFlow.cont",
+        "GFNBounds.Core.SamplingGeneral.MFlow.stop",
+        "GFNBounds.Core.SamplingGeneral.MFlow.stop_ae_eq",
+        "GFNBounds.Core.SamplingGeneral.MFlow.chainKernel",
+        "GFNBounds.Core.SamplingGeneral.MFlow.chainLaw_eq",
+        "GFNBounds.Core.SamplingGeneral.MFlow.occ_eq_chainLaw",
+        "GFNBounds.Core.SamplingGeneral.MFlow.stopped_eq_chainLaw",
+        "GFNBounds.Core.SamplingGeneral.MFlow.tailProb",
+        "GFNBounds.Core.SamplingGeneral.MFlow.expectedTau",
+        "GFNBounds.Core.SamplingGeneral.MFlow.stoppedLaw",
+        "GFNBounds.Core.SamplingGeneral.MFlow.sampleLaw",
+        "GFNBounds.Core.SamplingGeneral.MFlow.mass_eq",
+        "GFNBounds.Core.SamplingGeneral.MFlow.expectedTau_le",
+        "GFNBounds.Core.SamplingGeneral.MFlow.sampleLaw_eq",
+        "GFNBounds.Core.SamplingGeneral.Resample.inhabited"
       ],
       "status": "closed",
-      "bucket": "B",
-      "scope_notes": "Closed on a finite state space, 2026-09-18 (Core/Sampling, Graph/Sampling). The paper quotes the theorem from bengio2021flow, brunswic2024theory and proves nothing; ruling (iii) of 2026-09-13 put it in scope, and the proof is the library's own. Every clause is stated: F_init(S) = F_term(S); the series E(τ) = Σ_n P(τ > n) converges and is at most F*_out(S)/F_init(S) + 1; P(τ > n) → 0 and P(τ ≤ n) → 1; and P(τ ≤ n, s_τ = y) → F_term(y)/F_term(S), which is s_τ ∼ F_term read through app:notation's normalisation. The hypotheses are the paper's: non-negative F_init, F_term, F*_out, a stochastic P*, F_term ≠ 0, and pointwise flow matching. Narrowed, disclosed: (1) V is a Fintype, measures are functions and the kernel is a matrix, where the paper takes a Polish space with finite measures; the general form waits on the measure layer (kb 0006, obstruction 2), so the row is B and not A. (2) The sampler is modelled by the time-n marginals of an absorbing chain on V × Bool and not by a path measure. By absorption every event in the statement is an event of one marginal, so this loses nothing, but no trajectory measure is built. (3) At a state where F_term + F*_out = 0 the stopping probability is taken to be 1; unstopped_eq_zero_of_G_zero shows the sampler never visits such a state. The bound is proved as the domination of the occupation measure by the minimal solution, not as an equality. Parked.strict shows it can be strict (E(τ) = 1 against 41), and Parked.inhabited shows the hypotheses are met. Marked-graph form: sampler_law needs no hypothesis on s0 → s_f. sampler_termLaw adds F(s0 → s_f) = 0 to identify the law with CycleDivergence.termLaw, and discloses it. sampler_Fk certifies s_τ(F_k) ∼ δ_{x2} on the cycle 𝒞_N for every k ≥ 0. || Quoted from Bengio et al. 2021; the paper does not prove it. Formalizing it means formalizing the sampling theorem for generative flows from scratch -- a project of its own, and outside what this paper claims."
+      "bucket": "A",
+      "scope_notes": "CLOSED IN A 2026-09-19 (Core/SamplingGeneral.lean; audited by an agent that did not write it; sorry-free, clean under warningAsError, axioms within propext/Classical.choice/Quot.sound). `MFlow.sampling_theorem` states the theorem on an arbitrary measurable space. F_init, F_term and F*_out are finite measures, pi* is a Markov kernel, F_term != 0, and flow matching is an equality of measures, F_init + F*_out.bind pi* = F_term + F*_out. Every clause is stated: F_init(S) = F_term(S); E(tau) = sum_{n>=0} P(tau > n) <= F*_out(S)/F_init(S) + 1 in [0, inf]; P(tau > n) -> 0 and P(tau <= n) -> 1; the law of s_tau EQUALS F_term/F_term(S) as a measure (app:notation's reading of s_tau ~ F_term); and P(tau <= n, s_tau in A) -> F_term(A)/F_term(S) for every measurable A. WEAKENED, harmlessly: Polish is never used, and F*_out is any finite measure rather than f*_out nu_B with f*_out in L1(nu_B). Every such F*_out is a finite measure, and the background measure is never used. DISCLOSED MODELLING: (1) The sampler is the absorbing Markov kernel `chainKernel` on S x Bool. It stops at x with probability stop = 1 - min(dF*_out/dG, 1), where G = F_term + F*_out, and G-a.e. this is the paper's dF_term/dG (`stop_ae_eq`). Its time-n laws are identified with the occupation marginals (`chainLaw_eq`, `occ_eq_chainLaw`, `stopped_eq_chainLaw`). No path-space measure is built. By absorption every event in the statement is an event of one marginal, so nothing is lost. (2) The law of s_tau is `sampleLaw`, the setwise limit of P(tau <= n, s_tau in .), that is, P(tau < inf, s_tau in .). Together with P(tau <= n) -> 1 it is the law of s_tau. (3) Off the support of G the stopping version is immaterial, because the occupation is <= G/Z (`occupation_le`). The bound is a domination, not an equality: Core/Sampling's `Parked.strict` shows it can be strict. INHABITED: `Resample.inhabited`, the i.i.d. resampling flow with outflow c mu on every probability space (kb 0025). The finite form (Core/Sampling) and the marked-graph wiring (Graph/Sampling) are kept as corollary-level certificates. Supersedes the 2026-09-18 B note, whose only reason was the finite narrowing. || Closed on a finite state space, 2026-09-18 (Core/Sampling, Graph/Sampling). The paper quotes the theorem from bengio2021flow, brunswic2024theory and proves nothing; ruling (iii) of 2026-09-13 put it in scope, and the proof is the library's own. Every clause is stated: F_init(S) = F_term(S); the series E(τ) = Σ_n P(τ > n) converges and is at most F*_out(S)/F_init(S) + 1; P(τ > n) → 0 and P(τ ≤ n) → 1; and P(τ ≤ n, s_τ = y) → F_term(y)/F_term(S), which is s_τ ∼ F_term read through app:notation's normalisation. The hypotheses are the paper's: non-negative F_init, F_term, F*_out, a stochastic P*, F_term ≠ 0, and pointwise flow matching. Narrowed, disclosed: (1) V is a Fintype, measures are functions and the kernel is a matrix, where the paper takes a Polish space with finite measures; the general form waits on the measure layer (kb 0006, obstruction 2), so the row is B and not A. (2) The sampler is modelled by the time-n marginals of an absorbing chain on V × Bool and not by a path measure. By absorption every event in the statement is an event of one marginal, so this loses nothing, but no trajectory measure is built. (3) At a state where F_term + F*_out = 0 the stopping probability is taken to be 1; unstopped_eq_zero_of_G_zero shows the sampler never visits such a state. The bound is proved as the domination of the occupation measure by the minimal solution, not as an equality. Parked.strict shows it can be strict (E(τ) = 1 against 41), and Parked.inhabited shows the hypotheses are met. Marked-graph form: sampler_law needs no hypothesis on s0 → s_f. sampler_termLaw adds F(s0 → s_f) = 0 to identify the law with CycleDivergence.termLaw, and discloses it. sampler_Fk certifies s_τ(F_k) ∼ δ_{x2} on the cycle 𝒞_N for every k ≥ 0. || Quoted from Bengio et al. 2021; the paper does not prove it. Formalizing it means formalizing the sampling theorem for generative flows from scratch -- a project of its own, and outside what this paper claims."
     },
     {
       "label": "theo:negative_control",
@@ -1179,7 +1228,8 @@
       ],
       "block_sha256": "82287bcdc212af7c078a9e7de8b5ab465450559695e1d83ab7cfdb4e750ed13c",
       "lean_files": [
-        "GFNBounds/Core/NegativeControl.lean"
+        "GFNBounds/Core/NegativeControl.lean",
+        "GFNBounds/Core/SamplingGeneralBounds.lean"
       ],
       "decls": [
         "GFNBounds.Core.NegativeControl.negative_control",
@@ -1193,11 +1243,18 @@
         "GFNBounds.Core.NegativeControl.mixture",
         "GFNBounds.Core.NegativeControl.negative_control_hNC",
         "GFNBounds.Core.NegativeControl.tv_le_two_fmL1_finite",
-        "GFNBounds.Core.NegativeControl.Tight.bound_attained"
+        "GFNBounds.Core.NegativeControl.Tight.bound_attained",
+        "GFNBounds.Core.SamplingGeneral.negative_control_general",
+        "GFNBounds.Core.SamplingGeneral.hat_matched",
+        "GFNBounds.Core.SamplingGeneral.defect",
+        "GFNBounds.Core.SamplingGeneral.dInit",
+        "GFNBounds.Core.SamplingGeneral.dTerm",
+        "GFNBounds.Core.SamplingGeneral.hatTerm",
+        "GFNBounds.Core.SamplingGeneral.inference_negative_control"
       ],
       "status": "closed",
-      "bucket": "B",
-      "scope_notes": "Closed on a finite state space, 2026-09-18 (Core/NegativeControl). The paper quotes the theorem from brunswicEGF and proves nothing; ruling (iii) of 2026-09-13 put it in scope. The source's statement is the paper's word for word, and the proof is the source's: (P*, F*_out) is flow-matching from F̂_init to F̂_term (matched_flowMatching); the three chains from F_init, δF_init and F̂_init to F̂_term share one kernel, so the law is linear in the initial mass at every time (mixture); the sampling theorem (Core.Sampling.FlowData.sampling_theorem) on the matched flow then gives the mixture bound. The hypotheses are the paper's: non-negative F_init, F_term, F*_out, a stochastic P*, F_init ≠ 0, and no flow matching. δF_init, δF_term, F̂_term are the negative and positive parts of the pointwise defect, as printed before the theorem; TV carries the ½-convention of app:notation. The conclusion is the paper's TV bound, plus what the source leaves implicit: the sampler from F_init stops almost surely and s_τ has a law p (P(τ ≤ n, s_τ = y) → p y, Σp = 1), and F̂_term(S) = F_init(S) + δF_init(S). Narrowed, disclosed: (1) V is a Fintype, measures are functions and the kernel is a matrix, where the paper takes a Polish space; the general form waits on the measure layer (kb 0006, obstruction 2), so the row is B and not A. (2) The sampler is modelled by the time-n marginals of the absorbing chain of Core/Sampling, which it inherits along with that file's stop = 1 convention where F_term + F*_out = 0. Tight.bound_attained shows the hypotheses are met by a flow that is not flow-matching, and that the bound is attained there (TV = δF_init(S)/F̂_term(S) = 1/2). Downstream: negative_control_hNC delivers, for inference at κ̂ = E⁺ with a background measure charging every atom, the hypothesis hNC of Core.tv_le_two_fmL1, Core.stable_bound and Core.il_tv_bound together with E(S) = F_init(S), and tv_le_two_fmL1_finite composes it. Those rows keep hNC as a hypothesis on their general measurable space. || Quoted from brunswicEGF. Same as theo:sampling_theorem: the paper cites, it does not prove."
+      "bucket": "A",
+      "scope_notes": "2026-09-19 (Core/SamplingGeneralBounds.lean, audited in lane general-sampler): CLOSED IN A on a measurable space: negative_control_general proves the theorem from its source's statement on the general sampler (Core/SamplingGeneral.lean); the finite Core/NegativeControl.lean is an independent finite-state counterpart. The ruling of 2026-09-18 admitting it as a named hypothesis is no longer needed. || Closed on a finite state space, 2026-09-18 (Core/NegativeControl). The paper quotes the theorem from brunswicEGF and proves nothing; ruling (iii) of 2026-09-13 put it in scope. The source's statement is the paper's word for word, and the proof is the source's: (P*, F*_out) is flow-matching from F̂_init to F̂_term (matched_flowMatching); the three chains from F_init, δF_init and F̂_init to F̂_term share one kernel, so the law is linear in the initial mass at every time (mixture); the sampling theorem (Core.Sampling.FlowData.sampling_theorem) on the matched flow then gives the mixture bound. The hypotheses are the paper's: non-negative F_init, F_term, F*_out, a stochastic P*, F_init ≠ 0, and no flow matching. δF_init, δF_term, F̂_term are the negative and positive parts of the pointwise defect, as printed before the theorem; TV carries the ½-convention of app:notation. The conclusion is the paper's TV bound, plus what the source leaves implicit: the sampler from F_init stops almost surely and s_τ has a law p (P(τ ≤ n, s_τ = y) → p y, Σp = 1), and F̂_term(S) = F_init(S) + δF_init(S). Narrowed, disclosed: (1) V is a Fintype, measures are functions and the kernel is a matrix, where the paper takes a Polish space; the general form waits on the measure layer (kb 0006, obstruction 2), so the row is B and not A. (2) The sampler is modelled by the time-n marginals of the absorbing chain of Core/Sampling, which it inherits along with that file's stop = 1 convention where F_term + F*_out = 0. Tight.bound_attained shows the hypotheses are met by a flow that is not flow-matching, and that the bound is attained there (TV = δF_init(S)/F̂_term(S) = 1/2). Downstream: negative_control_hNC delivers, for inference at κ̂ = E⁺ with a background measure charging every atom, the hypothesis hNC of Core.tv_le_two_fmL1, Core.stable_bound and Core.il_tv_bound together with E(S) = F_init(S), and tv_le_two_fmL1_finite composes it. Those rows keep hNC as a hypothesis on their general measurable space. || Quoted from brunswicEGF. Same as theo:sampling_theorem: the paper cites, it does not prove."
     },
     {
       "label": "theo:universality_L2_full",
@@ -1324,7 +1381,9 @@
       "lean_files": [
         "GFNBounds/Core/StableBound.lean",
         "GFNBounds/Core/RLBound.lean",
-        "GFNBounds/Core/NegativeControl.lean"
+        "GFNBounds/Core/NegativeControl.lean",
+        "GFNBounds/Core/SamplingGeneralBounds.lean",
+        "GFNBounds/Core/SamplingGeneral.lean"
       ],
       "decls": [
         "GFNBounds.Core.tvD",
@@ -1365,11 +1424,24 @@
         "GFNBounds.Core.RLBound.mem_closure_of_joint_inf",
         "GFNBounds.Core.RLBound.joint_infimum",
         "GFNBounds.Core.RLBound.inf_loss_eq_zero_const_kernel",
-        "GFNBounds.Core.NegativeControl.negative_control_hNC"
+        "GFNBounds.Core.NegativeControl.negative_control_hNC",
+        "GFNBounds.Core.SamplingGeneral.stable_bound_general",
+        "GFNBounds.Core.SamplingGeneral.stable_bound_general_hNC",
+        "GFNBounds.Core.SamplingGeneral.inference_negative_control",
+        "GFNBounds.Core.SamplingGeneral.htri_inference",
+        "GFNBounds.Core.SamplingGeneral.infFlow",
+        "GFNBounds.Core.SamplingGeneral.infDelta",
+        "GFNBounds.Core.SamplingGeneral.infFlow_matched",
+        "GFNBounds.Core.SamplingGeneral.samplerDens",
+        "GFNBounds.Core.SamplingGeneral.MFlow.negative_control_tv",
+        "GFNBounds.Core.SamplingGeneral.Resample.stable_bound_general_inhabited",
+        "GFNBounds.Core.SamplingGeneral.le_essSup_rnDeriv_smul",
+        "GFNBounds.Core.SamplingGeneral.essSup_rnDeriv_eq_eLpNorm_top",
+        "GFNBounds.Core.SamplingGeneral.stable_bound_general_essSup"
       ],
       "status": "closed",
-      "bucket": "B",
-      "scope_notes": "CLOSED in B 2026-09-18 (RLBound.lean audited by an agent that did not write it; sorry-free, warningAsError-clean, axioms within propext/Classical.choice/Quot.sound). All three items are stated at every q in [1, +inf]. ITEM (1): equ:mass_floor holds for a kernel flow on any measurable space with nu_B finite (`mass_floor_kernel`), Step 0's E(S) = F_init(S) derived from pi_star Markov (`integral_eFn`), so `hz` is no longer a hypothesis. equ:stable_bound holds with NOTHING external only on a FINITE state space whose background measure charges every atom (`stable_bound_finite`: hNC by `negative_control_hNC`, htri by `tvD_triangle`, hz by its mass identity; s_tau's law is the limit law of the inference sampler at kappa-hat = E+). On the paper's general Polish setting `stable_bound_kernel` still carries hNC (theo:negative_control, proved in this library on a finite space only) and htri (the law of s_tau as a nu_B-density, which needs the general sampler) -- this finite narrowing of the TV display is why the row is B, and closing it is the general measure layer (Phase 4). C_0 = nu_B(S)^{1-1/q} M^{1/q} with nu_B <= M nu_T (`hdom`); the paper's constant is the instance at the least admissible M, M = ||dnu_B/dnu_T||_inf (the fact that this M is admissible is mathematics, not a Lean lemma); at q = inf C_0 = nu_B(S) (`holderConst_top`). The kernel lemmas ask nu_B pi_star << nu_B, weaker than the paper's standing convention that the star policy is nu_B-invariant in app:stable (proofs.tex notation paragraph); item (1)'s loss is read as a real under MemLp (e-k) q nu_T, the paper's tacit finiteness. ITEM (2): `inf_loss_eq_zero`, every 1 <= q <= p <= inf, over an arbitrary weakly L^p-universal family (Family.WeaklyUniversal, def:universality), pair via IsAdmissiblePair (masses match); needs only nu_T finite and nu_T << nu_B with dnu_T/dnu_B in L^{q'}, q' = conjExp p q (p/(p-q), 1 at p = inf, p/0 = inf at q = p < inf); `inf_loss_eq_zero_top` shows the integrability is automatic at p = inf for every q, which contains the paper's 'only the domination when q = p = inf'. Loss in [0, inf] (eLpNorm), an honest infimum. ITEM (3): `joint_infimum` (both implications), `massSetLp_eq_massSet` (the coinciding clause); initial family as a.e.-nonnegative, integrable, not a.e.-zero densities. Polish is used nowhere. Inhabited: `inf_loss_eq_zero_const_kernel` (i.i.d. resampling policy, nu_T = nu_B, any probability space, 1 <= q <= p < inf). || PARTIAL 2026-09-08, sorry-free, axiom-swept. ITEM (1) CLOSED in both its displays: equ:stable_bound (`stable_bound`, TV <= C * L) and equ:mass_floor (`mass_floor`, |z - t| <= C_0 * L), with the constant C_0 = nu_B(S)^(1-1/q) * M^(1/q) DERIVED independently and matching equ:stable_constants on the nose. equ:normalization_lemma is isolated as a reusable pair (`tvD_normalization`, `tvD_normalization_le`). Everything is on densities against nu_B; no measure and no kernel is formed. TWO EXTERNAL INPUTS, both carried as named hypotheses on real numbers and disclosed in three places each, never axiomatized (the axiom sweep stays clean): `hNC` is theo:negative_control, which the paper quotes from brunswicEGF and does not prove, and `htri` is the TV triangle inequality for the abstract sampler s_tau -- `tvD_triangle` discharges htri for any sampler whose law has a nu_B-density, nothing discharges hNC. Also hypothesized: `hz : z = int e dnu`, i.e. Step 0's E(S) = F_init(S), which rests on pi_star being a Markov kernel -- no layer builds that. ITEMS (2) AND (3) NOT ATTEMPTED: they need def:universality and the initial-family scaling argument. q = +inf not covered."
+      "bucket": "A",
+      "scope_notes": "2026-09-19: the paper's constant is a Lean instance: nu_B <= essSup(dnu_B/dnu_T) nu_T (le_essSup_rnDeriv_smul, nu_T sigma-finite), that essSup is ||dnu_B/dnu_T||_{L^inf(nu_T)} (essSup_rnDeriv_eq_eLpNorm_top), and stable_bound_general_essSup states item (1) at C_0 with M = ||dnu_B/dnu_T||_inf. || CLOSED IN A 2026-09-19 (Core/SamplingGeneralBounds.lean on Core/SamplingGeneral.lean; audited; sorry-free, clean under warningAsError, axioms clean). All three items are stated at every q in [1, +inf] on a general measurable space with nu_B finite. Polish is never used. ITEM (1): `stable_bound_general` proves both displays with NOTHING external. The first is TV(s_tau || kappa/t) <= C L, with TV the 1/2-convention distance between nu_B-densities. The second is |F_init(S) - kappa(S)| <= C_0 L. s_tau is the output of theo:sampling_theorem's sampler run at inference from F_init = f_init nu_B to kappa-hat = E+ (`infFlow`). The same theorem proves that this sampler stops a.s. and that s_tau's law is a probability << nu_B with density `samplerDens`. hNC is discharged by `inference_negative_control` (theo:negative_control on measures), htri by `htri_inference`, and Step 0 by `integral_eFn`. `stable_bound_general_hNC` keeps hNC as a named hypothesis (ruling (vii)). DISCLOSED: C_0 = nu_B(S)^{1-1/q} M^{1/q} for any M with nu_B <= M nu_T (`hdom`). The paper's constant is the instance at M = ||dnu_B/dnu_T||_inf, and admissibility of that M is standard but not a Lean lemma. At q = inf, C_0 = nu_B(S) (`holderConst_top`). The kernel lemmas ask nu_B pi* << nu_B (`hac`), which is weaker than app:stable's standing nu_B-invariance of pi*. The loss is read as a real under MemLp (e - k) q nu_T, and where it is infinite the paper's bound is vacuous. f_init >= 0 a.e. (`hi0`) is the paper's hypothesis that F_init is a measure. ITEMS (2) AND (3): as in the 2026-09-18 note (`inf_loss_eq_zero`, `inf_loss_eq_zero_top`, `joint_infimum`, `massSetLp_eq_massSet`), unchanged. INHABITED: `Resample.stable_bound_general_inhabited` (i.i.d. resampling, any outflow level c >= 0, every probability space, every q >= 1) and `inf_loss_eq_zero_const_kernel`. Supersedes the 2026-09-18 B note, whose only reason was the finite narrowing of item (1)'s TV display. || CLOSED in B 2026-09-18 (RLBound.lean audited by an agent that did not write it; sorry-free, warningAsError-clean, axioms within propext/Classical.choice/Quot.sound). All three items are stated at every q in [1, +inf]. ITEM (1): equ:mass_floor holds for a kernel flow on any measurable space with nu_B finite (`mass_floor_kernel`), Step 0's E(S) = F_init(S) derived from pi_star Markov (`integral_eFn`), so `hz` is no longer a hypothesis. equ:stable_bound holds with NOTHING external only on a FINITE state space whose background measure charges every atom (`stable_bound_finite`: hNC by `negative_control_hNC`, htri by `tvD_triangle`, hz by its mass identity; s_tau's law is the limit law of the inference sampler at kappa-hat = E+). On the paper's general Polish setting `stable_bound_kernel` still carries hNC (theo:negative_control, proved in this library on a finite space only) and htri (the law of s_tau as a nu_B-density, which needs the general sampler) -- this finite narrowing of the TV display is why the row is B, and closing it is the general measure layer (Phase 4). C_0 = nu_B(S)^{1-1/q} M^{1/q} with nu_B <= M nu_T (`hdom`); the paper's constant is the instance at the least admissible M, M = ||dnu_B/dnu_T||_inf (the fact that this M is admissible is mathematics, not a Lean lemma); at q = inf C_0 = nu_B(S) (`holderConst_top`). The kernel lemmas ask nu_B pi_star << nu_B, weaker than the paper's standing convention that the star policy is nu_B-invariant in app:stable (proofs.tex notation paragraph); item (1)'s loss is read as a real under MemLp (e-k) q nu_T, the paper's tacit finiteness. ITEM (2): `inf_loss_eq_zero`, every 1 <= q <= p <= inf, over an arbitrary weakly L^p-universal family (Family.WeaklyUniversal, def:universality), pair via IsAdmissiblePair (masses match); needs only nu_T finite and nu_T << nu_B with dnu_T/dnu_B in L^{q'}, q' = conjExp p q (p/(p-q), 1 at p = inf, p/0 = inf at q = p < inf); `inf_loss_eq_zero_top` shows the integrability is automatic at p = inf for every q, which contains the paper's 'only the domination when q = p = inf'. Loss in [0, inf] (eLpNorm), an honest infimum. ITEM (3): `joint_infimum` (both implications), `massSetLp_eq_massSet` (the coinciding clause); initial family as a.e.-nonnegative, integrable, not a.e.-zero densities. Polish is used nowhere. Inhabited: `inf_loss_eq_zero_const_kernel` (i.i.d. resampling policy, nu_T = nu_B, any probability space, 1 <= q <= p < inf). || PARTIAL 2026-09-08, sorry-free, axiom-swept. ITEM (1) CLOSED in both its displays: equ:stable_bound (`stable_bound`, TV <= C * L) and equ:mass_floor (`mass_floor`, |z - t| <= C_0 * L), with the constant C_0 = nu_B(S)^(1-1/q) * M^(1/q) DERIVED independently and matching equ:stable_constants on the nose. equ:normalization_lemma is isolated as a reusable pair (`tvD_normalization`, `tvD_normalization_le`). Everything is on densities against nu_B; no measure and no kernel is formed. TWO EXTERNAL INPUTS, both carried as named hypotheses on real numbers and disclosed in three places each, never axiomatized (the axiom sweep stays clean): `hNC` is theo:negative_control, which the paper quotes from brunswicEGF and does not prove, and `htri` is the TV triangle inequality for the abstract sampler s_tau -- `tvD_triangle` discharges htri for any sampler whose law has a nu_B-density, nothing discharges hNC. Also hypothesized: `hz : z = int e dnu`, i.e. Step 0's E(S) = F_init(S), which rests on pi_star being a Markov kernel -- no layer builds that. ITEMS (2) AND (3) NOT ATTEMPTED: they need def:universality and the initial-family scaling argument. q = +inf not covered."
     },
     {
       "label": "theo:IL_CV_bound",
@@ -1382,7 +1454,9 @@
       "lean_files": [
         "GFNBounds/Core/ILBound.lean",
         "GFNBounds/Core/ILBoundFull.lean",
-        "GFNBounds/Core/StableBound.lean"
+        "GFNBounds/Core/StableBound.lean",
+        "GFNBounds/Core/SamplingGeneralBounds.lean",
+        "GFNBounds/Core/SamplingGeneral.lean"
       ],
       "decls": [
         "GFNBounds.Core.klD",
@@ -1415,11 +1489,20 @@
         "GFNBounds.Core.ILBoundFull.il_iInf_eq",
         "GFNBounds.Core.ILBoundFull.il_attained",
         "GFNBounds.Core.ILBoundFull.il_attained_of_stronglyUniversal",
-        "GFNBounds.Core.ILBoundFull.Example.ilLoss_ne_top"
+        "GFNBounds.Core.ILBoundFull.Example.ilLoss_ne_top",
+        "GFNBounds.Core.SamplingGeneral.il_first_bullet_general",
+        "GFNBounds.Core.SamplingGeneral.il_first_bullet_general_hNC",
+        "GFNBounds.Core.SamplingGeneral.inference_negative_control",
+        "GFNBounds.Core.SamplingGeneral.infFlow",
+        "GFNBounds.Core.SamplingGeneral.samplerDens",
+        "GFNBounds.Core.SamplingGeneral.eFn_eq_eFlow",
+        "GFNBounds.Core.SamplingGeneral.Resample.il_first_bullet_general_inhabited",
+        "GFNBounds.Core.SamplingGeneral.Resample.lossFinite",
+        "GFNBounds.Core.ILBoundFull.ilLoss_of_finite"
       ],
       "status": "closed",
-      "bucket": "B",
-      "scope_notes": "CLOSED in B 2026-09-18, sorry-free, axiom-swept; `Core/ILBoundFull.lean` on top of the graduated `Core/ILBound.lean`. Nothing external is left on a finite state space. PINSKER is proved (`pinsker`, Pollard's proof; Mathlib v4.31.0 has none). equ:il_holder is proved at every conjugate pair, q in {1, inf} included (`il_holderE`). E(S) = F_init(S) is derived from pi* Markov and F*_<- << nu_B (`eFlow_integral`); ILBound had assumed it. The paper's (-inf, +inf]-valued loss is `ilLoss`, equal to +inf off `LossFinite` (kappa << kappa-hat, k log e+ integrable, delta f_init in L^q(nu_T)); `crossEntropy_posPart_integrable` shows why +inf is the paper's value there. That the paper's extended integral equals `ilLoss` is an argument and not a Lean theorem. FIRST BULLET: on a general measurable space `il_first_bullet` proves L >= H unconditionally. Its TV clause carries theo:negative_control as the hypothesis `hNC`, and the abstract sampler's triangle inequality as `htri`. `il_first_bullet_finite` discharges both on a FINITE state space with nu_B OF FULL SUPPORT (`hv`, inherited from `NegativeControl.negative_control_hNC`). TV there is the 1/2-convention distance between the law of s_tau (the limit of the absorbing chain's marginals) and kappa. The paper's space is Polish and general, so the fully certified first bullet is a finite narrowing, hence B. SECOND BULLET: proved in full on a general sigma-finite space, with no carried hypothesis: `il_member_le`, `il_iInf_eq` (inf over Theta = H in EReal), `il_attained` (attainment at eps = 0, equivalent to equ:FM_const by `eq_of_domination_zero`), and `il_attained_of_stronglyUniversal` (`Family.StronglyUniversal`, p >= 1). WEAKENED, harmlessly: Polish and nu_B finite are replaced by SigmaFinite and are never used; only nu << nu_T is needed where nu_T << nu is not; f_init >= 0 is used only where negative control and def:universality consume it; eps < 1 suffices. INHABITED: `Example.ilLoss_ne_top` gives a one-state flow meeting every hypothesis of `il_first_bullet_finite` with finite loss. To reach A: theo:negative_control on the general space, which needs the general measure layer for the sampler (obstruction 2, Phase 4). || PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. BOTH BULLETS COVERED and nothing dropped: bullet 1's entropy floor (`loss_ge_selfEntropy`) and its TV bound equ:il_tv_explicit in the paper's exact shape (`il_tv_bound`) -- entropy term, min(1,.) and both external inputs all present -- and bullet 2's `loss_le_of_domination`, `isGLB_of_domination` (inf = H, abstracted to the set of achievable loss values) and `loss_eq_selfEntropy_of_domination_zero` (attainment at eps = 0, with the equ:FM_const equivalence). equ:il_holder is PROVED for 1 < q < inf; the main theorems do not narrow, since they carry its conclusion as a hypothesis and so hold at every q for which that estimate is supplied. THREE EXTERNAL INPUTS, all named hypotheses on reals, never axioms: theo:negative_control (as in Core/StableBound), PINSKER'S INEQUALITY, and the TV triangle inequality (discharged by Core.tvD_triangle for any sampler with a nu_B-density). Mathlib v4.31.0 has `InformationTheory.klDiv` and Gibbs but NO Pinsker and NO total-variation distance -- only Jordan/vector-measure variation, which are measures and not metrics -- so both had to be carried. `Core.tvD` is reused; no third TV convention was introduced, and `stableLoss_eq_lqNormD` ties the L^q convention to Core/StableBound's by rfl. ONE HYPOTHESIS IS ADDED rather than carried -- a restriction, disclosed as such: see the paper finding."
+      "bucket": "A",
+      "scope_notes": "CLOSED IN A 2026-09-19 (Core/SamplingGeneralBounds.lean on Core/ILBoundFull.lean; audited; sorry-free, clean under warningAsError, axioms clean). FIRST BULLET: `il_first_bullet_general` proves it on a general measurable space with NOTHING external. It proves L^q >= H unconditionally in EReal. Where the loss is finite, it proves TV(s_tau || kappa) <= (1/sqrt 2) sqrt(L - H) + min(1, ||dnu_B/dnu_T||_{L^{q*}(nu_T)} (L - H)). s_tau is the output of theo:sampling_theorem's sampler run at inference from F_init to kappa-hat = (F_init + F*_<- - F*_out)+ (`infFlow`). The theorem proves that this sampler stops a.s. and that s_tau's law is a probability << nu_B with density `samplerDens`. TV is the 1/2-convention distance between nu_B-densities. hNC is discharged by `inference_negative_control` and htri by `Core.tvD_triangle`. Pinsker (`pinsker`) and the Holder step at every conjugate pair (`il_holderE`) are proved. `il_first_bullet_general_hNC` keeps hNC named (ruling (vii)). SECOND BULLET: as in the 2026-09-18 note (`il_member_le`, `il_iInf_eq`, `il_attained`, `il_attained_of_stronglyUniversal`), unchanged. DISCLOSED: the paper's (-inf, +inf]-valued loss is `ilLoss`, which is +inf off `LossFinite` and `wklfmLossE` on it (`ilLoss_of_finite`). That the paper's extended integral equals `ilLoss` is an argument, not a Lean theorem. Where the loss is +inf the TV clause is vacuous in the paper and is stated under ilLoss != top here. WEAKENED, harmlessly: Polish is never used; nu_B is sigma-finite, not finite; only nu_B << nu_T is used, not equivalence. f_init >= 0 a.e. (`hfi0`) is the paper's hypothesis that F_init is a probability. INHABITED with the TV clause live: `Resample.il_first_bullet_general_inhabited` (i.i.d. resampling on every probability space, outflow c >= 0, nu_T = nu_B, q = 1, finite loss by `Resample.lossFinite`). Supersedes the 2026-09-18 B note, whose only reason was the finite narrowing of the first bullet's TV clause. || CLOSED in B 2026-09-18, sorry-free, axiom-swept; `Core/ILBoundFull.lean` on top of the graduated `Core/ILBound.lean`. Nothing external is left on a finite state space. PINSKER is proved (`pinsker`, Pollard's proof; Mathlib v4.31.0 has none). equ:il_holder is proved at every conjugate pair, q in {1, inf} included (`il_holderE`). E(S) = F_init(S) is derived from pi* Markov and F*_<- << nu_B (`eFlow_integral`); ILBound had assumed it. The paper's (-inf, +inf]-valued loss is `ilLoss`, equal to +inf off `LossFinite` (kappa << kappa-hat, k log e+ integrable, delta f_init in L^q(nu_T)); `crossEntropy_posPart_integrable` shows why +inf is the paper's value there. That the paper's extended integral equals `ilLoss` is an argument and not a Lean theorem. FIRST BULLET: on a general measurable space `il_first_bullet` proves L >= H unconditionally. Its TV clause carries theo:negative_control as the hypothesis `hNC`, and the abstract sampler's triangle inequality as `htri`. `il_first_bullet_finite` discharges both on a FINITE state space with nu_B OF FULL SUPPORT (`hv`, inherited from `NegativeControl.negative_control_hNC`). TV there is the 1/2-convention distance between the law of s_tau (the limit of the absorbing chain's marginals) and kappa. The paper's space is Polish and general, so the fully certified first bullet is a finite narrowing, hence B. SECOND BULLET: proved in full on a general sigma-finite space, with no carried hypothesis: `il_member_le`, `il_iInf_eq` (inf over Theta = H in EReal), `il_attained` (attainment at eps = 0, equivalent to equ:FM_const by `eq_of_domination_zero`), and `il_attained_of_stronglyUniversal` (`Family.StronglyUniversal`, p >= 1). WEAKENED, harmlessly: Polish and nu_B finite are replaced by SigmaFinite and are never used; only nu << nu_T is needed where nu_T << nu is not; f_init >= 0 is used only where negative control and def:universality consume it; eps < 1 suffices. INHABITED: `Example.ilLoss_ne_top` gives a one-state flow meeting every hypothesis of `il_first_bullet_finite` with finite loss. To reach A: theo:negative_control on the general space, which needs the general measure layer for the sampler (obstruction 2, Phase 4). || PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. BOTH BULLETS COVERED and nothing dropped: bullet 1's entropy floor (`loss_ge_selfEntropy`) and its TV bound equ:il_tv_explicit in the paper's exact shape (`il_tv_bound`) -- entropy term, min(1,.) and both external inputs all present -- and bullet 2's `loss_le_of_domination`, `isGLB_of_domination` (inf = H, abstracted to the set of achievable loss values) and `loss_eq_selfEntropy_of_domination_zero` (attainment at eps = 0, with the equ:FM_const equivalence). equ:il_holder is PROVED for 1 < q < inf; the main theorems do not narrow, since they carry its conclusion as a hypothesis and so hold at every q for which that estimate is supplied. THREE EXTERNAL INPUTS, all named hypotheses on reals, never axioms: theo:negative_control (as in Core/StableBound), PINSKER'S INEQUALITY, and the TV triangle inequality (discharged by Core.tvD_triangle for any sampler with a nu_B-density). Mathlib v4.31.0 has `InformationTheory.klDiv` and Gibbs but NO Pinsker and NO total-variation distance -- only Jordan/vector-measure variation, which are measures and not metrics -- so both had to be carried. `Core.tvD` is reused; no third TV convention was introduced, and `stableLoss_eq_lqNormD` ties the L^q convention to Core/StableBound's by rfl. ONE HYPOTHESIS IS ADDED rather than carried -- a restriction, disclosed as such: see the paper finding."
     },
     {
       "label": "lem:adjoint",
@@ -1430,7 +1513,8 @@
       ],
       "block_sha256": "ef3aaa2745b8bf972ca20b49f9bc4c3f3b96541bd8e13b917ffb4f58078a62b4",
       "lean_files": [
-        "GFNBounds/Core/Adjoint.lean"
+        "GFNBounds/Core/Adjoint.lean",
+        "GFNBounds/Core/AdjointGeneral.lean"
       ],
       "decls": [
         "GFNBounds.Core.reversal",
@@ -1446,11 +1530,41 @@
         "GFNBounds.Core.nrmL2_densAct_le",
         "GFNBounds.Core.isLeast_opNorm_densAct",
         "GFNBounds.Core.adjoint_finite",
-        "GFNBounds.Core.graph_reversal_eq"
+        "GFNBounds.Core.graph_reversal_eq",
+        "GFNBounds.Core.General.adjoint_general",
+        "GFNBounds.Core.General.reversal",
+        "GFNBounds.Core.General.IsReversalPair",
+        "GFNBounds.Core.General.IsInvariant",
+        "GFNBounds.Core.General.InM2",
+        "GFNBounds.Core.General.ipM",
+        "GFNBounds.Core.General.nrmM",
+        "GFNBounds.Core.General.funAct",
+        "GFNBounds.Core.General.IsInvariant.isReversalPair_reversal",
+        "GFNBounds.Core.General.IsInvariant.ae_eq_reversal",
+        "GFNBounds.Core.General.IsInvariant.isInvariant_reversal",
+        "GFNBounds.Core.General.IsInvariant.isReversalPair_reversal_symm",
+        "GFNBounds.Core.General.IsInvariant.reversal_reversal",
+        "GFNBounds.Core.General.IsInvariant.comp_absolutelyContinuous",
+        "GFNBounds.Core.General.IsReversalPair.ipM_comp",
+        "GFNBounds.Core.General.IsReversalPair.inM2_comp",
+        "GFNBounds.Core.General.IsReversalPair.nrmM_comp_le",
+        "GFNBounds.Core.General.IsReversalPair.isLeast_opNorm_comp",
+        "GFNBounds.Core.General.IsReversalPair.toReal_rnDeriv_comp",
+        "GFNBounds.Core.General.IsInvariant.rnDeriv_comp",
+        "GFNBounds.Core.General.IsInvariant.rnDeriv_reversal_comp",
+        "GFNBounds.Core.General.IsInvariant.eLpNorm_funAct_le",
+        "GFNBounds.Core.General.IsInvariant.isLeast_opNorm_funAct",
+        "GFNBounds.Core.General.IsReversalPair.integral_mul_funAct",
+        "GFNBounds.Core.General.IsInvariant.integral_mul_funAct_reversal",
+        "GFNBounds.Core.General.IsInvariant.reversal_singleton",
+        "GFNBounds.Core.General.IsInvariant.toReal_reversal_singleton",
+        "GFNBounds.Core.General.isInvariant_const",
+        "GFNBounds.Core.reversal_hatEdge",
+        "GFNBounds.Core.reversal_snk_src"
       ],
-      "status": "partial",
-      "bucket": "D",
-      "scope_notes": "CORRECTION 2026-09-14: the kernel Jensen called 'GENUINELY MISSING FROM MATHLIB' below exists at this pin -- ConvexOn.map_integral_le applied to each fibre kappa x (Analysis/Convex/Integral.lean), and ConvexOn.map_condExp_le for the conditional form; the lambda-reversal itself is ProbabilityTheory.posterior (Probability/Kernel/Posterior.lean, compProd_posterior_eq_map_swap, posterior_posterior), on a StandardBorel space. PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- FINITE state space, disclosed. All three items on a general kernel over a Fintype with a general NON-NEGATIVE invariant lambda (not tied to a marked graph), so Balance/Lift and the DB block get a reversal layer to build on: (1) existence, Markov-ness a.e. and the characterizing identity lam x * R x y = lam y * A y x, with lambda-a.e. uniqueness; (2) lambda is invariant for the reversal, the flip identity -- the relation is SYMMETRIC, which is the whole content -- and the a.e. involution; (3) mutual adjointness on L^2(lambda), each density action is the other's function action, the contraction, and the operator norm EXACTLY 1 as an `IsLeast` with attainment at lambda. Two things came out better than the paper's phrasing, both stated as such: EXISTENCE IS UNCONDITIONAL -- the identity holds even where lambda(x) = 0, because invariance forces lambda(y)A(y->x) = 0 there, so only Markov-ness of that row degrades (`IsMarkovOn` vs `IsMarkov`); and the INVOLUTION NEEDS ONLY lambda(x) != 0, not lambda(y) != 0, since lambda(x) != 0 = lambda(y) forces A(x->y) = 0. No lambda > 0 is assumed anywhere; 'lambda-a.e.' is `lam x != 0`. `Graph.reversal`, `pdens` and `qact` are all `rfl`-equal to the general definitions, so every theorem applies to the graph objects verbatim. NOT DONE: the general Polish case. Items (1)-(2) are reachable at this Mathlib pin (`Measure.condKernel`, `eq_condKernel_of_measure_eq_compProd`, `Measure.compProd`, `Measure.fst_map_swap`); item (3) is obstruction 2 in full, and ONE PIECE IS GENUINELY MISSING FROM MATHLIB: a kernel-Jensen `(int u d kappa_x)^2 <= int u^2 d kappa_x`, which would have to be built from `inner_mul_le_norm_mul_norm` on L^2(kappa x)."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED 2026-09-19, sorry-free, axioms {propext, Classical.choice, Quot.sound}, audited by an agent that did not write it. The paper's statement is in the paper's generality. Items (1)-(3) hold for a Markov kernel T on a standard Borel space. That is weaker than Polish in the safe direction: every Polish space with its Borel sigma-algebra is standard Borel. The finite measure lambda is T-invariant and is `GFNBounds.Core.General.adjoint_general`'s hypothesis. `[Nonempty S]` is implied by lambda != 0 (kb 0027). nu_B is dropped because no clause uses it, so every lambda dominated by some nu_B is covered. (1) T^lambda is Mathlib's posterior, `T†lambda`, a condKernel. It is Markov and satisfies lambda (x) T^lambda = fl_*(lambda (x) T). It is lambda-a.e. unique, and the uniqueness holds among all finite kernels, not only Markov ones. (2) lambda is T^lambda-invariant. The flip identity eq:reversal_flip holds, and (T^lambda)^lambda = T lambda-a.e. (3) M^2(lambda) is `InM2`: finite, << lambda, with (dmu/dlambda).toReal in L^2. `inM2_withDensity_ofReal` and `InM2.eq_withDensity_ofReal` show it is the cone {u lambda : 0 <= u in L^2}. <mu T | nu>_lambda = <mu | nu T^lambda>_lambda holds on M^2. Both density actions preserve M^2 and contract it. d(mu T)/dlambda = T^lambda(dmu/dlambda), and conversely. 'Operator norm 1' is an `IsLeast` of the bound set, attained at lambda. M^2 is a cone, not a normed space, so no operator object is formed; this is disclosed. STRENGTHENED, proved: the function-action contraction and operator norm 1 hold on every L^p(lambda), 1 <= p <= infinity. The adjointness holds for every Hoelder pair with signed u, v, which is the form theo:first_variation_full's proof consumes. (4) The general half is items (1)-(2) at T = the loop closure, reading the balance constraint of (lambda, pi_->) as lambda (x) pi_-> = pi_<- (x) lambda, as the paper's own proof of (4) does. 'Balanced flow' is not a separate Lean object in the general setting. The finite-graph half (lambda > 0, the entrywise formula, support on the edges of the loop closure, pi_->^lambda(s_f -> s_0) = 1) is in GFNBounds/Core/Adjoint.lean: `reversal`, `reversal_hatEdge`, `reversal_snk_src`. `IsInvariant.toReal_reversal_singleton` shows the general reversal equals that finite one at every lambda-charged atom. Not formalized, and not part of the statement: the Riesz step in the proof of (3). Inhabited: `isInvariant_const` gives a non-trivial (T, lambda) on any standard Borel space. This supersedes the 2026-09-08 finite-only closure and its 2026-09-14 correction; the kernel Jensen is `lintegral_rpow_le` via eLpNorm monotonicity in the exponent (kb 0043). || CORRECTION 2026-09-14: the kernel Jensen called 'GENUINELY MISSING FROM MATHLIB' below exists at this pin -- ConvexOn.map_integral_le applied to each fibre kappa x (Analysis/Convex/Integral.lean), and ConvexOn.map_condExp_le for the conditional form; the lambda-reversal itself is ProbabilityTheory.posterior (Probability/Kernel/Posterior.lean, compProd_posterior_eq_map_swap, posterior_posterior), on a StandardBorel space. PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated -- FINITE state space, disclosed. All three items on a general kernel over a Fintype with a general NON-NEGATIVE invariant lambda (not tied to a marked graph), so Balance/Lift and the DB block get a reversal layer to build on: (1) existence, Markov-ness a.e. and the characterizing identity lam x * R x y = lam y * A y x, with lambda-a.e. uniqueness; (2) lambda is invariant for the reversal, the flip identity -- the relation is SYMMETRIC, which is the whole content -- and the a.e. involution; (3) mutual adjointness on L^2(lambda), each density action is the other's function action, the contraction, and the operator norm EXACTLY 1 as an `IsLeast` with attainment at lambda. Two things came out better than the paper's phrasing, both stated as such: EXISTENCE IS UNCONDITIONAL -- the identity holds even where lambda(x) = 0, because invariance forces lambda(y)A(y->x) = 0 there, so only Markov-ness of that row degrades (`IsMarkovOn` vs `IsMarkov`); and the INVOLUTION NEEDS ONLY lambda(x) != 0, not lambda(y) != 0, since lambda(x) != 0 = lambda(y) forces A(x->y) = 0. No lambda > 0 is assumed anywhere; 'lambda-a.e.' is `lam x != 0`. `Graph.reversal`, `pdens` and `qact` are all `rfl`-equal to the general definitions, so every theorem applies to the graph objects verbatim. NOT DONE: the general Polish case. Items (1)-(2) are reachable at this Mathlib pin (`Measure.condKernel`, `eq_condKernel_of_measure_eq_compProd`, `Measure.compProd`, `Measure.fst_map_swap`); item (3) is obstruction 2 in full, and ONE PIECE IS GENUINELY MISSING FROM MATHLIB: a kernel-Jensen `(int u d kappa_x)^2 <= int u^2 d kappa_x`, which would have to be built from `inner_mul_le_norm_mul_norm` on L^2(kappa x)."
     },
     {
       "label": "theo:first_variation_full",
@@ -1527,37 +1641,8 @@
       ],
       "block_sha256": "85135dc5095f8ec5039dc6381ea9dadf0a8af3846d1d29b09fd87cfa135fe32c",
       "lean_files": [
-        "GFNBounds/Balance/Lift.lean"
-      ],
-      "decls": [
-        "GFNBounds.Balance.edgeKernel",
-        "GFNBounds.Balance.edgeMeasure",
-        "GFNBounds.Balance.pushEdge",
-        "GFNBounds.Balance.pushEdge_apply",
-        "GFNBounds.Balance.pushEdge_edgeMeasure",
-        "GFNBounds.Balance.inner_funActEdge",
-        "GFNBounds.Balance.edgeDensAct_contraction",
-        "GFNBounds.Balance.disint",
-        "GFNBounds.Balance.marg₁_mul_disint",
-        "GFNBounds.Balance.db_lift_loss",
-        "GFNBounds.Balance.db_lift_iff",
-        "GFNBounds.Balance.lift_mixing",
-        "GFNBounds.Balance.lift_mixing_opNorm_le"
-      ],
-      "status": "partial",
-      "bucket": "D",
-      "scope_notes": "2026-09-14 (Phase 1 re-read against commit 3194054): the window lift K_l left the definition; edgeKernel/edgeMeasure are the definition verbatim on a finite space; only the general-S form is missing. || PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: the kernel K_2 and the edge measure lambda_2. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
-    },
-    {
-      "label": "lem:lift_wellposed",
-      "source": "proofs.tex",
-      "tex_span": [
-        522,
-        532
-      ],
-      "block_sha256": "3b82b8d332857989b2d08868372bae3b168d31c327f8d542a8185d551a3bd382",
-      "lean_files": [
-        "GFNBounds/Balance/Lift.lean"
+        "GFNBounds/Balance/Lift.lean",
+        "GFNBounds/Balance/LiftGeneral.lean"
       ],
       "decls": [
         "GFNBounds.Balance.edgeKernel",
@@ -1573,11 +1658,66 @@
         "GFNBounds.Balance.db_lift_iff",
         "GFNBounds.Balance.lift_mixing",
         "GFNBounds.Balance.lift_mixing_opNorm_le",
-        "GFNBounds.Balance.pushEdge_density"
+        "GFNBounds.Balance.LiftGeneral.edgeLift",
+        "GFNBounds.Balance.LiftGeneral.edgeLift_isMarkovKernel",
+        "GFNBounds.Balance.LiftGeneral.edgeLift_apply",
+        "GFNBounds.Balance.LiftGeneral.edgeMeasure",
+        "GFNBounds.Balance.LiftGeneral.lintegral_edgeMeasure",
+        "GFNBounds.Balance.LiftGeneral.fst_edgeMeasure",
+        "GFNBounds.Balance.LiftGeneral.snd_edgeMeasure",
+        "GFNBounds.Balance.LiftGeneral.edgeLift_apply_singleton"
       ],
-      "status": "partial",
-      "bucket": "D",
-      "scope_notes": "2026-09-14 (Phase 1 re-read against commit 3194054): 'the same holds for K_l' is gone; on a finite space invariance, contraction, duality and the adjoint sentence are proved (pushEdge_density, dualFunActEdge_apply, inner_funActEdge); only the general layer remains. || PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: invariance, the L^2(lambda_2) contraction, and the duality. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-19 (audited against the definition carrying the label in proofs.tex): CLOSED in A on a general measurable space. `edgeLift T` is K₂ : (s,s') ↦ (π_←(s), s), built as the product kernel (T ∘ pr₁) ×ₖ δ_{pr₁}. `edgeLift_apply` gives its law as (T s).map (z ↦ (z, s)), and it is proved Markov when π_← is. `edgeMeasure T λ = (λ ⊗ₘ T).map swap` is the paper's λ₂(ds ds') = π_←(s' → ds)λ(ds') verbatim, which `lintegral_edgeMeasure` confirms. Both marginals are computed: m₁λ₂ = λπ_← (= λ under invariance) and m₂λ₂ = λ. The definition does not use the invariance of λ, so it is never assumed. On a space with measurable singletons, `edgeLift_apply_singleton` agrees with the finite `edgeKernel` of Lift.lean. No hypothesis is added. The window lift K_ℓ, ℓ ≥ 3, left the paper on 2026-09-14. Supersedes the 2026-09-14 note, whose 'only the general-S form is missing' is now discharged. || 2026-09-14 (Phase 1 re-read against commit 3194054): the window lift K_l left the definition; edgeKernel/edgeMeasure are the definition verbatim on a finite space; only the general-S form is missing. || PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: the kernel K_2 and the edge measure lambda_2. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
+    },
+    {
+      "label": "lem:lift_wellposed",
+      "source": "proofs.tex",
+      "tex_span": [
+        522,
+        532
+      ],
+      "block_sha256": "3b82b8d332857989b2d08868372bae3b168d31c327f8d542a8185d551a3bd382",
+      "lean_files": [
+        "GFNBounds/Balance/Lift.lean",
+        "GFNBounds/Balance/LiftGeneral.lean"
+      ],
+      "decls": [
+        "GFNBounds.Balance.edgeKernel",
+        "GFNBounds.Balance.edgeMeasure",
+        "GFNBounds.Balance.pushEdge",
+        "GFNBounds.Balance.pushEdge_apply",
+        "GFNBounds.Balance.pushEdge_edgeMeasure",
+        "GFNBounds.Balance.inner_funActEdge",
+        "GFNBounds.Balance.edgeDensAct_contraction",
+        "GFNBounds.Balance.disint",
+        "GFNBounds.Balance.marg₁_mul_disint",
+        "GFNBounds.Balance.db_lift_loss",
+        "GFNBounds.Balance.db_lift_iff",
+        "GFNBounds.Balance.lift_mixing",
+        "GFNBounds.Balance.lift_mixing_opNorm_le",
+        "GFNBounds.Balance.pushEdge_density",
+        "GFNBounds.Balance.LiftGeneral.lift_wellposed",
+        "GFNBounds.Balance.LiftGeneral.edgeMeasure_invariant",
+        "GFNBounds.Balance.LiftGeneral.bind_edgeLift",
+        "GFNBounds.Balance.LiftGeneral.rnDeriv_bind_edgeLift",
+        "GFNBounds.Balance.LiftGeneral.bind_edgeLift_absolutelyContinuous",
+        "GFNBounds.Balance.LiftGeneral.edgeLift_contraction",
+        "GFNBounds.Balance.LiftGeneral.lintegral_rnDeriv_map_sq_le",
+        "GFNBounds.Balance.LiftGeneral.IsReversal",
+        "GFNBounds.Balance.LiftGeneral.isReversal_posterior",
+        "GFNBounds.Balance.LiftGeneral.edgeLiftDual",
+        "GFNBounds.Balance.LiftGeneral.edgeLift_duality",
+        "GFNBounds.Balance.LiftGeneral.edgeLift_reversal_unique",
+        "GFNBounds.Balance.LiftGeneral.edgeLift_adjoint",
+        "GFNBounds.Balance.LiftGeneral.edgeLift_adjoint_real",
+        "GFNBounds.Balance.LiftGeneral.isFiniteMeasure_withDensity_of_sq",
+        "GFNBounds.Balance.LiftGeneral.isReversal_const"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-19 (audited against the lemma carrying the label in proofs.tex and its proof): CLOSED in A. `lift_wellposed` states the whole lemma on a standard Borel 𝒮 for a Markov π_← and a finite π_←-invariant λ. (i) λ₂K₂ = λ₂. (ii) For every finite μ ≪ λ₂: μK₂ ≪ λ₂ and ∫(d(μK₂)/dλ₂)² dλ₂ ≤ ∫(dμ/dλ₂)² dλ₂. This is the contraction of 𝓜²(λ₂), read as the paper defines it ('Four measures': non-negative measures with square-integrable density), and every such measure is finite (`isFiniteMeasure_withDensity_of_sq`). (iii) With π_→^λ constructed as Mathlib's posterior T†λ, the λ-reversal of lem:adjoint(1), K₂* = (s,s') ↦ (s', π_→^λ(s')) satisfies λ₂ ⊗ K₂* = K₂ ⊗ λ₂ in the paper's orientation, and it is the λ₂-a.e. unique finite kernel that does. (iv) Its density action is the 𝓜²(λ₂)-adjoint of K₂'s, ⟪μK₂∣ν⟫ = ⟪μ∣νK₂*⟫, in both the ℝ≥0∞ and the real pairing. eq:muK2_density is `rnDeriv_bind_edgeLift`. Disclosed: standard Borel + Nonempty replaces Polish. Polish with its Borel σ-algebra implies standard Borel; the empty space, where every measure is 0 and the lemma is empty, is the one case excluded. Invariance, contraction, duality given a reversal R, and adjointness hold on any measurable space; only the construction and the uniqueness of R need more. 'The dual' is delivered as the paper's proof delivers it, namely reversal plus adjoint identity. The Riesz step, that an operator satisfying the identity is the adjoint, is not formalized, and the paper does not use it. The reversal facts consumed here (IsReversal.*) are proved locally in the form of lem:adjoint(1)–(2), which does not certify the lem:adjoint row. The contraction is proved by an image-density Cauchy–Schwarz (`lintegral_rnDeriv_map_sq_le`) with no disintegration. Axioms {propext, Classical.choice, Quot.sound}. The hypotheses are inhabited by `isReversal_const` and by the identity kernel on Bool (checked in audit). || 2026-09-14 (Phase 1 re-read against commit 3194054): 'the same holds for K_l' is gone; on a finite space invariance, contraction, duality and the adjoint sentence are proved (pushEdge_density, dualFunActEdge_apply, inner_funActEdge); only the general layer remains. || PARTIAL 2026-09-08, sorry-free, axiom-swept, graduated. CLOSED at ell = 2: invariance, the L^2(lambda_2) contraction, and the duality. The engine is eq:muK2_density (`pushEdge_apply`), proved first; everything else follows from it. Finite state space, disclosed. NOT DONE, and it is the same gap for all four labels: the WINDOW LIFT K_ell for ell >= 3 -- def:edge_lift's second sentence, lem:lift_wellposed's 'the same holds for K_ell', and lem:lift_mixing's beta-hat_n <= beta_{n-ell+1}. The paper defines lambda_ell as 'the stationary backward path measure of length ell', which needs a path-measure construction on S^ell this library does not have. The ell = 2 content is what every downstream consumer in the paper uses. lem:lift_mixing additionally assumes the paper's own 'the deviation norms coincide' step (||A|| = ||A*||), and its operator-norm form needs the infimum to be attained -- true in finite dimension, but proving it needs the Hilbert-space layer being declined. `Graph.reversal` is reused, not rebuilt: the abstract results take pi_forward only through lam u * pf u v = lam v * pb v u, the paper's lambda (x) pi_forward = pi_back (x) lambda in coordinates."
     },
     {
       "label": "prop:db_lift",
@@ -2961,7 +3101,8 @@
         "GFNBounds/Silva/Remarks.lean",
         "GFNBounds/Graph/CycleDivergence.lean",
         "GFNBounds/Graph/SamplerWiring.lean",
-        "GFNBounds/Silva/PathSpaceMarkov.lean"
+        "GFNBounds/Silva/PathSpaceMarkov.lean",
+        "GFNBounds/Silva/PathSpaceMarkovGeneral.lean"
       ],
       "decls": [
         "GFNBounds.Silva.Remarks.exists_pB_le_inv_pathCount",
@@ -2999,11 +3140,30 @@
         "GFNBounds.Silva.PathSpaceMarkov.hasSum_cycTraj",
         "GFNBounds.Silva.PathSpaceMarkov.cycle_exists_ratio_gt_markov",
         "GFNBounds.Silva.PathSpaceMarkov.cycle_ratio_not_bddAbove_markov",
-        "GFNBounds.Silva.PathSpaceMarkov.inhabit_markov_cycle"
+        "GFNBounds.Silva.PathSpaceMarkov.inhabit_markov_cycle",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.IsFullSupportMarkov",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.IsFullSupportMarkovBackward",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.backProb",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.SimpleCycle",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.exists_simpleCycle",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.cycPolicy",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.cycPolicy_isFullSupportMarkov",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.exists_pumped_of_simpleCycle",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.exists_pumped",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.exists_pumped_liminf",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.exists_markov_ratio_gt",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.markov_ratio_not_bddAbove",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.exists_markov_ratio_gt_backward",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.markov_ratio_not_bddAbove_backward",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.backProb_pos",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.summable_backProb",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.iInf_backProb_eq_zero",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.exists_isFullSupportMarkovBackward",
+        "GFNBounds.Silva.PathSpaceMarkovGeneral.inhabit_markov_general"
       ],
-      "status": "partial",
-      "bucket": "B",
-      "scope_notes": "2026-09-18 (Silva/PathSpaceMarkov.lean, audited, ready to graduate after one docstring fix): PARTIAL, B. New: sup_{p_F} M' = +inf on C_N over full-support MARKOV forward policies (cycle_exists_ratio_gt_markov, cycle_ratio_not_bddAbove_markov): the walks of C_N from s_0 to s_f are exactly cycTraj n (eq_cycTraj, cycTraj_injective), cycTraj n runs into x_{n+1 mod N}; cycPol a, 0 < a < 1, is positive on every edge, carried by the edges and stochastic, with p_F(cycTraj n) = a^n(1-a); for every p_B(.|x) that is non-negative, summable and positive on every trajectory into x (weaker than a full-support probability, which it contains) the ratio p_F/p_B over the policies and charged trajectories is unbounded, so M' >= M is. Inhabited (inhabit_markov_cycle). The proof uses summability of p_B, not inf p_B = 0: a Markov policy has p_F <= N/(n+1) on the length-n trajectory. Certified as before: see the 2026-09-18 SamplerWiring entry. REMAINING: the general sentence 'when a cycle lies on the trajectories into x ... sup_{p_F} M' = +inf' over Markov forward policies on an arbitrary graph; on a general graph it is certified only over full-support trajectory laws (exists_ratio_gt_walksInto). Routine on built layers for a Markov backward policy (p_B decays geometrically along the pumped cycle while a Markov p_F with continuation 1 - 1/k decays polynomially), hence B. || 2026-09-18 (Graph/SamplerWiring.lean, audited, ready to graduate): cycle sentence on the sampler (cycle_flows_target_sampler, cycle_no_model_free_bound_sampler, cycle_no_bound_punctured_sampler); certified before: exists_pB_le_inv_pathCount, sup_pathCount_div_le_inv_wMin, sup_pathCount_le_sSup_mPrime_markov (paths visiting each state once in place of acyclicity), walksInto_infinite, iInf_pB_walksInto_eq_zero, |X| = N (card_internal), doubling_terminal_infinite, not_hasSum_const_one, residual_not_divergence_FM_loss."
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "2026-09-19: fix 1 applied (exists_pumped_of_simpleCycle, the pumped family around a GIVEN simple cycle); the A of the audit below is unconditional. 'Cycle' is read as a simple directed cycle (figure-eight closed walks force p_F <= 4^{-n}); an author question whether the draft should say 'simple'. || 2026-09-19 (Silva/PathSpaceMarkovGeneral.lean, audited; CLOSED in A conditional on fix 1 of the audit, the given-cycle form exists_pumped_of_simpleCycle): the REMAINING item of 2026-09-18 is closed. On every finite marked graph, when some walk from s_0 to x visits a state carrying a closed walk and x -> s_f is an edge, sup_{p_F} M' = +inf over full-support MARKOV forward policies (exists_markov_ratio_gt, markov_ratio_not_bddAbove), for every p_B(.|x) positive and summable on the walks into x (weaker than the paper's 'a probability charging each of them', which it contains), and in Silva's setting for the law backProb pb of any full-support Markov backward policy (exists_markov_ratio_gt_backward, markov_ratio_not_bddAbove_backward; backProb_pos, summable_backProb via backward mass <= 1; that the mass equals 1 is not proved and not used). inf_tau p_B(tau|x) = 0 for that law (iInf_backProb_eq_zero). The mechanism sentence: for every simple cycle on the trajectories into x (exists_pumped_of_simpleCycle; a given closed walk supplies one of minimal length by exists_simpleCycle, not in general a sub-cycle of it -- the paper's 'cycle' is read as a simple directed cycle, the only reading on which its Markov lower bound holds), the walks tau_k that enter it, wind k further turns and leave it are an injective family into x with liminf (k+1) p_B(tau_k|x) = 0 for every summable p_B (exists_pumped_liminf), p_F(tau_k) > c_0/(k+1) for the loop-weighted policy cycPolicy with continuation (m+1)/(m+2), c_0 > 0 independent of k, and p_F(tau_k) <= 1/(k+1) for every full-support Markov policy. Readings, disclosed: p_F(tau) is pathProb pol (tau ++ [s_f]); '= +inf' is unboundedness of p_F/p_B (M' >= M >= ratio), M' having no value on an infinite trajectory set, as the paper says; the constants read c_0/(k+1) and 1/(k+1) for c/(n+2) and 1/(n+1), and the policy's exit probability at the leaving state is >= (1-a)/|V| with 1-a = 1/(m+2), not exactly 1/(n+2), a description of the construction; 'every forward policy has p_F(tau_n) <= 1/(n+1)' is stated over full-support Markov policies, the class the supremum runs over (the proof uses only non-negativity and row sums; false over trajectory laws). IsFullSupportMarkov does not require the induced trajectory law to have mass 1; every full-support Markov policy on a graph shares its support, so cycPolicy lies in any narrower class that is nonempty. Inhabited: exists_isFullSupportMarkovBackward on every finite graph, inhabit_markov_general on C_2. Certified as before: see the 2026-09-18 entries (C_N Markov form, SamplerWiring, path-count bounds with paths visiting each state once in place of acyclicity, |X| = N, the counter-example graph's infinite terminal set, residual_not_divergence_FM_loss). || 2026-09-18 (Silva/PathSpaceMarkov.lean, audited, ready to graduate after one docstring fix): PARTIAL, B. New: sup_{p_F} M' = +inf on C_N over full-support MARKOV forward policies (cycle_exists_ratio_gt_markov, cycle_ratio_not_bddAbove_markov): the walks of C_N from s_0 to s_f are exactly cycTraj n (eq_cycTraj, cycTraj_injective), cycTraj n runs into x_{n+1 mod N}; cycPol a, 0 < a < 1, is positive on every edge, carried by the edges and stochastic, with p_F(cycTraj n) = a^n(1-a); for every p_B(.|x) that is non-negative, summable and positive on every trajectory into x (weaker than a full-support probability, which it contains) the ratio p_F/p_B over the policies and charged trajectories is unbounded, so M' >= M is. Inhabited (inhabit_markov_cycle). The proof uses summability of p_B, not inf p_B = 0: a Markov policy has p_F <= N/(n+1) on the length-n trajectory. Certified as before: see the 2026-09-18 SamplerWiring entry. REMAINING: the general sentence 'when a cycle lies on the trajectories into x ... sup_{p_F} M' = +inf' over Markov forward policies on an arbitrary graph; on a general graph it is certified only over full-support trajectory laws (exists_ratio_gt_walksInto). Routine on built layers for a Markov backward policy (p_B decays geometrically along the pumped cycle while a Markov p_F with continuation 1 - 1/k decays polynomially), hence B. || 2026-09-18 (Graph/SamplerWiring.lean, audited, ready to graduate): cycle sentence on the sampler (cycle_flows_target_sampler, cycle_no_model_free_bound_sampler, cycle_no_bound_punctured_sampler); certified before: exists_pB_le_inv_pathCount, sup_pathCount_div_le_inv_wMin, sup_pathCount_le_sSup_mPrime_markov (paths visiting each state once in place of acyclicity), walksInto_infinite, iInf_pB_walksInto_eq_zero, |X| = N (card_internal), doubling_terminal_infinite, not_hasSum_const_one, residual_not_divergence_FM_loss."
     },
     {
       "label": "rem:silva_vs_ours",
@@ -3167,7 +3327,9 @@
       "lean_files": [
         "GFNBounds/Core/StableBound.lean",
         "GFNBounds/Core/RLBound.lean",
-        "GFNBounds/Core/NegativeControl.lean"
+        "GFNBounds/Core/NegativeControl.lean",
+        "GFNBounds/Core/SamplingGeneralBounds.lean",
+        "GFNBounds/Core/SamplingGeneral.lean"
       ],
       "decls": [
         "GFNBounds.Core.tvD",
@@ -3189,11 +3351,23 @@
         "GFNBounds.Core.RLBound.inf_loss_eq_zero",
         "GFNBounds.Core.RLBound.inf_loss_eq_zero_top",
         "GFNBounds.Core.RLBound.joint_infimum",
-        "GFNBounds.Core.RLBound.massSetLp_eq_massSet"
+        "GFNBounds.Core.RLBound.massSetLp_eq_massSet",
+        "GFNBounds.Core.SamplingGeneral.stable_bound_general_hNC",
+        "GFNBounds.Core.SamplingGeneral.inference_negative_control",
+        "GFNBounds.Core.SamplingGeneral.htri_inference",
+        "GFNBounds.Core.SamplingGeneral.infFlow",
+        "GFNBounds.Core.SamplingGeneral.infDelta",
+        "GFNBounds.Core.SamplingGeneral.infFlow_matched",
+        "GFNBounds.Core.SamplingGeneral.samplerDens",
+        "GFNBounds.Core.SamplingGeneral.MFlow.negative_control_tv",
+        "GFNBounds.Core.SamplingGeneral.Resample.stable_bound_general_inhabited",
+        "GFNBounds.Core.SamplingGeneral.le_essSup_rnDeriv_smul",
+        "GFNBounds.Core.SamplingGeneral.essSup_rnDeriv_eq_eLpNorm_top",
+        "GFNBounds.Core.SamplingGeneral.stable_bound_general_essSup"
       ],
       "status": "closed",
-      "bucket": "B",
-      "scope_notes": "BODY RESTATEMENT of theo:RL_CV_bound_full, certified through its appendix twin (restatement 'verified', proof-checker 2026-09-13); status and bucket are the twin's, 2026-09-18. The body's three clauses map to the twin's items: the loss bounds the TV sampling error and the mass defect (item (1); the TV half is Lean-certified with nothing external only on a finite state space charging every atom, `stable_bound_finite`, and on the general space with theo:negative_control and the sampler's triangle inequality as hypotheses, `stable_bound_kernel` -- hence B); the loss can be driven to zero over an L^p-universal family with q <= p at a matched initial mass (item (2), `inf_loss_eq_zero`, general measurable space); over a trained initial family 'exactly when' the target's mass is a limit of realized masses (item (3), `joint_infimum`, the iff reading being the twin's under 'every member in L^p', `massSetLp_eq_massSet` -- the body's 'technical integrability assumptions'). The twin's row carries the disclosures. || BODY RESTATEMENT of theo:RL_CV_bound_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- Integrability hypotheses flagged by the body itself ('under technical integrability assumptions'); C given at cv_stable.tex:20-21. proof-checker 2026-09-13.. The twin's row carries the disclosures."
+      "bucket": "A",
+      "scope_notes": "2026-09-19: follows its twin theo:RL_CV_bound_full (closed, A); restatement 'verified' unchanged. || BODY RESTATEMENT of theo:RL_CV_bound_full, certified through its appendix twin (restatement 'verified', proof-checker 2026-09-13); status and bucket are the twin's, 2026-09-18. The body's three clauses map to the twin's items: the loss bounds the TV sampling error and the mass defect (item (1); the TV half is Lean-certified with nothing external only on a finite state space charging every atom, `stable_bound_finite`, and on the general space with theo:negative_control and the sampler's triangle inequality as hypotheses, `stable_bound_kernel` -- hence B); the loss can be driven to zero over an L^p-universal family with q <= p at a matched initial mass (item (2), `inf_loss_eq_zero`, general measurable space); over a trained initial family 'exactly when' the target's mass is a limit of realized masses (item (3), `joint_infimum`, the iff reading being the twin's under 'every member in L^p', `massSetLp_eq_massSet` -- the body's 'technical integrability assumptions'). The twin's row carries the disclosures. || BODY RESTATEMENT of theo:RL_CV_bound_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- Integrability hypotheses flagged by the body itself ('under technical integrability assumptions'); C given at cv_stable.tex:20-21. proof-checker 2026-09-13.. The twin's row carries the disclosures."
     },
     {
       "label": "theo:IL_CV_bound_body",
@@ -3206,7 +3380,9 @@
       "lean_files": [
         "GFNBounds/Core/ILBound.lean",
         "GFNBounds/Core/ILBoundFull.lean",
-        "GFNBounds/Core/StableBound.lean"
+        "GFNBounds/Core/StableBound.lean",
+        "GFNBounds/Core/SamplingGeneralBounds.lean",
+        "GFNBounds/Core/SamplingGeneral.lean"
       ],
       "decls": [
         "GFNBounds.Core.klD",
@@ -3226,11 +3402,21 @@
         "GFNBounds.Core.ILBoundFull.il_attained",
         "GFNBounds.Core.ILBoundFull.il_attained_of_stronglyUniversal",
         "GFNBounds.Core.ILBoundFull.il_tv_le_sqrt",
-        "GFNBounds.Core.ILBoundFull.ilLoss"
+        "GFNBounds.Core.ILBoundFull.ilLoss",
+        "GFNBounds.Core.ILBoundFull.Example.ilLoss_ne_top",
+        "GFNBounds.Core.SamplingGeneral.il_first_bullet_general",
+        "GFNBounds.Core.SamplingGeneral.il_first_bullet_general_hNC",
+        "GFNBounds.Core.SamplingGeneral.inference_negative_control",
+        "GFNBounds.Core.SamplingGeneral.infFlow",
+        "GFNBounds.Core.SamplingGeneral.samplerDens",
+        "GFNBounds.Core.SamplingGeneral.eFn_eq_eFlow",
+        "GFNBounds.Core.SamplingGeneral.Resample.il_first_bullet_general_inhabited",
+        "GFNBounds.Core.SamplingGeneral.Resample.lossFinite",
+        "GFNBounds.Core.ILBoundFull.ilLoss_of_finite"
       ],
       "status": "closed",
-      "bucket": "B",
-      "scope_notes": "BODY RESTATEMENT of theo:IL_CV_bound, CLOSED in B 2026-09-18 through its twin in `Core/ILBoundFull.lean`. Four clauses. (1) The loss is at least the self-entropy H at any q in [1, inf]: `il_first_bullet`, general space. (2) Equality when the family dominates the target up to 1 - eps for every eps: `il_iInf_eq`, general. (3) Attained at exact matching, which strong L^p-universality supplies: `il_attained`, `il_attained_of_stronglyUniversal`, general. (4) Sampling error O(sqrt(L - H)): `il_tv_le_sqrt`, with the explicit constant 1/sqrt 2 + ||dnu_B/dnu_T||_{L^{q*}} once L - H <= 1. `il_tv_le_sqrt` is a real-number lemma composed with the TV clause of equ:il_tv_explicit, and that clause is certified with nothing carried only on a finite state space with nu_B of full support (`il_first_bullet_finite`). On a general space it carries theo:negative_control as `hNC`. Bucket B is inherited from the twin for this reason. The restatement reading stays 'verified' (proof-checker 2026-09-13); the body hides finite H and nu_train << nu_B. || BODY RESTATEMENT of theo:IL_CV_bound, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- Hides only finite H and nu_train << nu_B, both implied by the loss being well defined. proof-checker 2026-09-13.. The twin's row carries the disclosures."
+      "bucket": "A",
+      "scope_notes": "2026-09-19: follows its twin theo:IL_CV_bound (closed, A); restatement 'verified' unchanged. || BODY RESTATEMENT of theo:IL_CV_bound, CLOSED in B 2026-09-18 through its twin in `Core/ILBoundFull.lean`. Four clauses. (1) The loss is at least the self-entropy H at any q in [1, inf]: `il_first_bullet`, general space. (2) Equality when the family dominates the target up to 1 - eps for every eps: `il_iInf_eq`, general. (3) Attained at exact matching, which strong L^p-universality supplies: `il_attained`, `il_attained_of_stronglyUniversal`, general. (4) Sampling error O(sqrt(L - H)): `il_tv_le_sqrt`, with the explicit constant 1/sqrt 2 + ||dnu_B/dnu_T||_{L^{q*}} once L - H <= 1. `il_tv_le_sqrt` is a real-number lemma composed with the TV clause of equ:il_tv_explicit, and that clause is certified with nothing carried only on a finite state space with nu_B of full support (`il_first_bullet_finite`). On a general space it carries theo:negative_control as `hNC`. Bucket B is inherited from the twin for this reason. The restatement reading stays 'verified' (proof-checker 2026-09-13); the body hides finite H and nu_train << nu_B. || BODY RESTATEMENT of theo:IL_CV_bound, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- Hides only finite H and nu_train << nu_B, both implied by the loss being well defined. proof-checker 2026-09-13.. The twin's row carries the disclosures."
     },
     {
       "label": "theo:no_bound_divergence",

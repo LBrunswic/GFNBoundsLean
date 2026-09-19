@@ -1,11 +1,19 @@
 {
   "schema": 1,
-  "source_date": "2026-09-19T07:17:29Z",
-  "commit": "2156702bf338c43c79f33432491365294ed6c444",
-  "commit_short": "2156702",
+  "source_date": "2026-09-19T07:53:34Z",
+  "commit": "d6449eb95d802eb3bf62b06fa7350318c94a89d9",
+  "commit_short": "d6449eb",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json",
+    "kb/INDEX.md",
+    "paper-map.json"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -38,15 +46,15 @@
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 4583,
+    "declarations": 5090,
     "by_namespace": {
-      "GFNBounds.Doubling": 1451,
-      "GFNBounds.Balance": 1253,
+      "GFNBounds.Doubling": 1613,
+      "GFNBounds.Balance": 1297,
       "GFNBounds.Graph": 992,
-      "GFNBounds.Core": 662,
-      "GFNBounds.Silva": 225
+      "GFNBounds.Core": 877,
+      "GFNBounds.Silva": 311
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "c1544771e22ef4d96ec8f0be8495c98270c5d1099456c4aa4b5d9dde00141298"
+    "sha256": "b8c68bbb638eddce7317663671cf3d083df0be7c04c39e1d4b590449570d0738"
   }
 }

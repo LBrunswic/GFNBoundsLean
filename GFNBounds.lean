@@ -138,4 +138,5 @@ import GFNBounds.Graph.PartialSupportClose
 import GFNBounds.Silva.PathSpaceMarkov
 import GFNBounds.Doubling.RenewalClose
 import GFNBounds.Balance.LocalConvergenceClose
+import GFNBounds.Balance.LiftGeneral
 import GFNBounds.Audit

@@ -141,4 +141,5 @@ import GFNBounds.Balance.LocalConvergenceClose
 import GFNBounds.Silva.PathSpaceMarkovGeneral
 import GFNBounds.Core.SamplingGeneral
 import GFNBounds.Core.SamplingGeneralBounds
+import GFNBounds.Core.AdjointGeneral
 import GFNBounds.Audit

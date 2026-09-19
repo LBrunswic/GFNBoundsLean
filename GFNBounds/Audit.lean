@@ -97,6 +97,7 @@ import GFNBounds.Balance.LocalConvergenceClose
 import GFNBounds.Silva.PathSpaceMarkovGeneral
 import GFNBounds.Core.SamplingGeneral
 import GFNBounds.Core.SamplingGeneralBounds
+import GFNBounds.Core.AdjointGeneral
 
 /-!
 # Axiom audit
@@ -1537,3 +1538,57 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Core.SamplingGeneral.Resample.stable_bound_general_inhabited
 #print axioms GFNBounds.Core.SamplingGeneral.Resample.lossFinite
 #print axioms GFNBounds.Core.SamplingGeneral.Resample.il_first_bullet_general_inhabited
+-- `lem:adjoint` in the general setting — GFNBounds/Core/AdjointGeneral.lean
+#print axioms GFNBounds.Core.General.IsInvariant
+#print axioms GFNBounds.Core.General.funAct
+#print axioms GFNBounds.Core.General.isInvariant_id
+#print axioms GFNBounds.Core.General.isInvariant_const
+#print axioms GFNBounds.Core.General.IsInvariant.ae_ae
+#print axioms GFNBounds.Core.General.lintegral_rpow_le
+#print axioms GFNBounds.Core.General.IsInvariant.lintegral_rpow_lintegral_le
+#print axioms GFNBounds.Core.General.enorm_funAct_le
+#print axioms GFNBounds.Core.General.IsInvariant.funAct_congr
+#print axioms GFNBounds.Core.General.IsInvariant.aestronglyMeasurable_funAct
+#print axioms GFNBounds.Core.General.IsInvariant.eLpNorm_funAct_le
+#print axioms GFNBounds.Core.General.IsInvariant.memLp_funAct
+#print axioms GFNBounds.Core.General.funAct_one
+#print axioms GFNBounds.Core.General.IsInvariant.isLeast_opNorm_funAct
+#print axioms GFNBounds.Core.General.IsReversalPair
+#print axioms GFNBounds.Core.General.IsReversalPair.symm
+#print axioms GFNBounds.Core.General.IsReversalPair.isInvariant
+#print axioms GFNBounds.Core.General.reversal
+#print axioms GFNBounds.Core.General.posterior_congr_measure
+#print axioms GFNBounds.Core.General.IsInvariant.isReversalPair_reversal
+#print axioms GFNBounds.Core.General.IsInvariant.ae_eq_reversal
+#print axioms GFNBounds.Core.General.IsInvariant.isInvariant_reversal
+#print axioms GFNBounds.Core.General.IsInvariant.isReversalPair_reversal_symm
+#print axioms GFNBounds.Core.General.IsInvariant.reversal_reversal
+#print axioms GFNBounds.Core.General.IsInvariant.comp_absolutelyContinuous
+#print axioms GFNBounds.Core.General.IsReversalPair.lintegral_mul_apply
+#print axioms GFNBounds.Core.General.IsReversalPair.comp_withDensity
+#print axioms GFNBounds.Core.General.IsReversalPair.rnDeriv_comp
+#print axioms GFNBounds.Core.General.IsReversalPair.toReal_rnDeriv_comp
+#print axioms GFNBounds.Core.General.measurePreserving_fst_compProd
+#print axioms GFNBounds.Core.General.IsInvariant.measurePreserving_snd_compProd
+#print axioms GFNBounds.Core.General.IsReversalPair.measurePreserving_swap
+#print axioms GFNBounds.Core.General.IsInvariant.integrable_mul_compProd
+#print axioms GFNBounds.Core.General.IsReversalPair.integral_mul_funAct
+#print axioms GFNBounds.Core.General.InM2
+#print axioms GFNBounds.Core.General.ipM
+#print axioms GFNBounds.Core.General.nrmM
+#print axioms GFNBounds.Core.General.InM2.of_sigmaFinite
+#print axioms GFNBounds.Core.General.inM2_withDensity_ofReal
+#print axioms GFNBounds.Core.General.InM2.eq_withDensity_ofReal
+#print axioms GFNBounds.Core.General.IsReversalPair.inM2_comp
+#print axioms GFNBounds.Core.General.IsReversalPair.nrmM_comp_le
+#print axioms GFNBounds.Core.General.IsReversalPair.ipM_comp
+#print axioms GFNBounds.Core.General.IsReversalPair.isLeast_opNorm_comp
+#print axioms GFNBounds.Core.General.IsInvariant.rnDeriv_comp
+#print axioms GFNBounds.Core.General.IsInvariant.rnDeriv_reversal_comp
+#print axioms GFNBounds.Core.General.IsInvariant.integral_mul_funAct_reversal
+#print axioms GFNBounds.Core.General.adjoint_general
+#print axioms GFNBounds.Core.General.IsInvariant.reversal_singleton_mul
+#print axioms GFNBounds.Core.General.IsInvariant.reversal_singleton
+#print axioms GFNBounds.Core.General.IsInvariant.toReal_reversal_singleton
+-- `lem:adjoint` finite graph half — GFNBounds/Core/Adjoint.lean
+#print axioms GFNBounds.Core.adjoint_finite

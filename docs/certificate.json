@@ -1,11 +1,13 @@
 {
   "schema": 1,
-  "source_date": "2026-09-20T11:16:05+01:00",
-  "commit": "828c35e8cbda0fc3f262a6f3a53eb7bf3573bc6f",
-  "commit_short": "828c35e",
+  "source_date": "2026-09-20T19:02:05+01:00",
+  "commit": "1f59baacd774efbfdf8aadac9588350da0966361",
+  "commit_short": "1f59baa",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "NonAcyclic/"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",

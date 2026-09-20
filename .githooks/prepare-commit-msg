@@ -5,34 +5,39 @@
 # compilation, sorry-free status, axiom list — read from docs/certificate.json,
 # which `make check` writes.
 #
-# Two rules this obeys:
+# Three rules this obeys:
 #   * it never blocks a commit. A missing or unreadable certificate yields a line
 #     saying so, not a failure.
-#   * it never repeats a green it has not earned. A commit that stages Lean sources
-#     the recorded gate run never saw is marked as such; `pre-push` re-runs
-#     `make check`, and that is the gate that actually certifies a push.
+#   * it does not dress `gates_green` up as a checked fact. That field is true by
+#     construction (certificate.py runs last in `make check`, so its existence is
+#     the claim), and the scoreboard says so.
+#   * freshness is asked of the repository's own predicate,
+#     `scripts/certificate.py --verify`, not of a heuristic here: it compares the
+#     worktree against the certified source commit and checks the facts file and
+#     the axiom set. `pre-push` re-runs the whole gate, and that is what certifies
+#     a push.
 
 set -u
 MSG="$1"
 SRC="${2:-}"
 
-# leave merge/squash messages alone; stay idempotent under `commit --amend`
 [ "$SRC" = "merge" ] && exit 0
 [ "$SRC" = "squash" ] && exit 0
 grep -q '^Scoreboard' "$MSG" 2>/dev/null && exit 0
 
 python3 - "$MSG" <<'PY' || exit 0
-import io, json, subprocess, sys, os
+import io, json, os, subprocess, sys
 
 msg_path = sys.argv[1]
 
-def sh(*a):
+def sh(*a, **kw):
     try:
-        return subprocess.run(a, capture_output=True, text=True, timeout=20).stdout.strip()
+        return subprocess.run(a, capture_output=True, text=True, timeout=60, **kw)
     except Exception:
-        return ""
+        return None
 
-root = sh("git", "rev-parse", "--show-toplevel") or "."
+top = sh("git", "rev-parse", "--show-toplevel")
+root = top.stdout.strip() if top and top.returncode == 0 else "."
 cert_path = os.path.join(root, "docs", "certificate.json")
 
 lines = []
@@ -41,32 +46,37 @@ try:
 except Exception:
     lines = ["Scoreboard unavailable — docs/certificate.json unreadable; run `make check`."]
 else:
-    green = c.get("gates_green")
     gates = c.get("gates") or []
     ax = c.get("standard_axioms") or []
     off = c.get("facts", {}).get("declarations_on_nonstandard_axioms") or []
     ml = (c.get("mathlib") or {}).get("rev", "")[:8]
     dirty = c.get("dirty")
+    dfs = c.get("dirty_files") or []
 
-    # Lean sources staged in THIS commit that the recorded run never saw.
-    staged = [p for p in sh("git", "diff", "--cached", "--name-only").splitlines()
-              if p.endswith(".lean")]
+    where = c.get("commit_short", "?")
+    tree = ("dirty: " + ", ".join(dfs[:3])) if dirty else "clean"
+    lines.append("Scoreboard — docs/certificate.json @ %s (%s)" % (where, tree))
+    lines.append("  gate     lake build %s green · %d/%d · recorded by construction, not asserted"
+                 % (c.get("strict_library", "GFNBounds"), len(gates), len(gates)))
 
-    head = "Scoreboard — docs/certificate.json @ %s (%s tree)" % (
-        c.get("commit_short", "?"), "dirty" if dirty else "clean")
-    lines.append(head)
-    lines.append("  build    lake build %s: %s · %d/%d gates" % (
-        c.get("strict_library", "GFNBounds"),
-        "green" if green else "RED", len(gates) if green else 0, len(gates)))
+    v = sh(sys.executable, os.path.join(root, "scripts", "certificate.py"), "--verify", cwd=root)
+    if v is None:
+        lines.append("  fresh    unknown — could not run certificate.py --verify")
+    elif v.returncode == 0:
+        lines.append("  fresh    certificate.py --verify: PASS")
+    else:
+        probs = [l.strip().replace("certificate: ", "")
+                 for l in (v.stderr or "").splitlines() if l.strip()]
+        lines.append("  fresh    certificate.py --verify: FAIL — %s"
+                     % (probs[0] if probs else "see `make check`"))
+        for p in probs[1:3]:
+            lines.append("           %s" % p)
+
     lines.append("  sorries  strict 0 (a sorry is a compile error there) · scaffold %s"
                  % c.get("scaffold_sorries", "?"))
     lines.append("  axioms   %s · %d declaration(s) off them" % (", ".join(ax), len(off)))
     lines.append("  pin      %s · mathlib %s" % (c.get("toolchain", "?"), ml))
     lines.append("  decls    %s" % c.get("facts", {}).get("declarations", "?"))
-    if staged:
-        lines.append("  note     %d Lean file(s) staged here are not covered by that run;"
-                     % len(staged))
-        lines.append("           `pre-push` re-runs `make check`, which is the gate for a push.")
 
 block = "\n".join(lines)
 
@@ -75,7 +85,6 @@ body, comments = [], []
 for ln in raw:
     (comments if ln.startswith("#") else body).append(ln)
 
-# keep a trailing trailer block (Co-Authored-By: etc.) last
 def is_trailer(s):
     if ":" not in s or s.startswith(" "):
         return False

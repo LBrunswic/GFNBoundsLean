@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "source_date": "2026-09-20T09:02:23Z",
-  "commit": "df83318eb5d4c2bd3553b40ef0667edafd44fdf7",
-  "commit_short": "df83318",
+  "source_date": "2026-09-20T11:16:05+01:00",
+  "commit": "828c35e8cbda0fc3f262a6f3a53eb7bf3573bc6f",
+  "commit_short": "828c35e",
   "branch": "main",
   "dirty": false,
   "dirty_files": [],

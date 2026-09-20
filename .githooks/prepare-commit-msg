@@ -1,0 +1,98 @@
+#!/bin/sh
+# prepare-commit-msg — append the gate scoreboard to every commit message.
+#
+# DEC-33 (2026-09-20, AUTHOR): commits here carry a scoreboard — Lean library
+# compilation, sorry-free status, axiom list — read from docs/certificate.json,
+# which `make check` writes.
+#
+# Two rules this obeys:
+#   * it never blocks a commit. A missing or unreadable certificate yields a line
+#     saying so, not a failure.
+#   * it never repeats a green it has not earned. A commit that stages Lean sources
+#     the recorded gate run never saw is marked as such; `pre-push` re-runs
+#     `make check`, and that is the gate that actually certifies a push.
+
+set -u
+MSG="$1"
+SRC="${2:-}"
+
+# leave merge/squash messages alone; stay idempotent under `commit --amend`
+[ "$SRC" = "merge" ] && exit 0
+[ "$SRC" = "squash" ] && exit 0
+grep -q '^Scoreboard' "$MSG" 2>/dev/null && exit 0
+
+python3 - "$MSG" <<'PY' || exit 0
+import io, json, subprocess, sys, os
+
+msg_path = sys.argv[1]
+
+def sh(*a):
+    try:
+        return subprocess.run(a, capture_output=True, text=True, timeout=20).stdout.strip()
+    except Exception:
+        return ""
+
+root = sh("git", "rev-parse", "--show-toplevel") or "."
+cert_path = os.path.join(root, "docs", "certificate.json")
+
+lines = []
+try:
+    c = json.load(io.open(cert_path, encoding="utf-8"))
+except Exception:
+    lines = ["Scoreboard unavailable — docs/certificate.json unreadable; run `make check`."]
+else:
+    green = c.get("gates_green")
+    gates = c.get("gates") or []
+    ax = c.get("standard_axioms") or []
+    off = c.get("facts", {}).get("declarations_on_nonstandard_axioms") or []
+    ml = (c.get("mathlib") or {}).get("rev", "")[:8]
+    dirty = c.get("dirty")
+
+    # Lean sources staged in THIS commit that the recorded run never saw.
+    staged = [p for p in sh("git", "diff", "--cached", "--name-only").splitlines()
+              if p.endswith(".lean")]
+
+    head = "Scoreboard — docs/certificate.json @ %s (%s tree)" % (
+        c.get("commit_short", "?"), "dirty" if dirty else "clean")
+    lines.append(head)
+    lines.append("  build    lake build %s: %s · %d/%d gates" % (
+        c.get("strict_library", "GFNBounds"),
+        "green" if green else "RED", len(gates) if green else 0, len(gates)))
+    lines.append("  sorries  strict 0 (a sorry is a compile error there) · scaffold %s"
+                 % c.get("scaffold_sorries", "?"))
+    lines.append("  axioms   %s · %d declaration(s) off them" % (", ".join(ax), len(off)))
+    lines.append("  pin      %s · mathlib %s" % (c.get("toolchain", "?"), ml))
+    lines.append("  decls    %s" % c.get("facts", {}).get("declarations", "?"))
+    if staged:
+        lines.append("  note     %d Lean file(s) staged here are not covered by that run;"
+                     % len(staged))
+        lines.append("           `pre-push` re-runs `make check`, which is the gate for a push.")
+
+block = "\n".join(lines)
+
+raw = io.open(msg_path, encoding="utf-8").read().split("\n")
+body, comments = [], []
+for ln in raw:
+    (comments if ln.startswith("#") else body).append(ln)
+
+# keep a trailing trailer block (Co-Authored-By: etc.) last
+def is_trailer(s):
+    if ":" not in s or s.startswith(" "):
+        return False
+    k = s.split(":", 1)[0]
+    return k and all(ch.isalnum() or ch == "-" for ch in k)
+
+end = len(body)
+while end > 0 and body[end - 1].strip() == "":
+    end -= 1
+start = end
+while start > 0 and is_trailer(body[start - 1].strip()):
+    start -= 1
+
+if start < end:
+    out = body[:start] + [block, ""] + body[start:end] + body[end:]
+else:
+    out = body[:end] + ["", block] + body[end:]
+
+io.open(msg_path, "w", encoding="utf-8").write("\n".join(out + comments))
+PY

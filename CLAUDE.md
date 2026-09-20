@@ -24,7 +24,7 @@ twin's row carries the disclosures. The two body statements without a twin, `def
 and `theo:no_bound_divergence`, have their own rows. This closes the gap recorded on 2026-09-12:
 `theo:no_bound_divergence` was a closed certificate with no digest on this side, so a reworded
 Theorem 5 would have left `make check` green. The paper-side ledger
-(`FORMALIZATION-LEDGER.md`, all 130 statements) still cross-checks every mapped row.
+(`FORMALIZATION-LEDGER.md`, all 131 statements) still cross-checks every mapped row.
 
 ## Orientation, in reading order
 
@@ -33,7 +33,7 @@ Theorem 5 would have left `make check` green. The paper-side ledger
 | [`docs/REPO-MAP.md`](docs/REPO-MAP.md) | **Orientation.** Loose ends, layer order, the general-purpose shelf, one line per file. ~15 KB — read it whole. Generated. |
 | [`docs/REPO-INDEX.md`](docs/REPO-INDEX.md) | **Where is the lemma I need.** Every declaration with its statement, and the name index. Large — `grep` it, do not read it. Generated. |
 | [`kb/INDEX.md`](kb/INDEX.md) | **What working here is like.** Patterns, pitfalls, obstructions, house rules. Read before you start; write to it when you finish. |
-| [`docs/COVERAGE.md`](docs/COVERAGE.md) | **How far it has got.** All 41 statements, status and difficulty bucket. Generated. |
+| [`docs/COVERAGE.md`](docs/COVERAGE.md) | **How far it has got.** All 98 mapped statements — Appendix A's 39, B's 7, H's 40 and the body's 12 — with status and difficulty bucket. Generated. |
 | [`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md) | Every open `sorry`, keyed and justified. Generated. |
 | `paper-map.json` | The traceability spine: label → tex span → LaTeX digest → Lean files and declarations → status, bucket, scope notes. |
 
@@ -41,11 +41,13 @@ The paper is at `/home/maxbrain/Dropbox/GFN Bounds/`; the three files in scope a
 `proofs.tex`, `silva_comparison.tex` and `app_doubling.tex`. **Nothing here edits them.** If
 formalizing forces a change to the draft, that change goes through `/writer`.
 
-The whole-paper ledger — all 130 statements with natural-language status, Lean status and the
+The whole-paper ledger — all 131 statements with natural-language status, Lean status and the
 dependency DAG — is on the paper side at `FORMALIZATION-LEDGER.md` (generator
 `formalization_ledger.py`, machine twin `formalization-ledger.json`). It reads `paper-map.json`
 and never writes it. Use it to pick the next target: `python3 formalization_ledger.py ready`
-lists what is unformalized and has every dependency closed.
+lists what is unformalized and has every dependency closed. Since 2026-09-19 that queue is
+**empty** — closure is 96 of 96 — so new work here comes from a change to the paper, or from the
+author widening the scope beyond Appendices A, B and H.
 
 ## The five rules
 
@@ -94,9 +96,11 @@ detail, and `docs/COVERAGE.md`'s bucket column is the standing record.
 
 1. **A chain — narrowed.** The pin has `Kernel.traj` (Ionescu–Tulcea), hitting times and bounded
    optional stopping, but no recurrence/transience classification, Foster criterion or strong
-   Markov property. Of the rows once behind it only `prop:doubling_phase` (and the recurrence
-   labels of `theo:doubling_main`(1)) still is. *Check whether the statement really needs a chain*
-   — `Kac.lean`, the decay block and `DescentStatement.lean`'s pathwise reading did not.
+   Markov property. **No row is behind it any more.** The last two, `prop:doubling_phase` and the
+   recurrence labels of `theo:doubling_main`(1), closed on 2026-09-19 as the least-solution classes
+   of `RecurrenceClass.lean` under ruling R8, which builds no path space — the disclosure is in
+   their scope notes. *Check whether the statement really needs a chain* — `Kac.lean`, the decay
+   block and `DescentStatement.lean`'s pathwise reading did not.
 2. **The general measure layer** — the density action on `L^p(λ)` for an arbitrary kernel with its
    `λ`-reversal and adjoint, a Radon–Nikodym calculus on `𝓜⁺`, disintegration. The doubling
    instances are done (`LpLayer.lean`, committed); what remains is the generality Appendix A states.
@@ -107,9 +111,11 @@ detail, and `docs/COVERAGE.md`'s bucket column is the standing record.
 **A defect found and repaired (2026-09-13):** `Balance/Flow.lean`'s `IsGradientFlow` asked the ODE
 at every real `t` and had no solution from a non-balanced start, so every theorem hypothesising it
 was vacuous there. It now asks `0 ≤ t` (author's approval); 17 auxiliary signatures gained a
-`0 ≤ t` or lost their negative times, no paper-level statement changed. **Existence of a forward
-solution is still not proved** — a theorem about solutions of a predicate is only as good as the
-predicate's inhabitation. `kb/entries/0025` has the detail.
+`0 ≤ t` or lost their negative times, no paper-level statement changed. Existence of a forward
+solution — the inhabitation the repair left owed, and a theorem about solutions of a predicate is
+only as good as it — is **proved since 2026-09-19** in `Balance/FlowExistence.lean`, with
+uniqueness and positivity, on a finite ergodic chain for both generators. `kb/entries/0025` has
+the detail, and the lesson outlives the instance.
 
 ## The team
 

@@ -5,17 +5,19 @@ Flows* — **Appendices A, B and H**:
 
 | appendix | source | what it is | statements |
 |---|---|---|---|
-| **A** | `proofs.tex` | the paper's proofs: universality, the stable bounds, the first variation, the frozen-policy dynamics, universality on finite graphs | 37 |
-| **B** | `silva_comparison.tex` | the explicit-constant restatement of Silva et al.'s bound, and why its state-space dependence is unavoidable | 6 |
-| **H** | `app_doubling.tex` | the doubling-graph counter-example: an unbounded diffusion operator at finite backward length | 41 |
+| **A** | `proofs.tex` | the paper's proofs: universality, the stable bounds, the first variation, the frozen-policy dynamics, universality on finite graphs | 39 |
+| **B** | `silva_comparison.tex` | the explicit-constant restatement of Silva et al.'s bound, and why its state-space dependence is unavoidable | 7 |
+| **H** | `app_doubling.tex` | the doubling-graph counter-example: an unbounded diffusion operator at finite backward length | 40 |
 
 The library began as Appendix H alone and was widened to A and B on 2026-09-08, at the author's
 instruction. Appendices C–G are **not** in scope.
 
 Coverage: **[`docs/COVERAGE.md`](docs/COVERAGE.md)**. Open `sorry`s:
-[`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md). The whole-paper ledger — all 130 statements with
+[`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md). The whole-paper ledger — all 131 statements with
 their natural-language status, their Lean status and the dependency DAG — lives on the paper side
-at `FORMALIZATION-LEDGER.md`.
+at `FORMALIZATION-LEDGER.md`. Since 2026-09-19 it reads **closure 96 of 96**: every in-scope
+statement of the body and Appendices A, B and H is closed in bucket A, the four terminal remarks
+excepted.
 
 ## Where it stands
 
@@ -48,10 +50,13 @@ the `p = 2` clauses of `theo:doubling_unbounded` on the same space (`UnboundedL2
 **What is deliberately not claimed**, and is disclosed in each file's `SCOPE` section: `Π` is the
 mean projection, not proved to be the projection onto the invariant densities — ergodicity has moved
 into the summability hypothesis, and `eq_meanProj_of_invariant` proves that is where it went. Strong
-universality at `p = +∞` and the paper's cross-`p` transfer are not carried. Statements resting on
-theorems the paper *cites* rather than proves — `theo:sampling_theorem` from `bengio2021flow`,
-`theo:negative_control` from `brunswicEGF`, and the gradient formula of `theo:first_variation_full`
-— carry them as named hypotheses, never as axioms, so `#print axioms` stays honest.
+universality at `p = +∞` and the paper's cross-`p` transfer are not carried. Where a statement rests
+on a theorem the paper *cites* rather than proves, that theorem enters as a named hypothesis, never
+as an axiom, so `#print axioms` stays honest. Three did: `theo:sampling_theorem` from
+`bengio2021flow`, `theo:negative_control` from `brunswicEGF` and the gradient formula of
+`theo:first_variation_full`. All three were since formalized from their sources (author's ruling
+(iii)) and are closed in bucket A; the device remains for Stern's Jacobian bound in
+`theo:universality_L2_body`, which ruling (vii) admits as a disclosed hypothesis.
 
 ## What this is for
 
@@ -106,7 +111,8 @@ Three audits back it up, run by `make check`:
 
 ## Traceability to the `.tex`
 
-`paper-map.json` maps each of the 41 labels to its line span in `app_doubling.tex`, a **sha256 of
+`paper-map.json` maps each of 98 labels — Appendix H's 40, Appendix A's 39, Appendix B's 7 and the
+body's 12 — to its line span in the source `.tex`, a **sha256 of
 that statement's own LaTeX block** (statement plus proof, whitespace-normalised), the Lean files
 and declarations certifying it, a status, a difficulty bucket, and scope notes.
 
@@ -149,8 +155,8 @@ Three decisions carry most of the weight, and are argued in the module docstring
   source is not a special case in any transition proof.
 - **`P⋆` is total and in closed form**, not `∑' y, kern x y * f y`, so it carries no integrability
   side condition and every proof touching it is a case analysis.
-- **`λ` is a real sequence**, not `ℝ≥0∞` or a `PMF`: 31 of the 41 statements are arithmetic on
-  reals with subtraction and division throughout.
+- **`λ` is a real sequence**, not `ℝ≥0∞` or a `PMF`: most of Appendix H's 40 statements are
+  arithmetic on reals with subtraction and division throughout.
 
 One thing `St` does *not* model is that the truncation at `K` is a chain on `K + 2` states while
 `St` is infinite. States above the cap carry no incoming edge from within the truncated chain, so

@@ -30,6 +30,15 @@ python3 scripts/trace_check.py --reaffirm lem:doubling_percut
 
 Digests are per statement, not per file, so an edit to one label does not stale the others.
 
+`trace_check.py` **writes `paper-map.json` on every run**, and `sorry_audit.py` rewrites
+`docs/SORRY-STATUS.md` and `docs/sorry.json`. So a sub-session told not to edit other files, or one
+sharing the tree with a session editing the map, must not run them. It replicates invariant (c)
+read-only instead: every label its file cites has a map row. (Learned 2026-09-24.)
+
+Since 2026-09-24 the paper side's `formalization_ledger.py check` also fails when this map's
+`bucket` disagrees with the ledger's, so a bucket you change here must be the ledger's too. See
+kb 0057.
+
 ## Why
 
 `trace_check` enforces four invariants: the label still exists; every listed declaration exists in

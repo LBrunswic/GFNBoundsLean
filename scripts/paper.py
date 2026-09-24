@@ -24,6 +24,11 @@ SOURCES = {
     "universality.tex": "S2",
     "cv_stable.tex": "S3",
     "cv_divergence.tex": "S4",
+    # Appendix I since 2026-09-24: the Lean appendix (`app_lean.tex`, commented out of the paper
+    # build) states the doubling theorem in the form the certificate carries. The paper-side ledger
+    # has counted its two statements in scope since 2026-09-13; digesting them here makes the two
+    # views count the same 96, and an edit to either block stales its row on this side too.
+    "app_lean.tex": "I",
 }
 
 DEFAULT_SOURCE = "app_doubling.tex"

@@ -1550,6 +1550,23 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `kinkGen_C3On_not_C3` | `TrainingSpeedAssembled.lean` | `theorem kinkGen_C3On_not_C3 : ContDiffOn ℝ 3 kinkGen (winC3 (1/2)) ∧ (∀ y ∈ winC3 (1/2), HasDerivWithinAt kinkGen (2 * (y - 1)) (winC3 (1/2)) y) ∧ deriv kinkGen 1 = 0 ∧ 0 < deriv (deriv kinkGen) 1 ∧ ¬ DifferentiableAt ℝ kinkGen (3/2)` |
 | `twoState_exists_check` | `TrainingSpeedAssembled.lean` | `theorem twoState_exists_check : ∃ h : ℝ → Fin 2 → ℝ, IsGradientFlow twoStateK twoStateLam (fun z => twoStateLam z * 1) logSqDeriv (fun s x => 1 + h s x) ∧ ¬ Balanced twoStateK twoStateLam (fun x => 1 + h 0 x)` |
 | `cycle_training_speed_paper_check` | `TrainingSpeedAssembled.lean` | `theorem cycle_training_speed_paper_check : ∃ u : ℝ → Fin 5 → ℝ, u 0 = uInfl 2 ∧ IsGradientFlow (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (fun x => lam (1 / 2) x * 1) logSqDeriv u ∧ ¬ Balanced (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (u 0) ∧ ∃ t₁ : ℝ, 0 ≤ t₁ ∧ Graph.nrmL2 (lam (1 / 2)) (fun x => u t₁ x / Graph.meanL2 (lam (1 / 2)) (u t₁) - 1) ≤ eps0W logSq (1/2) 1 (Graph.maxOver cyc fun _ => (1:ℝ)) (BhatSigma cyc (hitExp (1 / 2)) (lam (1 / 2))) (Graph.minOver cyc (lam (1 / 2)))` |
+| `nontrivial_edgeSet` | `TrainingSpeedDB.lean` | `theorem nontrivial_edgeSet (B : Graph.BackwardPolicy G) : Nontrivial (EdgeSet B.phat)` |
+| `liftedMixingSum` | `TrainingSpeedDB.lean` | `noncomputable def liftedMixingSum (B : Graph.BackwardPolicy G) (lam : V → ℝ) : ℝ` |
+| `lifted_beta_succ` | `TrainingSpeedDB.lean` | `theorem lifted_beta_succ (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (n : ℕ) : Core.Mixing.beta (densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat)) (meanOp (edgeMeasureE B.phat lam)) (n + 1) = Core.Mixing.beta (densOp lam B.phat) (meanOp lam) n` |
+| `lifted_summable_iff` | `TrainingSpeedDB.lean` | `theorem lifted_summable_iff (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) : (Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) ↔ Summable fun n : ℕ => ‖densOp lam B.phat ^ n - meanOp lam‖` |
+| `liftedMixingSum_eq` | `TrainingSpeedDB.lean` | `theorem liftedMixingSum_eq (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hsum : Summable fun n : ℕ => ‖densOp lam B.phat ^ n - meanOp lam‖) : liftedMixingSum B lam = 1 + Core.Mixing.B (densOp lam B.phat) (meanOp lam)` |
+| `summable_iff_tsum_ofReal_ne_top` | `TrainingSpeedDB.lean` | `theorem summable_iff_tsum_ofReal_ne_top {f : ℕ → ℝ} (hf : ∀ n, 0 ≤ f n) : Summable f ↔ ∑' n, ENNReal.ofReal (f n) ≠ ⊤` |
+| `lifted_summable_iff_ne_top` | `TrainingSpeedDB.lean` | `theorem lifted_summable_iff_ne_top : (Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) ↔ ∑' n : ℕ, ENNReal.ofReal ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖ ≠ ⊤` |
+| `lifted_not_summable_of_leveled` | `TrainingSpeedDB.lean` | `theorem lifted_not_summable_of_leveled (L : Graph.Leveled G) (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) : ¬ Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖` |
+| `lifted_summable_iff_aperiodic` | `TrainingSpeedDB.lean` | `theorem lifted_summable_iff_aperiodic (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (x₀ : V) : (Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) ↔ ¬ ∃ d, RemarksA.PeriodicAt B.phat x₀ d` |
+| `training_speed_DB_edge_lift` | `TrainingSpeedDB.lean` | `theorem training_speed_DB_edge_lift (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) {w : EdgeSet B.phat → ℝ} {wmin : ℝ} (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hsum : Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) : (∀ u : EdgeSet B.phat → ℝ, (∀ e, 0 ≤ u e) → loss (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun z => edgeMeasureE B.phat lam z * w z) u logSq = ∑ e : EdgeSet B.phat, edgeMeasureE B.phat lam e * w e * logSq (marg₁ (extE B.phat lam u) e.1.2 * B.phat e.1.2 e.1.1 / (marg₁ (extE B.phat lam u) e.1.1 * disint (extE B.phat lam u) e.1.1 e.1.2))) ∧ 1 ≤ liftedMixingSum B lam ∧ (∀ f : EdgeSet B.phat → ℝ, Graph.nrmL2 (edgeMeasureE B.phat lam) (perpL2 (edgeMeasureE B.phat lam) f) ≤ liftedMixingSum B lam * Graph.nrmL2 (edgeMeasureE B.phat lam) (Aop (edgeKernelE B.phat) (edgeMeasureE B.phat lam) f)) ∧ (Summable fun n : ℕ => ‖densOp lam B.phat ^ n - meanOp lam‖) ∧ liftedMixingSum B lam = 1 + Core.Mixing.B (densOp lam B.phat) (meanOp lam) ∧ rhoL (deriv (deriv logSq) 1) wmin (liftedMixingSum B lam) = 2 * wmin / liftedMixingSum B lam ^ 2 ∧ 0 < rhoL (deriv (deriv logSq) 1) wmin (liftedMixingSum B lam) ∧ (∀ (eps : ℝ) (h : ℕ → EdgeSet B.phat → ℝ), 0 ≤ eps → eps ≤ (4 * deriv (deriv logSq) 1 * supAbsOf w)⁻¹ → (∀ k e, h (k + 1) e = h k e - eps * linHess (edgeKernelE B.phat)` |
+| `wrapInd` | `TrainingSpeedDB.lean` | `noncomputable def wrapInd (B : Graph.BackwardPolicy G) : EdgeSet B.phat → ℝ` |
+| `wrapInd_ne_const` | `TrainingSpeedDB.lean` | `theorem wrapInd_ne_const (B : Graph.BackwardPolicy G) (c : ℝ) : wrapInd B ≠ fun _ => c` |
+| `eq_const_of_balanced_edge` | `TrainingSpeedDB.lean` | `theorem eq_const_of_balanced_edge (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hsum : Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) {u : EdgeSet B.phat → ℝ} (hu : Balanced (edgeKernelE B.phat) (edgeMeasureE B.phat lam) u) : u = fun _ => Graph.meanL2 (edgeMeasureE B.phat lam) u` |
+| `eq_zero_of_nrmL2_eq_zero` | `TrainingSpeedDB.lean` | `theorem eq_zero_of_nrmL2_eq_zero {W : Type*} [Fintype W] {mu f : W → ℝ} (hmu : ∀ x, 0 < mu x) (hf : Graph.nrmL2 mu f = 0) : f = fun _ => 0` |
+| `training_speed_DB_edge_lift_nonvacuous` | `TrainingSpeedDB.lean` | `theorem training_speed_DB_edge_lift_nonvacuous (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) {w : EdgeSet B.phat → ℝ} {wmin : ℝ} (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hsum : Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) : 0 < Graph.nrmL2 (edgeMeasureE B.phat lam) (perpL2 (edgeMeasureE B.phat lam) (wrapInd B)) ∧ 0 < (4 * deriv (deriv logSq) 1 * supAbsOf w)⁻¹ ∧ (∀ eps : ℝ, ∃ h : ℕ → EdgeSet B.phat → ℝ, h 0 = wrapInd B ∧ ∀ k e, h (k + 1) e = h k e - eps * linHess (edgeKernelE B.phat) (edgeMeasureE B.phat lam) w (deriv (deriv logSq) 1) (h k) e) ∧ (∃ h : ℝ → EdgeSet B.phat → ℝ, h 0 = wrapInd B ∧ ∀ t : ℝ, HasDerivAt h (fun e => -(linHess (edgeKernelE B.phat) (edgeMeasureE B.phat lam) w (deriv (deriv logSq) 1) (h t) e)) t) ∧ ∃ h : ℝ → EdgeSet B.phat → ℝ, IsGradientFlow (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun z => edgeMeasureE B.phat lam z * w z) logSqDeriv (fun s e => 1 + h s e) ∧ ¬ Balanced (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun e => 1 + h 0 e) ∧ ∃ cinf : ℝ, Balanced (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun _ => cinf) ∧ Tendsto (fun t => Graph.nrmL2 (edgeMeasureE B.phat lam) (fun e => h t e - (cinf - 1))) atTop (𝓝 0)` |
+| `triangle_DB_edge_lift_check` | `TrainingSpeedDB.lean` | `theorem triangle_DB_edge_lift_check : ∃ lam : Fin 3 → ℝ, RemarksA.triPolicy.IsInvProb lam ∧ (Summable fun n : ℕ => ‖densOp (edgeMeasureE RemarksA.triPolicy.phat lam) (edgeKernelE RemarksA.triPolicy.phat) ^ n - meanOp (edgeMeasureE RemarksA.triPolicy.phat lam)‖) ∧ liftedMixingSum RemarksA.triPolicy lam = 1 + Core.Mixing.B (densOp lam RemarksA.triPolicy.phat) (meanOp lam) ∧ 0 < Graph.nrmL2 (edgeMeasureE RemarksA.triPolicy.phat lam) (perpL2 (edgeMeasureE RemarksA.triPolicy.phat lam) (wrapInd RemarksA.triPolicy)) ∧ ∃ h : ℝ → EdgeSet RemarksA.triPolicy.phat → ℝ, IsGradientFlow (edgeKernelE RemarksA.triPolicy.phat) (edgeMeasureE RemarksA.triPolicy.phat lam) (fun z => edgeMeasureE RemarksA.triPolicy.phat lam z * 1) logSqDeriv (fun s e => 1 + h s e) ∧ ¬ Balanced (edgeKernelE RemarksA.triPolicy.phat) (edgeMeasureE RemarksA.triPolicy.phat lam) (fun e => 1 + h 0 e) ∧ ∃ cinf : ℝ, Balanced (edgeKernelE RemarksA.triPolicy.phat) (edgeMeasureE RemarksA.triPolicy.phat lam) (fun _ => cinf) ∧ Tendsto (fun t => Graph.nrmL2 (edgeMeasureE RemarksA.triPolicy.phat lam) (fun e => h t e - (cinf - 1))) atTop (𝓝 0)` |
+| `ar_lifted_not_summable` | `TrainingSpeedDB.lean` | `theorem ar_lifted_not_summable : ¬ Summable fun n : ℕ => ‖densOp (edgeMeasureE Graph.arPol.phat Graph.arLam) (edgeKernelE Graph.arPol.phat) ^ n - meanOp (edgeMeasureE Graph.arPol.phat Graph.arLam)‖` |
 | `wtL2` | `WeightedL2.lean` | `noncomputable def wtL2 (lam a : V → ℝ) : EuclideanSpace ℝ V` |
 | `wtL2_apply` | `WeightedL2.lean` | `@[simp] theorem wtL2_apply (lam a : V → ℝ) (x : V) : wtL2 lam a x = Real.sqrt (lam x) * a x` |
 | `unwtL2` | `WeightedL2.lean` | `noncomputable def unwtL2 (lam : V → ℝ) (v : EuclideanSpace ℝ V) : V → ℝ` |
@@ -4084,7 +4101,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Gra
 *strict library; 1124 lines; 60 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket A), ✅ `prop:tb_hessian` (bucket A), ✅ `theo:training_speed_full` (bucket A), ✅ `theo:training_speed` (bucket B), ✅ `theo:local_convergence` (bucket A)
+Certifies: ✅ `theo:local_convergence_full` (bucket A), ✅ `prop:tb_hessian` (bucket A), ✅ `theo:training_speed_full` (bucket A), ✅ `theo:training_speed` (bucket A), ✅ `theo:local_convergence` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`
@@ -4181,7 +4198,7 @@ In scope: `variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 *strict library; 2841 lines; 82 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:training_speed_full` (bucket A), ✅ `theo:training_speed` (bucket B)
+Certifies: ✅ `theo:training_speed_full` (bucket A), ✅ `theo:training_speed` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`
@@ -5632,7 +5649,7 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V] {G : Mar
 *strict library; 375 lines; 17 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `prop:no_distant_equilibrium` (bucket A), ✅ `theo:training_speed_full` (bucket A), ✅ `theo:training_speed` (bucket B)
+Certifies: ✅ `prop:no_distant_equilibrium` (bucket A), ✅ `theo:training_speed_full` (bucket A), ✅ `theo:training_speed` (bucket A)
 
 
 In scope: `variable, `∀ x, |r(x) − 1| < δ`. Step 4 of `theo:local_convergence_full` wants a radius in the`, `variable {V : Type*} [Fintype V]`
@@ -6144,7 +6161,7 @@ In scope: `variable (S : Setting) (cap : Option ℕ)`, `variable {S : Setting} {
 *strict library; 759 lines; 29 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:training_speed_full` (bucket A), ✅ `theo:training_speed` (bucket B)
+Certifies: ✅ `theo:training_speed_full` (bucket A), ✅ `theo:training_speed` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`
@@ -6189,7 +6206,7 @@ In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Typ
 *strict library; 1427 lines; 44 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
-Certifies: ✅ `theo:local_convergence_full` (bucket A), ✅ `theo:training_speed_full` (bucket A), ✅ `theo:training_speed` (bucket B), ✅ `theo:local_convergence` (bucket A)
+Certifies: ✅ `theo:local_convergence_full` (bucket A), ✅ `theo:training_speed_full` (bucket A), ✅ `theo:training_speed` (bucket A), ✅ `theo:local_convergence` (bucket A)
 
 
 In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {V : Type*} [Fintype V] [DecidableEq V]`
@@ -6241,6 +6258,39 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable {V : Type*} [Fintype V]`
 | 1305 | theorem | `kinkGen_C3On_not_C3` | `theorem kinkGen_C3On_not_C3 : ContDiffOn ℝ 3 kinkGen (winC3 (1/2)) ∧ (∀ y ∈ winC3 (1/2), HasDerivWithinAt kinkGen (2 * (y - 1)) (winC3 (1/2)) y) ∧ deriv kinkGen 1 = 0 ∧ 0 < deriv (deriv kinkGen) 1 ∧ ¬ DifferentiableAt ℝ kinkGen (3/2)` |
 | 1366 | theorem | `twoState_exists_check` | `theorem twoState_exists_check : ∃ h : ℝ → Fin 2 → ℝ, IsGradientFlow twoStateK twoStateLam (fun z => twoStateLam z * 1) logSqDeriv (fun s x => 1 + h s x) ∧ ¬ Balanced twoStateK twoStateLam (fun x => 1 + h 0 x)` |
 | 1403 | theorem | `cycle_training_speed_paper_check` | `theorem cycle_training_speed_paper_check : ∃ u : ℝ → Fin 5 → ℝ, u 0 = uInfl 2 ∧ IsGradientFlow (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (fun x => lam (1 / 2) x * 1) logSqDeriv u ∧ ¬ Balanced (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (u 0) ∧ ∃ t₁ : ℝ, 0 ≤ t₁ ∧ Graph.nrmL2 (lam (1 / 2)) (fun x => u t₁ x / Graph.meanL2 (lam (1 / 2)) (u t₁) - 1) ≤ eps0W logSq (1/2) 1 (Graph.maxOver cyc fun _ => (1:ℝ)) (BhatSigma cyc (hitExp (1 / 2)) (lam (1 / 2))) (Graph.minOver cyc (lam (1 / 2)))` |
+
+### `GFNBounds/Balance/TrainingSpeedDB.lean`
+
+**The DB instance of the training-speed theorem: a local rate through the edge lift, wherever the lifted mixing sum is finite**  
+
+*strict library; 603 lines; 17 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `theo:training_speed` (bucket A)
+
+
+In scope: `variable {V : Type*} [Fintype V] [DecidableEq V] {G : Graph.MarkedGraph V}`, `variable {B : Graph.BackwardPolicy G} {lam : V → ℝ}`, `variable {V : Type*} [Fintype V] [DecidableEq V] {G : Graph.MarkedGraph V}`, `variable {V : Type*} [Fintype V] [DecidableEq V] {G : Graph.MarkedGraph V}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 152 | theorem | `nontrivial_edgeSet` | `theorem nontrivial_edgeSet (B : Graph.BackwardPolicy G) : Nontrivial (EdgeSet B.phat)` |
+| 167 | def | `liftedMixingSum` | `noncomputable def liftedMixingSum (B : Graph.BackwardPolicy G) (lam : V → ℝ) : ℝ` |
+| 175 | theorem | `lifted_beta_succ` | `theorem lifted_beta_succ (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (n : ℕ) : Core.Mixing.beta (densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat)) (meanOp (edgeMeasureE B.phat lam)) (n + 1) = Core.Mixing.beta (densOp lam B.phat) (meanOp lam) n` |
+| 185 | theorem | `lifted_summable_iff` | `theorem lifted_summable_iff (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) : (Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) ↔ Summable fun n : ℕ => ‖densOp lam B.phat ^ n - meanOp lam‖` |
+| 198 | theorem | `liftedMixingSum_eq` | `theorem liftedMixingSum_eq (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hsum : Summable fun n : ℕ => ‖densOp lam B.phat ^ n - meanOp lam‖) : liftedMixingSum B lam = 1 + Core.Mixing.B (densOp lam B.phat) (meanOp lam)` |
+| 213 | theorem | `summable_iff_tsum_ofReal_ne_top` | `theorem summable_iff_tsum_ofReal_ne_top {f : ℕ → ℝ} (hf : ∀ n, 0 ≤ f n) : Summable f ↔ ∑' n, ENNReal.ofReal (f n) ≠ ⊤` |
+| 221 | theorem | `lifted_summable_iff_ne_top` | `theorem lifted_summable_iff_ne_top : (Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) ↔ ∑' n : ℕ, ENNReal.ofReal ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖ ≠ ⊤` |
+| 231 | theorem | `lifted_not_summable_of_leveled` | `theorem lifted_not_summable_of_leveled (L : Graph.Leveled G) (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) : ¬ Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖` |
+| 242 | theorem | `lifted_summable_iff_aperiodic` | `theorem lifted_summable_iff_aperiodic (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (x₀ : V) : (Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) ↔ ¬ ∃ d, RemarksA.PeriodicAt B.phat x₀ d` |
+| 283 | theorem | `training_speed_DB_edge_lift` | `theorem training_speed_DB_edge_lift (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) {w : EdgeSet B.phat → ℝ} {wmin : ℝ} (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hsum : Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) : (∀ u : EdgeSet B.phat → ℝ, (∀ e, 0 ≤ u e) → loss (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun z => edgeMeasureE B.phat lam z * w z) u logSq = ∑ e : EdgeSet B.phat, edgeMeasureE B.phat lam e * w e * logSq (marg₁ (extE B.phat lam u) e.1.2 * B.phat e.1.2 e.1.1 / (marg₁ (extE B.phat lam u) e.1.1 * disint (extE B.phat lam u) e.1.1 e.1.2))) ∧ 1 ≤ liftedMixingSum B lam ∧ (∀ f : EdgeSet B.phat → ℝ, Graph.nrmL2 (edgeMeasureE B.phat lam) (perpL2 (edgeMeasureE B.phat lam) f) ≤ liftedMixingSum B lam * Graph.nrmL2 (edgeMeasureE B.phat lam) (Aop (edgeKernelE B.phat) (edgeMeasureE B.phat lam) f)) ∧ (Summable fun n : ℕ => ‖densOp lam B.phat ^ n - meanOp lam‖) ∧ liftedMixingSum B lam = 1 + Core.Mixing.B (densOp lam B.phat) (meanOp lam) ∧ rhoL (deriv (deriv logSq) 1) wmin (liftedMixingSum B lam) = 2 * wmin / liftedMixingSum B lam ^ 2 ∧ 0 < rhoL (deriv (deriv logSq) 1) wmin (liftedMixingSum B lam) ∧ (∀ (eps : ℝ) (h : ℕ → EdgeSet B.phat → ℝ), 0 ≤ eps → eps ≤ (4 * deriv (deriv logSq) 1 * supAbsOf w)⁻¹ → (∀ k e, h (k + 1) e = h k e - eps * linHess (edgeKernelE B.phat)` |
+| 440 | def | `wrapInd` | `noncomputable def wrapInd (B : Graph.BackwardPolicy G) : EdgeSet B.phat → ℝ` |
+| 444 | theorem | `wrapInd_ne_const` | `theorem wrapInd_ne_const (B : Graph.BackwardPolicy G) (c : ℝ) : wrapInd B ≠ fun _ => c` |
+| 456 | theorem | `eq_const_of_balanced_edge` | `theorem eq_const_of_balanced_edge (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hsum : Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) {u : EdgeSet B.phat → ℝ} (hu : Balanced (edgeKernelE B.phat) (edgeMeasureE B.phat lam) u) : u = fun _ => Graph.meanL2 (edgeMeasureE B.phat lam) u` |
+| 472 | theorem | `eq_zero_of_nrmL2_eq_zero` | `theorem eq_zero_of_nrmL2_eq_zero {W : Type*} [Fintype W] {mu f : W → ℝ} (hmu : ∀ x, 0 < mu x) (hf : Graph.nrmL2 mu f = 0) : f = fun _ => 0` |
+| 488 | theorem | `training_speed_DB_edge_lift_nonvacuous` | `theorem training_speed_DB_edge_lift_nonvacuous (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) {w : EdgeSet B.phat → ℝ} {wmin : ℝ} (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hsum : Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) : 0 < Graph.nrmL2 (edgeMeasureE B.phat lam) (perpL2 (edgeMeasureE B.phat lam) (wrapInd B)) ∧ 0 < (4 * deriv (deriv logSq) 1 * supAbsOf w)⁻¹ ∧ (∀ eps : ℝ, ∃ h : ℕ → EdgeSet B.phat → ℝ, h 0 = wrapInd B ∧ ∀ k e, h (k + 1) e = h k e - eps * linHess (edgeKernelE B.phat) (edgeMeasureE B.phat lam) w (deriv (deriv logSq) 1) (h k) e) ∧ (∃ h : ℝ → EdgeSet B.phat → ℝ, h 0 = wrapInd B ∧ ∀ t : ℝ, HasDerivAt h (fun e => -(linHess (edgeKernelE B.phat) (edgeMeasureE B.phat lam) w (deriv (deriv logSq) 1) (h t) e)) t) ∧ ∃ h : ℝ → EdgeSet B.phat → ℝ, IsGradientFlow (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun z => edgeMeasureE B.phat lam z * w z) logSqDeriv (fun s e => 1 + h s e) ∧ ¬ Balanced (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun e => 1 + h 0 e) ∧ ∃ cinf : ℝ, Balanced (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun _ => cinf) ∧ Tendsto (fun t => Graph.nrmL2 (edgeMeasureE B.phat lam) (fun e => h t e - (cinf - 1))) atTop (𝓝 0)` |
+| 557 | theorem | `triangle_DB_edge_lift_check` | `theorem triangle_DB_edge_lift_check : ∃ lam : Fin 3 → ℝ, RemarksA.triPolicy.IsInvProb lam ∧ (Summable fun n : ℕ => ‖densOp (edgeMeasureE RemarksA.triPolicy.phat lam) (edgeKernelE RemarksA.triPolicy.phat) ^ n - meanOp (edgeMeasureE RemarksA.triPolicy.phat lam)‖) ∧ liftedMixingSum RemarksA.triPolicy lam = 1 + Core.Mixing.B (densOp lam RemarksA.triPolicy.phat) (meanOp lam) ∧ 0 < Graph.nrmL2 (edgeMeasureE RemarksA.triPolicy.phat lam) (perpL2 (edgeMeasureE RemarksA.triPolicy.phat lam) (wrapInd RemarksA.triPolicy)) ∧ ∃ h : ℝ → EdgeSet RemarksA.triPolicy.phat → ℝ, IsGradientFlow (edgeKernelE RemarksA.triPolicy.phat) (edgeMeasureE RemarksA.triPolicy.phat lam) (fun z => edgeMeasureE RemarksA.triPolicy.phat lam z * 1) logSqDeriv (fun s e => 1 + h s e) ∧ ¬ Balanced (edgeKernelE RemarksA.triPolicy.phat) (edgeMeasureE RemarksA.triPolicy.phat lam) (fun e => 1 + h 0 e) ∧ ∃ cinf : ℝ, Balanced (edgeKernelE RemarksA.triPolicy.phat) (edgeMeasureE RemarksA.triPolicy.phat lam) (fun _ => cinf) ∧ Tendsto (fun t => Graph.nrmL2 (edgeMeasureE RemarksA.triPolicy.phat lam) (fun e => h t e - (cinf - 1))) atTop (𝓝 0)` |
+| 595 | theorem | `ar_lifted_not_summable` | `theorem ar_lifted_not_summable : ¬ Summable fun n : ℕ => ‖densOp (edgeMeasureE Graph.arPol.phat Graph.arLam) (edgeKernelE Graph.arPol.phat) ^ n - meanOp (edgeMeasureE Graph.arPol.phat Graph.arLam)‖` |
 
 ### `GFNBounds/Balance/WeightedL2.lean`
 
@@ -12412,6 +12462,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `ar_lamMinE` | `GFNBounds.Graph.MorozovDB` |
 | `ar_leveled_check` | `GFNBounds.Graph.MorozovConsume` |
 | `ar_leveled_mixing_check` | `GFNBounds.Graph.MorozovDB` |
+| `ar_lifted_not_summable` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `ar_local_convergence_DB_witness` | `GFNBounds.Graph.MorozovDB` |
 | `ar_local_convergence_FM_witness` | `GFNBounds.Graph.MorozovFM` |
 | `ar_minOver_lam` | `GFNBounds.Graph.MorozovConsume` |
@@ -13362,6 +13413,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `eps_le_one` | `GFNBounds.Graph.CycleRemarks` |
 | `eps_lt_one` | `GFNBounds.Doubling.Setting` |
 | `eps_pos` | `GFNBounds.Doubling.DecayNotation` |
+| `eq_const_of_balanced_edge` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `eq_const_of_balanced_of_uniqueInvariant` | `GFNBounds.Balance.GlobalConvergenceFinite` |
 | `eq_const_of_densAct_eq` | `GFNBounds.Balance.LocalConvergenceMixing` |
 | `eq_cycTail_of_walk` | `GFNBounds.Silva.PathSpaceMarkov` |
@@ -13385,6 +13437,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `eq_zero_of_breach` | `GFNBounds.Graph.Setting` |
 | `eq_zero_of_harm_off_src` | `GFNBounds.Graph.Morozov` |
 | `eq_zero_of_mem_kerPi_of_fixed` | `GFNBounds.Doubling.Unsolvable` |
+| `eq_zero_of_nrmL2_eq_zero` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `eq_zero_of_three_nonneg` | `GFNBounds.Doubling.FixedPointsP` |
 | `ereal_le_of_forall_pos` | `GFNBounds.Core.ILBoundFull` |
 | `ergodicG_const` | `GFNBounds.Balance.FreezingGeneral2` |
@@ -14603,9 +14656,16 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `lift_mixing_succ` | `GFNBounds.Balance.LiftGeneralMixing` |
 | `lift_mixing_summable_iff` | `GFNBounds.Balance.LiftGeneralMixing` |
 | `lift_wellposed` | `GFNBounds.Balance.LiftGeneral` |
+| `liftedMixingSum` | `GFNBounds.Balance.TrainingSpeedDB` |
+| `liftedMixingSum_eq` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `liftedOutflow` | `GFNBounds.Core.Universality` |
 | `liftedOutflow_eq` | `GFNBounds.Core.Universality` |
 | `liftedOutflow_nonneg` | `GFNBounds.Core.Universality` |
+| `lifted_beta_succ` | `GFNBounds.Balance.TrainingSpeedDB` |
+| `lifted_not_summable_of_leveled` | `GFNBounds.Balance.TrainingSpeedDB` |
+| `lifted_summable_iff` | `GFNBounds.Balance.TrainingSpeedDB` |
+| `lifted_summable_iff_aperiodic` | `GFNBounds.Balance.TrainingSpeedDB` |
+| `lifted_summable_iff_ne_top` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `limit_arith` | `GFNBounds.Balance.DiscreteGlobal` |
 | `linDescent` | `GFNBounds.Graph.MorozovDB` |
 | `linDescent_step` | `GFNBounds.Graph.MorozovDB` |
@@ -15108,6 +15168,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `nonneg_of_ae_le` | `GFNBounds.Balance.FreezingGeneral2` |
 | `nonneg_of_superharm_off_src` | `GFNBounds.Graph.Morozov` |
 | `nonneg_rep` | `GFNBounds.Core.FamilyUniversality` |
+| `nontrivial_edgeSet` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `norm_S_apply_le` | `GFNBounds.Core.Mixing` |
 | `norm_S_le` | `GFNBounds.Core.Mixing` |
 | `norm_S_le_of_coercive` | `GFNBounds.Balance.RemarksA` |
@@ -16238,6 +16299,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `summable_backProb` | `GFNBounds.Silva.PathSpaceMarkovGeneral` |
 | `summable_beta` | `GFNBounds.Core.Mixing` |
 | `summable_const_kernel` | `GFNBounds.Core.FamilyUniversality` |
+| `summable_iff_tsum_ofReal_ne_top` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `summable_lad` | `GFNBounds.Doubling.Unbounded` |
 | `summable_lam_abs` | `GFNBounds.Doubling.Unsolvable` |
 | `summable_lam_dens` | `GFNBounds.Doubling.Adjoint` |
@@ -16427,6 +16489,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `toReal_rnDeriv_wt_pert` | `GFNBounds.Balance.FreezingGeneral2` |
 | `toStat` | `GFNBounds.Doubling.Irreducible` |
 | `topologicalClosure_defectRange` | `GFNBounds.Doubling.Unsolvable` |
+| `training_speed_DB_edge_lift` | `GFNBounds.Balance.TrainingSpeedDB` |
+| `training_speed_DB_edge_lift_nonvacuous` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `training_speed_full` | `GFNBounds.Balance.TrainingSpeed` |
 | `training_speed_full_Gamma3` | `GFNBounds.Balance.C3Wrappers` |
 | `training_speed_full_complete` | `GFNBounds.Balance.DiscreteGlobal` |
@@ -16483,6 +16547,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `triangle` | `GFNBounds.Core.FamilyUniversality` |
 | `triangleTarget` | `GFNBounds.Core.FamilyUniversality` |
 | `triangleTarget_full` | `GFNBounds.Graph.UniversalityClosing` |
+| `triangle_DB_edge_lift_check` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `triangle_attained` | `GFNBounds.Core.FamilyUniversality` |
 | `triangle_edge_src_snk` | `GFNBounds.Graph.UniversalityClosing` |
 | `triangle_pathConnected` | `GFNBounds.Graph.UniversalityClosing` |
@@ -16807,6 +16872,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `wm_nonneg` | `GFNBounds.Doubling.DecayNotation` |
 | `wm_pos` | `GFNBounds.Doubling.DecayNotation` |
 | `wrapEdge` | `GFNBounds.Graph.MorozovDB` |
+| `wrapInd` | `GFNBounds.Balance.TrainingSpeedDB` |
+| `wrapInd_ne_const` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `wsup_pos` | `GFNBounds.Balance.LocalConvergence` |
 | `wtCLM` | `GFNBounds.Balance.WeightedL2` |
 | `wtCLM_apply` | `GFNBounds.Balance.WeightedL2` |

@@ -9,6 +9,7 @@ This file is what binds every session, master and sub-session alike.
 | **A** — the paper's proofs | `proofs.tex` | `GFNBounds.Core`, `GFNBounds.Graph` |
 | **B** — the Silva comparison | `silva_comparison.tex` | `GFNBounds.Silva` |
 | **H** — the doubling graph | `app_doubling.tex` | `GFNBounds.Doubling` |
+| **I** — the Lean appendix (out of the paper build; digested since 2026-09-24) | `app_lean.tex` | restates `GFNBounds.Doubling`'s main theorems |
 
 **Appendices C–G are not in scope.** The library began as Appendix H alone and was widened to A
 and B on 2026-09-08 at the author's instruction; where a file, a script or a docstring still says
@@ -26,6 +27,15 @@ and `theo:no_bound_divergence`, have their own rows. This closes the gap recorde
 Theorem 5 would have left `make check` green. The paper-side ledger
 (`FORMALIZATION-LEDGER.md`, all 131 statements) still cross-checks every mapped row.
 
+**Appendix I is digested too, since 2026-09-24.** `SOURCES` gained `app_lean.tex` (I). Its two
+statements, `def:lean_setting` and `theo:lean_main`, restate the doubling setting and main theorem in
+the form the certificate carries. The paper-side ledger had counted them in scope since 2026-09-13
+through curated links, so the two views disagreed on the count: 96 target rows there, 94 here. The
+same day `theo:training_speed` left bucket B: its body form claims one sentence its twin lacks, the
+DB instance through the edge lift, now certified by `Balance/TrainingSpeedDB.lean`. The ledger had
+shown that row in A by inheriting its twin's bucket. Closure has read 96 of 96 on both sides since
+then, and `formalization_ledger.py crosscheck` now compares buckets as well as statuses.
+
 ## Orientation, in reading order
 
 | | |
@@ -33,7 +43,7 @@ Theorem 5 would have left `make check` green. The paper-side ledger
 | [`docs/REPO-MAP.md`](docs/REPO-MAP.md) | **Orientation.** Loose ends, layer order, the general-purpose shelf, one line per file. ~15 KB — read it whole. Generated. |
 | [`docs/REPO-INDEX.md`](docs/REPO-INDEX.md) | **Where is the lemma I need.** Every declaration with its statement, and the name index. Large — `grep` it, do not read it. Generated. |
 | [`kb/INDEX.md`](kb/INDEX.md) | **What working here is like.** Patterns, pitfalls, obstructions, house rules. Read before you start; write to it when you finish. |
-| [`docs/COVERAGE.md`](docs/COVERAGE.md) | **How far it has got.** All 98 mapped statements — Appendix A's 39, B's 7, H's 40 and the body's 12 — with status and difficulty bucket. Generated. |
+| [`docs/COVERAGE.md`](docs/COVERAGE.md) | **How far it has got.** All 100 mapped statements — Appendix A's 39, B's 7, H's 40, I's 2 and the body's 12 — with status and difficulty bucket. Generated. |
 | [`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md) | Every open `sorry`, keyed and justified. Generated. |
 | `paper-map.json` | The traceability spine: label → tex span → LaTeX digest → Lean files and declarations → status, bucket, scope notes. |
 
@@ -46,8 +56,9 @@ dependency DAG — is on the paper side at `FORMALIZATION-LEDGER.md` (generator
 `formalization_ledger.py`, machine twin `formalization-ledger.json`). It reads `paper-map.json`
 and never writes it. Use it to pick the next target: `python3 formalization_ledger.py ready`
 lists what is unformalized and has every dependency closed. Since 2026-09-19 that queue is
-**empty** — closure is 96 of 96 — so new work here comes from a change to the paper, or from the
-author widening the scope beyond Appendices A, B and H.
+**empty**. Closure is 96 of 96, and since 2026-09-24 the Lean map agrees row for row. New work here
+comes from a change to the paper, or from the author widening the scope beyond Appendices A, B, H
+and I.
 
 ## The five rules
 

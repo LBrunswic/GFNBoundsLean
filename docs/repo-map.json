@@ -168,10 +168,11 @@
     "GFNBounds.Balance.GdDiffusionGeneral",
     "GFNBounds.Balance.StableFrozenGeneral",
     "GFNBounds.Balance.TBvsDBClose",
+    "GFNBounds.Balance.TrainingSpeedDB",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 163,
+   "lines": 164,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -296,11 +297,12 @@
     "GFNBounds.Balance.GdDiffusionGeneral",
     "GFNBounds.Balance.StableFrozenGeneral",
     "GFNBounds.Balance.TBvsDBClose",
+    "GFNBounds.Balance.TrainingSpeedDB",
     "GFNBounds.Doubling.GeomFamily",
     "GFNBounds.Doubling.PolicyTable"
    ],
    "variables": [],
-   "lines": 2376,
+   "lines": 2391,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -17000,6 +17002,200 @@
      "private": false,
      "statement": "theorem cycle_training_speed_paper_check : ∃ u : ℝ → Fin 5 → ℝ, u 0 = uInfl 2 ∧ IsGradientFlow (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (fun x => lam (1 / 2) x * 1) logSqDeriv u ∧ ¬ Balanced (pol (p := 1 / 2) (by norm_num) (by norm_num)).phat (lam (1 / 2)) (u 0) ∧ ∃ t₁ : ℝ, 0 ≤ t₁ ∧ Graph.nrmL2 (lam (1 / 2)) (fun x => u t₁ x / Graph.meanL2 (lam (1 / 2)) (u t₁) - 1) ≤ eps0W logSq (1/2) 1 (Graph.maxOver cyc fun _ => (1:ℝ)) (BhatSigma cyc (hitExp (1 / 2)) (lam (1 / 2))) (Graph.minOver cyc (lam (1 / 2)))",
      "doc": "**`training_speed_full_paper` applies, with no flow hypothesised**, on the five-vertex cycle of `rem:cycle_no_stalemate` at `p = 1/2`, `w ≡ 1`, from the over-inflated `uInfl 2`: a flow exists, starts off balance, and enters the paper's neighbourhood at some `t₁ ≥ 0`."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Balance/TrainingSpeedDB.lean",
+   "title": "The DB instance of the training-speed theorem: a local rate through the edge lift, wherever the lifted mixing sum is finite",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.LocalConvergenceClose",
+    "GFNBounds.Balance.LocalConvergenceMixing",
+    "GFNBounds.Graph.MorozovDB",
+    "GFNBounds.Balance.RemarksA"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {G : Graph.MarkedGraph V}",
+    "variable {B : Graph.BackwardPolicy G} {lam : V → ℝ}",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {G : Graph.MarkedGraph V}",
+    "variable {V : Type*} [Fintype V] [DecidableEq V] {G : Graph.MarkedGraph V}"
+   ],
+   "lines": 603,
+   "decls": [
+    {
+     "name": "nontrivial_edgeSet",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.nontrivial_edgeSet",
+     "kind": "theorem",
+     "line": 152,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem nontrivial_edgeSet (B : Graph.BackwardPolicy G) : Nontrivial (EdgeSet B.phat)",
+     "doc": "The edge set `E = {(s,s') : π̂_←(s'→s) > 0}` of the loop closure has two distinct pairs, for every backward policy: the wrap pair `(s_f, s₀)`, and a pair `(y, s_f)` with `π̂_←(s_f → y) > 0`, which exists because the row of `π̂_←` at `s_f` sums to `1`."
+    },
+    {
+     "name": "liftedMixingSum",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.liftedMixingSum",
+     "kind": "def",
+     "line": 167,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def liftedMixingSum (B : Graph.BackwardPolicy G) (lam : V → ℝ) : ℝ",
+     "doc": "**`theo:training_speed`, \"the lifted mixing sum\"** (`cv_divergence.tex:79–81`): `B̂₂ := ∑_{n≥0}‖P₂ⁿ − Π₂‖_{L²(λ₂)}`, the mixing sum of the edge lift `K₂` of the loop closure `π̂_←`, on `E` with its invariant probability `λ₂`."
+    },
+    {
+     "name": "lifted_beta_succ",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.lifted_beta_succ",
+     "kind": "theorem",
+     "line": 175,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lifted_beta_succ (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (n : ℕ) : Core.Mixing.beta (densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat)) (meanOp (edgeMeasureE B.phat lam)) (n + 1) = Core.Mixing.beta (densOp lam B.phat) (meanOp lam) n",
+     "doc": "`lem:lift_mixing` on the loop closure of a marked graph: `β̂_{n+1} = β_n`, the lifted coefficient against the backward chain's (`LiftFinite.lift_mixing_beta` at `π̂_←`)."
+    },
+    {
+     "name": "lifted_summable_iff",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.lifted_summable_iff",
+     "kind": "theorem",
+     "line": 185,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lifted_summable_iff (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) : (Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) ↔ Summable fun n : ℕ => ‖densOp lam B.phat ^ n - meanOp lam‖",
+     "doc": "**`theo:training_speed`, \"wherever the lifted mixing sum is finite\"**: the lifted mixing sum is finite exactly when the backward chain has summable `L²`-mixing — the hypothesis of `theo:db_stable_frozen` — since `β̂_{n+1} = β_n` (`lem:lift_mixing`)."
+    },
+    {
+     "name": "liftedMixingSum_eq",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.liftedMixingSum_eq",
+     "kind": "theorem",
+     "line": 198,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem liftedMixingSum_eq (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hsum : Summable fun n : ℕ => ‖densOp lam B.phat ^ n - meanOp lam‖) : liftedMixingSum B lam = 1 + Core.Mixing.B (densOp lam B.phat) (meanOp lam)",
+     "doc": "**`theo:training_speed`, the lifted mixing sum is `1 + B`** (`cv_divergence.tex:166`, \"for DB is `1+B`\"; `theo:db_stable_frozen_full`, `proofs.tex:653`; the sentence at `proofs.tex:589`): when the backward chain has summable mixing, `B̂₂ = β̂₀ + ∑_{n≥0}β̂_{n+1} = 1 + ∑_{n≥0}β_n`, with `β̂₀ = ‖I − Π₂‖ = 1` because `E` has two points (`nontrivial_edgeSet`)."
+    },
+    {
+     "name": "summable_iff_tsum_ofReal_ne_top",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.summable_iff_tsum_ofReal_ne_top",
+     "kind": "theorem",
+     "line": 213,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem summable_iff_tsum_ofReal_ne_top {f : ℕ → ℝ} (hf : ∀ n, 0 ≤ f n) : Summable f ↔ ∑' n, ENNReal.ofReal (f n) ≠ ⊤",
+     "doc": "A series of non-negative reals is summable iff its sum in `ℝ≥0∞` is finite."
+    },
+    {
+     "name": "lifted_summable_iff_ne_top",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.lifted_summable_iff_ne_top",
+     "kind": "theorem",
+     "line": 221,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lifted_summable_iff_ne_top : (Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) ↔ ∑' n : ℕ, ENNReal.ofReal ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖ ≠ ⊤",
+     "doc": "**`theo:training_speed`, \"the lifted mixing sum is finite\", read literally**: `hsum` of the principal theorem is `∑_{n≥0}‖P₂ⁿ − Π₂‖ ≠ +∞` in `ℝ≥0∞` — the dual of the reading `MorozovDB.Leveled.mixing_sum_eq_top` gives \"the mixing sum is `+∞`\"."
+    },
+    {
+     "name": "lifted_not_summable_of_leveled",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.lifted_not_summable_of_leveled",
+     "kind": "theorem",
+     "line": 231,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lifted_not_summable_of_leveled (L : Graph.Leveled G) (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) : ¬ Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖",
+     "doc": "**`theo:training_speed`, \"wherever\" is a genuine restriction**: on a leveled — autoregressive — graph the loop closure is periodic, `‖P^n − Π‖ ≥ 1` for every `n` (`MorozovDB.Leveled.not_summable_beta`), and so the lifted mixing sum is infinite."
+    },
+    {
+     "name": "lifted_summable_iff_aperiodic",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.lifted_summable_iff_aperiodic",
+     "kind": "theorem",
+     "line": 242,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lifted_summable_iff_aperiodic (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (x₀ : V) : (Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) ↔ ¬ ∃ d, RemarksA.PeriodicAt B.phat x₀ d",
+     "doc": "**`theo:training_speed`, \"wherever the lifted mixing sum is finite\", made exact**: on the loop closure of a finite path-connected marked graph, the lifted mixing sum is finite **iff** the backward chain `π̂_←` is aperiodic at `x₀` (any state) — summable `L²`-mixing is aperiodicity on these chains (`RemarksA.graphs_vs_L2_aperiodic`, `RemarksA.graphs_vs_L2_periodic`)."
+    },
+    {
+     "name": "training_speed_DB_edge_lift",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.training_speed_DB_edge_lift",
+     "kind": "theorem",
+     "line": 283,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem training_speed_DB_edge_lift (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) {w : EdgeSet B.phat → ℝ} {wmin : ℝ} (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hsum : Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) : (∀ u : EdgeSet B.phat → ℝ, (∀ e, 0 ≤ u e) → loss (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun z => edgeMeasureE B.phat lam z * w z) u logSq = ∑ e : EdgeSet B.phat, edgeMeasureE B.phat lam e * w e * logSq (marg₁ (extE B.phat lam u) e.1.2 * B.phat e.1.2 e.1.1 / (marg₁ (extE B.phat lam u) e.1.1 * disint (extE B.phat lam u) e.1.1 e.1.2))) ∧ 1 ≤ liftedMixingSum B lam ∧ (∀ f : EdgeSet B.phat → ℝ, Graph.nrmL2 (edgeMeasureE B.phat lam) (perpL2 (edgeMeasureE B.phat lam) f) ≤ liftedMixingSum B lam * Graph.nrmL2 (edgeMeasureE B.phat lam) (Aop (edgeKernelE B.phat) (edgeMeasureE B.phat lam) f)) ∧ (Summable fun n : ℕ => ‖densOp lam B.phat ^ n - meanOp lam‖) ∧ liftedMixingSum B lam = 1 + Core.Mixing.B (densOp lam B.phat) (meanOp lam) ∧ rhoL (deriv (deriv logSq) 1) wmin (liftedMixingSum B lam) = 2 * wmin / liftedMixingSum B lam ^ 2 ∧ 0 < rhoL (deriv (deriv logSq) 1) wmin (liftedMixingSum B lam) ∧ (∀ (eps : ℝ) (h : ℕ → EdgeSet B.phat → ℝ), 0 ≤ eps → eps ≤ (4 * deriv (deriv logSq) 1 * supAbsOf w)⁻¹ → (∀ k e, h (k + 1) e = h k e - eps * linHess (edgeKernelE B.phat)",
+     "doc": "**`theo:training_speed`, the DB sentence** (`cv_divergence.tex:79–81`): \"the DB instance inherits a local rate through the edge lift wherever the lifted mixing sum is finite (Theorems `theo:db_stable_frozen` and `theo:local_convergence`)\"."
+    },
+    {
+     "name": "wrapInd",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.wrapInd",
+     "kind": "def",
+     "line": 440,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def wrapInd (B : Graph.BackwardPolicy G) : EdgeSet B.phat → ℝ",
+     "doc": "The indicator `𝟙_{(s_f,s₀)}` of the wrap pair, on `E`."
+    },
+    {
+     "name": "wrapInd_ne_const",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.wrapInd_ne_const",
+     "kind": "theorem",
+     "line": 444,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem wrapInd_ne_const (B : Graph.BackwardPolicy G) (c : ℝ) : wrapInd B ≠ fun _ => c",
+     "doc": "`𝟙_{(s_f,s₀)}` is not constant on `E`, which has another pair (`nontrivial_edgeSet`)."
+    },
+    {
+     "name": "eq_const_of_balanced_edge",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.eq_const_of_balanced_edge",
+     "kind": "theorem",
+     "line": 456,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_const_of_balanced_edge (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (hsum : Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) {u : EdgeSet B.phat → ℝ} (hu : Balanced (edgeKernelE B.phat) (edgeMeasureE B.phat lam) u) : u = fun _ => Graph.meanL2 (edgeMeasureE B.phat lam) u",
+     "doc": "Under summable lifted mixing a balanced density on `E` is constant: `μK₂ = μ` makes it a fixed point of the density action, and summable mixing is ergodicity (`LocalConvergenceMixing.eq_const_of_densAct_eq`)."
+    },
+    {
+     "name": "eq_zero_of_nrmL2_eq_zero",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.eq_zero_of_nrmL2_eq_zero",
+     "kind": "theorem",
+     "line": 472,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_zero_of_nrmL2_eq_zero {W : Type*} [Fintype W] {mu f : W → ℝ} (hmu : ∀ x, 0 < mu x) (hf : Graph.nrmL2 mu f = 0) : f = fun _ => 0",
+     "doc": "A function of zero `L²(μ)`-norm vanishes, for a positive weight `μ`."
+    },
+    {
+     "name": "training_speed_DB_edge_lift_nonvacuous",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.training_speed_DB_edge_lift_nonvacuous",
+     "kind": "theorem",
+     "line": 488,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem training_speed_DB_edge_lift_nonvacuous (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) {w : EdgeSet B.phat → ℝ} {wmin : ℝ} (hwmin0 : 0 < wmin) (hwmin : ∀ e, wmin ≤ w e) (hsum : Summable fun n : ℕ => ‖densOp (edgeMeasureE B.phat lam) (edgeKernelE B.phat) ^ n - meanOp (edgeMeasureE B.phat lam)‖) : 0 < Graph.nrmL2 (edgeMeasureE B.phat lam) (perpL2 (edgeMeasureE B.phat lam) (wrapInd B)) ∧ 0 < (4 * deriv (deriv logSq) 1 * supAbsOf w)⁻¹ ∧ (∀ eps : ℝ, ∃ h : ℕ → EdgeSet B.phat → ℝ, h 0 = wrapInd B ∧ ∀ k e, h (k + 1) e = h k e - eps * linHess (edgeKernelE B.phat) (edgeMeasureE B.phat lam) w (deriv (deriv logSq) 1) (h k) e) ∧ (∃ h : ℝ → EdgeSet B.phat → ℝ, h 0 = wrapInd B ∧ ∀ t : ℝ, HasDerivAt h (fun e => -(linHess (edgeKernelE B.phat) (edgeMeasureE B.phat lam) w (deriv (deriv logSq) 1) (h t) e)) t) ∧ ∃ h : ℝ → EdgeSet B.phat → ℝ, IsGradientFlow (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun z => edgeMeasureE B.phat lam z * w z) logSqDeriv (fun s e => 1 + h s e) ∧ ¬ Balanced (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun e => 1 + h 0 e) ∧ ∃ cinf : ℝ, Balanced (edgeKernelE B.phat) (edgeMeasureE B.phat lam) (fun _ => cinf) ∧ Tendsto (fun t => Graph.nrmL2 (edgeMeasureE B.phat lam) (fun e => h t e - (cinf - 1))) atTop (𝓝 0)",
+     "doc": "**`theo:training_speed`, the DB sentence is not vacuous on any instance** (kb 0025, 0027): whenever `training_speed_DB_edge_lift` applies, * its linearized clauses are exercised off the balanced ray: `𝟙_{(s_f,s₀)}` has a deviation from its mean of positive norm, the step cap `(4g''(1)‖w‖_{L^∞})^{−1}` is positive, and the linearized descent (at any step) and the linearized flow run from `𝟙_{(s_f,s₀)}` (`Graph.linDescent`, `Graph.exists_linFlow`); * its nonlinear clause is exercised off balance: from `ε₀𝟙_{(s_f,s₀)}`, inside the paper's ball, the DB gradient flow exists, is **not** balanced at `t = 0`, and converges to a balanced flow."
+    },
+    {
+     "name": "triangle_DB_edge_lift_check",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.triangle_DB_edge_lift_check",
+     "kind": "theorem",
+     "line": 557,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem triangle_DB_edge_lift_check : ∃ lam : Fin 3 → ℝ, RemarksA.triPolicy.IsInvProb lam ∧ (Summable fun n : ℕ => ‖densOp (edgeMeasureE RemarksA.triPolicy.phat lam) (edgeKernelE RemarksA.triPolicy.phat) ^ n - meanOp (edgeMeasureE RemarksA.triPolicy.phat lam)‖) ∧ liftedMixingSum RemarksA.triPolicy lam = 1 + Core.Mixing.B (densOp lam RemarksA.triPolicy.phat) (meanOp lam) ∧ 0 < Graph.nrmL2 (edgeMeasureE RemarksA.triPolicy.phat lam) (perpL2 (edgeMeasureE RemarksA.triPolicy.phat lam) (wrapInd RemarksA.triPolicy)) ∧ ∃ h : ℝ → EdgeSet RemarksA.triPolicy.phat → ℝ, IsGradientFlow (edgeKernelE RemarksA.triPolicy.phat) (edgeMeasureE RemarksA.triPolicy.phat lam) (fun z => edgeMeasureE RemarksA.triPolicy.phat lam z * 1) logSqDeriv (fun s e => 1 + h s e) ∧ ¬ Balanced (edgeKernelE RemarksA.triPolicy.phat) (edgeMeasureE RemarksA.triPolicy.phat lam) (fun e => 1 + h 0 e) ∧ ∃ cinf : ℝ, Balanced (edgeKernelE RemarksA.triPolicy.phat) (edgeMeasureE RemarksA.triPolicy.phat lam) (fun _ => cinf) ∧ Tendsto (fun t => Graph.nrmL2 (edgeMeasureE RemarksA.triPolicy.phat lam) (fun e => h t e - (cinf - 1))) atTop (𝓝 0)",
+     "doc": "**`theo:training_speed`, the DB sentence, inhabited** (kb 0025): on the aperiodic triangle `s₀ → x → s_f`, `s₀ → s_f` of `RemarksA` (returns to `s₀` of lengths `2` and `3`), with its invariant probability and `w ≡ 1`, the lifted mixing sum is finite — from the backward chain's summable mixing (`RemarksA.graphs_vs_L2_aperiodic`) through `lifted_summable_iff` — and equals `1 + B`; the linearized start `𝟙_{(s_f,s₀)}` is off the balanced ray; and the DB gradient flow of `training_speed_DB_edge_lift` runs from a non-balanced start to a balanced flow."
+    },
+    {
+     "name": "ar_lifted_not_summable",
+     "full": "GFNBounds.Balance.TrainingSpeedDB.ar_lifted_not_summable",
+     "kind": "theorem",
+     "line": 595,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ar_lifted_not_summable : ¬ Summable fun n : ℕ => ‖densOp (edgeMeasureE Graph.arPol.phat Graph.arLam) (edgeKernelE Graph.arPol.phat) ^ n - meanOp (edgeMeasureE Graph.arPol.phat Graph.arLam)‖",
+     "doc": "**`theo:training_speed`, \"wherever\" on an instance**: on the autoregressive graph `s₀ → s_f` (`MorozovConsume.ar`, leveled, its loop closure the swap, of period `2`) the lifted mixing sum is infinite, so the DB sentence says nothing there; the DB rate on that graph is `prop:morozov_rate`*(3)*'s, at `1 + B̂_σ` (`MorozovDB.ar_local_convergence_DB_witness`)."
     }
    ],
    "library": "strict",

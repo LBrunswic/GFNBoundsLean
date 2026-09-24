@@ -8,6 +8,7 @@ Flows* — **Appendices A, B and H**:
 | **A** | `proofs.tex` | the paper's proofs: universality, the stable bounds, the first variation, the frozen-policy dynamics, universality on finite graphs | 39 |
 | **B** | `silva_comparison.tex` | the explicit-constant restatement of Silva et al.'s bound, and why its state-space dependence is unavoidable | 7 |
 | **H** | `app_doubling.tex` | the doubling-graph counter-example: an unbounded diffusion operator at finite backward length | 40 |
+| **I** | `app_lean.tex` | the Lean appendix (out of the paper build): the doubling setting and main theorem in the form the certificate carries — digested since 2026-09-24, proved by Appendix H's Lean | 2 |
 
 The library began as Appendix H alone and was widened to A and B on 2026-09-08, at the author's
 instruction. Appendices C–G are **not** in scope.
@@ -15,9 +16,14 @@ instruction. Appendices C–G are **not** in scope.
 Coverage: **[`docs/COVERAGE.md`](docs/COVERAGE.md)**. Open `sorry`s:
 [`docs/SORRY-STATUS.md`](docs/SORRY-STATUS.md). The whole-paper ledger — all 131 statements with
 their natural-language status, their Lean status and the dependency DAG — lives on the paper side
-at `FORMALIZATION-LEDGER.md`. Since 2026-09-19 it reads **closure 96 of 96**: every in-scope
-statement of the body and Appendices A, B and H is closed in bucket A, the four terminal remarks
-excepted.
+at `FORMALIZATION-LEDGER.md`. It reads **closure 96 of 96**: every in-scope statement of the body
+and Appendices A, B, H and I is closed in bucket A, the four terminal remarks excepted. Since
+2026-09-24 the two views agree row for row: `paper-map.json` carries all 100 in-scope statements,
+96 closed in A and 4 terminal, and the ledger's `crosscheck` compares buckets. Until that day the
+ledger's figure rested on two things the map did not have: Appendix I's two rows, counted through
+curated links, and bucket A on `theo:training_speed`, inherited from its twin, while the map kept
+the row in B because its DB sentence had no Lean. `Balance/TrainingSpeedDB.lean` now certifies that
+sentence.
 
 ## Where it stands
 
@@ -111,8 +117,8 @@ Three audits back it up, run by `make check`:
 
 ## Traceability to the `.tex`
 
-`paper-map.json` maps each of 98 labels — Appendix H's 40, Appendix A's 39, Appendix B's 7 and the
-body's 12 — to its line span in the source `.tex`, a **sha256 of
+`paper-map.json` maps each of 100 labels — Appendix H's 40, Appendix A's 39, Appendix B's 7,
+Appendix I's 2 and the body's 12 — to its line span in the source `.tex`, a **sha256 of
 that statement's own LaTeX block** (statement plus proof, whitespace-normalised), the Lean files
 and declarations certifying it, a status, a difficulty bucket, and scope notes.
 

@@ -111,6 +111,7 @@ import GFNBounds.Balance.FreezingGradientBridge
 import GFNBounds.Balance.GdDiffusionGeneral
 import GFNBounds.Balance.StableFrozenGeneral
 import GFNBounds.Balance.TBvsDBClose
+import GFNBounds.Balance.TrainingSpeedDB
 import GFNBounds.Doubling.GeomFamily
 import GFNBounds.Doubling.PolicyTable
 
@@ -2374,3 +2375,17 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.table_polynomial
 #print axioms GFNBounds.Doubling.table_uniform
 #print axioms GFNBounds.Doubling.table_geometric
+
+-- `theo:training_speed`, the DB sentence (cv_divergence.tex:79-81): the DB instance through the edge lift, wherever the lifted mixing sum is finite — GFNBounds/Balance/TrainingSpeedDB.lean
+#print axioms GFNBounds.Balance.TrainingSpeedDB.training_speed_DB_edge_lift
+#print axioms GFNBounds.Balance.TrainingSpeedDB.liftedMixingSum
+#print axioms GFNBounds.Balance.TrainingSpeedDB.lifted_summable_iff
+#print axioms GFNBounds.Balance.TrainingSpeedDB.liftedMixingSum_eq
+#print axioms GFNBounds.Balance.TrainingSpeedDB.lifted_summable_iff_ne_top
+#print axioms GFNBounds.Balance.TrainingSpeedDB.lifted_not_summable_of_leveled
+#print axioms GFNBounds.Balance.TrainingSpeedDB.lifted_summable_iff_aperiodic
+#print axioms GFNBounds.Balance.TrainingSpeedDB.training_speed_DB_edge_lift_nonvacuous
+#print axioms GFNBounds.Balance.TrainingSpeedDB.triangle_DB_edge_lift_check
+#print axioms GFNBounds.Balance.TrainingSpeedDB.ar_lifted_not_summable
+#print axioms GFNBounds.Balance.TrainingSpeedDB.nontrivial_edgeSet
+#print axioms GFNBounds.Balance.TrainingSpeedDB.lifted_beta_succ

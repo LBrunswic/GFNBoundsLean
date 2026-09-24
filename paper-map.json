@@ -3760,7 +3760,8 @@
         "GFNBounds/Balance/TrainingSpeed.lean",
         "GFNBounds/Balance/C3Wrappers.lean",
         "GFNBounds/Balance/DiscreteGlobal.lean",
-        "GFNBounds/Balance/TrainingSpeedAssembled.lean"
+        "GFNBounds/Balance/TrainingSpeedAssembled.lean",
+        "GFNBounds/Balance/TrainingSpeedDB.lean"
       ],
       "decls": [
         "GFNBounds.Balance.Aop_eq_ratio_sub_one_mul",
@@ -3846,11 +3847,21 @@
         "GFNBounds.Balance.DiscreteGlobal.gammaStar_ofReal",
         "GFNBounds.Balance.DiscreteGlobal.gamma0W_logSq_eq_gamma0At",
         "GFNBounds.Balance.DiscreteGlobal.eps0W_logSq_eq_eps0At",
-        "GFNBounds.Balance.DiscreteGlobal.cycle_training_speed_complete_check"
+        "GFNBounds.Balance.DiscreteGlobal.cycle_training_speed_complete_check",
+        "GFNBounds.Balance.TrainingSpeedDB.training_speed_DB_edge_lift",
+        "GFNBounds.Balance.TrainingSpeedDB.liftedMixingSum",
+        "GFNBounds.Balance.TrainingSpeedDB.lifted_summable_iff",
+        "GFNBounds.Balance.TrainingSpeedDB.liftedMixingSum_eq",
+        "GFNBounds.Balance.TrainingSpeedDB.lifted_summable_iff_ne_top",
+        "GFNBounds.Balance.TrainingSpeedDB.lifted_not_summable_of_leveled",
+        "GFNBounds.Balance.TrainingSpeedDB.lifted_summable_iff_aperiodic",
+        "GFNBounds.Balance.TrainingSpeedDB.training_speed_DB_edge_lift_nonvacuous",
+        "GFNBounds.Balance.TrainingSpeedDB.triangle_DB_edge_lift_check",
+        "GFNBounds.Balance.TrainingSpeedDB.ar_lifted_not_summable"
       ],
       "status": "closed",
-      "bucket": "B",
-      "scope_notes": "2026-09-18: the twin's principal declaration training_speed_full_complete is listed here too. || 2026-09-18: the twin theo:training_speed_full is closed in A (training_speed_gd_minPos_ennreal, 8542f9c); this body row keeps its own bucket on its edge-lift gap. || 2026-09-14: follows its twin theo:training_speed_full (closed, bucket B; TrainingSpeedAssembled.lean). || 2026-09-14: the discrete-descent sentence and 'no step size fixed in advance works from every initialization' are certified through item 3 of the twin (DiscreteGlobal.lean, audited). 'The DB instance inherits a local rate through the edge lift' still has no Lean. || 2026-09-14 (Phase 1 re-read against commit 3194054): 'the DB instance inherits a local rate through the edge lift' has no Lean (no K_2 instance). || BODY RESTATEMENT of theo:training_speed_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13: W2 written in; body Theorem 6 now states both phases for flow and descent with a step chosen from the initialization, faithful to theo:training_speed_full (proof-checker).. The twin's row carries the disclosures."
+      "bucket": "A",
+      "scope_notes": "2026-09-24 (Balance/TrainingSpeedDB.lean, written by a lean-prover session and audited READY by a lean-auditor that did not write it): CLOSED IN A. The DB sentence (cv_divergence.tex:79-81), the row's last clause without Lean, is certified; the rest of the row was already its twin's. PRINCIPAL DECLARATION training_speed_DB_edge_lift: on the loop closure of a finite path-connected marked graph, lambda its invariant probability, g = (log x)^2, nu-hat = w lambda_2 on E with w >= w_min > 0, and hsum (the lifted mixing sum B-hat_2 = sum_n ||P_2^n - Pi_2||_{L^2(lambda_2)} finite), one statement gives: the balance loss of K_2 on (E, lambda_2) is the DB loss (prop:db_lift); B-hat_2 >= 1 is a coercivity constant equal to 1 + B (lem:lift_mixing; hsum <-> summable mixing of pi-hat, lifted_summable_iff); rho = 2 w_min/B-hat_2^2 > 0; theo:db_stable_frozen's linearized DB descent and flow at B-hat_2; and local_convergence_full_DB_paper's whole conclusion at B-hat_2, a = 1/2 (flow existence and uniqueness, rate rho/2; descent at 1 - gamma rho/4 below gamma_0; eps_0, C, gamma_0 explicit). Readings disclosed: stated on E, not S^2 (lossless: lambda_2 vanishes off E, beta-hat_n unchanged, LiftFinite.opNorm_densDeviation_restrict); the linearized dynamics hypothesised as theo:db_stable_frozen_full states them, the linear ODE asked at every real t as in stable_frozen_decay_finite (inhabited from every h_0 by Graph.exists_linFlow, not kb 0025's vacuity); linearized step 0 <= eps; one window a = 1/2, as the twin. hsum IS aperiodicity of pi-hat on these chains (lifted_summable_iff_aperiodic, from RemarksA.graphs_vs_L2_aperiodic / graphs_vs_L2_periodic), so the sentence says nothing on periodic loop closures, leveled graphs among them (lifted_not_summable_of_leveled, ar_lifted_not_summable), where the DB rate is prop:morozov_rate(3)'s at 1 + B-hat_sigma with no aperiodicity (MorozovDB.local_convergence_full_DB_sigma) -- the body sentence is true but undersells DB; the rewording is the author's, through /writer. Inhabited: training_speed_DB_edge_lift_nonvacuous on every instance from unbalanced starts, and triangle_DB_edge_lift_check on RemarksA's aperiodic triangle (hsum via graphs_vs_L2_aperiodic, non-effective; w = 1). || 2026-09-18: the twin's principal declaration training_speed_full_complete is listed here too. || 2026-09-18: the twin theo:training_speed_full is closed in A (training_speed_gd_minPos_ennreal, 8542f9c); this body row keeps its own bucket on its edge-lift gap. || 2026-09-14: follows its twin theo:training_speed_full (closed, bucket B; TrainingSpeedAssembled.lean). || 2026-09-14: the discrete-descent sentence and 'no step size fixed in advance works from every initialization' are certified through item 3 of the twin (DiscreteGlobal.lean, audited). 'The DB instance inherits a local rate through the edge lift' still has no Lean. || 2026-09-14 (Phase 1 re-read against commit 3194054): 'the DB instance inherits a local rate through the edge lift' has no Lean (no K_2 instance). || BODY RESTATEMENT of theo:training_speed_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13: W2 written in; body Theorem 6 now states both phases for flow and descent with a step chosen from the initialization, faithful to theo:training_speed_full (proof-checker).. The twin's row carries the disclosures."
     },
     {
       "label": "theo:first_variation",
@@ -4305,6 +4316,118 @@
       "status": "closed",
       "bucket": "A",
       "scope_notes": "2026-09-19 (Balance/LiftGeneralMixing.lean, checked against the lemma carrying the label in proofs.tex by a session that did not write it): CLOSED IN A on any measurable space. `lift_coercivity_general` states the lemma clause by clause. π_← is Markov and λ finite and invariant. P and P₂ are the density actions φ ↦ d((φλ)π_←)/dλ and h ↦ d((hλ₂)K₂)/dλ₂ on L² (`Core.densityActionL2`), and Π and Π₂ are the mean projections against λ and λ₂ (`Core.meanProj`, normalised by total mass, so no probability assumption). The hypothesis is C ≥ 0 with ‖φ − Πφ‖ ≤ C‖(I − P)φ‖ for every φ ∈ L²(λ). The conclusion is ‖h − Π₂h‖ ≤ (1 + C)‖(I − P₂)h‖ for every h ∈ L²(λ₂). The proof is the paper's: v = h − E k_h, k_v = (I − P)k_h, h − Π₂h = v + E(k_h − Πk_h), and a triangle inequality. k_h is M = E†P₂, and ‖M‖ ≤ 1 replaces the paper's Jensen over π_→^λ, so no disintegration or standard Borel hypothesis enters. The remark's 'C = B lifts to 1 + C' is `lift_coercivity_of_mixing`, which uses lem:sigma_mixing's `sigma_mixing`. Inhabited: the resampling kernel x ↦ ρ meets the hypothesis with C = 1, and `lift_coercivity_const` gives 2. Axioms {propext, Classical.choice, Quot.sound}. Supersedes the 2026-09-14 finite note, whose probability-case and finite-S narrowings are discharged. The finite twins `lift_coercivity_finite`/`lift_coercivity_edgeSupport` remain; the latter is what `prop:morozov_rate`(3)'s DB half consumes. || 2026-09-14 (Phase 2, GFNBounds/Balance/LiftFinite.lean, audited READY): CLOSED on a finite state space by the paper's proof, on V x V and on E (lift_coercivity_edgeSupport, definitionally the hcoer of C3Wrappers.local_convergence_full_DB). Pi is the library's unnormalised mean, so the hypothesis can hold only at mass 1: this is the probability case; the general-mass rescaling is not formalised. Left: the general measure layer (Phase 4). Inhabited: uniform two-state chain, C = 1 gives 2. || 2026-09-14 (Phase 1 re-read against commit 3194054): new lemma, no Lean. The finite form is short on Lift.lean (condFwd = k_h, pushEdge_density = P_2 h = k_h o pr_2, edgeMean = Pi_2, l2sq_condFwd_le = Jensen, a triangle inequality via wtL2); its only Lean-side consumer, the DB half of prop:morozov_rate(3), is finite."
+    },
+    {
+      "label": "def:lean_setting",
+      "source": "app_lean.tex",
+      "tex_span": [
+        17,
+        66
+      ],
+      "block_sha256": "737f4548138c2c6de98ec243a4317b30851b05e8799221cca6bf0a9e358c5ca2",
+      "lean_files": [
+        "GFNBounds/Doubling/Setting.lean",
+        "GFNBounds/Doubling/Range.lean",
+        "GFNBounds/Doubling/Cramer.lean",
+        "GFNBounds/Doubling/Irreducible.lean",
+        "GFNBounds/Doubling/PointwiseInv.lean",
+        "GFNBounds/Doubling/PerCutIdentity.lean",
+        "GFNBounds/Doubling/PerCutNorms.lean",
+        "GFNBounds/Doubling/Supersolution.lean",
+        "GFNBounds/Doubling/Kac.lean",
+        "GFNBounds/Doubling/LpLayer.lean",
+        "GFNBounds/Doubling/LpContraction.lean",
+        "GFNBounds/Doubling/Adjoint.lean",
+        "GFNBounds/Doubling/AdjointL2.lean",
+        "GFNBounds/Doubling/Unsolvable.lean",
+        "GFNBounds/Doubling/TruncationBhat.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.St",
+        "GFNBounds.Doubling.HasDouble",
+        "GFNBounds.Doubling.OnChain",
+        "GFNBounds.Doubling.Setting",
+        "GFNBounds.Doubling.Setting.jbar",
+        "GFNBounds.Doubling.pstar",
+        "GFNBounds.Doubling.Stat",
+        "GFNBounds.Doubling.PreStat",
+        "GFNBounds.Doubling.inv_of_pointwise",
+        "GFNBounds.Doubling.epsCS",
+        "GFNBounds.Doubling.epsCS_pos",
+        "GFNBounds.Doubling.epsCS_antitone",
+        "GFNBounds.Doubling.epsCS_one",
+        "GFNBounds.Doubling.epsCS_le_one_val",
+        "GFNBounds.Doubling.epsCS_one_lt_one",
+        "GFNBounds.Doubling.Setting.ofFamily",
+        "GFNBounds.Doubling.psi",
+        "GFNBounds.Doubling.cramer_root_exists",
+        "GFNBounds.Doubling.cramer_root_unique",
+        "GFNBounds.Doubling.tailInd",
+        "GFNBounds.Doubling.Stat.mass",
+        "GFNBounds.Doubling.Stat.tailMass",
+        "GFNBounds.Doubling.Stat.centredTail",
+        "GFNBounds.Doubling.hitExp",
+        "GFNBounds.Doubling.sbar",
+        "GFNBounds.Doubling.Stat.mu",
+        "GFNBounds.Doubling.RowOnChain",
+        "GFNBounds.Doubling.Stat.pstarL2",
+        "GFNBounds.Doubling.Stat.eLpNorm_pstar_le_of_memLp",
+        "GFNBounds.Doubling.Stat.dens",
+        "GFNBounds.Doubling.Stat.densL2",
+        "GFNBounds.Doubling.Stat.piL2",
+        "GFNBounds.Doubling.Stat.betaHat",
+        "GFNBounds.Doubling.Stat.kerPi",
+        "GFNBounds.Doubling.Stat.diffOpK",
+        "GFNBounds.Doubling.Stat.bhatK"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED, bucket A. Mapped 2026-09-24 when app_lean.tex (Appendix I, commented out of the paper build) joined SOURCES; audited against eca6443 (Lean unchanged since 2e9865c) by a session that did not write it. Appendix I's restatement of def:doubling_setting. Objects: St (lad 0 is s_0, the definition's own 'j-1 = 0 read as s_0'); HasDouble, OnChain (the cap); Setting (d >= 1, eps, the target row supported in 1..d; jbar = Setting.jbar derived from the row, as the definition says); pstar (the total closed-form function action); Stat / PreStat (an invariant probability, in integral form against bounded f; inv_of_pointwise bridges to lambda T = lambda); tailInd, Stat.tailMass, Stat.centredTail (L(m), f_m); Stat.dens / Stat.densL2 (P); Stat.piL2, Stat.kerPi (Pi, ker Pi); Stat.betaHat; Stat.diffOpK / Stat.bhatK (S and B-hat_K on the truncation); psi (the Cramer equation). The definition's three uncited embedded claims are certified outside Setting.lean: on the standing range eps takes values in (0,1) with supremum c 2^{-s} < 1 (Range.lean, as for lem:doubling_range); P* is a contraction of L^p(lambda) for every p in [1, infinity] (Stat.eLpNorm_pstar_le_of_memLp); the non-zero Cramer root exists and is unique for c > 0, c != 1/ln 2 (cramer_root_exists, cramer_root_unique) -- the definition says 'its non-zero real root' without that qualifier, and the theorem reads p_* only at 0 < c < 1. Modelling, disclosed: (X_n) and sigma are not Lean objects; sigma-bar is sup_n sbar S none n, with hitExp the recursion for E(sigma ^ n | X0 = .) (R17). epsMax is a Setting field (a bound < 1), not the supremum; Setting.ofFamily sets it to c 2^{-s}. The family enters through heps : forall j, S.eps j = epsCS c s j, which also fixes S.eps 0 = c, a value the chain never reads. PRECISION, for /writer: the definition does not name the truncation's state set {s_0, 1, ..., K, s_f} (OnChain (some K); K + 2 states, main_truncation_states), and theo:lean_main(5)'s 'irreducible on its states' reads it."
+    },
+    {
+      "label": "theo:lean_main",
+      "source": "app_lean.tex",
+      "tex_span": [
+        68,
+        119
+      ],
+      "block_sha256": "b2b286364b575d3d46a5e1fc1c9272f34c5253cb1cafb3212025c516eeea75b2",
+      "lean_files": [
+        "GFNBounds/Doubling/Main.lean",
+        "GFNBounds/Doubling/TruncationBhat.lean",
+        "GFNBounds/Doubling/Cramer.lean",
+        "GFNBounds/Doubling/Irreducible.lean"
+      ],
+      "decls": [
+        "GFNBounds.Doubling.main_irreducible",
+        "GFNBounds.Doubling.main_phase",
+        "GFNBounds.Doubling.main_invariant_measure",
+        "GFNBounds.Doubling.main_constant_determined",
+        "GFNBounds.Doubling.main_constant_functional",
+        "GFNBounds.Doubling.main_unbounded",
+        "GFNBounds.Doubling.main_unbounded_infty",
+        "GFNBounds.Doubling.main_unbounded_two",
+        "GFNBounds.Doubling.main_sigmaBar_eq",
+        "GFNBounds.Doubling.main_sigmaBar_le",
+        "GFNBounds.Doubling.main_rate",
+        "GFNBounds.Doubling.main_unsolvable",
+        "GFNBounds.Doubling.main_truncation_irreducible",
+        "GFNBounds.Doubling.main_truncation_bhat",
+        "GFNBounds.Doubling.main_truncation_sqrtK",
+        "GFNBounds.Doubling.Decay.ofC",
+        "GFNBounds.Doubling.Stat.diffOpK",
+        "GFNBounds.Doubling.Stat.bhatK",
+        "GFNBounds.Doubling.Stat.diffOpK_resolvent",
+        "GFNBounds.Doubling.cramer_root_unique",
+        "GFNBounds.Doubling.Edge",
+        "GFNBounds.Doubling.Reach",
+        "GFNBounds.Doubling.edge_pstar_pos",
+        "GFNBounds.Doubling.PreStat.toStatNone",
+        "GFNBounds.Doubling.PreStat.toStatSome"
+      ],
+      "status": "closed",
+      "bucket": "A",
+      "scope_notes": "CLOSED, bucket A. Mapped 2026-09-24 (app_lean.tex joined SOURCES as appendix I); audited against eca6443 by a session that did not write it. Appendix I states the doubling theorem in the form the Lean carries, and every Lean line app_lean.tex quotes matches HEAD verbatim. (1) main_irreducible (Reach over Edge; edge_pstar_pos makes each edge a positive transition); main_phase is stated over Stat and reads as 'no invariant probability' through PreStat.toStatNone. (2) main_invariant_measure, main_constant_determined, main_constant_functional; each 'exists p, psi c p = 0 and 1 < p' is p_* by cramer_root_unique. (3) main_unbounded (p in [1, infinity), mass layer); main_unbounded_infty (p = infinity, over bounded f against the supremum over states); main_unbounded_two; main_sigmaBar_eq and main_sigmaBar_le (sigma-bar recursion-defined, R17); main_rate. (4) main_unsolvable. (5) main_truncation_irreducible, main_truncation_bhat, main_truncation_sqrtK. 'So that B-hat_K < +infinity' and 'that is B-hat_K >= sqrt(c8) sqrt(K)' read B-hat_K as Stat.bhatK = ||Stat.diffOpK||, the paper's (Id - P* + Pi)^{-1} - Pi, which satisfies the resolvent identities (Stat.diffOpK_resolvent), so the R of main_truncation_bhat is that operator. 'Its states' in (5) is read as OnChain (some K), a set def:lean_setting does not name (flagged there). The sqrt(K) bound is stated in Lean for every K >= K0 and in the paper for even K only, which is weaker. c8 and K0 are bare existentials in both; in main_truncation_sqrtK, c8 also depends on the Setting's epsMax. THE LIBRARY PROVES MORE than this statement, and app_lean.tex's own scope section still says it does not: uniqueness of the invariant probability on the loop closure (main_invariant_unique); the recurrence labels and E(sigma | X0 = j) = +infinity at 1 <= c (main_phase_classes, prop_doubling_phase, least-solution classes under R8); the K + 2 state count (main_truncation_states); the dependence clauses of c7 (Decay.c7Of_congr, main_c7_congr) and of c8, K0 (main_truncation, main_truncation_explicit)."
     }
   ],
   "sources": {
@@ -4331,6 +4454,10 @@
     "cv_divergence.tex": {
       "path": "/home/maxbrain/Dropbox/GFN Bounds/cv_divergence.tex",
       "appendix": "S4"
+    },
+    "app_lean.tex": {
+      "path": "/home/maxbrain/Dropbox/GFN Bounds/app_lean.tex",
+      "appendix": "I"
     }
   }
 }

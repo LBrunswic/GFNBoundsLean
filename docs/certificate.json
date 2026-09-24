@@ -6,7 +6,22 @@
   "branch": "main",
   "dirty": true,
   "dirty_files": [
-    "NonAcyclic/"
+    "CLAUDE.md",
+    "GFNBounds.lean",
+    "GFNBounds/Audit.lean",
+    "GFNBounds/Balance/TrainingSpeedDB.lean",
+    "README.md",
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json",
+    "kb/INDEX.md",
+    "kb/entries/0013-trace-map-upkeep.md",
+    "kb/entries/0057-a-row-is-closed-only-when-every-clause-has-a-cer.md",
+    "kb/entries/0058-on-a-finite-irreducible-chain-summable-l-mixing-.md",
+    "paper-map.json",
+    "scripts/paper.py"
   ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
@@ -40,15 +55,15 @@
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 5703,
+    "declarations": 5721,
     "by_namespace": {
+      "GFNBounds.Balance": 1742,
       "GFNBounds.Doubling": 1730,
-      "GFNBounds.Balance": 1724,
       "GFNBounds.Graph": 992,
       "GFNBounds.Core": 946,
       "GFNBounds.Silva": 311
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "6d7a496159423435c7d3d62e1a1ce6469c1fcdc3066b1d729a092de7138f1582"
+    "sha256": "bad49a05441aa2f9bc0af8d729f1fec08d7bc2600e9255c26568e05cc43f9ce4"
   }
 }

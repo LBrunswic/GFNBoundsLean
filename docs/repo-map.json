@@ -304,7 +304,7 @@
     "GFNBounds.Graph.Diffusion"
    ],
    "variables": [],
-   "lines": 2396,
+   "lines": 2397,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -47987,13 +47987,13 @@
     "variable {G : MarkedGraph V}",
     "variable {B : BackwardPolicy G}"
    ],
-   "lines": 181,
+   "lines": 252,
    "decls": [
     {
      "name": "gd_diffusion_frozen",
      "full": "GFNBounds.Graph.BackwardPolicy.gd_diffusion_frozen",
      "kind": "theorem",
-     "line": 79,
+     "line": 80,
      "attrs": "",
      "private": false,
      "statement": "theorem gd_diffusion_frozen {lam w h : V → ℝ} {g gd : ℝ → ℝ} {a eps : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (ha : 0 < a) (ha1 : a < 1) (hC3 : ContDiffOn ℝ 3 g (Balance.winC3 a)) (hgd : ∀ y ∈ Balance.winC3 a, HasDerivWithinAt g (gd y) (Balance.winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (heps0 : 0 < eps) (heps : eps ≤ a / 4) (hh : ∀ x, |h x| ≤ eps) : (∀ x, Balance.ratio B.phat lam (fun z => 1 + h z) x - 1 = Balance.Aop B.phat lam h x / (1 + h x)) ∧ (∀ d : V → ℝ, HasDerivAt (fun t : ℝ => Balance.loss B.phat lam (fun z => lam z * w z) (fun x => 1 + h x + t * d x) g) (ipL2 lam (Balance.lossGrad B.phat lam (fun z => lam z * w z) gd fun z => 1 + h z) d) 0) ∧ nrmL2 lam (fun x => Balance.lossGrad B.phat lam (fun z => lam z * w z) gd (fun z => 1 + h z) x - Balance.linHess B.phat lam w (deriv (deriv g) 1) h x) ≤ Balance.Kexp (deriv (deriv g) 1) a (Balance.Gamma3W g a) (Balance.supAbsOf w) * eps * nrmL2 lam (Balance.Aop B.phat lam h) ∧ nrmL2 lam (Balance.Aop B.phat lam h) ≤ 2 * nrmL2 lam h",
@@ -48003,11 +48003,21 @@
      "name": "local_convergence_frozen",
      "full": "GFNBounds.Graph.BackwardPolicy.local_convergence_frozen",
      "kind": "theorem",
-     "line": 126,
+     "line": 127,
      "attrs": "",
      "private": false,
      "statement": "theorem local_convergence_frozen {lam w : V → ℝ} {g gd : ℝ → ℝ} {a wmin Bhat : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (Balance.winC3 a)) (hgd : ∀ y ∈ Balance.winC3 a, HasDerivWithinAt g (gd y) (Balance.winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, nrmL2 lam (Balance.perpL2 lam f) ≤ Bhat * nrmL2 lam (Balance.Aop B.phat lam f)) : ((∃ x, lam x = Balance.lamMinOf lam) ∧ (∀ x, Balance.lamMinOf lam ≤ lam x) ∧ 1 ≤ Balance.Cinf (Balance.lamMinOf lam)) ∧ (Balance.eps0W g a wmin (Balance.supAbsOf w) Bhat (Balance.lamMinOf lam) ∈ Set.Ioc 0 (a / (16 * Balance.Cinf (Balance.lamMinOf lam))) ∧ 1 ≤ Balance.CW g a wmin (Balance.supAbsOf w) ∧ 0 < Balance.gamma0W g a wmin (Balance.supAbsOf w) Bhat) ∧ ∀ h0 : V → ℝ, nrmL2 lam h0 ≤ Balance.eps0W g a wmin (Balance.supAbsOf w) Bhat (Balance.lamMinOf lam) → (∃ h : ℝ → V → ℝ, h 0 = h0 ∧ Balance.IsGradientFlow B.phat lam (fun z => lam z * w z) gd (fun s x => 1 + h s x) ∧ (∀ t : ℝ, 0 ≤ t → ∀ d : V → ℝ, HasDerivAt (fun s : ℝ => Balance.loss B.phat lam (fun z => lam z * w z) (fun x => 1 + h t x + s * d x) g) (ipL2 lam (Balance.lossGrad B.phat lam (fun z => lam z * w z) gd fun z => 1 + h t z) d) 0) ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < 1 + h t x ∧ |Balance.ratio B.phat lam (fun z => 1 + h t z) x - 1| ≤ 2 * a / 3) ∧ (∀ h' : ℝ → V → ℝ, h' 0 = h0 → Balance.IsGradientFlow B.phat lam (fun z => lam z * w z) gd (fun s x => 1 + h' s x) → ∀ t : ℝ, 0 ≤ t → h' t = h t) ∧ ∃ cinf : ℝ, Balance.Balanced B.phat lam (fun _ => cinf) ∧ |cinf - 1 - meanL2 lam h0|",
      "doc": "**`theo:local_convergence`, on a finite marked graph with the backward policy frozen**: for the loop closure and any coercivity constant `B̂ ≥ 1` on `L²(λ)`, the explicit `ε₀`, `C`, `γ₀`; the gradient flow from `(1+h₀)λ` exists, is the gradient, is unique, stays positive, and converges to `c_∞λ` at rate `ϱ/2`; gradient descent contracts by `1 − γϱ/4`, `ϱ = g''(1)w_min/B̂²`."
+    },
+    {
+     "name": "curvature_two_sided_frozen",
+     "full": "GFNBounds.Graph.BackwardPolicy.curvature_two_sided_frozen",
+     "kind": "theorem",
+     "line": 185,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem curvature_two_sided_frozen {lam w : V → ℝ} {g2 wmin wsup : ℝ} (hl : B.IsInvProb lam) (hwmin : ∀ x, wmin ≤ w x) (hwsup : ∀ x, w x ≤ wsup) (hwmin0 : 0 ≤ wmin) (hg2 : 0 ≤ g2) : (∀ Bhat : ℝ, 0 < Bhat → (∀ h : V → ℝ, nrmL2 lam (Balance.perpL2 lam h) ≤ Bhat * nrmL2 lam (Balance.Aop B.phat lam h)) → ∀ h : V → ℝ, g2 * wmin / Bhat ^ 2 * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess B.phat lam w g2 h)) ∧ (∀ c : ℝ, 0 < c → (∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess B.phat lam w g2 h)) → ∀ h : V → ℝ, nrmL2 lam (Balance.perpL2 lam h) ≤ Real.sqrt (g2 * wsup / c) * nrmL2 lam (Balance.Aop B.phat lam h))",
+     "doc": "**The curvature transverse to balance is of order `1/B̂²`, from both sides.** On the loop closure of a frozen backward policy, with `H = g''(1)A†M_wA` and `w_min ≤ w ≤ w_max`: (a) a coercivity constant `B̂` gives the curvature `g''(1)w_min/B̂²`; (b) conversely, a curvature `c > 0` gives the coercivity constant `√(g''(1)w_max/c)`."
     }
    ],
    "library": "strict",

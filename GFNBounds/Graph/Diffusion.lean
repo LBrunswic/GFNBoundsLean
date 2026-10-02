@@ -26,6 +26,7 @@ states is `𝓛_{g,ν}(μ) = ∑ ν g(r)` with `r` the balance ratio of the loop
 |---|---|
 | **`gd_diffusion_frozen`** | `theo:gd_diffusion` on the loop closure: at the state mass `(1+h)λ`, `|h| ≤ ε ≤ a/4`, the ratio is `1 + Ah/(1+h)`; the loss has the `L²(λ)` gradient `D(h)` along every direction; `‖D(h) − Hh‖ ≤ Kε‖Ah‖`, `H = g''(1)A†M_wA`, `K = 2C₄ + C₅` at `Γ₃` and `max |w|`; and `‖Ah‖ ≤ 2‖h‖` |
 | **`local_convergence_frozen`** | `theo:local_convergence` on the loop closure, at any coercivity constant `B̂ ≥ 1` on `L²(λ)`: the explicit `ε₀`, `C`, `γ₀`; the gradient flow from `(1+h₀)λ` exists, is the gradient, is unique, stays positive and in the window, and converges to a balanced `c_∞λ` at rate `ϱ/2`; gradient descent below `γ₀` is well defined and contracts `‖h_k − Πh_k‖` by `1 − γϱ/4`, `ϱ = g''(1)w_min/B̂²` |
+| **`curvature_two_sided_frozen`** | the curvature of `H` transverse to balance and the coercivity constant determine each other: a coercivity constant `B̂` gives the curvature `g''(1)w_min/B̂²`, and a curvature `c > 0` gives the coercivity constant `√(g''(1)w_max/c)`; at the best `B̂` the best curvature lies between `g''(1)w_min/B̂²` and `g''(1)w_max/B̂²` |
 
 ## Hypothesis checklist
 
@@ -175,6 +176,76 @@ theorem local_convergence_frozen {lam w : V → ℝ} {g gd : ℝ → ℝ} {a wmi
   Balance.local_convergence_full_paper ((Core.phat_isMarkov B).toIsMarkovOn lam)
     (Core.isInvariant_of_isInvProb B hl) (fun x => hl.pos hpc hpos x) hl.total
     ha hC3 hgd hg1 hg2 hwmin0 hwmin hB1 hcoer
+
+/-- **The curvature transverse to balance is of order `1/B̂²`, from both sides.** On the loop
+closure of a frozen backward policy, with `H = g''(1)A†M_wA` and `w_min ≤ w ≤ w_max`:
+(a) a coercivity constant `B̂` gives the curvature `g''(1)w_min/B̂²`; (b) conversely, a curvature
+`c > 0` gives the coercivity constant `√(g''(1)w_max/c)`. So no curvature exceeds
+`g''(1)w_max/B̂²` at the best `B̂`, and with `w` constant the two bounds meet. -/
+theorem curvature_two_sided_frozen {lam w : V → ℝ} {g2 wmin wsup : ℝ}
+    (hl : B.IsInvProb lam) (hwmin : ∀ x, wmin ≤ w x) (hwsup : ∀ x, w x ≤ wsup)
+    (hwmin0 : 0 ≤ wmin) (hg2 : 0 ≤ g2) :
+    (∀ Bhat : ℝ, 0 < Bhat →
+        (∀ h : V → ℝ, nrmL2 lam (Balance.perpL2 lam h)
+          ≤ Bhat * nrmL2 lam (Balance.Aop B.phat lam h)) →
+        ∀ h : V → ℝ, g2 * wmin / Bhat ^ 2 * nrmL2 lam (Balance.perpL2 lam h) ^ 2
+          ≤ ipL2 lam h (Balance.linHess B.phat lam w g2 h))
+    ∧ (∀ c : ℝ, 0 < c →
+        (∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2
+          ≤ ipL2 lam h (Balance.linHess B.phat lam w g2 h)) →
+        ∀ h : V → ℝ, nrmL2 lam (Balance.perpL2 lam h)
+          ≤ Real.sqrt (g2 * wsup / c) * nrmL2 lam (Balance.Aop B.phat lam h)) := by
+  have hK := Core.phat_isMarkov B
+  have hinv := Core.isInvariant_of_isInvProb B hl
+  refine ⟨fun Bhat hB hcoer h => ?_, fun c hc hcurv h => ?_⟩
+  · have hp0 : 0 ≤ nrmL2 lam (Balance.perpL2 lam h) := nrmL2_nonneg _ _
+    have hB2 : 0 < Bhat ^ 2 := pow_pos hB 2
+    have hsq : nrmL2 lam (Balance.perpL2 lam h) ^ 2
+        ≤ Bhat ^ 2 * nrmL2 lam (Balance.Aop B.phat lam h) ^ 2 := by
+      rw [← mul_pow]
+      exact pow_le_pow_left₀ hp0 (hcoer h) 2
+    calc g2 * wmin / Bhat ^ 2 * nrmL2 lam (Balance.perpL2 lam h) ^ 2
+        ≤ g2 * wmin / Bhat ^ 2 * (Bhat ^ 2 * nrmL2 lam (Balance.Aop B.phat lam h) ^ 2) :=
+          mul_le_mul_of_nonneg_left hsq (div_nonneg (mul_nonneg hg2 hwmin0) hB2.le)
+      _ = g2 * wmin * nrmL2 lam (Balance.Aop B.phat lam h) ^ 2 := by
+          rw [div_mul_eq_mul_div, div_eq_iff hB2.ne']
+          ring
+      _ ≤ ipL2 lam h (Balance.linHess B.phat lam w g2 h) :=
+          Balance.linHess_coercive hinv hK.nonneg hwmin hg2 h
+  · have hup : ipL2 lam h (Balance.linHess B.phat lam w g2 h)
+        ≤ g2 * wsup * nrmL2 lam (Balance.Aop B.phat lam h) ^ 2 := by
+      rw [Balance.ipL2_linHess hinv hK.nonneg w g2 h h,
+        sq_nrmL2 hinv.nonneg (Balance.Aop B.phat lam h)]
+      have hle : ipL2 lam (fun y => w y * Balance.Aop B.phat lam h y) (Balance.Aop B.phat lam h)
+          ≤ wsup * ipL2 lam (Balance.Aop B.phat lam h) (Balance.Aop B.phat lam h) := by
+        simp only [ipL2, Finset.mul_sum]
+        refine Finset.sum_le_sum fun x _ => ?_
+        have hrw1 : lam x * (w x * Balance.Aop B.phat lam h x * Balance.Aop B.phat lam h x)
+            = (lam x * (Balance.Aop B.phat lam h x * Balance.Aop B.phat lam h x)) * w x := by
+          ring
+        have hrw2 : wsup * (lam x * (Balance.Aop B.phat lam h x * Balance.Aop B.phat lam h x))
+            = (lam x * (Balance.Aop B.phat lam h x * Balance.Aop B.phat lam h x)) * wsup := by
+          ring
+        rw [hrw1, hrw2]
+        exact mul_le_mul_of_nonneg_left (hwsup x)
+          (mul_nonneg (hinv.nonneg x) (mul_self_nonneg _))
+      calc g2 * ipL2 lam (fun y => w y * Balance.Aop B.phat lam h y) (Balance.Aop B.phat lam h)
+          ≤ g2 * (wsup * ipL2 lam (Balance.Aop B.phat lam h) (Balance.Aop B.phat lam h)) :=
+            mul_le_mul_of_nonneg_left hle hg2
+        _ = g2 * wsup * ipL2 lam (Balance.Aop B.phat lam h) (Balance.Aop B.phat lam h) := by
+            ring
+    have hsq : nrmL2 lam (Balance.perpL2 lam h) ^ 2
+        ≤ g2 * wsup / c * nrmL2 lam (Balance.Aop B.phat lam h) ^ 2 := by
+      rw [div_mul_eq_mul_div, le_div_iff₀ hc]
+      exact (mul_comm _ _).trans_le ((hcurv h).trans hup)
+    have hA0 : 0 ≤ nrmL2 lam (Balance.Aop B.phat lam h) := nrmL2_nonneg _ _
+    have hp0 : 0 ≤ nrmL2 lam (Balance.perpL2 lam h) := nrmL2_nonneg _ _
+    calc nrmL2 lam (Balance.perpL2 lam h)
+        = Real.sqrt (nrmL2 lam (Balance.perpL2 lam h) ^ 2) := (Real.sqrt_sq hp0).symm
+      _ ≤ Real.sqrt (g2 * wsup / c * nrmL2 lam (Balance.Aop B.phat lam h) ^ 2) :=
+          Real.sqrt_le_sqrt hsq
+      _ = Real.sqrt (g2 * wsup / c) * nrmL2 lam (Balance.Aop B.phat lam h) := by
+          rw [Real.sqrt_mul' _ (sq_nonneg _), Real.sqrt_sq hA0]
 
 end BackwardPolicy
 

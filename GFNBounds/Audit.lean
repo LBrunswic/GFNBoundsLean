@@ -2394,3 +2394,4 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 -- `theo:gd_diffusion` and `theo:local_convergence` on the loop closure of a finite marked graph — GFNBounds/Graph/Diffusion.lean
 #print axioms GFNBounds.Graph.BackwardPolicy.gd_diffusion_frozen
 #print axioms GFNBounds.Graph.BackwardPolicy.local_convergence_frozen
+#print axioms GFNBounds.Graph.BackwardPolicy.curvature_two_sided_frozen

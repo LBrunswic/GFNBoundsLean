@@ -161,4 +161,5 @@ import GFNBounds.Balance.GdDiffusionGeneral
 import GFNBounds.Balance.StableFrozenGeneral
 import GFNBounds.Balance.TBvsDBClose
 import GFNBounds.Balance.TrainingSpeedDB
+import GFNBounds.Graph.Diffusion
 import GFNBounds.Audit

@@ -1,7 +1,7 @@
 {
   "paper": {
     "path": "/home/maxbrain/Dropbox/GFN Bounds/app_doubling.tex",
-    "git_commit": "fb315cf",
+    "git_commit": "b83dd0f",
     "appendix": "H"
   },
   "statements": [
@@ -3917,9 +3917,11 @@
       "block_sha256": "75a073f80f133ea66004f88467cccc52ee6e74b201f9a2f00ba0a8626603a786",
       "lean_files": [
         "GFNBounds/Balance/Expansion.lean",
-        "GFNBounds/Balance/GdDiffusionGeneral.lean"
+        "GFNBounds/Balance/GdDiffusionGeneral.lean",
+        "GFNBounds/Graph/Diffusion.lean"
       ],
       "decls": [
+        "GFNBounds.Graph.BackwardPolicy.gd_diffusion_frozen",
         "GFNBounds.Balance.linHess",
         "GFNBounds.Balance.gd_diffusion_display",
         "GFNBounds.Balance.linHess_reversible",
@@ -3941,7 +3943,7 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "2026-09-19: BODY RESTATEMENT of theo:gd_diffusion_full, certified through it. The restatement is verified (2026-09-13), and 'C^3 near 1 with non-degenerate curvature' matches the full form's hypotheses. The subsection's setting (S', lambda', T) has two halves. The FM half, (S, lambda, pi_back), is theo_gd_diffusion_full at T = pi_back. The DB half, (S^2, lambda_2, K_2), is theo_gd_diffusion_DB: the DB loss dbLoss is identified with the balance loss of K_2 by prop:db_lift (dbLoss_eq_loss); its derivative at mu = (1+h)lambda_2 along every bounded direction is represented by D = K_2 psi - r-hat psi; and ||D - g''(1)A^dagger M_w A h||_2 <= K eps ||Ah||_2 <= 2K eps ||h||_2. For the DB half the flow-sentence uniqueness is linearization_unique read at T = K_2. It applies because the field gradD is the same object for both losses, but it is not restated as a clause of theo_gd_diffusion_DB, and neither are the ratio bounds or L^2 uniqueness of the representative. The reversible, w = 1 sentence is about the FM loss and is theo_gd_diffusion_full(6). Disclosures as on the twin row: T ergodic is dropped (unused); the flow sentence is read on the field, with no flow constructed; eigenmode decay is the explicit solution. || 2026-09-14 (Phase 1 re-read against commit 3194054): 'C^3 near 1' matches the full form. || BODY RESTATEMENT of theo:gd_diffusion_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13 after repair: the body overstated its full form (see the findings triage); draft-writer applied the verifier's smallest fix and proof-checker re-read the pair.. The twin's row carries the disclosures."
+      "scope_notes": "2026-10-02: GRAPH FORM, certified directly by Graph.BackwardPolicy.gd_diffusion_frozen (GFNBounds/Graph/Diffusion.lean): on the loop closure B.phat of a finite path-connected marked graph with a backward policy positive on its edges, lambda its invariant probability (positive), mu = (1+h)lambda, nu = w lambda, g C^3 on the closed window, 0 < a < 1, g'(1) = 0 < g''(1), |h| <= eps <= a/4: the ratio is 1 + Ah/(1+h); lossGrad is the L^2(lambda) gradient along every direction; ||lossGrad - g''(1)A^dagger M_w A h|| <= Kexp eps ||Ah||; ||Ah|| <= 2||h||. A proof term over gradient_expansion, linHess_perpL2, Aop_perpL2, ratio_one_add_sub_one, abs_ratio_sub_one_le_two_a_div_three, hasDerivAt_loss_ipL2_local, nrmL2_Aop_le_two. It is the body tip of the GFNCertified paper (Figure 1 'Gradient as diffusion'). Not carried on the graph: uniqueness of the linear part (theo_gd_diffusion_full(5), linearization_unique), the DB half (theo_gd_diffusion_DB), and the reversible w = 1 sentence (theo_gd_diffusion_full(6)), which is empty on a loop closure since none is reversible. Disclosed reading: the library's ratio d(mu pi-hat)/d mu is outflow over inflow, the reciprocal of the GFNCertified eq:loss-fm, so this loss is eq:loss-fm at the generator g(1/x) (same first two derivatives at 1 when g'(1) = 0); the loop-closure loss also charges the two marks. The row's other declarations are unchanged. || 2026-09-19: BODY RESTATEMENT of theo:gd_diffusion_full, certified through it. The restatement is verified (2026-09-13), and 'C^3 near 1 with non-degenerate curvature' matches the full form's hypotheses. The subsection's setting (S', lambda', T) has two halves. The FM half, (S, lambda, pi_back), is theo_gd_diffusion_full at T = pi_back. The DB half, (S^2, lambda_2, K_2), is theo_gd_diffusion_DB: the DB loss dbLoss is identified with the balance loss of K_2 by prop:db_lift (dbLoss_eq_loss); its derivative at mu = (1+h)lambda_2 along every bounded direction is represented by D = K_2 psi - r-hat psi; and ||D - g''(1)A^dagger M_w A h||_2 <= K eps ||Ah||_2 <= 2K eps ||h||_2. For the DB half the flow-sentence uniqueness is linearization_unique read at T = K_2. It applies because the field gradD is the same object for both losses, but it is not restated as a clause of theo_gd_diffusion_DB, and neither are the ratio bounds or L^2 uniqueness of the representative. The reversible, w = 1 sentence is about the FM loss and is theo_gd_diffusion_full(6). Disclosures as on the twin row: T ergodic is dropped (unused); the flow sentence is read on the field, with no flow constructed; eigenmode decay is the explicit solution. || 2026-09-14 (Phase 1 re-read against commit 3194054): 'C^3 near 1' matches the full form. || BODY RESTATEMENT of theo:gd_diffusion_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13 after repair: the body overstated its full form (see the findings triage); draft-writer applied the verifier's smallest fix and proof-checker re-read the pair.. The twin's row carries the disclosures."
     },
     {
       "label": "theo:db_stable_frozen",
@@ -4005,9 +4007,11 @@
         "GFNBounds/Balance/WeightedL2Norm.lean",
         "GFNBounds/Balance/C3Wrappers.lean",
         "GFNBounds/Balance/TrainingSpeedAssembled.lean",
-        "GFNBounds/Balance/LocalConvergenceClose.lean"
+        "GFNBounds/Balance/LocalConvergenceClose.lean",
+        "GFNBounds/Graph/Diffusion.lean"
       ],
       "decls": [
+        "GFNBounds.Graph.BackwardPolicy.local_convergence_frozen",
         "GFNBounds.Balance.C4",
         "GFNBounds.Balance.Cg",
         "GFNBounds.Balance.C5",
@@ -4126,7 +4130,7 @@
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "2026-09-18: follows its twin theo:local_convergence_full (closed, bucket A), now certified as one statement per loss in LocalConvergenceClose.lean (local_convergence_full_paper, local_convergence_full_DB_paper). The body sentence 'on a finite state space, from an explicit neighbourhood of the unit-mass balanced flow, the rate upgrades ... halved for the gradient flow, quartered for gradient descent below an explicit step' is the 2 e^{-rho t/2} flow bound and the 1 - gamma rho/4 descent contraction, with eps_0, gamma_0 explicit; restatement 'verified' (2026-09-13) unchanged. Earlier log below. || 2026-09-14: follows its twin theo:local_convergence_full (closed, bucket A; TrainingSpeedAssembled.lean). || 2026-09-14 (Phase 1 re-read against commit 3194054): 'halved for gradient flow, quartered for gradient descent below an explicit step' matches local_convergence_full and local_convergence_gd (contraction 1 - gamma rho/4). || BODY RESTATEMENT of theo:local_convergence_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13 after repair: the body overstated its full form (see the findings triage); draft-writer applied the verifier's smallest fix and proof-checker re-read the pair.. The twin's row carries the disclosures."
+      "scope_notes": "2026-10-02: GRAPH FORM, certified directly by Graph.BackwardPolicy.local_convergence_frozen (GFNBounds/Graph/Diffusion.lean): Balance.local_convergence_full_paper at T = B.phat, the loop closure of a finite path-connected marked graph with a backward policy positive on its edges, at any coercivity constant Bhat >= 1 on L^2(lambda), both clauses (the constructed flow and the descent), rate rho = g''(1) w_min / Bhat^2. A one-term proof; it shares no helper with gd_diffusion_frozen. It is the body tip of the GFNCertified paper (Figure 1 'Local rate'). The loss is read as on theo:gd_diffusion's GRAPH FORM note (eq:loss-fm at g(1/x), marks charged). Inhabited off balance at Bhat := Bhat_sigma by MorozovFM.ar_local_convergence_FM_witness. The DB half stays with local_convergence_full_DB_paper and Graph.local_convergence_full_DB_sigma. || 2026-09-18: follows its twin theo:local_convergence_full (closed, bucket A), now certified as one statement per loss in LocalConvergenceClose.lean (local_convergence_full_paper, local_convergence_full_DB_paper). The body sentence 'on a finite state space, from an explicit neighbourhood of the unit-mass balanced flow, the rate upgrades ... halved for the gradient flow, quartered for gradient descent below an explicit step' is the 2 e^{-rho t/2} flow bound and the 1 - gamma rho/4 descent contraction, with eps_0, gamma_0 explicit; restatement 'verified' (2026-09-13) unchanged. Earlier log below. || 2026-09-14: follows its twin theo:local_convergence_full (closed, bucket A; TrainingSpeedAssembled.lean). || 2026-09-14 (Phase 1 re-read against commit 3194054): 'halved for gradient flow, quartered for gradient descent below an explicit step' matches local_convergence_full and local_convergence_gd (contraction 1 - gamma rho/4). || BODY RESTATEMENT of theo:local_convergence_full, mapped 2026-09-14 when the body files joined SOURCES (author's ruling R2). It is certified through its appendix twin: lean_files, decls, status and bucket are the twin's as the paper-side ledger records them, and the restatement reading is 'verified' there -- VERIFIED 2026-09-13 after repair: the body overstated its full form (see the findings triage); draft-writer applied the verifier's smallest fix and proof-checker re-read the pair.. The twin's row carries the disclosures."
     },
     {
       "label": "prop:frozen_unstable",

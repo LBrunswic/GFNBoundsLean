@@ -169,10 +169,11 @@
     "GFNBounds.Balance.StableFrozenGeneral",
     "GFNBounds.Balance.TBvsDBClose",
     "GFNBounds.Balance.TrainingSpeedDB",
+    "GFNBounds.Graph.Diffusion",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 164,
+   "lines": 165,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -299,10 +300,11 @@
     "GFNBounds.Balance.TBvsDBClose",
     "GFNBounds.Balance.TrainingSpeedDB",
     "GFNBounds.Doubling.GeomFamily",
-    "GFNBounds.Doubling.PolicyTable"
+    "GFNBounds.Doubling.PolicyTable",
+    "GFNBounds.Graph.Diffusion"
    ],
    "variables": [],
-   "lines": 2391,
+   "lines": 2396,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -47966,6 +47968,46 @@
      "private": false,
      "statement": "theorem cycle_internal_flow_check {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) : ∑ x ∈ cyc.internal, lam p x = lam p cyc.snk * (3 / (1 - p))",
      "doc": "**Inhabitation**: the invariant probability `lam p` is such a flow, and it carries `λ(s_f)·3/(1−p)` through the internal states."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Graph/Diffusion.lean",
+   "title": "Training with the backward policy frozen: the gradient as a diffusion, and the local rate",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Balance.LocalConvergenceClose"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable {G : MarkedGraph V}",
+    "variable {B : BackwardPolicy G}"
+   ],
+   "lines": 181,
+   "decls": [
+    {
+     "name": "gd_diffusion_frozen",
+     "full": "GFNBounds.Graph.BackwardPolicy.gd_diffusion_frozen",
+     "kind": "theorem",
+     "line": 79,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem gd_diffusion_frozen {lam w h : V → ℝ} {g gd : ℝ → ℝ} {a eps : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (ha : 0 < a) (ha1 : a < 1) (hC3 : ContDiffOn ℝ 3 g (Balance.winC3 a)) (hgd : ∀ y ∈ Balance.winC3 a, HasDerivWithinAt g (gd y) (Balance.winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (heps0 : 0 < eps) (heps : eps ≤ a / 4) (hh : ∀ x, |h x| ≤ eps) : (∀ x, Balance.ratio B.phat lam (fun z => 1 + h z) x - 1 = Balance.Aop B.phat lam h x / (1 + h x)) ∧ (∀ d : V → ℝ, HasDerivAt (fun t : ℝ => Balance.loss B.phat lam (fun z => lam z * w z) (fun x => 1 + h x + t * d x) g) (ipL2 lam (Balance.lossGrad B.phat lam (fun z => lam z * w z) gd fun z => 1 + h z) d) 0) ∧ nrmL2 lam (fun x => Balance.lossGrad B.phat lam (fun z => lam z * w z) gd (fun z => 1 + h z) x - Balance.linHess B.phat lam w (deriv (deriv g) 1) h x) ≤ Balance.Kexp (deriv (deriv g) 1) a (Balance.Gamma3W g a) (Balance.supAbsOf w) * eps * nrmL2 lam (Balance.Aop B.phat lam h) ∧ nrmL2 lam (Balance.Aop B.phat lam h) ≤ 2 * nrmL2 lam h",
+     "doc": "**`theo:gd_diffusion`, on a finite marked graph with the backward policy frozen**: on the loop closure, at the state mass `(1+h)λ` with `|h| ≤ ε ≤ a/4`, the ratio is `1 + Ah/(1+h)`, the loss has the `L²(λ)` gradient `D(h)` along every direction, and `‖D(h) − Hh‖ ≤ Kε‖Ah‖ ≤ 2Kε‖h‖`, `H = g''(1)A†M_wA`, `K = 2C₄ + C₅` at `Γ₃` and `max |w|`."
+    },
+    {
+     "name": "local_convergence_frozen",
+     "full": "GFNBounds.Graph.BackwardPolicy.local_convergence_frozen",
+     "kind": "theorem",
+     "line": 126,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem local_convergence_frozen {lam w : V → ℝ} {g gd : ℝ → ℝ} {a wmin Bhat : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (Balance.winC3 a)) (hgd : ∀ y ∈ Balance.winC3 a, HasDerivWithinAt g (gd y) (Balance.winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, nrmL2 lam (Balance.perpL2 lam f) ≤ Bhat * nrmL2 lam (Balance.Aop B.phat lam f)) : ((∃ x, lam x = Balance.lamMinOf lam) ∧ (∀ x, Balance.lamMinOf lam ≤ lam x) ∧ 1 ≤ Balance.Cinf (Balance.lamMinOf lam)) ∧ (Balance.eps0W g a wmin (Balance.supAbsOf w) Bhat (Balance.lamMinOf lam) ∈ Set.Ioc 0 (a / (16 * Balance.Cinf (Balance.lamMinOf lam))) ∧ 1 ≤ Balance.CW g a wmin (Balance.supAbsOf w) ∧ 0 < Balance.gamma0W g a wmin (Balance.supAbsOf w) Bhat) ∧ ∀ h0 : V → ℝ, nrmL2 lam h0 ≤ Balance.eps0W g a wmin (Balance.supAbsOf w) Bhat (Balance.lamMinOf lam) → (∃ h : ℝ → V → ℝ, h 0 = h0 ∧ Balance.IsGradientFlow B.phat lam (fun z => lam z * w z) gd (fun s x => 1 + h s x) ∧ (∀ t : ℝ, 0 ≤ t → ∀ d : V → ℝ, HasDerivAt (fun s : ℝ => Balance.loss B.phat lam (fun z => lam z * w z) (fun x => 1 + h t x + s * d x) g) (ipL2 lam (Balance.lossGrad B.phat lam (fun z => lam z * w z) gd fun z => 1 + h t z) d) 0) ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < 1 + h t x ∧ |Balance.ratio B.phat lam (fun z => 1 + h t z) x - 1| ≤ 2 * a / 3) ∧ (∀ h' : ℝ → V → ℝ, h' 0 = h0 → Balance.IsGradientFlow B.phat lam (fun z => lam z * w z) gd (fun s x => 1 + h' s x) → ∀ t : ℝ, 0 ≤ t → h' t = h t) ∧ ∃ cinf : ℝ, Balance.Balanced B.phat lam (fun _ => cinf) ∧ |cinf - 1 - meanL2 lam h0|",
+     "doc": "**`theo:local_convergence`, on a finite marked graph with the backward policy frozen**: for the loop closure and any coercivity constant `B̂ ≥ 1` on `L²(λ)`, the explicit `ε₀`, `C`, `γ₀`; the gradient flow from `(1+h₀)λ` exists, is the gradient, is unique, stays positive, and converges to `c_∞λ` at rate `ϱ/2`; gradient descent contracts by `1 − γϱ/4`, `ϱ = g''(1)w_min/B̂²`."
     }
    ],
    "library": "strict",

@@ -114,6 +114,7 @@ import GFNBounds.Balance.TBvsDBClose
 import GFNBounds.Balance.TrainingSpeedDB
 import GFNBounds.Doubling.GeomFamily
 import GFNBounds.Doubling.PolicyTable
+import GFNBounds.Graph.Diffusion
 
 /-!
 # Axiom audit
@@ -2389,3 +2390,7 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Balance.TrainingSpeedDB.ar_lifted_not_summable
 #print axioms GFNBounds.Balance.TrainingSpeedDB.nontrivial_edgeSet
 #print axioms GFNBounds.Balance.TrainingSpeedDB.lifted_beta_succ
+
+-- `theo:gd_diffusion` and `theo:local_convergence` on the loop closure of a finite marked graph — GFNBounds/Graph/Diffusion.lean
+#print axioms GFNBounds.Graph.BackwardPolicy.gd_diffusion_frozen
+#print axioms GFNBounds.Graph.BackwardPolicy.local_convergence_frozen

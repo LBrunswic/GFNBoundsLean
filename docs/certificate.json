@@ -4,8 +4,18 @@
   "commit": "3b8d318e6e5f689e109876fc2c684c4bd9e465bf",
   "commit_short": "3b8d318",
   "branch": "main",
-  "dirty": false,
-  "dirty_files": [],
+  "dirty": true,
+  "dirty_files": [
+    "GFNBounds.lean",
+    "GFNBounds/Audit.lean",
+    "docs/COVERAGE.md",
+    "docs/REPO-INDEX.md",
+    "docs/REPO-MAP.md",
+    "docs/lean-facts.json",
+    "docs/repo-map.json",
+    "paper-map.json",
+    "GFNBounds/Graph/Diffusion.lean"
+  ],
   "toolchain": "leanprover/lean4:v4.31.0",
   "mathlib": {
     "rev": "fabf563a7c95a166b8d7b6efca11c8b4dc9d911f",
@@ -38,15 +48,15 @@
   "scaffold_sorries": 0,
   "facts": {
     "present": true,
-    "declarations": 5721,
+    "declarations": 5723,
     "by_namespace": {
       "GFNBounds.Balance": 1742,
       "GFNBounds.Doubling": 1730,
-      "GFNBounds.Graph": 992,
+      "GFNBounds.Graph": 994,
       "GFNBounds.Core": 946,
       "GFNBounds.Silva": 311
     },
     "declarations_on_nonstandard_axioms": [],
-    "sha256": "bad49a05441aa2f9bc0af8d729f1fec08d7bc2600e9255c26568e05cc43f9ce4"
+    "sha256": "f0f544cd536267717ed75883d8c759acd407422421880cb02bf8570680cd5372"
   }
 }

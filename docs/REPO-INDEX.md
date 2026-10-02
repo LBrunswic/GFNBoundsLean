@@ -3284,6 +3284,8 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `cycle_internal_flow` | `CycleRemarks.lean` | `theorem cycle_internal_flow {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) {F : Fin 5 → ℝ} (hF : ∀ y, ∑ x, F x * (pol hp0 hp1).phat x y = F y) : ∑ x ∈ cyc.internal, F x = F cyc.snk * (3 / (1 - p)) ∧ F 1 + F 2 + F 3 = F 4 * (3 / (1 - p))` |
 | `cycle_flow_values` | `CycleRemarks.lean` | `theorem cycle_flow_values {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) {F : Fin 5 → ℝ} (hF : ∀ y, ∑ x, F x * (pol hp0 hp1).phat x y = F y) : F 1 = F 4 / (1 - p) ∧ F 2 = F 4 / (1 - p) ∧ F 3 = F 4 / (1 - p) ∧ F 0 = F 4` |
 | `cycle_internal_flow_check` | `CycleRemarks.lean` | `theorem cycle_internal_flow_check {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) : ∑ x ∈ cyc.internal, lam p x = lam p cyc.snk * (3 / (1 - p))` |
+| `gd_diffusion_frozen` | `Diffusion.lean` | `theorem gd_diffusion_frozen {lam w h : V → ℝ} {g gd : ℝ → ℝ} {a eps : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (ha : 0 < a) (ha1 : a < 1) (hC3 : ContDiffOn ℝ 3 g (Balance.winC3 a)) (hgd : ∀ y ∈ Balance.winC3 a, HasDerivWithinAt g (gd y) (Balance.winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (heps0 : 0 < eps) (heps : eps ≤ a / 4) (hh : ∀ x, \|h x\| ≤ eps) : (∀ x, Balance.ratio B.phat lam (fun z => 1 + h z) x - 1 = Balance.Aop B.phat lam h x / (1 + h x)) ∧ (∀ d : V → ℝ, HasDerivAt (fun t : ℝ => Balance.loss B.phat lam (fun z => lam z * w z) (fun x => 1 + h x + t * d x) g) (ipL2 lam (Balance.lossGrad B.phat lam (fun z => lam z * w z) gd fun z => 1 + h z) d) 0) ∧ nrmL2 lam (fun x => Balance.lossGrad B.phat lam (fun z => lam z * w z) gd (fun z => 1 + h z) x - Balance.linHess B.phat lam w (deriv (deriv g) 1) h x) ≤ Balance.Kexp (deriv (deriv g) 1) a (Balance.Gamma3W g a) (Balance.supAbsOf w) * eps * nrmL2 lam (Balance.Aop B.phat lam h) ∧ nrmL2 lam (Balance.Aop B.phat lam h) ≤ 2 * nrmL2 lam h` |
+| `local_convergence_frozen` | `Diffusion.lean` | `theorem local_convergence_frozen {lam w : V → ℝ} {g gd : ℝ → ℝ} {a wmin Bhat : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (Balance.winC3 a)) (hgd : ∀ y ∈ Balance.winC3 a, HasDerivWithinAt g (gd y) (Balance.winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, nrmL2 lam (Balance.perpL2 lam f) ≤ Bhat * nrmL2 lam (Balance.Aop B.phat lam f)) : ((∃ x, lam x = Balance.lamMinOf lam) ∧ (∀ x, Balance.lamMinOf lam ≤ lam x) ∧ 1 ≤ Balance.Cinf (Balance.lamMinOf lam)) ∧ (Balance.eps0W g a wmin (Balance.supAbsOf w) Bhat (Balance.lamMinOf lam) ∈ Set.Ioc 0 (a / (16 * Balance.Cinf (Balance.lamMinOf lam))) ∧ 1 ≤ Balance.CW g a wmin (Balance.supAbsOf w) ∧ 0 < Balance.gamma0W g a wmin (Balance.supAbsOf w) Bhat) ∧ ∀ h0 : V → ℝ, nrmL2 lam h0 ≤ Balance.eps0W g a wmin (Balance.supAbsOf w) Bhat (Balance.lamMinOf lam) → (∃ h : ℝ → V → ℝ, h 0 = h0 ∧ Balance.IsGradientFlow B.phat lam (fun z => lam z * w z) gd (fun s x => 1 + h s x) ∧ (∀ t : ℝ, 0 ≤ t → ∀ d : V → ℝ, HasDerivAt (fun s : ℝ => Balance.loss B.phat lam (fun z => lam z * w z) (fun x => 1 + h t x + s * d x) g) (ipL2 lam (Balance.lossGrad B.phat lam (fun z => lam z * w z) gd fun z => 1 + h t z) d) 0) ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < 1 + h t x ∧ \|Balance.ratio B.phat lam (fun z => 1 + h t z) x - 1\| ≤ 2 * a / 3) ∧ (∀ h' : ℝ → V → ℝ, h' 0 = h0 → Balance.IsGradientFlow B.phat lam (fun z => lam z * w z) gd (fun s x => 1 + h' s x) → ∀ t : ℝ, 0 ≤ t → h' t = h t) ∧ ∃ cinf : ℝ, Balance.Balanced B.phat lam (fun _ => cinf) ∧ \|cinf - 1 - meanL2 lam h0\|` |
 | `edgeInflow` | `FrozenUnstable.lean` | `def edgeInflow (F : V → V → ℝ) : V → ℝ` |
 | `edgeOutflow` | `FrozenUnstable.lean` | `def edgeOutflow (F : V → V → ℝ) : V → ℝ` |
 | `IsCirculation` | `FrozenUnstable.lean` | `def IsCirculation (F : V → V → ℝ) : Prop` |
@@ -10777,6 +10779,24 @@ In scope: `variable {M : ℕ}`, `variable {V : Type*} [Fintype V]`, `variable {E
 | 1981 | theorem | `cycle_flow_values` | `theorem cycle_flow_values {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) {F : Fin 5 → ℝ} (hF : ∀ y, ∑ x, F x * (pol hp0 hp1).phat x y = F y) : F 1 = F 4 / (1 - p) ∧ F 2 = F 4 / (1 - p) ∧ F 3 = F 4 / (1 - p) ∧ F 0 = F 4` |
 | 1998 | theorem | `cycle_internal_flow_check` | `theorem cycle_internal_flow_check {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) : ∑ x ∈ cyc.internal, lam p x = lam p cyc.snk * (3 / (1 - p))` |
 
+### `GFNBounds/Graph/Diffusion.lean`
+
+**Training with the backward policy frozen: the gradient as a diffusion, and the local rate**  
+
+*strict library; 181 lines; 2 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `theo:gd_diffusion` (bucket A), ✅ `theo:local_convergence` (bucket A)
+
+
+In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : MarkedGraph V}`, `variable {B : BackwardPolicy G}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 79 | theorem | `gd_diffusion_frozen` | `theorem gd_diffusion_frozen {lam w h : V → ℝ} {g gd : ℝ → ℝ} {a eps : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (ha : 0 < a) (ha1 : a < 1) (hC3 : ContDiffOn ℝ 3 g (Balance.winC3 a)) (hgd : ∀ y ∈ Balance.winC3 a, HasDerivWithinAt g (gd y) (Balance.winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (heps0 : 0 < eps) (heps : eps ≤ a / 4) (hh : ∀ x, \|h x\| ≤ eps) : (∀ x, Balance.ratio B.phat lam (fun z => 1 + h z) x - 1 = Balance.Aop B.phat lam h x / (1 + h x)) ∧ (∀ d : V → ℝ, HasDerivAt (fun t : ℝ => Balance.loss B.phat lam (fun z => lam z * w z) (fun x => 1 + h x + t * d x) g) (ipL2 lam (Balance.lossGrad B.phat lam (fun z => lam z * w z) gd fun z => 1 + h z) d) 0) ∧ nrmL2 lam (fun x => Balance.lossGrad B.phat lam (fun z => lam z * w z) gd (fun z => 1 + h z) x - Balance.linHess B.phat lam w (deriv (deriv g) 1) h x) ≤ Balance.Kexp (deriv (deriv g) 1) a (Balance.Gamma3W g a) (Balance.supAbsOf w) * eps * nrmL2 lam (Balance.Aop B.phat lam h) ∧ nrmL2 lam (Balance.Aop B.phat lam h) ≤ 2 * nrmL2 lam h` |
+| 126 | theorem | `local_convergence_frozen` | `theorem local_convergence_frozen {lam w : V → ℝ} {g gd : ℝ → ℝ} {a wmin Bhat : ℝ} (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) (hl : B.IsInvProb lam) (ha : 0 < a) (hC3 : ContDiffOn ℝ 3 g (Balance.winC3 a)) (hgd : ∀ y ∈ Balance.winC3 a, HasDerivWithinAt g (gd y) (Balance.winC3 a) y) (hg1 : deriv g 1 = 0) (hg2 : 0 < deriv (deriv g) 1) (hwmin0 : 0 < wmin) (hwmin : ∀ x, wmin ≤ w x) (hB1 : 1 ≤ Bhat) (hcoer : ∀ f : V → ℝ, nrmL2 lam (Balance.perpL2 lam f) ≤ Bhat * nrmL2 lam (Balance.Aop B.phat lam f)) : ((∃ x, lam x = Balance.lamMinOf lam) ∧ (∀ x, Balance.lamMinOf lam ≤ lam x) ∧ 1 ≤ Balance.Cinf (Balance.lamMinOf lam)) ∧ (Balance.eps0W g a wmin (Balance.supAbsOf w) Bhat (Balance.lamMinOf lam) ∈ Set.Ioc 0 (a / (16 * Balance.Cinf (Balance.lamMinOf lam))) ∧ 1 ≤ Balance.CW g a wmin (Balance.supAbsOf w) ∧ 0 < Balance.gamma0W g a wmin (Balance.supAbsOf w) Bhat) ∧ ∀ h0 : V → ℝ, nrmL2 lam h0 ≤ Balance.eps0W g a wmin (Balance.supAbsOf w) Bhat (Balance.lamMinOf lam) → (∃ h : ℝ → V → ℝ, h 0 = h0 ∧ Balance.IsGradientFlow B.phat lam (fun z => lam z * w z) gd (fun s x => 1 + h s x) ∧ (∀ t : ℝ, 0 ≤ t → ∀ d : V → ℝ, HasDerivAt (fun s : ℝ => Balance.loss B.phat lam (fun z => lam z * w z) (fun x => 1 + h t x + s * d x) g) (ipL2 lam (Balance.lossGrad B.phat lam (fun z => lam z * w z) gd fun z => 1 + h t z) d) 0) ∧ (∀ t : ℝ, 0 ≤ t → ∀ x, 0 < 1 + h t x ∧ \|Balance.ratio B.phat lam (fun z => 1 + h t z) x - 1\| ≤ 2 * a / 3) ∧ (∀ h' : ℝ → V → ℝ, h' 0 = h0 → Balance.IsGradientFlow B.phat lam (fun z => lam z * w z) gd (fun s x => 1 + h' s x) → ∀ t : ℝ, 0 ≤ t → h' t = h t) ∧ ∃ cinf : ℝ, Balance.Balanced B.phat lam (fun _ => cinf) ∧ \|cinf - 1 - meanL2 lam h0\|` |
+
 ### `GFNBounds/Graph/FrozenUnstable.lean`
 
 **Freezing the backward policy does not restore stability, and the loop closure is what makes the frozen family nonempty**  
@@ -13845,6 +13865,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `gamma_rho_le` | `GFNBounds.Balance.LocalConvergence` |
 | `gd_contract_step` | `GFNBounds.Balance.LocalConvergence` |
 | `gd_diffusion_display` | `GFNBounds.Balance.Expansion` |
+| `gd_diffusion_frozen` | `GFNBounds.Graph.Diffusion` |
 | `gd_diffusion_hypotheses_inhabited` | `GFNBounds.Balance.GdDiffusionGeneral` |
 | `gd_drift_step` | `GFNBounds.Balance.LocalConvergence` |
 | `gd_energy_step` | `GFNBounds.Balance.LocalConvergence` |
@@ -14713,6 +14734,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `lintegral_rpow_enorm_eq_mass` | `GFNBounds.Doubling.LpLayer` |
 | `lintegral_rpow_le` | `GFNBounds.Core.AdjointGeneral` |
 | `lipschitzWith_clampBox` | `GFNBounds.Balance.FlowExistence` |
+| `local_convergence_frozen` | `GFNBounds.Graph.Diffusion` |
 | `local_convergence_full` | `GFNBounds.Balance.LocalConvergence` |
 | `local_convergence_full_C` | `GFNBounds.Balance.LocalConvergenceClauses` |
 | `local_convergence_full_C3` | `GFNBounds.Balance.C3Wrappers` |

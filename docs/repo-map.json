@@ -33225,7 +33225,7 @@
      "attrs": "",
      "private": false,
      "statement": "noncomputable def k (i : ℕ) : ℝ≥0∞",
-     "doc": "**The backward step to the source**, from the first rung only."
+     "doc": "**The backward step to the source**, from the lowest rung only."
     },
     {
      "name": "ρ",

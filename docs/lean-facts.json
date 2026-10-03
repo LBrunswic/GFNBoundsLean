@@ -54886,7 +54886,7 @@
    "module": "GFNBounds.Doubling.LeakageInstance",
    "line": 68,
    "kind": "def",
-   "doc": "**The backward step to the source**, from the first rung only. ",
+   "doc": "**The backward step to the source**, from the lowest rung only. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Leak.eps_nonneg":
   {"uses_value":

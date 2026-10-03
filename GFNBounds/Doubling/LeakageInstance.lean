@@ -15,7 +15,7 @@ escapes with positive probability.
 The internal states are the rungs `j ≥ 1`, indexed by `i ↦ j = i + 1`. From the rung `i + 1` the
 backward chain doubles to the rung `2(i + 1)` with probability `ε(i + 1)` and steps down to the rung
 `i` otherwise; the rung `0` is the source, so the step to the source is the step down from the
-first rung. The sink row is the target row.
+lowest rung. The sink row is the target row.
 
 ## What is proved
 
@@ -43,7 +43,7 @@ first rung. The sink row is the target row.
   flow of the frozen family whose initial mass equals its terminal mass; such a flow carries mass
   entering from infinity, and its existence on a transient row is not established here. The
   general statement, `sampler_leaks_doubling`, holds for every flow, at every initial mass.
-* **Probabilities are least solutions** (ruling R8 of `RecurrenceClass`): no path space is built,
+* **Probabilities are least solutions**, as throughout `RecurrenceClass`: no path space is built,
   as in `Graph.Leakage`, whose sampler is its sequence of laws.
 * **No `sorry`.**
 
@@ -65,7 +65,7 @@ noncomputable def Q (i i' : ℕ) : ℝ≥0∞ :=
   (if i' = 2 * i + 1 then ENNReal.ofReal (S.eps (i + 1)) else 0)
     + (if i' + 1 = i then ENNReal.ofReal (1 - S.eps (i + 1)) else 0)
 
-/-- **The backward step to the source**, from the first rung only. -/
+/-- **The backward step to the source**, from the lowest rung only. -/
 noncomputable def k (i : ℕ) : ℝ≥0∞ := if i = 0 then ENNReal.ofReal (1 - S.eps 1) else 0
 
 /-- **The sink row**: the target row. -/

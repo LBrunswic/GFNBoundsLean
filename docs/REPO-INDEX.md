@@ -3713,6 +3713,23 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `invProb_unique` | `Setting.lean` | `theorem invProb_unique (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam lam' : V → ℝ} (h : B.IsInvProb lam) (h' : B.IsInvProb lam') : lam = lam'` |
 | `IsInvProb.lam_snk_eq_src` | `Setting.lean` | `theorem IsInvProb.lam_snk_eq_src {lam : V → ℝ} (h : B.IsInvProb lam) : lam G.snk = lam G.src` |
 | `universality_graphs_one` | `Setting.lean` | `theorem universality_graphs_one (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) : (∀ x y : V, B.BReach x y) ∧ (∃ lam : V → ℝ, B.IsInvProb lam) ∧ (∀ lam lam' : V → ℝ, B.IsInvProb lam → B.IsInvProb lam' → lam = lam') ∧ (∀ lam : V → ℝ, B.IsInvProb lam → (∀ x, 0 < lam x) ∧ lam G.snk = lam G.src)` |
+| `curvSet` | `SlowMode.lean` | `def curvSet (B : BackwardPolicy G) (lam w : V → ℝ) (g2 : ℝ) : Set ℝ` |
+| `mem_curvSet` | `SlowMode.lean` | `theorem mem_curvSet {lam w : V → ℝ} {g2 c : ℝ} : c ∈ B.curvSet lam w g2 ↔ ∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess B.phat lam w g2 h)` |
+| `unitPerp` | `SlowMode.lean` | `def unitPerp (lam : V → ℝ) : Set (V → ℝ)` |
+| `mem_unitPerp` | `SlowMode.lean` | `theorem mem_unitPerp {lam h : V → ℝ} : h ∈ unitPerp lam ↔ meanL2 lam h = 0 ∧ ipL2 lam h h = 1` |
+| `ipL2_add_smul` | `SlowMode.lean` | `theorem ipL2_add_smul (lam a b c d : V → ℝ) (t : ℝ) : ipL2 lam (fun x => a x + t * b x) (fun x => c x + t * d x) = ipL2 lam a c + t * (ipL2 lam a d + ipL2 lam b c) + t ^ 2 * ipL2 lam b d` |
+| `ipL2_smul_smul` | `SlowMode.lean` | `theorem ipL2_smul_smul (lam a : V → ℝ) (s : ℝ) : ipL2 lam (fun x => s * a x) (fun x => s * a x) = s ^ 2 * ipL2 lam a a` |
+| `quad_smul` | `SlowMode.lean` | `theorem quad_smul (K : V → V → ℝ) (lam w : V → ℝ) (g2 s : ℝ) (h : V → ℝ) : ipL2 lam (fun x => s * h x) (Balance.linHess K lam w g2 (fun x => s * h x)) = s ^ 2 * ipL2 lam h (Balance.linHess K lam w g2 h)` |
+| `ipL2_perpL2_of_mean_zero` | `SlowMode.lean` | `theorem ipL2_perpL2_of_mean_zero {lam h f : V → ℝ} (hf : meanL2 lam f = 0) : ipL2 lam (Balance.perpL2 lam h) f = ipL2 lam h f` |
+| `perpL2_of_mean_zero` | `SlowMode.lean` | `theorem perpL2_of_mean_zero {lam h : V → ℝ} (hm : meanL2 lam h = 0) : Balance.perpL2 lam h = h` |
+| `quad_perpL2` | `SlowMode.lean` | `theorem quad_perpL2 {K : V → V → ℝ} {lam w : V → ℝ} (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (g2 : ℝ) (h : V → ℝ) : ipL2 lam (Balance.perpL2 lam h) (Balance.linHess K lam w g2 (Balance.perpL2 lam h)) = ipL2 lam h (Balance.linHess K lam w g2 h)` |
+| `quad_nonneg` | `SlowMode.lean` | `theorem quad_nonneg {K : V → V → ℝ} {lam w : V → ℝ} (hinv : Core.IsInvariant lam K) (hKnn : ∀ x y, 0 ≤ K x y) (hw0 : ∀ x, 0 ≤ w x) {g2 : ℝ} (hg2 : 0 ≤ g2) (h : V → ℝ) : 0 ≤ ipL2 lam h (Balance.linHess K lam w g2 h)` |
+| `eq_zero_of_quad_nonneg` | `SlowMode.lean` | `theorem eq_zero_of_quad_nonneg {a b : ℝ} (hb : 0 ≤ b) (h : ∀ t : ℝ, 0 ≤ 2 * b * t + a * t ^ 2) : b = 0` |
+| `exists_slowMode` | `SlowMode.lean` | `theorem exists_slowMode (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam w : V → ℝ} (hl : B.IsInvProb lam) (hw0 : ∀ x, 0 ≤ w x) {g2 : ℝ} (hg2 : 0 ≤ g2) : ∃ c : ℝ, IsGreatest (B.curvSet lam w g2) c ∧ ∃ h0 : V → ℝ, meanL2 lam h0 = 0 ∧ nrmL2 lam h0 = 1 ∧ ∀ x, Balance.linHess B.phat lam w g2 h0 x = c * h0 x` |
+| `hasDerivAt_perp_sq_linear` | `SlowMode.lean` | `theorem hasDerivAt_perp_sq_linear {K : V → V → ℝ} {lam w : V → ℝ} {g2 : ℝ} (hinv : Core.IsInvariant lam K) (hnn : ∀ x, 0 ≤ lam x) {u : ℝ → V → ℝ} (hu : ∀ t, 0 ≤ t → ∀ x, HasDerivAt (fun s => u s x) (-Balance.linHess K lam w g2 (u t) x) t) (s : ℝ) (hs : 0 ≤ s) : HasDerivAt (fun r : ℝ => nrmL2 lam (Balance.perpL2 lam (u r)) ^ 2) (-(2 * ipL2 lam (u s) (Balance.linHess K lam w g2 (u s)))) s` |
+| `linear_decay` | `SlowMode.lean` | `theorem linear_decay {K : V → V → ℝ} {lam w : V → ℝ} {g2 c : ℝ} (hinv : Core.IsInvariant lam K) (hnn : ∀ x, 0 ≤ lam x) (hc : ∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess K lam w g2 h)) {u : ℝ → V → ℝ} (hu : ∀ t, 0 ≤ t → ∀ x, HasDerivAt (fun s => u s x) (-Balance.linHess K lam w g2 (u t) x) t) : ∀ t, 0 ≤ t → nrmL2 lam (Balance.perpL2 lam (u t)) ≤ Real.exp (-(c * t)) * nrmL2 lam (Balance.perpL2 lam (u 0))` |
+| `slowMode_trajectory` | `SlowMode.lean` | `theorem slowMode_trajectory {K : V → V → ℝ} {lam w h0 : V → ℝ} {g2 c : ℝ} (heig : ∀ x, Balance.linHess K lam w g2 h0 x = c * h0 x) : (∀ t x, HasDerivAt (fun s => Real.exp (-(c * s)) * h0 x) (-Balance.linHess K lam w g2 (fun y => Real.exp (-(c * t)) * h0 y) x) t) ∧ (meanL2 lam h0 = 0 → nrmL2 lam h0 = 1 → ∀ t, nrmL2 lam (Balance.perpL2 lam (fun y => Real.exp (-(c * t)) * h0 y)) = Real.exp (-(c * t)))` |
+| `slowest_rate_frozen` | `SlowMode.lean` | `theorem slowest_rate_frozen (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam w : V → ℝ} (hl : B.IsInvProb lam) {g2 wmin wsup : ℝ} (hwmin : ∀ x, wmin ≤ w x) (hwsup : ∀ x, w x ≤ wsup) (hwmin0 : 0 ≤ wmin) (hg2 : 0 ≤ g2) {Bstar : ℝ} (hBpos : 0 < Bstar) (hB : IsLeast (B.coercSet lam) Bstar) : ∃ c : ℝ, IsGreatest (B.curvSet lam w g2) c ∧ g2 * wmin / Bstar ^ 2 ≤ c ∧ c ≤ g2 * wsup / Bstar ^ 2 ∧ (∀ u : ℝ → V → ℝ, (∀ t, 0 ≤ t → ∀ x, HasDerivAt (fun s => u s x) (-Balance.linHess B.phat lam w g2 (u t) x) t) → ∀ t, 0 ≤ t → nrmL2 lam (Balance.perpL2 lam (u t)) ≤ Real.exp (-(c * t)) * nrmL2 lam (Balance.perpL2 lam (u 0))) ∧ ∃ h0 : V → ℝ, meanL2 lam h0 = 0 ∧ nrmL2 lam h0 = 1 ∧ (∀ x, Balance.linHess B.phat lam w g2 h0 x = c * h0 x) ∧ (∀ t x, HasDerivAt (fun s => Real.exp (-(c * s)) * h0 x) (-Balance.linHess B.phat lam w g2 (fun y => Real.exp (-(c * t)) * h0 y) x) t) ∧ ∀ t, nrmL2 lam (Balance.perpL2 lam (fun y => Real.exp (-(c * t)) * h0 y)) = Real.exp (-(c * t))` |
 | `internal` | `Universality.lean` | `def internal : Finset V` |
 | `mem_internal` | `Universality.lean` | `theorem mem_internal {v : V} : v ∈ G.internal ↔ v ≠ G.src ∧ v ≠ G.snk` |
 | `internal_eq_erase_src` | `Universality.lean` | `theorem internal_eq_erase_src : G.internal = (Finset.univ.erase G.snk).erase G.src` |
@@ -11495,6 +11512,39 @@ In scope: `variable {V : Type*} (G : MarkedGraph V)`, `variable {G}`, `variable 
 | 572 | theorem | `IsInvProb.lam_snk_eq_src` | `theorem IsInvProb.lam_snk_eq_src {lam : V → ℝ} (h : B.IsInvProb lam) : lam G.snk = lam G.src` |
 | 598 | theorem | `universality_graphs_one` | `theorem universality_graphs_one (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) : (∀ x y : V, B.BReach x y) ∧ (∃ lam : V → ℝ, B.IsInvProb lam) ∧ (∀ lam lam' : V → ℝ, B.IsInvProb lam → B.IsInvProb lam' → lam = lam') ∧ (∀ lam : V → ℝ, B.IsInvProb lam → (∀ x, 0 < lam x) ∧ lam G.snk = lam G.src)` |
 
+### `GFNBounds/Graph/SlowMode.lean`
+
+**The slow mode: the best curvature constant is the slowest rate of linearized training**  
+
+*strict library; 474 lines; 17 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `theo:local_convergence` (bucket A)
+
+
+In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : MarkedGraph V}`, `variable {B : BackwardPolicy G}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 68 | def | `curvSet` | `def curvSet (B : BackwardPolicy G) (lam w : V → ℝ) (g2 : ℝ) : Set ℝ` |
+| 72 | theorem | `mem_curvSet` | `theorem mem_curvSet {lam w : V → ℝ} {g2 c : ℝ} : c ∈ B.curvSet lam w g2 ↔ ∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess B.phat lam w g2 h)` |
+| 79 | def | `unitPerp` | `def unitPerp (lam : V → ℝ) : Set (V → ℝ)` |
+| 83 | theorem | `mem_unitPerp` | `theorem mem_unitPerp {lam h : V → ℝ} : h ∈ unitPerp lam ↔ meanL2 lam h = 0 ∧ ipL2 lam h h = 1` |
+| 89 | theorem | `ipL2_add_smul` | `theorem ipL2_add_smul (lam a b c d : V → ℝ) (t : ℝ) : ipL2 lam (fun x => a x + t * b x) (fun x => c x + t * d x) = ipL2 lam a c + t * (ipL2 lam a d + ipL2 lam b c) + t ^ 2 * ipL2 lam b d` |
+| 97 | theorem | `ipL2_smul_smul` | `theorem ipL2_smul_smul (lam a : V → ℝ) (s : ℝ) : ipL2 lam (fun x => s * a x) (fun x => s * a x) = s ^ 2 * ipL2 lam a a` |
+| 104 | theorem | `quad_smul` | `theorem quad_smul (K : V → V → ℝ) (lam w : V → ℝ) (g2 s : ℝ) (h : V → ℝ) : ipL2 lam (fun x => s * h x) (Balance.linHess K lam w g2 (fun x => s * h x)) = s ^ 2 * ipL2 lam h (Balance.linHess K lam w g2 h)` |
+| 113 | theorem | `ipL2_perpL2_of_mean_zero` | `theorem ipL2_perpL2_of_mean_zero {lam h f : V → ℝ} (hf : meanL2 lam f = 0) : ipL2 lam (Balance.perpL2 lam h) f = ipL2 lam h f` |
+| 126 | theorem | `perpL2_of_mean_zero` | `theorem perpL2_of_mean_zero {lam h : V → ℝ} (hm : meanL2 lam h = 0) : Balance.perpL2 lam h = h` |
+| 133 | theorem | `quad_perpL2` | `theorem quad_perpL2 {K : V → V → ℝ} {lam w : V → ℝ} (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (g2 : ℝ) (h : V → ℝ) : ipL2 lam (Balance.perpL2 lam h) (Balance.linHess K lam w g2 (Balance.perpL2 lam h)) = ipL2 lam h (Balance.linHess K lam w g2 h)` |
+| 143 | theorem | `quad_nonneg` | `theorem quad_nonneg {K : V → V → ℝ} {lam w : V → ℝ} (hinv : Core.IsInvariant lam K) (hKnn : ∀ x y, 0 ≤ K x y) (hw0 : ∀ x, 0 ≤ w x) {g2 : ℝ} (hg2 : 0 ≤ g2) (h : V → ℝ) : 0 ≤ ipL2 lam h (Balance.linHess K lam w g2 h)` |
+| 151 | theorem | `eq_zero_of_quad_nonneg` | `theorem eq_zero_of_quad_nonneg {a b : ℝ} (hb : 0 ≤ b) (h : ∀ t : ℝ, 0 ≤ 2 * b * t + a * t ^ 2) : b = 0` |
+| 170 | theorem | `exists_slowMode` | `theorem exists_slowMode (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam w : V → ℝ} (hl : B.IsInvProb lam) (hw0 : ∀ x, 0 ≤ w x) {g2 : ℝ} (hg2 : 0 ≤ g2) : ∃ c : ℝ, IsGreatest (B.curvSet lam w g2) c ∧ ∃ h0 : V → ℝ, meanL2 lam h0 = 0 ∧ nrmL2 lam h0 = 1 ∧ ∀ x, Balance.linHess B.phat lam w g2 h0 x = c * h0 x` |
+| 315 | theorem | `hasDerivAt_perp_sq_linear` | `theorem hasDerivAt_perp_sq_linear {K : V → V → ℝ} {lam w : V → ℝ} {g2 : ℝ} (hinv : Core.IsInvariant lam K) (hnn : ∀ x, 0 ≤ lam x) {u : ℝ → V → ℝ} (hu : ∀ t, 0 ≤ t → ∀ x, HasDerivAt (fun s => u s x) (-Balance.linHess K lam w g2 (u t) x) t) (s : ℝ) (hs : 0 ≤ s) : HasDerivAt (fun r : ℝ => nrmL2 lam (Balance.perpL2 lam (u r)) ^ 2) (-(2 * ipL2 lam (u s) (Balance.linHess K lam w g2 (u s)))) s` |
+| 358 | theorem | `linear_decay` | `theorem linear_decay {K : V → V → ℝ} {lam w : V → ℝ} {g2 c : ℝ} (hinv : Core.IsInvariant lam K) (hnn : ∀ x, 0 ≤ lam x) (hc : ∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess K lam w g2 h)) {u : ℝ → V → ℝ} (hu : ∀ t, 0 ≤ t → ∀ x, HasDerivAt (fun s => u s x) (-Balance.linHess K lam w g2 (u t) x) t) : ∀ t, 0 ≤ t → nrmL2 lam (Balance.perpL2 lam (u t)) ≤ Real.exp (-(c * t)) * nrmL2 lam (Balance.perpL2 lam (u 0))` |
+| 402 | theorem | `slowMode_trajectory` | `theorem slowMode_trajectory {K : V → V → ℝ} {lam w h0 : V → ℝ} {g2 c : ℝ} (heig : ∀ x, Balance.linHess K lam w g2 h0 x = c * h0 x) : (∀ t x, HasDerivAt (fun s => Real.exp (-(c * s)) * h0 x) (-Balance.linHess K lam w g2 (fun y => Real.exp (-(c * t)) * h0 y) x) t) ∧ (meanL2 lam h0 = 0 → nrmL2 lam h0 = 1 → ∀ t, nrmL2 lam (Balance.perpL2 lam (fun y => Real.exp (-(c * t)) * h0 y)) = Real.exp (-(c * t)))` |
+| 430 | theorem | `slowest_rate_frozen` | `theorem slowest_rate_frozen (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam w : V → ℝ} (hl : B.IsInvProb lam) {g2 wmin wsup : ℝ} (hwmin : ∀ x, wmin ≤ w x) (hwsup : ∀ x, w x ≤ wsup) (hwmin0 : 0 ≤ wmin) (hg2 : 0 ≤ g2) {Bstar : ℝ} (hBpos : 0 < Bstar) (hB : IsLeast (B.coercSet lam) Bstar) : ∃ c : ℝ, IsGreatest (B.curvSet lam w g2) c ∧ g2 * wmin / Bstar ^ 2 ≤ c ∧ c ≤ g2 * wsup / Bstar ^ 2 ∧ (∀ u : ℝ → V → ℝ, (∀ t, 0 ≤ t → ∀ x, HasDerivAt (fun s => u s x) (-Balance.linHess B.phat lam w g2 (u t) x) t) → ∀ t, 0 ≤ t → nrmL2 lam (Balance.perpL2 lam (u t)) ≤ Real.exp (-(c * t)) * nrmL2 lam (Balance.perpL2 lam (u 0))) ∧ ∃ h0 : V → ℝ, meanL2 lam h0 = 0 ∧ nrmL2 lam h0 = 1 ∧ (∀ x, Balance.linHess B.phat lam w g2 h0 x = c * h0 x) ∧ (∀ t x, HasDerivAt (fun s => Real.exp (-(c * s)) * h0 x) (-Balance.linHess B.phat lam w g2 (fun y => Real.exp (-(c * t)) * h0 y) x) t) ∧ ∀ t, nrmL2 lam (Balance.perpL2 lam (fun y => Real.exp (-(c * t)) * h0 y)) = Real.exp (-(c * t))` |
+
 ### `GFNBounds/Graph/Universality.lean`
 
 **The frozen-backward family: the balanced ray, and the flow left by cutting the wrap edge**  
@@ -12976,6 +13026,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `crossingFloor_of_reach` | `GFNBounds.Balance.BoundaryBlowup` |
 | `crossingFloor_phat` | `GFNBounds.Balance.BoundaryBlowup` |
 | `ctau_pos` | `GFNBounds.Doubling.Escape` |
+| `curvSet` | `GFNBounds.Graph.SlowMode` |
 | `curvature_exact_frozen` | `GFNBounds.Graph.BestConstant` |
 | `curvature_two_sided_frozen` | `GFNBounds.Graph.Diffusion` |
 | `cutA` | `GFNBounds.Graph.CycleRemarks` |
@@ -13592,6 +13643,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `eq_zero_of_harm_off_src` | `GFNBounds.Graph.Morozov` |
 | `eq_zero_of_mem_kerPi_of_fixed` | `GFNBounds.Doubling.Unsolvable` |
 | `eq_zero_of_nrmL2_eq_zero` | `GFNBounds.Balance.TrainingSpeedDB` |
+| `eq_zero_of_quad_nonneg` | `GFNBounds.Graph.SlowMode` |
 | `eq_zero_of_three_nonneg` | `GFNBounds.Doubling.FixedPointsP` |
 | `ereal_le_of_forall_pos` | `GFNBounds.Core.ILBoundFull` |
 | `ergodicG_const` | `GFNBounds.Balance.FreezingGeneral2` |
@@ -13691,6 +13743,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `exists_row_pos` | `GFNBounds.Doubling.Irreducible` |
 | `exists_setting_six` | `GFNBounds.Balance.TBvsDB` |
 | `exists_simpleCycle` | `GFNBounds.Silva.PathSpaceMarkovGeneral` |
+| `exists_slowMode` | `GFNBounds.Graph.SlowMode` |
 | `exists_small_defect` | `GFNBounds.Doubling.Unsolvable` |
 | `exists_small_mass_ratio` | `GFNBounds.Doubling.Unbounded` |
 | `exists_srcWeight` | `GFNBounds.Graph.PartialSupportClose` |
@@ -14133,6 +14186,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `hasDerivAt_mean_of_at` | `GFNBounds.Balance.TrainingSpeedAssembled` |
 | `hasDerivAt_mul_rpow` | `GFNBounds.Doubling.ExpansionTrapezoid` |
 | `hasDerivAt_perp_sq` | `GFNBounds.Balance.LocalEnergy` |
+| `hasDerivAt_perp_sq_linear` | `GFNBounds.Graph.SlowMode` |
 | `hasDerivAt_perp_sq_of_at` | `GFNBounds.Balance.TrainingSpeedAssembled` |
 | `hasDerivAt_psi` | `GFNBounds.Doubling.Cramer` |
 | `hasDerivAt_ratio` | `GFNBounds.Balance.TBGradient` |
@@ -14446,6 +14500,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `ipL2` | `GFNBounds.Graph.Morozov` |
 | `ipL2_Adj_left` | `GFNBounds.Balance.L2Toolkit` |
 | `ipL2_add_right` | `GFNBounds.Balance.TBHessian` |
+| `ipL2_add_smul` | `GFNBounds.Graph.SlowMode` |
 | `ipL2_comm` | `GFNBounds.Balance.L2Toolkit` |
 | `ipL2_congr_left` | `GFNBounds.Core.Adjoint` |
 | `ipL2_congr_right` | `GFNBounds.Core.Adjoint` |
@@ -14460,10 +14515,12 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `ipL2_linHess` | `GFNBounds.Balance.Expansion` |
 | `ipL2_lossGrad_self` | `GFNBounds.Balance.Flow` |
 | `ipL2_pdens_qact` | `GFNBounds.Graph.Morozov` |
+| `ipL2_perpL2_of_mean_zero` | `GFNBounds.Graph.SlowMode` |
 | `ipL2_perpL2_right` | `GFNBounds.Balance.LocalConvergence` |
 | `ipL2_quad` | `GFNBounds.Balance.TBvsDBClose` |
 | `ipL2_self_nonneg` | `GFNBounds.Graph.Morozov` |
 | `ipL2_smul_right` | `GFNBounds.Balance.Expansion` |
+| `ipL2_smul_smul` | `GFNBounds.Graph.SlowMode` |
 | `ipL2_sub_const_left` | `GFNBounds.Balance.LiftFinite` |
 | `ipL2_sub_left` | `GFNBounds.Balance.L2Toolkit` |
 | `ipL2_sub_mean` | `GFNBounds.Balance.MassAscent` |
@@ -14853,6 +14910,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `lineG_eq_perturb` | `GFNBounds.Balance.FreezingGradientBridge` |
 | `linearFlow_hasDerivAt` | `GFNBounds.Balance.StableFrozenGeneral` |
 | `linearFlow_zero` | `GFNBounds.Balance.StableFrozenGeneral` |
+| `linear_decay` | `GFNBounds.Graph.SlowMode` |
 | `linearization_unique` | `GFNBounds.Balance.GdDiffusionGeneral` |
 | `linfty_nonneg` | `GFNBounds.Balance.StableFrozenGeneral` |
 | `lintegral_add_ne_top` | `GFNBounds.Core.Kernel` |
@@ -15213,6 +15271,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `mem_chainFinset` | `GFNBounds.Doubling.TruncationStat` |
 | `mem_closure_of_joint_inf` | `GFNBounds.Core.RLBound` |
 | `mem_coercSet` | `GFNBounds.Graph.BestConstant` |
+| `mem_curvSet` | `GFNBounds.Graph.SlowMode` |
 | `mem_densityBox` | `GFNBounds.Balance.FlowExistence` |
 | `mem_descPaths_iff` | `GFNBounds.Doubling.WeightFull` |
 | `mem_farSet` | `GFNBounds.Balance.Lojasiewicz` |
@@ -15224,6 +15283,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `mem_subVerts` | `GFNBounds.Core.FamilyUniversality` |
 | `mem_subVerts_of_edge` | `GFNBounds.Core.FamilyUniversality` |
 | `mem_subVerts_of_not_deleted` | `GFNBounds.Graph.PartialSupportClose` |
+| `mem_unitPerp` | `GFNBounds.Graph.SlowMode` |
 | `mem_wSupport` | `GFNBounds.Silva.Remarks` |
 | `mem_walksInto_concat` | `GFNBounds.Silva.PathSpaceMarkovGeneral` |
 | `mem_window` | `GFNBounds.Doubling.Setting` |
@@ -15681,6 +15741,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `perpL2_apply` | `GFNBounds.Balance.L2Toolkit` |
 | `perpL2_div_sub_one` | `GFNBounds.Balance.DiscreteGlobal` |
 | `perpL2_eq` | `GFNBounds.Balance.L2Toolkit` |
+| `perpL2_of_mean_zero` | `GFNBounds.Graph.SlowMode` |
 | `perpL2_restrict` | `GFNBounds.Balance.LiftFinite` |
 | `perpL2_sub_smul` | `GFNBounds.Balance.LocalConvergence` |
 | `perp_decay_on` | `GFNBounds.Balance.LocalEnergy` |
@@ -15900,6 +15961,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `qm_eq` | `GFNBounds.Doubling.DecayNotation` |
 | `qm_le_one` | `GFNBounds.Doubling.ExpansionSecond` |
 | `qm_pos` | `GFNBounds.Doubling.DecayNotation` |
+| `quad_nonneg` | `GFNBounds.Graph.SlowMode` |
+| `quad_perpL2` | `GFNBounds.Graph.SlowMode` |
+| `quad_smul` | `GFNBounds.Graph.SlowMode` |
 | `quarter_lt_gam` | `GFNBounds.Doubling.Escape` |
 | `quot_bounds` | `GFNBounds.Core.FirstVariationGeneral` |
 | `rTail` | `GFNBounds.Doubling.RecurrenceClass` |
@@ -16212,6 +16276,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `sinkMass_pos` | `GFNBounds.Core.FamilyUniversality` |
 | `sink_mem_chainFinset` | `GFNBounds.Doubling.TruncationStat` |
 | `sixteen_lt_level` | `GFNBounds.Doubling.Product` |
+| `slowMode_trajectory` | `GFNBounds.Graph.SlowMode` |
+| `slowest_rate_frozen` | `GFNBounds.Graph.SlowMode` |
 | `snd_edgeMeasure` | `GFNBounds.Balance.LiftGeneral` |
 | `snkC` | `GFNBounds.Graph.CycleDivergence` |
 | `snkC_ne_srcC` | `GFNBounds.Graph.CycleDivergence` |
@@ -16925,6 +16991,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `unitEdge_nonneg` | `GFNBounds.Graph.CycleDivergence` |
 | `unitEdge_of_ne_zero` | `GFNBounds.Graph.CycleDivergence` |
 | `unitEdge_right` | `GFNBounds.Graph.CycleDivergence` |
+| `unitPerp` | `GFNBounds.Graph.SlowMode` |
 | `unit_univ_nonempty` | `GFNBounds.Silva.Remarks` |
 | `universality_L2_body` | `GFNBounds.Core.UniversalityBody` |
 | `universality_L2_body_coin` | `GFNBounds.Core.UniversalityBody` |

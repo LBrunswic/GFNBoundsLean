@@ -23576,6 +23576,17 @@
    "doc":
    "**`theo:universality_graphs`*(1)*** (`proofs.tex:967–969`, proof `proofs.tex:985`).\n\nOn a finite path-connected marked graph with a backward policy positive on every edge, the\nbackward chain of the loop closure is irreducible and admits a unique invariant probability `λ`;\nmoreover `λ > 0` everywhere and `λ(s₀) = λ(s_f)`.\n\nThe four conjuncts are the paper's four assertions, in its order. `Z > 0` and the counting measure\n`μ` play no part in item *(1)*; see the module SCOPE. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.unitPerp":
+  {"uses_value": ["GFNBounds.Graph.ipL2", "GFNBounds.Graph.meanL2"],
+   "uses_type": [],
+   "uses_external": 12,
+   "type": "{V : Type u_1} → [Fintype V] → (V → ℝ) → Set (V → ℝ)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 78,
+   "kind": "def",
+   "doc": "The unit sphere of the mean-zero functions of `L²(λ)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.two_add_sigmaBar_pos":
   {"uses_value":
    ["GFNBounds.Graph.BackwardPolicy",
@@ -24037,6 +24048,80 @@
    "doc":
    "**`def:loop_closure`, the source row.** A row summing to `1` and supported on the\nin-neighbours of `s₀` in `Ĝ` is the point mass at `s_f`, the wrap edge being the only one.\n\nThe policy plays no part — this is a statement about `Ĝ` alone — and non-negativity, which the\npaper's \"probability distribution\" carries, is not used either: the support condition kills every\nentry off `s_f` and the total mass fixes the one that is left. Both are strengthenings in the safe\ndirection; the paper's statement is the case `q ≥ 0`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.slowest_rate_frozen":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.isInvariant_of_isInvProb",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb.pos",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.BackwardPolicy.coercSet",
+    "GFNBounds.Graph.BackwardPolicy.curvSet",
+    "GFNBounds.Graph.BackwardPolicy.curvature_two_sided_frozen",
+    "GFNBounds.Graph.BackwardPolicy.exists_slowMode",
+    "GFNBounds.Graph.BackwardPolicy.linear_decay",
+    "GFNBounds.Graph.BackwardPolicy.mem_coercSet",
+    "GFNBounds.Graph.BackwardPolicy.mem_curvSet",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.BackwardPolicy.slowMode_trajectory",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.MarkedGraph.src",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.BackwardPolicy.coercSet",
+    "GFNBounds.Graph.BackwardPolicy.curvSet",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 147,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V}\n  {B : GFNBounds.Graph.BackwardPolicy G},\n  G.PathConnected →\n    B.PositiveOnEdges →\n      ∀ {lam w : V → ℝ},\n        B.IsInvProb lam →\n          ∀ {g2 wmin wsup : ℝ},\n            (∀ (x : V), wmin ≤ w x) →\n              (∀ (x : V), w x ≤ wsup) →\n                0 ≤ wmin →\n                  0 ≤ g2 →\n                    ∀ {Bstar : ℝ},\n                      0 < Bstar →\n                        IsLeast (B.coercSet lam) Bstar →\n                          ∃ c,\n                            IsGreatest (B.curvSet lam w g2) c ∧\n                              g2 * wmin / Bstar ^ 2 ≤ c ∧\n                                c ≤ g2 * wsup / Bstar ^ 2 ∧\n                                  (∀ (u : ℝ → V → ℝ),\n                                      (∀ (t : ℝ),\n                                          0 ≤ t →\n                                            ∀ (x : V),\n                                              HasDerivAt (fun s => u s x)\n                                                (-GFNBounds.Balance.linHess B.phat lam w g2 (u t) x) t) →\n                                        ∀ (t : ℝ),\n                                          0 ≤ t →\n                                            GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam (u t)) ≤\n                                              Real.exp (-(c * t)) *\n                                                GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam (u 0))) ∧\n                                    ∃ h0,\n                                      GFNBounds.Graph.meanL2 lam h0 = 0 ∧\n                                        GFNBounds.Graph.nrmL2 lam h0 = 1 ∧\n                                          (∀ (x : V), GFNBounds.Balance.linHess B.phat lam w g2 h0 x = c * h0 x) ∧\n                                            (∀ (t : ℝ) (x : V),\n                                                HasDerivAt (fun s => Real.exp (-(c * s)) * h0 x)\n                                                  (-GFNBounds.Balance.linHess B.phat lam w g2\n                                                      (fun y => Real.exp (-(c * t)) * h0 y) x)\n                                                  t) ∧\n                                              ∀ (t : ℝ),\n                                                GFNBounds.Graph.nrmL2 lam\n                                                    (GFNBounds.Balance.perpL2 lam fun y => Real.exp (-(c * t)) * h0 y) =\n                                                  Real.exp (-(c * t))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 424,
+   "kind": "theorem",
+   "doc":
+   "**The slowest rate of linearized training is the best curvature constant.** On the loop\nclosure of a finite path-connected marked graph, with the policy positive on its edges and frozen,\nand `B̂` the least coercivity constant, there is a `c⋆` such that:\n* `c⋆` is the best curvature constant, and lies between `g''(1)w_min/B̂²` and `g''(1)w_max/B̂²`;\n* every linearized trajectory satisfies `‖h_t^⊥‖ ≤ e^{−c⋆t}‖h_0^⊥‖`;\n* a slow mode `h₀`, of mean zero and norm one with `Hh₀ = c⋆h₀`, contracts at exactly `c⋆`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.slowMode_trajectory":
+  {"uses_value":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.linHess_smul",
+    "GFNBounds.Balance.meanL2_const_mul",
+    "GFNBounds.Balance.nrmL2_smul",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.BackwardPolicy.perpL2_of_mean_zero",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 162,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam w h0 : V → ℝ} {g2 c : ℝ},\n  (∀ (x : V), GFNBounds.Balance.linHess K lam w g2 h0 x = c * h0 x) →\n    (∀ (t : ℝ) (x : V),\n        HasDerivAt (fun s => Real.exp (-(c * s)) * h0 x)\n          (-GFNBounds.Balance.linHess K lam w g2 (fun y => Real.exp (-(c * t)) * h0 y) x) t) ∧\n      (GFNBounds.Graph.meanL2 lam h0 = 0 →\n        GFNBounds.Graph.nrmL2 lam h0 = 1 →\n          ∀ (t : ℝ),\n            GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam fun y => Real.exp (-(c * t)) * h0 y) =\n              Real.exp (-(c * t)))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 399,
+   "kind": "theorem",
+   "doc":
+   "**Along a slow mode, linearized training is `e^{−ct}h₀`**: if `Hh₀ = ch₀`, the curve\n`t ↦ e^{−ct}h₀` solves `ḣ = −Hh`, and when `h₀` has mean zero and norm one its centred part has\nnorm `e^{−ct}`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.sigmaStar_nonneg":
   {"uses_value":
    ["GFNBounds.Graph.BackwardPolicy",
@@ -24252,6 +24337,67 @@
    "line": 233,
    "kind": "rec",
    "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.quad_smul":
+  {"uses_value":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.linHess_smul",
+    "GFNBounds.Graph.ipL2"],
+   "uses_type": ["GFNBounds.Balance.linHess", "GFNBounds.Graph.ipL2"],
+   "uses_external": 78,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] (K : V → V → ℝ) (lam w : V → ℝ) (g2 s : ℝ) (h : V → ℝ),\n  GFNBounds.Graph.ipL2 lam (fun x => s * h x) (GFNBounds.Balance.linHess K lam w g2 fun x => s * h x) =\n    s ^ 2 * GFNBounds.Graph.ipL2 lam h (GFNBounds.Balance.linHess K lam w g2 h)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 103,
+   "kind": "theorem",
+   "doc": "`⟨sh, H(sh)⟩ = s²⟨h, Hh⟩`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.quad_perpL2":
+  {"uses_value":
+   ["GFNBounds.Balance.invariant_of_isInvariant",
+    "GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.linHess_perpL2",
+    "GFNBounds.Balance.meanL2_linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Graph.BackwardPolicy.ipL2_perpL2_of_mean_zero",
+    "GFNBounds.Graph.ipL2"],
+   "uses_type":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Graph.ipL2"],
+   "uses_external": 11,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam w : V → ℝ},\n  GFNBounds.Core.IsInvariant lam K →\n    (∀ (x : V), 0 < lam x) →\n      ∀ (g2 : ℝ) (h : V → ℝ),\n        GFNBounds.Graph.ipL2 lam (GFNBounds.Balance.perpL2 lam h)\n            (GFNBounds.Balance.linHess K lam w g2 (GFNBounds.Balance.perpL2 lam h)) =\n          GFNBounds.Graph.ipL2 lam h (GFNBounds.Balance.linHess K lam w g2 h)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 132,
+   "kind": "theorem",
+   "doc":
+   "**`⟨h, Hh⟩ = ⟨h^⊥, Hh^⊥⟩`**: `H` kills the constants, and its image has mean zero. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.quad_nonneg":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.linHess_coercive",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Graph.ipL2"],
+   "uses_external": 24,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam w : V → ℝ},\n  GFNBounds.Core.IsInvariant lam K →\n    (∀ (x y : V), 0 ≤ K x y) →\n      (∀ (x : V), 0 ≤ w x) →\n        ∀ {g2 : ℝ}, 0 ≤ g2 → ∀ (h : V → ℝ), 0 ≤ GFNBounds.Graph.ipL2 lam h (GFNBounds.Balance.linHess K lam w g2 h)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 142,
+   "kind": "theorem",
+   "doc": "**`⟨h, Hh⟩ ≥ 0`** for a non-negative weight. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.qact_sub":
   {"uses_value":
@@ -25035,6 +25181,21 @@
    "doc":
    "**`prop:frozen_unstable_full`, the perturbed edgeflow `F := F* − ε1_γ`**\n(`proofs.tex:665`). ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.perpL2_of_mean_zero":
+  {"uses_value":
+   ["GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.perpL2_apply",
+    "GFNBounds.Graph.meanL2"],
+   "uses_type": ["GFNBounds.Balance.perpL2", "GFNBounds.Graph.meanL2"],
+   "uses_external": 23,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {lam h : V → ℝ},\n  GFNBounds.Graph.meanL2 lam h = 0 → GFNBounds.Balance.perpL2 lam h = h",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 125,
+   "kind": "theorem",
+   "doc": "A mean-zero function is its own centred part. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.pdens_sub":
   {"uses_value":
    ["GFNBounds.Graph.BackwardPolicy",
@@ -25691,6 +25852,44 @@
    "kind": "ctor",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.mem_unitPerp":
+  {"uses_value": ["GFNBounds.Graph.BackwardPolicy.unitPerp"],
+   "uses_type":
+   ["GFNBounds.Graph.BackwardPolicy.unitPerp",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.meanL2"],
+   "uses_external": 6,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {lam h : V → ℝ},\n  h ∈ GFNBounds.Graph.BackwardPolicy.unitPerp lam ↔ GFNBounds.Graph.meanL2 lam h = 0 ∧ GFNBounds.Graph.ipL2 lam h h = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 83,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.mem_curvSet":
+  {"uses_value":
+   ["GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.curvSet",
+    "GFNBounds.Graph.MarkedGraph"],
+   "uses_type":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.curvSet",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 7,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V}\n  {B : GFNBounds.Graph.BackwardPolicy G} {lam w : V → ℝ} {g2 c : ℝ},\n  c ∈ B.curvSet lam w g2 ↔\n    ∀ (h : V → ℝ),\n      c * GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam h) ^ 2 ≤\n        GFNBounds.Graph.ipL2 lam h (GFNBounds.Balance.linHess B.phat lam w g2 h)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 72,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.mem_coercSet":
   {"uses_value":
    ["GFNBounds.Graph.BackwardPolicy",
@@ -25794,6 +25993,31 @@
    "kind": "theorem",
    "doc":
    "**`theo:local_convergence`, on a finite marked graph with the backward policy frozen**: for the\nloop closure and any coercivity constant `B̂ ≥ 1` on `L²(λ)`, the explicit `ε₀`, `C`, `γ₀`; the\ngradient flow from `(1+h₀)λ` exists, is the gradient, is unique, stays positive, and converges to\n`c_∞λ` at rate `ϱ/2`; gradient descent contracts by `1 − γϱ/4`, `ϱ = g''(1)w_min/B̂²`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.linear_decay":
+  {"uses_value":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Graph.BackwardPolicy.hasDerivAt_perp_sq_linear",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2",
+    "GFNBounds.Graph.nrmL2_nonneg"],
+   "uses_type":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 241,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam w : V → ℝ} {g2 c : ℝ},\n  GFNBounds.Core.IsInvariant lam K →\n    (∀ (x : V), 0 ≤ lam x) →\n      (∀ (h : V → ℝ),\n          c * GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam h) ^ 2 ≤\n            GFNBounds.Graph.ipL2 lam h (GFNBounds.Balance.linHess K lam w g2 h)) →\n        ∀ {u : ℝ → V → ℝ},\n          (∀ (t : ℝ),\n              0 ≤ t → ∀ (x : V), HasDerivAt (fun s => u s x) (-GFNBounds.Balance.linHess K lam w g2 (u t) x) t) →\n            ∀ (t : ℝ),\n              0 ≤ t →\n                GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam (u t)) ≤\n                  Real.exp (-(c * t)) * GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam (u 0))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 355,
+   "kind": "theorem",
+   "doc":
+   "**Every linearized trajectory contracts at least at a curvature constant.** If\n`c‖h^⊥‖² ≤ ⟨h, Hh⟩` for every `h`, every curve with `ḣ = −Hh` satisfies\n`‖h_t^⊥‖ ≤ e^{−ct}‖h_0^⊥‖`, by Grönwall's inequality on `‖h_t^⊥‖²`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.le_qact":
   {"uses_value":
@@ -25968,6 +26192,37 @@
    "doc":
    "**`F = F* − ε1_γ` is again a `0`-flow**: `F*` is a circulation\n(`theo:universality_graphs`*(3)*, `proofs.tex:995–996`) and so is `ε1_γ`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.ipL2_smul_smul":
+  {"uses_value": ["GFNBounds.Graph.ipL2"],
+   "uses_type": ["GFNBounds.Graph.ipL2"],
+   "uses_external": 78,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] (lam a : V → ℝ) (s : ℝ),\n  (GFNBounds.Graph.ipL2 lam (fun x => s * a x) fun x => s * a x) = s ^ 2 * GFNBounds.Graph.ipL2 lam a a",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 96,
+   "kind": "theorem",
+   "doc": "`⟨sa, sa⟩ = s²⟨a, a⟩`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.ipL2_perpL2_of_mean_zero":
+  {"uses_value":
+   ["GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.perpL2_apply",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.meanL2"],
+   "uses_type":
+   ["GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.meanL2"],
+   "uses_external": 106,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {lam h f : V → ℝ},\n  GFNBounds.Graph.meanL2 lam f = 0 →\n    GFNBounds.Graph.ipL2 lam (GFNBounds.Balance.perpL2 lam h) f = GFNBounds.Graph.ipL2 lam h f",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 112,
+   "kind": "theorem",
+   "doc": "`⟨h^⊥, f⟩ = ⟨h, f⟩` when `Πf = 0`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.ipL2_pdens_qact":
   {"uses_value":
    ["GFNBounds.Graph.BackwardPolicy",
@@ -25991,6 +26246,18 @@
    "kind": "theorem",
    "doc":
    "**`P` and `Q` are `L²(λ)`-adjoint** (`proofs.tex:861`), by a swap of two finite sums. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.ipL2_add_smul":
+  {"uses_value": ["GFNBounds.Graph.ipL2"],
+   "uses_type": ["GFNBounds.Graph.ipL2"],
+   "uses_external": 88,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] (lam a b c d : V → ℝ) (t : ℝ),\n  (GFNBounds.Graph.ipL2 lam (fun x => a x + t * b x) fun x => c x + t * d x) =\n    GFNBounds.Graph.ipL2 lam a c + t * (GFNBounds.Graph.ipL2 lam a d + GFNBounds.Graph.ipL2 lam b c) +\n      t ^ 2 * GFNBounds.Graph.ipL2 lam b d",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 88,
+   "kind": "theorem",
+   "doc": "`⟨a + tb, c + td⟩ = ⟨a, c⟩ + t(⟨a, d⟩ + ⟨b, c⟩) + t²⟨b, d⟩`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.invariant_edgeInflow_of_pushEdge_eq":
   {"uses_value":
@@ -26085,6 +26352,34 @@
    "kind": "def",
    "doc":
    "**`theo:universality_graphs`*(3)*, the initial flow**: `F_init(v) = e(s₀ → v)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.hasDerivAt_perp_sq_linear":
+  {"uses_value":
+   ["GFNBounds.Balance.invariant_of_isInvariant",
+    "GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.meanL2_linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Graph.BackwardPolicy.ipL2_perpL2_of_mean_zero",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2",
+    "GFNBounds.Graph.sq_nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 181,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] {K : V → V → ℝ} {lam w : V → ℝ} {g2 : ℝ},\n  GFNBounds.Core.IsInvariant lam K →\n    (∀ (x : V), 0 ≤ lam x) →\n      ∀ {u : ℝ → V → ℝ},\n        (∀ (t : ℝ), 0 ≤ t → ∀ (x : V), HasDerivAt (fun s => u s x) (-GFNBounds.Balance.linHess K lam w g2 (u t) x) t) →\n          ∀ (s : ℝ),\n            0 ≤ s →\n              HasDerivAt (fun r => GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam (u r)) ^ 2)\n                (-(2 * GFNBounds.Graph.ipL2 lam (u s) (GFNBounds.Balance.linHess K lam w g2 (u s)))) s",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 313,
+   "kind": "theorem",
+   "doc":
+   "**`d/dt‖h_t^⊥‖² = −2⟨h_t, Hh_t⟩`** along linearized training `ḣ = −Hh`: the mean is\nconserved, because the image of `H` has mean zero. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.greenMap_apply":
   {"uses_value":
@@ -26624,6 +26919,71 @@
    "doc":
    "**`theo:universality_graphs`*(3)*, flow matching**, in the paper's own form\n(`proofs.tex:1004–1009`): `F_init(v) + ((f_out^* μ) π_→^*)(v) = F_term(v) + f_out^*(v)` at every\n`v ∈ 𝒮`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.exists_slowMode":
+  {"uses_value":
+   ["GFNBounds.Balance.invariant_of_isInvariant",
+    "GFNBounds.Balance.ipL2_comm",
+    "GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.linHess_add",
+    "GFNBounds.Balance.linHess_smul",
+    "GFNBounds.Balance.linHess_symm",
+    "GFNBounds.Balance.meanL2_add",
+    "GFNBounds.Balance.meanL2_const_mul",
+    "GFNBounds.Balance.meanL2_linHess",
+    "GFNBounds.Balance.meanL2_perpL2",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Core.IsInvariant",
+    "GFNBounds.Core.IsMarkov",
+    "GFNBounds.Core.IsMarkov.nonneg",
+    "GFNBounds.Core.isInvariant_of_isInvProb",
+    "GFNBounds.Core.phat_isMarkov",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb.pos",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb.total",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.BackwardPolicy.curvSet",
+    "GFNBounds.Graph.BackwardPolicy.eq_zero_of_quad_nonneg",
+    "GFNBounds.Graph.BackwardPolicy.exists_perp_pos",
+    "GFNBounds.Graph.BackwardPolicy.ipL2_add_smul",
+    "GFNBounds.Graph.BackwardPolicy.ipL2_smul_smul",
+    "GFNBounds.Graph.BackwardPolicy.mem_curvSet",
+    "GFNBounds.Graph.BackwardPolicy.mem_unitPerp",
+    "GFNBounds.Graph.BackwardPolicy.perpL2_of_mean_zero",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.BackwardPolicy.quad_nonneg",
+    "GFNBounds.Graph.BackwardPolicy.quad_perpL2",
+    "GFNBounds.Graph.BackwardPolicy.quad_smul",
+    "GFNBounds.Graph.BackwardPolicy.unitPerp",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.ipL2_self_nonneg",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2",
+    "GFNBounds.Graph.nrmL2_nonneg",
+    "GFNBounds.Graph.sq_nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.BackwardPolicy.curvSet",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 423,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V}\n  {B : GFNBounds.Graph.BackwardPolicy G},\n  G.PathConnected →\n    B.PositiveOnEdges →\n      ∀ {lam w : V → ℝ},\n        B.IsInvProb lam →\n          (∀ (x : V), 0 ≤ w x) →\n            ∀ {g2 : ℝ},\n              0 ≤ g2 →\n                ∃ c,\n                  IsGreatest (B.curvSet lam w g2) c ∧\n                    ∃ h0,\n                      GFNBounds.Graph.meanL2 lam h0 = 0 ∧\n                        GFNBounds.Graph.nrmL2 lam h0 = 1 ∧\n                          ∀ (x : V), GFNBounds.Balance.linHess B.phat lam w g2 h0 x = c * h0 x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 166,
+   "kind": "theorem",
+   "doc":
+   "**The slow mode exists.** The best curvature constant `c⋆` exists, and it is the eigenvalue\nof an eigenvector `h₀` of `H` of mean zero and norm one: `Hh₀ = c⋆h₀`. The eigenvector minimizes\n`⟨h, Hh⟩` on the compact unit sphere of the mean-zero functions; the first-order condition makes\nit an eigenvector. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.exists_phat_pos_into":
   {"uses_value":
    ["GFNBounds.Graph.BackwardPolicy",
@@ -26844,6 +27204,19 @@
    "kind": "theorem",
    "doc":
    "**`prop:frozen_unstable_full`, *Admissibility*, second half** (`proofs.tex:675`): \"`ε` is\nwell defined and positive\". For a `1_γ` supported on the edges of `Ĝ` the witness is\n`ε := ½ min_{1_γ(u→v) ≠ 0} F*(u→v)/1_γ(u→v)`, which is the statement's\n`½ min_{(u→v)∈γ} F*(u→v)` when `1_γ` is `{0,1}`-valued.\n\nThe support hypothesis is where \"`γ` is a directed cycle *of the graph*\" enters: a circulation\nriding on non-edges, where `F*` vanishes, admits no positive `ε` at all. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.eq_zero_of_quad_nonneg":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 231,
+   "type":
+   "∀ {a b : ℝ}, 0 ≤ b → (∀ (t : ℝ), 0 ≤ 2 * b * t + a * t ^ 2) → b = 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 149,
+   "kind": "theorem",
+   "doc":
+   "**A quadratic that never goes negative has no linear term**: `2bt + at² ≥ 0` for every `t`\nand `b ≥ 0` force `b = 0`, by evaluating at `t = −b/(|a| + 1)`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.eq_zero_of_harm_off_src":
   {"uses_value":
@@ -27829,6 +28202,27 @@
    "kind": "theorem",
    "doc":
    "**The exact curvature at a constant weight.** With `w ≡ w₀ ≥ 0`, `g''(1) ≥ 0` and `B̂` the least\ncoercivity constant, the best constant `c` with `c‖h − Πh‖² ≤ ⟨h, Hh⟩` for every `h` is\n`g''(1)w₀/B̂²`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.curvSet":
+  {"uses_value":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Graph.BackwardPolicy", "GFNBounds.Graph.MarkedGraph"],
+   "uses_external": 16,
+   "type":
+   "{V : Type u_1} →\n  [inst : Fintype V] →\n    [DecidableEq V] →\n      {G : GFNBounds.Graph.MarkedGraph V} → GFNBounds.Graph.BackwardPolicy G → (V → ℝ) → (V → ℝ) → ℝ → Set ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.SlowMode",
+   "line": 66,
+   "kind": "def",
+   "doc":
+   "**The curvature constants** at the weight `w`: the `c` with `c‖h − Πh‖² ≤ ⟨h, Hh⟩` for every\n`h`, `H = g''(1)A†M_wA`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.ctorIdx":
   {"uses_value":

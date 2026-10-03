@@ -119,6 +119,7 @@ import GFNBounds.Graph.Leakage
 import GFNBounds.Doubling.LeakageInstance
 import GFNBounds.Doubling.WeakUniversal
 import GFNBounds.Graph.BestConstant
+import GFNBounds.Graph.SlowMode
 
 /-!
 # Axiom audit
@@ -2414,3 +2415,8 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 -- the best coercivity constant, and the exact curvature at a constant weight — GFNBounds/Graph/BestConstant.lean
 #print axioms GFNBounds.Graph.BackwardPolicy.bestCoerc_exists
 #print axioms GFNBounds.Graph.BackwardPolicy.curvature_exact_frozen
+-- the slow mode: the best curvature constant is the slowest rate of linearized training — GFNBounds/Graph/SlowMode.lean
+#print axioms GFNBounds.Graph.BackwardPolicy.exists_slowMode
+#print axioms GFNBounds.Graph.BackwardPolicy.linear_decay
+#print axioms GFNBounds.Graph.BackwardPolicy.slowMode_trajectory
+#print axioms GFNBounds.Graph.BackwardPolicy.slowest_rate_frozen

@@ -174,10 +174,11 @@
     "GFNBounds.Doubling.LeakageInstance",
     "GFNBounds.Doubling.WeakUniversal",
     "GFNBounds.Graph.BestConstant",
+    "GFNBounds.Graph.SlowMode",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 169,
+   "lines": 170,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -309,10 +310,11 @@
     "GFNBounds.Graph.Leakage",
     "GFNBounds.Doubling.LeakageInstance",
     "GFNBounds.Doubling.WeakUniversal",
-    "GFNBounds.Graph.BestConstant"
+    "GFNBounds.Graph.BestConstant",
+    "GFNBounds.Graph.SlowMode"
    ],
    "variables": [],
-   "lines": 2416,
+   "lines": 2422,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -52850,6 +52852,198 @@
      "private": false,
      "statement": "theorem universality_graphs_one (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) : (∀ x y : V, B.BReach x y) ∧ (∃ lam : V → ℝ, B.IsInvProb lam) ∧ (∀ lam lam' : V → ℝ, B.IsInvProb lam → B.IsInvProb lam' → lam = lam') ∧ (∀ lam : V → ℝ, B.IsInvProb lam → (∀ x, 0 < lam x) ∧ lam G.snk = lam G.src)",
      "doc": "**`theo:universality_graphs`*(1)*** (`proofs.tex:967–969`, proof `proofs.tex:985`)."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Graph/SlowMode.lean",
+   "title": "The slow mode: the best curvature constant is the slowest rate of linearized training",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Graph.BestConstant",
+    "GFNBounds.Balance.WeightedL2",
+    "GFNBounds.Balance.LocalEnergy"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable {G : MarkedGraph V}",
+    "variable {B : BackwardPolicy G}"
+   ],
+   "lines": 474,
+   "decls": [
+    {
+     "name": "curvSet",
+     "full": "GFNBounds.Graph.BackwardPolicy.curvSet",
+     "kind": "def",
+     "line": 68,
+     "attrs": "",
+     "private": false,
+     "statement": "def curvSet (B : BackwardPolicy G) (lam w : V → ℝ) (g2 : ℝ) : Set ℝ",
+     "doc": "**The curvature constants** at the weight `w`: the `c` with `c‖h − Πh‖² ≤ ⟨h, Hh⟩` for every `h`, `H = g''(1)A†M_wA`."
+    },
+    {
+     "name": "mem_curvSet",
+     "full": "GFNBounds.Graph.BackwardPolicy.mem_curvSet",
+     "kind": "theorem",
+     "line": 72,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mem_curvSet {lam w : V → ℝ} {g2 c : ℝ} : c ∈ B.curvSet lam w g2 ↔ ∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess B.phat lam w g2 h)",
+     "doc": ""
+    },
+    {
+     "name": "unitPerp",
+     "full": "GFNBounds.Graph.BackwardPolicy.unitPerp",
+     "kind": "def",
+     "line": 79,
+     "attrs": "",
+     "private": false,
+     "statement": "def unitPerp (lam : V → ℝ) : Set (V → ℝ)",
+     "doc": "The unit sphere of the mean-zero functions of `L²(λ)`."
+    },
+    {
+     "name": "mem_unitPerp",
+     "full": "GFNBounds.Graph.BackwardPolicy.mem_unitPerp",
+     "kind": "theorem",
+     "line": 83,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mem_unitPerp {lam h : V → ℝ} : h ∈ unitPerp lam ↔ meanL2 lam h = 0 ∧ ipL2 lam h h = 1",
+     "doc": ""
+    },
+    {
+     "name": "ipL2_add_smul",
+     "full": "GFNBounds.Graph.BackwardPolicy.ipL2_add_smul",
+     "kind": "theorem",
+     "line": 89,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_add_smul (lam a b c d : V → ℝ) (t : ℝ) : ipL2 lam (fun x => a x + t * b x) (fun x => c x + t * d x) = ipL2 lam a c + t * (ipL2 lam a d + ipL2 lam b c) + t ^ 2 * ipL2 lam b d",
+     "doc": "`⟨a + tb, c + td⟩ = ⟨a, c⟩ + t(⟨a, d⟩ + ⟨b, c⟩) + t²⟨b, d⟩`."
+    },
+    {
+     "name": "ipL2_smul_smul",
+     "full": "GFNBounds.Graph.BackwardPolicy.ipL2_smul_smul",
+     "kind": "theorem",
+     "line": 97,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_smul_smul (lam a : V → ℝ) (s : ℝ) : ipL2 lam (fun x => s * a x) (fun x => s * a x) = s ^ 2 * ipL2 lam a a",
+     "doc": "`⟨sa, sa⟩ = s²⟨a, a⟩`."
+    },
+    {
+     "name": "quad_smul",
+     "full": "GFNBounds.Graph.BackwardPolicy.quad_smul",
+     "kind": "theorem",
+     "line": 104,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem quad_smul (K : V → V → ℝ) (lam w : V → ℝ) (g2 s : ℝ) (h : V → ℝ) : ipL2 lam (fun x => s * h x) (Balance.linHess K lam w g2 (fun x => s * h x)) = s ^ 2 * ipL2 lam h (Balance.linHess K lam w g2 h)",
+     "doc": "`⟨sh, H(sh)⟩ = s²⟨h, Hh⟩`."
+    },
+    {
+     "name": "ipL2_perpL2_of_mean_zero",
+     "full": "GFNBounds.Graph.BackwardPolicy.ipL2_perpL2_of_mean_zero",
+     "kind": "theorem",
+     "line": 113,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem ipL2_perpL2_of_mean_zero {lam h f : V → ℝ} (hf : meanL2 lam f = 0) : ipL2 lam (Balance.perpL2 lam h) f = ipL2 lam h f",
+     "doc": "`⟨h^⊥, f⟩ = ⟨h, f⟩` when `Πf = 0`."
+    },
+    {
+     "name": "perpL2_of_mean_zero",
+     "full": "GFNBounds.Graph.BackwardPolicy.perpL2_of_mean_zero",
+     "kind": "theorem",
+     "line": 126,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem perpL2_of_mean_zero {lam h : V → ℝ} (hm : meanL2 lam h = 0) : Balance.perpL2 lam h = h",
+     "doc": "A mean-zero function is its own centred part."
+    },
+    {
+     "name": "quad_perpL2",
+     "full": "GFNBounds.Graph.BackwardPolicy.quad_perpL2",
+     "kind": "theorem",
+     "line": 133,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem quad_perpL2 {K : V → V → ℝ} {lam w : V → ℝ} (hinv : Core.IsInvariant lam K) (hlam : ∀ x, 0 < lam x) (g2 : ℝ) (h : V → ℝ) : ipL2 lam (Balance.perpL2 lam h) (Balance.linHess K lam w g2 (Balance.perpL2 lam h)) = ipL2 lam h (Balance.linHess K lam w g2 h)",
+     "doc": "**`⟨h, Hh⟩ = ⟨h^⊥, Hh^⊥⟩`**: `H` kills the constants, and its image has mean zero."
+    },
+    {
+     "name": "quad_nonneg",
+     "full": "GFNBounds.Graph.BackwardPolicy.quad_nonneg",
+     "kind": "theorem",
+     "line": 143,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem quad_nonneg {K : V → V → ℝ} {lam w : V → ℝ} (hinv : Core.IsInvariant lam K) (hKnn : ∀ x y, 0 ≤ K x y) (hw0 : ∀ x, 0 ≤ w x) {g2 : ℝ} (hg2 : 0 ≤ g2) (h : V → ℝ) : 0 ≤ ipL2 lam h (Balance.linHess K lam w g2 h)",
+     "doc": "**`⟨h, Hh⟩ ≥ 0`** for a non-negative weight."
+    },
+    {
+     "name": "eq_zero_of_quad_nonneg",
+     "full": "GFNBounds.Graph.BackwardPolicy.eq_zero_of_quad_nonneg",
+     "kind": "theorem",
+     "line": 151,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eq_zero_of_quad_nonneg {a b : ℝ} (hb : 0 ≤ b) (h : ∀ t : ℝ, 0 ≤ 2 * b * t + a * t ^ 2) : b = 0",
+     "doc": "**A quadratic that never goes negative has no linear term**: `2bt + at² ≥ 0` for every `t` and `b ≥ 0` force `b = 0`, by evaluating at `t = −b/(|a| + 1)`."
+    },
+    {
+     "name": "exists_slowMode",
+     "full": "GFNBounds.Graph.BackwardPolicy.exists_slowMode",
+     "kind": "theorem",
+     "line": 170,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_slowMode (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam w : V → ℝ} (hl : B.IsInvProb lam) (hw0 : ∀ x, 0 ≤ w x) {g2 : ℝ} (hg2 : 0 ≤ g2) : ∃ c : ℝ, IsGreatest (B.curvSet lam w g2) c ∧ ∃ h0 : V → ℝ, meanL2 lam h0 = 0 ∧ nrmL2 lam h0 = 1 ∧ ∀ x, Balance.linHess B.phat lam w g2 h0 x = c * h0 x",
+     "doc": "**The slow mode exists.** The best curvature constant `c⋆` exists, and it is the eigenvalue of an eigenvector `h₀` of `H` of mean zero and norm one: `Hh₀ = c⋆h₀`."
+    },
+    {
+     "name": "hasDerivAt_perp_sq_linear",
+     "full": "GFNBounds.Graph.BackwardPolicy.hasDerivAt_perp_sq_linear",
+     "kind": "theorem",
+     "line": 315,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem hasDerivAt_perp_sq_linear {K : V → V → ℝ} {lam w : V → ℝ} {g2 : ℝ} (hinv : Core.IsInvariant lam K) (hnn : ∀ x, 0 ≤ lam x) {u : ℝ → V → ℝ} (hu : ∀ t, 0 ≤ t → ∀ x, HasDerivAt (fun s => u s x) (-Balance.linHess K lam w g2 (u t) x) t) (s : ℝ) (hs : 0 ≤ s) : HasDerivAt (fun r : ℝ => nrmL2 lam (Balance.perpL2 lam (u r)) ^ 2) (-(2 * ipL2 lam (u s) (Balance.linHess K lam w g2 (u s)))) s",
+     "doc": "**`d/dt‖h_t^⊥‖² = −2⟨h_t, Hh_t⟩`** along linearized training `ḣ = −Hh`: the mean is conserved, because the image of `H` has mean zero."
+    },
+    {
+     "name": "linear_decay",
+     "full": "GFNBounds.Graph.BackwardPolicy.linear_decay",
+     "kind": "theorem",
+     "line": 358,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem linear_decay {K : V → V → ℝ} {lam w : V → ℝ} {g2 c : ℝ} (hinv : Core.IsInvariant lam K) (hnn : ∀ x, 0 ≤ lam x) (hc : ∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess K lam w g2 h)) {u : ℝ → V → ℝ} (hu : ∀ t, 0 ≤ t → ∀ x, HasDerivAt (fun s => u s x) (-Balance.linHess K lam w g2 (u t) x) t) : ∀ t, 0 ≤ t → nrmL2 lam (Balance.perpL2 lam (u t)) ≤ Real.exp (-(c * t)) * nrmL2 lam (Balance.perpL2 lam (u 0))",
+     "doc": "**Every linearized trajectory contracts at least at a curvature constant.** If `c‖h^⊥‖² ≤ ⟨h, Hh⟩` for every `h`, every curve with `ḣ = −Hh` satisfies `‖h_t^⊥‖ ≤ e^{−ct}‖h_0^⊥‖`, by Grönwall's inequality on `‖h_t^⊥‖²`."
+    },
+    {
+     "name": "slowMode_trajectory",
+     "full": "GFNBounds.Graph.BackwardPolicy.slowMode_trajectory",
+     "kind": "theorem",
+     "line": 402,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem slowMode_trajectory {K : V → V → ℝ} {lam w h0 : V → ℝ} {g2 c : ℝ} (heig : ∀ x, Balance.linHess K lam w g2 h0 x = c * h0 x) : (∀ t x, HasDerivAt (fun s => Real.exp (-(c * s)) * h0 x) (-Balance.linHess K lam w g2 (fun y => Real.exp (-(c * t)) * h0 y) x) t) ∧ (meanL2 lam h0 = 0 → nrmL2 lam h0 = 1 → ∀ t, nrmL2 lam (Balance.perpL2 lam (fun y => Real.exp (-(c * t)) * h0 y)) = Real.exp (-(c * t)))",
+     "doc": "**Along a slow mode, linearized training is `e^{−ct}h₀`**: if `Hh₀ = ch₀`, the curve `t ↦ e^{−ct}h₀` solves `ḣ = −Hh`, and when `h₀` has mean zero and norm one its centred part has norm `e^{−ct}`."
+    },
+    {
+     "name": "slowest_rate_frozen",
+     "full": "GFNBounds.Graph.BackwardPolicy.slowest_rate_frozen",
+     "kind": "theorem",
+     "line": 430,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem slowest_rate_frozen (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam w : V → ℝ} (hl : B.IsInvProb lam) {g2 wmin wsup : ℝ} (hwmin : ∀ x, wmin ≤ w x) (hwsup : ∀ x, w x ≤ wsup) (hwmin0 : 0 ≤ wmin) (hg2 : 0 ≤ g2) {Bstar : ℝ} (hBpos : 0 < Bstar) (hB : IsLeast (B.coercSet lam) Bstar) : ∃ c : ℝ, IsGreatest (B.curvSet lam w g2) c ∧ g2 * wmin / Bstar ^ 2 ≤ c ∧ c ≤ g2 * wsup / Bstar ^ 2 ∧ (∀ u : ℝ → V → ℝ, (∀ t, 0 ≤ t → ∀ x, HasDerivAt (fun s => u s x) (-Balance.linHess B.phat lam w g2 (u t) x) t) → ∀ t, 0 ≤ t → nrmL2 lam (Balance.perpL2 lam (u t)) ≤ Real.exp (-(c * t)) * nrmL2 lam (Balance.perpL2 lam (u 0))) ∧ ∃ h0 : V → ℝ, meanL2 lam h0 = 0 ∧ nrmL2 lam h0 = 1 ∧ (∀ x, Balance.linHess B.phat lam w g2 h0 x = c * h0 x) ∧ (∀ t x, HasDerivAt (fun s => Real.exp (-(c * s)) * h0 x) (-Balance.linHess B.phat lam w g2 (fun y => Real.exp (-(c * t)) * h0 y) x) t) ∧ ∀ t, nrmL2 lam (Balance.perpL2 lam (fun y => Real.exp (-(c * t)) * h0 y)) = Real.exp (-(c * t))",
+     "doc": "**The slowest rate of linearized training is the best curvature constant.** On the loop closure of a finite path-connected marked graph, with the policy positive on its edges and frozen, and `B̂` the least coercivity constant, there is a `c⋆` such that: * `c⋆` is the best curvature constant, and lies between `g''(1)w_min/B̂²` and `g''(1)w_max/B̂²`; * every linearized trajectory satisfies `‖h_t^⊥‖ ≤ e^{−c⋆t}‖h_0^⊥‖`; * a slow mode `h₀`, of mean zero and norm one with `Hh₀ = c⋆h₀`, contracts at exactly `c⋆`."
     }
    ],
    "library": "strict",

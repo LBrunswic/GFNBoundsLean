@@ -118,6 +118,7 @@ import GFNBounds.Graph.Diffusion
 import GFNBounds.Graph.Leakage
 import GFNBounds.Doubling.LeakageInstance
 import GFNBounds.Doubling.WeakUniversal
+import GFNBounds.Graph.BestConstant
 
 /-!
 # Axiom audit
@@ -2410,3 +2411,6 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.Stat.weaklyUniversal_densL2
 #print axioms GFNBounds.Doubling.Stat.weaklyUniversal_pstarL2
 #print axioms GFNBounds.Doubling.weaklyUniversal_family
+-- the best coercivity constant, and the exact curvature at a constant weight — GFNBounds/Graph/BestConstant.lean
+#print axioms GFNBounds.Graph.BackwardPolicy.bestCoerc_exists
+#print axioms GFNBounds.Graph.BackwardPolicy.curvature_exact_frozen

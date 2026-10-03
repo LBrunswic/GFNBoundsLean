@@ -25691,6 +25691,28 @@
    "kind": "ctor",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.mem_coercSet":
+  {"uses_value":
+   ["GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.coercSet",
+    "GFNBounds.Graph.MarkedGraph"],
+   "uses_type":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.coercSet",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 7,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V}\n  {B : GFNBounds.Graph.BackwardPolicy G} {lam : V → ℝ} {c : ℝ},\n  c ∈ B.coercSet lam ↔\n    ∀ (h : V → ℝ),\n      GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam h) ≤\n        c * GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.Aop B.phat lam h)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.BestConstant",
+   "line": 57,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.loop_closure_necessary":
   {"uses_value":
    ["GFNBounds.Graph.BackwardPolicy",
@@ -26624,6 +26646,41 @@
    "kind": "theorem",
    "doc":
    "Every state receives mass from somewhere under `π̂_←`: an invariant probability that is\npositive somewhere is positive at `y`, so some term of `∑_x λ(x) π̂_←(x → y) = λ(y) > 0` is. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.exists_perp_pos":
+  {"uses_value":
+   ["GFNBounds.Balance.perpL2",
+    "GFNBounds.Balance.perpL2_apply",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb.pos",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb.total",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.MarkedGraph.snk",
+    "GFNBounds.Graph.MarkedGraph.src",
+    "GFNBounds.Graph.MarkedGraph.src_ne_snk",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.meanL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 178,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V}\n  {B : GFNBounds.Graph.BackwardPolicy G},\n  G.PathConnected →\n    B.PositiveOnEdges →\n      ∀ {lam : V → ℝ}, B.IsInvProb lam → ∃ h, 0 < GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam h)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.BestConstant",
+   "line": 62,
+   "kind": "theorem",
+   "doc":
+   "**A function with a centred part of positive norm**: the indicator of the sink, whose mean\n`λ(s_f)` is strictly between `0` and `1`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.exists_isPoisson":
   {"uses_value":
@@ -27739,6 +27796,40 @@
    "doc":
    "**The curvature transverse to balance is of order `1/B̂²`, from both sides.** On the loop\nclosure of a frozen backward policy, with `H = g''(1)A†M_wA` and `w_min ≤ w ≤ w_max`:\n(a) a coercivity constant `B̂` gives the curvature `g''(1)w_min/B̂²`; (b) conversely, a curvature\n`c > 0` gives the coercivity constant `√(g''(1)w_max/c)`. So no curvature exceeds\n`g''(1)w_max/B̂²` at the best `B̂`, and with `w` constant the two bounds meet. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.curvature_exact_frozen":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.coercSet",
+    "GFNBounds.Graph.BackwardPolicy.curvature_two_sided_frozen",
+    "GFNBounds.Graph.BackwardPolicy.mem_coercSet",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Balance.linHess",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.coercSet",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.ipL2",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_external": 108,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V}\n  {B : GFNBounds.Graph.BackwardPolicy G} {lam : V → ℝ},\n  B.IsInvProb lam →\n    ∀ {Bstar : ℝ},\n      0 < Bstar →\n        IsLeast (B.coercSet lam) Bstar →\n          ∀ {g2 w0 : ℝ},\n            0 ≤ g2 →\n              0 ≤ w0 →\n                IsGreatest\n                  {c |\n                    ∀ (h : V → ℝ),\n                      c * GFNBounds.Graph.nrmL2 lam (GFNBounds.Balance.perpL2 lam h) ^ 2 ≤\n                        GFNBounds.Graph.ipL2 lam h (GFNBounds.Balance.linHess B.phat lam (fun x => w0) g2 h)}\n                  (g2 * w0 / Bstar ^ 2)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.BestConstant",
+   "line": 126,
+   "kind": "theorem",
+   "doc":
+   "**The exact curvature at a constant weight.** With `w ≡ w₀ ≥ 0`, `g''(1) ≥ 0` and `B̂` the least\ncoercivity constant, the best constant `c` with `c‖h − Πh‖² ≤ ⟨h, Hh⟩` for every `h` is\n`g''(1)w₀/B̂²`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.ctorIdx":
   {"uses_value":
    ["GFNBounds.Graph.BackwardPolicy", "GFNBounds.Graph.MarkedGraph"],
@@ -27859,6 +27950,26 @@
    "kind": "theorem",
    "doc":
    "**`prop:morozov_rate`*(2)*, in the `σ_*/√λ_min` form of `proofs.tex:931`**:\n`‖h − Πh‖_{L²(λ)} ≤ (σ_*/√(min λ)) ‖(I−P)h‖_{L²(λ)}`.\n\nThe route is `proofs.tex:861–870` with its last step replaced: instead of transferring the bound\nfrom `I − Q` to `I − P` through the equality of the norms of two adjoint restricted inverses,\n`⟪h₀, h₀⟫ = ⟪h₀, (I−Q)w⟫ = ⟪(I−P)h₀, w⟫` uses only the pointwise adjointness `ipL2_pdens_qact`.\nNo aperiodicity is assumed anywhere. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.coercSet":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.nrmL2"],
+   "uses_type":
+   ["GFNBounds.Graph.BackwardPolicy", "GFNBounds.Graph.MarkedGraph"],
+   "uses_external": 9,
+   "type":
+   "{V : Type u_1} →\n  [inst : Fintype V] →\n    [DecidableEq V] → {G : GFNBounds.Graph.MarkedGraph V} → GFNBounds.Graph.BackwardPolicy G → (V → ℝ) → Set ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.BestConstant",
+   "line": 52,
+   "kind": "def",
+   "doc":
+   "**The coercivity constants** of the loop closure: the `c` with `‖h − Πh‖ ≤ c‖Ah‖` for every\n`h`, `A = P − I`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.circ_eq_zero_of_not_hatEdge":
   {"uses_value":
@@ -28013,6 +28124,42 @@
    "kind": "theorem",
    "doc":
    "**`theo:universality_graphs`*(1)*, irreducibility.** From `s`, reverse a walk `s₀ ⤳ s` down to\n`s₀`, take the wrap edge to `s_f`, then reverse a walk `s' ⤳ s_f` down to `s'`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.BackwardPolicy.bestCoerc_exists":
+  {"uses_value":
+   ["GFNBounds.Balance.Aop",
+    "GFNBounds.Balance.BhatSigma",
+    "GFNBounds.Balance.hcoer_of_graph",
+    "GFNBounds.Balance.perpL2",
+    "GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsHitExp",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.BackwardPolicy.coercSet",
+    "GFNBounds.Graph.BackwardPolicy.exists_isHitExp",
+    "GFNBounds.Graph.BackwardPolicy.exists_perp_pos",
+    "GFNBounds.Graph.BackwardPolicy.mem_coercSet",
+    "GFNBounds.Graph.BackwardPolicy.phat",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected",
+    "GFNBounds.Graph.nrmL2",
+    "GFNBounds.Graph.nrmL2_nonneg"],
+   "uses_type":
+   ["GFNBounds.Graph.BackwardPolicy",
+    "GFNBounds.Graph.BackwardPolicy.IsInvProb",
+    "GFNBounds.Graph.BackwardPolicy.PositiveOnEdges",
+    "GFNBounds.Graph.BackwardPolicy.coercSet",
+    "GFNBounds.Graph.MarkedGraph",
+    "GFNBounds.Graph.MarkedGraph.PathConnected"],
+   "uses_external": 154,
+   "type":
+   "∀ {V : Type u_1} [inst : Fintype V] [inst_1 : DecidableEq V] {G : GFNBounds.Graph.MarkedGraph V}\n  {B : GFNBounds.Graph.BackwardPolicy G},\n  G.PathConnected →\n    B.PositiveOnEdges → ∀ {lam : V → ℝ}, B.IsInvProb lam → ∃ Bstar, 0 < Bstar ∧ IsLeast (B.coercSet lam) Bstar",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.BestConstant",
+   "line": 91,
+   "kind": "theorem",
+   "doc":
+   "**The best coercivity constant exists.** The set of coercivity constants of the loop closure\nhas a least element, and it is positive. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.BackwardPolicy.balanced_iff":
   {"uses_value":

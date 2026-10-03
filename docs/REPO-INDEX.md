@@ -3001,6 +3001,11 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `telescope_Ico` | `WindowSum.lean` | `theorem telescope_Ico (f : ℕ → ℝ) {a b : ℕ} (hab : a ≤ b) : ∑ j ∈ Finset.Ico a b, (f j - f (j + 1)) = f a - f b` |
 | `sum_window_ge` | `WindowSum.lean` | `theorem sum_window_ge {r : ℝ} (hr : 0 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / r ≤ ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r - 1)` |
 | `sum_window_le` | `WindowSum.lean` | `theorem sum_window_le {r : ℝ} (hr : 0 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r - 1) ≤ (a : ℝ) ^ (-r - 1) + ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / r` |
+| `coercSet` | `BestConstant.lean` | `def coercSet (B : BackwardPolicy G) (lam : V → ℝ) : Set ℝ` |
+| `mem_coercSet` | `BestConstant.lean` | `theorem mem_coercSet {lam : V → ℝ} {c : ℝ} : c ∈ B.coercSet lam ↔ ∀ h : V → ℝ, nrmL2 lam (Balance.perpL2 lam h) ≤ c * nrmL2 lam (Balance.Aop B.phat lam h)` |
+| `exists_perp_pos` | `BestConstant.lean` | `theorem exists_perp_pos (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : ∃ h : V → ℝ, 0 < nrmL2 lam (Balance.perpL2 lam h)` |
+| `bestCoerc_exists` | `BestConstant.lean` | `theorem bestCoerc_exists (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : ∃ Bstar : ℝ, 0 < Bstar ∧ IsLeast (B.coercSet lam) Bstar` |
+| `curvature_exact_frozen` | `BestConstant.lean` | `theorem curvature_exact_frozen {lam : V → ℝ} (hl : B.IsInvProb lam) {Bstar : ℝ} (hBpos : 0 < Bstar) (hB : IsLeast (B.coercSet lam) Bstar) {g2 w0 : ℝ} (hg2 : 0 ≤ g2) (hw0 : 0 ≤ w0) : IsGreatest {c : ℝ \| ∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess B.phat lam (fun _ => w0) g2 h)} (g2 * w0 / Bstar ^ 2)` |
 | `inv_one_sub_tendsto_atTop` | `CycleBlowup.lean` | `theorem inv_one_sub_tendsto_atTop : Tendsto (fun p : ℝ => (1 - p)⁻¹) (𝓝[<] 1) atTop` |
 | `eventually_mem_Ioo_zero_one` | `CycleBlowup.lean` | `theorem eventually_mem_Ioo_zero_one : ∀ᶠ p : ℝ in 𝓝[<] 1, 0 < p ∧ p < 1` |
 | `three_div_one_sub_tendsto_atTop` | `CycleBlowup.lean` | `theorem three_div_one_sub_tendsto_atTop : Tendsto (fun p : ℝ => 3 / (1 - p)) (𝓝[<] 1) atTop` |
@@ -10499,6 +10504,27 @@ Certifies: ✅ `lem:doubling_expansion` (bucket A)
 | 53 | theorem | `sum_window_ge` | `theorem sum_window_ge {r : ℝ} (hr : 0 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / r ≤ ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r - 1)` |
 | 70 | theorem | `sum_window_le` | `theorem sum_window_le {r : ℝ} (hr : 0 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r - 1) ≤ (a : ℝ) ^ (-r - 1) + ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / r` |
 
+### `GFNBounds/Graph/BestConstant.lean`
+
+**The best coercivity constant, and the exact curvature at a constant weight**  
+
+*strict library; 151 lines; 5 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `theo:local_convergence` (bucket A)
+
+
+In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : MarkedGraph V}`, `variable {B : BackwardPolicy G}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 54 | def | `coercSet` | `def coercSet (B : BackwardPolicy G) (lam : V → ℝ) : Set ℝ` |
+| 57 | theorem | `mem_coercSet` | `theorem mem_coercSet {lam : V → ℝ} {c : ℝ} : c ∈ B.coercSet lam ↔ ∀ h : V → ℝ, nrmL2 lam (Balance.perpL2 lam h) ≤ c * nrmL2 lam (Balance.Aop B.phat lam h)` |
+| 64 | theorem | `exists_perp_pos` | `theorem exists_perp_pos (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : ∃ h : V → ℝ, 0 < nrmL2 lam (Balance.perpL2 lam h)` |
+| 93 | theorem | `bestCoerc_exists` | `theorem bestCoerc_exists (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : ∃ Bstar : ℝ, 0 < Bstar ∧ IsLeast (B.coercSet lam) Bstar` |
+| 129 | theorem | `curvature_exact_frozen` | `theorem curvature_exact_frozen {lam : V → ℝ} (hl : B.IsInvProb lam) {Bstar : ℝ} (hBpos : 0 < Bstar) (hB : IsLeast (B.coercSet lam) Bstar) {g2 w0 : ℝ} (hg2 : 0 ≤ g2) (hw0 : 0 ≤ w0) : IsGreatest {c : ℝ \| ∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess B.phat lam (fun _ => w0) g2 h)} (g2 * w0 / Bstar ^ 2)` |
+
 ### `GFNBounds/Graph/CycleBlowup.lean`
 
 **On the five-vertex cycle, `B̂_σ` blows up as the leak closes**  
@@ -12622,6 +12648,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `bddAbove_abs_g3` | `GFNBounds.Balance.C3Wrappers` |
 | `bddAbove_abs_g3W` | `GFNBounds.Balance.TrainingSpeedAssembled` |
 | `bddBelow_opBound₂` | `GFNBounds.Balance.Lift` |
+| `bestCoerc_exists` | `GFNBounds.Graph.BestConstant` |
 | `beta` | `GFNBounds.Core.Mixing` |
 | `betaCyc` | `GFNBounds.Graph.CycleRemarks` |
 | `betaCyc_add16_le` | `GFNBounds.Graph.CycleRemarks` |
@@ -12833,6 +12860,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `coerK_nonneg` | `GFNBounds.Doubling.GeomOperator` |
 | `coer_edgeU` | `GFNBounds.Balance.C3Wrappers` |
 | `coercConst_mono` | `GFNBounds.Balance.TBvsDB` |
+| `coercSet` | `GFNBounds.Graph.BestConstant` |
 | `coercive` | `GFNBounds.Doubling.GeomPoincare` |
 | `coercive_bhatK` | `GFNBounds.Balance.TBvsDBClose` |
 | `coercive_restrict` | `GFNBounds.Balance.LiftFinite` |
@@ -12948,6 +12976,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `crossingFloor_of_reach` | `GFNBounds.Balance.BoundaryBlowup` |
 | `crossingFloor_phat` | `GFNBounds.Balance.BoundaryBlowup` |
 | `ctau_pos` | `GFNBounds.Doubling.Escape` |
+| `curvature_exact_frozen` | `GFNBounds.Graph.BestConstant` |
 | `curvature_two_sided_frozen` | `GFNBounds.Graph.Diffusion` |
 | `cutA` | `GFNBounds.Graph.CycleRemarks` |
 | `cutBal_of_setting` | `GFNBounds.Doubling.DecayNotation` |
@@ -13645,6 +13674,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `exists_mul_lt` | `GFNBounds.Silva.PathSpaceMarkov` |
 | `exists_outflow_memLp_of_top` | `GFNBounds.Core.StrongUniversality` |
 | `exists_pB_le_inv_pathCount` | `GFNBounds.Silva.Remarks` |
+| `exists_perp_pos` | `GFNBounds.Graph.BestConstant` |
 | `exists_phat_pos_into` | `GFNBounds.Graph.FrozenUnstable` |
 | `exists_pos` | `GFNBounds.Doubling.Irreducible` |
 | `exists_pos_hasSum_one` | `GFNBounds.Silva.Remarks` |
@@ -15182,6 +15212,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `mem_block` | `GFNBounds.Doubling.DecayNotation` |
 | `mem_chainFinset` | `GFNBounds.Doubling.TruncationStat` |
 | `mem_closure_of_joint_inf` | `GFNBounds.Core.RLBound` |
+| `mem_coercSet` | `GFNBounds.Graph.BestConstant` |
 | `mem_densityBox` | `GFNBounds.Balance.FlowExistence` |
 | `mem_descPaths_iff` | `GFNBounds.Doubling.WeightFull` |
 | `mem_farSet` | `GFNBounds.Balance.Lojasiewicz` |

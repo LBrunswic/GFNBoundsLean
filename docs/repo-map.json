@@ -173,10 +173,11 @@
     "GFNBounds.Graph.Leakage",
     "GFNBounds.Doubling.LeakageInstance",
     "GFNBounds.Doubling.WeakUniversal",
+    "GFNBounds.Graph.BestConstant",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 168,
+   "lines": 169,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -307,10 +308,11 @@
     "GFNBounds.Graph.Diffusion",
     "GFNBounds.Graph.Leakage",
     "GFNBounds.Doubling.LeakageInstance",
-    "GFNBounds.Doubling.WeakUniversal"
+    "GFNBounds.Doubling.WeakUniversal",
+    "GFNBounds.Graph.BestConstant"
    ],
    "variables": [],
-   "lines": 2412,
+   "lines": 2416,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -45227,6 +45229,77 @@
      "private": false,
      "statement": "theorem sum_window_le {r : ℝ} (hr : 0 < r) {a b : ℕ} (ha : 1 ≤ a) (hab : a ≤ b) : ∑ j ∈ Finset.Ico a b, (j : ℝ) ^ (-r - 1) ≤ (a : ℝ) ^ (-r - 1) + ((a : ℝ) ^ (-r) - (b : ℝ) ^ (-r)) / r",
      "doc": "**Upper bound.** `Σ_{j=a}^{b−1} j^{−r−1} ≤ a^{−r−1} + (a^{−r} − b^{−r})/r`."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Graph/BestConstant.lean",
+   "title": "The best coercivity constant, and the exact curvature at a constant weight",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Graph.Diffusion",
+    "GFNBounds.Balance.TrainingSpeed"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable {G : MarkedGraph V}",
+    "variable {B : BackwardPolicy G}"
+   ],
+   "lines": 151,
+   "decls": [
+    {
+     "name": "coercSet",
+     "full": "GFNBounds.Graph.BackwardPolicy.coercSet",
+     "kind": "def",
+     "line": 54,
+     "attrs": "",
+     "private": false,
+     "statement": "def coercSet (B : BackwardPolicy G) (lam : V → ℝ) : Set ℝ",
+     "doc": "**The coercivity constants** of the loop closure: the `c` with `‖h − Πh‖ ≤ c‖Ah‖` for every `h`, `A = P − I`."
+    },
+    {
+     "name": "mem_coercSet",
+     "full": "GFNBounds.Graph.BackwardPolicy.mem_coercSet",
+     "kind": "theorem",
+     "line": 57,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mem_coercSet {lam : V → ℝ} {c : ℝ} : c ∈ B.coercSet lam ↔ ∀ h : V → ℝ, nrmL2 lam (Balance.perpL2 lam h) ≤ c * nrmL2 lam (Balance.Aop B.phat lam h)",
+     "doc": ""
+    },
+    {
+     "name": "exists_perp_pos",
+     "full": "GFNBounds.Graph.BackwardPolicy.exists_perp_pos",
+     "kind": "theorem",
+     "line": 64,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem exists_perp_pos (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : ∃ h : V → ℝ, 0 < nrmL2 lam (Balance.perpL2 lam h)",
+     "doc": "**A function with a centred part of positive norm**: the indicator of the sink, whose mean `λ(s_f)` is strictly between `0` and `1`."
+    },
+    {
+     "name": "bestCoerc_exists",
+     "full": "GFNBounds.Graph.BackwardPolicy.bestCoerc_exists",
+     "kind": "theorem",
+     "line": 93,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem bestCoerc_exists (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : ∃ Bstar : ℝ, 0 < Bstar ∧ IsLeast (B.coercSet lam) Bstar",
+     "doc": "**The best coercivity constant exists.** The set of coercivity constants of the loop closure has a least element, and it is positive."
+    },
+    {
+     "name": "curvature_exact_frozen",
+     "full": "GFNBounds.Graph.BackwardPolicy.curvature_exact_frozen",
+     "kind": "theorem",
+     "line": 129,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem curvature_exact_frozen {lam : V → ℝ} (hl : B.IsInvProb lam) {Bstar : ℝ} (hBpos : 0 < Bstar) (hB : IsLeast (B.coercSet lam) Bstar) {g2 w0 : ℝ} (hg2 : 0 ≤ g2) (hw0 : 0 ≤ w0) : IsGreatest {c : ℝ | ∀ h : V → ℝ, c * nrmL2 lam (Balance.perpL2 lam h) ^ 2 ≤ ipL2 lam h (Balance.linHess B.phat lam (fun _ => w0) g2 h)} (g2 * w0 / Bstar ^ 2)",
+     "doc": "**The exact curvature at a constant weight.** With `w ≡ w₀ ≥ 0`, `g''(1) ≥ 0` and `B̂` the least coercivity constant, the best constant `c` with `c‖h − Πh‖² ≤ ⟨h, Hh⟩` for every `h` is `g''(1)w₀/B̂²`."
     }
    ],
    "library": "strict",

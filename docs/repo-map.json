@@ -172,10 +172,11 @@
     "GFNBounds.Graph.Diffusion",
     "GFNBounds.Graph.Leakage",
     "GFNBounds.Doubling.LeakageInstance",
+    "GFNBounds.Doubling.WeakUniversal",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 167,
+   "lines": 168,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -305,10 +306,11 @@
     "GFNBounds.Doubling.PolicyTable",
     "GFNBounds.Graph.Diffusion",
     "GFNBounds.Graph.Leakage",
-    "GFNBounds.Doubling.LeakageInstance"
+    "GFNBounds.Doubling.LeakageInstance",
+    "GFNBounds.Doubling.WeakUniversal"
    ],
    "variables": [],
-   "lines": 2407,
+   "lines": 2412,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -44113,6 +44115,87 @@
      "private": false,
      "statement": "theorem doubling_unsolvable (L : Stat S none) (hstar : GrowthCond S) : (L.defectRange ≤ L.kerPi ∧ L.defectRange.topologicalClosure = L.kerPi ∧ L.defectRange ≠ L.kerPi) ∧ ∃ fi fe : St → ℝ, (∀ x, 0 ≤ fi x) ∧ (∀ x, 0 ≤ fe x) ∧ MemLp fi 2 L.mu ∧ MemLp fe 2 L.mu ∧ ∑' x, L.lam x * fi x = 1 ∧ ∑' x, L.lam x * fe x = 1 ∧ ¬ ∃ f : St → ℝ, MemLp f 2 L.mu ∧ ∀ᵐ x ∂L.mu, f x - pstar S none f x = fi x - fe x",
      "doc": "**`prop:doubling_unsolvable`.** Under `eq:doubling_star`, on the positive recurrent loop closure: *(1)* `(Id − P⋆)L²(λ)` is a dense proper linear subspace of `ker Π`; *(2)* some pair of probability densities of `L²(λ)` has its difference outside it, so the exact `L²` flow-matching problem it poses has no solution."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/WeakUniversal.lean",
+   "title": "Weak universality on the infinite doubling chain",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.GeomOperator",
+    "GFNBounds.Doubling.Main",
+    "GFNBounds.Core.Universality"
+   ],
+   "variables": [
+    "variable {S : Setting}",
+    "variable (L : Stat S none)"
+   ],
+   "lines": 204,
+   "decls": [
+    {
+     "name": "weaklyUniversal_of_dense",
+     "full": "GFNBounds.Doubling.Stat.weaklyUniversal_of_dense",
+     "kind": "theorem",
+     "line": 69,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem weaklyUniversal_of_dense {Q : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu} (hQ : ‖Q‖ ≤ 1) (hQ1 : Q L.oneLp = L.oneLp) (hdense : (LinearMap.range (((1 : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu) - Q : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu) : Lp ℝ 2 L.mu →ₗ[ℝ] Lp ℝ 2 L.mu)).topologicalClosure = L.kerPi) : Core.WeaklyUniversal Q L.piL2",
+     "doc": "**A contraction fixing the constants, whose defect range is dense in `ker Π`, is weakly `L²(λ)`-universal.** Approximate a mean-zero target by a defect, the function by a simple one, and add the simple function's bound: the defect does not see the constant."
+    },
+    {
+     "name": "weaklyUniversal_pstarL2",
+     "full": "GFNBounds.Doubling.Stat.weaklyUniversal_pstarL2",
+     "kind": "theorem",
+     "line": 138,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem weaklyUniversal_pstarL2 : Core.WeaklyUniversal (L.pstarL2 (rowOnChain_none S)) L.piL2",
+     "doc": "**Weak `L²(λ)`-universality for `P⋆`**, the function action of this chapter."
+    },
+    {
+     "name": "densL2_oneLp",
+     "full": "GFNBounds.Doubling.Stat.densL2_oneLp",
+     "kind": "theorem",
+     "line": 144,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem densL2_oneLp : L.densL2 (rowOnChain_none S) L.oneLp = L.oneLp",
+     "doc": "`P1 = 1`: the density action fixes the constants, `λ` being invariant."
+    },
+    {
+     "name": "topologicalClosure_densDefectRange",
+     "full": "GFNBounds.Doubling.Stat.topologicalClosure_densDefectRange",
+     "kind": "theorem",
+     "line": 151,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem topologicalClosure_densDefectRange : (LinearMap.range (((1 : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu) - L.densL2 (rowOnChain_none S) : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu) : Lp ℝ 2 L.mu →ₗ[ℝ] Lp ℝ 2 L.mu)).topologicalClosure = L.kerPi",
+     "doc": "**The range of `Id − P` is dense in `ker Π`**, `P` the density action: a vector orthogonal to it is a fixed point of the adjoint `P⋆`, hence a constant."
+    },
+    {
+     "name": "weaklyUniversal_densL2",
+     "full": "GFNBounds.Doubling.Stat.weaklyUniversal_densL2",
+     "kind": "theorem",
+     "line": 186,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem weaklyUniversal_densL2 : Core.WeaklyUniversal (L.densL2 (rowOnChain_none S)) L.piL2",
+     "doc": "**Weak `L²(λ)`-universality for `P`**, the density action: the main text's reading, the kernel taken as the star backward policy and the free density as its inflow."
+    },
+    {
+     "name": "weaklyUniversal_family",
+     "full": "GFNBounds.Doubling.weaklyUniversal_family",
+     "kind": "theorem",
+     "line": 196,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem weaklyUniversal_family {c : ℝ} (hc : 0 < c) (hc1 : c < 1) (hS : ∀ j, S.eps j = epsCS c 1 j) : ∃ L : Stat S none, Core.WeaklyUniversal (L.densL2 (rowOnChain_none S)) L.piL2 ∧ Core.WeaklyUniversal (L.pstarL2 (rowOnChain_none S)) L.piL2",
+     "doc": "**On the positive recurrent rows the frozen family is weakly `L²(λ)`-universal.** For `ε = ε_{c,1}` with `0 < c < 1` the loop closure has an invariant probability, and for it the operator statement holds."
     }
    ],
    "library": "strict",

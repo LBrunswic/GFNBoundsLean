@@ -1127,16 +1127,20 @@
       ],
       "block_sha256": "a195679a74255fa14e2c571e4c8a2d931dafc5a63a9e7878e45d9e56aba029da",
       "lean_files": [
-        "GFNBounds/Doubling/Unsolvable.lean"
+        "GFNBounds/Doubling/Unsolvable.lean",
+        "GFNBounds/Doubling/WeakUniversal.lean"
       ],
       "decls": [
         "GFNBounds.Doubling.doubling_unsolvable",
         "GFNBounds.Doubling.Stat.defectRange",
-        "GFNBounds.Doubling.Stat.exists_unsolvable_pair"
+        "GFNBounds.Doubling.Stat.exists_unsolvable_pair",
+        "GFNBounds.Doubling.Stat.weaklyUniversal_densL2",
+        "GFNBounds.Doubling.Stat.weaklyUniversal_pstarL2",
+        "GFNBounds.Doubling.weaklyUniversal_family"
       ],
       "status": "closed",
       "bucket": "A",
-      "scope_notes": "",
+      "scope_notes": "2026-10-03: WEAK UNIVERSALITY, Doubling.Stat.weaklyUniversal_densL2 / weaklyUniversal_pstarL2 (GFNBounds/Doubling/WeakUniversal.lean): for every invariant probability of the loop closure the frozen family is weakly L2(lambda)-universal, for the density action P (the main text's reading) and for its adjoint P*; the defect range is dense in ker Pi, a simple-function approximant is bounded, and adding its bound is free since both operators fix the constants. On the rows s = 1, 0 < c < 1 the invariant probability exists (weaklyUniversal_family), so there the chain is weakly but not strongly L2-universal; the summable-mixing hypothesis of the general theorem, which fails there, is sufficient and not necessary. The draft's 'open' for weak universality on the infinite chain is settled by this. ",
       "source": "app_doubling.tex"
     },
     {

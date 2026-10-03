@@ -10322,6 +10322,28 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 | 488 | theorem | `exists_unsolvable_pair` | `theorem exists_unsolvable_pair (hstar : GrowthCond S) : ∃ fi fe : St → ℝ, (∀ x, 0 ≤ fi x) ∧ (∀ x, 0 ≤ fe x) ∧ MemLp fi 2 L.mu ∧ MemLp fe 2 L.mu ∧ ∑' x, L.lam x * fi x = 1 ∧ ∑' x, L.lam x * fe x = 1 ∧ ¬ ∃ f : St → ℝ, MemLp f 2 L.mu ∧ ∀ᵐ x ∂L.mu, f x - pstar S none f x = fi x - fe x` |
 | 590 | theorem | `doubling_unsolvable` | `theorem doubling_unsolvable (L : Stat S none) (hstar : GrowthCond S) : (L.defectRange ≤ L.kerPi ∧ L.defectRange.topologicalClosure = L.kerPi ∧ L.defectRange ≠ L.kerPi) ∧ ∃ fi fe : St → ℝ, (∀ x, 0 ≤ fi x) ∧ (∀ x, 0 ≤ fe x) ∧ MemLp fi 2 L.mu ∧ MemLp fe 2 L.mu ∧ ∑' x, L.lam x * fi x = 1 ∧ ∑' x, L.lam x * fe x = 1 ∧ ¬ ∃ f : St → ℝ, MemLp f 2 L.mu ∧ ∀ᵐ x ∂L.mu, f x - pstar S none f x = fi x - fe x` |
 
+### `GFNBounds/Doubling/WeakUniversal.lean`
+
+**Weak universality on the infinite doubling chain**  
+
+*strict library; 204 lines; 6 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `prop:doubling_unsolvable` (bucket A)
+
+
+In scope: `variable {S : Setting}`, `variable (L : Stat S none)`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 69 | theorem | `weaklyUniversal_of_dense` | `theorem weaklyUniversal_of_dense {Q : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu} (hQ : ‖Q‖ ≤ 1) (hQ1 : Q L.oneLp = L.oneLp) (hdense : (LinearMap.range (((1 : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu) - Q : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu) : Lp ℝ 2 L.mu →ₗ[ℝ] Lp ℝ 2 L.mu)).topologicalClosure = L.kerPi) : Core.WeaklyUniversal Q L.piL2` |
+| 138 | theorem | `weaklyUniversal_pstarL2` | `theorem weaklyUniversal_pstarL2 : Core.WeaklyUniversal (L.pstarL2 (rowOnChain_none S)) L.piL2` |
+| 144 | theorem | `densL2_oneLp` | `theorem densL2_oneLp : L.densL2 (rowOnChain_none S) L.oneLp = L.oneLp` |
+| 151 | theorem | `topologicalClosure_densDefectRange` | `theorem topologicalClosure_densDefectRange : (LinearMap.range (((1 : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu) - L.densL2 (rowOnChain_none S) : Lp ℝ 2 L.mu →L[ℝ] Lp ℝ 2 L.mu) : Lp ℝ 2 L.mu →ₗ[ℝ] Lp ℝ 2 L.mu)).topologicalClosure = L.kerPi` |
+| 186 | theorem | `weaklyUniversal_densL2` | `theorem weaklyUniversal_densL2 : Core.WeaklyUniversal (L.densL2 (rowOnChain_none S)) L.piL2` |
+| 196 | theorem | `weaklyUniversal_family` | `theorem weaklyUniversal_family {c : ℝ} (hc : 0 < c) (hc1 : c < 1) (hS : ∀ j, S.eps j = epsCS c 1 j) : ∃ L : Stat S none, Core.WeaklyUniversal (L.densL2 (rowOnChain_none S)) L.piL2 ∧ Core.WeaklyUniversal (L.pstarL2 (rowOnChain_none S)) L.piL2` |
+
 ### `GFNBounds/Doubling/Weight.lean`
 
 **`lem:doubling_weight`: the weight of a descent deviates from `1` by `O(1/ℓ)` in mean**  
@@ -13134,6 +13156,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `densL2` | `GFNBounds.Doubling.AdjointL2` |
 | `densL2_apply` | `GFNBounds.Doubling.AdjointL2` |
 | `densL2_mul_piL2` | `GFNBounds.Doubling.AdjointL2` |
+| `densL2_oneLp` | `GFNBounds.Doubling.WeakUniversal` |
 | `densLin` | `GFNBounds.Balance.WeightedL2` |
 | `densLp` | `GFNBounds.Doubling.AdjointL2` |
 | `densLp_add` | `GFNBounds.Doubling.AdjointL2` |
@@ -16610,6 +16633,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `toReal_rnDeriv_wt_pert` | `GFNBounds.Balance.FreezingGeneral2` |
 | `toStat` | `GFNBounds.Doubling.Irreducible` |
 | `topologicalClosure_defectRange` | `GFNBounds.Doubling.Unsolvable` |
+| `topologicalClosure_densDefectRange` | `GFNBounds.Doubling.WeakUniversal` |
 | `training_speed_DB_edge_lift` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `training_speed_DB_edge_lift_nonvacuous` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `training_speed_full` | `GFNBounds.Balance.TrainingSpeed` |
@@ -16942,10 +16966,14 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `weaklyUniversalAt_of_tendsto` | `GFNBounds.Core.Universality` |
 | `weaklyUniversal_Lp` | `GFNBounds.Core.UniversalityLp` |
 | `weaklyUniversal_const_kernel` | `GFNBounds.Core.FamilyUniversality` |
+| `weaklyUniversal_densL2` | `GFNBounds.Doubling.WeakUniversal` |
+| `weaklyUniversal_family` | `GFNBounds.Doubling.WeakUniversal` |
 | `weaklyUniversal_fixedPolicyFamily_iff` | `GFNBounds.Core.FamilyUniversality` |
 | `weaklyUniversal_fixedPolicyFamily_of_kernel` | `GFNBounds.Core.FamilyUniversality` |
+| `weaklyUniversal_of_dense` | `GFNBounds.Doubling.WeakUniversal` |
 | `weaklyUniversal_of_kernel` | `GFNBounds.Core.Kernel` |
 | `weaklyUniversal_of_massPreserving` | `GFNBounds.Core.Flow` |
+| `weaklyUniversal_pstarL2` | `GFNBounds.Doubling.WeakUniversal` |
 | `weight` | `GFNBounds.Balance.TBGradient` |
 | `weightDev` | `GFNBounds.Doubling.WeightFull` |
 | `weightDev_eq_sum_paths` | `GFNBounds.Doubling.WeightFull` |

@@ -57,7 +57,7 @@ The **bucket** says how far the rest is, and every non-`A` row carries its obstr
 | H | `theo:doubling_unbounded` | 1925–1999 | ✅ closed | A | `Doubling/Unbounded.lean`<br>`Doubling/UnboundedL2.lean`<br>`Doubling/RayleighBridge.lean` | — |
 | H | `lem:doubling_ramp` | 2001–2065 | ✅ closed | A | `Doubling/Ramp.lean` | — |
 | H | `cor:doubling_family` | 2067–2104 | ✅ closed | A | `Doubling/Family.lean`<br>`Doubling/Main.lean` | — |
-| H | `prop:doubling_unsolvable` | 2106–2161 | ✅ closed | A | `Doubling/Unsolvable.lean` | — |
+| H | `prop:doubling_unsolvable` | 2106–2161 | ✅ closed | A | `Doubling/Unsolvable.lean`<br>`Doubling/WeakUniversal.lean` | — |
 | H | `rem:doubling_geometric` | 2163–2169 | ✅ closed | A | `Doubling/Unbounded.lean` | — |
 | H | `cor:doubling_truncation` | 2179–2316 | ✅ closed | A | `Doubling/TruncationBhat.lean`<br>`Doubling/Truncation.lean`<br>`Doubling/Kac.lean`<br>`Doubling/Main.lean`<br>`Doubling/RayleighBridge.lean` | — |
 | A | `theo:sampling_theorem` | 28–39 | ✅ closed | A | `Core/Sampling.lean`<br>`Graph/Sampling.lean`<br>`Core/SamplingGeneral.lean` | — |

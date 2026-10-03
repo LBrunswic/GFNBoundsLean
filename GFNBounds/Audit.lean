@@ -117,6 +117,7 @@ import GFNBounds.Doubling.PolicyTable
 import GFNBounds.Graph.Diffusion
 import GFNBounds.Graph.Leakage
 import GFNBounds.Doubling.LeakageInstance
+import GFNBounds.Doubling.WeakUniversal
 
 /-!
 # Axiom audit
@@ -2405,3 +2406,7 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.Leak.sampler_leaks_doubling
 #print axioms GFNBounds.Doubling.Leak.retProb_src_lt_one
 #print axioms GFNBounds.Doubling.Leak.sampler_escapes_doubling
+-- weak L²(λ)-universality on the doubling graph, both readings — GFNBounds/Doubling/WeakUniversal.lean
+#print axioms GFNBounds.Doubling.Stat.weaklyUniversal_densL2
+#print axioms GFNBounds.Doubling.Stat.weaklyUniversal_pstarL2
+#print axioms GFNBounds.Doubling.weaklyUniversal_family

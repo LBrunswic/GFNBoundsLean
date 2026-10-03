@@ -167,4 +167,5 @@ import GFNBounds.Doubling.LeakageInstance
 import GFNBounds.Doubling.WeakUniversal
 import GFNBounds.Graph.BestConstant
 import GFNBounds.Graph.SlowMode
+import GFNBounds.Graph.GreenNorm
 import GFNBounds.Audit

@@ -3372,6 +3372,13 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `frozen_unstable_full_db` | `FrozenUnstableDB.lean` | `theorem frozen_unstable_full_db (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (γ : MarkedCirculation G) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) (hnu0 : ∀ u v, ¬ G.hatEdge u v → nuHat u v = 0) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : (∀ u v, 0 ≤ epsCirc eps γ.circ u v) ∧ (∀ u v, epsCirc eps γ.circ u v ≤ B.perturbedFlow lam eps γ.circ u v) ∧ B.dbLoss g nuHat (B.perturbedFlow lam eps γ.circ + epsCirc eps γ.circ) = 0 ∧ 0 < B.dbLoss g nuHat (B.perturbedFlow lam eps γ.circ)` |
 | `frozen_not_stable_fm` | `FrozenUnstableDB.lean` | `theorem frozen_not_stable_fm (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nu : V → ℝ} (hnu : ∀ x, 0 < nu x) : ¬ Stable G (fun F => B.fmLoss g nu (edgeInflow F))` |
 | `frozen_not_stable_db` | `FrozenUnstableDB.lean` | `theorem frozen_not_stable_db (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) : ¬ Stable G (B.dbLoss g nuHat)` |
+| `isUnit_of_injective_euclid` | `GreenNorm.lean` | `theorem isUnit_of_injective_euclid {T : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hinj : Function.Injective T) : IsUnit T` |
+| `resolventOp` | `GreenNorm.lean` | `noncomputable def resolventOp (B : BackwardPolicy G) (lam : V → ℝ) : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V` |
+| `greenOp` | `GreenNorm.lean` | `noncomputable def greenOp (B : BackwardPolicy G) (lam : V → ℝ) : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V` |
+| `resolvent_injective` | `GreenNorm.lean` | `theorem resolvent_injective (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : Function.Injective (B.resolventOp lam)` |
+| `greenOp_resolvent` | `GreenNorm.lean` | `theorem greenOp_resolvent (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : (1 - Balance.densOp lam B.phat) * B.greenOp lam = 1 - Balance.meanOp lam ∧ B.greenOp lam * (1 - Balance.densOp lam B.phat) = 1 - Balance.meanOp lam ∧ Balance.meanOp lam * B.greenOp lam = 0` |
+| `isLeast_greenOp_norm` | `GreenNorm.lean` | `theorem isLeast_greenOp_norm (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : IsLeast (B.coercSet lam) ‖B.greenOp lam‖` |
+| `curvature_exact_green` | `GreenNorm.lean` | `theorem curvature_exact_green (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) {g2 w0 : ℝ} (hg2 : 0 ≤ g2) (hw0 : 0 ≤ w0) : IsGreatest (B.curvSet lam (fun _ => w0) g2) (g2 * w0 / ‖B.greenOp lam‖ ^ 2)` |
 | `absorbN` | `Leakage.lean` | `noncomputable def absorbN (Q : V → V → ℝ≥0∞) (k : V → ℝ≥0∞) : ℕ → V → ℝ≥0∞` |
 | `absorb` | `Leakage.lean` | `noncomputable def absorb (Q : V → V → ℝ≥0∞) (k : V → ℝ≥0∞) (x : V) : ℝ≥0∞` |
 | `fwdLaw` | `Leakage.lean` | `noncomputable def fwdLaw (Q : V → V → ℝ≥0∞) (k μ : V → ℝ≥0∞) (m : ℝ≥0∞) : ℕ → V → ℝ≥0∞` |
@@ -11018,6 +11025,29 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`, `varia
 | 451 | theorem | `frozen_not_stable_fm` | `theorem frozen_not_stable_fm (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nu : V → ℝ} (hnu : ∀ x, 0 < nu x) : ¬ Stable G (fun F => B.fmLoss g nu (edgeInflow F))` |
 | 469 | theorem | `frozen_not_stable_db` | `theorem frozen_not_stable_db (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) : ¬ Stable G (B.dbLoss g nuHat)` |
 
+### `GFNBounds/Graph/GreenNorm.lean`
+
+**The best coercivity constant is the norm of the Green operator**  
+
+*strict library; 239 lines; 7 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `theo:local_convergence` (bucket A)
+
+
+In scope: `variable {V : Type*} [Fintype V] [DecidableEq V]`, `variable {G : MarkedGraph V}`, `variable {B : BackwardPolicy G}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 57 | theorem | `isUnit_of_injective_euclid` | `theorem isUnit_of_injective_euclid {T : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hinj : Function.Injective T) : IsUnit T` |
+| 73 | def | `resolventOp` | `noncomputable def resolventOp (B : BackwardPolicy G) (lam : V → ℝ) : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V` |
+| 79 | def | `greenOp` | `noncomputable def greenOp (B : BackwardPolicy G) (lam : V → ℝ) : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V` |
+| 85 | theorem | `resolvent_injective` | `theorem resolvent_injective (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : Function.Injective (B.resolventOp lam)` |
+| 127 | theorem | `greenOp_resolvent` | `theorem greenOp_resolvent (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : (1 - Balance.densOp lam B.phat) * B.greenOp lam = 1 - Balance.meanOp lam ∧ B.greenOp lam * (1 - Balance.densOp lam B.phat) = 1 - Balance.meanOp lam ∧ Balance.meanOp lam * B.greenOp lam = 0` |
+| 175 | theorem | `isLeast_greenOp_norm` | `theorem isLeast_greenOp_norm (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : IsLeast (B.coercSet lam) ‖B.greenOp lam‖` |
+| 230 | theorem | `curvature_exact_green` | `theorem curvature_exact_green (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) {g2 w0 : ℝ} (hg2 : 0 ≤ g2) (hw0 : 0 ≤ w0) : IsGreatest (B.curvSet lam (fun _ => w0) g2) (g2 * w0 / ‖B.greenOp lam‖ ^ 2)` |
+
 ### `GFNBounds/Graph/Leakage.lean`
 
 **Leakage: the sampler of a frozen backward policy whose backward walk can escape**  
@@ -13028,6 +13058,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `ctau_pos` | `GFNBounds.Doubling.Escape` |
 | `curvSet` | `GFNBounds.Graph.SlowMode` |
 | `curvature_exact_frozen` | `GFNBounds.Graph.BestConstant` |
+| `curvature_exact_green` | `GFNBounds.Graph.GreenNorm` |
 | `curvature_two_sided_frozen` | `GFNBounds.Graph.Diffusion` |
 | `cutA` | `GFNBounds.Graph.CycleRemarks` |
 | `cutBal_of_setting` | `GFNBounds.Doubling.DecayNotation` |
@@ -14130,6 +14161,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `green` | `GFNBounds.Graph.CycleExample` |
 | `greenMap` | `GFNBounds.Graph.Morozov` |
 | `greenMap_apply` | `GFNBounds.Graph.Morozov` |
+| `greenOp` | `GFNBounds.Graph.GreenNorm` |
+| `greenOp_resolvent` | `GFNBounds.Graph.GreenNorm` |
 | `green_comparison` | `GFNBounds.Doubling.RecurrenceClass` |
 | `green_ge_of_posRecurrent` | `GFNBounds.Doubling.RecurrenceClass` |
 | `green_le_of_transient` | `GFNBounds.Doubling.RecurrenceClass` |
@@ -14582,6 +14615,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `isInvariant_of_bind` | `GFNBounds.Doubling.OperatorGeneral` |
 | `isInvariant_of_isInvProb` | `GFNBounds.Core.Adjoint` |
 | `isLeast_bhatK` | `GFNBounds.Balance.TBvsDB` |
+| `isLeast_greenOp_norm` | `GFNBounds.Graph.GreenNorm` |
 | `isLeast_opNorm_densAct` | `GFNBounds.Core.Adjoint` |
 | `isLeast_opNorm_funAct` | `GFNBounds.Core.Adjoint` |
 | `isMarkovKernel_coinKernel` | `GFNBounds.Core.UniversalityBody` |
@@ -14610,6 +14644,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `isTargetI_epsTargetI` | `GFNBounds.Graph.PartialSupportClose` |
 | `isTarget_epsTarget` | `GFNBounds.Core.FamilyUniversality` |
 | `isTransientAt_iff_not_recurrent` | `GFNBounds.Doubling.RecurrenceClass` |
+| `isUnit_of_injective_euclid` | `GFNBounds.Graph.GreenNorm` |
 | `isUnit_resolventOp` | `GFNBounds.Doubling.OperatorFiniteSum` |
 | `item_three_masses_on_internal` | `GFNBounds.Graph.UniversalityClosing` |
 | `iter_ptFn_eq` | `GFNBounds.Doubling.RecurrenceClass` |
@@ -16108,11 +16143,13 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `residuals_le` | `GFNBounds.Core.Universality` |
 | `residuals_le_of_kernel` | `GFNBounds.Core.UniversalityKernelBound` |
 | `residuals_le_two_norm_defect` | `GFNBounds.Core.Universality` |
+| `resolventOp` | `GFNBounds.Graph.GreenNorm` |
 | `resolventOp_injective` | `GFNBounds.Doubling.OperatorFinite` |
 | `resolventOp_mul_pi` | `GFNBounds.Doubling.OperatorFinite` |
 | `resolvent_eq_tsum_of_bdd` | `GFNBounds.Doubling.OperatorFiniteSum` |
 | `resolvent_identities` | `GFNBounds.Doubling.Operator` |
 | `resolvent_identities_of_inverse` | `GFNBounds.Doubling.OperatorFinite` |
+| `resolvent_injective` | `GFNBounds.Graph.GreenNorm` |
 | `resolvent_inverse` | `GFNBounds.Doubling.Operator` |
 | `resolvent_norm_le` | `GFNBounds.Doubling.Operator` |
 | `restrictWith` | `GFNBounds.Core.FamilyUniversality` |

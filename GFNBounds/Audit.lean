@@ -120,6 +120,7 @@ import GFNBounds.Doubling.LeakageInstance
 import GFNBounds.Doubling.WeakUniversal
 import GFNBounds.Graph.BestConstant
 import GFNBounds.Graph.SlowMode
+import GFNBounds.Graph.GreenNorm
 
 /-!
 # Axiom audit
@@ -2420,3 +2421,7 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Graph.BackwardPolicy.linear_decay
 #print axioms GFNBounds.Graph.BackwardPolicy.slowMode_trajectory
 #print axioms GFNBounds.Graph.BackwardPolicy.slowest_rate_frozen
+-- the best coercivity constant is the norm of the Green operator — GFNBounds/Graph/GreenNorm.lean
+#print axioms GFNBounds.Graph.BackwardPolicy.greenOp_resolvent
+#print axioms GFNBounds.Graph.BackwardPolicy.isLeast_greenOp_norm
+#print axioms GFNBounds.Graph.BackwardPolicy.curvature_exact_green

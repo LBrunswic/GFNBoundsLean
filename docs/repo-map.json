@@ -175,10 +175,11 @@
     "GFNBounds.Doubling.WeakUniversal",
     "GFNBounds.Graph.BestConstant",
     "GFNBounds.Graph.SlowMode",
+    "GFNBounds.Graph.GreenNorm",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 170,
+   "lines": 171,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -311,10 +312,11 @@
     "GFNBounds.Doubling.LeakageInstance",
     "GFNBounds.Doubling.WeakUniversal",
     "GFNBounds.Graph.BestConstant",
-    "GFNBounds.Graph.SlowMode"
+    "GFNBounds.Graph.SlowMode",
+    "GFNBounds.Graph.GreenNorm"
    ],
    "variables": [],
-   "lines": 2422,
+   "lines": 2427,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -49144,6 +49146,96 @@
      "private": false,
      "statement": "theorem frozen_not_stable_db (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) : ¬ Stable G (B.dbLoss g nuHat)",
      "doc": "**`prop:frozen_unstable_full`, the DB loss is unstable in the sense of `eq:def_stability`** (`proofs.tex:689`, and \"the same pair `(F, F₀)` therefore witnesses DB instability\", `proofs.tex:701`)."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Graph/GreenNorm.lean",
+   "title": "The best coercivity constant is the norm of the Green operator",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Graph.SlowMode"
+   ],
+   "variables": [
+    "variable {V : Type*} [Fintype V] [DecidableEq V]",
+    "variable {G : MarkedGraph V}",
+    "variable {B : BackwardPolicy G}"
+   ],
+   "lines": 239,
+   "decls": [
+    {
+     "name": "isUnit_of_injective_euclid",
+     "full": "GFNBounds.Graph.BackwardPolicy.isUnit_of_injective_euclid",
+     "kind": "theorem",
+     "line": 57,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isUnit_of_injective_euclid {T : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V} (hinj : Function.Injective T) : IsUnit T",
+     "doc": "**An injective endomorphism of `EuclideanSpace ℝ V` is a unit**, the space being finite-dimensional."
+    },
+    {
+     "name": "resolventOp",
+     "full": "GFNBounds.Graph.BackwardPolicy.resolventOp",
+     "kind": "def",
+     "line": 73,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def resolventOp (B : BackwardPolicy G) (lam : V → ℝ) : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V",
+     "doc": "`I − P + Π` on `L²(λ)`, read through the weighting, `P` the density action of the loop closure and `Π` the mean."
+    },
+    {
+     "name": "greenOp",
+     "full": "GFNBounds.Graph.BackwardPolicy.greenOp",
+     "kind": "def",
+     "line": 79,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def greenOp (B : BackwardPolicy G) (lam : V → ℝ) : EuclideanSpace ℝ V →L[ℝ] EuclideanSpace ℝ V",
+     "doc": "**The Green operator** of the loop closure on `L²(λ)`, read through the weighting: `S = (I − P + Π)^{-1} − Π`."
+    },
+    {
+     "name": "resolvent_injective",
+     "full": "GFNBounds.Graph.BackwardPolicy.resolvent_injective",
+     "kind": "theorem",
+     "line": 85,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem resolvent_injective (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : Function.Injective (B.resolventOp lam)",
+     "doc": "**`I − P + Π` is injective**: `Π` kills its image of `v` down to `Πv`, so `Πv = 0`, then `Av = 0`, and coercivity leaves `v = 0`."
+    },
+    {
+     "name": "greenOp_resolvent",
+     "full": "GFNBounds.Graph.BackwardPolicy.greenOp_resolvent",
+     "kind": "theorem",
+     "line": 127,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem greenOp_resolvent (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : (1 - Balance.densOp lam B.phat) * B.greenOp lam = 1 - Balance.meanOp lam ∧ B.greenOp lam * (1 - Balance.densOp lam B.phat) = 1 - Balance.meanOp lam ∧ Balance.meanOp lam * B.greenOp lam = 0",
+     "doc": "**The resolvent identities**: `(I − P)S = I − Π`, `S(I − P) = I − Π` and `ΠS = 0`."
+    },
+    {
+     "name": "isLeast_greenOp_norm",
+     "full": "GFNBounds.Graph.BackwardPolicy.isLeast_greenOp_norm",
+     "kind": "theorem",
+     "line": 175,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem isLeast_greenOp_norm (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) : IsLeast (B.coercSet lam) ‖B.greenOp lam‖",
+     "doc": "**The best coercivity constant is the norm of the Green operator.** On the loop closure of a finite path-connected marked graph with a policy positive on its edges, `‖S‖` is the least `c` with `‖h − Πh‖ ≤ c‖Ah‖` for every `h`."
+    },
+    {
+     "name": "curvature_exact_green",
+     "full": "GFNBounds.Graph.BackwardPolicy.curvature_exact_green",
+     "kind": "theorem",
+     "line": 230,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem curvature_exact_green (hpc : G.PathConnected) (hpos : B.PositiveOnEdges) {lam : V → ℝ} (hl : B.IsInvProb lam) {g2 w0 : ℝ} (hg2 : 0 ≤ g2) (hw0 : 0 ≤ w0) : IsGreatest (B.curvSet lam (fun _ => w0) g2) (g2 * w0 / ‖B.greenOp lam‖ ^ 2)",
+     "doc": "**The exact curvature at a constant weight, at the norm of the Green operator.** With `w ≡ w₀ ≥ 0` and `g''(1) ≥ 0`, the best constant `c` with `c‖h − Πh‖² ≤ ⟨h, Hh⟩` for every `h` is `g''(1)w₀/‖S‖²`."
     }
    ],
    "library": "strict",

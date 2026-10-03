@@ -3362,6 +3362,17 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `frozen_unstable_full_db` | `FrozenUnstableDB.lean` | `theorem frozen_unstable_full_db (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) {lam : V → ℝ} (h : B.IsInvProb lam) (γ : MarkedCirculation G) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) (hnu0 : ∀ u v, ¬ G.hatEdge u v → nuHat u v = 0) {eps : ℝ} (heps : 0 < eps) (hadm : B.AdmissibleEps lam eps γ.circ) : (∀ u v, 0 ≤ epsCirc eps γ.circ u v) ∧ (∀ u v, epsCirc eps γ.circ u v ≤ B.perturbedFlow lam eps γ.circ u v) ∧ B.dbLoss g nuHat (B.perturbedFlow lam eps γ.circ + epsCirc eps γ.circ) = 0 ∧ 0 < B.dbLoss g nuHat (B.perturbedFlow lam eps γ.circ)` |
 | `frozen_not_stable_fm` | `FrozenUnstableDB.lean` | `theorem frozen_not_stable_fm (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nu : V → ℝ} (hnu : ∀ x, 0 < nu x) : ¬ Stable G (fun F => B.fmLoss g nu (edgeInflow F))` |
 | `frozen_not_stable_db` | `FrozenUnstableDB.lean` | `theorem frozen_not_stable_db (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) : ¬ Stable G (B.dbLoss g nuHat)` |
+| `absorbN` | `Leakage.lean` | `noncomputable def absorbN (Q : V → V → ℝ≥0∞) (k : V → ℝ≥0∞) : ℕ → V → ℝ≥0∞` |
+| `absorb` | `Leakage.lean` | `noncomputable def absorb (Q : V → V → ℝ≥0∞) (k : V → ℝ≥0∞) (x : V) : ℝ≥0∞` |
+| `fwdLaw` | `Leakage.lean` | `noncomputable def fwdLaw (Q : V → V → ℝ≥0∞) (k μ : V → ℝ≥0∞) (m : ℝ≥0∞) : ℕ → V → ℝ≥0∞` |
+| `stopLaw` | `Leakage.lean` | `noncomputable def stopLaw (Q : V → V → ℝ≥0∞) (k μ : V → ℝ≥0∞) (m Z : ℝ≥0∞) (ρ : V → ℝ≥0∞) (x : V) : ℝ≥0∞` |
+| `fwdLaw_eq` | `Leakage.lean` | `theorem fwdLaw_eq (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (n : ℕ) (x : V) : fwdLaw Q k μ m n x = μ x * absorbN Q k n x / m` |
+| `stopLaw_eq` | `Leakage.lean` | `theorem stopLaw_eq (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (x : V) : stopLaw Q k μ m Z ρ x = Z * ρ x * absorb Q k x / m` |
+| `mass_step` | `Leakage.lean` | `theorem mass_step (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (n : ℕ) : (∑' x, fwdLaw Q k μ m (n + 1) x) + ∑' y, fwdLaw Q k μ m n y * (Z * ρ y / μ y) = ∑' y, fwdLaw Q k μ m n y` |
+| `mass_partial` | `Leakage.lean` | `theorem mass_partial (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (N : ℕ) : (∑ n ∈ Finset.range N, ∑' y, fwdLaw Q k μ m n y * (Z * ρ y / μ y)) + ∑' x, fwdLaw Q k μ m N x = ∑' x, fwdLaw Q k μ m 0 x` |
+| `fwdLaw_zero_mass` | `Leakage.lean` | `theorem fwdLaw_zero_mass (hm : m = ∑' x, μ x * k x) (hm0 : m ≠ 0) (hmt : m ≠ ∞) : (∑' x, fwdLaw Q k μ m 0 x) = 1` |
+| `sampler_leaks` | `Leakage.lean` | `theorem sampler_leaks (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (hm : m = ∑' x, μ x * k x) (hm0 : m ≠ 0) (hmt : m ≠ ∞) : (∀ x, stopLaw Q k μ m Z ρ x = Z * ρ x * absorb Q k x / m) ∧ (∑' x, stopLaw Q k μ m Z ρ x) = Z * (∑' x, ρ x * absorb Q k x) / m ∧ (∑' x, stopLaw Q k μ m Z ρ x) ≤ 1 ∧ Z * (∑' x, ρ x * absorb Q k x) ≤ m` |
+| `sampler_leaks_matched` | `Leakage.lean` | `theorem sampler_leaks_matched (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (hm : Z = ∑' x, μ x * k x) (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : (∀ x, stopLaw Q k μ Z Z ρ x = ρ x * absorb Q k x) ∧ (∑' x, stopLaw Q k μ Z Z ρ x) = ∑' x, ρ x * absorb Q k x` |
 | `maxOver` | `Morozov.lean` | `noncomputable def maxOver (G : MarkedGraph V) (u : V → ℝ) : ℝ` |
 | `minOver` | `Morozov.lean` | `noncomputable def minOver (G : MarkedGraph V) (u : V → ℝ) : ℝ` |
 | `le_maxOver` | `Morozov.lean` | `theorem le_maxOver (u : V → ℝ) (x : V) : u x ≤ maxOver G u` |
@@ -10907,6 +10918,33 @@ In scope: `variable {V : Type*} [Fintype V]`, `variable [DecidableEq V]`, `varia
 | 451 | theorem | `frozen_not_stable_fm` | `theorem frozen_not_stable_fm (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nu : V → ℝ} (hnu : ∀ x, 0 < nu x) : ¬ Stable G (fun F => B.fmLoss g nu (edgeInflow F))` |
 | 469 | theorem | `frozen_not_stable_db` | `theorem frozen_not_stable_db (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) : ¬ Stable G (B.dbLoss g nuHat)` |
 
+### `GFNBounds/Graph/Leakage.lean`
+
+**Leakage: the sampler of a frozen backward policy whose backward walk can escape**  
+
+*strict library; 211 lines; 11 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `prop:doubling_phase` (bucket A)
+
+
+In scope: `variable {V : Type*}`, `variable {Q : V → V → ℝ≥0∞} {k μ ρ : V → ℝ≥0∞} {m Z : ℝ≥0∞}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 65 | def | `absorbN` | `noncomputable def absorbN (Q : V → V → ℝ≥0∞) (k : V → ℝ≥0∞) : ℕ → V → ℝ≥0∞` |
+| 70 | def | `absorb` | `noncomputable def absorb (Q : V → V → ℝ≥0∞) (k : V → ℝ≥0∞) (x : V) : ℝ≥0∞` |
+| 75 | def | `fwdLaw` | `noncomputable def fwdLaw (Q : V → V → ℝ≥0∞) (k μ : V → ℝ≥0∞) (m : ℝ≥0∞) : ℕ → V → ℝ≥0∞` |
+| 80 | def | `stopLaw` | `noncomputable def stopLaw (Q : V → V → ℝ≥0∞) (k μ : V → ℝ≥0∞) (m Z : ℝ≥0∞) (ρ : V → ℝ≥0∞) (x : V) : ℝ≥0∞` |
+| 87 | theorem | `fwdLaw_eq` | `theorem fwdLaw_eq (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (n : ℕ) (x : V) : fwdLaw Q k μ m n x = μ x * absorbN Q k n x / m` |
+| 109 | theorem | `stopLaw_eq` | `theorem stopLaw_eq (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (x : V) : stopLaw Q k μ m Z ρ x = Z * ρ x * absorb Q k x / m` |
+| 125 | theorem | `mass_step` | `theorem mass_step (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (n : ℕ) : (∑' x, fwdLaw Q k μ m (n + 1) x) + ∑' y, fwdLaw Q k μ m n y * (Z * ρ y / μ y) = ∑' y, fwdLaw Q k μ m n y` |
+| 144 | theorem | `mass_partial` | `theorem mass_partial (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (N : ℕ) : (∑ n ∈ Finset.range N, ∑' y, fwdLaw Q k μ m n y * (Z * ρ y / μ y)) + ∑' x, fwdLaw Q k μ m N x = ∑' x, fwdLaw Q k μ m 0 x` |
+| 155 | theorem | `fwdLaw_zero_mass` | `theorem fwdLaw_zero_mass (hm : m = ∑' x, μ x * k x) (hm0 : m ≠ 0) (hmt : m ≠ ∞) : (∑' x, fwdLaw Q k μ m 0 x) = 1` |
+| 165 | theorem | `sampler_leaks` | `theorem sampler_leaks (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (hm : m = ∑' x, μ x * k x) (hm0 : m ≠ 0) (hmt : m ≠ ∞) : (∀ x, stopLaw Q k μ m Z ρ x = Z * ρ x * absorb Q k x / m) ∧ (∑' x, stopLaw Q k μ m Z ρ x) = Z * (∑' x, ρ x * absorb Q k x) / m ∧ (∑' x, stopLaw Q k μ m Z ρ x) ≤ 1 ∧ Z * (∑' x, ρ x * absorb Q k x) ≤ m` |
+| 197 | theorem | `sampler_leaks_matched` | `theorem sampler_leaks_matched (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (hm : Z = ∑' x, μ x * k x) (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : (∀ x, stopLaw Q k μ Z Z ρ x = ρ x * absorb Q k x) ∧ (∑' x, stopLaw Q k μ Z Z ρ x) = ∑' x, ρ x * absorb Q k x` |
+
 ### `GFNBounds/Graph/Morozov.lean`
 
 **The training rate in the variables of Morozov et al., with no Markov chain underneath**  
@@ -12410,6 +12448,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `abs_sum_sub_le` | `GFNBounds.Doubling.TotalVariation` |
 | `abs_taylor_le_of_lipschitz` | `GFNBounds.Core.FirstVariationGeneral` |
 | `absolutelyContinuous_comp` | `GFNBounds.Balance.FreezingGeneral2` |
+| `absorb` | `GFNBounds.Graph.Leakage` |
+| `absorbN` | `GFNBounds.Graph.Leakage` |
 | `ac_flowOf` | `GFNBounds.Balance.GdDiffusionGeneral` |
 | `adj_Q` | `GFNBounds.Balance.TBHessian` |
 | `adjoint_densL2` | `GFNBounds.Doubling.AdjointL2` |
@@ -13827,6 +13867,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `funOp_pow_wtL2` | `GFNBounds.Doubling.Remarks` |
 | `funOp_wtL2` | `GFNBounds.Doubling.Remarks` |
 | `fwd` | `GFNBounds.Balance.TBGradient` |
+| `fwdLaw` | `GFNBounds.Graph.Leakage` |
+| `fwdLaw_eq` | `GFNBounds.Graph.Leakage` |
+| `fwdLaw_zero_mass` | `GFNBounds.Graph.Leakage` |
 | `fwdStar` | `GFNBounds.Graph.Universality` |
 | `fwdStarE` | `GFNBounds.Core.FamilyUniversality` |
 | `g` | `GFNBounds.Balance.Freezing` |
@@ -14960,8 +15003,10 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `mass_monotone_flow` | `GFNBounds.Balance.MassAscent` |
 | `mass_nonneg` | `GFNBounds.Doubling.LpLayer` |
 | `mass_nonpos` | `GFNBounds.Balance.FreezingGeneral2` |
+| `mass_partial` | `GFNBounds.Graph.Leakage` |
 | `mass_pstar_le` | `GFNBounds.Doubling.LpContraction` |
 | `mass_ratio_bound` | `GFNBounds.Doubling.Unbounded` |
+| `mass_step` | `GFNBounds.Graph.Leakage` |
 | `mass_tendsto` | `GFNBounds.Balance.BoundaryBlowup` |
 | `mass_two_pstar_le` | `GFNBounds.Doubling.LpLayer` |
 | `matched` | `GFNBounds.Core.NegativeControl` |
@@ -16011,6 +16056,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `sampler_inference` | `GFNBounds.Core.NegativeControl` |
 | `sampler_isGenFlow` | `GFNBounds.Core.NegativeControl` |
 | `sampler_law` | `GFNBounds.Graph.Sampling` |
+| `sampler_leaks` | `GFNBounds.Graph.Leakage` |
+| `sampler_leaks_matched` | `GFNBounds.Graph.Leakage` |
 | `sampler_termLaw` | `GFNBounds.Graph.Sampling` |
 | `sampling_theorem` | `GFNBounds.Core.SamplingGeneral` |
 | `sbar` | `GFNBounds.Doubling.Kac` |
@@ -16202,6 +16249,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `sternBound_of_map_eq` | `GFNBounds.Core.UniversalityBody` |
 | `sternBound_of_rnDeriv_le` | `GFNBounds.Core.UniversalityBody` |
 | `stop` | `GFNBounds.Core.SamplingGeneral` |
+| `stopLaw` | `GFNBounds.Graph.Leakage` |
+| `stopLaw_eq` | `GFNBounds.Graph.Leakage` |
 | `stop_ae_eq` | `GFNBounds.Core.SamplingGeneral` |
 | `stop_mul` | `GFNBounds.Core.Sampling` |
 | `stop_mul_occ` | `GFNBounds.Core.Sampling` |

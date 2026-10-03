@@ -170,10 +170,11 @@
     "GFNBounds.Balance.TBvsDBClose",
     "GFNBounds.Balance.TrainingSpeedDB",
     "GFNBounds.Graph.Diffusion",
+    "GFNBounds.Graph.Leakage",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 165,
+   "lines": 166,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -301,10 +302,11 @@
     "GFNBounds.Balance.TrainingSpeedDB",
     "GFNBounds.Doubling.GeomFamily",
     "GFNBounds.Doubling.PolicyTable",
-    "GFNBounds.Graph.Diffusion"
+    "GFNBounds.Graph.Diffusion",
+    "GFNBounds.Graph.Leakage"
    ],
    "variables": [],
-   "lines": 2397,
+   "lines": 2402,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -48820,6 +48822,135 @@
      "private": false,
      "statement": "theorem frozen_not_stable_db (hpc : G.PathConnected) (hbpos : B.PositiveOnEdges) (γ : MarkedCirculation G) (hsupp : ∀ u v, γ.circ u v ≠ 0 → G.hatEdge u v) {g : ℝ → ℝ} (hg1 : g 1 = 0) (hgpos : ∀ x : ℝ, 0 < x → x ≠ 1 → 0 < g x) {nuHat : V → V → ℝ} (hnupos : ∀ u v, G.hatEdge u v → 0 < nuHat u v) : ¬ Stable G (B.dbLoss g nuHat)",
      "doc": "**`prop:frozen_unstable_full`, the DB loss is unstable in the sense of `eq:def_stability`** (`proofs.tex:689`, and \"the same pair `(F, F₀)` therefore witnesses DB instability\", `proofs.tex:701`)."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Graph/Leakage.lean",
+   "title": "Leakage: the sampler of a frozen backward policy whose backward walk can escape",
+   "labels": [],
+   "scope_disclosed": true,
+   "imports": [
+    "Mathlib"
+   ],
+   "variables": [
+    "variable {V : Type*}",
+    "variable {Q : V → V → ℝ≥0∞} {k μ ρ : V → ℝ≥0∞} {m Z : ℝ≥0∞}"
+   ],
+   "lines": 211,
+   "decls": [
+    {
+     "name": "absorbN",
+     "full": "GFNBounds.Graph.Leakage.absorbN",
+     "kind": "def",
+     "line": 65,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def absorbN (Q : V → V → ℝ≥0∞) (k : V → ℝ≥0∞) : ℕ → V → ℝ≥0∞",
+     "doc": "**`(Qⁿk)(x)`**: the probability that the backward walk from `x`, moving by `Q` among the internal states, steps to the source at step `n + 1` exactly."
+    },
+    {
+     "name": "absorb",
+     "full": "GFNBounds.Graph.Leakage.absorb",
+     "kind": "def",
+     "line": 70,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def absorb (Q : V → V → ℝ≥0∞) (k : V → ℝ≥0∞) (x : V) : ℝ≥0∞",
+     "doc": "**`h(x)`**: the probability that the backward walk from `x` ever reaches the source."
+    },
+    {
+     "name": "fwdLaw",
+     "full": "GFNBounds.Graph.Leakage.fwdLaw",
+     "kind": "def",
+     "line": 75,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def fwdLaw (Q : V → V → ℝ≥0∞) (k μ : V → ℝ≥0∞) (m : ℝ≥0∞) : ℕ → V → ℝ≥0∞",
+     "doc": "**The sampler's law at step `n`**, among the states it has not left: it starts at `x` with probability `μ(x)k(x)/m` and moves from `y` to `x` with probability `μ(x)Q(x,y)/μ(y)`."
+    },
+    {
+     "name": "stopLaw",
+     "full": "GFNBounds.Graph.Leakage.stopLaw",
+     "kind": "def",
+     "line": 80,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def stopLaw (Q : V → V → ℝ≥0∞) (k μ : V → ℝ≥0∞) (m Z : ℝ≥0∞) (ρ : V → ℝ≥0∞) (x : V) : ℝ≥0∞",
+     "doc": "**The stopping law**: the sampler stops at `x` at some step, at the rate `Zρ(x)/μ(x)`."
+    },
+    {
+     "name": "fwdLaw_eq",
+     "full": "GFNBounds.Graph.Leakage.fwdLaw_eq",
+     "kind": "theorem",
+     "line": 87,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fwdLaw_eq (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (n : ℕ) (x : V) : fwdLaw Q k μ m n x = μ x * absorbN Q k n x / m",
+     "doc": "**The step law is the backward absorption read forward**: `μ(x)(Qⁿk)(x)/m`."
+    },
+    {
+     "name": "stopLaw_eq",
+     "full": "GFNBounds.Graph.Leakage.stopLaw_eq",
+     "kind": "theorem",
+     "line": 109,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem stopLaw_eq (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (x : V) : stopLaw Q k μ m Z ρ x = Z * ρ x * absorb Q k x / m",
+     "doc": "**The stopping law is the sink row times the absorption probability**: `Zρ(x)h(x)/m`, whatever the flow, through its initial mass only."
+    },
+    {
+     "name": "mass_step",
+     "full": "GFNBounds.Graph.Leakage.mass_step",
+     "kind": "theorem",
+     "line": 125,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_step (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (n : ℕ) : (∑' x, fwdLaw Q k μ m (n + 1) x) + ∑' y, fwdLaw Q k μ m n y * (Z * ρ y / μ y) = ∑' y, fwdLaw Q k μ m n y",
+     "doc": "**One step of mass accounting**: what is running at step `n + 1` plus what stops at step `n` is what was running at step `n`."
+    },
+    {
+     "name": "mass_partial",
+     "full": "GFNBounds.Graph.Leakage.mass_partial",
+     "kind": "theorem",
+     "line": 144,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem mass_partial (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (N : ℕ) : (∑ n ∈ Finset.range N, ∑' y, fwdLaw Q k μ m n y * (Z * ρ y / μ y)) + ∑' x, fwdLaw Q k μ m N x = ∑' x, fwdLaw Q k μ m 0 x",
+     "doc": "**Mass accounting to step `N`**: what has stopped before step `N` plus what is still running at step `N` is the initial law's mass."
+    },
+    {
+     "name": "fwdLaw_zero_mass",
+     "full": "GFNBounds.Graph.Leakage.fwdLaw_zero_mass",
+     "kind": "theorem",
+     "line": 155,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem fwdLaw_zero_mass (hm : m = ∑' x, μ x * k x) (hm0 : m ≠ 0) (hmt : m ≠ ∞) : (∑' x, fwdLaw Q k μ m 0 x) = 1",
+     "doc": "The initial law has mass one."
+    },
+    {
+     "name": "sampler_leaks",
+     "full": "GFNBounds.Graph.Leakage.sampler_leaks",
+     "kind": "theorem",
+     "line": 165,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sampler_leaks (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (hm : m = ∑' x, μ x * k x) (hm0 : m ≠ 0) (hmt : m ≠ ∞) : (∀ x, stopLaw Q k μ m Z ρ x = Z * ρ x * absorb Q k x / m) ∧ (∑' x, stopLaw Q k μ m Z ρ x) = Z * (∑' x, ρ x * absorb Q k x) / m ∧ (∑' x, stopLaw Q k μ m Z ρ x) ≤ 1 ∧ Z * (∑' x, ρ x * absorb Q k x) ≤ m",
+     "doc": "**The sampler of a frozen backward policy leaks.** For a flow of the frozen family, balanced at every internal state, with positive finite state mass and initial mass `m`, the sampler started from the source stops at `x` with probability `Zρ(x)h(x)/m`; it stops at all with probability `Z⟨ρ,h⟩/m ≤ 1` and escapes otherwise; and `m ≥ Z⟨ρ,h⟩`."
+    },
+    {
+     "name": "sampler_leaks_matched",
+     "full": "GFNBounds.Graph.Leakage.sampler_leaks_matched",
+     "kind": "theorem",
+     "line": 197,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sampler_leaks_matched (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q x y) + Z * ρ y) (hm : Z = ∑' x, μ x * k x) (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : (∀ x, stopLaw Q k μ Z Z ρ x = ρ x * absorb Q k x) ∧ (∑' x, stopLaw Q k μ Z Z ρ x) = ∑' x, ρ x * absorb Q k x",
+     "doc": "**At matched mass the escape probability is the backward escape probability.** If the initial mass equals the terminal mass and the sink row is a probability, the sampler stops at `x` with probability `ρ(x)h(x)`, and at all with probability `⟨ρ,h⟩`: it escapes with the probability that a backward trajectory started from the sink row escapes, and when it stops it draws the sink row tilted by `h`."
     }
    ],
    "library": "strict",

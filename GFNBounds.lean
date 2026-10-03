@@ -162,4 +162,5 @@ import GFNBounds.Balance.StableFrozenGeneral
 import GFNBounds.Balance.TBvsDBClose
 import GFNBounds.Balance.TrainingSpeedDB
 import GFNBounds.Graph.Diffusion
+import GFNBounds.Graph.Leakage
 import GFNBounds.Audit

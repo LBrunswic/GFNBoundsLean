@@ -17359,6 +17359,167 @@
    "doc":
    "A **leveled** marked graph: a height rising by exactly one along every edge, with the source\nat height `0`. Every source-to-sink walk then has the same length `ℓ(s_f)`, which is the paper's\n`t_m`. The height is real-valued so that `ℓ(y) = ℓ(x) − 1` needs no truncation. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.stopLaw_eq":
+  {"uses_value":
+   ["GFNBounds.Graph.Leakage.absorb",
+    "GFNBounds.Graph.Leakage.absorbN",
+    "GFNBounds.Graph.Leakage.fwdLaw",
+    "GFNBounds.Graph.Leakage.fwdLaw_eq",
+    "GFNBounds.Graph.Leakage.stopLaw"],
+   "uses_type":
+   ["GFNBounds.Graph.Leakage.absorb", "GFNBounds.Graph.Leakage.stopLaw"],
+   "uses_external": 75,
+   "type":
+   "∀ {V : Type u_1} {Q : V → V → ENNReal} {k μ ρ : V → ENNReal} {m Z : ENNReal},\n  (∀ (y : V), μ y ≠ 0) →\n    (∀ (y : V), μ y ≠ ⊤) →\n      ∀ (x : V), GFNBounds.Graph.Leakage.stopLaw Q k μ m Z ρ x = Z * ρ x * GFNBounds.Graph.Leakage.absorb Q k x / m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 107,
+   "kind": "theorem",
+   "doc":
+   "**The stopping law is the sink row times the absorption probability**: `Zρ(x)h(x)/m`,\nwhatever the flow, through its initial mass only. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.stopLaw":
+  {"uses_value": ["GFNBounds.Graph.Leakage.fwdLaw"],
+   "uses_type": [],
+   "uses_external": 16,
+   "type":
+   "{V : Type u_1} → (V → V → ENNReal) → (V → ENNReal) → (V → ENNReal) → ENNReal → ENNReal → (V → ENNReal) → V → ENNReal",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 79,
+   "kind": "def",
+   "doc":
+   "**The stopping law**: the sampler stops at `x` at some step, at the rate `Zρ(x)/μ(x)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.sampler_leaks_matched":
+  {"uses_value":
+   ["GFNBounds.Graph.Leakage.absorb",
+    "GFNBounds.Graph.Leakage.sampler_leaks",
+    "GFNBounds.Graph.Leakage.stopLaw"],
+   "uses_type":
+   ["GFNBounds.Graph.Leakage.absorb", "GFNBounds.Graph.Leakage.stopLaw"],
+   "uses_external": 79,
+   "type":
+   "∀ {V : Type u_1} {Q : V → V → ENNReal} {k μ ρ : V → ENNReal} {Z : ENNReal},\n  (∀ (y : V), μ y ≠ 0) →\n    (∀ (y : V), μ y ≠ ⊤) →\n      (∀ (y : V), μ y = ∑' (x : V), μ x * Q x y + Z * ρ y) →\n        Z = ∑' (x : V), μ x * k x →\n          Z ≠ 0 →\n            Z ≠ ⊤ →\n              (∀ (x : V), GFNBounds.Graph.Leakage.stopLaw Q k μ Z Z ρ x = ρ x * GFNBounds.Graph.Leakage.absorb Q k x) ∧\n                ∑' (x : V), GFNBounds.Graph.Leakage.stopLaw Q k μ Z Z ρ x =\n                  ∑' (x : V), ρ x * GFNBounds.Graph.Leakage.absorb Q k x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 192,
+   "kind": "theorem",
+   "doc":
+   "**At matched mass the escape probability is the backward escape probability.** If the\ninitial mass equals the terminal mass and the sink row is a probability, the sampler stops at `x`\nwith probability `ρ(x)h(x)`, and at all with probability `⟨ρ,h⟩`: it escapes with the probability\nthat a backward trajectory started from the sink row escapes, and when it stops it draws the sink\nrow tilted by `h`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.sampler_leaks":
+  {"uses_value":
+   ["GFNBounds.Graph.Leakage.absorb",
+    "GFNBounds.Graph.Leakage.fwdLaw",
+    "GFNBounds.Graph.Leakage.fwdLaw_zero_mass",
+    "GFNBounds.Graph.Leakage.mass_partial",
+    "GFNBounds.Graph.Leakage.stopLaw",
+    "GFNBounds.Graph.Leakage.stopLaw_eq"],
+   "uses_type":
+   ["GFNBounds.Graph.Leakage.absorb", "GFNBounds.Graph.Leakage.stopLaw"],
+   "uses_external": 109,
+   "type":
+   "∀ {V : Type u_1} {Q : V → V → ENNReal} {k μ ρ : V → ENNReal} {m Z : ENNReal},\n  (∀ (y : V), μ y ≠ 0) →\n    (∀ (y : V), μ y ≠ ⊤) →\n      (∀ (y : V), μ y = ∑' (x : V), μ x * Q x y + Z * ρ y) →\n        m = ∑' (x : V), μ x * k x →\n          m ≠ 0 →\n            m ≠ ⊤ →\n              (∀ (x : V),\n                  GFNBounds.Graph.Leakage.stopLaw Q k μ m Z ρ x = Z * ρ x * GFNBounds.Graph.Leakage.absorb Q k x / m) ∧\n                ∑' (x : V), GFNBounds.Graph.Leakage.stopLaw Q k μ m Z ρ x =\n                    (Z * ∑' (x : V), ρ x * GFNBounds.Graph.Leakage.absorb Q k x) / m ∧\n                  ∑' (x : V), GFNBounds.Graph.Leakage.stopLaw Q k μ m Z ρ x ≤ 1 ∧\n                    Z * ∑' (x : V), ρ x * GFNBounds.Graph.Leakage.absorb Q k x ≤ m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 161,
+   "kind": "theorem",
+   "doc":
+   "**The sampler of a frozen backward policy leaks.** For a flow of the frozen family, balanced\nat every internal state, with positive finite state mass and initial mass `m`, the sampler started\nfrom the source stops at `x` with probability `Zρ(x)h(x)/m`; it stops at all with probability\n`Z⟨ρ,h⟩/m ≤ 1` and escapes otherwise; and `m ≥ Z⟨ρ,h⟩`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.mass_step":
+  {"uses_value": ["GFNBounds.Graph.Leakage.fwdLaw"],
+   "uses_type": ["GFNBounds.Graph.Leakage.fwdLaw"],
+   "uses_external": 57,
+   "type":
+   "∀ {V : Type u_1} {Q : V → V → ENNReal} {k μ ρ : V → ENNReal} {m Z : ENNReal},\n  (∀ (y : V), μ y ≠ 0) →\n    (∀ (y : V), μ y ≠ ⊤) →\n      (∀ (y : V), μ y = ∑' (x : V), μ x * Q x y + Z * ρ y) →\n        ∀ (n : ℕ),\n          ∑' (x : V), GFNBounds.Graph.Leakage.fwdLaw Q k μ m (n + 1) x +\n              ∑' (y : V), GFNBounds.Graph.Leakage.fwdLaw Q k μ m n y * (Z * ρ y / μ y) =\n            ∑' (y : V), GFNBounds.Graph.Leakage.fwdLaw Q k μ m n y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 123,
+   "kind": "theorem",
+   "doc":
+   "**One step of mass accounting**: what is running at step `n + 1` plus what stops at step\n`n` is what was running at step `n`. This is where balance enters. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.mass_partial":
+  {"uses_value":
+   ["GFNBounds.Graph.Leakage.fwdLaw", "GFNBounds.Graph.Leakage.mass_step"],
+   "uses_type": ["GFNBounds.Graph.Leakage.fwdLaw"],
+   "uses_external": 56,
+   "type":
+   "∀ {V : Type u_1} {Q : V → V → ENNReal} {k μ ρ : V → ENNReal} {m Z : ENNReal},\n  (∀ (y : V), μ y ≠ 0) →\n    (∀ (y : V), μ y ≠ ⊤) →\n      (∀ (y : V), μ y = ∑' (x : V), μ x * Q x y + Z * ρ y) →\n        ∀ (N : ℕ),\n          ∑ n ∈ Finset.range N, ∑' (y : V), GFNBounds.Graph.Leakage.fwdLaw Q k μ m n y * (Z * ρ y / μ y) +\n              ∑' (x : V), GFNBounds.Graph.Leakage.fwdLaw Q k μ m N x =\n            ∑' (x : V), GFNBounds.Graph.Leakage.fwdLaw Q k μ m 0 x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 142,
+   "kind": "theorem",
+   "doc":
+   "**Mass accounting to step `N`**: what has stopped before step `N` plus what is still running\nat step `N` is the initial law's mass. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.fwdLaw_zero_mass":
+  {"uses_value": ["GFNBounds.Graph.Leakage.fwdLaw"],
+   "uses_type": ["GFNBounds.Graph.Leakage.fwdLaw"],
+   "uses_external": 45,
+   "type":
+   "∀ {V : Type u_1} {Q : V → V → ENNReal} {k μ : V → ENNReal} {m : ENNReal},\n  m = ∑' (x : V), μ x * k x → m ≠ 0 → m ≠ ⊤ → ∑' (x : V), GFNBounds.Graph.Leakage.fwdLaw Q k μ m 0 x = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 154,
+   "kind": "theorem",
+   "doc": "The initial law has mass one. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.fwdLaw_eq":
+  {"uses_value":
+   ["GFNBounds.Graph.Leakage.absorbN", "GFNBounds.Graph.Leakage.fwdLaw"],
+   "uses_type":
+   ["GFNBounds.Graph.Leakage.absorbN", "GFNBounds.Graph.Leakage.fwdLaw"],
+   "uses_external": 78,
+   "type":
+   "∀ {V : Type u_1} {Q : V → V → ENNReal} {k μ : V → ENNReal} {m : ENNReal},\n  (∀ (y : V), μ y ≠ 0) →\n    (∀ (y : V), μ y ≠ ⊤) →\n      ∀ (n : ℕ) (x : V), GFNBounds.Graph.Leakage.fwdLaw Q k μ m n x = μ x * GFNBounds.Graph.Leakage.absorbN Q k n x / m",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 86,
+   "kind": "theorem",
+   "doc":
+   "**The step law is the backward absorption read forward**: `μ(x)(Qⁿk)(x)/m`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.fwdLaw":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 3,
+   "type":
+   "{V : Type u_1} → (V → V → ENNReal) → (V → ENNReal) → (V → ENNReal) → ENNReal → ℕ → V → ENNReal",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 73,
+   "kind": "def",
+   "doc":
+   "**The sampler's law at step `n`**, among the states it has not left: it starts at `x` with\nprobability `μ(x)k(x)/m` and moves from `y` to `x` with probability `μ(x)Q(x,y)/μ(y)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.absorbN":
+  {"uses_value": [],
+   "uses_type": [],
+   "uses_external": 3,
+   "type":
+   "{V : Type u_1} → (V → V → ENNReal) → (V → ENNReal) → ℕ → V → ENNReal",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 63,
+   "kind": "def",
+   "doc":
+   "**`(Qⁿk)(x)`**: the probability that the backward walk from `x`, moving by `Q` among the\ninternal states, steps to the source at step `n + 1` exactly. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Graph.Leakage.absorb":
+  {"uses_value": ["GFNBounds.Graph.Leakage.absorbN"],
+   "uses_type": [],
+   "uses_external": 6,
+   "type": "{V : Type u_1} → (V → V → ENNReal) → (V → ENNReal) → V → ENNReal",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Graph.Leakage",
+   "line": 69,
+   "kind": "def",
+   "doc":
+   "**`h(x)`**: the probability that the backward walk from `x` ever reaches the source. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Graph.IsZeroFlow":
   {"uses_value":
    ["GFNBounds.Graph.IsFlow",

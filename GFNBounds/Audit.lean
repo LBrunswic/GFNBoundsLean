@@ -115,6 +115,7 @@ import GFNBounds.Balance.TrainingSpeedDB
 import GFNBounds.Doubling.GeomFamily
 import GFNBounds.Doubling.PolicyTable
 import GFNBounds.Graph.Diffusion
+import GFNBounds.Graph.Leakage
 
 /-!
 # Axiom audit
@@ -2395,3 +2396,7 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Graph.BackwardPolicy.gd_diffusion_frozen
 #print axioms GFNBounds.Graph.BackwardPolicy.local_convergence_frozen
 #print axioms GFNBounds.Graph.BackwardPolicy.curvature_two_sided_frozen
+
+-- the sampler of a frozen backward policy whose backward walk can escape — GFNBounds/Graph/Leakage.lean
+#print axioms GFNBounds.Graph.Leakage.sampler_leaks
+#print axioms GFNBounds.Graph.Leakage.sampler_leaks_matched

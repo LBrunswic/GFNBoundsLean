@@ -31,7 +31,7 @@ The **bucket** says how far the rest is, and every non-`A` row carries its obstr
 | H | `lem:doubling_excursion` | 406–432 | ✅ closed | A | `Doubling/Excursion.lean` | — |
 | H | `lem:doubling_supersolution` | 434–482 | ✅ closed | A | `Doubling/Supersolution.lean` | — |
 | H | `prop:doubling_length` | 484–509 | ✅ closed | A | `Doubling/Length.lean` | — |
-| H | `prop:doubling_phase` | 520–634 | ✅ closed | A | `Doubling/Summable.lean`<br>`Doubling/StatExists.lean`<br>`Doubling/PhaseExists.lean`<br>`Doubling/PhaseEmpty.lean`<br>`Doubling/Lyapunov.lean`<br>`Doubling/PointwiseInv.lean`<br>`Doubling/PhaseRecurrence.lean`<br>`Doubling/RecurrenceClass.lean`<br>`Doubling/Length.lean`<br>`Doubling/Irreducible.lean` | — |
+| H | `prop:doubling_phase` | 520–634 | ✅ closed | A | `Doubling/Summable.lean`<br>`Doubling/StatExists.lean`<br>`Doubling/PhaseExists.lean`<br>`Doubling/PhaseEmpty.lean`<br>`Doubling/Lyapunov.lean`<br>`Doubling/PointwiseInv.lean`<br>`Doubling/PhaseRecurrence.lean`<br>`Doubling/RecurrenceClass.lean`<br>`Doubling/Length.lean`<br>`Doubling/Irreducible.lean`<br>`Graph/Leakage.lean` | — |
 | H | `prop:doubling_cut` | 651–701 | ✅ closed | A | `Doubling/CutBalance.lean`<br>`Doubling/Ratios.lean` | — |
 | H | `prop:doubling_exponent` | 703–719 | ✅ closed | A | `Doubling/Exponent.lean` | — |
 | H | `lem:doubling_cramer_root` | 721–777 | ✅ closed | A | `Doubling/Cramer.lean` | — |

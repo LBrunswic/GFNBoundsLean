@@ -116,6 +116,7 @@ import GFNBounds.Doubling.GeomFamily
 import GFNBounds.Doubling.PolicyTable
 import GFNBounds.Graph.Diffusion
 import GFNBounds.Graph.Leakage
+import GFNBounds.Doubling.LeakageInstance
 
 /-!
 # Axiom audit
@@ -2400,3 +2401,7 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 -- the sampler of a frozen backward policy whose backward walk can escape — GFNBounds/Graph/Leakage.lean
 #print axioms GFNBounds.Graph.Leakage.sampler_leaks
 #print axioms GFNBounds.Graph.Leakage.sampler_leaks_matched
+-- the doubling graph leaks: the stopping probability is the return probability of the source — GFNBounds/Doubling/LeakageInstance.lean
+#print axioms GFNBounds.Doubling.Leak.sampler_leaks_doubling
+#print axioms GFNBounds.Doubling.Leak.retProb_src_lt_one
+#print axioms GFNBounds.Doubling.Leak.sampler_escapes_doubling

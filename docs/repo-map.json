@@ -171,10 +171,11 @@
     "GFNBounds.Balance.TrainingSpeedDB",
     "GFNBounds.Graph.Diffusion",
     "GFNBounds.Graph.Leakage",
+    "GFNBounds.Doubling.LeakageInstance",
     "GFNBounds.Audit"
    ],
    "variables": [],
-   "lines": 166,
+   "lines": 167,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -303,10 +304,11 @@
     "GFNBounds.Doubling.GeomFamily",
     "GFNBounds.Doubling.PolicyTable",
     "GFNBounds.Graph.Diffusion",
-    "GFNBounds.Graph.Leakage"
+    "GFNBounds.Graph.Leakage",
+    "GFNBounds.Doubling.LeakageInstance"
    ],
    "variables": [],
-   "lines": 2402,
+   "lines": 2407,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -33182,6 +33184,168 @@
      "private": false,
      "statement": "theorem lam_one_ge {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = c / ((j : ℝ) + 1)) {M : ℝ} (hM : ∀ n : ℕ, L.hitInt n ≤ M) : (2 + S.jbar / (1 - c))⁻¹ ≤ L.lam (.lad 1)",
      "doc": "**Step 6 of `cor:doubling_truncation`.** `λ_1 ≥ (2 + j̄/(1−c))^{-1}`, a bound free of `K`."
+    }
+   ],
+   "library": "strict",
+   "tracked": true,
+   "root_reachable": true
+  },
+  {
+   "file": "GFNBounds/Doubling/LeakageInstance.lean",
+   "title": "The doubling graph leaks: the sampler on a transient row",
+   "labels": [
+    "def:doubling_setting"
+   ],
+   "scope_disclosed": true,
+   "imports": [
+    "GFNBounds.Doubling.PhaseRecurrence",
+    "GFNBounds.Graph.Leakage"
+   ],
+   "variables": [
+    "variable (S : Setting)",
+    "variable {S}"
+   ],
+   "lines": 238,
+   "decls": [
+    {
+     "name": "Q",
+     "full": "GFNBounds.Doubling.Leak.Q",
+     "kind": "def",
+     "line": 64,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def Q (i i' : ℕ) : ℝ≥0∞",
+     "doc": "**The backward step among the rungs.** From the rung `i + 1` to the rung `2(i + 1)` with probability `ε(i + 1)`, and to the rung `i` with probability `1 − ε(i + 1)` when `i ≥ 1`."
+    },
+    {
+     "name": "k",
+     "full": "GFNBounds.Doubling.Leak.k",
+     "kind": "def",
+     "line": 69,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def k (i : ℕ) : ℝ≥0∞",
+     "doc": "**The backward step to the source**, from the first rung only."
+    },
+    {
+     "name": "ρ",
+     "full": "GFNBounds.Doubling.Leak.ρ",
+     "kind": "def",
+     "line": 72,
+     "attrs": "",
+     "private": false,
+     "statement": "noncomputable def ρ (i : ℕ) : ℝ≥0∞",
+     "doc": "**The sink row**: the target row."
+    },
+    {
+     "name": "lad_ne_src",
+     "full": "GFNBounds.Doubling.Leak.lad_ne_src",
+     "kind": "theorem",
+     "line": 76,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lad_ne_src {j : ℕ} (hj : j ≠ 0) : St.lad j ≠ St.src",
+     "doc": ""
+    },
+    {
+     "name": "lad_succ_ne_src",
+     "full": "GFNBounds.Doubling.Leak.lad_succ_ne_src",
+     "kind": "theorem",
+     "line": 80,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem lad_succ_ne_src (i : ℕ) : St.lad (i + 1) ≠ St.src",
+     "doc": ""
+    },
+    {
+     "name": "pstar_lad_none",
+     "full": "GFNBounds.Doubling.Leak.pstar_lad_none",
+     "kind": "theorem",
+     "line": 82,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem pstar_lad_none (f : St → ℝ) (i : ℕ) : pstar S none f (St.lad (i + 1)) = S.eps (i + 1) * f (St.lad (2 * i + 1 + 1)) + (1 - S.eps (i + 1)) * f (St.lad i)",
+     "doc": ""
+    },
+    {
+     "name": "eps_nonneg",
+     "full": "GFNBounds.Doubling.Leak.eps_nonneg",
+     "kind": "theorem",
+     "line": 89,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem eps_nonneg (i : ℕ) : 0 ≤ S.eps (i + 1)",
+     "doc": ""
+    },
+    {
+     "name": "one_sub_eps_nonneg",
+     "full": "GFNBounds.Doubling.Leak.one_sub_eps_nonneg",
+     "kind": "theorem",
+     "line": 91,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem one_sub_eps_nonneg (i : ℕ) : 0 ≤ 1 - S.eps (i + 1)",
+     "doc": ""
+    },
+    {
+     "name": "absorbN_eq",
+     "full": "GFNBounds.Doubling.Leak.absorbN_eq",
+     "kind": "theorem",
+     "line": 96,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem absorbN_eq (n i : ℕ) : Graph.Leakage.absorbN (Q S) (k S) n i = ENNReal.ofReal (fpass S none St.src (n + 1) (St.lad (i + 1)))",
+     "doc": "**The backward absorption read as a first passage**: `(Qⁿk)(i) = P_{i+1}(τ_{s₀} = n + 1)`."
+    },
+    {
+     "name": "absorb_eq",
+     "full": "GFNBounds.Doubling.Leak.absorb_eq",
+     "kind": "theorem",
+     "line": 144,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem absorb_eq (i : ℕ) : Graph.Leakage.absorb (Q S) (k S) i = ENNReal.ofReal (hitProb S none St.src (St.lad (i + 1)))",
+     "doc": "**The absorption probability is the hitting probability of the source**: `h(i) = P_{i+1}(τ_{s₀} < ∞)`."
+    },
+    {
+     "name": "tsum_rho_absorb",
+     "full": "GFNBounds.Doubling.Leak.tsum_rho_absorb",
+     "kind": "theorem",
+     "line": 166,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem tsum_rho_absorb : ∑' i, ρ S i * Graph.Leakage.absorb (Q S) (k S) i = ENNReal.ofReal (retProb S none St.src)",
+     "doc": "**The stopping probability is the return probability of the source**: `⟨ρ,h⟩ = P_{s₀}(τ⁺_{s₀} < ∞)`."
+    },
+    {
+     "name": "sampler_leaks_doubling",
+     "full": "GFNBounds.Doubling.Leak.sampler_leaks_doubling",
+     "kind": "theorem",
+     "line": 196,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sampler_leaks_doubling {μ : ℕ → ℝ≥0∞} {m Z : ℝ≥0∞} (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : m = ∑' x, μ x * k S x) (hm0 : m ≠ 0) (hmt : m ≠ ∞) : (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ m Z (ρ S) i) = Z * ENNReal.ofReal (retProb S none St.src) / m ∧ Z * ENNReal.ofReal (retProb S none St.src) ≤ m",
+     "doc": "**The doubling graph leaks.** For every flow of the frozen family on the loop closure of the doubling graph, the sampler stops with probability `Z·P_{s₀}(τ⁺_{s₀} < ∞)/m`, and the initial mass is at least `Z·P_{s₀}(τ⁺_{s₀} < ∞)`."
+    },
+    {
+     "name": "retProb_src_lt_one",
+     "full": "GFNBounds.Doubling.Leak.retProb_src_lt_one",
+     "kind": "theorem",
+     "line": 209,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem retProb_src_lt_one {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) : retProb S none St.src < 1",
+     "doc": "**The transient rows**: for `ε = ε_{c,s}` with `s < 1`, or `s = 1` and `c > 1/ln 2`, the backward chain started at the source returns to it with probability below one."
+    },
+    {
+     "name": "sampler_escapes_doubling",
+     "full": "GFNBounds.Doubling.Leak.sampler_escapes_doubling",
+     "kind": "theorem",
+     "line": 221,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem sampler_escapes_doubling {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) {μ : ℕ → ℝ≥0∞} {Z : ℝ≥0∞} (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : Z = ∑' x, μ x * k S x) (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) = ENNReal.ofReal (retProb S none St.src) ∧ (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) < 1",
+     "doc": "**On a transient row the sampler escapes.** For every flow of the frozen family at matched mass, `m = Z`, the sampler stops with probability `P_{s₀}(τ⁺_{s₀} < ∞)`, which is below one."
     }
    ],
    "library": "strict",

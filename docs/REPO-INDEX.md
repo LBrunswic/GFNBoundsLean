@@ -2609,6 +2609,11 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `hitExp_bounded` | `Kac.lean` | `theorem hitExp_bounded (n : ℕ) : ∃ C, ∀ x, \|hitExp S cap n x\| ≤ C` |
 | `sbar_nonneg` | `Kac.lean` | `theorem sbar_nonneg (n : ℕ) : 0 ≤ sbar S cap n` |
 | `sbar_mono` | `Kac.lean` | `theorem sbar_mono : Monotone (sbar S cap)` |
+| `Q` | `LeakageInstance.lean` | `noncomputable def Q (i i' : ℕ) : ℝ≥0∞` |
+| `k` | `LeakageInstance.lean` | `noncomputable def k (i : ℕ) : ℝ≥0∞` |
+| `ρ` | `LeakageInstance.lean` | `noncomputable def ρ (i : ℕ) : ℝ≥0∞` |
+| `eps_nonneg` | `LeakageInstance.lean` | `theorem eps_nonneg (i : ℕ) : 0 ≤ S.eps (i + 1)` |
+| `one_sub_eps_nonneg` | `LeakageInstance.lean` | `theorem one_sub_eps_nonneg (i : ℕ) : 0 ≤ 1 - S.eps (i + 1)` |
 | `ladT_zero` | `Length.lean` | `@[simp] theorem ladT_zero (f : ℕ → ℝ) : ladT S f 0 = 0` |
 | `ladT_succ` | `Length.lean` | `theorem ladT_succ (f : ℕ → ℝ) (m : ℕ) : ladT S f (m + 1) = S.eps (m + 1) * f (2 * (m + 1)) + (1 - S.eps (m + 1)) * f m` |
 | `ladT_mono` | `Length.lean` | `theorem ladT_mono {f g : ℕ → ℝ} (h : ∀ k, f k ≤ g k) (m : ℕ) : ladT S f m ≤ ladT S g m` |
@@ -8633,6 +8638,36 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 | 219 | theorem | `kac_identity` | `theorem kac_identity {M B : ℝ} (hM : ∀ n : ℕ, L.hitInt n ≤ M) (hB : ∀ n : ℕ, sbar S cap n ≤ B) : L.lam (.lad 0) * (2 + ⨆ n, sbar S cap n) = 1` |
 | 246 | theorem | `lam_one_ge` | `theorem lam_one_ge {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j : ℕ, 1 ≤ j → S.eps j = c / ((j : ℝ) + 1)) {M : ℝ} (hM : ∀ n : ℕ, L.hitInt n ≤ M) : (2 + S.jbar / (1 - c))⁻¹ ≤ L.lam (.lad 1)` |
 
+### `GFNBounds/Doubling/LeakageInstance.lean`
+
+**The doubling graph leaks: the sampler on a transient row**  
+
+*strict library; 238 lines; 14 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `def:doubling_setting` (bucket A)
+
+
+In scope: `variable (S : Setting)`, `variable {S}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 64 | def | `Q` | `noncomputable def Q (i i' : ℕ) : ℝ≥0∞` |
+| 69 | def | `k` | `noncomputable def k (i : ℕ) : ℝ≥0∞` |
+| 72 | def | `ρ` | `noncomputable def ρ (i : ℕ) : ℝ≥0∞` |
+| 76 | theorem | `lad_ne_src` | `theorem lad_ne_src {j : ℕ} (hj : j ≠ 0) : St.lad j ≠ St.src` |
+| 80 | theorem | `lad_succ_ne_src` | `theorem lad_succ_ne_src (i : ℕ) : St.lad (i + 1) ≠ St.src` |
+| 82 | theorem | `pstar_lad_none` | `theorem pstar_lad_none (f : St → ℝ) (i : ℕ) : pstar S none f (St.lad (i + 1)) = S.eps (i + 1) * f (St.lad (2 * i + 1 + 1)) + (1 - S.eps (i + 1)) * f (St.lad i)` |
+| 89 | theorem | `eps_nonneg` | `theorem eps_nonneg (i : ℕ) : 0 ≤ S.eps (i + 1)` |
+| 91 | theorem | `one_sub_eps_nonneg` | `theorem one_sub_eps_nonneg (i : ℕ) : 0 ≤ 1 - S.eps (i + 1)` |
+| 96 | theorem | `absorbN_eq` | `theorem absorbN_eq (n i : ℕ) : Graph.Leakage.absorbN (Q S) (k S) n i = ENNReal.ofReal (fpass S none St.src (n + 1) (St.lad (i + 1)))` |
+| 144 | theorem | `absorb_eq` | `theorem absorb_eq (i : ℕ) : Graph.Leakage.absorb (Q S) (k S) i = ENNReal.ofReal (hitProb S none St.src (St.lad (i + 1)))` |
+| 166 | theorem | `tsum_rho_absorb` | `theorem tsum_rho_absorb : ∑' i, ρ S i * Graph.Leakage.absorb (Q S) (k S) i = ENNReal.ofReal (retProb S none St.src)` |
+| 196 | theorem | `sampler_leaks_doubling` | `theorem sampler_leaks_doubling {μ : ℕ → ℝ≥0∞} {m Z : ℝ≥0∞} (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : m = ∑' x, μ x * k S x) (hm0 : m ≠ 0) (hmt : m ≠ ∞) : (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ m Z (ρ S) i) = Z * ENNReal.ofReal (retProb S none St.src) / m ∧ Z * ENNReal.ofReal (retProb S none St.src) ≤ m` |
+| 209 | theorem | `retProb_src_lt_one` | `theorem retProb_src_lt_one {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) : retProb S none St.src < 1` |
+| 221 | theorem | `sampler_escapes_doubling` | `theorem sampler_escapes_doubling {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) {μ : ℕ → ℝ≥0∞} {Z : ℝ≥0∞} (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : Z = ∑' x, μ x * k S x) (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) = ENNReal.ofReal (retProb S none St.src) ∧ (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) < 1` |
+
 ### `GFNBounds/Doubling/Length.lean`
 
 **The closed-form backward length**  
@@ -12241,6 +12276,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `PreStat` | `GFNBounds.Doubling.Irreducible` |
 | `PreStat.toStatNone` | `GFNBounds.Doubling.Irreducible` |
 | `PreStat.toStatSome` | `GFNBounds.Doubling.Irreducible` |
+| `Q` | `GFNBounds.Doubling.LeakageInstance` |
 | `QLb` | `GFNBounds.Graph.CycleRemarks` |
 | `QLb_01` | `GFNBounds.Graph.CycleRemarks` |
 | `QLb_12` | `GFNBounds.Graph.CycleRemarks` |
@@ -12450,6 +12486,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `absolutelyContinuous_comp` | `GFNBounds.Balance.FreezingGeneral2` |
 | `absorb` | `GFNBounds.Graph.Leakage` |
 | `absorbN` | `GFNBounds.Graph.Leakage` |
+| `absorbN_eq` | `GFNBounds.Doubling.LeakageInstance` |
+| `absorb_eq` | `GFNBounds.Doubling.LeakageInstance` |
 | `ac_flowOf` | `GFNBounds.Balance.GdDiffusionGeneral` |
 | `adj_Q` | `GFNBounds.Balance.TBHessian` |
 | `adjoint_densL2` | `GFNBounds.Doubling.AdjointL2` |
@@ -13475,6 +13513,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `eps_le_half` | `GFNBounds.Doubling.DecayNotation` |
 | `eps_le_one` | `GFNBounds.Graph.CycleRemarks` |
 | `eps_lt_one` | `GFNBounds.Doubling.Setting` |
+| `eps_nonneg` | `GFNBounds.Doubling.LeakageInstance` |
 | `eps_pos` | `GFNBounds.Doubling.DecayNotation` |
 | `eq_const_of_balanced_edge` | `GFNBounds.Balance.TrainingSpeedDB` |
 | `eq_const_of_balanced_of_uniqueInvariant` | `GFNBounds.Balance.GlobalConvergenceFinite` |
@@ -14470,6 +14509,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `jensen_gap_zero_memLp` | `GFNBounds.Doubling.LpLayer` |
 | `joint_inf_eq_zero` | `GFNBounds.Core.RLBound` |
 | `joint_infimum` | `GFNBounds.Core.RLBound` |
+| `k` | `GFNBounds.Doubling.LeakageInstance` |
 | `k0` | `GFNBounds.Balance.DiscreteGlobal` |
 | `k0real` | `GFNBounds.Balance.DiscreteGlobal` |
 | `k0real_eq` | `GFNBounds.Balance.DiscreteGlobal` |
@@ -14559,6 +14599,8 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `ladT_succ` | `GFNBounds.Doubling.Length` |
 | `ladT_wLog_le` | `GFNBounds.Doubling.Length` |
 | `ladT_zero` | `GFNBounds.Doubling.Length` |
+| `lad_ne_src` | `GFNBounds.Doubling.LeakageInstance` |
+| `lad_succ_ne_src` | `GFNBounds.Doubling.LeakageInstance` |
 | `ladderOne` | `GFNBounds.Silva.Remarks` |
 | `ladderPB` | `GFNBounds.Silva.Remarks` |
 | `ladderPB_eq` | `GFNBounds.Silva.Remarks` |
@@ -15435,6 +15477,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `one_sub_densOp_wtL2` | `GFNBounds.Balance.WeightedL2` |
 | `one_sub_epsCS_one_pos` | `GFNBounds.Doubling.Range` |
 | `one_sub_eps_le_pstar_dirac_pred` | `GFNBounds.Doubling.Ratios` |
+| `one_sub_eps_nonneg` | `GFNBounds.Doubling.LeakageInstance` |
 | `one_sub_eps_pos` | `GFNBounds.Doubling.Setting` |
 | `one_sub_eq_neg_aOpG` | `GFNBounds.Balance.StableFrozenGeneral` |
 | `one_sub_hitP_src` | `GFNBounds.Doubling.PhaseRecurrence` |
@@ -15739,6 +15782,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `pstar_iterate_mono` | `GFNBounds.Doubling.RecurrenceClass` |
 | `pstar_iterate_nonneg` | `GFNBounds.Doubling.RecurrenceClass` |
 | `pstar_lad_eq_ladT` | `GFNBounds.Doubling.PhaseRecurrence` |
+| `pstar_lad_none` | `GFNBounds.Doubling.LeakageInstance` |
 | `pstar_lad_of_hasDouble` | `GFNBounds.Doubling.Setting` |
 | `pstar_lad_of_not_hasDouble` | `GFNBounds.Doubling.Setting` |
 | `pstar_lad_succ` | `GFNBounds.Doubling.Setting` |
@@ -15972,6 +16016,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `retProb` | `GFNBounds.Doubling.RecurrenceClass` |
 | `retProb_le_one` | `GFNBounds.Doubling.RecurrenceClass` |
 | `retProb_nonneg` | `GFNBounds.Doubling.RecurrenceClass` |
+| `retProb_src_lt_one` | `GFNBounds.Doubling.LeakageInstance` |
 | `retT` | `GFNBounds.Doubling.RecurrenceClass` |
 | `retT_bdd` | `GFNBounds.Doubling.RecurrenceClass` |
 | `retT_eq_sum` | `GFNBounds.Doubling.RecurrenceClass` |
@@ -16052,11 +16097,13 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `samplerTV_le_one_general` | `GFNBounds.Graph.SamplerWiring` |
 | `sampler_Fk` | `GFNBounds.Graph.Sampling` |
 | `sampler_check_triangle` | `GFNBounds.Graph.SamplerWiring` |
+| `sampler_escapes_doubling` | `GFNBounds.Doubling.LeakageInstance` |
 | `sampler_general` | `GFNBounds.Graph.SamplerWiring` |
 | `sampler_inference` | `GFNBounds.Core.NegativeControl` |
 | `sampler_isGenFlow` | `GFNBounds.Core.NegativeControl` |
 | `sampler_law` | `GFNBounds.Graph.Sampling` |
 | `sampler_leaks` | `GFNBounds.Graph.Leakage` |
+| `sampler_leaks_doubling` | `GFNBounds.Doubling.LeakageInstance` |
 | `sampler_leaks_matched` | `GFNBounds.Graph.Leakage` |
 | `sampler_termLaw` | `GFNBounds.Graph.Sampling` |
 | `sampling_theorem` | `GFNBounds.Core.SamplingGeneral` |
@@ -16650,6 +16697,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `tsum_pstar_eq` | `GFNBounds.Doubling.Unsolvable` |
 | `tsum_pstar_eq_of_nonneg` | `GFNBounds.Doubling.Unsolvable` |
 | `tsum_pstar_le` | `GFNBounds.Doubling.LpLayer` |
+| `tsum_rho_absorb` | `GFNBounds.Doubling.LeakageInstance` |
 | `tsum_stepVar_le` | `GFNBounds.Doubling.GeomPoincare` |
 | `tsum_sub_pstar` | `GFNBounds.Doubling.Setting` |
 | `tv` | `GFNBounds.Silva.Basic` |
@@ -16977,3 +17025,4 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `zeta_add_xi_pos` | `GFNBounds.Balance.RemarksA` |
 | `zeta_eq_zero_iff` | `GFNBounds.Balance.RemarksA` |
 | `zeta_nonneg` | `GFNBounds.Balance.RemarksA` |
+| `ρ` | `GFNBounds.Doubling.LeakageInstance` |

@@ -55630,7 +55630,7 @@
    "type": "GFNBounds.Doubling.Setting → ℕ → ENNReal",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 71,
+   "line": 72,
    "kind": "def",
    "doc": "**The sink row**: the target row. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -55671,10 +55671,29 @@
    "∀ {S : GFNBounds.Doubling.Setting},\n  ∑' (i : ℕ),\n      GFNBounds.Doubling.Leak.ρ S i *\n        GFNBounds.Graph.Leakage.absorb (GFNBounds.Doubling.Leak.Q S) (GFNBounds.Doubling.Leak.k S) i =\n    ENNReal.ofReal (GFNBounds.Doubling.retProb S none GFNBounds.Doubling.St.src)",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 164,
+   "line": 165,
    "kind": "theorem",
    "doc":
    "**The stopping probability is the return probability of the source**:\n`⟨ρ,h⟩ = P_{s₀}(τ⁺_{s₀} < ∞)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.tsum_mul_Q":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.Q",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.Q",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps"],
+   "uses_external": 68,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} (μ : ℕ → ENNReal) (y : ℕ),\n  ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.Q S x y =\n    (if y % 2 = 1 then μ (y / 2) * ENNReal.ofReal (S.eps (y / 2 + 1)) else 0) +\n      μ (y + 1) * ENNReal.ofReal (1 - S.eps (y + 1 + 1))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 164,
+   "kind": "theorem",
+   "doc":
+   "**What enters the rung `y + 1` from the rungs**: the step down from `y + 2`, and the doubling\nfrom `(y + 1)/2` when `y + 1` is even. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Leak.sampler_leaks_doubling":
   {"uses_value":
@@ -55701,7 +55720,7 @@
    "∀ {S : GFNBounds.Doubling.Setting} {μ : ℕ → ENNReal} {m Z : ENNReal},\n  (∀ (y : ℕ), μ y ≠ 0) →\n    (∀ (y : ℕ), μ y ≠ ⊤) →\n      (∀ (y : ℕ), μ y = ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.Q S x y + Z * GFNBounds.Doubling.Leak.ρ S y) →\n        m = ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.k S x →\n          m ≠ 0 →\n            m ≠ ⊤ →\n              ∑' (i : ℕ),\n                    GFNBounds.Graph.Leakage.stopLaw (GFNBounds.Doubling.Leak.Q S) (GFNBounds.Doubling.Leak.k S) μ m Z\n                      (GFNBounds.Doubling.Leak.ρ S) i =\n                  Z * ENNReal.ofReal (GFNBounds.Doubling.retProb S none GFNBounds.Doubling.St.src) / m ∧\n                Z * ENNReal.ofReal (GFNBounds.Doubling.retProb S none GFNBounds.Doubling.St.src) ≤ m",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 193,
+   "line": 194,
    "kind": "theorem",
    "doc":
    "**The doubling graph leaks.** For every flow of the frozen family on the loop closure of the\ndoubling graph, the sampler stops with probability `Z·P_{s₀}(τ⁺_{s₀} < ∞)/m`, and the initial mass\nis at least `Z·P_{s₀}(τ⁺_{s₀} < ∞)`. ",
@@ -55736,10 +55755,79 @@
    "∀ {S : GFNBounds.Doubling.Setting} {c s : ℝ},\n  0 < c →\n    (∀ (j : ℕ), S.eps j = GFNBounds.Doubling.epsCS c s j) →\n      s < 1 ∨ s = 1 ∧ 1 / Real.log 2 < c →\n        ∀ {μ : ℕ → ENNReal} {Z : ENNReal},\n          (∀ (y : ℕ), μ y ≠ 0) →\n            (∀ (y : ℕ), μ y ≠ ⊤) →\n              (∀ (y : ℕ), μ y = ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.Q S x y + Z * GFNBounds.Doubling.Leak.ρ S y) →\n                Z = ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.k S x →\n                  Z ≠ 0 →\n                    Z ≠ ⊤ →\n                      ∑' (i : ℕ),\n                            GFNBounds.Graph.Leakage.stopLaw (GFNBounds.Doubling.Leak.Q S) (GFNBounds.Doubling.Leak.k S)\n                              μ Z Z (GFNBounds.Doubling.Leak.ρ S) i =\n                          ENNReal.ofReal (GFNBounds.Doubling.retProb S none GFNBounds.Doubling.St.src) ∧\n                        ∑' (i : ℕ),\n                            GFNBounds.Graph.Leakage.stopLaw (GFNBounds.Doubling.Leak.Q S) (GFNBounds.Doubling.Leak.k S)\n                              μ Z Z (GFNBounds.Doubling.Leak.ρ S) i <\n                          1",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 219,
+   "line": 220,
    "kind": "theorem",
    "doc":
    "**On a transient row the sampler escapes.** For every flow of the frozen family at matched\nmass, `m = Z`, the sampler stops with probability `P_{s₀}(τ⁺_{s₀} < ∞)`, which is below one. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.rowTail_zero":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.d",
+    "GFNBounds.Doubling.Setting.row",
+    "GFNBounds.Doubling.Setting.row_sum"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.rowTail", "GFNBounds.Doubling.Setting"],
+   "uses_external": 35,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting}, GFNBounds.Doubling.Leak.rowTail S 0 = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 64,
+   "kind": "theorem",
+   "doc": "All of the target mass lies beyond the source. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.rowTail_succ":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.d",
+    "GFNBounds.Doubling.Setting.row",
+    "GFNBounds.Doubling.Setting.row_supp"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.row"],
+   "uses_external": 54,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} (n : ℕ),\n  GFNBounds.Doubling.Leak.rowTail S n = S.row (n + 1) + GFNBounds.Doubling.Leak.rowTail S (n + 1)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 72,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.rowTail_nonneg":
+  {"uses_value":
+   ["GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.d",
+    "GFNBounds.Doubling.Setting.row",
+    "GFNBounds.Doubling.Setting.row_nonneg"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.rowTail", "GFNBounds.Doubling.Setting"],
+   "uses_external": 14,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} (N : ℕ), 0 ≤ GFNBounds.Doubling.Leak.rowTail S N",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 61,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.rowTail":
+  {"uses_value":
+   ["GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.d",
+    "GFNBounds.Doubling.Setting.row"],
+   "uses_type": ["GFNBounds.Doubling.Setting"],
+   "uses_external": 7,
+   "type": "GFNBounds.Doubling.Setting → ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 58,
+   "kind": "def",
+   "doc": "**The target mass beyond the rung `N`**: `Σ_{N < j ≤ d} row(j)`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Leak.retProb_src_lt_one":
   {"uses_value":
@@ -55767,7 +55855,7 @@
    "∀ {S : GFNBounds.Doubling.Setting} {c s : ℝ},\n  0 < c →\n    (∀ (j : ℕ), S.eps j = GFNBounds.Doubling.epsCS c s j) →\n      s < 1 ∨ s = 1 ∧ 1 / Real.log 2 < c → GFNBounds.Doubling.retProb S none GFNBounds.Doubling.St.src < 1",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 207,
+   "line": 208,
    "kind": "theorem",
    "doc":
    "**The transient rows**: for `ε = ε_{c,s}` with `s < 1`, or `s = 1` and `c > 1/ln 2`, the\nbackward chain started at the source returns to it with probability below one. ",
@@ -55794,7 +55882,7 @@
    "∀ {S : GFNBounds.Doubling.Setting} (f : GFNBounds.Doubling.St → ℝ) (i : ℕ),\n  GFNBounds.Doubling.pstar S none f (GFNBounds.Doubling.St.lad (i + 1)) =\n    S.eps (i + 1) * f (GFNBounds.Doubling.St.lad (2 * i + 1 + 1)) +\n      (1 - S.eps (i + 1)) * f (GFNBounds.Doubling.St.lad i)",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 82,
+   "line": 83,
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -55811,9 +55899,227 @@
    "type": "∀ {S : GFNBounds.Doubling.Setting} (i : ℕ), 0 ≤ 1 - S.eps (i + 1)",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 91,
+   "line": 92,
    "kind": "theorem",
    "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflow_succ":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps"],
+   "uses_external": 54,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} (N : ℕ),\n  GFNBounds.Doubling.Leak.mflow S (N + 1) =\n    (GFNBounds.Doubling.Leak.rowTail S N + ∑ j ∈ Finset.Ioc (N / 2) N, GFNBounds.Doubling.Leak.mflow S j * S.eps j) /\n      (1 - S.eps (N + 1))",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 92,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflow_pos":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Leak.mflow_succ",
+    "GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Leak.rowTail_nonneg",
+    "GFNBounds.Doubling.Leak.rowTail_zero",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps",
+    "GFNBounds.Doubling.Setting.eps_pos",
+    "GFNBounds.Doubling.Setting.one_sub_eps_pos"],
+   "uses_type": ["GFNBounds.Doubling.Leak.mflow", "GFNBounds.Doubling.Setting"],
+   "uses_external": 206,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} (N : ℕ), 0 < GFNBounds.Doubling.Leak.mflow S (N + 1)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 106,
+   "kind": "theorem",
+   "doc": "**The flow is positive on every rung.** ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflow_one":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Leak.mflow_cut",
+    "GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Leak.rowTail_zero",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps"],
+   "uses_external": 41,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting}, GFNBounds.Doubling.Leak.mflow S 1 * (1 - S.eps 1) = 1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 131,
+   "kind": "theorem",
+   "doc": "**The initial mass is the target mass**: `λ(1)(1 − ε(1)) = 1`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflow_cut":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Leak.mflow_succ",
+    "GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps",
+    "GFNBounds.Doubling.Setting.one_sub_eps_pos"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps"],
+   "uses_external": 50,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} (N : ℕ),\n  GFNBounds.Doubling.Leak.mflow S (N + 1) * (1 - S.eps (N + 1)) =\n    GFNBounds.Doubling.Leak.rowTail S N + ∑ j ∈ Finset.Ioc (N / 2) N, GFNBounds.Doubling.Leak.mflow S j * S.eps j",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 100,
+   "kind": "theorem",
+   "doc": "**The cut balance** above the rung `N`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflow_balance":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Leak.mflow_cut",
+    "GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Leak.rowTail_succ",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps",
+    "GFNBounds.Doubling.Setting.row"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps",
+    "GFNBounds.Doubling.Setting.row"],
+   "uses_external": 164,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} (n : ℕ),\n  GFNBounds.Doubling.Leak.mflow S (n + 1) =\n    (GFNBounds.Doubling.Leak.mflow S (n + 1 + 1) * (1 - S.eps (n + 1 + 1)) +\n        if n % 2 = 1 then GFNBounds.Doubling.Leak.mflow S (n / 2 + 1) * S.eps (n / 2 + 1) else 0) +\n      S.row (n + 1)",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 137,
+   "kind": "theorem",
+   "doc":
+   "**The flow is balanced at every rung**: the rung `n + 1` takes in what steps down from the rung\n`n + 2`, what doubles from the rung `(n + 1)/2` when `n + 1` is even, and its target mass. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflowE_ne_zero":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Leak.mflow_pos",
+    "GFNBounds.Doubling.Setting"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.mflowE", "GFNBounds.Doubling.Setting"],
+   "uses_external": 27,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} {Z : ENNReal}, Z ≠ 0 → ∀ (y : ℕ), GFNBounds.Doubling.Leak.mflowE S Z y ≠ 0",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 183,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflowE_ne_top":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.mflow", "GFNBounds.Doubling.Setting"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.mflowE", "GFNBounds.Doubling.Setting"],
+   "uses_external": 13,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} {Z : ENNReal}, Z ≠ ⊤ → ∀ (y : ℕ), GFNBounds.Doubling.Leak.mflowE S Z y ≠ ⊤",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 186,
+   "kind": "theorem",
+   "doc": "",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflowE_mass":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.k",
+    "GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Leak.mflowE",
+    "GFNBounds.Doubling.Leak.mflow_one",
+    "GFNBounds.Doubling.Leak.mflow_pos",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.k",
+    "GFNBounds.Doubling.Leak.mflowE",
+    "GFNBounds.Doubling.Setting"],
+   "uses_external": 67,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} {Z : ENNReal},\n  Z = ∑' (x : ℕ), GFNBounds.Doubling.Leak.mflowE S Z x * GFNBounds.Doubling.Leak.k S x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 210,
+   "kind": "theorem",
+   "doc": "**The initial mass is the terminal mass**: `Σ μ(x)k(x) = Z`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflowE_balance":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.Q",
+    "GFNBounds.Doubling.Leak.eps_nonneg",
+    "GFNBounds.Doubling.Leak.mflow",
+    "GFNBounds.Doubling.Leak.mflowE",
+    "GFNBounds.Doubling.Leak.mflow_balance",
+    "GFNBounds.Doubling.Leak.mflow_pos",
+    "GFNBounds.Doubling.Leak.one_sub_eps_nonneg",
+    "GFNBounds.Doubling.Leak.tsum_mul_Q",
+    "GFNBounds.Doubling.Leak.ρ",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps",
+    "GFNBounds.Doubling.Setting.row",
+    "GFNBounds.Doubling.Setting.row_nonneg"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.Q",
+    "GFNBounds.Doubling.Leak.mflowE",
+    "GFNBounds.Doubling.Leak.ρ",
+    "GFNBounds.Doubling.Setting"],
+   "uses_external": 109,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} (Z : ENNReal) (y : ℕ),\n  GFNBounds.Doubling.Leak.mflowE S Z y =\n    ∑' (x : ℕ), GFNBounds.Doubling.Leak.mflowE S Z x * GFNBounds.Doubling.Leak.Q S x y +\n      Z * GFNBounds.Doubling.Leak.ρ S y",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 189,
+   "kind": "theorem",
+   "doc":
+   "**The flow is balanced**, in the form `μ = μQ + Zρ` of `Graph.Leakage`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflowE":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.mflow", "GFNBounds.Doubling.Setting"],
+   "uses_type": ["GFNBounds.Doubling.Setting"],
+   "uses_external": 14,
+   "type": "GFNBounds.Doubling.Setting → ENNReal → ℕ → ENNReal",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 160,
+   "kind": "def",
+   "doc":
+   "**The matched-mass flow**, in the form of `Graph.Leakage`: `μ(i) = Z·λ(i + 1)`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.mflow":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.rowTail",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps"],
+   "uses_type": ["GFNBounds.Doubling.Setting"],
+   "uses_external": 37,
+   "type": "GFNBounds.Doubling.Setting → ℕ → ℝ",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 85,
+   "kind": "def",
+   "doc":
+   "**The matched-mass flow on the rungs**, by the cut balance above the rung `N`:\n`λ(N + 1) = (Σ_{j > N} row(j) + Σ_{N/2 < j ≤ N} λ(j)ε(j))/(1 − ε(N + 1))`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Leak.lad_succ_ne_src":
   {"uses_value": ["GFNBounds.Doubling.Leak.lad_ne_src"],
@@ -55826,7 +56132,7 @@
    "∀ (i : ℕ), GFNBounds.Doubling.St.lad (i + 1) ≠ GFNBounds.Doubling.St.src",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 80,
+   "line": 81,
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext"]},
@@ -55845,7 +56151,7 @@
    "∀ {j : ℕ}, j ≠ 0 → GFNBounds.Doubling.St.lad j ≠ GFNBounds.Doubling.St.src",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 76,
+   "line": 77,
    "kind": "theorem",
    "doc": "",
    "axioms": []},
@@ -55857,9 +56163,71 @@
    "type": "GFNBounds.Doubling.Setting → ℕ → ENNReal",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 68,
+   "line": 69,
    "kind": "def",
    "doc": "**The backward step to the source**, from the lowest rung only. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.exists_matched_flow":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.Q",
+    "GFNBounds.Doubling.Leak.k",
+    "GFNBounds.Doubling.Leak.mflowE",
+    "GFNBounds.Doubling.Leak.mflowE_balance",
+    "GFNBounds.Doubling.Leak.mflowE_mass",
+    "GFNBounds.Doubling.Leak.mflowE_ne_top",
+    "GFNBounds.Doubling.Leak.mflowE_ne_zero",
+    "GFNBounds.Doubling.Leak.ρ",
+    "GFNBounds.Doubling.Setting"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.Q",
+    "GFNBounds.Doubling.Leak.k",
+    "GFNBounds.Doubling.Leak.ρ",
+    "GFNBounds.Doubling.Setting"],
+   "uses_external": 25,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} {Z : ENNReal},\n  Z ≠ 0 →\n    Z ≠ ⊤ →\n      ∃ μ,\n        (∀ (y : ℕ), μ y ≠ 0) ∧\n          (∀ (y : ℕ), μ y ≠ ⊤) ∧\n            (∀ (y : ℕ), μ y = ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.Q S x y + Z * GFNBounds.Doubling.Leak.ρ S y) ∧\n              Z = ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.k S x",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 216,
+   "kind": "theorem",
+   "doc":
+   "**A flow at matched mass exists, on every row.** On the loop closure of the doubling graph,\nfor every target row and every terminal mass `Z`, positive and finite, there is a flow of the\nfrozen family, positive and finite on every rung and balanced at every rung, whose initial mass is\n`Z`. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.exists_escaping_flow":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.Q",
+    "GFNBounds.Doubling.Leak.exists_matched_flow",
+    "GFNBounds.Doubling.Leak.k",
+    "GFNBounds.Doubling.Leak.sampler_escapes_doubling",
+    "GFNBounds.Doubling.Leak.ρ",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps",
+    "GFNBounds.Doubling.St.src",
+    "GFNBounds.Doubling.epsCS",
+    "GFNBounds.Doubling.retProb",
+    "GFNBounds.Graph.Leakage.absorb",
+    "GFNBounds.Graph.Leakage.sampler_leaks_matched",
+    "GFNBounds.Graph.Leakage.stopLaw"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.Q",
+    "GFNBounds.Doubling.Leak.k",
+    "GFNBounds.Doubling.Leak.ρ",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps",
+    "GFNBounds.Doubling.St.src",
+    "GFNBounds.Doubling.epsCS",
+    "GFNBounds.Doubling.retProb",
+    "GFNBounds.Graph.Leakage.absorb",
+    "GFNBounds.Graph.Leakage.stopLaw"],
+   "uses_external": 51,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} {c s : ℝ},\n  0 < c →\n    (∀ (j : ℕ), S.eps j = GFNBounds.Doubling.epsCS c s j) →\n      s < 1 ∨ s = 1 ∧ 1 / Real.log 2 < c →\n        ∀ {Z : ENNReal},\n          Z ≠ 0 →\n            Z ≠ ⊤ →\n              ∃ μ,\n                (∀ (y : ℕ), μ y ≠ 0) ∧\n                  (∀ (y : ℕ), μ y ≠ ⊤) ∧\n                    (∀ (y : ℕ),\n                        μ y = ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.Q S x y + Z * GFNBounds.Doubling.Leak.ρ S y) ∧\n                      Z = ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.k S x ∧\n                        (∀ (x : ℕ),\n                            GFNBounds.Graph.Leakage.stopLaw (GFNBounds.Doubling.Leak.Q S) (GFNBounds.Doubling.Leak.k S)\n                                μ Z Z (GFNBounds.Doubling.Leak.ρ S) x =\n                              GFNBounds.Doubling.Leak.ρ S x *\n                                GFNBounds.Graph.Leakage.absorb (GFNBounds.Doubling.Leak.Q S)\n                                  (GFNBounds.Doubling.Leak.k S) x) ∧\n                          ∑' (i : ℕ),\n                                GFNBounds.Graph.Leakage.stopLaw (GFNBounds.Doubling.Leak.Q S)\n                                  (GFNBounds.Doubling.Leak.k S) μ Z Z (GFNBounds.Doubling.Leak.ρ S) i =\n                              ENNReal.ofReal (GFNBounds.Doubling.retProb S none GFNBounds.Doubling.St.src) ∧\n                            ∑' (i : ℕ),\n                                GFNBounds.Graph.Leakage.stopLaw (GFNBounds.Doubling.Leak.Q S)\n                                  (GFNBounds.Doubling.Leak.k S) μ Z Z (GFNBounds.Doubling.Leak.ρ S) i <\n                              1",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 226,
+   "kind": "theorem",
+   "doc":
+   "**On a transient row there is a flow whose sampler escapes.** For `ε = ε_{c,s}` with `s < 1`,\nor `s = 1` and `c > 1/ln 2`, and every terminal mass `Z`, positive and finite, there is a flow of\nthe frozen family, positive, finite, balanced and at matched mass, whose sampler stops at `x` with\nprobability `ρ(x)h(x)`, stops at all with probability `P_{s₀}(τ⁺_{s₀} < ∞) < 1`, and escapes to\ninfinity otherwise. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Leak.eps_nonneg":
   {"uses_value":
@@ -55872,7 +56240,7 @@
    "type": "∀ {S : GFNBounds.Doubling.Setting} (i : ℕ), 0 ≤ S.eps (i + 1)",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 89,
+   "line": 90,
    "kind": "theorem",
    "doc": "",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
@@ -55910,7 +56278,7 @@
    "∀ {S : GFNBounds.Doubling.Setting} (i : ℕ),\n  GFNBounds.Graph.Leakage.absorb (GFNBounds.Doubling.Leak.Q S) (GFNBounds.Doubling.Leak.k S) i =\n    ENNReal.ofReal (GFNBounds.Doubling.hitProb S none GFNBounds.Doubling.St.src (GFNBounds.Doubling.St.lad (i + 1)))",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 142,
+   "line": 143,
    "kind": "theorem",
    "doc":
    "**The absorption probability is the hitting probability of the source**:\n`h(i) = P_{i+1}(τ_{s₀} < ∞)`. ",
@@ -55951,7 +56319,7 @@
    "∀ {S : GFNBounds.Doubling.Setting} (n i : ℕ),\n  GFNBounds.Graph.Leakage.absorbN (GFNBounds.Doubling.Leak.Q S) (GFNBounds.Doubling.Leak.k S) n i =\n    ENNReal.ofReal\n      (GFNBounds.Doubling.fpass S none GFNBounds.Doubling.St.src (n + 1) (GFNBounds.Doubling.St.lad (i + 1)))",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 95,
+   "line": 96,
    "kind": "theorem",
    "doc":
    "**The backward absorption read as a first passage**: `(Qⁿk)(i) = P_{i+1}(τ_{s₀} = n + 1)`. ",
@@ -55964,7 +56332,7 @@
    "type": "GFNBounds.Doubling.Setting → ℕ → ℕ → ENNReal",
    "nonstandard_axioms": [],
    "module": "GFNBounds.Doubling.LeakageInstance",
-   "line": 62,
+   "line": 63,
    "kind": "def",
    "doc":
    "**The backward step among the rungs.** From the rung `i + 1` to the rung `2(i + 1)` with\nprobability `ε(i + 1)`, and to the rung `i` with probability `1 − ε(i + 1)` when `i ≥ 1`. ",

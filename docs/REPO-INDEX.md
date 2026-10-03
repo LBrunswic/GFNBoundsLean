@@ -2687,6 +2687,20 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `Wpow_strictAnti` | `Lyapunov.lean` | `theorem Wpow_strictAnti {t : ℝ} (ht : 0 < t) {i j : ℕ} (h : i < j) : Wpow t (.lad j) < Wpow t (.lad i)` |
 | `c_mul_log_two_lt_one` | `Main.lean` | `theorem c_mul_log_two_lt_one {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) : c * Real.log 2 < 1` |
 | `card_chainFinset` | `MainPackaging.lean` | `theorem card_chainFinset (K : ℕ) : (chainFinset K).card = K + 2` |
+| `rowTail_nonneg` | `MatchedFlow.lean` | `theorem rowTail_nonneg (N : ℕ) : 0 ≤ rowTail S N` |
+| `rowTail_zero` | `MatchedFlow.lean` | `theorem rowTail_zero : rowTail S 0 = 1` |
+| `rowTail_succ` | `MatchedFlow.lean` | `theorem rowTail_succ (n : ℕ) : rowTail S n = S.row (n + 1) + rowTail S (n + 1)` |
+| `mflow_succ` | `MatchedFlow.lean` | `theorem mflow_succ (N : ℕ) : mflow S (N + 1) = (rowTail S N + ∑ j ∈ Finset.Ioc (N / 2) N, mflow S j * S.eps j) / (1 - S.eps (N + 1))` |
+| `mflow_cut` | `MatchedFlow.lean` | `theorem mflow_cut (N : ℕ) : mflow S (N + 1) * (1 - S.eps (N + 1)) = rowTail S N + ∑ j ∈ Finset.Ioc (N / 2) N, mflow S j * S.eps j` |
+| `mflow_pos` | `MatchedFlow.lean` | `theorem mflow_pos (N : ℕ) : 0 < mflow S (N + 1)` |
+| `mflow_one` | `MatchedFlow.lean` | `theorem mflow_one : mflow S 1 * (1 - S.eps 1) = 1` |
+| `mflow_balance` | `MatchedFlow.lean` | `theorem mflow_balance (n : ℕ) : mflow S (n + 1) = mflow S (n + 1 + 1) * (1 - S.eps (n + 1 + 1)) + (if n % 2 = 1 then mflow S (n / 2 + 1) * S.eps (n / 2 + 1) else 0) + S.row (n + 1)` |
+| `tsum_mul_Q` | `MatchedFlow.lean` | `theorem tsum_mul_Q (μ : ℕ → ℝ≥0∞) (y : ℕ) : ∑' x, μ x * Q S x y = (if y % 2 = 1 then μ (y / 2) * ENNReal.ofReal (S.eps (y / 2 + 1)) else 0) + μ (y + 1) * ENNReal.ofReal (1 - S.eps (y + 1 + 1))` |
+| `mflowE_ne_zero` | `MatchedFlow.lean` | `theorem mflowE_ne_zero {Z : ℝ≥0∞} (hZ0 : Z ≠ 0) (y : ℕ) : mflowE S Z y ≠ 0` |
+| `mflowE_ne_top` | `MatchedFlow.lean` | `theorem mflowE_ne_top {Z : ℝ≥0∞} (hZt : Z ≠ ∞) (y : ℕ) : mflowE S Z y ≠ ∞` |
+| `mflowE_balance` | `MatchedFlow.lean` | `theorem mflowE_balance (Z : ℝ≥0∞) (y : ℕ) : mflowE S Z y = (∑' x, mflowE S Z x * Q S x y) + Z * ρ S y` |
+| `mflowE_mass` | `MatchedFlow.lean` | `theorem mflowE_mass {Z : ℝ≥0∞} : Z = ∑' x, mflowE S Z x * k S x` |
+| `exists_matched_flow` | `MatchedFlow.lean` | `theorem exists_matched_flow {Z : ℝ≥0∞} (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : ∃ μ : ℕ → ℝ≥0∞, (∀ y, μ y ≠ 0) ∧ (∀ y, μ y ≠ ∞) ∧ (∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) ∧ Z = ∑' x, μ x * k S x` |
 | `pi_mul_pow` | `Operator.lean` | `theorem pi_mul_pow (hPiP : Pi * P = Pi) : ∀ n : ℕ, Pi * P ^ n = Pi` |
 | `pow_mul_pi` | `Operator.lean` | `theorem pow_mul_pi (hPPi : P * Pi = Pi) : ∀ n : ℕ, P ^ n * Pi = Pi` |
 | `partialSum` | `Operator.lean` | `noncomputable def partialSum (P Pi : E →L[ℝ] E) (N : ℕ) : E →L[ℝ] E` |
@@ -8671,7 +8685,7 @@ In scope: `variable {S : Setting} {cap : Option ℕ}`, `variable (L : Stat S cap
 
 **The doubling graph leaks: the sampler on a transient row**  
 
-*strict library; 238 lines; 14 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 239 lines; 14 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `def:doubling_setting` (bucket A)
@@ -8682,20 +8696,20 @@ In scope: `variable (S : Setting)`, `variable {S}`
 
 | ln | kind | name | statement |
 |---|---|---|---|
-| 64 | def | `Q` | `noncomputable def Q (i i' : ℕ) : ℝ≥0∞` |
-| 69 | def | `k` | `noncomputable def k (i : ℕ) : ℝ≥0∞` |
-| 72 | def | `ρ` | `noncomputable def ρ (i : ℕ) : ℝ≥0∞` |
-| 76 | theorem | `lad_ne_src` | `theorem lad_ne_src {j : ℕ} (hj : j ≠ 0) : St.lad j ≠ St.src` |
-| 80 | theorem | `lad_succ_ne_src` | `theorem lad_succ_ne_src (i : ℕ) : St.lad (i + 1) ≠ St.src` |
-| 82 | theorem | `pstar_lad_none` | `theorem pstar_lad_none (f : St → ℝ) (i : ℕ) : pstar S none f (St.lad (i + 1)) = S.eps (i + 1) * f (St.lad (2 * i + 1 + 1)) + (1 - S.eps (i + 1)) * f (St.lad i)` |
-| 89 | theorem | `eps_nonneg` | `theorem eps_nonneg (i : ℕ) : 0 ≤ S.eps (i + 1)` |
-| 91 | theorem | `one_sub_eps_nonneg` | `theorem one_sub_eps_nonneg (i : ℕ) : 0 ≤ 1 - S.eps (i + 1)` |
-| 96 | theorem | `absorbN_eq` | `theorem absorbN_eq (n i : ℕ) : Graph.Leakage.absorbN (Q S) (k S) n i = ENNReal.ofReal (fpass S none St.src (n + 1) (St.lad (i + 1)))` |
-| 144 | theorem | `absorb_eq` | `theorem absorb_eq (i : ℕ) : Graph.Leakage.absorb (Q S) (k S) i = ENNReal.ofReal (hitProb S none St.src (St.lad (i + 1)))` |
-| 166 | theorem | `tsum_rho_absorb` | `theorem tsum_rho_absorb : ∑' i, ρ S i * Graph.Leakage.absorb (Q S) (k S) i = ENNReal.ofReal (retProb S none St.src)` |
-| 196 | theorem | `sampler_leaks_doubling` | `theorem sampler_leaks_doubling {μ : ℕ → ℝ≥0∞} {m Z : ℝ≥0∞} (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : m = ∑' x, μ x * k S x) (hm0 : m ≠ 0) (hmt : m ≠ ∞) : (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ m Z (ρ S) i) = Z * ENNReal.ofReal (retProb S none St.src) / m ∧ Z * ENNReal.ofReal (retProb S none St.src) ≤ m` |
-| 209 | theorem | `retProb_src_lt_one` | `theorem retProb_src_lt_one {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) : retProb S none St.src < 1` |
-| 221 | theorem | `sampler_escapes_doubling` | `theorem sampler_escapes_doubling {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) {μ : ℕ → ℝ≥0∞} {Z : ℝ≥0∞} (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : Z = ∑' x, μ x * k S x) (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) = ENNReal.ofReal (retProb S none St.src) ∧ (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) < 1` |
+| 65 | def | `Q` | `noncomputable def Q (i i' : ℕ) : ℝ≥0∞` |
+| 70 | def | `k` | `noncomputable def k (i : ℕ) : ℝ≥0∞` |
+| 73 | def | `ρ` | `noncomputable def ρ (i : ℕ) : ℝ≥0∞` |
+| 77 | theorem | `lad_ne_src` | `theorem lad_ne_src {j : ℕ} (hj : j ≠ 0) : St.lad j ≠ St.src` |
+| 81 | theorem | `lad_succ_ne_src` | `theorem lad_succ_ne_src (i : ℕ) : St.lad (i + 1) ≠ St.src` |
+| 83 | theorem | `pstar_lad_none` | `theorem pstar_lad_none (f : St → ℝ) (i : ℕ) : pstar S none f (St.lad (i + 1)) = S.eps (i + 1) * f (St.lad (2 * i + 1 + 1)) + (1 - S.eps (i + 1)) * f (St.lad i)` |
+| 90 | theorem | `eps_nonneg` | `theorem eps_nonneg (i : ℕ) : 0 ≤ S.eps (i + 1)` |
+| 92 | theorem | `one_sub_eps_nonneg` | `theorem one_sub_eps_nonneg (i : ℕ) : 0 ≤ 1 - S.eps (i + 1)` |
+| 97 | theorem | `absorbN_eq` | `theorem absorbN_eq (n i : ℕ) : Graph.Leakage.absorbN (Q S) (k S) n i = ENNReal.ofReal (fpass S none St.src (n + 1) (St.lad (i + 1)))` |
+| 145 | theorem | `absorb_eq` | `theorem absorb_eq (i : ℕ) : Graph.Leakage.absorb (Q S) (k S) i = ENNReal.ofReal (hitProb S none St.src (St.lad (i + 1)))` |
+| 167 | theorem | `tsum_rho_absorb` | `theorem tsum_rho_absorb : ∑' i, ρ S i * Graph.Leakage.absorb (Q S) (k S) i = ENNReal.ofReal (retProb S none St.src)` |
+| 197 | theorem | `sampler_leaks_doubling` | `theorem sampler_leaks_doubling {μ : ℕ → ℝ≥0∞} {m Z : ℝ≥0∞} (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : m = ∑' x, μ x * k S x) (hm0 : m ≠ 0) (hmt : m ≠ ∞) : (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ m Z (ρ S) i) = Z * ENNReal.ofReal (retProb S none St.src) / m ∧ Z * ENNReal.ofReal (retProb S none St.src) ≤ m` |
+| 210 | theorem | `retProb_src_lt_one` | `theorem retProb_src_lt_one {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) : retProb S none St.src < 1` |
+| 222 | theorem | `sampler_escapes_doubling` | `theorem sampler_escapes_doubling {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) {μ : ℕ → ℝ≥0∞} {Z : ℝ≥0∞} (hμ0 : ∀ y, μ y ≠ 0) (hμt : ∀ y, μ y ≠ ∞) (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : Z = ∑' x, μ x * k S x) (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) = ENNReal.ofReal (retProb S none St.src) ∧ (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) < 1` |
 
 ### `GFNBounds/Doubling/Length.lean`
 
@@ -8975,6 +8989,40 @@ In scope: `variable {S : Setting}`, `variable (D : Decay)`, `variable {D}`
 | 301 | theorem | `main_rate_explicit` | `theorem main_rate_explicit {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) (L : Stat S none) : psi c (Decay.ofC hc0 hc1).p = 0 ∧ 1 < (Decay.ofC hc0 hc1).p ∧ 0 < (Decay.ofC hc0 hc1).c7Of S.d (fun j => L.lam (.lad j)) ∧ ∃ m₂ : ℕ, S.d < m₂ ∧ ∀ m : ℕ, m₂ ≤ m → (Decay.ofC hc0 hc1).c7Of S.d (fun j => L.lam (.lad j)) * Real.sqrt (m : ℝ) * Real.sqrt (L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x)) ≤ Real.sqrt (L.mass 2 (L.centredTail m)) ∧ 0 < L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x) ∧ (Decay.ofC hc0 hc1).c7Of S.d (fun j => L.lam (.lad j)) * Real.sqrt (m : ℝ) ≤ Real.sqrt (L.mass 2 (L.centredTail m)) / Real.sqrt (L.mass 2 (fun x => L.centredTail m x - pstar S none (L.centredTail m) x))` |
 | 322 | theorem | `main_c7_congr` | `theorem main_c7_congr {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) {S' : Setting} (hd : S.d = S'.d) (L : Stat S none) (L' : Stat S' none) (hagree : ∀ j : ℕ, 1 ≤ j → j < 2 * (Decay.ofC hc0 hc1).m0 S.d → L.lam (.lad j) = L'.lam (.lad j)) : (Decay.ofC hc0 hc1).c7Of S.d (fun j => L.lam (.lad j)) = (Decay.ofC hc0 hc1).c7Of S'.d (fun j => L'.lam (.lad j))` |
 | 341 | theorem | `main_truncation_explicit` | `theorem main_truncation_explicit {c : ℝ} (hc0 : 0 < c) (hc1 : c < 1) (heps : ∀ j, S.eps j = epsCS c 1 j) : (∀ K : ℕ, Even K → ∀ hdK : S.d ≤ K, Nat.card {x : St // OnChain (some K) x} = K + 2 ∧ (∀ x y : St, OnChain (some K) y → Reach S (some K) x y) ∧ Nonempty (Stat S (some K)) ∧ (∀ L L' : Stat S (some K), L.lam = L'.lam) ∧ ∀ L : Stat S (some K), (1 - L.pstarL2 (rowOnChain_some hdK)) * L.diffOpK hdK = 1 - L.piL2 ∧ L.diffOpK hdK * (1 - L.pstarL2 (rowOnChain_some hdK)) = 1 - L.piL2 ∧ L.piL2 * L.diffOpK hdK = 0 ∧ L.diffOpK hdK * L.piL2 = 0 ∧ L.bhatK hdK = ‖L.diffOpK hdK‖) ∧ S.d ≤ (Decay.ofC hc0 hc1).K0Of S.d ∧ 0 < (Decay.ofC hc0 hc1).c8Of S.d S.jbar ∧ ∀ K : ℕ, (Decay.ofC hc0 hc1).K0Of S.d ≤ K → ∀ (hdK : S.d ≤ K) (L : Stat S (some K)), (Decay.ofC hc0 hc1).c8Of S.d S.jbar * Real.sqrt (K : ℝ) ≤ L.bhatK hdK` |
+
+### `GFNBounds/Doubling/MatchedFlow.lean`
+
+**The matched-mass flow of the doubling graph, and the flow whose sampler escapes**  
+
+*strict library; 248 lines; 18 declarations; carries a **SCOPE** disclosure — read it before extending.*
+
+
+Certifies: ✅ `prop:doubling_phase` (bucket A)
+
+
+In scope: `variable {S : Setting}`
+
+
+| ln | kind | name | statement |
+|---|---|---|---|
+| 59 | def | `rowTail` | `noncomputable def rowTail (S : Setting) (N : ℕ) : ℝ` |
+| 61 | theorem | `rowTail_nonneg` | `theorem rowTail_nonneg (N : ℕ) : 0 ≤ rowTail S N` |
+| 65 | theorem | `rowTail_zero` | `theorem rowTail_zero : rowTail S 0 = 1` |
+| 72 | theorem | `rowTail_succ` | `theorem rowTail_succ (n : ℕ) : rowTail S n = S.row (n + 1) + rowTail S (n + 1)` |
+| 87 | def | `mflow` | `noncomputable def mflow (S : Setting) : ℕ → ℝ` |
+| 92 | theorem | `mflow_succ` | `theorem mflow_succ (N : ℕ) : mflow S (N + 1) = (rowTail S N + ∑ j ∈ Finset.Ioc (N / 2) N, mflow S j * S.eps j) / (1 - S.eps (N + 1))` |
+| 101 | theorem | `mflow_cut` | `theorem mflow_cut (N : ℕ) : mflow S (N + 1) * (1 - S.eps (N + 1)) = rowTail S N + ∑ j ∈ Finset.Ioc (N / 2) N, mflow S j * S.eps j` |
+| 107 | theorem | `mflow_pos` | `theorem mflow_pos (N : ℕ) : 0 < mflow S (N + 1)` |
+| 132 | theorem | `mflow_one` | `theorem mflow_one : mflow S 1 * (1 - S.eps 1) = 1` |
+| 139 | theorem | `mflow_balance` | `theorem mflow_balance (n : ℕ) : mflow S (n + 1) = mflow S (n + 1 + 1) * (1 - S.eps (n + 1 + 1)) + (if n % 2 = 1 then mflow S (n / 2 + 1) * S.eps (n / 2 + 1) else 0) + S.row (n + 1)` |
+| 161 | def | `mflowE` | `noncomputable def mflowE (S : Setting) (Z : ℝ≥0∞) (i : ℕ) : ℝ≥0∞` |
+| 166 | theorem | `tsum_mul_Q` | `theorem tsum_mul_Q (μ : ℕ → ℝ≥0∞) (y : ℕ) : ∑' x, μ x * Q S x y = (if y % 2 = 1 then μ (y / 2) * ENNReal.ofReal (S.eps (y / 2 + 1)) else 0) + μ (y + 1) * ENNReal.ofReal (1 - S.eps (y + 1 + 1))` |
+| 183 | theorem | `mflowE_ne_zero` | `theorem mflowE_ne_zero {Z : ℝ≥0∞} (hZ0 : Z ≠ 0) (y : ℕ) : mflowE S Z y ≠ 0` |
+| 186 | theorem | `mflowE_ne_top` | `theorem mflowE_ne_top {Z : ℝ≥0∞} (hZt : Z ≠ ∞) (y : ℕ) : mflowE S Z y ≠ ∞` |
+| 190 | theorem | `mflowE_balance` | `theorem mflowE_balance (Z : ℝ≥0∞) (y : ℕ) : mflowE S Z y = (∑' x, mflowE S Z x * Q S x y) + Z * ρ S y` |
+| 211 | theorem | `mflowE_mass` | `theorem mflowE_mass {Z : ℝ≥0∞} : Z = ∑' x, mflowE S Z x * k S x` |
+| 220 | theorem | `exists_matched_flow` | `theorem exists_matched_flow {Z : ℝ≥0∞} (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : ∃ μ : ℕ → ℝ≥0∞, (∀ y, μ y ≠ 0) ∧ (∀ y, μ y ≠ ∞) ∧ (∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) ∧ Z = ∑' x, μ x * k S x` |
+| 231 | theorem | `exists_escaping_flow` | `theorem exists_escaping_flow {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) {Z : ℝ≥0∞} (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : ∃ μ : ℕ → ℝ≥0∞, (∀ y, μ y ≠ 0) ∧ (∀ y, μ y ≠ ∞) ∧ (∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) ∧ Z = ∑' x, μ x * k S x ∧ (∀ x, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) x = ρ S x * Graph.Leakage.absorb (Q S) (k S) x) ∧ (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) = ENNReal.ofReal (retProb S none St.src) ∧ (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) < 1` |
 
 ### `GFNBounds/Doubling/Operator.lean`
 
@@ -13729,6 +13777,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `exists_diffusionOp_of_ratio` | `GFNBounds.Doubling.GeomFamily` |
 | `exists_diffusionOp_of_tail` | `GFNBounds.Doubling.GeomOperator` |
 | `exists_edgeFloor` | `GFNBounds.Balance.BoundaryBlowup` |
+| `exists_escaping_flow` | `GFNBounds.Doubling.MatchedFlow` |
 | `exists_family_setting` | `GFNBounds.Doubling.PhaseRecurrence` |
 | `exists_fixed` | `GFNBounds.Graph.Setting` |
 | `exists_forall_hasDerivAt_of_lipschitzWith` | `GFNBounds.Balance.FlowExistence` |
@@ -13751,6 +13800,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `exists_lt_eq` | `GFNBounds.Silva.PathSpaceMarkovGeneral` |
 | `exists_markov_ratio_gt` | `GFNBounds.Silva.PathSpaceMarkovGeneral` |
 | `exists_markov_ratio_gt_backward` | `GFNBounds.Silva.PathSpaceMarkovGeneral` |
+| `exists_matched_flow` | `GFNBounds.Doubling.MatchedFlow` |
 | `exists_measurableSet_of_ne_smul_dirac` | `GFNBounds.Core.SigmaMixing` |
 | `exists_measurableSet_of_two_pos` | `GFNBounds.Core.SigmaMixing` |
 | `exists_member_close` | `GFNBounds.Core.FamilyUniversality` |
@@ -15327,6 +15377,17 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `member_dichotomy` | `GFNBounds.Core.FamilyUniversality` |
 | `member_epsTarget` | `GFNBounds.Core.FamilyUniversality` |
 | `member_epsTargetI` | `GFNBounds.Graph.PartialSupportClose` |
+| `mflow` | `GFNBounds.Doubling.MatchedFlow` |
+| `mflowE` | `GFNBounds.Doubling.MatchedFlow` |
+| `mflowE_balance` | `GFNBounds.Doubling.MatchedFlow` |
+| `mflowE_mass` | `GFNBounds.Doubling.MatchedFlow` |
+| `mflowE_ne_top` | `GFNBounds.Doubling.MatchedFlow` |
+| `mflowE_ne_zero` | `GFNBounds.Doubling.MatchedFlow` |
+| `mflow_balance` | `GFNBounds.Doubling.MatchedFlow` |
+| `mflow_cut` | `GFNBounds.Doubling.MatchedFlow` |
+| `mflow_one` | `GFNBounds.Doubling.MatchedFlow` |
+| `mflow_pos` | `GFNBounds.Doubling.MatchedFlow` |
+| `mflow_succ` | `GFNBounds.Doubling.MatchedFlow` |
 | `minOver` | `GFNBounds.Graph.Morozov` |
 | `minOver_div_const` | `GFNBounds.Balance.TrainingSpeed` |
 | `minOver_lam_eq` | `GFNBounds.Balance.TrainingSpeed` |
@@ -16229,7 +16290,9 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `rowTail_nonneg` | `GFNBounds.Doubling.StatExists` |
 | `rowTail_one` | `GFNBounds.Doubling.StatExists` |
 | `rowTail_sub` | `GFNBounds.Doubling.StatExists` |
+| `rowTail_succ` | `GFNBounds.Doubling.MatchedFlow` |
 | `rowTail_swap` | `GFNBounds.Doubling.StatExists` |
+| `rowTail_zero` | `GFNBounds.Doubling.MatchedFlow` |
 | `row_zero` | `GFNBounds.Doubling.Balance` |
 | `rpow_div_self` | `GFNBounds.Doubling.Lyapunov` |
 | `rpow_div_sq` | `GFNBounds.Doubling.Lyapunov` |
@@ -16851,6 +16914,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `tsum_lam_pstar_sq` | `GFNBounds.Doubling.Adjoint` |
 | `tsum_mact` | `GFNBounds.Doubling.Balance` |
 | `tsum_mact_eq` | `GFNBounds.Doubling.Balance` |
+| `tsum_mul_Q` | `GFNBounds.Doubling.MatchedFlow` |
 | `tsum_ofReal_eq_top_of_one_le` | `GFNBounds.Graph.CycleRemarks` |
 | `tsum_pstar_eq` | `GFNBounds.Doubling.Unsolvable` |
 | `tsum_pstar_eq_of_nonneg` | `GFNBounds.Doubling.Unsolvable` |

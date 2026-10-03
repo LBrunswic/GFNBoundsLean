@@ -39,10 +39,11 @@ lowest rung. The sink row is the target row.
 
 ## SCOPE (disclosed)
 
-* **Matched mass is a hypothesis, not a construction.** `sampler_escapes_doubling` holds for every
-  flow of the frozen family whose initial mass equals its terminal mass; such a flow carries mass
-  entering from infinity, and its existence on a transient row is not established here. The
-  general statement, `sampler_leaks_doubling`, holds for every flow, at every initial mass.
+* **Matched mass is a hypothesis here.** `sampler_escapes_doubling` holds for every flow of the
+  frozen family whose initial mass equals its terminal mass. Such a flow exists on every row: it is
+  built by the cut balance in `Doubling/MatchedFlow.lean` (`exists_matched_flow`,
+  `exists_escaping_flow`). The general statement, `sampler_leaks_doubling`, holds for every flow,
+  at every initial mass.
 * **Probabilities are least solutions**, as throughout `RecurrenceClass`: no path space is built,
   as in `Graph.Leakage`, whose sampler is its sequence of laws.
 * **No `sorry`.**

@@ -121,6 +121,7 @@ import GFNBounds.Doubling.WeakUniversal
 import GFNBounds.Graph.BestConstant
 import GFNBounds.Graph.SlowMode
 import GFNBounds.Graph.GreenNorm
+import GFNBounds.Doubling.MatchedFlow
 
 /-!
 # Axiom audit
@@ -2425,3 +2426,7 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Graph.BackwardPolicy.greenOp_resolvent
 #print axioms GFNBounds.Graph.BackwardPolicy.isLeast_greenOp_norm
 #print axioms GFNBounds.Graph.BackwardPolicy.curvature_exact_green
+-- the matched-mass flow of the doubling graph, and the flow whose sampler escapes — GFNBounds/Doubling/MatchedFlow.lean
+#print axioms GFNBounds.Doubling.Leak.mflow_balance
+#print axioms GFNBounds.Doubling.Leak.exists_matched_flow
+#print axioms GFNBounds.Doubling.Leak.exists_escaping_flow

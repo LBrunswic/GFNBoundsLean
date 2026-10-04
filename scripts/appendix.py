@@ -529,28 +529,52 @@ def index_section(cfg: Config, facts: dict) -> str:
                 "correspondence. Every one of them\nhas been verified to rest on no axiom beyond "
                 "Lean's own \\texttt{propext},\n\\texttt{Classical.choice} and "
                 "\\texttt{Quot.sound}, and the development contains no unproved\ngoal.")
+    caption = rf"""The results of this appendix as declarations of the Lean development, in the
+{namespaces}. The last two columns count what each proof rests on,
+unfolded to the bottom of the development: how many of the declarations it reaches are results the
+development names rather than steps internal to one, and how many it reaches in all. A zero means
+that the proof rests on Mathlib alone."""
+    header = "result & declaration & named results & declarations \\\\"
+    if cfg.single:
+        table = rf"""\begin{{table}}[htb]
+\centering
+\small
+\begin{{tabular}}{{@{{}}l l r r@{{}}}}
+\hline
+{header}
+\hline
+{body}
+\hline
+\end{{tabular}}
+\caption{{{caption}}}
+\label{{tab:doubling_decls}}
+\end{{table}}"""
+    else:
+        # Several chapters make a table taller than a page, and a float taller than its page loses
+        # what overflows: the table breaks across pages instead.
+        table = rf"""\begingroup\small\setlength{{\tabcolsep}}{{4pt}}
+\begin{{longtable}}{{@{{}}l l r r@{{}}}}
+\caption{{{caption}}}\label{{tab:doubling_decls}}\\
+\hline
+{header}
+\hline
+\endfirsthead
+\multicolumn{{4}}{{@{{}}l}}{{Table~\thetable, continued}} \\
+\hline
+{header}
+\hline
+\endhead
+\hline
+\endfoot
+{body}
+\end{{longtable}}
+\endgroup"""
     return rf"""
 \subsection{{The development}}\label{{sec:doubling_development}}
 
 {lead}
 
-\begin{{table}}[htb]
-\centering
-\small
-\begin{{tabular}}{{@{{}}l l r r@{{}}}}
-\hline
-result & declaration & named results & declarations \\
-\hline
-{body}
-\hline
-\end{{tabular}}
-\caption{{The results of this appendix as declarations of the Lean development, in the
-{namespaces}. The last two columns count what each proof rests on,
-unfolded to the bottom of the development: how many of the declarations it reaches are results the
-development names rather than steps internal to one, and how many it reaches in all. A zero means
-that the proof rests on Mathlib alone.}}
-\label{{tab:doubling_decls}}
-\end{{table}}
+{table}
 """
 
 

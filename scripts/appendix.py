@@ -82,6 +82,7 @@ class Config:
     title_plain: str = ("The doubling graph: an unbounded diffusion operator at finite "
                         "backward length")
     label: str = "app:doubling"
+    front: str = ""           # the document's own front matter, before the first chapter, or ""
 
     @property
     def headlines(self) -> list[str]:
@@ -174,6 +175,7 @@ def load_config(path: Path | None) -> Config:
         title_macro=doc.get("title_macro", DEFAULT_CONFIG.title_macro),
         title_plain=doc.get("title_plain", DEFAULT_CONFIG.title_plain),
         label=doc.get("label", DEFAULT_CONFIG.label),
+        front=doc.get("front", ""),
     )
 
 
@@ -449,6 +451,11 @@ def preamble(cfg: Config, facts: dict, paper_mode: bool) -> str:
         front = cfg.expo / cfg.chapters[0].front if cfg.chapters[0].front else None
         text = front.read_text(encoding="utf8").strip() if front and front.exists() else ""
         return head + "\n\n" + text + "\n"
+    # Several chapters: the document's own front matter, if any, opens the appendix before the
+    # first chapter, so that what is said of the whole is not read as the first chapter's.
+    front = cfg.expo / cfg.front if cfg.front else None
+    if front and front.exists():
+        return head + "\n\n" + front.read_text(encoding="utf8").strip() + "\n"
     return head + "\n"
 
 
@@ -511,14 +518,21 @@ def index_section(cfg: Config, facts: dict) -> str:
     ns_list = [f"\\texttt{{{esc(c.namespace)}}}" for c in cfg.chapters]
     namespaces = ("namespace " + ns_list[0] if len(ns_list) == 1
                   else "namespaces " + ", ".join(ns_list[:-1]) + " and " + ns_list[-1])
+    if cfg.front:
+        # The document's front matter already states the Mathlib version and the axioms.
+        lead = (r"Table~\ref{tab:doubling_decls} lists each result of this appendix with the "
+                "declaration that states it\nin Lean, and how much of the development its proof "
+                "rests on.")
+    else:
+        lead = (r"Each result above is a declaration of a Lean~4 development checked against "
+                "Mathlib\n\\texttt{v4.31.0}. Table~\\ref{tab:doubling_decls} gives the "
+                "correspondence. Every one of them\nhas been verified to rest on no axiom beyond "
+                "Lean's own \\texttt{propext},\n\\texttt{Classical.choice} and "
+                "\\texttt{Quot.sound}, and the development contains no unproved\ngoal.")
     return rf"""
 \subsection{{The development}}\label{{sec:doubling_development}}
 
-Each result above is a declaration of a Lean~4 development checked against Mathlib
-\texttt{{v4.31.0}}. Table~\ref{{tab:doubling_decls}} gives the correspondence. Every one of them
-has been verified to rest on no axiom beyond Lean's own \texttt{{propext}},
-\texttt{{Classical.choice}} and \texttt{{Quot.sound}}, and the development contains no unproved
-goal.
+{lead}
 
 \begin{{table}}[htb]
 \centering
@@ -532,8 +546,9 @@ result & declaration & named results & declarations \\
 \end{{tabular}}
 \caption{{The results of this appendix as declarations of the Lean development, in the
 {namespaces}. The last two columns count what each proof rests on,
-unfolded to the bottom of the development: the declarations it reaches, and how many of those
-are results the development names rather than steps internal to one.}}
+unfolded to the bottom of the development: how many of the declarations it reaches are results the
+development names rather than steps internal to one, and how many it reaches in all. A zero means
+that the proof rests on Mathlib alone.}}
 \label{{tab:doubling_decls}}
 \end{{table}}
 """

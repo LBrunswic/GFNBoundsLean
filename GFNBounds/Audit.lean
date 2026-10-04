@@ -2430,3 +2430,4 @@ Before this section `Audit.lean` checked Doubling only; these modules were cover
 #print axioms GFNBounds.Doubling.Leak.mflow_balance
 #print axioms GFNBounds.Doubling.Leak.exists_matched_flow
 #print axioms GFNBounds.Doubling.Leak.exists_escaping_flow
+#print axioms GFNBounds.Doubling.Leak.matched_flow_unique

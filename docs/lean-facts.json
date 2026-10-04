@@ -56121,6 +56121,36 @@
    "doc":
    "**The matched-mass flow on the rungs**, by the cut balance above the rung `N`:\n`λ(N + 1) = (Σ_{j > N} row(j) + Σ_{N/2 < j ≤ N} λ(j)ε(j))/(1 − ε(N + 1))`. ",
    "axioms": ["propext", "Classical.choice", "Quot.sound"]},
+  "GFNBounds.Doubling.Leak.matched_flow_unique":
+  {"uses_value":
+   ["GFNBounds.Doubling.Leak.Q",
+    "GFNBounds.Doubling.Leak.k",
+    "GFNBounds.Doubling.Leak.mflowE",
+    "GFNBounds.Doubling.Leak.mflowE_balance",
+    "GFNBounds.Doubling.Leak.mflowE_mass",
+    "GFNBounds.Doubling.Leak.mflowE_ne_top",
+    "GFNBounds.Doubling.Leak.tsum_mul_Q",
+    "GFNBounds.Doubling.Leak.ρ",
+    "GFNBounds.Doubling.Setting",
+    "GFNBounds.Doubling.Setting.eps",
+    "GFNBounds.Doubling.Setting.one_sub_eps_pos",
+    "GFNBounds.Doubling.Setting.row"],
+   "uses_type":
+   ["GFNBounds.Doubling.Leak.Q",
+    "GFNBounds.Doubling.Leak.k",
+    "GFNBounds.Doubling.Leak.mflowE",
+    "GFNBounds.Doubling.Leak.ρ",
+    "GFNBounds.Doubling.Setting"],
+   "uses_external": 90,
+   "type":
+   "∀ {S : GFNBounds.Doubling.Setting} {Z : ENNReal},\n  Z ≠ ⊤ →\n    ∀ {μ : ℕ → ENNReal},\n      (∀ (y : ℕ), μ y = ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.Q S x y + Z * GFNBounds.Doubling.Leak.ρ S y) →\n        Z = ∑' (x : ℕ), μ x * GFNBounds.Doubling.Leak.k S x → μ = GFNBounds.Doubling.Leak.mflowE S Z",
+   "nonstandard_axioms": [],
+   "module": "GFNBounds.Doubling.MatchedFlow",
+   "line": 246,
+   "kind": "theorem",
+   "doc":
+   "**The matched-mass flow is unique.** On the loop closure of the doubling graph, with a finite\nterminal mass `Z`, every flow of the frozen family that is balanced at every rung and has initial\nmass `Z` is the flow built by the cut balance: the initial mass fixes the lowest rung, and the\nbalance at a rung fixes the next one. ",
+   "axioms": ["propext", "Classical.choice", "Quot.sound"]},
   "GFNBounds.Doubling.Leak.lad_succ_ne_src":
   {"uses_value": ["GFNBounds.Doubling.Leak.lad_ne_src"],
    "uses_type":

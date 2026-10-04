@@ -28,6 +28,7 @@ infinity with probability `1 − P_{s₀}(τ⁺_{s₀} < ∞) > 0`, and stops at
 | **`mflow_balance`** | it is balanced at every rung |
 | `mflowE`, `tsum_mul_Q`, `mflowE_balance`, `mflowE_mass` | the same in `ℝ≥0∞`, scaled by `Z`, in the form of `Graph.Leakage` |
 | **`exists_matched_flow`** | a positive, finite, balanced flow at matched mass exists, on every row |
+| **`matched_flow_unique`** | it is the only balanced flow at matched mass |
 | **`exists_escaping_flow`** | on a transient row, a flow exists whose sampler escapes with probability `1 − P_{s₀}(τ⁺_{s₀} < ∞) > 0` and otherwise draws `ρh` |
 
 ## Hypothesis checklist
@@ -41,7 +42,6 @@ infinity with probability `1 − P_{s₀}(τ⁺_{s₀} < ∞) > 0`, and stops at
 
 ## SCOPE (disclosed)
 
-* **Existence only.** Uniqueness of the matched-mass flow is not stated here.
 * **No `sorry`.**
 
 Provenance: mathlib tag `v4.31.0`, pinned via `lakefile.toml`.
@@ -242,6 +242,39 @@ theorem exists_escaping_flow {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = eps
   obtain ⟨hlaw, -⟩ := Graph.Leakage.sampler_leaks_matched h0 ht hb hm hZ0 hZt
   obtain ⟨htot, hlt⟩ := sampler_escapes_doubling hc hS hrow h0 ht hb hm hZ0 hZt
   exact ⟨μ, h0, ht, hb, hm, hlaw, htot, hlt⟩
+
+/-- **The matched-mass flow is unique.** On the loop closure of the doubling graph, with a finite
+terminal mass `Z`, every flow of the frozen family that is balanced at every rung and has initial
+mass `Z` is the flow built by the cut balance: the initial mass fixes the lowest rung, and the
+balance at a rung fixes the next one. -/
+theorem matched_flow_unique {Z : ℝ≥0∞} (hZt : Z ≠ ∞) {μ : ℕ → ℝ≥0∞}
+    (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y)
+    (hm : Z = ∑' x, μ x * k S x) : μ = mflowE S Z := by
+  funext y
+  induction y using Nat.strong_induction_on with
+  | _ y ih =>
+    rcases y with _ | y
+    · have ha0 : ENNReal.ofReal (1 - S.eps 1) ≠ 0 :=
+        (ENNReal.ofReal_pos.mpr (S.one_sub_eps_pos le_rfl)).ne'
+      have h1 : Z = μ 0 * ENNReal.ofReal (1 - S.eps 1) := by
+        rw [hm, tsum_eq_single 0 fun b hb => by rw [k, if_neg hb, mul_zero], k, if_pos rfl]
+      have h2 := mflowE_mass (S := S) (Z := Z)
+      rw [tsum_eq_single 0 fun b hb => by rw [k, if_neg hb, mul_zero], k, if_pos rfl] at h2
+      exact (ENNReal.mul_left_inj ha0 ENNReal.ofReal_ne_top).mp (h1.symm.trans h2)
+    · have hb := hbal y
+      have hb' := mflowE_balance (S := S) Z y
+      rw [tsum_mul_Q] at hb hb'
+      rw [ih y (Nat.lt_succ_self y), ih (y / 2) (by omega)] at hb
+      have ha0 : ENNReal.ofReal (1 - S.eps (y + 1 + 1)) ≠ 0 :=
+        (ENNReal.ofReal_pos.mpr (S.one_sub_eps_pos (by omega))).ne'
+      have hD : (if y % 2 = 1 then mflowE S Z (y / 2) * ENNReal.ofReal (S.eps (y / 2 + 1))
+          else 0) ≠ ∞ := by
+        split_ifs
+        · exact ENNReal.mul_ne_top (mflowE_ne_top hZt _) ENNReal.ofReal_ne_top
+        · exact ENNReal.zero_ne_top
+      have hR : Z * ρ S y ≠ ∞ := ENNReal.mul_ne_top hZt ENNReal.ofReal_ne_top
+      have h := (ENNReal.add_right_inj hD).mp ((ENNReal.add_left_inj hR).mp (hb.symm.trans hb'))
+      exact (ENNReal.mul_left_inj ha0 ENNReal.ofReal_ne_top).mp h
 
 end Leak
 

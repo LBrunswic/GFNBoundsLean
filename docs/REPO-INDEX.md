@@ -2701,6 +2701,7 @@ Declarations whose statement mentions none of `St`, `Setting`, `Stat`, `pstar` �
 | `mflowE_balance` | `MatchedFlow.lean` | `theorem mflowE_balance (Z : ℝ≥0∞) (y : ℕ) : mflowE S Z y = (∑' x, mflowE S Z x * Q S x y) + Z * ρ S y` |
 | `mflowE_mass` | `MatchedFlow.lean` | `theorem mflowE_mass {Z : ℝ≥0∞} : Z = ∑' x, mflowE S Z x * k S x` |
 | `exists_matched_flow` | `MatchedFlow.lean` | `theorem exists_matched_flow {Z : ℝ≥0∞} (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : ∃ μ : ℕ → ℝ≥0∞, (∀ y, μ y ≠ 0) ∧ (∀ y, μ y ≠ ∞) ∧ (∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) ∧ Z = ∑' x, μ x * k S x` |
+| `matched_flow_unique` | `MatchedFlow.lean` | `theorem matched_flow_unique {Z : ℝ≥0∞} (hZt : Z ≠ ∞) {μ : ℕ → ℝ≥0∞} (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : Z = ∑' x, μ x * k S x) : μ = mflowE S Z` |
 | `pi_mul_pow` | `Operator.lean` | `theorem pi_mul_pow (hPiP : Pi * P = Pi) : ∀ n : ℕ, Pi * P ^ n = Pi` |
 | `pow_mul_pi` | `Operator.lean` | `theorem pow_mul_pi (hPPi : P * Pi = Pi) : ∀ n : ℕ, P ^ n * Pi = Pi` |
 | `partialSum` | `Operator.lean` | `noncomputable def partialSum (P Pi : E →L[ℝ] E) (N : ℕ) : E →L[ℝ] E` |
@@ -8994,7 +8995,7 @@ In scope: `variable {S : Setting}`, `variable (D : Decay)`, `variable {D}`
 
 **The matched-mass flow of the doubling graph, and the flow whose sampler escapes**  
 
-*strict library; 248 lines; 18 declarations; carries a **SCOPE** disclosure — read it before extending.*
+*strict library; 281 lines; 19 declarations; carries a **SCOPE** disclosure — read it before extending.*
 
 
 Certifies: ✅ `prop:doubling_phase` (bucket A)
@@ -9023,6 +9024,7 @@ In scope: `variable {S : Setting}`
 | 211 | theorem | `mflowE_mass` | `theorem mflowE_mass {Z : ℝ≥0∞} : Z = ∑' x, mflowE S Z x * k S x` |
 | 220 | theorem | `exists_matched_flow` | `theorem exists_matched_flow {Z : ℝ≥0∞} (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : ∃ μ : ℕ → ℝ≥0∞, (∀ y, μ y ≠ 0) ∧ (∀ y, μ y ≠ ∞) ∧ (∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) ∧ Z = ∑' x, μ x * k S x` |
 | 231 | theorem | `exists_escaping_flow` | `theorem exists_escaping_flow {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) {Z : ℝ≥0∞} (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : ∃ μ : ℕ → ℝ≥0∞, (∀ y, μ y ≠ 0) ∧ (∀ y, μ y ≠ ∞) ∧ (∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) ∧ Z = ∑' x, μ x * k S x ∧ (∀ x, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) x = ρ S x * Graph.Leakage.absorb (Q S) (k S) x) ∧ (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) = ENNReal.ofReal (retProb S none St.src) ∧ (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) < 1` |
+| 250 | theorem | `matched_flow_unique` | `theorem matched_flow_unique {Z : ℝ≥0∞} (hZt : Z ≠ ∞) {μ : ℕ → ℝ≥0∞} (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : Z = ∑' x, μ x * k S x) : μ = mflowE S Z` |
 
 ### `GFNBounds/Doubling/Operator.lean`
 
@@ -15249,6 +15251,7 @@ In scope: `variable {X T : Type*} [Fintype X] [Fintype T]`, `variable {X T : Typ
 | `mass_two_pstar_le` | `GFNBounds.Doubling.LpLayer` |
 | `matched` | `GFNBounds.Core.NegativeControl` |
 | `matched_flowMatching` | `GFNBounds.Core.NegativeControl` |
+| `matched_flow_unique` | `GFNBounds.Doubling.MatchedFlow` |
 | `matched_isGenFlow` | `GFNBounds.Core.NegativeControl` |
 | `matched_step` | `GFNBounds.Core.SamplingGeneralBounds` |
 | `matches_descPaths_unique` | `GFNBounds.Doubling.WeightChain` |

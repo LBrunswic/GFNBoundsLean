@@ -318,7 +318,7 @@
     "GFNBounds.Doubling.MatchedFlow"
    ],
    "variables": [],
-   "lines": 2432,
+   "lines": 2433,
    "decls": [],
    "library": "strict",
    "tracked": true,
@@ -35354,7 +35354,7 @@
    "variables": [
     "variable {S : Setting}"
    ],
-   "lines": 248,
+   "lines": 281,
    "decls": [
     {
      "name": "rowTail",
@@ -35535,6 +35535,16 @@
      "private": false,
      "statement": "theorem exists_escaping_flow {c s : ℝ} (hc : 0 < c) (hS : ∀ j, S.eps j = epsCS c s j) (hrow : s < 1 ∨ (s = 1 ∧ 1 / Real.log 2 < c)) {Z : ℝ≥0∞} (hZ0 : Z ≠ 0) (hZt : Z ≠ ∞) : ∃ μ : ℕ → ℝ≥0∞, (∀ y, μ y ≠ 0) ∧ (∀ y, μ y ≠ ∞) ∧ (∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) ∧ Z = ∑' x, μ x * k S x ∧ (∀ x, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) x = ρ S x * Graph.Leakage.absorb (Q S) (k S) x) ∧ (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) = ENNReal.ofReal (retProb S none St.src) ∧ (∑' i, Graph.Leakage.stopLaw (Q S) (k S) μ Z Z (ρ S) i) < 1",
      "doc": "**On a transient row there is a flow whose sampler escapes.** For `ε = ε_{c,s}` with `s < 1`, or `s = 1` and `c > 1/ln 2`, and every terminal mass `Z`, positive and finite, there is a flow of the frozen family, positive, finite, balanced and at matched mass, whose sampler stops at `x` with probability `ρ(x)h(x)`, stops at all with probability `P_{s₀}(τ⁺_{s₀} < ∞) < 1`, and escapes to infinity otherwise."
+    },
+    {
+     "name": "matched_flow_unique",
+     "full": "GFNBounds.Doubling.Leak.matched_flow_unique",
+     "kind": "theorem",
+     "line": 250,
+     "attrs": "",
+     "private": false,
+     "statement": "theorem matched_flow_unique {Z : ℝ≥0∞} (hZt : Z ≠ ∞) {μ : ℕ → ℝ≥0∞} (hbal : ∀ y, μ y = (∑' x, μ x * Q S x y) + Z * ρ S y) (hm : Z = ∑' x, μ x * k S x) : μ = mflowE S Z",
+     "doc": "**The matched-mass flow is unique.** On the loop closure of the doubling graph, with a finite terminal mass `Z`, every flow of the frozen family that is balanced at every rung and has initial mass `Z` is the flow built by the cut balance: the initial mass fixes the lowest rung, and the balance at a rung fixes the next one."
     }
    ],
    "library": "strict",
